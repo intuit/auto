@@ -155,7 +155,7 @@ describe('github', () => {
     });
 
     expect(await gh.getFirstCommit()).toBe(
-      'bff20e6d61765f75dfe485183374fe58b78966b8'
+      '0b2af75d8b55c8869cda93d0e5589ad9f2677e18'
     );
   });
 
@@ -180,7 +180,7 @@ describe('github', () => {
 
     expect(
       await gh.getGitLog(
-        'bff20e6d61765f75dfe485183374fe58b78966b8',
+        '0b2af75d8b55c8869cda93d0e5589ad9f2677e18',
         '7e190d601648d888af40d32fb36758a4a3a4ab92'
       )
     ).toMatchSnapshot();
@@ -409,7 +409,7 @@ describe('github', () => {
       getLatestRelease.mockRejectedValueOnce({ status: 404 });
 
       expect(await gh.getLatestRelease()).toBe(
-        'bff20e6d61765f75dfe485183374fe58b78966b8'
+        '0b2af75d8b55c8869cda93d0e5589ad9f2677e18'
       );
     });
 
