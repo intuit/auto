@@ -1,4 +1,9 @@
-# auto-release
+<div align="center">
+  <img width="200" height="200"
+    src="./auto.gif">
+  <h1>auto-release</h1>
+  <p>Generate releases based on semantic version labels on pull requests.</p>
+</div
 
 CI/CD helpers for github releases. Generate releases based on semantic version labels on pull requests.
 
