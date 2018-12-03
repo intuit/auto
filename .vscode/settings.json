@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    ".autorc": "json"
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["/.autorc"],
+      "url": "./src/auto-rc.json"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "name": "auto-release",
+  "description": "CLI tools to help facilitate semantic versioning based on Github PR labels.",
+  "version": "0.20.8",
+  "author": "Intuit",
+  "license": "MIT",
+  "bin": {
+    "auto": "dist/bin/auto.js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto-release"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "semver:check": "./scripts/post-install.sh",
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "precommit": "lint-staged",
+    "test": "jest",
+    "release": "./scripts/release.sh"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.1.0",
+    "@types/argparse": "1.0.35",
+    "@types/cosmiconfig": "5.0.3",
+    "@types/node-fetch": "2.1.4",
+    "@types/parse-github-url": "1.0.0",
+    "@types/semver": "^5.5.0",
+    "@types/signale": "^1.2.0",
+    "argparse": "1.0.10",
+    "chalk": "2.4.1",
+    "cosmiconfig": "5.0.7",
+    "node-fetch": "2.3.0",
+    "parse-git": "~1.1.2",
+    "parse-github-url": "1.0.2",
+    "registry-url": "4.0.0",
+    "semver": "^5.6.0",
+    "signale": "^1.3.0",
+    "url-join": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "~23.3.10",
+    "@types/node": "~10.12.11",
+    "@types/url-join": "^0.8.2",
+    "husky": "^1.2.0",
+    "jest": "~23.6.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "ts-jest": "~23.10.5",
+    "tslint": "~5.11.0",
+    "tslint-config-prettier": "~1.17.0",
+    "tslint-xo": "~0.10.0",
+    "typescript": "~3.2.1",
+    "typescript-tslint-plugin": "^0.1.2"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --parser typescript --write",
+      "npm run lint",
+      "git add"
+    ]
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/src/**/__tests__/*.test.+(ts|tsx|js)"
+    ],
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.test.ts",
+      "!src/**/__tests__/**/*"
+    ],
+    "coverageReporters": [
+      "cobertura",
+      "html",
+      "lcov"
+    ]
+  }
+}

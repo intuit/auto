@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`github getGitLog  1`] = `
+Array [
+  Object {
+    "author": Object {
+      "email": "Adam_Dierkens@intuit.com",
+      "name": "Adam Dierkens",
+    },
+    "comment": "Add stuff",
+    "date": 2018-10-16T17:20:51.000Z,
+    "files": Array [
+      Object {
+        "path": ".gitignore",
+        "type": "A",
+      },
+      Object {
+        "path": ".navirc",
+        "type": "A",
+      },
+      Object {
+        "path": "README.md",
+        "type": "A",
+      },
+      Object {
+        "path": "yarn.lock",
+        "type": "A",
+      },
+    ],
+    "id": "7e190d601648d888af40d32fb36758a4a3a4ab92",
+  },
+]
+`;

@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GithubRelease generateReleaseNotes should allow user to configure section headings 1`] = `
+"#### 💥  Breaking Change
+- First [#1234](https://custom-git.com/pull/1234) (adam@dierkens.com)
+
+#### 🚀  Enhancement
+- Second [#1235](https://custom-git.com/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+- Fourth [#1237](https://custom-git.com/pull/1237) (adam@dierkens.com)
+
+#### 🏠  Internal
+- Third [#1236](https://custom-git.com/pull/1236) (adam@dierkens.com)
+
+#### Authors: 1
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`GithubRelease getCommits should resolve authors with PR commits 1`] = `
+Array [
+  Object {
+    "author": Object {
+      "email": "adam@dierkens.com",
+      "name": "Adam Dierkens",
+    },
+    "authors": Array [
+      Object {
+        "login": "adam",
+        "name": "Adam Dierkens",
+        "username": "adam",
+      },
+    ],
+    "comment": "First",
+    "id": "foo",
+    "labels": Array [],
+    "packages": undefined,
+  },
+  Object {
+    "author": Object {
+      "email": "lisowski54@gmail.com",
+      "name": "Andrew Lisowski",
+    },
+    "authors": Array [
+      Object {
+        "login": "andrew",
+        "name": "Andrew Lisowski",
+        "username": "andrew",
+      },
+    ],
+    "comment": "Second",
+    "id": "foo",
+    "labels": undefined,
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": "123",
+    },
+  },
+  Object {
+    "author": Object {
+      "email": "adam@dierkens.com",
+      "name": "Adam Dierkens",
+    },
+    "authors": Array [
+      Object {
+        "login": "adam",
+        "name": "Adam Dierkens",
+        "username": "adam",
+      },
+    ],
+    "comment": "Third",
+    "id": "foo",
+    "labels": Array [],
+    "packages": undefined,
+  },
+]
+`;

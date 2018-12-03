@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": 683464,
+      "url": "https://github.custom.com/api/v3/repos/adam/test/labels/foo",
+      "name": "foo",
+      "color": "fbca04",
+      "default": false
+    },
+    {
+      "id": 780541,
+      "url": "https://github.custom.com/api/v3/repos/adam/test/labels/bar",
+      "name": "bar",
+      "color": "cc9cfc",
+      "default": false
+    }
+  ],
+  "status": 200,
+  "headers": {},
+  "meta": {}
+}
