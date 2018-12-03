@@ -181,7 +181,7 @@ describe('github', () => {
     expect(
       await gh.getGitLog(
         '0b2af75d8b55c8869cda93d0e5589ad9f2677e18',
-        '7e190d601648d888af40d32fb36758a4a3a4ab92'
+        'a7f6634429731055a5a44bae24ac88c5f9822e58'
       )
     ).toMatchSnapshot();
   });

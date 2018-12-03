@@ -4,30 +4,18 @@ exports[`github getGitLog  1`] = `
 Array [
   Object {
     "author": Object {
-      "email": "Adam_Dierkens@intuit.com",
-      "name": "Adam Dierkens",
+      "email": "lisowski54@gmail.com",
+      "name": "Andrew Lisowski",
     },
-    "comment": "Add stuff",
-    "date": 2018-10-16T17:20:51.000Z,
+    "comment": "update tests",
+    "date": 2018-12-03T23:20:22.000Z,
     "files": Array [
       Object {
-        "path": ".gitignore",
-        "type": "A",
-      },
-      Object {
-        "path": ".navirc",
-        "type": "A",
-      },
-      Object {
-        "path": "README.md",
-        "type": "A",
-      },
-      Object {
-        "path": "yarn.lock",
-        "type": "A",
+        "path": "src/__tests__/git.test.ts",
+        "type": "M",
       },
     ],
-    "id": "7e190d601648d888af40d32fb36758a4a3a4ab92",
+    "id": "a7f6634429731055a5a44bae24ac88c5f9822e58",
   },
 ]
 `;
