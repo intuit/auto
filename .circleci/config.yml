@@ -53,9 +53,9 @@ jobs:
       - run:
           name: Test
           command: yarn test
-      # - run:
-      #     name: Send CodeCov Results
-      #     command: bash <(curl -s https://codecov.tools.a.intuit.com/bash) -t $CODECOV_KEY
+      - run:
+          name: Send CodeCov Results
+          command: bash <(curl -s https://codecov.tools.a.intuit.com/bash) -t $CODECOV_KEY
 
   build:
     <<: *defaults
