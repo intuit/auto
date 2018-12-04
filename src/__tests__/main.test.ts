@@ -67,6 +67,8 @@ jest.mock('fs', () => ({
   // @ts-ignore
   WriteStream: () => undefined,
   // @ts-ignore
+  closeSync: () => undefined,
+  // @ts-ignore
   writeFile: (file, data, cb) => {
     cb(null, writeSpy(file, data));
   }
