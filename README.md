@@ -5,6 +5,8 @@
   <p>Generate releases based on semantic version labels on pull requests.</p>
 </div
 
+[![Codecov](https://img.shields.io/codecov/c/github/intuit/auto-release.svg?style=for-the-badge)](https://codecov.io/gh/intuit/auto-release) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge)](https://github.com/prettier/prettier) [![CircleCI](https://img.shields.io/circleci/project/github/intuit/auto-release/master.svg?style=for-the-badge)](https://circleci.com/gh/intuit/auto-release)
+
 CI/CD helpers for github releases. Generate releases based on semantic version labels on pull requests.
 
 Release Features:
