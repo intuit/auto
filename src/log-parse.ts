@@ -42,6 +42,10 @@ export const createUserLink = (
 ) => {
   const githubUrl = new URL(options.baseUrl).origin;
 
+  if (author.username === 'invalid-email-address') {
+    return;
+  }
+
   return author.username
     ? `[@${author.username}](${join(githubUrl, author.username)})`
     : author.email || commit.author.email;
@@ -184,10 +188,9 @@ function generateCommitNote(
     pr = `[#${commit.pullRequest.number}](${prLink})`;
   }
 
-  return `- ${jira}${commit.comment} ${pr} (${createUserLinkList(
-    commit,
-    options
-  )})`;
+  const user = createUserLinkList(commit, options);
+
+  return `- ${jira}${commit.comment} ${pr}${user ? ` (${user})` : ''}`;
 }
 
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
@@ -312,6 +315,10 @@ function createAuthorSection(
     )
     .reduce((commitAuthors: string[], commit) => {
       commit.authors.map(author => {
+        if (author.username === 'invalid-email-address') {
+          return commitAuthors;
+        }
+
         const user = createUserLink(author, commit, options);
         const authorString = `- ${author.name} (${user})`;
 
