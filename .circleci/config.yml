@@ -113,12 +113,12 @@ workflows:
           filters:
             tags:
               only: /.*/
-      # - release:
-      #     requires:
-      #       - build
-      #       - lint
-      #       - test
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
+      - release:
+          requires:
+            - build
+            - lint
+            - test
+          filters:
+            branches:
+              only:
+                - master
