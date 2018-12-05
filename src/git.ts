@@ -43,7 +43,7 @@ export default class Github {
   constructor(options: IGithubOptions) {
     this.logger = options.logger;
     this.options = options;
-    this.options.baseUrl = this.options.baseUrl || 'https://api.github.com/';
+    this.options.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
     this.logger.veryVerbose.info(
       `Initializing Github with: ${this.options.baseUrl}`
