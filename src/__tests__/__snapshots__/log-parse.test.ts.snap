@@ -53,6 +53,15 @@ exports[`generateReleaseNotes should create sections for packages 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should foo 1`] = `
+"#### 🐛  Bug Fix
+- Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234) (adam@dierkens.com)
+- Third  (adam@dierkens.com)
+
+#### Authors: 1
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should use username if present 1`] = `
 "#### 🚀  Enhancement
 - Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234) ([@adam](https://github.custom.com/adam))

@@ -288,6 +288,16 @@ describe('generateReleaseNotes', () => {
     expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
   });
 
+  test('should combine pr w/no label and labelled pr', () => {
+    const normalized = normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)'),
+      makeCommitFromMsg('Third', { labels: ['patch'] }),
+      makeCommitFromMsg('Fourth')
+    ]);
+
+    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+  });
+
   test('should create sections for packages', () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
