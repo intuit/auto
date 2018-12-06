@@ -1,3 +1,16 @@
+# v0.20.18 (Thu Dec 06 2018)
+
+#### 🐛  Bug Fix
+- badge [#18](https://github.com/intuit/auto-release/pull/18) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+- Contributors [#16](https://github.com/intuit/auto-release/pull/16) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v0.20.17 (Thu Dec 06 2018)
 
 #### 🐛  Bug Fix
