@@ -59,15 +59,15 @@ export default class Github {
     if (authToken === undefined && this.options.token === undefined) {
       throw new Error('Auth needs a Github token.');
     }
-                                                   
+
     const token = authToken || this.options.token;
-    
+
     if (this.hasAuthed) {
-      return Promise.resolve()
+      return Promise.resolve();
     }
 
-    this.logger.veryVerbose.info('Authenticating with Github.');                                                     
-                                                         
+    this.logger.veryVerbose.info('Authenticating with Github.');
+
     this.ghub.authenticate({
       type: 'token',
       token: token!
