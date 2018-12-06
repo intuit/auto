@@ -10,6 +10,18 @@
   "commit": true,
   "contributors": [
     {
+      "login": "adierkens",
+      "name": "Adam Dierkens",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13004162?v=4",
+      "profile": "https://adamdierkens.com",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "test"
+      ]
+    },
+    {
       "login": "hipstersmoothie",
       "name": "Andrew Lisowski",
       "avatar_url": "https://avatars3.githubusercontent.com/u/1192452?v=4",
@@ -19,18 +31,6 @@
         "doc",
         "ideas",
         "infra",
-        "test"
-      ]
-    },
-    {
-      "login": "adierkens",
-      "name": "Adam Dierkens",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/13004162?v=4",
-      "profile": "https://adamdierkens.com",
-      "contributions": [
-        "code",
-        "doc",
-        "ideas",
         "test"
       ]
     }
