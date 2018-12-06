@@ -70,7 +70,7 @@ async function getCurrentVersion(
   return lastVersion;
 }
 
-export default async function main(args: ArgsType) {
+async function run(args: ArgsType) {
   const logger = createLog(
     args.very_verbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
   );
@@ -321,6 +321,14 @@ export default async function main(args: ArgsType) {
     }
     default:
       throw new Error(`idk what i'm doing.`);
+  }
+}
+
+export default async function main(args: ArgsType) {
+  try {
+    await run(args);
+  } catch (error) {
+    console.log(error);
   }
 }
 
