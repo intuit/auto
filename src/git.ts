@@ -39,10 +39,12 @@ export default class Github {
   public readonly ghub: GHub;
   public readonly options: IGithubOptions;
   private readonly logger: ILogger;
+  private hasAuthed: boolean;
 
   constructor(options: IGithubOptions) {
     this.logger = options.logger;
     this.options = options;
+    this.hasAuthed = false;
     this.options.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
     this.logger.veryVerbose.info(
@@ -57,16 +59,21 @@ export default class Github {
     if (authToken === undefined && this.options.token === undefined) {
       throw new Error('Auth needs a Github token.');
     }
-
+                                                   
     const token = authToken || this.options.token;
+    
+    if (this.hasAuthed) {
+      return Promise.resolve()
+    }
 
-    this.logger.veryVerbose.info('Authenticating with Github.');
-
+    this.logger.veryVerbose.info('Authenticating with Github.');                                                     
+                                                         
     this.ghub.authenticate({
       type: 'token',
       token: token!
     });
 
+    this.hasAuthed = true;
     this.logger.veryVerbose.info('Sucessfully authenticated with Github.');
 
     return Promise.resolve();
