@@ -1,3 +1,21 @@
+# v0.20.16 (Thu Dec 06 2018)
+
+#### 🐛  Bug Fix
+- Check prCommit.author is defined. [#14](https://github.com/intuit/auto-release/pull/14) ([@adierkens](https://github.com/adierkens))
+
+#### 🏠  Internal
+- Rename CONTRIBUTING.md to CODE_OF_CONDUCT.md [#13](https://github.com/intuit/auto-release/pull/13) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Create CONTRIBUTING.md [#12](https://github.com/intuit/auto-release/pull/12) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update issue templates [#11](https://github.com/intuit/auto-release/pull/11) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Create PULL_REQUEST_TEMPLATE.md [#10](https://github.com/intuit/auto-release/pull/10) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- remove bad changelog [#9](https://github.com/intuit/auto-release/pull/9) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v0.20.15 (Wed Dec 05 2018)
 
 #### 🐛  Bug Fix
