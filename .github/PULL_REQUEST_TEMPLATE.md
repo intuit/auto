@@ -1,12 +1,8 @@
 # What Changed
 
-
-
 # Why
 
-
-
-Todo: 
+Todo:
 
 - [ ] Add tests
 - [ ] Add docs
