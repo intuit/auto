@@ -206,7 +206,6 @@ export default class GithubRelease {
         let resolvedAuthors = [];
 
         if (commit.pullRequest) {
-          // 1
           const prCommits = await client.getCommitsForPR(
             Number(commit.pullRequest.number)
           );
@@ -215,15 +214,12 @@ export default class GithubRelease {
             return;
           }
 
-          // 1+
           resolvedAuthors = await Promise.all(
             prCommits.map(async prCommit =>
               client.getUserByUsername(prCommit.author.login)
             )
           );
         } else if (commit.author.email) {
-          // 1
-          console.log('get', commit.author.email);
           const author = await client.getUserByEmail(commit.author.email);
           resolvedAuthors.push(author);
         }
