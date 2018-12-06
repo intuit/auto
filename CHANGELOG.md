@@ -1,3 +1,13 @@
+# v0.20.17 (Thu Dec 06 2018)
+
+#### 🐛  Bug Fix
+- Move typescript-memoize to dependencies [#17](https://github.com/intuit/auto-release/pull/17) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v0.20.16 (Thu Dec 06 2018)
 
 #### 🐛  Bug Fix
