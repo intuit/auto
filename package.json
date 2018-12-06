@@ -24,7 +24,9 @@
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
     "test": "jest",
-    "release": "./scripts/release.sh"
+    "release": "./scripts/release.sh",
+    "contributors:add": "all-contributors",
+    "contributors:generate": "all-contributors generate"
   },
   "dependencies": {
     "@octokit/rest": "^16.1.0",
@@ -50,6 +52,7 @@
     "@types/jest": "~23.3.10",
     "@types/node": "~10.12.11",
     "@types/url-join": "^0.8.2",
+    "all-contributors-cli": "^5.4.1",
     "husky": "^1.2.0",
     "jest": "~23.6.0",
     "lint-staged": "^8.1.0",
