@@ -1,3 +1,13 @@
+# v0.20.15 (Wed Dec 05 2018)
+
+#### 🐛  Bug Fix
+- memoize all the user functions [#5](https://github.com/intuit/auto-release/pull/5) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v0.20.14 (Wed Dec 05 2018)
 
 
