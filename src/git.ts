@@ -165,6 +165,7 @@ export default class Github {
       : { login: email };
   }
 
+  @Memoize()
   public async getUserByUsername(username: string) {
     await this.authenticate();
 
