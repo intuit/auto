@@ -58,6 +58,7 @@
     "tslint-config-prettier": "~1.17.0",
     "tslint-xo": "~0.10.0",
     "typescript": "~3.2.1",
+    "typescript-memoize": "^1.0.0-alpha.3",
     "typescript-tslint-plugin": "^0.1.2"
   },
   "prettier": {
