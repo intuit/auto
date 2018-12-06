@@ -201,39 +201,39 @@ export default class GithubRelease {
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
-    await Promise.all(
-      commits.map(async commit => {
-        let resolvedAuthors = [];
+    // await Promise.all(
+    //   commits.map(async commit => {
+    //     let resolvedAuthors = [];
+    //     console.log('here');
+    //     if (commit.pullRequest) {
+    //       const prCommits = await client.getCommitsForPR(
+    //         Number(commit.pullRequest.number)
+    //       );
 
-        if (commit.pullRequest) {
-          const prCommits = await client.getCommitsForPR(
-            Number(commit.pullRequest.number)
-          );
+    //       if (!prCommits) {
+    //         return;
+    //       }
 
-          if (!prCommits) {
-            return;
-          }
+    //       resolvedAuthors = await Promise.all(
+    //         prCommits.map(async prCommit =>
+    //           client.getUserByUsername(prCommit.author.login)
+    //         )
+    //       );
+    //     } else if (commit.author.email) {
+    //       const author = await client.getUserByEmail(commit.author.email);
+    //       resolvedAuthors.push(author);
+    //     }
 
-          resolvedAuthors = await Promise.all(
-            prCommits.map(async prCommit =>
-              client.getUserByUsername(prCommit.author.login)
-            )
-          );
-        } else if (commit.author.email) {
-          const author = await client.getUserByEmail(commit.author.email);
-          resolvedAuthors.push(author);
-        }
+    //     commit.authors = resolvedAuthors.map(author => ({
+    //       ...author,
+    //       username: author ? author.login : undefined
+    //     }));
 
-        commit.authors = resolvedAuthors.map(author => ({
-          ...author,
-          username: author ? author.login : undefined
-        }));
-
-        commit.authors.map(author => {
-          this.logger.veryVerbose.info(`Found author: ${author.username}`);
-        });
-      })
-    );
+    //     commit.authors.map(author => {
+    //       this.logger.veryVerbose.info(`Found author: ${author.username}`);
+    //     });
+    //   })
+    // );
 
     return commits;
   }
