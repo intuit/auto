@@ -215,9 +215,11 @@ export default class GithubRelease {
           }
 
           resolvedAuthors = await Promise.all(
-            prCommits.map(async prCommit =>
-              client.getUserByUsername(prCommit.author.login)
-            )
+            prCommits.map(async prCommit => {
+              if (prCommit && prCommit.author) {
+                return client.getUserByUsername(prCommit.author.login);
+              }
+            })
           );
         } else if (commit.author.email) {
           const author = await client.getUserByEmail(commit.author.email);
