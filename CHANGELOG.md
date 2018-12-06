@@ -1,3 +1,15 @@
+# v0.20.10 (Wed Dec 05 2018)
+
+#### 🐛  Bug Fix
+- ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
+- use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
+- add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
+
+#### Authors: 1
+- Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
+
+---
+
 # v0.20.8 (Mon Dec 03 2018)
 
 #### 🐛 Bug Fix
