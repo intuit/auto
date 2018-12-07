@@ -2,7 +2,10 @@
   "name": "auto-release-cli",
   "description": "CLI tools to help facilitate semantic versioning based on Github PR labels.",
   "version": "0.20.19",
-  "author": "Intuit",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
   "license": "MIT",
   "bin": {
     "auto": "dist/bin/auto.js"
