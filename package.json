@@ -26,7 +26,10 @@
     "test": "jest",
     "release": "./scripts/release.sh",
     "contributors:add": "all-contributors",
-    "contributors:generate": "all-contributors generate"
+    "contributors:generate": "all-contributors generate",
+    "docs": "ignite",
+    "docs:watch": "ignite --watch",
+    "docs:publish": "ignite --publish"
   },
   "dependencies": {
     "@octokit/rest": "^16.1.0",
@@ -54,6 +57,7 @@
     "@types/url-join": "^0.8.2",
     "all-contributors-cli": "^5.4.1",
     "husky": "^1.2.0",
+    "ignite": "^1.6.1",
     "jest": "~23.6.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
@@ -111,5 +115,13 @@
       "html",
       "lcov"
     ]
+  },
+  "ignite": {
+    "title": "auto-release",
+    "logo": "logo.gif",
+    "githubURL": "https://github.com/intuit/auto-release",
+    "customHead": "<style>.header-image { max-width: 200px !important; }</style>",
+    "favicon": "favicon.gif",
+    "faviconType": "image/gif"
   }
 }
