@@ -121,6 +121,7 @@
   },
   "ignite": {
     "title": "auto-release",
+    "baseURL": "/auto-release",
     "logo": "logo.gif",
     "githubURL": "https://github.com/intuit/auto-release",
     "customHead": "<style>.header-image { max-width: 200px !important; }</style>",
