@@ -1,3 +1,17 @@
+# v0.20.19 (Thu Dec 06 2018)
+
+#### 🏠  Internal
+- getting codecov working [#20](https://github.com/intuit/auto-release/pull/20) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- more badges [#19](https://github.com/intuit/auto-release/pull/19) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- Add documentation website [#21](https://github.com/intuit/auto-release/pull/21) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v0.20.18 (Thu Dec 06 2018)
 
 #### 🐛  Bug Fix
