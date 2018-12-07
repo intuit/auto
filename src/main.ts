@@ -223,7 +223,7 @@ export async function run(args: ArgsType) {
     case 'shipit': {
       const version = await getVersion(githubRelease, args);
 
-      if (version === '') {
+      if (version !== '') {
         await makeChangelog(
           args,
           githubRelease,
