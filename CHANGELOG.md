@@ -1,3 +1,24 @@
+# v0.20.20 (Fri Dec 07 2018)
+
+#### 🐛  Bug Fix
+- Move login out of CLI [#33](https://github.com/intuit/auto-release/pull/33) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+- update ignite [#30](https://github.com/intuit/auto-release/pull/30) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix header and theme sidebar [#27](https://github.com/intuit/auto-release/pull/27) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add base url [#25](https://github.com/intuit/auto-release/pull/25) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add correct author ;) [#24](https://github.com/intuit/auto-release/pull/24) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- remove weird border [#29](https://github.com/intuit/auto-release/pull/29) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update README.md [#28](https://github.com/intuit/auto-release/pull/28) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Polish [#26](https://github.com/intuit/auto-release/pull/26) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v0.20.19 (Thu Dec 06 2018)
 
 #### 🏠  Internal
