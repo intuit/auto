@@ -123,8 +123,9 @@
     "title": "auto-release",
     "baseURL": "/auto-release",
     "logo": "logo.gif",
+    "bulmaTheme": "materia",
     "githubURL": "https://github.com/intuit/auto-release",
-    "customHead": "<style>.header-image { max-width: 200px !important; }</style>",
+    "customHead": "<style>.header-image { max-width: 200px !important; } .navbar { box-shadow: none !important; border-bottom: 1px solid lightgrey; } .list { font-size: 1.2rem; } .is-purple { background: #870048 !important;  } .has-text-purple { color: #870048 !important;  } .is-red { background: #C5000B !important;  } .is-yellow { background: #F1A60E !important;  } a.navbar-item.is-active, a.navbar-item:hover, a.navbar-link.is-active, a.navbar-link:hover { background-color: #f5f5f5;color: #870048; } .button.is-link.is-inverted.is-outlined:hover { background-color: #fff;color: #870048; } p .image { max-width: 100% !important; }</style>",
     "favicon": "favicon.png"
   }
 }
