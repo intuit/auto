@@ -23,6 +23,8 @@ Pull Request Interaction Features:
 - Check that a pull request has a SemVer label
 - Comment on a PR with markdown
 
+Visit [the docs](https://intuit.github.io/auto-release/) for more information.
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
