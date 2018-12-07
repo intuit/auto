@@ -33,7 +33,7 @@ const addOwner = (parser: ArgumentParser) =>
 
 const addDryRun = (parser: ArgumentParser) =>
   parser.addArgument(['-d', '--dry-run'], {
-    help: "Don't actually commit status. Just print the request body",
+    help: 'Dont actually commit status. Just print the request body',
     action: ACTION_TYPES.storeTrue
   });
 

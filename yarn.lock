@@ -1128,9 +1128,9 @@
     jimp "*"
 
 "@types/lodash@^4.14.53":
-  version "4.14.119"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.119.tgz#be847e5f4bc3e35e46d041c394ead8b603ad8b39"
-  integrity sha512-Z3TNyBL8Vd/M9D9Ms2S3LmFq2sSMzahodD6rCS9V2N44HUMINb75jNkSuwAx7eo2ufqTdfOdtGQpNbieUjPQmw==
+  version "4.14.118"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.118.tgz#247bab39bfcc6d910d4927c6e06cbc70ec376f27"
+  integrity sha512-iiJbKLZbhSa6FYRip/9ZDX6HXhayXLDGY2Fqws9cOkEQ6XeKfaxB0sC541mowZJueYyMnVUmmG+al5/4fCDrgw==
 
 "@types/node-fetch@2.1.4":
   version "2.1.4"
@@ -6096,10 +6096,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.4.2.tgz#71be5c253ca9539cfdcf0cabede8bc1932a977f8"
-  integrity sha512-WUpAUvhazETI71bS60fpTwtbZg0TsRD5smIADoRcS1UjmLJLa4/HG+ZTuap1ROWzNKm2KVsc4WG2cZ7RQtNEvw==
+ignite@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.6.1.tgz#e7769b4f92992e7a5e19b33d56968eb0762ae096"
+  integrity sha512-pYL4dyakEsYUzTsx4XOEX50Rc3MGZaueEk7OdTw6wNTapmR+JWUkZ/FfDY5DajfvLkZsFoSXNzzAUrnoY5ZSBg==
   dependencies:
     "@babel/cli" "7.0.0"
     "@babel/core" "7.0.0"

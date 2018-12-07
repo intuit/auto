@@ -1,22 +1,30 @@
-- [:page_facing_up: Introduction](pages/introduction.md)
-- [:tada: Getting Started](pages/getting-started.md)
+:tada: Welcome
+
+- [Introduction](pages/introduction.md)
+- [Getting Started](pages/getting-started.md)
 
 ---
 
-:hammer: Tools API :wrench:
+:hammer: Tool APIs :wrench:
 
-- [Publishing](pages/ProjectStructure.md)
-  - [auto version](pages/ProjectStructure.md)
-  - [auto changelog](pages/ProjectStructure.md)
-  - [auto release](pages/ProjectStructure.md)
-- [PR Interaction](pages/ProjectStructure.md)
-  - [auto label](pages/ProjectStructure.md)
-  - [auto pr](pages/ProjectStructure.md)
-  - [auto pr-check](pages/ProjectStructure.md)
-  - [auto comment](pages/ProjectStructure.md)
+- [Publishing](pages/publishing.md)
+  - [auto version](pages/auto-version.md)
+  - [auto changelog](pages/auto-changelog.md)
+  - [auto release](pages/auto-release.md)
+- [PR Interaction](pages/pr-interaction.md)
+  - [auto label](pages/auto-label.md)
+  - [auto pr](pages/auto-pr.md)
+  - [auto pr-check](pages/auto-pr-check.md)
+  - [auto comment](pages/auto-comment.md)
 
 ---
 
 :gear: Configuration
 
-- [.autorc](pages/Options.md)
+- [.autorc](pages/autorc.md)
+
+---
+
+:bathtub: Continuos Integration
+
+- [CircleCI](pages/circleci.md)

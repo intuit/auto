@@ -67,3 +67,7 @@ if [ ! -z "$VERSION" ]; then
   auto release
 fi
 ```
+
+## Enterprise
+
+If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi` or by setting the value in your `.autorc`.
