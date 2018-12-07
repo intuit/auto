@@ -28,7 +28,8 @@
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
-    "docs:watch": "ignite -w"
+    "docs:watch": "ignite --watch",
+    "docs:publish": "ignite --publish"
   },
   "dependencies": {
     "@octokit/rest": "^16.1.0",
