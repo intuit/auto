@@ -2,7 +2,7 @@ import GHub from '@octokit/rest';
 import { ICommit, parseGit } from 'parse-git';
 import { Memoize } from 'typescript-memoize';
 
-import { ILogger } from './GithubRelease';
+import { ILogger } from './github-release';
 import execPromise from './utils/exec-promise';
 
 export interface IGithubOptions {

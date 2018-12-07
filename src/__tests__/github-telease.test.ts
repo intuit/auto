@@ -1,5 +1,5 @@
+import GithubRelease from '../github-release';
 import { normalizeCommits } from '../log-parse';
-import GithubRelease from '../GithubRelease';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';

@@ -10,7 +10,7 @@ import { IPRInfo } from './git';
 import GithubRelease, {
   defaultLabels,
   IGithubReleaseOptions
-} from './GithubRelease';
+} from './github-release';
 
 import createLog from './utils/logger';
 
