@@ -1,7 +1,7 @@
 import { ICommit } from 'parse-git';
 import { URL } from 'url';
 import join from 'url-join';
-import { ILogger } from './main';
+import { ILogger } from './github-release';
 
 interface ICommitAuthor {
   name: string;
