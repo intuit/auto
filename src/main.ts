@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
 import cosmiconfig from 'cosmiconfig';
 import * as fs from 'fs';
 import signale from 'signale';
 import { promisify } from 'util';
 
-import parseArgs, { ArgsType } from './cli/args';
+import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
 import GithubRelease, {
   defaultLabels,
@@ -73,7 +72,7 @@ async function getCurrentVersion(
   return lastVersion;
 }
 
-async function run(args: ArgsType) {
+export async function run(args: ArgsType) {
   const logger = createLog(
     args.very_verbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
   );

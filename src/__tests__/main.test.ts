@@ -1,9 +1,13 @@
-import run from '../main';
+import { run } from '../main';
 
-test('throws error for unknown args', () => {
-  expect(
-    run({
+test('throws error for unknown args', async () => {
+  expect.assertions(1);
+
+  try {
+    await run({
       command: 'foo'
-    })
-  ).rejects.toEqual(new Error(`idk what i'm doing.`));
+    });
+  } catch (error) {
+    expect(error).toEqual(new Error("idk what i'm doing."));
+  }
 });
