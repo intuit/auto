@@ -118,6 +118,20 @@ Auto-generate a github release.
 ::::
 :::::
 
+::::: hero is-light is-small no-margin
+:::: div columns
+::: div column
+![Markdown](images/shipit.png)
+:::
+::: div column feature
+
+# `auto shipit`
+
+Do all of the above in one simple command!
+:::
+::::
+:::::
+
 ::: hero is-red is-link is-small has-text-centered
 Pull Request Tools
 :::
