@@ -1,3 +1,21 @@
+# 0.23.0 (Fri Dec 07 2018)
+
+#### 🚀  Enhancement
+- add init script [#42](https://github.com/intuit/auto-release/pull/42) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+- center badges [#40](https://github.com/intuit/auto-release/pull/40) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- switch to tiny badges [#39](https://github.com/intuit/auto-release/pull/39) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- add shipit to home page [#41](https://github.com/intuit/auto-release/pull/41) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add Contributor documentation [#38](https://github.com/intuit/auto-release/pull/38) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.22.0 (Fri Dec 07 2018)
 
 #### 🚀  Enhancement
