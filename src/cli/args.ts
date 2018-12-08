@@ -214,7 +214,8 @@ export const PARSERS: [string, ParserFunction][] = [
   ['release', addReleaseParser],
   ['version', addVersionParser],
   ['comment', addCommentParser],
-  ['changelog', addChangelogParser]
+  ['changelog', addChangelogParser],
+  ['shipit', () => undefined]
 ];
 
 const rootParser = new ArgumentParser({
