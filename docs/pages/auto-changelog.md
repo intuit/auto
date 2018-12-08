@@ -37,7 +37,7 @@ Optional arguments:
 
 ## Jira
 
-To include Jira story information you must include a URL to your hosted JIRA instance as a CLI or `.autorc` config option.
+To include Jira story information you must include a URL to your hosted JIRA instance as a CLI or [.autorc`](./autorc.md) config option.
 
 ## Changelog Titles
 
