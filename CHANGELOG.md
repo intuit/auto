@@ -1,3 +1,13 @@
+# 0.22.0 (Fri Dec 07 2018)
+
+#### 🚀  Enhancement
+- Add git user options [#37](https://github.com/intuit/auto-release/pull/37) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.21.0 (Fri Dec 07 2018)
 
 #### 🚀  Enhancement
