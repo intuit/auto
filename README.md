@@ -3,9 +3,11 @@
     src="./auto.gif">
   <h1>auto-release</h1>
   <p>Generate releases based on semantic version labels on pull requests</p>
-</div
+</div>
 
-[![CircleCI](https://img.shields.io/circleci/project/github/intuit/auto-release/master.svg?style=flat-square)](https://circleci.com/gh/intuit/auto-release) [![Codecov](https://img.shields.io/codecov/c/github/intuit/auto-release.svg?style=flat-square)](https://codecov.io/gh/intuit/auto-release) [![npm](https://img.shields.io/npm/v/auto-release-cli.svg?style=flat-square)](https://www.npmjs.com/package/auto-release-cli) [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors) [![npm](https://img.shields.io/npm/dt/auto-release-cli.svg?style=flat-square)](https://www.npmjs.com/package/auto-release-cli) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+<div align="center"><a href="https://circleci.com/gh/intuit/auto-release"><img src="https://img.shields.io/circleci/project/github/intuit/auto-release/master.svg?style=flat-square" alt="CircleCI" /></a> <a href="https://codecov.io/gh/intuit/auto-release"><img src="https://img.shields.io/codecov/c/github/intuit/auto-release.svg?style=flat-square" alt="Codecov" /></a> <a href="https://www.npmjs.com/package/auto-release-cli"><img src="https://img.shields.io/npm/v/auto-release-cli.svg?style=flat-square" alt="npm" /></a> <a href="#contributors"><img src="https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square" alt="All Contributors" /></a> <a href="https://www.npmjs.com/package/auto-release-cli"><img src="https://img.shields.io/npm/dt/auto-release-cli.svg?style=flat-square" alt="npm" /></a> <a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="code style: prettier" /></a></div>
+
+<br />
 
 CI/CD helpers for github releases. Generate releases based on semantic version labels on pull requests.
 
