@@ -12,6 +12,7 @@ import GithubRelease, {
   IGithubReleaseOptions
 } from './github-release';
 
+import init from './init';
 import execPromise from './utils/exec-promise';
 import createLog from './utils/logger';
 
@@ -243,6 +244,10 @@ export async function run(args: ArgsType) {
   );
 
   switch (args.command) {
+    case 'init': {
+      await init();
+      break;
+    }
     case 'shipit': {
       const version = await getVersion(githubRelease, args);
 

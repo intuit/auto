@@ -65,6 +65,17 @@ const addJira = (parser: ArgumentParser) =>
     help: 'Jira base URL'
   });
 
+const addGithubApi = (parser: ArgumentParser) =>
+  parser.addArgument(['--githubApi'], {
+    help: 'Github API to use'
+  });
+
+const addOnlyPublishWithReleaseLabel = (parser: ArgumentParser) =>
+  parser.addArgument(['--onlyPublishWithReleaseLabel'], {
+    help: 'Only bump version if `release` label is on pull request',
+    action: ACTION_TYPES.storeTrue
+  });
+
 function addLoggingParser(parser: ArgumentParser) {
   parser.addArgument(['-v', '--verbose'], {
     help: 'Show some more logs',
@@ -76,16 +87,11 @@ function addLoggingParser(parser: ArgumentParser) {
     action: ACTION_TYPES.storeTrue
   });
 
-  parser.addArgument(['--githubApi'], {
-    help: 'Github API to use'
-  });
+  addGithubApi(parser);
 }
 
 function addSemverParser(parser: ArgumentParser) {
-  parser.addArgument(['--onlyPublishWithReleaseLabel'], {
-    help: 'Only bump version if `release` label is on pull request',
-    action: ACTION_TYPES.storeTrue
-  });
+  addOnlyPublishWithReleaseLabel(parser);
 
   parser.addArgument(['--major'], {
     help: 'The name of the tag for a major version bump',
@@ -227,6 +233,7 @@ export const PARSERS: [string, ParserFunction][] = [
   ['version', addVersionParser],
   ['comment', addCommentParser],
   ['changelog', addChangelogParser],
+  ['init', () => undefined],
   ['shipit', () => undefined]
 ];
 
