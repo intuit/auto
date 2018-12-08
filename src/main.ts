@@ -238,7 +238,7 @@ export async function run(args: ArgsType) {
 
       if (isMonorepo) {
         await execPromise(
-          `lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
+          `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
         );
       } else {
         await execPromise(
