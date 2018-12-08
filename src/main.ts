@@ -77,6 +77,27 @@ async function getCurrentVersion(
   return lastVersion;
 }
 
+async function setGitUser(args: IGithubReleaseOptions) {
+  const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
+  let { name, email } = args;
+
+  if (!name) {
+    ({ name } = packageJson.author);
+  }
+
+  if (!email) {
+    ({ email } = packageJson.author);
+  }
+
+  if (email) {
+    await execPromise(`git config user.email "${email}"`);
+  }
+
+  if (name) {
+    await execPromise(`git config user.name "${name}"`);
+  }
+}
+
 async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
   const lastRelease = await githubRelease.getLatestRelease();
 
@@ -199,6 +220,8 @@ export async function run(args: ArgsType) {
     ...args,
     logger
   };
+
+  await setGitUser(config);
 
   let semVerLabels = defaultLabels;
 

@@ -10,8 +10,8 @@ Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and com
 >  auto changelog -h
 
 usage: auto changelog [-h] [--from FROM] [--to TO] [--jira JIRA]
-                           [--no-version-prefix] [-d] [-m MESSAGE] [-v] [-vv]
-                           [--githubApi GITHUBAPI]
+                         [--no-version-prefix] [-d] [-m MESSAGE] [-v] [-vv]
+                         [--githubApi GITHUBAPI] [--name NAME] [--email EMAIL]
 
 
 Optional arguments:
@@ -30,6 +30,9 @@ Optional arguments:
   -vv, --very-verbose   Show a lot more logs
   --githubApi GITHUBAPI
                         Github API to use
+  --name NAME           Git name to commit and release with. Defaults to
+                        package.json
+  --email EMAIL         Git email to commit with. Defaults to package.json
 ```
 
 ## Jira

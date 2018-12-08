@@ -27,8 +27,8 @@ You will need to push the tags to github first:
 >  auto release -h
 
 usage: auto release [-h] [-s SLACK] [--use-version USE_VERSION]
-                         [--jira JIRA] [--no-version-prefix] [-d] [-v] [-vv]
-                         [--githubApi GITHUBAPI]
+                       [--jira JIRA] [--no-version-prefix] [-d] [-v] [-vv]
+                       [--githubApi GITHUBAPI] [--name NAME] [--email EMAIL]
 
 
 Optional arguments:
@@ -47,6 +47,9 @@ Optional arguments:
   -vv, --very-verbose   Show a lot more logs
   --githubApi GITHUBAPI
                         Github API to use
+  --name NAME           Git name to commit and release with. Defaults to
+                        package.json
+  --email EMAIL         Git email to commit with. Defaults to package.json
 ```
 
 ## Slack URL

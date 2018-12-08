@@ -93,3 +93,23 @@ If you are using enterprise github `auto-release` lets you configure the github 
   "jira": "https://url-to-jira.com"
 }
 ```
+
+### name
+
+Git name to commit and release with. Defaults to package.json. Used in `auto changelog` and `auto release`
+
+```json
+{
+  "name": "Joe Schmo"
+}
+```
+
+### email
+
+Git email to commit and release with. Defaults to package.json. Used in `auto changelog` and `auto release`
+
+```json
+{
+  "email": "joe@schmo.com"
+}
+```
