@@ -12,6 +12,7 @@ import GithubRelease, {
   IGithubReleaseOptions
 } from './github-release';
 
+import execPromise from './utils/exec-promise';
 import createLog from './utils/logger';
 
 const readFile = promisify(fs.readFile);
@@ -26,6 +27,10 @@ const calcGreaterVersion = (
   return localVersion > latestVersion ? localVersion : latestVersion;
 };
 
+function isMonorepo() {
+  return fs.existsSync('lerna.json');
+}
+
 async function getCurrentVersion(
   prefixRelease: (release: string) => string,
   lastRelease: string,
@@ -35,7 +40,7 @@ async function getCurrentVersion(
   let packageVersion = '';
   let monorepoVersion = '';
 
-  if (fs.existsSync('lerna.json')) {
+  if (isMonorepo()) {
     monorepoVersion = prefixRelease(
       JSON.parse(await readFile('lerna.json', 'utf-8')).version
     );
@@ -70,6 +75,97 @@ async function getCurrentVersion(
   );
 
   return lastVersion;
+}
+
+async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
+  const lastRelease = await githubRelease.getLatestRelease();
+
+  return githubRelease.getSemverBump(
+    lastRelease,
+    undefined,
+    args.onlyPublishWithReleaseLabel
+  );
+}
+
+async function makeChangelog(
+  args: ArgsType,
+  githubRelease: GithubRelease,
+  log: signale.Signale<signale.DefaultMethods>,
+  prefixRelease: (release: string) => string,
+  veryVerbose: signale.Signale<signale.DefaultMethods>,
+  verbose: signale.Signale<signale.DefaultMethods>
+) {
+  const lastRelease = args.from || (await githubRelease.getLatestRelease());
+  const releaseNotes = await githubRelease.generateReleaseNotes(
+    lastRelease,
+    args.to || undefined
+  );
+
+  log.info('New Release Notes\n', releaseNotes);
+
+  if (!args.dry_run) {
+    const currentVersion = await getCurrentVersion(
+      prefixRelease,
+      lastRelease,
+      veryVerbose
+    );
+
+    await githubRelease.addToChangelog(
+      releaseNotes,
+      currentVersion,
+      args.no_version_prefix,
+      args.message || undefined
+    );
+  } else {
+    verbose.info('`changelog` dry run complete.');
+  }
+}
+
+async function makeRelease(
+  args: ArgsType,
+  githubRelease: GithubRelease,
+  log: signale.Signale<signale.DefaultMethods>,
+  prefixRelease: (release: string) => string,
+  veryVerbose: signale.Signale<signale.DefaultMethods>,
+  verbose: signale.Signale<signale.DefaultMethods>
+) {
+  let lastRelease = await githubRelease.getLatestRelease();
+
+  // Find base commit or latest release to generate the changelog to HEAD (new tag)
+  veryVerbose.info(`Using ${lastRelease} as previous release.`);
+
+  if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+    lastRelease = prefixRelease(lastRelease);
+  }
+
+  log.info('Last used release:', lastRelease);
+
+  const releaseNotes = await githubRelease.generateReleaseNotes(lastRelease);
+
+  log.info(`Using release notes:\n${releaseNotes}`);
+
+  const version =
+    args.use_version ||
+    (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose));
+
+  if (!version) {
+    log.error('Could not calculate next version from last tag.');
+    return;
+  }
+
+  const prefixed = prefixRelease(version);
+  log.info(`Publishing ${prefixed} to Github.`);
+
+  if (!args.dry_run) {
+    await githubRelease.publish(releaseNotes, prefixed);
+
+    if (args.slack) {
+      log.info('Posting release to slack');
+      await githubRelease.postToSlack(releaseNotes, prefixed);
+    }
+  } else {
+    verbose.info('Release dry run complete.');
+  }
 }
 
 export async function run(args: ArgsType) {
@@ -124,6 +220,48 @@ export async function run(args: ArgsType) {
   );
 
   switch (args.command) {
+    case 'shipit': {
+      const version = await getVersion(githubRelease, args);
+
+      if (version === '') {
+        return;
+      }
+
+      await makeChangelog(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
+
+      if (isMonorepo) {
+        await execPromise(
+          `lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
+        );
+      } else {
+        await execPromise(
+          `npm version ${version} -m "Bump version to: %s [skip ci]"`
+        );
+        await execPromise('npm publish');
+        await execPromise(
+          'git push --follow-tags --set-upstream origin $branch'
+        );
+      }
+
+      await makeRelease(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
+
+      break;
+    }
+    // PR Interaction
     case 'label': {
       verbose.info("Using command: 'label'");
       const labels = await githubRelease.getLabels(args.pr!);
@@ -221,94 +359,6 @@ export async function run(args: ArgsType) {
 
       break;
     }
-    case 'release': {
-      verbose.info("Using command: 'release'");
-
-      let lastRelease = await githubRelease.getLatestRelease();
-
-      // Find base commit or latest release to generate the changelog to HEAD (new tag)
-      veryVerbose.info(`Using ${lastRelease} as previous release.`);
-
-      if (lastRelease.match(/\d+\.\d+\.\d+/)) {
-        lastRelease = prefixRelease(lastRelease);
-      }
-
-      log.info('Last used release:', lastRelease);
-
-      const releaseNotes = await githubRelease.generateReleaseNotes(
-        lastRelease
-      );
-
-      log.info(`Using release notes:\n${releaseNotes}`);
-
-      const version =
-        args.use_version ||
-        (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose));
-
-      if (!version) {
-        log.error('Could not calculate next version from last tag.');
-        return;
-      }
-
-      const prefixed = prefixRelease(version);
-      log.info(`Publishing ${prefixed} to Github.`);
-
-      if (!args.dry_run) {
-        await githubRelease.publish(releaseNotes, prefixed);
-
-        if (args.slack) {
-          log.info('Posting release to slack');
-          await githubRelease.postToSlack(releaseNotes, prefixed);
-        }
-      } else {
-        verbose.info('Release dry run complete.');
-      }
-
-      break;
-    }
-    case 'changelog': {
-      verbose.info("Using command: 'changelog'");
-
-      const lastRelease = args.from || (await githubRelease.getLatestRelease());
-      const releaseNotes = await githubRelease.generateReleaseNotes(
-        lastRelease,
-        args.to || undefined
-      );
-
-      log.info('New Release Notes\n', releaseNotes);
-
-      if (!args.dry_run) {
-        const currentVersion = await getCurrentVersion(
-          prefixRelease,
-          lastRelease,
-          veryVerbose
-        );
-        await githubRelease.addToChangelog(
-          releaseNotes,
-          currentVersion,
-          args.no_version_prefix,
-          args.message || undefined
-        );
-      } else {
-        verbose.info('`changelog` dry run complete.');
-      }
-
-      break;
-    }
-    case 'version': {
-      verbose.info("Using command: 'version'");
-
-      const lastRelease = await githubRelease.getLatestRelease();
-      const bump = await githubRelease.getSemverBump(
-        lastRelease,
-        undefined,
-        args.onlyPublishWithReleaseLabel
-      );
-
-      console.log(bump);
-
-      break;
-    }
     case 'comment': {
       verbose.info("Using command: 'comment'");
 
@@ -321,6 +371,45 @@ export async function run(args: ArgsType) {
       log.success(`Commented on PR #${args.pr}`);
       break;
     }
+    // Release
+    case 'version': {
+      verbose.info("Using command: 'version'");
+
+      const bump = await getVersion(githubRelease, args);
+
+      console.log(bump);
+
+      break;
+    }
+    case 'changelog': {
+      verbose.info("Using command: 'changelog'");
+
+      await makeChangelog(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
+
+      break;
+    }
+    case 'release': {
+      verbose.info("Using command: 'release'");
+
+      await makeRelease(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
+
+      break;
+    }
+
     default:
       throw new Error(`idk what i'm doing.`);
   }
