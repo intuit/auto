@@ -236,7 +236,7 @@ export async function run(args: ArgsType) {
         verbose
       );
 
-      if (isMonorepo) {
+      if (isMonorepo()) {
         await execPromise(
           `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
         );
