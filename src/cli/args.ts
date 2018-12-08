@@ -103,6 +103,16 @@ function addSemverParser(parser: ArgumentParser) {
   });
 }
 
+function addGitUser(parser: ArgumentParser) {
+  parser.addArgument(['--name'], {
+    help: 'Git name to commit and release with. Defaults to package.json'
+  });
+
+  parser.addArgument(['--email'], {
+    help: 'Git email to commit with. Defaults to package.json'
+  });
+}
+
 // All of the parsers for each command are setup in their own functions
 // This allows us to either use separate commands for each one (github-pr, github-label)
 // or group them under a single root command (github pr, github label)
@@ -170,6 +180,7 @@ export function addReleaseParser(parser: ArgumentParser) {
   addDryRun(parser);
 
   addLoggingParser(parser);
+  addGitUser(parser);
 }
 
 export function addVersionParser(parser: ArgumentParser) {
@@ -195,6 +206,7 @@ export function addChangelogParser(parser: ArgumentParser) {
   );
 
   addLoggingParser(parser);
+  addGitUser(parser);
 }
 
 export function addCommentParser(parser: ArgumentParser) {
@@ -245,6 +257,11 @@ export interface ISemverArgs {
   githubApi?: string;
 }
 
+export interface IOwnerArgs {
+  name?: string;
+  email?: string;
+}
+
 export interface IRepoArgs {
   owner?: string;
   repo?: string;
@@ -290,7 +307,8 @@ export type ArgsType = {
   IReleaseArgs &
   ICommentArgs &
   IPRArgs &
-  ILogArgs;
+  ILogArgs &
+  IOwnerArgs;
 
 export default function parse(stuff?: string[]): ArgsType {
   return rootParser.parseArgs(stuff);

@@ -45,6 +45,8 @@ export interface IGithubReleaseOptions {
   jira?: string;
   slack?: string;
   githubApi?: string;
+  name?: string;
+  email?: string;
   changelogTitles?: {
     [label: string]: string;
   };

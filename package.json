@@ -27,7 +27,7 @@
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
     "test": "jest",
-    "release": "./scripts/release.sh",
+    "release": "chmod +x ./dist/bin/auto.js && ./dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
