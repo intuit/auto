@@ -45,6 +45,7 @@
     "argparse": "1.0.10",
     "chalk": "2.4.1",
     "cosmiconfig": "5.0.7",
+    "enquirer": "^2.1.1",
     "node-fetch": "2.3.0",
     "parse-git": "~1.1.2",
     "parse-github-url": "1.0.2",

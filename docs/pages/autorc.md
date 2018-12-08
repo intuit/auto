@@ -9,6 +9,14 @@ We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your 
 - an "rc file" with the extensions .json, .yaml, .yml, or .js.
 - a .config.js CommonJS module
 
+## Initialization
+
+To interactively create an `.autorc` use the `init` command. You can configure most flags and all labels/changelogTitles.
+
+```sh
+auto init
+```
+
 ## Exclusive
 
 These options can be set exclusively in the `.autorc` and do not exist as CLI flags.

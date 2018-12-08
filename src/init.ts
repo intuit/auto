@@ -1,0 +1,184 @@
+// tslint:disable no-unnecessary-type-annotation
+
+import { prompt } from 'enquirer';
+import * as fs from 'fs';
+import * as path from 'path';
+import { promisify } from 'util';
+
+import { defaultChangelogTitles } from './github-release';
+
+const writeFile = promisify(fs.writeFile);
+const isObject = (value: any) => typeof value === 'object' && value !== null;
+
+async function getFlags() {
+  return prompt([
+    {
+      type: 'input',
+      name: 'repo',
+      message: 'Github Project Repository (press enter to use package.json)'
+    },
+    {
+      type: 'input',
+      name: 'owner',
+      message: 'Github Project Owner (press enter to use package.json)'
+    },
+    {
+      type: 'confirm',
+      name: 'no-version-prefix',
+      message: 'Use the version as the tag without the `v` prefix?',
+      initial: 'no'
+    },
+    {
+      type: 'input',
+      name: 'jira',
+      message: 'Jira base URL (press enter to skip)'
+    },
+    {
+      type: 'input',
+      name: 'githubApi',
+      message: 'Github API to use (press enter to use public)'
+    },
+    {
+      type: 'confirm',
+      name: 'onlyPublishWithReleaseLabel',
+      message: 'Only bump version if `release` label is on pull request',
+      initial: 'no'
+    },
+    {
+      type: 'input',
+      name: 'name',
+      message:
+        'Git name to commit and release with (press enter to use package.json)'
+    },
+    {
+      type: 'input',
+      name: 'email',
+      message: 'Git email to commit with (press enter to use package.json)'
+    }
+  ]);
+}
+
+async function getLabels() {
+  const useCustomLabels: { value: boolean } = await prompt({
+    type: 'confirm',
+    name: 'value',
+    message: 'Would you like to use custom labels for your pull requests?',
+    initial: 'no'
+  });
+
+  let labels = {};
+
+  if (useCustomLabels.value) {
+    const response = await prompt({
+      type: 'snippet',
+      name: 'value',
+      message: 'Fill out the custom PR labels',
+      // @ts-ignore
+      template: `
+major: #{major}
+minor: #{minor}
+patch: #{patch}
+no-release: #{no-release}
+release: #{release}
+prerelease: #{prerelease}
+internal: #{internal}
+      `
+    });
+
+    labels = Object.entries(response.value.values).reduce(
+      (all, [key, label]) => {
+        if (!label) {
+          return all;
+        }
+
+        return {
+          ...all,
+          [key]: label
+        };
+      },
+      {}
+    );
+  }
+
+  return labels;
+}
+
+async function getChangelogTitles() {
+  const useCustomChangelogTitles: { value: boolean } = await prompt({
+    type: 'confirm',
+    name: 'value',
+    message: 'Would you like to use custom changelog titles?',
+    initial: 'no'
+  });
+
+  let changelogTitles = {};
+
+  if (useCustomChangelogTitles.value) {
+    const response = await prompt({
+      type: 'snippet',
+      name: 'value',
+      message:
+        "Fill out the custom changelog titles (you can add as many as you want when you're done)",
+      initial: defaultChangelogTitles,
+      // @ts-ignore
+      template: `
+major: #{major}
+minor: #{minor}
+patch: #{patch}
+internal: #{internal}
+documentation: #{documentation}
+      `
+    });
+
+    const titles = Object.values(defaultChangelogTitles);
+
+    changelogTitles = Object.entries(response.value.values as {
+      [key: string]: string;
+    }).reduce((all, [key, title]) => {
+      if (titles.includes(title)) {
+        return all;
+      }
+
+      return {
+        ...all,
+        [key]: title
+      };
+    }, {});
+  }
+
+  return changelogTitles;
+}
+
+export default async function init() {
+  const flags = await getFlags();
+  const labels = await getLabels();
+  const changelogTitles = await getChangelogTitles();
+
+  const autoRc = Object.entries({
+    ...flags,
+    labels,
+    changelogTitles
+  }).reduce((all, [key, value]) => {
+    if (
+      value === '' ||
+      value === false ||
+      (isObject(value) && Object.keys(value).length === 0)
+    ) {
+      return all;
+    }
+
+    return {
+      ...all,
+      [key]: value
+    };
+  }, {});
+
+  if (Object.keys(autoRc).length === 0) {
+    return;
+  }
+
+  await writeFile(
+    path.join(process.cwd(), '.autorc'),
+    JSON.stringify(autoRc, null, 2)
+  );
+}
