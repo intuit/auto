@@ -6,9 +6,21 @@ Before we do anything we must first install `auto-release-cli` as a dev dependen
 yarn add -D auto-release-cli
 ```
 
-## Setup
+## Quick Setup
 
-The simplest workflow to get set up is adding the following to your `package.json`. With this setup your application will not be able to use the `no-release` flag, but everything else will work just fine
+To version, changelog, publish and release your code in all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
+
+```json
+{
+  "scripts": {
+    "release": "auto shipit"
+  }
+}
+```
+
+## Detailed Setup
+
+The simplest workflow to get set up in just the `package.json` is by adding the following to your `package.json`. With this setup your application will not be able to use the `no-release` flag, but everything else will work just fine
 
 ```json
 {
@@ -20,9 +32,9 @@ The simplest workflow to get set up is adding the following to your `package.jso
 }
 ```
 
-## Enabling `no-release` label
+### Enabling `no-release` label
 
-To use the `no-release` label you have to use a little more involved bash script. We could do the if checks in the `package.json` but this would get messy and hard to read. So instead in your package.json use a shell script defined in the project.
+To use the `no-release` label you have to get a little more involved and use a shell script. We could do the `if` checks in the `package.json`, but this would get messy and hard to read very quickly.
 
 ```json
 {
@@ -70,4 +82,4 @@ fi
 
 ## Enterprise
 
-If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi` or by setting the value in your `.autorc`.
+If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi` or by setting the value in your [.autorc](./autorc.md#githubApi).
