@@ -12,6 +12,20 @@
 
 ---
 
+# 0.21.0 (Fri Dec 07 2018)
+
+#### 🚀  Enhancement
+- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
+
+#### 🐛  Bug Fix
+- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v0.20.20 (Fri Dec 07 2018)
 
 #### 🐛  Bug Fix
