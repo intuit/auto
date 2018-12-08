@@ -223,41 +223,41 @@ export async function run(args: ArgsType) {
     case 'shipit': {
       const version = await getVersion(githubRelease, args);
 
-      if (version !== '') {
-        await makeChangelog(
-          args,
-          githubRelease,
-          log,
-          prefixRelease,
-          veryVerbose,
-          verbose
-        );
-
-        if (isMonorepo) {
-          await execPromise(
-            `lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
-          );
-        } else {
-          await execPromise(
-            `npm version ${version} -m "Bump version to: %s [skip ci]"`
-          );
-          await execPromise('npm publish');
-          await execPromise(
-            'git push --follow-tags --set-upstream origin $branch'
-          );
-        }
-
-        await makeRelease(
-          args,
-          githubRelease,
-          log,
-          prefixRelease,
-          veryVerbose,
-          verbose
-        );
-
+      if (version === '') {
         return;
       }
+
+      await makeChangelog(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
+
+      if (isMonorepo) {
+        await execPromise(
+          `lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
+        );
+      } else {
+        await execPromise(
+          `npm version ${version} -m "Bump version to: %s [skip ci]"`
+        );
+        await execPromise('npm publish');
+        await execPromise(
+          'git push --follow-tags --set-upstream origin $branch'
+        );
+      }
+
+      await makeRelease(
+        args,
+        githubRelease,
+        log,
+        prefixRelease,
+        veryVerbose,
+        verbose
+      );
 
       break;
     }
