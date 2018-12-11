@@ -159,17 +159,28 @@ export default class GithubRelease {
   public async addToChangelog(
     releaseNotes: string,
     lastRelease: string,
+    currentVersion: string,
     noVersionPrefix = true,
     message = 'Update CHANGELOG.md [skip ci]'
   ) {
     this.logger.verbose.info('Adding new changes to changelog.');
 
-    const version = await this.calcNextVersion(lastRelease);
+    let version;
+
+    if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+      version = await this.calcNextVersion(lastRelease);
+    } else {
+      const bump = await this.getSemverBump(lastRelease);
+      version = inc(currentVersion, bump as ReleaseType);
+    }
 
     this.logger.verbose.info('Calculated next version to be:', version);
 
     const date = new Date().toDateString();
-    const prefixed = noVersionPrefix ? version : `v${version}`;
+    const prefixed =
+      noVersionPrefix || (version && version.includes('v'))
+        ? version
+        : `v${version}`;
 
     let newChangelog = `# ${prefixed} (${date})\n\n${releaseNotes}`;
 

@@ -134,6 +134,7 @@ async function makeChangelog(
 
     await githubRelease.addToChangelog(
       releaseNotes,
+      lastRelease,
       currentVersion,
       args.no_version_prefix,
       args.message || undefined
