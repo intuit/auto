@@ -178,7 +178,7 @@ export default class GithubRelease {
 
     const date = new Date().toDateString();
     const prefixed =
-      noVersionPrefix || (version && version.includes('v'))
+      noVersionPrefix || (version && version.startsWith('v'))
         ? version
         : `v${version}`;
 
