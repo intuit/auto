@@ -218,14 +218,18 @@ describe('GithubRelease', () => {
   describe('addToChangelog', async () => {
     test("creates new changelog if one didn't exist", async () => {
       const gh = new GithubRelease();
-      await gh.addToChangelog('# My new Notes', 'v0.0.0');
+      await gh.addToChangelog(
+        '# My new Notes',
+        'klajsdlfk4lj51l43k5hj234l',
+        'v0.0.0'
+      );
 
       expect(writeSpy.mock.calls[0][1].includes(`# My new Notes`)).toBe(true);
     });
 
     test("creates new changelog if one didn't exist", async () => {
       const gh = new GithubRelease();
-      await gh.addToChangelog('# My new Notes', 'v1.0.0', false);
+      await gh.addToChangelog('# My new Notes', 'v1.0.0', 'v1.0.0', false);
 
       expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
     });
@@ -236,7 +240,11 @@ describe('GithubRelease', () => {
       existsSync.mockReturnValueOnce(true);
       readResult = '# My old Notes';
 
-      await gh.addToChangelog('# My new Notes', 'v0.0.0');
+      await gh.addToChangelog(
+        '# My new Notes',
+        'asdfasdlkfjlkj435l2j',
+        'v0.0.0'
+      );
       expect(writeSpy.mock.calls[0][1].includes(readResult)).toBe(true);
     });
 
@@ -247,7 +255,13 @@ describe('GithubRelease', () => {
       existsSync.mockReturnValueOnce(true);
       readResult = '# My old Notes';
 
-      await gh.addToChangelog('# My new Notes', 'v0.0.0', false, message);
+      await gh.addToChangelog(
+        '# My new Notes',
+        'asdklfhlkh24387513',
+        'v0.0.0',
+        false,
+        message
+      );
       expect(execSpy.mock.calls[1][0].includes(message)).toBe(true);
     });
   });
