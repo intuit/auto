@@ -134,6 +134,7 @@ async function makeChangelog(
 
     await githubRelease.addToChangelog(
       releaseNotes,
+      lastRelease,
       currentVersion,
       args.no_version_prefix,
       args.message || undefined
@@ -201,7 +202,7 @@ export async function run(args: ArgsType) {
   let rawConfig = {};
 
   const prefixRelease = (release: string) =>
-    args.no_version_prefix || release.includes('v') ? release : `v${release}`;
+    args.no_version_prefix || release.startsWith('v') ? release : `v${release}`;
 
   if (result && result.config) {
     rawConfig = result.config;
