@@ -1,3 +1,19 @@
+# 0.23.1 (Tue Dec 11 2018)
+
+#### 🐛  Bug Fix
+- Fix Single new project [#45](https://github.com/intuit/auto-release/pull/45) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
+
+#### 🏠  Internal
+- fix: removed vscode folder and updated gitignore [#44](https://github.com/intuit/auto-release/pull/44) ([@Aghassi](https://github.com/Aghassi))
+- update ignite [#43](https://github.com/intuit/auto-release/pull/43) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- David ([@Aghassi](https://github.com/Aghassi))
+
+---
+
 # 0.23.0 (Fri Dec 07 2018)
 
 #### 🚀  Enhancement
