@@ -1,4 +1,4 @@
-# Frequently Asked Question
+# Troubleshooting
 
 ## Error: Can't find a GitHub token to use
 
