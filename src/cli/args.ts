@@ -190,6 +190,12 @@ export function addReleaseParser(parser: ArgumentParser) {
 }
 
 export function addVersionParser(parser: ArgumentParser) {
+  parser.addArgument(['--noReleaseLabels'], {
+    help:
+      "Labels that will not create a release. Defaults to just 'no-release'",
+    type: Array
+  });
+
   addSemverParser(parser);
   addLoggingParser(parser);
 }
@@ -256,6 +262,7 @@ PARSERS.forEach(([parserName, parserFunction]) => {
 });
 
 export interface ISemverArgs {
+  noReleaseLabels?: string[];
   onlyPublishWithReleaseLabel?: boolean;
   major?: string;
   minor?: string;

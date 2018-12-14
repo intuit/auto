@@ -105,7 +105,8 @@ async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
   return githubRelease.getSemverBump(
     lastRelease,
     undefined,
-    args.onlyPublishWithReleaseLabel
+    args.onlyPublishWithReleaseLabel,
+    args.noReleaseLabels
   );
 }
 

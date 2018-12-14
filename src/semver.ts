@@ -28,14 +28,19 @@ export function getHigherSemverTag(left: string, right: string): SEMVER {
 
 interface ISemVerOptions {
   onlyPublishWithReleaseLabel?: boolean;
+  noReleaseLabels?: string[];
 }
 
 export function calculateSemVerBump(
   labels: string[][],
   labelMap: IVersionLabels,
-  { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
+  { onlyPublishWithReleaseLabel, noReleaseLabels = [] }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
+
+  if (!noReleaseLabels.includes(labelMap.get('no-release')!)) {
+    noReleaseLabels.push(labelMap.get('no-release')!);
+  }
 
   labels.map(pr =>
     pr.forEach(label => {
@@ -51,7 +56,7 @@ export function calculateSemVerBump(
     isPrerelease = labels[0].includes(labelMap.get('prerelease')!);
     noRelease = onlyPublishWithReleaseLabel
       ? !labels[0].includes(labelMap.get('release')!)
-      : labels[0].includes(labelMap.get('no-release')!);
+      : !!labels[0].find(label => noReleaseLabels.includes(label));
   }
 
   const version = [...labelSet].reduce(
