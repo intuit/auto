@@ -30,10 +30,10 @@ After that, you need to set up the labels on your github project. The types of l
 - Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](./autorc.md#versioning-labels).
 - Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
 
-To create the labels for your project on Github, run the following command.
+To create the labels for your project on Github, run the following command with your `GH_TOKEN`.
 
 ```sh
-auto init-labels
+GH_TOKEN=YOUR_TOKEN auto init-labels
 ```
 
 ### 3. Environment Variables
