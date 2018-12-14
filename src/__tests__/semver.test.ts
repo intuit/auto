@@ -1,3 +1,4 @@
+import { defaultLabels } from '../github-release';
 import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
 test('ranks releases right', () => {
@@ -5,15 +6,6 @@ test('ranks releases right', () => {
   expect(getHigherSemverTag('foo', 'bar')).toBe('patch');
   expect(getHigherSemverTag('minor', 'patch')).toBe('minor');
 });
-
-const defaultLabels = {
-  major: 'major',
-  minor: 'minor',
-  patch: 'patch',
-  'no-release': 'no-release',
-  release: 'release',
-  prerelease: 'prerelease'
-};
 
 describe('calculateSemVerBump', () => {
   test('publishes pre-releases', () => {

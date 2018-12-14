@@ -9,7 +9,7 @@ import generateReleaseNotes, {
   IExtendedCommit,
   normalizeCommits
 } from './log-parse';
-import SEMVER, { calculateSemVerBump } from './semver';
+import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import exec from './utils/exec-promise';
 import getGithubToken from './utils/github-token';
 import { dummyLog } from './utils/logger';
@@ -23,22 +23,14 @@ export type VersionLabel =
   | 'no-release'
   | 'release'
   | 'prerelease';
-export interface ILabelMap {
-  [SEMVER.minor]: string;
-  [SEMVER.patch]: string;
-  'no-release': string;
-  release: string;
-  prerelease: string;
-}
 
-export const defaultLabels: ILabelMap = {
-  [SEMVER.major]: 'major',
-  [SEMVER.minor]: 'minor',
-  [SEMVER.patch]: 'patch',
-  'no-release': 'no-release',
-  release: 'release',
-  prerelease: 'prerelease'
-};
+export const defaultLabels = new Map<VersionLabel, string>();
+defaultLabels.set(SEMVER.major, 'major');
+defaultLabels.set(SEMVER.minor, 'minor');
+defaultLabels.set(SEMVER.patch, 'patch');
+defaultLabels.set('no-release', 'no-release');
+defaultLabels.set('release', 'release');
+defaultLabels.set('prerelease', 'prerelease');
 
 export const defaultChangelogTitles = {
   major: '💥  Breaking Change',
@@ -66,7 +58,7 @@ export interface ILogger {
 }
 
 export interface IGithubReleaseOptions {
-  labels?: ILabelMap;
+  labels?: IVersionLabels;
   logger: ILogger;
   jira?: string;
   slack?: string;
@@ -90,7 +82,7 @@ const writeFile = promisify(fs.writeFile);
 
 export default class GithubRelease {
   private readonly github: Promise<Github>;
-  private readonly userLabels: ILabelMap;
+  private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
   private readonly logger: ILogger;
 
@@ -103,7 +95,7 @@ export default class GithubRelease {
   ) {
     this.jira = releaseOptions.jira;
     this.slack = releaseOptions.slack;
-    this.userLabels = releaseOptions.labels || {};
+    this.userLabels = releaseOptions.labels || new Map();
     this.changelogTitles = releaseOptions.changelogTitles || {};
     this.logger = releaseOptions.logger;
 
@@ -337,10 +329,7 @@ export default class GithubRelease {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
     const options = { onlyPublishWithReleaseLabel };
-    const versionLabels = {
-      ...defaultLabels,
-      ...this.userLabels
-    };
+    const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
