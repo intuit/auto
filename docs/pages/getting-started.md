@@ -6,9 +6,48 @@ Before we do anything we must first install `auto-release-cli` as a dev dependen
 yarn add -D auto-release-cli
 ```
 
+## Configuration
+
+To quickly configure most options run `auto init`.
+
+If you do this you still must configure the environment variables and add the labels to your project. `auto init` cannot automate these steps.
+
+### Environment Variables
+
+You must configure some environment variables for publishing and releasing.
+
+- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
+- `NPM_TOKEN` - Used to publish to npm.
+
+If you are publishing from the CI you must inject the `NPM_TOKEN` into your `.npmrc`.
+
+```sh
+echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+```
+
+### Labels
+
+After that, set up the labels on your github project. The following labels are the defaults. To change them refer to [this](./autorc.md#versioning-labels).
+
+#### Versioning Labels:
+
+- `major` - create a major release
+- `minor` - create a minor release
+- `patch` - create a patch release
+- `no-release` - do not create a release
+- `release` (optional) - only used with `onlyPublishWithReleaseLabel`
+- `prerelease` (optional) - create pre release
+
+#### Changelog Labels
+
+These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
+
+- `internal` - the changes do not effect the code and is more about tooling
+- `documentation` - the changes effect the documentation
+
 ## Quick Setup
 
-To version, changelog, publish and release your code in all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
+To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
 
 ```json
 {
