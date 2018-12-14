@@ -35,7 +35,7 @@
     "docs:publish": "ignite --publish"
   },
   "dependencies": {
-    "@octokit/rest": "^16.1.0",
+    "@octokit/rest": "^16.2.0",
     "@types/argparse": "1.0.35",
     "@types/cosmiconfig": "5.0.3",
     "@types/node-fetch": "2.1.4",
@@ -57,10 +57,10 @@
   },
   "devDependencies": {
     "@types/jest": "~23.3.10",
-    "@types/node": "~10.12.11",
+    "@types/node": "~10.12.15",
     "@types/url-join": "^0.8.2",
     "all-contributors-cli": "^5.4.1",
-    "husky": "^1.2.0",
+    "husky": "^1.2.1",
     "ignite": "^1.6.5",
     "jest": "~23.6.0",
     "lint-staged": "^8.1.0",
@@ -69,8 +69,8 @@
     "tslint": "~5.11.0",
     "tslint-config-prettier": "~1.17.0",
     "tslint-xo": "~0.10.0",
-    "typescript": "~3.2.1",
-    "typescript-tslint-plugin": "^0.1.2"
+    "typescript": "~3.2.2",
+    "typescript-tslint-plugin": "^0.2.0"
   },
   "prettier": {
     "singleQuote": true

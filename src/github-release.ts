@@ -306,13 +306,24 @@ export default class GithubRelease {
     return client.createComment(message, pr, context);
   }
 
-  public async addLabelsToProject(labels: Map<VersionLabel, string>) {
+  public async addLabelsToProject(
+    labels: Map<VersionLabel, string>,
+    onlyPublishWithReleaseLabel?: boolean
+  ) {
     const client = await this.github;
     const oldLabels = await client.getProjectLabels();
 
     await Promise.all(
       [...labels.entries()].map(async ([versionLabel, customLabel]) => {
         if (oldLabels.includes(customLabel)) {
+          return;
+        }
+
+        if (versionLabel === 'release' && !onlyPublishWithReleaseLabel) {
+          return;
+        }
+
+        if (versionLabel === 'no-release' && onlyPublishWithReleaseLabel) {
           return;
         }
 

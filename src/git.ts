@@ -54,7 +54,10 @@ export default class Github {
       `Initializing Github with: ${this.options.baseUrl}`
     );
     this.ghub = new GHub({
-      baseUrl: this.options.baseUrl
+      baseUrl: this.options.baseUrl,
+      headers: {
+        accept: 'application/vnd.github.symmetra-preview+json'
+      }
     });
   }
 

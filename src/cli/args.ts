@@ -233,6 +233,7 @@ export const PARSERS: [string, ParserFunction][] = [
   ['version', addVersionParser],
   ['comment', addCommentParser],
   ['changelog', addChangelogParser],
+  ['init-labels', addLoggingParser],
   ['init', () => undefined],
   ['shipit', () => undefined]
 ];
