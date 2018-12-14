@@ -249,6 +249,13 @@ export async function run(args: ArgsType) {
       await init();
       break;
     }
+    case 'init-labels': {
+      await githubRelease.addLabelsToProject(
+        semVerLabels,
+        args.onlyPublishWithReleaseLabel
+      );
+      break;
+    }
     case 'shipit': {
       const version = await getVersion(githubRelease, args);
 

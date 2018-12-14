@@ -1,3 +1,5 @@
+import { VersionLabel } from './github-release';
+
 enum SEMVER {
   major = 'major',
   premajor = 'premajor',
@@ -7,6 +9,8 @@ enum SEMVER {
   prepatch = 'prepatch',
   noVersion = ''
 }
+
+export type IVersionLabels = Map<VersionLabel, string>;
 
 export default SEMVER;
 
@@ -22,30 +26,20 @@ export function getHigherSemverTag(left: string, right: string): SEMVER {
   return SEMVER.patch;
 }
 
-export interface ILabelMap {
-  major?: string;
-  minor?: string;
-  patch?: string;
-  'no-release'?: string;
-  release?: string;
-  prerelease?: string;
-}
-
 interface ISemVerOptions {
   onlyPublishWithReleaseLabel?: boolean;
 }
 
 export function calculateSemVerBump(
   labels: string[][],
-  labelMap: ILabelMap,
+  labelMap: IVersionLabels,
   { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
 ) {
-  const labelPairs = Object.entries(labelMap);
   const labelSet = new Set<string>();
 
   labels.map(pr =>
     pr.forEach(label => {
-      const userLabel = labelPairs.find(pair => pair[1] === label);
+      const userLabel = [...labelMap.entries()].find(pair => pair[1] === label);
       labelSet.add(userLabel ? userLabel[0] : label);
     })
   );
@@ -54,10 +48,10 @@ export function calculateSemVerBump(
   let isPrerelease = false;
 
   if (labels.length > 0 && labels[0].length > 0) {
-    isPrerelease = labels[0].includes(labelMap.prerelease!);
+    isPrerelease = labels[0].includes(labelMap.get('prerelease')!);
     noRelease = onlyPublishWithReleaseLabel
-      ? !labels[0].includes(labelMap.release!)
-      : labels[0].includes(labelMap['no-release']!);
+      ? !labels[0].includes(labelMap.get('release')!)
+      : labels[0].includes(labelMap.get('no-release')!);
   }
 
   const version = [...labelSet].reduce(

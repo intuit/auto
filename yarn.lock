@@ -1052,10 +1052,10 @@
     node-fetch "^2.3.0"
     universal-user-agent "^2.0.1"
 
-"@octokit/rest@^16.1.0":
-  version "16.1.0"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/@octokit/rest/-/rest-16.1.0.tgz#43bee0f58821b6c6a4c9d63e14919a1fb67a71b5"
-  integrity sha1-Q77g9YghtsakydY+FJGaH7Z6cbU=
+"@octokit/rest@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.2.0.tgz#790d4189e8befd61e5cfebc4a6171b274d0526cb"
+  integrity sha512-4OyWqvF0mZhSe0NEcsXboq4WJ3HC2pThHCKWeJNd/8M10zDu0q9/Ct8u0IBzHXdgmfpE2hrJJdkIBSF2NlyB9A==
   dependencies:
     "@octokit/request" "2.2.0"
     before-after-hook "^1.2.0"
@@ -1149,10 +1149,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.38.tgz#e05c201a668492e534b48102aca0294898f449f6"
   integrity sha512-EibsnbJerd0hBFaDjJStFrVbVBAtOy4dgL8zZFw0uOvPqzBAX59Ci8cgjg3+RgJIWhsB5A4c+pi+D4P9tQQh/A==
 
-"@types/node@~10.12.11":
-  version "10.12.11"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/@types/node/-/node-10.12.11.tgz#715c476c99a5f6898a1ae61caf9825e43c03912e"
-  integrity sha1-cVxHbJml9omKGuYcr5gl5DwDkS4=
+"@types/node@~10.12.15":
+  version "10.12.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.15.tgz#20e85651b62fd86656e57c9c9bc771ab1570bc59"
+  integrity sha512-9kROxduaN98QghwwHmxXO2Xz3MaWf+I1sLVAA6KJDF5xix+IyXVhds0MAfdNwtcpSrzhaTsNB0/jnL86fgUhqA==
 
 "@types/parse-github-url@1.0.0":
   version "1.0.0"
@@ -3476,7 +3476,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cosmiconfig@5.0.6, cosmiconfig@^5.0.6:
+cosmiconfig@5.0.6:
   version "5.0.6"
   resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/cosmiconfig/-/cosmiconfig-5.0.6.tgz#dca6cf680a0bd03589aff684700858c81abeeb39"
   integrity sha1-3KbPaAoL0DWJr/aEcAhYyBq+6zk=
@@ -3485,7 +3485,7 @@ cosmiconfig@5.0.6, cosmiconfig@^5.0.6:
     js-yaml "^3.9.0"
     parse-json "^4.0.0"
 
-cosmiconfig@5.0.7, cosmiconfig@^5.0.0, cosmiconfig@^5.0.2:
+cosmiconfig@5.0.7, cosmiconfig@^5.0.0, cosmiconfig@^5.0.2, cosmiconfig@^5.0.7:
   version "5.0.7"
   resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/cosmiconfig/-/cosmiconfig-5.0.7.tgz#39826b292ee0d78eda137dfa3173bd1c21a43b04"
   integrity sha1-OYJrKS7g147aE336MXO9HCGkOwQ=
@@ -6056,12 +6056,12 @@ humanize-url@^1.0.0:
     normalize-url "^1.0.0"
     strip-url-auth "^1.0.0"
 
-husky@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/husky/-/husky-1.2.0.tgz#d631dda1e4a9ee8ba69a10b0c51a0e2c66e711e5"
-  integrity sha1-1jHdoeSp7oummhCwxRoOLGbnEeU=
+husky@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-1.2.1.tgz#33628f7013e345c1790a4dbe4642ad047f772dee"
+  integrity sha512-4Ylal3HWhnDvIszuiyLoVrSGI7QLg/ogkNCoHE34c+yZYzb9kBZNrlTOsdw92cGi3cJT8pPb6CdVfxFkLnc8Dg==
   dependencies:
-    cosmiconfig "^5.0.6"
+    cosmiconfig "^5.0.7"
     execa "^1.0.0"
     find-up "^3.0.0"
     get-stdin "^6.0.0"
@@ -6108,10 +6108,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.6.5:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.6.5.tgz#bd0d2f58496e20f44879bfec116a77166d6f2e84"
-  integrity sha512-cSiEwRcTdUSkRP1PvyXkJKm9lIV1jFWxiMnr3GVb1r2cXPwz4CqorXDKwe60WHFWMKhUc6Orh6lo4Mj7+SWRmQ==
+ignite@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.6.6.tgz#7ad49bddf8dfc1b964197c7aac8b6c779a2b85eb"
+  integrity sha512-kaHhSvWm1LfVXAJKjgPFFYw3s1RTuwAr1ibid1xji1jr53XcyPsw0YgfjcUmEA/YCc0f2G7wp4hVLgH89p2Auw==
   dependencies:
     "@babel/cli" "7.0.0"
     "@babel/core" "7.0.0"
@@ -12258,19 +12258,19 @@ typescript-memoize@^1.0.0-alpha.3:
   dependencies:
     core-js "2.4.1"
 
-typescript-tslint-plugin@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/typescript-tslint-plugin/-/typescript-tslint-plugin-0.1.2.tgz#2523a003ad399eeaf8b0b97fe1f0d80614cc5ecd"
-  integrity sha1-JSOgA605nur4sLl/4fDYBhTMXs0=
+typescript-tslint-plugin@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.2.0.tgz#b2ca6771a50503245df3d64d19a3925a07ae1b0e"
+  integrity sha512-QzDopYibA4TDYVMY+r1pAHnVPz1qrYJSobT+J/jSZt7Qe8JwbGkU3q6b6nNqhRKc0/mslW0LX6F/GYc4+Z5W8g==
   dependencies:
     minimatch "^3.0.4"
     mock-require "^3.0.2"
     vscode-languageserver "^5.1.0"
 
-typescript@~3.2.1:
-  version "3.2.1"
-  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/typescript/-/typescript-3.2.1.tgz#0b7a04b8cf3868188de914d9568bd030f0c56192"
-  integrity sha1-C3oEuM84aBiN6RTZVovQMPDFYZI=
+typescript@~3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
+  integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.5"

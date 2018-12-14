@@ -2,7 +2,11 @@ import GHub from '@octokit/rest';
 import { ICommit, parseGit } from 'parse-git';
 import { Memoize } from 'typescript-memoize';
 
-import { ILogger } from './github-release';
+import {
+  defaultLabelsDescriptions,
+  ILogger,
+  VersionLabel
+} from './github-release';
 import execPromise from './utils/exec-promise';
 
 export interface IGithubOptions {
@@ -50,7 +54,10 @@ export default class Github {
       `Initializing Github with: ${this.options.baseUrl}`
     );
     this.ghub = new GHub({
-      baseUrl: this.options.baseUrl
+      baseUrl: this.options.baseUrl,
+      headers: {
+        accept: 'application/vnd.github.symmetra-preview+json'
+      }
     });
   }
 
@@ -145,6 +152,32 @@ export default class Github {
     }
   }
 
+  public async getProjectLabels() {
+    this.logger.verbose.info(
+      `Getting labels for project: ${this.options.repo}`
+    );
+
+    await this.authenticate();
+
+    const args = {
+      owner: this.options.owner,
+      repo: this.options.repo
+    };
+
+    try {
+      const labels = await this.ghub.issues.listLabelsForRepo(args);
+      this.logger.veryVerbose.info(
+        'Got response for "listLabelsForRepo":\n',
+        labels
+      );
+      this.logger.verbose.info('Found labels on project:\n', labels.data);
+
+      return labels.data.map(l => l.name);
+    } catch (e) {
+      throw new GithubAPIError('listLabelsOnIssue', args, e);
+    }
+  }
+
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const gitlog = await execPromise(
       `git log --name-status ${start.trim()}..${end.trim()}`
@@ -210,6 +243,25 @@ export default class Github {
 
     this.logger.veryVerbose.info('Got response from createStatues\n', result);
     this.logger.verbose.info('Created status on Github.');
+
+    return result;
+  }
+
+  public async createLabel(label: VersionLabel, name: string) {
+    await this.authenticate();
+
+    this.logger.verbose.info(`Creating "${label}" label :\n${name}`);
+
+    const result = await this.ghub.issues.createLabel({
+      name,
+      owner: this.options.owner,
+      repo: this.options.repo,
+      color: Math.floor(Math.random() * 16777215).toString(16),
+      description: defaultLabelsDescriptions.get(label)
+    });
+
+    this.logger.veryVerbose.info('Got response from createLabel\n', result);
+    this.logger.verbose.info('Created label on Github.');
 
     return result;
   }

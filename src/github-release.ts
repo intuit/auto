@@ -9,21 +9,28 @@ import generateReleaseNotes, {
   IExtendedCommit,
   normalizeCommits
 } from './log-parse';
-import SEMVER, { calculateSemVerBump, ILabelMap } from './semver';
+import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import exec from './utils/exec-promise';
 import getGithubToken from './utils/github-token';
 import { dummyLog } from './utils/logger';
 import getConfigFromPackageJson from './utils/package-config';
 import postToSlack from './utils/slack';
 
-export const defaultLabels = {
-  [SEMVER.major]: 'major',
-  [SEMVER.minor]: 'minor',
-  [SEMVER.patch]: 'patch',
-  'no-release': 'no-release',
-  release: 'release',
-  prerelease: 'prerelease'
-};
+export type VersionLabel =
+  | SEMVER.major
+  | SEMVER.minor
+  | SEMVER.patch
+  | 'no-release'
+  | 'release'
+  | 'prerelease';
+
+export const defaultLabels = new Map<VersionLabel, string>();
+defaultLabels.set(SEMVER.major, 'major');
+defaultLabels.set(SEMVER.minor, 'minor');
+defaultLabels.set(SEMVER.patch, 'patch');
+defaultLabels.set('no-release', 'no-release');
+defaultLabels.set('release', 'release');
+defaultLabels.set('prerelease', 'prerelease');
 
 export const defaultChangelogTitles = {
   major: '💥  Breaking Change',
@@ -33,6 +40,17 @@ export const defaultChangelogTitles = {
   documentation: '📝  Documentation'
 };
 
+export const defaultLabelsDescriptions = new Map<VersionLabel, string>();
+defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
+defaultLabelsDescriptions.set(SEMVER.minor, 'create a minor release');
+defaultLabelsDescriptions.set(SEMVER.patch, 'create a patch release');
+defaultLabelsDescriptions.set('no-release', 'do not create a release');
+defaultLabelsDescriptions.set(
+  'release',
+  'publish a release when this pr is merged'
+);
+defaultLabelsDescriptions.set('prerelease', 'create pre release');
+
 export interface ILogger {
   log: signale.Signale<signale.DefaultMethods>;
   verbose: signale.Signale<signale.DefaultMethods>;
@@ -40,7 +58,7 @@ export interface ILogger {
 }
 
 export interface IGithubReleaseOptions {
-  labels?: ILabelMap;
+  labels?: IVersionLabels;
   logger: ILogger;
   jira?: string;
   slack?: string;
@@ -64,7 +82,7 @@ const writeFile = promisify(fs.writeFile);
 
 export default class GithubRelease {
   private readonly github: Promise<Github>;
-  private readonly userLabels: ILabelMap;
+  private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
   private readonly logger: ILogger;
 
@@ -77,7 +95,7 @@ export default class GithubRelease {
   ) {
     this.jira = releaseOptions.jira;
     this.slack = releaseOptions.slack;
-    this.userLabels = releaseOptions.labels || {};
+    this.userLabels = releaseOptions.labels || new Map();
     this.changelogTitles = releaseOptions.changelogTitles || {};
     this.logger = releaseOptions.logger;
 
@@ -210,7 +228,7 @@ export default class GithubRelease {
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
-    const commits = await this.addLabels(gitlog);
+    const commits = await this.addLabelsToCommits(gitlog);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -288,6 +306,32 @@ export default class GithubRelease {
     return client.createComment(message, pr, context);
   }
 
+  public async addLabelsToProject(
+    labels: Map<VersionLabel, string>,
+    onlyPublishWithReleaseLabel?: boolean
+  ) {
+    const client = await this.github;
+    const oldLabels = await client.getProjectLabels();
+
+    await Promise.all(
+      [...labels.entries()].map(async ([versionLabel, customLabel]) => {
+        if (oldLabels.includes(customLabel)) {
+          return;
+        }
+
+        if (versionLabel === 'release' && !onlyPublishWithReleaseLabel) {
+          return;
+        }
+
+        if (versionLabel === 'no-release' && onlyPublishWithReleaseLabel) {
+          return;
+        }
+
+        await client.createLabel(versionLabel, customLabel);
+      })
+    );
+  }
+
   public async getSemverBump(
     from: string,
     to = 'HEAD',
@@ -296,10 +340,7 @@ export default class GithubRelease {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
     const options = { onlyPublishWithReleaseLabel };
-    const versionLabels = {
-      ...defaultLabels,
-      ...this.userLabels
-    };
+    const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
@@ -340,7 +381,7 @@ export default class GithubRelease {
     return inc(lastTag, bump as ReleaseType);
   }
 
-  private async addLabels(commits: ICommit[]) {
+  private async addLabelsToCommits(commits: ICommit[]) {
     if (!commits) {
       return [];
     }
