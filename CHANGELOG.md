@@ -1,3 +1,13 @@
+# 0.26.2 (Fri Dec 14 2018)
+
+#### 🐛  Bug Fix
+- use config for version [#55](https://github.com/intuit/auto-release/pull/55) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.26.1 (Fri Dec 14 2018)
 
 #### 📝  Documentation
