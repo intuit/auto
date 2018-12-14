@@ -335,11 +335,12 @@ export default class GithubRelease {
   public async getSemverBump(
     from: string,
     to = 'HEAD',
-    onlyPublishWithReleaseLabel = false
+    onlyPublishWithReleaseLabel = false,
+    noReleaseLabels: string[] = []
   ): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const options = { onlyPublishWithReleaseLabel };
+    const options = { onlyPublishWithReleaseLabel, noReleaseLabels };
     const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {

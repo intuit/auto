@@ -5,13 +5,17 @@ Get the semantic version bump for the given changes. Requires all PRs to have la
 ```bash
 >  auto version -h
 
-usage: auto version [-h] [--onlyPublishWithReleaseLabel] [--major MAJOR]
-                         [--minor MINOR] [--patch PATCH] [-v] [-vv]
-                         [--githubApi GITHUBAPI]
+usage: auto.js version [-h] [--noReleaseLabels NORELEASELABELS]
+                       [--onlyPublishWithReleaseLabel] [--major MAJOR]
+                       [--minor MINOR] [--patch PATCH] [-v] [-vv]
+                       [--githubApi GITHUBAPI]
 
 
 Optional arguments:
   -h, --help            Show this help message and exit.
+  --noReleaseLabels NORELEASELABELS
+                        Labels that will not create a release. Defaults to
+                        just 'no-release'
   --onlyPublishWithReleaseLabel
                         Only bump version if `release` label is on pull
                         request

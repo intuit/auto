@@ -19,4 +19,24 @@ describe('calculateSemVerBump', () => {
       SEMVER.premajor
     );
   });
+
+  test('should be able to use multiple labels for no-release', () => {
+    expect(
+      calculateSemVerBump([['no-release', 'major']], defaultLabels, {
+        noReleaseLabels: ['documentation']
+      })
+    ).toBe(SEMVER.noVersion);
+
+    expect(
+      calculateSemVerBump([['documentation', 'major']], defaultLabels, {
+        noReleaseLabels: ['documentation']
+      })
+    ).toBe(SEMVER.noVersion);
+
+    expect(
+      calculateSemVerBump([['major']], defaultLabels, {
+        noReleaseLabels: ['documentation']
+      })
+    ).toBe(SEMVER.major);
+  });
 });
