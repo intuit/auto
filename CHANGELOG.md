@@ -1,3 +1,16 @@
+# 0.26.0 (Fri Dec 14 2018)
+
+#### 🚀  Enhancement
+- Allow user to configure multiple labels to `no-release` [#53](https://github.com/intuit/auto-release/pull/53) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- typos in docs [#52](https://github.com/intuit/auto-release/pull/52) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.25.0 (Fri Dec 14 2018)
 
 #### 🚀  Enhancement
