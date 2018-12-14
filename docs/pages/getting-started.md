@@ -21,7 +21,7 @@ Getting started with `auto-release` is super easy.
 
 ### 1. Initialize Options
 
-Initialize all options and configure label text. If this is not run then `auto-release` will use the default configuration.
+Initialize all options and configure label text. If this is not run then `auto-release` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
 
 ### 2. Labels
 
@@ -51,7 +51,7 @@ echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
 ### 4. Script
 
-`auto-release` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code release.
+`auto-release` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.
 
 #### Quick Setup
 
