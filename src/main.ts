@@ -258,14 +258,17 @@ export async function run(args: ArgsType) {
       break;
     }
     case 'shipit': {
-      const version = await getVersion(githubRelease, args);
+      const version = await getVersion(githubRelease, {
+        ...config,
+        command: args.command
+      });
 
       if (version === '') {
         return;
       }
 
       await makeChangelog(
-        args,
+        args, // change to config?
         githubRelease,
         log,
         prefixRelease,
@@ -288,7 +291,7 @@ export async function run(args: ArgsType) {
       }
 
       await makeRelease(
-        args,
+        args, // change to config?
         githubRelease,
         log,
         prefixRelease,
@@ -412,7 +415,10 @@ export async function run(args: ArgsType) {
     case 'version': {
       verbose.info("Using command: 'version'");
 
-      const bump = await getVersion(githubRelease, args);
+      const bump = await getVersion(githubRelease, {
+        command: args.command,
+        ...config
+      });
 
       console.log(bump);
 
