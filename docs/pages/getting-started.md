@@ -6,15 +6,39 @@ Before we do anything we must first install `auto-release-cli` as a dev dependen
 yarn add -D auto-release-cli
 ```
 
+## Enterprise
+
+If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
+
 ## Configuration
 
-To quickly configure most options run `auto init`.
+Getting started with `auto-release` is super easy.
 
-If you do this you still must configure the environment variables. `auto init` cannot automate this step.
+1. `auto init` (optional)
+2. `auto init-labels`
+3. Configure environment variables
+4. Set up script
 
-### Environment Variables
+### 1. Initialize Options
 
-You must configure some environment variables for publishing and releasing.
+Initialize all options and configure label text. If this is not run then `auto-release` will use the default configuration.
+
+### 2. Labels
+
+After that, you need to set up the labels on your github project. The types of labels that `auto-release` uses are:
+
+- Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](./autorc.md#versioning-labels).
+- Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
+
+To create the labels for your project on Github, run the following command.
+
+```sh
+auto init-labels
+```
+
+### 3. Environment Variables
+
+You must configure some environment variables for publishing and releasing to work properly.
 
 - `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
 - `NPM_TOKEN` - Used to publish to npm.
@@ -25,27 +49,11 @@ If you are publishing from the CI you must inject the `NPM_TOKEN` into your `.np
 echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 ```
 
-### Labels
+### 4. Script
 
-After that, set up the labels on your github project. The following labels are the defaults. To change them refer to [this](./autorc.md#versioning-labels).
+`auto-release` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code release.
 
-#### Versioning Labels:
-
-- `major` - create a major release
-- `minor` - create a minor release
-- `patch` - create a patch release
-- `no-release` - do not create a release
-- `release` (optional) - only used with `onlyPublishWithReleaseLabel`
-- `prerelease` (optional) - create pre release
-
-#### Changelog Labels
-
-These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
-
-- `internal` - the changes do not effect the code and is more about tooling
-- `documentation` - the changes effect the documentation
-
-## Quick Setup
+#### Quick Setup
 
 To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
 
@@ -57,7 +65,7 @@ To version, changelog, publish and release your code all at the same time, we've
 }
 ```
 
-## Detailed Setup
+#### Detailed Setup
 
 The simplest workflow to get set up in just the `package.json` is by adding the following to your `package.json`. With this setup your application will not be able to use the `no-release` flag, but everything else will work just fine
 
@@ -71,7 +79,7 @@ The simplest workflow to get set up in just the `package.json` is by adding the 
 }
 ```
 
-### Enabling `no-release` label
+##### Enabling `no-release` label
 
 To use the `no-release` label you have to get a little more involved and use a shell script. We could do the `if` checks in the `package.json`, but this would get messy and hard to read very quickly.
 
@@ -118,7 +126,3 @@ if [ ! -z "$VERSION" ]; then
   auto release
 fi
 ```
-
-## Enterprise
-
-If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi` or by setting the value in your [.autorc](./autorc.md#githubApi).
