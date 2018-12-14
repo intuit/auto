@@ -1,3 +1,13 @@
+# 0.24.0 (Thu Dec 13 2018)
+
+#### 🚀  Enhancement
+- repository as just a string [#46](https://github.com/intuit/auto-release/pull/46) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.23.1 (Tue Dec 11 2018)
 
 #### 🐛  Bug Fix
