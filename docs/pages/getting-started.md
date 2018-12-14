@@ -10,7 +10,7 @@ yarn add -D auto-release-cli
 
 To quickly configure most options run `auto init`.
 
-If you do this you still must configure the environment variables and add the labels to your project. `auto init` cannot automate these steps.
+If you do this you still must configure the environment variables. `auto init` cannot automate this step.
 
 ### Environment Variables
 
