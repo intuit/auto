@@ -1,3 +1,18 @@
+# 0.25.0 (Fri Dec 14 2018)
+
+#### 🚀  Enhancement
+- Add createLabels tool [#51](https://github.com/intuit/auto-release/pull/51) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- Add CircleCI Troubleshooting [#49](https://github.com/intuit/auto-release/pull/49) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update README.md [#48](https://github.com/intuit/auto-release/pull/48) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- more troubleshooting docs [#47](https://github.com/intuit/auto-release/pull/47) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.24.0 (Thu Dec 13 2018)
 
 #### 🚀  Enhancement
