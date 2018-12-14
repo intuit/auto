@@ -1,3 +1,13 @@
+# 0.26.1 (Fri Dec 14 2018)
+
+#### 📝  Documentation
+- add shield icons [#54](https://github.com/intuit/auto-release/pull/54) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.26.0 (Fri Dec 14 2018)
 
 #### 🚀  Enhancement
