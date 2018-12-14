@@ -2,6 +2,7 @@ dist
 coverage
 .DS_store
 package-lock.json
+_ignite
 
 
 # Created by https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
