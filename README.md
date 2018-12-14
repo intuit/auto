@@ -59,11 +59,18 @@ yarn build
 yarn docs:watch
 ```
 
-### Contributing
+## Contributing
 
 Feel free to make and [issue](https://github.com/intuit/auto-release/issues) or open a [pull request](https://github.com/intuit/auto-release/pulls)!
 
 Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
+
+## :rocket: Projects Using `auto-release` :rocket:
+
+:star: [webpack-inject-plugin](https://github.com/adierkens/webpack-inject-plugin) - A webpack plugin to dynamically inject code into the bundle.
+
+:star: [storybook-addon-notes-github-markdown-css
+](https://github.com/hipstersmoothie/github-markdown-css) - Make your notes addon look like github markdown.
 
 ## Contributors
 
