@@ -69,8 +69,9 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
 :star: [webpack-inject-plugin](https://github.com/adierkens/webpack-inject-plugin) - A webpack plugin to dynamically inject code into the bundle.
 
-:star: [storybook-addon-notes-github-markdown-css
-](https://github.com/hipstersmoothie/github-markdown-css) - Make your notes addon look like github markdown.
+:star: [storybook-addon-notes-github-markdown-css](https://github.com/hipstersmoothie/github-markdown-css) - Make your notes addon look like github markdown.
+
+:star: [html-webpack-insert-text-plugin](https://github.com/hipstersmoothie/html-webpack-insert-text-plugin) - Insert text into the head or body of your HTML
 
 ## Contributors
 
