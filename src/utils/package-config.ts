@@ -10,9 +10,11 @@ export interface IRepoConfig {
 
 interface IPackageConfig {
   version: string;
-  repository?: {
-    url: string;
-  };
+  repository?:
+    | {
+        url: string;
+      }
+    | 'string';
 }
 
 const readFile = promisify(fs.readFile);
@@ -29,7 +31,10 @@ export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
     throw new Error('Cannot read repo info from package.json');
   }
 
-  const { owner, name } = parseGithubUrl(repository.url) || ({} as any);
+  const { owner, name } =
+    parseGithubUrl(
+      typeof repository === 'string' ? repository : repository.url
+    ) || ({} as any);
 
   if (!owner || !name) {
     throw new Error(
