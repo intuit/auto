@@ -5,27 +5,24 @@ Get the semantic version bump for the given changes. Requires all PRs to have la
 ```bash
 >  auto version -h
 
-usage: auto.js version [-h] [--noReleaseLabels NORELEASELABELS]
-                       [--onlyPublishWithReleaseLabel] [--major MAJOR]
-                       [--minor MINOR] [--patch PATCH] [-v] [-vv]
-                       [--githubApi GITHUBAPI]
+Options
 
+  --onlyPublishWithReleaseLabel    Only bump version if `release` label is on pull request
+  --major string                   The name of the tag for a major version bump
+  --minor string                   The name of the tag for a minor version bump
+  --patch string                   The name of the tag for a patch version bump
+  --noReleaseLabels string[]       Labels that will not create a release. Defaults to just 'no-release
+  -h, --help                       Display the help output for the command
+  -v, --verbose                    Show some more logs
+  -w, --very-verbose               Show a lot more logs
+  --repo string                    The repo to set the status on. Defaults to looking in the package.json
+  --owner string                   Version number to publish as. Defaults to reading from the package.json
+  --githubApi string               Github API to use
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
-  --noReleaseLabels NORELEASELABELS
-                        Labels that will not create a release. Defaults to
-                        just 'no-release'
-  --onlyPublishWithReleaseLabel
-                        Only bump version if `release` label is on pull
-                        request
-  --major MAJOR         The name of the tag for a major version bump
-  --minor MINOR         The name of the tag for a minor version bump
-  --patch PATCH         The name of the tag for a patch version bump
-  -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
+Examples
+
+  Get the new version using the last release to head   $ auto version
+  Skip releases with multiple labels                   $ auto version --noReleaseLabels documentation CI
 ```
 
 Useful in conjunction with `npm version` to auto-version releases.

@@ -26,30 +26,26 @@ You will need to push the tags to github first:
 ```bash
 >  auto release -h
 
-usage: auto release [-h] [-s SLACK] [--use-version USE_VERSION]
-                       [--jira JIRA] [--no-version-prefix] [-d] [-v] [-vv]
-                       [--githubApi GITHUBAPI] [--name NAME] [--email EMAIL]
+Options
 
+  -d, --dry-run          Dont actually commit status. Just print the request body
+  --no-version-prefix    Use the version as the tag without the `v` prefix
+  --name string          Git name to commit and release with. Defaults to package.json
+  --email string         Git email to commit with. Defaults to package.json
+  --jira string          Jira base URL
+  --use-version          Version number to publish as. Defaults to reading from the package.json.
+  -s, --slack string     Post a message to slack about the release. Make sure the SLACK_TOKEN
+                         environment variable is set.
+  -h, --help             Display the help output for the command
+  -v, --verbose          Show some more logs
+  -w, --very-verbose     Show a lot more logs
+  --repo string          The repo to set the status on. Defaults to looking in the package.json
+  --owner string         Version number to publish as. Defaults to reading from the package.json
+  --githubApi string     Github API to use
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
-  -s SLACK, --slack SLACK
-                        Post a message to slack about the release. Make sure
-                        the SLACK_TOKEN environment variable is set.
-  --use-version USE_VERSION
-                        Version number to publish as. Defaults to reading
-                        from the package.json.
-  --jira JIRA           Jira base URL
-  --no-version-prefix   Use the version as the tag without the `v` prefix
-  -d, --dry-run         Dont actually commit status. Just print the request
-                        body
-  -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
-  --name NAME           Git name to commit and release with. Defaults to
-                        package.json
-  --email EMAIL         Git email to commit with. Defaults to package.json
+Examples
+
+  $ auto release
 ```
 
 ## Slack URL

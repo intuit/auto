@@ -150,7 +150,8 @@ const commands: ICommand[] = [
   {
     name: 'init-labels',
     summary: 'Create your projects labels on github.',
-    examples: ['$ auto init-labels']
+    examples: ['$ auto init-labels'],
+    options: defaultOptions
   },
   {
     name: 'label',

@@ -11,31 +11,23 @@ auto pr-check --pr 24 --url http://your-ci.com
 ```bash
 >  auto pr-check -h
 
-usage: auto pr-check [-h] [--pr PR] [-d] --url URL
-                          [--owner OWNER] [--repo REPO]
-                          [--onlyPublishWithReleaseLabel] [--major MAJOR]
-                          [--minor MINOR] [--patch PATCH] [-v] [-vv]
-                          [--githubApi GITHUBAPI]
+Options
 
+  --pr number [required]           The pull request number you want the labels of
+  --url string [required]          URL to associate with this status
+  --onlyPublishWithReleaseLabel    Only bump version if `release` label is on pull request
+  --major string                   The name of the tag for a major version bump
+  --minor string                   The name of the tag for a minor version bump
+  --patch string                   The name of the tag for a patch version bump
+  --context string                 A string label to differentiate this status from others
+  -h, --help                       Display the help output for the command
+  -v, --verbose                    Show some more logs
+  -w, --very-verbose               Show a lot more logs
+  --repo string                    The repo to set the status on. Defaults to looking in the package.json
+  --owner string                   Version number to publish as. Defaults to reading from the package.json
+  --githubApi string               Github API to use
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
-  --pr PR       The PR number
-  -d, --dry-run         Dont actually commit status. Just print the request
-                        body
-  --url URL             URL to associate with this status
-  --owner OWNER         Version number to publish as. Defaults to reading
-                        from the package.json
-  --repo REPO           The repo to set the status on. Defaults to looking in
-                        the package.json
-  --onlyPublishWithReleaseLabel
-                        Only bump version if `release` label is on pull
-                        request
-  --major MAJOR         The name of the tag for a major version bump
-  --minor MINOR         The name of the tag for a minor version bump
-  --patch PATCH         The name of the tag for a patch version bump
-  -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
+Examples
+
+  $ auto pr-check --pr 32 --url http://your-ci.com/build/123
 ```
