@@ -128,22 +128,26 @@ interface ICommand {
   summary: string;
   options?: commandLineUsage.OptionDefinition[];
   require?: (keyof ArgsType)[];
+  examples: any[];
 }
 
 const commands: ICommand[] = [
   {
     name: 'init',
-    summary: 'Interactive setup for most configurable options'
+    summary: 'Interactive setup for most configurable options',
+    examples: ['$ auto init']
   },
   {
     name: 'init-labels',
-    summary: 'Create your projects labels on github.'
+    summary: 'Create your projects labels on github.',
+    examples: ['$ auto init-labels']
   },
   {
     name: 'label',
     summary: 'Get the labels for a pull request',
     require: ['pr'],
-    options: [pr]
+    options: [pr],
+    examples: ['$ auto label --pr 123']
   },
   {
     name: 'pr-check',
@@ -152,13 +156,13 @@ const commands: ICommand[] = [
     options: [
       pr,
       url,
-      dryRun,
       ...semver,
       {
         ...context,
         defaultValue: 'ci/pr-check'
       }
-    ]
+    ],
+    examples: ['$ auto pr-check --pr 32 --url http://your-ci.com/build/123']
   },
   {
     name: 'pr',
@@ -189,6 +193,9 @@ const commands: ICommand[] = [
         type: String,
         description: 'A string label to differentiate this status from others'
       }
+    ],
+    examples: [
+      `$ auto pr --pr 32 --url http://your-ci.com/build/123 --state pending --description "Build still running..." --context build-check`
     ]
   },
   {
@@ -203,6 +210,16 @@ const commands: ICommand[] = [
         description:
           "Labels that will not create a release. Defaults to just 'no-release"
       }
+    ],
+    examples: [
+      {
+        desc: 'Get the new version using the last release to head',
+        example: '$ auto version'
+      },
+      {
+        desc: 'Skip releases with multiple labels',
+        example: '$ auto version --noReleaseLabels documentation CI'
+      }
     ]
   },
   {
@@ -210,10 +227,10 @@ const commands: ICommand[] = [
     summary:
       "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.",
     options: [
-      name,
-      email,
       dryRun,
       noVersionPrefix,
+      name,
+      email,
       jira,
       {
         name: 'from',
@@ -231,16 +248,26 @@ const commands: ICommand[] = [
         description:
           'Message to commit the changelog with. Defaults to "Update CHANGELOG.md [skip ci]"'
       }
+    ],
+    examples: [
+      {
+        desc: 'Generate a changelog from the last release to head',
+        example: '$ auto changelog'
+      },
+      {
+        desc: 'Generate a changelog across specific versions',
+        example: '$ auto changelog --from v0.20.1 --to v0.21.0'
+      }
     ]
   },
   {
     name: 'release',
     summary: 'Auto-generate a github release',
     options: [
-      name,
-      email,
       dryRun,
       noVersionPrefix,
+      name,
+      email,
       jira,
       {
         name: 'use-version',
@@ -255,7 +282,8 @@ const commands: ICommand[] = [
         description:
           'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
       }
-    ]
+    ],
+    examples: ['$ auto release']
   },
   {
     name: 'comment',
@@ -265,11 +293,13 @@ const commands: ICommand[] = [
       pr,
       context,
       { ...message, description: 'Message to post to comment' }
-    ]
+    ],
+    examples: ['$ auto comment --pr 123 --comment "# Why you\'re wrong..."']
   },
   {
     name: 'shipit',
-    summary: 'Run the full auto-release project. Detects if in a lerna project'
+    summary: 'Run the full auto-release project. Detects if in a lerna project',
+    examples: ['$ auto shipit']
   }
 ];
 
@@ -325,16 +355,28 @@ function printRootHelp() {
 }
 
 function printCommandHelp(command: ICommand) {
-  const usage = commandLineUsage([
+  const sections: commandLineUsage.Section[] = [
     {
       header: `auto ${command.name}`,
       content: command.summary
-    },
-    {
+    }
+  ];
+
+  if (command.options) {
+    sections.push({
       header: 'Options',
       optionList: command.options
-    }
-  ]);
+    });
+  }
+
+  if (command.examples) {
+    sections.push({
+      header: 'Examples',
+      content: command.examples
+    });
+  }
+
+  const usage = commandLineUsage(sections);
 
   console.log(usage);
 }
