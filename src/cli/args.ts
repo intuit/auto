@@ -381,7 +381,6 @@ export default function parseArgs() {
     });
   }
 
-  console.log(autoOptions);
   return autoOptions;
 }
 
