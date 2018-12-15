@@ -163,16 +163,16 @@ const commands: ICommand[] = [
   {
     name: 'pr',
     summary: 'Set the status on a PR commit',
-    require: ['pr', 'state', 'description', 'context', 'pr'],
+    require: ['pr', 'state', 'description', 'context', 'url'],
     options: [
-      pr,
-      url,
       {
         name: 'sha',
         type: String,
         description:
           'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
       },
+      pr,
+      url,
       {
         name: 'state',
         type: String,
@@ -349,6 +349,22 @@ export default function parseArgs() {
   if (!command) {
     return printRootHelp();
   }
+
+  const options = command.options || [];
+
+  options.map(option => {
+    const isRequired =
+      command.require &&
+      command.require.includes(option.name as keyof ArgsType);
+
+    if (isRequired && option.type === Number) {
+      option.typeLabel = '{underline number} [required]';
+    }
+
+    if (isRequired && option.type === String) {
+      option.typeLabel = '{underline string} [required]';
+    }
+  });
 
   if (mainOptions.help) {
     return printCommandHelp(command);
