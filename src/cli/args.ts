@@ -1,13 +1,23 @@
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 
+const help: commandLineUsage.OptionDefinition = {
+  name: 'help',
+  alias: 'h',
+  type: Boolean
+};
+
 const mainDefinitions: commandLineUsage.OptionDefinition[] = [
   { name: 'command', type: String, defaultOption: true },
   {
-    name: 'help',
-    alias: 'h',
-    type: Boolean,
+    ...help,
     description: 'Display the help output. Works on each command as well'
+  }
+];
+const defaultOptions = [
+  {
+    ...help,
+    description: 'Display the help output for the command'
   },
   {
     name: 'verbose',
@@ -126,7 +136,7 @@ const required = (options: ArgsType, option: keyof ArgsType) => {
 interface ICommand {
   name: string;
   summary: string;
-  options?: commandLineUsage.OptionDefinition[];
+  options: commandLineUsage.OptionDefinition[];
   require?: (keyof ArgsType)[];
   examples: any[];
 }
@@ -135,18 +145,20 @@ const commands: ICommand[] = [
   {
     name: 'init',
     summary: 'Interactive setup for most configurable options',
-    examples: ['$ auto init']
+    examples: ['$ auto init'],
+    options: defaultOptions
   },
   {
     name: 'init-labels',
     summary: 'Create your projects labels on github.',
-    examples: ['$ auto init-labels']
+    examples: ['$ auto init-labels'],
+    options: defaultOptions
   },
   {
     name: 'label',
     summary: 'Get the labels for a pull request',
     require: ['pr'],
-    options: [pr],
+    options: [pr, ...defaultOptions],
     examples: ['$ auto label --pr 123']
   },
   {
@@ -160,7 +172,8 @@ const commands: ICommand[] = [
       {
         ...context,
         defaultValue: 'ci/pr-check'
-      }
+      },
+      ...defaultOptions
     ],
     examples: ['$ auto pr-check --pr 32 --url http://your-ci.com/build/123']
   },
@@ -192,7 +205,8 @@ const commands: ICommand[] = [
         name: 'context',
         type: String,
         description: 'A string label to differentiate this status from others'
-      }
+      },
+      ...defaultOptions
     ],
     examples: [
       `$ auto pr --pr 32 --url http://your-ci.com/build/123 --state pending --description "Build still running..." --context build-check`
@@ -209,7 +223,8 @@ const commands: ICommand[] = [
         multiple: true,
         description:
           "Labels that will not create a release. Defaults to just 'no-release"
-      }
+      },
+      ...defaultOptions
     ],
     examples: [
       {
@@ -247,7 +262,8 @@ const commands: ICommand[] = [
         ...message,
         description:
           'Message to commit the changelog with. Defaults to "Update CHANGELOG.md [skip ci]"'
-      }
+      },
+      ...defaultOptions
     ],
     examples: [
       {
@@ -281,7 +297,8 @@ const commands: ICommand[] = [
         type: String,
         description:
           'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
-      }
+      },
+      ...defaultOptions
     ],
     examples: ['$ auto release']
   },
@@ -292,14 +309,16 @@ const commands: ICommand[] = [
     options: [
       pr,
       context,
-      { ...message, description: 'Message to post to comment' }
+      { ...message, description: 'Message to post to comment' },
+      ...defaultOptions
     ],
     examples: ['$ auto comment --pr 123 --comment "# Why you\'re wrong..."']
   },
   {
     name: 'shipit',
     summary: 'Run the full auto-release project. Detects if in a lerna project',
-    examples: ['$ auto shipit']
+    examples: ['$ auto shipit'],
+    options: defaultOptions
   }
 ];
 
@@ -355,35 +374,28 @@ function printRootHelp() {
 }
 
 function printCommandHelp(command: ICommand) {
-  const sections: commandLineUsage.Section[] = [
+  const usage = commandLineUsage([
     {
       header: `auto ${command.name}`,
       content: command.summary
-    }
-  ];
-
-  if (command.options) {
-    sections.push({
+    },
+    {
       header: 'Options',
       optionList: command.options
-    });
-  }
-
-  if (command.examples) {
-    sections.push({
+    },
+    {
       header: 'Examples',
       content: command.examples
-    });
-  }
-
-  const usage = commandLineUsage(sections);
+    }
+  ]);
 
   console.log(usage);
 }
 
-export default function parseArgs() {
+export default function parseArgs(testArgs?: string[]) {
   const mainOptions = commandLineArgs(mainDefinitions, {
-    stopAtFirstUnknown: true
+    stopAtFirstUnknown: true,
+    argv: testArgs
   });
   const argv = mainOptions._unknown || [];
   const command = commands.find(c => c.name === mainOptions.command);
@@ -392,9 +404,7 @@ export default function parseArgs() {
     return printRootHelp();
   }
 
-  const options = command.options || [];
-
-  options.map(option => {
+  command.options.map(option => {
     const isRequired =
       command.require &&
       command.require.includes(option.name as keyof ArgsType);
@@ -414,7 +424,7 @@ export default function parseArgs() {
 
   const autoOptions: ArgsType = {
     command: mainOptions.command,
-    ...commandLineArgs(command.options || [], { argv })
+    ...commandLineArgs(command.options, { argv })
   };
 
   if (command.require) {
