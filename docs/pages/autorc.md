@@ -38,6 +38,16 @@ To override the label text used for versioning define new labels in the `.autorc
 }
 ```
 
+### Multiple No Version
+
+You can configure multiple labels to skip releases.
+
+```json
+{
+  "noReleaseLabels": ["documentation", "project-files"]
+}
+```
+
 ### Changelog Titles
 
 To configure the titles used in the changelog add `changelogTitles` to the `.autorc`.

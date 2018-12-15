@@ -42,6 +42,14 @@ To not create a release for a pull request add the `no-release` label. Any pull 
 :warning: You must check the return value of `auto version` in a bash script like in the example configuration for the `no-release` label to function properly.
 :::
 
+### Multiple
+
+You can configure multiple labels to skip releasing as well. To do this use the `noReleaseLabels` options. This can also be configured via the [.autorc](./autorc.md#multiple-no-version).
+
+```sh
+auto version --noReleaseLabels project-files --noReleaseLabels documentation
+```
+
 ## Configure Versioning Labels
 
 You can customize the versioning labels in the `.autorc`. To see configuration [go here](./autorc.md#versioning-labels).
