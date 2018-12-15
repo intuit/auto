@@ -136,7 +136,7 @@ const required = (options: ArgsType, option: keyof ArgsType) => {
 interface ICommand {
   name: string;
   summary: string;
-  options: commandLineUsage.OptionDefinition[];
+  options?: commandLineUsage.OptionDefinition[];
   require?: (keyof ArgsType)[];
   examples: any[];
 }
@@ -145,14 +145,12 @@ const commands: ICommand[] = [
   {
     name: 'init',
     summary: 'Interactive setup for most configurable options',
-    examples: ['$ auto init'],
-    options: defaultOptions
+    examples: ['$ auto init']
   },
   {
     name: 'init-labels',
     summary: 'Create your projects labels on github.',
-    examples: ['$ auto init-labels'],
-    options: defaultOptions
+    examples: ['$ auto init-labels']
   },
   {
     name: 'label',
@@ -374,22 +372,26 @@ function printRootHelp() {
 }
 
 function printCommandHelp(command: ICommand) {
-  const usage = commandLineUsage([
+  const sections: commandLineUsage.Section[] = [
     {
       header: `auto ${command.name}`,
       content: command.summary
-    },
-    {
+    }
+  ];
+
+  if (command.options) {
+    sections.push({
       header: 'Options',
       optionList: command.options
-    },
-    {
-      header: 'Examples',
-      content: command.examples
-    }
-  ]);
+    });
+  }
 
-  console.log(usage);
+  sections.push({
+    header: 'Examples',
+    content: command.examples
+  });
+
+  console.log(commandLineUsage(sections));
 }
 
 export default function parseArgs(testArgs?: string[]) {
@@ -404,7 +406,9 @@ export default function parseArgs(testArgs?: string[]) {
     return printRootHelp();
   }
 
-  command.options.map(option => {
+  const options = command.options || [];
+
+  options.map(option => {
     const isRequired =
       command.require &&
       command.require.includes(option.name as keyof ArgsType);
@@ -424,7 +428,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   const autoOptions: ArgsType = {
     command: mainOptions.command,
-    ...commandLineArgs(command.options, { argv })
+    ...commandLineArgs(options, { argv })
   };
 
   if (command.require) {
