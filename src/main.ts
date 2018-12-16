@@ -313,9 +313,16 @@ export async function run(args: ArgsType) {
     // PR Interaction
     case 'label': {
       verbose.info("Using command: 'label'");
-      const labels = await githubRelease.getLabels(args.pr!);
+      let number = args.pr;
 
-      console.log(labels.join('\n'));
+      if (!args.pr) {
+        const pulls = await githubRelease.getPullRequests({ state: 'closed' });
+        console.log(pulls.map(pull => pull.merged_at));
+      }
+
+      // const labels = await githubRelease.getLabels(args.pr!);
+
+      // console.log(labels.join('\n'));
       break;
     }
     case 'pr-check': {
