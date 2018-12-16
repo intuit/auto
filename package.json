@@ -32,7 +32,7 @@
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
     "docs:watch": "ignite --watch",
-    "docs:publish": "ignite --publish"
+    "docs:publish": "./scripts/publish-docs.sh"
   },
   "dependencies": {
     "@octokit/rest": "^16.2.0",
