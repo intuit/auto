@@ -203,7 +203,7 @@ const commands: ICommand[] = [
     name: 'label',
     summary: 'Get the labels for a pull request',
     options: [
-      { ...pr, description: `${pr.description} (default to last merged PR)` },
+      { ...pr, description: `${pr.description} (defaults to last merged PR)` },
       ...defaultOptions
     ],
     examples: ['{green $} auto label --pr 123']
