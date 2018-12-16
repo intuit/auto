@@ -22,3 +22,9 @@ Examples
 
   $ auto label --pr 123
 ```
+
+## Without PR Number
+
+Running `auto label` without the PR number enables it to run in master after a PR has been merged. You can use these labels to automate more things in your merge build pipeline other than the release.
+
+`auto-release` the project uses this to only deploy the documentation when the last merged PR has a `documentation` label.
