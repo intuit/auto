@@ -1,3 +1,15 @@
+# 0.33.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+
+- Default `label` to last merged PR [#83](https://github.com/intuit/auto-release/pull/83) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.32.2 (Sun Dec 16 2018)
 
 #### 🐛  Bug Fix
