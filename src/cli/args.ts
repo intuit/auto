@@ -107,7 +107,7 @@ const url: commandLineUsage.OptionDefinition = {
 const noVersionPrefix: commandLineUsage.OptionDefinition = {
   name: 'no-version-prefix',
   type: Boolean,
-  description: 'Use the version as the tag without the `v` prefix',
+  description: "Use the version as the tag without the 'v' prefix",
   group: 'main'
 };
 
@@ -121,7 +121,7 @@ const jira: commandLineUsage.OptionDefinition = {
 const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
   name: 'onlyPublishWithReleaseLabel',
   type: Boolean,
-  description: 'Only bump version if `release` label is on pull request',
+  description: "Only bump version if 'release' label is on pull request",
   group: 'main'
 };
 
@@ -273,7 +273,7 @@ const commands: ICommand[] = [
         group: 'main',
         multiple: true,
         description:
-          "Labels that will not create a release. Defaults to just 'no-release"
+          "Labels that will not create a release. Defaults to just 'no-release'"
       },
       ...defaultOptions
     ],
@@ -291,7 +291,7 @@ const commands: ICommand[] = [
   {
     name: 'changelog',
     summary:
-      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.",
+      "Prepend release notes to 'CHANGELOG.md', create one if it doesn't exist, and commit the changes.",
     options: [
       dryRun,
       noVersionPrefix,
@@ -314,7 +314,7 @@ const commands: ICommand[] = [
       {
         ...message,
         description:
-          'Message to commit the changelog with. Defaults to "Update CHANGELOG.md [skip ci]"'
+          "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
       },
       ...defaultOptions
     ],
@@ -442,11 +442,17 @@ function printCommandHelp(command: ICommand) {
   ];
 
   if (command.options) {
-    sections.push({
-      header: 'Options',
-      optionList: command.options,
-      group: 'main'
-    });
+    const hasLocalOptions = command.options.filter(
+      option => option.group === 'main'
+    );
+
+    if (hasLocalOptions.length > 0) {
+      sections.push({
+        header: 'Options',
+        optionList: command.options,
+        group: 'main'
+      });
+    }
 
     sections.push({
       header: 'Global Options',
