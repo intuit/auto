@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
+import signale from 'signale';
 
 const p = chalk.hex('#870048');
 const y = chalk.hex('#F1A60E');
@@ -166,12 +167,6 @@ const message: commandLineUsage.OptionDefinition = {
   group: 'main',
   type: String,
   alias: 'm'
-};
-
-const required = (options: ArgsType, option: keyof ArgsType) => {
-  if (!options[option]) {
-    throw new TypeError(`--${option} is required`);
-  }
 };
 
 interface ICommand {
@@ -520,9 +515,16 @@ export default function parseArgs(testArgs?: string[]) {
   };
 
   if (command.require) {
-    command.require.map(option => {
-      required(autoOptions, option);
-    });
+    const missing = command.require
+      .filter(option => !autoOptions[option])
+      .map(option => `--${option}`);
+    const multiple = missing.length > 1;
+
+    printCommandHelp(command);
+    signale.error(
+      `Missing required flag${multiple ? 's' : ''}: ${missing.join(', ')}`
+    );
+    process.exit(0);
   }
 
   return autoOptions;
