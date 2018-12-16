@@ -43,88 +43,107 @@ const mainDefinitions: commandLineUsage.OptionDefinition[] = [
 const defaultOptions = [
   {
     ...help,
-    description: 'Display the help output for the command'
+    description: 'Display the help output for the command',
+    group: 'misc'
   },
   {
     name: 'verbose',
     alias: 'v',
     type: Boolean,
-    description: 'Show some more logs'
+    description: 'Show some more logs',
+    group: 'misc'
   },
   {
     name: 'very-verbose',
     alias: 'w',
     type: Boolean,
-    description: 'Show a lot more logs'
+    description: 'Show a lot more logs',
+    group: 'misc'
   },
   {
     name: 'repo',
     type: String,
     description:
-      'The repo to set the status on. Defaults to looking in the package.json'
+      'The repo to set the status on. Defaults to looking in the package.json',
+    group: 'misc'
   },
   {
     name: 'owner',
     type: String,
     description:
-      'Version number to publish as. Defaults to reading from the package.json'
+      'Version number to publish as. Defaults to reading from the package.json',
+    group: 'misc'
   },
-  { name: 'githubApi', type: String, description: 'Github API to use' }
+  {
+    name: 'githubApi',
+    type: String,
+    description: 'Github API to use',
+    group: 'misc'
+  }
 ];
 
 const pr: commandLineUsage.OptionDefinition = {
   name: 'pr',
   type: Number,
-  description: 'The pull request number you want the labels of'
+  description: 'The pull request number you want the labels of',
+  group: 'main'
 };
 
 const dryRun: commandLineUsage.OptionDefinition = {
   name: 'dry-run',
   alias: 'd',
   type: Boolean,
-  description: 'Dont actually commit status. Just print the request body'
+  description: 'Dont actually commit status. Just print the request body',
+  group: 'main'
 };
 
 const url: commandLineUsage.OptionDefinition = {
   name: 'url',
   type: String,
-  description: 'URL to associate with this status'
+  description: 'URL to associate with this status',
+  group: 'main'
 };
 
 const noVersionPrefix: commandLineUsage.OptionDefinition = {
   name: 'no-version-prefix',
   type: Boolean,
-  description: 'Use the version as the tag without the `v` prefix'
+  description: 'Use the version as the tag without the `v` prefix',
+  group: 'main'
 };
 
 const jira: commandLineUsage.OptionDefinition = {
   name: 'jira',
   type: String,
-  description: 'Jira base URL'
+  description: 'Jira base URL',
+  group: 'main'
 };
 
 const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
   name: 'onlyPublishWithReleaseLabel',
   type: Boolean,
-  description: 'Only bump version if `release` label is on pull request'
+  description: 'Only bump version if `release` label is on pull request',
+  group: 'main'
 };
 
 const major: commandLineUsage.OptionDefinition = {
   name: 'major',
   type: String,
-  description: 'The name of the tag for a major version bump'
+  description: 'The name of the tag for a major version bump',
+  group: 'main'
 };
 
 const minor: commandLineUsage.OptionDefinition = {
   name: 'minor',
   type: String,
-  description: 'The name of the tag for a minor version bump'
+  description: 'The name of the tag for a minor version bump',
+  group: 'main'
 };
 
 const patch: commandLineUsage.OptionDefinition = {
   name: 'patch',
   type: String,
-  description: 'The name of the tag for a patch version bump'
+  description: 'The name of the tag for a patch version bump',
+  group: 'main'
 };
 
 const semver = [onlyPublishWithReleaseLabel, major, minor, patch];
@@ -144,11 +163,13 @@ const email: commandLineUsage.OptionDefinition = {
 const context: commandLineUsage.OptionDefinition = {
   name: 'context',
   type: String,
-  description: 'A string label to differentiate this status from others'
+  description: 'A string label to differentiate this status from others',
+  group: 'main'
 };
 
 const message: commandLineUsage.OptionDefinition = {
   name: 'message',
+  group: 'main',
   type: String,
   alias: 'm'
 };
@@ -210,6 +231,7 @@ const commands: ICommand[] = [
       {
         name: 'sha',
         type: String,
+        group: 'main',
         description:
           'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
       },
@@ -218,17 +240,20 @@ const commands: ICommand[] = [
       {
         name: 'state',
         type: String,
+        group: 'main',
         description:
           "State of the PR. ['pending', 'success', 'error', 'failure']"
       },
       {
         name: 'description',
         type: String,
+        group: 'main',
         description: 'A description of the status'
       },
       {
         name: 'context',
         type: String,
+        group: 'main',
         description: 'A string label to differentiate this status from others'
       },
       ...defaultOptions
@@ -245,6 +270,7 @@ const commands: ICommand[] = [
       {
         name: 'noReleaseLabels',
         type: String,
+        group: 'main',
         multiple: true,
         description:
           "Labels that will not create a release. Defaults to just 'no-release"
@@ -275,12 +301,14 @@ const commands: ICommand[] = [
       {
         name: 'from',
         type: String,
+        group: 'main',
         description:
           'Tag to start changelog generation on. Defaults to latest tag.'
       },
       {
         name: 'to',
         type: String,
+        group: 'main',
         description: 'Tag to end changelog generation on. Defaults to HEAD.'
       },
       {
@@ -313,6 +341,7 @@ const commands: ICommand[] = [
       {
         name: 'use-version',
         type: Boolean,
+        group: 'main',
         description:
           'Version number to publish as. Defaults to reading from the package.json.'
       },
@@ -320,6 +349,7 @@ const commands: ICommand[] = [
         name: 'slack',
         alias: 's',
         type: String,
+        group: 'main',
         description:
           'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
       },
@@ -394,8 +424,9 @@ function printRootHelp() {
         }))
     },
     {
-      header: 'Options',
-      optionList: mainDefinitions.filter(def => def.name !== 'command')
+      header: 'Global Options',
+      optionList: [...mainDefinitions, ...defaultOptions],
+      group: 'misc'
     }
   ]);
 
@@ -413,7 +444,14 @@ function printCommandHelp(command: ICommand) {
   if (command.options) {
     sections.push({
       header: 'Options',
-      optionList: command.options
+      optionList: command.options,
+      group: 'main'
+    });
+
+    sections.push({
+      header: 'Global Options',
+      optionList: command.options,
+      group: 'misc'
     });
   }
 
