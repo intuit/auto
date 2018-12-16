@@ -1,3 +1,19 @@
+# 0.32.1 (Sun Dec 16 2018)
+
+#### 🐛  Bug Fix
+
+- Formatted Changelogs [#79](https://github.com/intuit/auto-release/pull/79) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Document process for onboarding an already published repo [#78](https://github.com/intuit/auto-release/pull/78) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.32.0 (Sun Dec 16 2018)
 
 #### 🚀 Enhancement
