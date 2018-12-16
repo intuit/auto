@@ -247,7 +247,7 @@ export async function run(args: ArgsType) {
 
   switch (args.command) {
     case 'init': {
-      await init();
+      await init(args['only-labels']);
       break;
     }
     case 'create-labels': {
