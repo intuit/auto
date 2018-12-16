@@ -192,12 +192,12 @@ const commands: ICommand[] = [
   {
     name: 'init',
     summary: 'Interactive setup for most configurable options',
-    examples: ['$ auto init']
+    examples: ['{green $} auto init']
   },
   {
     name: 'init-labels',
     summary: 'Create your projects labels on github.',
-    examples: ['$ auto init-labels'],
+    examples: ['{green $} auto init-labels'],
     options: defaultOptions
   },
   {
@@ -205,7 +205,7 @@ const commands: ICommand[] = [
     summary: 'Get the labels for a pull request',
     require: ['pr'],
     options: [pr, ...defaultOptions],
-    examples: ['$ auto label --pr 123']
+    examples: ['{green $} auto label --pr 123']
   },
   {
     name: 'pr-check',
@@ -221,7 +221,9 @@ const commands: ICommand[] = [
       },
       ...defaultOptions
     ],
-    examples: ['$ auto pr-check --pr 32 --url http://your-ci.com/build/123']
+    examples: [
+      '{green $} auto pr-check --pr 32 --url http://your-ci.com/build/123'
+    ]
   },
   {
     name: 'pr',
@@ -280,11 +282,11 @@ const commands: ICommand[] = [
     examples: [
       {
         desc: 'Get the new version using the last release to head',
-        example: '$ auto version'
+        example: '{green $} auto version'
       },
       {
         desc: 'Skip releases with multiple labels',
-        example: '$ auto version --noReleaseLabels documentation CI'
+        example: '{green $} auto version --noReleaseLabels documentation CI'
       }
     ]
   },
@@ -321,11 +323,11 @@ const commands: ICommand[] = [
     examples: [
       {
         desc: 'Generate a changelog from the last release to head',
-        example: '$ auto changelog'
+        example: '{green $} auto changelog'
       },
       {
         desc: 'Generate a changelog across specific versions',
-        example: '$ auto changelog --from v0.20.1 --to v0.21.0'
+        example: '{green $} auto changelog --from v0.20.1 --to v0.21.0'
       }
     ]
   },
@@ -355,7 +357,7 @@ const commands: ICommand[] = [
       },
       ...defaultOptions
     ],
-    examples: ['$ auto release']
+    examples: ['{green $} auto release']
   },
   {
     name: 'comment',
@@ -367,17 +369,22 @@ const commands: ICommand[] = [
       { ...message, description: 'Message to post to comment' },
       ...defaultOptions
     ],
-    examples: ['$ auto comment --pr 123 --comment "# Why you\'re wrong..."']
+    examples: [
+      '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
+    ]
   },
   {
     name: 'shipit',
     summary: 'Run the full auto-release project. Detects if in a lerna project',
-    examples: ['$ auto shipit'],
+    examples: ['{green $} auto shipit'],
     options: defaultOptions
   }
 ];
 
 function printRootHelp() {
+  const options = [...mainDefinitions, ...defaultOptions];
+  options.forEach(option => styleTypes({} as ICommand, option));
+
   const usage = commandLineUsage([
     {
       content: logo.replace(/\\/g, '\\\\'),
@@ -425,7 +432,7 @@ function printRootHelp() {
     },
     {
       header: 'Global Options',
-      optionList: [...mainDefinitions, ...defaultOptions],
+      optionList: options,
       group: 'misc'
     }
   ]);
@@ -469,6 +476,31 @@ function printCommandHelp(command: ICommand) {
   console.log(commandLineUsage(sections));
 }
 
+function styleTypes(
+  command: ICommand,
+  option: commandLineUsage.OptionDefinition
+) {
+  console.log(option);
+  const isRequired =
+    command.require && command.require.includes(option.name as keyof ArgsType);
+
+  if (isRequired && option.type === Number) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline number}} [{rgb(254,91,92) required}]';
+  } else if (option.type === Number) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline number}}';
+  }
+
+  if (isRequired && option.type === String) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline string}} [{rgb(254,91,92) required}]';
+  } else if (option.multiple && option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string[]}}';
+  } else if (option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string}}';
+  }
+}
+
 export default function parseArgs(testArgs?: string[]) {
   const mainOptions = commandLineArgs(mainDefinitions, {
     stopAtFirstUnknown: true,
@@ -483,19 +515,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   const options = command.options || [];
 
-  options.map(option => {
-    const isRequired =
-      command.require &&
-      command.require.includes(option.name as keyof ArgsType);
-
-    if (isRequired && option.type === Number) {
-      option.typeLabel = '{underline number} [required]';
-    }
-
-    if (isRequired && option.type === String) {
-      option.typeLabel = '{underline string} [required]';
-    }
-  });
+  options.map(option => styleTypes(command, option));
 
   if (mainOptions.help) {
     return printCommandHelp(command);
