@@ -538,7 +538,6 @@ export default function parseArgs(testArgs?: string[]) {
     process.exit(0);
   }
 
-  console.log(autoOptions);
   return autoOptions;
 }
 
