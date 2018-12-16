@@ -1,3 +1,13 @@
+# 0.28.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+- rename init-labels -> create-labels [#68](https://github.com/intuit/auto-release/pull/68) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.27.0 (Sat Dec 15 2018)
 
 #### 🚀  Enhancement
