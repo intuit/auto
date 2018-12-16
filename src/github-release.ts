@@ -40,7 +40,7 @@ export const defaultChangelogTitles = {
   documentation: '📝  Documentation'
 };
 
-export const defaultLabelsDescriptions = new Map<VersionLabel, string>();
+export const defaultLabelsDescriptions = new Map<string, string>();
 defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
 defaultLabelsDescriptions.set(SEMVER.minor, 'create a minor release');
 defaultLabelsDescriptions.set(SEMVER.patch, 'create a patch release');
@@ -50,6 +50,14 @@ defaultLabelsDescriptions.set(
   'publish a release when this pr is merged'
 );
 defaultLabelsDescriptions.set('prerelease', 'create pre release');
+defaultLabelsDescriptions.set(
+  'internal',
+  'changes are internal to the project'
+);
+defaultLabelsDescriptions.set(
+  'documentation',
+  'changes only effect documentation'
+);
 
 export interface ILogger {
   log: signale.Signale<signale.DefaultMethods>;
@@ -307,7 +315,7 @@ export default class GithubRelease {
   }
 
   public async addLabelsToProject(
-    labels: Map<VersionLabel, string>,
+    labels: Map<string, string>,
     onlyPublishWithReleaseLabel?: boolean
   ) {
     const client = await this.github;

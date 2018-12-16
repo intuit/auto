@@ -8,6 +8,7 @@ import { promisify } from 'util';
 import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
 import GithubRelease, {
+  defaultChangelogTitles,
   defaultLabels,
   IGithubReleaseOptions
 } from './github-release';
@@ -252,7 +253,14 @@ export async function run(args: ArgsType) {
     }
     case 'create-labels': {
       await githubRelease.addLabelsToProject(
-        semVerLabels,
+        new Map([
+          ...semVerLabels,
+          ...new Map(
+            Object.keys(defaultChangelogTitles).map(
+              (label): [string, string] => [label, label]
+            )
+          )
+        ]),
         args.onlyPublishWithReleaseLabel
       );
       break;
