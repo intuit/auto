@@ -1,4 +1,4 @@
-import GithubRelease from '../github-release';
+import GithubRelease, { VersionLabel } from '../github-release';
 import { normalizeCommits } from '../log-parse';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
@@ -20,6 +20,8 @@ const changedPackages = jest.fn();
 const getCommitsForPR = jest.fn();
 const getUserByEmail = jest.fn();
 const getUserByUsername = jest.fn();
+const getProjectLabels = jest.fn();
+const createLabel = jest.fn();
 
 getProject.mockReturnValue({
   data: { html_url: 'https://custom-git.com' }
@@ -42,7 +44,9 @@ jest.mock('../git.ts', () => (...args) => {
     changedPackages,
     getCommitsForPR,
     getUserByUsername,
-    getUserByEmail
+    getUserByEmail,
+    getProjectLabels,
+    createLabel
   };
 });
 
@@ -87,6 +91,8 @@ describe('GithubRelease', () => {
     getLabels.mockClear();
     writeSpy.mockClear();
     execSpy.mockClear();
+    execSpy.mockClear();
+    createLabel.mockClear();
   });
 
   test('should use options owner, repo, and token', async () => {
@@ -445,6 +451,59 @@ describe('GithubRelease', () => {
       getLabels.mockReturnValueOnce(['Version: Patch']);
 
       expect(await gh.getSemverBump('1234', '123', true)).toBe(SEMVER.major);
+    });
+  });
+
+  describe('addLabelsToProject', () => {
+    test('should add labels', async () => {
+      const gh = new GithubRelease();
+      const labels = new Map<VersionLabel, string>();
+      labels.set(SEMVER.major, '1');
+      labels.set(SEMVER.minor, '2');
+      labels.set(SEMVER.patch, '3');
+
+      await gh.addLabelsToProject(labels);
+
+      expect(createLabel).toHaveBeenCalledWith(SEMVER.major, '1');
+      expect(createLabel).toHaveBeenCalledWith(SEMVER.minor, '2');
+      expect(createLabel).toHaveBeenCalledWith(SEMVER.patch, '3');
+    });
+
+    test('should not add old labels', async () => {
+      const gh = new GithubRelease();
+      const labels = new Map<VersionLabel, string>();
+      labels.set(SEMVER.major, '1');
+      labels.set(SEMVER.minor, '2');
+
+      getProjectLabels.mockReturnValueOnce(['1']);
+      await gh.addLabelsToProject(labels);
+
+      expect(createLabel).not.toHaveBeenCalledWith(SEMVER.major, '1');
+      expect(createLabel).toHaveBeenCalledWith(SEMVER.minor, '2');
+    });
+
+    test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
+      const gh = new GithubRelease();
+      const labels = new Map<VersionLabel, string>();
+      labels.set('release', 'deploy');
+
+      await gh.addLabelsToProject(labels);
+      expect(createLabel).not.toHaveBeenCalledWith('release', 'deploy');
+
+      await gh.addLabelsToProject(labels, true);
+      expect(createLabel).toHaveBeenCalledWith('release', 'deploy');
+    });
+
+    test('should add no-release label not in onlyPublishWithReleaseLabel mode', async () => {
+      const gh = new GithubRelease();
+      const labels = new Map<VersionLabel, string>();
+      labels.set('no-release', 'no!');
+
+      await gh.addLabelsToProject(labels, true);
+      expect(createLabel).not.toHaveBeenCalledWith('no-release', 'no!');
+
+      await gh.addLabelsToProject(labels);
+      expect(createLabel).toHaveBeenCalledWith('no-release', 'no!');
     });
   });
 });

@@ -516,7 +516,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   const autoOptions: ArgsType = {
     command: mainOptions.command,
-    ...commandLineArgs(options, { argv })
+    ...commandLineArgs(options, { argv })._all
   };
 
   if (command.require) {
