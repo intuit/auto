@@ -1,3 +1,13 @@
+# 0.30.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+- Init prompt for changelog labels [#71](https://github.com/intuit/auto-release/pull/71) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.29.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
