@@ -380,6 +380,15 @@ const commands: ICommand[] = [
   }
 ];
 
+function filterCommands(allCommands: ICommand[], include: string[]) {
+  return allCommands
+    .filter(command => include.includes(command.name))
+    .map(command => ({
+      name: command.name,
+      summary: command.summary
+    }));
+}
+
 function printRootHelp() {
   const options = [...mainDefinitions, ...defaultOptions];
   options.forEach(option => styleTypes({} as ICommand, option));
@@ -399,34 +408,20 @@ function printRootHelp() {
     },
     {
       header: 'Setup Commands',
-      content: commands
-        .filter(command => ['init', 'create-labels'].includes(command.name))
-        .map(command => ({
-          name: command.name,
-          summary: command.summary
-        }))
+      content: filterCommands(commands, ['init', 'create-labels'])
     },
     {
       header: 'Release Commands',
-      content: commands
-        .filter(command =>
-          ['release', 'version', 'changelog', 'shipit'].includes(command.name)
-        )
-        .map(command => ({
-          name: command.name,
-          summary: command.summary
-        }))
+      content: filterCommands(commands, [
+        'release',
+        'version',
+        'changelog',
+        'shipit'
+      ])
     },
     {
       header: 'Pull Request Interaction Commands',
-      content: commands
-        .filter(command =>
-          ['label', 'pr-check', 'pr', 'comment'].includes(command.name)
-        )
-        .map(command => ({
-          name: command.name,
-          summary: command.summary
-        }))
+      content: filterCommands(commands, ['label', 'pr-check', 'pr', 'comment'])
     },
     {
       header: 'Global Options',
