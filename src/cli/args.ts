@@ -170,6 +170,15 @@ const message: commandLineUsage.OptionDefinition = {
   alias: 'm'
 };
 
+const noReleaseLabels: commandLineUsage.OptionDefinition = {
+  name: 'noReleaseLabels',
+  type: String,
+  group: 'main',
+  multiple: true,
+  description:
+    "Labels that will not create a release. Defaults to just 'no-release'"
+};
+
 interface ICommand {
   name: string;
   summary: string;
@@ -220,6 +229,7 @@ const commands: ICommand[] = [
         ...context,
         defaultValue: 'ci/pr-check'
       },
+      noReleaseLabels,
       ...defaultOptions
     ],
     examples: [
@@ -268,18 +278,7 @@ const commands: ICommand[] = [
   {
     name: 'version',
     summary: 'Get the semantic version bump for the given changes.',
-    options: [
-      ...semver,
-      {
-        name: 'noReleaseLabels',
-        type: String,
-        group: 'main',
-        multiple: true,
-        description:
-          "Labels that will not create a release. Defaults to just 'no-release'"
-      },
-      ...defaultOptions
-    ],
+    options: [...semver, noReleaseLabels, ...defaultOptions],
     examples: [
       {
         desc: 'Get the new version using the last release to head',

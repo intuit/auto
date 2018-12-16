@@ -20,6 +20,7 @@ Options
   --minor string                   The name of the tag for a minor version bump
   --patch string                   The name of the tag for a patch version bump
   --context string                 A string label to differentiate this status from others
+  --noReleaseLabels string[]       Labels that will not create a release. Defaults to just 'no-release'
 
 Global Options
 
