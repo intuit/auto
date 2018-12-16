@@ -146,6 +146,44 @@ documentation: #{documentation}
     }, {});
   }
 
+  let getAnotherTitle: { value?: boolean } = await prompt({
+    type: 'confirm',
+    name: 'value',
+    message: 'Would you like to add additional changelog titles?',
+    initial: 'no'
+  });
+
+  while (getAnotherTitle.value) {
+    const response = await prompt({
+      type: 'snippet',
+      name: 'value',
+      message: 'Add another changelog title:',
+      initial: defaultChangelogTitles,
+      // @ts-ignore
+      template: `
+#{githubLabel}: #{changelogTitle}
+      `
+    });
+
+    const { githubLabel, changelogTitle } = response.value.values;
+
+    if (githubLabel === undefined || changelogTitle === undefined) {
+      break;
+    }
+
+    changelogTitles = {
+      ...changelogTitles,
+      [githubLabel]: changelogTitle
+    };
+
+    getAnotherTitle = await prompt({
+      type: 'confirm',
+      name: 'value',
+      message: 'Would you like to add another?',
+      initial: 'no'
+    });
+  }
+
   return changelogTitles;
 }
 
