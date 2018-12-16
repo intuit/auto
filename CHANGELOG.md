@@ -1,3 +1,17 @@
+# 0.27.0 (Sat Dec 15 2018)
+
+#### 🚀  Enhancement
+- Cli [#65](https://github.com/intuit/auto-release/pull/65) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+- Add docs for `noReleaseLabels` [#57](https://github.com/intuit/auto-release/pull/57) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Badge [#56](https://github.com/intuit/auto-release/pull/56) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.26.2 (Fri Dec 14 2018)
 
 #### 🐛  Bug Fix
