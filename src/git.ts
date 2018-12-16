@@ -2,11 +2,7 @@ import GHub from '@octokit/rest';
 import { ICommit, parseGit } from 'parse-git';
 import { Memoize } from 'typescript-memoize';
 
-import {
-  defaultLabelsDescriptions,
-  ILogger,
-  VersionLabel
-} from './github-release';
+import { defaultLabelsDescriptions, ILogger } from './github-release';
 import execPromise from './utils/exec-promise';
 
 export interface IGithubOptions {
@@ -247,7 +243,7 @@ export default class Github {
     return result;
   }
 
-  public async createLabel(label: VersionLabel, name: string) {
+  public async createLabel(label: string, name: string) {
     await this.authenticate();
 
     this.logger.verbose.info(`Creating "${label}" label :\n${name}`);
