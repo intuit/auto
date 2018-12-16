@@ -1,3 +1,13 @@
+# 0.32.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+- Configure changelog labels with create-labels [#76](https://github.com/intuit/auto-release/pull/76) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.31.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
