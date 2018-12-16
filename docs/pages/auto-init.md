@@ -14,12 +14,12 @@ Examples
   $ auto init
 ```
 
-## `auto init-labels`
+## `auto create-labels`
 
 Create your projects labels on github.
 
 ```sh
-$ auto init-labels --help
+$ auto create-labels --help
 
 Global Options
 
@@ -32,9 +32,9 @@ Global Options
 
 Examples
 
-  $ auto init-labels
+  $ auto create-labels
 ```
 
 ::: message is-warning
-:warning: For this to work you must have a `GH_TOKEN` set, ex: `GH_TOKEN=YOUR_TOKEN auto init-labels`
+:warning: For this to work you must have a `GH_TOKEN` set, ex: `GH_TOKEN=YOUR_TOKEN auto create-labels`
 :::
