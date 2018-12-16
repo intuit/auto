@@ -22,6 +22,7 @@ const getUserByEmail = jest.fn();
 const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
+const getPullRequests = jest.fn();
 
 getProject.mockReturnValue({
   data: { html_url: 'https://custom-git.com' }
@@ -46,7 +47,8 @@ jest.mock('../git.ts', () => (...args) => {
     getUserByUsername,
     getUserByEmail,
     getProjectLabels,
-    createLabel
+    createLabel,
+    getPullRequests
   };
 });
 
@@ -219,6 +221,12 @@ describe('GithubRelease', () => {
     const gh = new GithubRelease();
     await gh.createComment('Some long message', 22);
     expect(createComment).toHaveBeenCalled();
+  });
+
+  test('getPullRequests', async () => {
+    const gh = new GithubRelease();
+    await gh.getPullRequests({ state: 'closed' });
+    expect(getPullRequests).toHaveBeenCalled();
   });
 
   describe('addToChangelog', async () => {

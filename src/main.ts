@@ -313,7 +313,18 @@ export async function run(args: ArgsType) {
     // PR Interaction
     case 'label': {
       verbose.info("Using command: 'label'");
-      const labels = await githubRelease.getLabels(args.pr!);
+      let labels: string[] = [];
+
+      if (!args.pr) {
+        const pulls = await githubRelease.getPullRequests({ state: 'closed' });
+        const lastMerged = pulls.find(pull => !!pull.merged_at);
+
+        if (lastMerged) {
+          labels = lastMerged.labels.map(label => label.name);
+        }
+      } else {
+        labels = await githubRelease.getLabels(args.pr);
+      }
 
       console.log(labels.join('\n'));
       break;

@@ -278,6 +278,23 @@ export default class Github {
     return result;
   }
 
+  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
+    this.logger.verbose.info('Getting pull requests...');
+
+    await this.authenticate();
+
+    const result = (await this.ghub.pulls.list({
+      owner: this.options.owner.toLowerCase(),
+      repo: this.options.repo.toLowerCase(),
+      ...options
+    })).data;
+
+    this.logger.veryVerbose.info('Got response from pull requests', result);
+    this.logger.verbose.info('Got pull request');
+
+    return result;
+  }
+
   public async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 

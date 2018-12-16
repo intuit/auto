@@ -1,3 +1,4 @@
+import GHub from '@octokit/rest';
 import * as fs from 'fs';
 import { ICommit } from 'parse-git';
 import { inc, ReleaseType } from 'semver';
@@ -312,6 +313,11 @@ export default class GithubRelease {
   public async createComment(message: string, pr: number, context = 'default') {
     const client = await this.github;
     return client.createComment(message, pr, context);
+  }
+
+  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
+    const client = await this.github;
+    return client.getPullRequests(options);
   }
 
   public async addLabelsToProject(
