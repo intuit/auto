@@ -1,3 +1,15 @@
+# 0.33.1 (Sun Dec 16 2018)
+
+#### 🐛  Bug Fix
+
+- update deps [#85](https://github.com/intuit/auto-release/pull/85) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
