@@ -276,7 +276,7 @@ function createLabelSection(
     );
 
     const pkgCount = Object.keys(packageCommits).length;
-    const title = `#### ${options.changelogTitles[label]}`;
+    const title = `#### ${options.changelogTitles[label]}\n`;
     const hasRepoCommits =
       packageCommits.monorepo && packageCommits.monorepo.length > 0;
 
@@ -331,7 +331,7 @@ function createAuthorSection(
     }, []);
 
   if (authors.length > 0) {
-    let authorSection = `#### Authors: ${authors.length}\n`;
+    let authorSection = `#### Authors: ${authors.length}\n\n`;
     authorSection += authors.join('\n');
     sections.push(authorSection);
   }
