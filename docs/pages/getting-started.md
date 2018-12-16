@@ -10,15 +10,6 @@ yarn add -D auto-release-cli
 
 If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
 
-## Configuration
-
-Getting started with `auto-release` is super easy.
-
-1. `auto init` (optional)
-2. `auto create-labels`
-3. Configure environment variables
-4. Set up script
-
 ### Project already published
 
 If you're project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
@@ -33,6 +24,15 @@ git push --tags
 Then on GitHub go to your project's releases and click `Draft a new release`. In the `Tag version` field enter the version number you just tagged and click `Publish release`.
 
 Now your github project is set up to use `auto-release`.
+
+## Configuration
+
+Getting started with `auto-release` is super easy.
+
+1. `auto init` (optional)
+2. `auto create-labels`
+3. Configure environment variables
+4. Set up script
 
 ### 1. Initialize Options
 
