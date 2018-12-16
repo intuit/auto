@@ -18,12 +18,14 @@ const listCommits = jest.fn();
 const getProject = jest.fn();
 const listLabelsForRepo = jest.fn();
 const createLabel = jest.fn();
+const list = jest.fn();
 
 jest.mock('@octokit/rest', () => () => ({
   authenticate,
   pulls: {
     get: getPr,
-    listCommits
+    listCommits,
+    list
   },
   issues: {
     listLabelsOnIssue,
@@ -333,6 +335,22 @@ describe('github', () => {
     });
 
     await gh.getCommitsForPR(22);
+    expect(listCommits).toHaveBeenCalled();
+  });
+
+  test('getCommitsForPR', async () => {
+    const gh = new Github({
+      logger,
+      owner: 'Adam Dierkens',
+      repo: 'test',
+      token: 'MyToken'
+    });
+
+    list.mockReturnValueOnce({
+      data: undefined
+    });
+
+    await gh.getPullRequests();
     expect(listCommits).toHaveBeenCalled();
   });
 

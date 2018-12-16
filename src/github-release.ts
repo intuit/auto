@@ -315,7 +315,7 @@ export default class GithubRelease {
     return client.createComment(message, pr, context);
   }
 
-  public async getPullRequests(options: Partial<GHub.PullsListParams>) {
+  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
     const client = await this.github;
     return client.getPullRequests(options);
   }

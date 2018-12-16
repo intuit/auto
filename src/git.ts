@@ -278,7 +278,7 @@ export default class Github {
     return result;
   }
 
-  public async getPullRequests(options: Partial<GHub.PullsListParams>) {
+  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
     await this.authenticate();
