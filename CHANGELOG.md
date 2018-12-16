@@ -1,135 +1,163 @@
 # 0.32.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Configure changelog labels with create-labels [#76](https://github.com/intuit/auto-release/pull/76) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.31.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - init flag to just get labels [#74](https://github.com/intuit/auto-release/pull/74) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.30.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Init prompt for changelog labels [#71](https://github.com/intuit/auto-release/pull/71) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.29.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - print help or missing flag + print all missing flags [#69](https://github.com/intuit/auto-release/pull/69) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.28.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - rename init-labels -> create-labels [#68](https://github.com/intuit/auto-release/pull/68) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.27.0 (Sat Dec 15 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Cli [#65](https://github.com/intuit/auto-release/pull/65) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - Add docs for `noReleaseLabels` [#57](https://github.com/intuit/auto-release/pull/57) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Badge [#56](https://github.com/intuit/auto-release/pull/56) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.26.2 (Fri Dec 14 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - use config for version [#55](https://github.com/intuit/auto-release/pull/55) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.26.1 (Fri Dec 14 2018)
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - add shield icons [#54](https://github.com/intuit/auto-release/pull/54) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.26.0 (Fri Dec 14 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Allow user to configure multiple labels to `no-release` [#53](https://github.com/intuit/auto-release/pull/53) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - typos in docs [#52](https://github.com/intuit/auto-release/pull/52) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.25.0 (Fri Dec 14 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Add createLabels tool [#51](https://github.com/intuit/auto-release/pull/51) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - Add CircleCI Troubleshooting [#49](https://github.com/intuit/auto-release/pull/49) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update README.md [#48](https://github.com/intuit/auto-release/pull/48) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - more troubleshooting docs [#47](https://github.com/intuit/auto-release/pull/47) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.24.0 (Thu Dec 13 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - repository as just a string [#46](https://github.com/intuit/auto-release/pull/46) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.23.1 (Tue Dec 11 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - Fix Single new project [#45](https://github.com/intuit/auto-release/pull/45) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - fix: removed vscode folder and updated gitignore [#44](https://github.com/intuit/auto-release/pull/44) ([@Aghassi](https://github.com/Aghassi))
 - update ignite [#43](https://github.com/intuit/auto-release/pull/43) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 3
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))
 - David ([@Aghassi](https://github.com/Aghassi))
@@ -138,236 +166,131 @@
 
 # 0.23.0 (Fri Dec 07 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - add init script [#42](https://github.com/intuit/auto-release/pull/42) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - center badges [#40](https://github.com/intuit/auto-release/pull/40) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - switch to tiny badges [#39](https://github.com/intuit/auto-release/pull/39) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - add shipit to home page [#41](https://github.com/intuit/auto-release/pull/41) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Add Contributor documentation [#38](https://github.com/intuit/auto-release/pull/38) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.22.0 (Fri Dec 07 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Add git user options [#37](https://github.com/intuit/auto-release/pull/37) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # 0.21.0 (Fri Dec 07 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
+
 - Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 2
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
-
-# 0.21.0 (Fri Dec 07 2018)
-
-#### 🚀  Enhancement
-- Add shipit tool [#35](https://github.com/intuit/auto-release/pull/35) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
-
-#### 🐛  Bug Fix
-- add shipit parser [#36](https://github.com/intuit/auto-release/pull/36) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-
-#### Authors: 2
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Adam Dierkens ([@adierkens](https://github.com/adierkens))
-
----
 
 # v0.20.20 (Fri Dec 07 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - Move login out of CLI [#33](https://github.com/intuit/auto-release/pull/33) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - update ignite [#30](https://github.com/intuit/auto-release/pull/30) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - fix header and theme sidebar [#27](https://github.com/intuit/auto-release/pull/27) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - add base url [#25](https://github.com/intuit/auto-release/pull/25) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - add correct author ;) [#24](https://github.com/intuit/auto-release/pull/24) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - remove weird border [#29](https://github.com/intuit/auto-release/pull/29) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update README.md [#28](https://github.com/intuit/auto-release/pull/28) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Polish [#26](https://github.com/intuit/auto-release/pull/26) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # v0.20.19 (Thu Dec 06 2018)
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - getting codecov working [#20](https://github.com/intuit/auto-release/pull/20) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - more badges [#19](https://github.com/intuit/auto-release/pull/19) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
+
 - Add documentation website [#21](https://github.com/intuit/auto-release/pull/21) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # v0.20.18 (Thu Dec 06 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - badge [#18](https://github.com/intuit/auto-release/pull/18) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - Contributors [#16](https://github.com/intuit/auto-release/pull/16) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # v0.20.17 (Thu Dec 06 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - Move typescript-memoize to dependencies [#17](https://github.com/intuit/auto-release/pull/17) ([@adierkens](https://github.com/adierkens))
 
 #### Authors: 1
+
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))
 
 ---
 
 # v0.20.16 (Thu Dec 06 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - Check prCommit.author is defined. [#14](https://github.com/intuit/auto-release/pull/14) ([@adierkens](https://github.com/adierkens))
 
-#### 🏠  Internal
+#### 🏠 Internal
+
 - Rename CONTRIBUTING.md to CODE_OF_CONDUCT.md [#13](https://github.com/intuit/auto-release/pull/13) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Create CONTRIBUTING.md [#12](https://github.com/intuit/auto-release/pull/12) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update issue templates [#11](https://github.com/intuit/auto-release/pull/11) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -375,6 +298,7 @@
 - remove bad changelog [#9](https://github.com/intuit/auto-release/pull/9) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 2
+
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -382,82 +306,96 @@
 
 # v0.20.15 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - memoize all the user functions [#5](https://github.com/intuit/auto-release/pull/5) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
+
 - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
 
 # v0.20.10 (Wed Dec 05 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
+
 - ignore invalid user [#3](https://github.com/intuit/auto-release/pull/3) (hipstersmoothie@users.noreply.github.com)
 - use correct url [#2](https://github.com/intuit/auto-release/pull/2) (hipstersmoothie@users.noreply.github.com)
 - add auto release to CI [#1](https://github.com/intuit/auto-release/pull/1) (hipstersmoothie@users.noreply.github.com)
 
 #### Authors: 1
+
 - Andrew Lisowski (hipstersmoothie@users.noreply.github.com)
 
 ---
