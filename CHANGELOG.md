@@ -1,3 +1,19 @@
+# 0.32.2 (Sun Dec 16 2018)
+
+#### 🐛  Bug Fix
+
+- unneeded long desc on chengelog cli [#81](https://github.com/intuit/auto-release/pull/81) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- doc ordering [#80](https://github.com/intuit/auto-release/pull/80) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.32.1 (Sun Dec 16 2018)
 
 #### 🐛  Bug Fix
