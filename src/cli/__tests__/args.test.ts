@@ -25,8 +25,11 @@ describe('root parser', () => {
     expect(console.log).toHaveBeenCalled();
   });
 
-  test('should throw when required arg is not included', () => {
-    expect(() => parseArgs(['pr'])).toThrow();
+  test('should exit when required arg is not included', () => {
+    // @ts-ignore
+    process.exit = jest.fn();
+    parseArgs(['pr']);
+    expect(process.exit).toHaveBeenCalled();
   });
 
   test('should parse just provided args', () => {
