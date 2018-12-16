@@ -15,7 +15,7 @@ If you are using enterprise github `auto-release` lets you configure the github 
 Getting started with `auto-release` is super easy.
 
 1. `auto init` (optional)
-2. `auto init-labels`
+2. `auto create-labels`
 3. Configure environment variables
 4. Set up script
 
@@ -33,7 +33,7 @@ After that, you need to set up the labels on your github project. The types of l
 To create the labels for your project on Github, run the following command with your `GH_TOKEN`.
 
 ```sh
-GH_TOKEN=YOUR_TOKEN auto init-labels
+GH_TOKEN=YOUR_TOKEN auto create-labels
 ```
 
 ### 3. Environment Variables

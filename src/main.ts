@@ -250,7 +250,7 @@ export async function run(args: ArgsType) {
       await init();
       break;
     }
-    case 'init-labels': {
+    case 'create-labels': {
       await githubRelease.addLabelsToProject(
         semVerLabels,
         args.onlyPublishWithReleaseLabel

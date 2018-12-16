@@ -9,7 +9,7 @@
 
 - [Setup](pages/auto-init.md)
   - [auto init](pages/auto-init.md#auto-init)
-  - [auto init-labels](pages/auto-init.md#auto-init-labels)
+  - [auto create-labels](pages/auto-init.md#auto-create-labels)
 - [Publishing](pages/publishing.md)
   - [auto version](pages/auto-version.md)
   - [auto changelog](pages/auto-changelog.md)

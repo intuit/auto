@@ -189,9 +189,9 @@ const commands: ICommand[] = [
     examples: ['{green $} auto init']
   },
   {
-    name: 'init-labels',
+    name: 'create-labels',
     summary: 'Create your projects labels on github.',
-    examples: ['{green $} auto init-labels'],
+    examples: ['{green $} auto create-labels'],
     options: defaultOptions
   },
   {
@@ -395,7 +395,7 @@ function printRootHelp() {
     {
       header: 'Setup Commands',
       content: commands
-        .filter(command => ['init', 'init-labels'].includes(command.name))
+        .filter(command => ['init', 'create-labels'].includes(command.name))
         .map(command => ({
           name: command.name,
           summary: command.summary
