@@ -19,6 +19,21 @@ Getting started with `auto-release` is super easy.
 3. Configure environment variables
 4. Set up script
 
+### Project already published
+
+If you're project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
+
+To tag your last release find that last commit where you bumped the version and run the following commands with your version number.
+
+```sh
+git tag v1.2.3
+git push --tags
+```
+
+Then on GitHub go to your project's releases and click `Draft a new release`. In the `Tag version` field enter the version number you just tagged and click `Publish release`.
+
+Now your github project is set up to use `auto-release`.
+
 ### 1. Initialize Options
 
 Initialize all options and configure label text. If this is not run then `auto-release` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
