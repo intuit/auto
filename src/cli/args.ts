@@ -1,5 +1,31 @@
+import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
+
+const p = chalk.hex('#870048');
+const y = chalk.hex('#F1A60E');
+const r = chalk.hex('#C5000B');
+const g = chalk.hex('#888888');
+
+// prettier-ignore
+const logo = `
+         ${y('.──────────.')}
+     ${y("_.─'            `──.")}
+   ${p(",'╲")}                  ${r('╱\`.')}               _         _
+  ${p('╱   ╲')}   ${y('.────────.')}   ${r('╱   ╲')}             / \\  _   _| |_ ___
+ ${p('╱     ╲')}${y("─'          '─")}${r('╱     ╲')}           / _ \\| | | | __/ _ \\
+${p(';     ╱')}                ${r('╲     :')}         / ___ \\ |_| | || (_) |
+${p('│    ;')}    ______        ${r(':    │')}        /_/   \\_\\__,_|\\__\\___/
+${p('│    │')}    ╲     \`\\      ${r('│    │')}
+${g('│────│')}     ╲      )     ${g('│────│')}     ____      _
+${g('│    │')}      \`─────      ${g('│    │')}    |  _ \\ ___| | ___  __ _ ___  ___
+${g('│     \`\\              /\`     │')}    | |_) / _ \\ |/ _ \\/ _\` / __|/ _ \\
+ ${g('\\      ╲            ╱      /')}     |  _ <  __/ |  __/ (_| \\__ \\  __/
+  ${g('╲      \`\`\\______/\`\`      ╱')}      |_| \\_\\___|_|\\___|\\__,_|___/\\___|
+   ${g('\`\\                    /\`')}
+     ${g('\`\\                /\`')}
+       ${g('\`\`\\__________/\`\`')}
+`;
 
 const help: commandLineUsage.OptionDefinition = {
   name: 'help',
@@ -324,13 +350,17 @@ const commands: ICommand[] = [
 function printRootHelp() {
   const usage = commandLineUsage([
     {
+      content: logo.replace(/\\/g, '\\\\'),
+      raw: true
+    },
+    {
       header: 'auto',
       content:
         'Generate releases based on semantic version labels on pull requests'
     },
     {
       header: 'Synopsis',
-      content: '$ auto <options> <command>'
+      content: '$ auto <command> <options>'
     },
     {
       header: 'Setup Commands',

@@ -44,7 +44,7 @@
     "@types/semver": "^5.5.0",
     "@types/signale": "^1.2.0",
     "argparse": "1.0.10",
-    "chalk": "2.4.1",
+    "chalk": "^2.4.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "cosmiconfig": "5.0.7",
