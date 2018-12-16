@@ -9,6 +9,10 @@ Interactive setup for most configurable options.
 ```sh
 $ auto init --help
 
+Options
+
+  --only-labels    Only run init for the labels. As most other options are for advanced users
+
 Examples
 
   $ auto init
