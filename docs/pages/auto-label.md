@@ -7,7 +7,7 @@ Get the labels for a pull request. Doesn't do much, but the return value lets yo
 
 Options
 
-  --pr number [required]   The pull request number you want the labels of
+  --pr number   The pull request number you want the labels of (default to last merged PR)
 
 Global Options
 
