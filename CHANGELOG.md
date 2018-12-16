@@ -1,3 +1,26 @@
+# 0.33.1 (Sun Dec 16 2018)
+
+#### 🐛  Bug Fix
+
+- missed adding no release labels to `pr-check` [#89](https://github.com/intuit/auto-release/pull/89) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update deps [#85](https://github.com/intuit/auto-release/pull/85) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- fix version number [#92](https://github.com/intuit/auto-release/pull/92) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- only publish docs with documentation label [#86](https://github.com/intuit/auto-release/pull/86) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- fix docs publish [#88](https://github.com/intuit/auto-release/pull/88) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Clearer wording [#87](https://github.com/intuit/auto-release/pull/87) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
