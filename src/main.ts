@@ -344,9 +344,18 @@ export async function run(args: ArgsType) {
         const labels = await githubRelease.getLabels(args.pr!);
         const labelTexts = Object.values(semVerLabels);
         const releaseTag = labels.find(l => l === 'release');
-        const noReleaseTag = labels.find(l => l === 'no-release');
+        const noReleaseLabels = args.noReleaseLabels || [];
+
+        if (!noReleaseLabels.includes(semVerLabels.get('no-release')!)) {
+          noReleaseLabels.push(semVerLabels.get('no-release')!);
+        }
+
+        const noReleaseTag = labels.find(l => noReleaseLabels.includes(l));
         const semverTag = labels.find(
-          l => labelTexts.includes(l) && l !== 'no-release' && l !== 'release'
+          l =>
+            labelTexts.includes(l) &&
+            !noReleaseLabels.includes(l) &&
+            l !== 'release'
         );
 
         if (semverTag === undefined && !noReleaseTag) {
