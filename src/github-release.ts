@@ -1,5 +1,5 @@
-import * as fs from 'fs';
 import GHub from '@octokit/rest';
+import * as fs from 'fs';
 import { ICommit } from 'parse-git';
 import { inc, ReleaseType } from 'semver';
 import signale from 'signale';
