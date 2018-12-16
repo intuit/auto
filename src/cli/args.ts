@@ -291,8 +291,7 @@ const commands: ICommand[] = [
   },
   {
     name: 'changelog',
-    summary:
-      "Prepend release notes to 'CHANGELOG.md', create one if it doesn't exist, and commit the changes.",
+    summary: "Prepend release notes to 'CHANGELOG.md'",
     options: [
       dryRun,
       noVersionPrefix,
