@@ -16,12 +16,15 @@ Options
   --pr number [required]            The pull request number you want the labels of
   --context string                  A string label to differentiate this status from others
   -m, --message string [required]   Message to post to comment
-  -h, --help                        Display the help output for the command
-  -v, --verbose                     Show some more logs
-  -w, --very-verbose                Show a lot more logs
-  --repo string                     The repo to set the status on. Defaults to looking in the package.json
-  --owner string                    Version number to publish as. Defaults to reading from the package.json
-  --githubApi string                Github API to use
+
+Global Options
+
+  -h, --help            Display the help output for the command
+  -v, --verbose         Show some more logs
+  -w, --very-verbose    Show a lot more logs
+  --repo string         The repo to set the status on. Defaults to looking in the package.json
+  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --githubApi string    Github API to use
 
 Examples
 

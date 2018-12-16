@@ -2,15 +2,6 @@
 
 Set the status on a PR commit
 
-```sh
-auto pr
-  --pr 24 \
-  --state success \
-  --description 'Your thing passed' \
-  --url http://result.com \
-  --context 1337c0d3
-```
-
 ## Options
 
 ```bash
@@ -25,15 +16,22 @@ Options
   --state string [required]         State of the PR. ['pending', 'success', 'error', 'failure']
   --description string [required]   A description of the status
   --context string [required]       A string label to differentiate this status from others
-  -h, --help                        Display the help output for the command
-  -v, --verbose                     Show some more logs
-  -w, --very-verbose                Show a lot more logs
-  --repo string                     The repo to set the status on. Defaults to looking in the package.json
-  --owner string                    Version number to publish as. Defaults to reading from the package.json
-  --githubApi string                Github API to use
+
+Global Options
+
+  -h, --help            Display the help output for the command
+  -v, --verbose         Show some more logs
+  -w, --very-verbose    Show a lot more logs
+  --repo string         The repo to set the status on. Defaults to looking in the package.json
+  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --githubApi string    Github API to use
 
 Examples
 
-  $ auto pr --pr 32 --url http://your-ci.com/build/123 --state pending
-  --description "Build still running..." --context build-check
+$ auto pr \
+   --pr 32 \
+   --url http://your-ci.com/build/123 \
+   --state pending \
+   --description "Build still running..." \
+   --context build-check
 ```

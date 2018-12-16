@@ -12,7 +12,7 @@ auto shipit
 
 $ auto shipit --help
 
-Options
+Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs

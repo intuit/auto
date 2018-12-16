@@ -21,7 +21,7 @@ Create your projects labels on github.
 ```sh
 $ auto init-labels --help
 
-Options
+Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
