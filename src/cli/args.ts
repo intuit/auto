@@ -480,7 +480,6 @@ function styleTypes(
   command: ICommand,
   option: commandLineUsage.OptionDefinition
 ) {
-  console.log(option);
   const isRequired =
     command.require && command.require.includes(option.name as keyof ArgsType);
 
