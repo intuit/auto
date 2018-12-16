@@ -187,8 +187,8 @@ documentation: #{documentation}
   return changelogTitles;
 }
 
-export default async function init() {
-  const flags = await getFlags();
+export default async function init(onlyLabels?: boolean) {
+  const flags = onlyLabels ? {} : await getFlags();
   const labels = await getLabels();
   const changelogTitles = await getChangelogTitles();
 

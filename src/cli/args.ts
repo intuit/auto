@@ -35,6 +35,7 @@ const mainDefinitions: commandLineUsage.OptionDefinition[] = [
     description: 'Display the help output. Works on each command as well'
   }
 ];
+
 const defaultOptions = [
   {
     ...help,
@@ -181,7 +182,16 @@ const commands: ICommand[] = [
   {
     name: 'init',
     summary: 'Interactive setup for most configurable options',
-    examples: ['{green $} auto init']
+    examples: ['{green $} auto init'],
+    options: [
+      {
+        name: 'only-labels',
+        type: Boolean,
+        group: 'main',
+        description:
+          'Only run init for the labels. As most other options are for advanced users'
+      }
+    ]
   },
   {
     name: 'create-labels',
@@ -449,11 +459,17 @@ function printCommandHelp(command: ICommand) {
       });
     }
 
-    sections.push({
-      header: 'Global Options',
-      optionList: command.options,
-      group: 'misc'
-    });
+    const hasGlobalOptions = command.options.filter(
+      option => option.group === 'misc'
+    );
+
+    if (hasGlobalOptions.length > 0) {
+      sections.push({
+        header: 'Global Options',
+        optionList: command.options,
+        group: 'misc'
+      });
+    }
   }
 
   sections.push({
@@ -527,6 +543,7 @@ export default function parseArgs(testArgs?: string[]) {
     process.exit(0);
   }
 
+  console.log(autoOptions);
   return autoOptions;
 }
 
@@ -578,6 +595,10 @@ export interface ICommentArgs {
   message?: string;
 }
 
+export interface IInitArgs {
+  'only-labels'?: boolean;
+}
+
 export interface ILogArgs {
   verbose?: boolean;
   very_verbose?: boolean;
@@ -592,4 +613,5 @@ export type ArgsType = {
   ICommentArgs &
   IPRArgs &
   ILogArgs &
-  IOwnerArgs;
+  IOwnerArgs &
+  IInitArgs;
