@@ -1,3 +1,13 @@
+# 0.29.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+- print help or missing flag + print all missing flags [#69](https://github.com/intuit/auto-release/pull/69) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.28.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
