@@ -255,7 +255,7 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
-      `{green $} auto pr --pr 32 --url http://your-ci.com/build/123 --state pending --description "Build still running..." --context build-check`
+      `{green $} auto pr \\\\ \n   --pr 32 \\\\ \n   --url http://your-ci.com/build/123 \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
     ]
   },
   {
@@ -463,7 +463,8 @@ function printCommandHelp(command: ICommand) {
 
   sections.push({
     header: 'Examples',
-    content: command.examples
+    content: command.examples,
+    raw: command.name === 'pr'
   });
 
   console.log(commandLineUsage(sections));
