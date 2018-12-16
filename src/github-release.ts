@@ -315,7 +315,7 @@ export default class GithubRelease {
 
     await Promise.all(
       [...labels.entries()].map(async ([versionLabel, customLabel]) => {
-        if (oldLabels.includes(customLabel)) {
+        if (oldLabels && oldLabels.includes(customLabel)) {
           return;
         }
 

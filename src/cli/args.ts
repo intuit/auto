@@ -1,265 +1,532 @@
-import { ArgumentParser } from 'argparse';
-import SEMVER from '../semver';
+import chalk from 'chalk';
+import commandLineArgs from 'command-line-args';
+import commandLineUsage from 'command-line-usage';
 
-export type ParserFunction = (parser: ArgumentParser) => void;
+const p = chalk.hex('#870048');
+const y = chalk.hex('#F1A60E');
+const r = chalk.hex('#C5000B');
+const g = chalk.hex('#888888');
 
-const enum ACTION_TYPES {
-  storeTrue = 'storeTrue'
-}
+// prettier-ignore
+const logo = `
+      ${y('_________')}
+     ${p('/')}${y('\\       /')}${r('\\')}                   _______ _     _ _______  _____
+    ${p('/')}  ${y('\\_____/')}  ${r('\\')}                  |_____| |     |    |    |     |
+   ${p('/   /')}     ${r('\\   \\')}                 |     | |_____|    |    |_____|
+  ${p('/___/')} \\▔▔\\ ${r(' \\___\\')}
+  ${g('\\   \\')}  \\_/  ${g('/   /')}     ______ _______        _______ _______ _______ _______
+   ${g('\\   \\')}     ${g('/   /')}     |_____/ |______ |      |______ |_____| |______ |______
+    ${g('\\   ▔▔▔▔▔   /')}      |    \\_ |______ |_____ |______ |     | ______| |______
+     ${g('\\         /')}
+      ${g('▔▔▔▔▔▔▔▔▔ ')}
+`;
 
-const addPr = (parser: ArgumentParser, required = true) =>
-  parser.addArgument('--pr', {
-    help: 'The pull request number you want the labels of',
-    required
-  });
+const help: commandLineUsage.OptionDefinition = {
+  name: 'help',
+  alias: 'h',
+  type: Boolean
+};
 
-const addUrl = (parser: ArgumentParser) =>
-  parser.addArgument(['--url'], {
-    help: 'URL to associate with this status',
-    required: true
-  });
-
-const addRepo = (parser: ArgumentParser) =>
-  parser.addArgument('--repo', {
-    help:
-      'The repo to set the status on. Defaults to looking in the package.json'
-  });
-
-const addOwner = (parser: ArgumentParser) =>
-  parser.addArgument(['--owner'], {
-    help:
-      'Version number to publish as. Defaults to reading from the package.json'
-  });
-
-const addDryRun = (parser: ArgumentParser) =>
-  parser.addArgument(['-d', '--dry-run'], {
-    help: 'Dont actually commit status. Just print the request body',
-    action: ACTION_TYPES.storeTrue
-  });
-
-const addNoVersionPrefix = (parser: ArgumentParser) =>
-  parser.addArgument(['--no-version-prefix'], {
-    help: 'Use the version as the tag without the `v` prefix',
-    action: ACTION_TYPES.storeTrue
-  });
-
-const addMessage = (parser: ArgumentParser, help: string, required = false) =>
-  parser.addArgument(['-m', '--message'], {
-    help,
-    required
-  });
-
-const addContext = (
-  parser: ArgumentParser,
-  required = true,
-  defaultValue?: string
-) =>
-  parser.addArgument(['--context'], {
-    help: 'A string label to differentiate this status from others',
-    required,
-    defaultValue
-  });
-
-const addJira = (parser: ArgumentParser) =>
-  parser.addArgument(['--jira'], {
-    help: 'Jira base URL'
-  });
-
-const addGithubApi = (parser: ArgumentParser) =>
-  parser.addArgument(['--githubApi'], {
-    help: 'Github API to use'
-  });
-
-const addOnlyPublishWithReleaseLabel = (parser: ArgumentParser) =>
-  parser.addArgument(['--onlyPublishWithReleaseLabel'], {
-    help: 'Only bump version if `release` label is on pull request',
-    action: ACTION_TYPES.storeTrue
-  });
-
-function addLoggingParser(parser: ArgumentParser) {
-  parser.addArgument(['-v', '--verbose'], {
-    help: 'Show some more logs',
-    action: ACTION_TYPES.storeTrue
-  });
-
-  parser.addArgument(['-vv', '--very-verbose'], {
-    help: 'Show a lot more logs',
-    action: ACTION_TYPES.storeTrue
-  });
-
-  addGithubApi(parser);
-}
-
-function addSemverParser(parser: ArgumentParser) {
-  addOnlyPublishWithReleaseLabel(parser);
-
-  parser.addArgument(['--major'], {
-    help: 'The name of the tag for a major version bump',
-    defaultValue: SEMVER.major
-  });
-
-  parser.addArgument(['--minor'], {
-    help: 'The name of the tag for a minor version bump',
-    defaultValue: SEMVER.minor
-  });
-
-  parser.addArgument(['--patch'], {
-    help: 'The name of the tag for a patch version bump',
-    defaultValue: SEMVER.patch
-  });
-}
-
-function addGitUser(parser: ArgumentParser) {
-  parser.addArgument(['--name'], {
-    help: 'Git name to commit and release with. Defaults to package.json'
-  });
-
-  parser.addArgument(['--email'], {
-    help: 'Git email to commit with. Defaults to package.json'
-  });
-}
-
-// All of the parsers for each command are setup in their own functions
-// This allows us to either use separate commands for each one (github-pr, github-label)
-// or group them under a single root command (github pr, github label)
-// without having to redeclare any of the args each command needs.
-
-export function addLabelParser(parser: ArgumentParser) {
-  addPr(parser);
-  addRepo(parser);
-  addOwner(parser);
-
-  addLoggingParser(parser);
-}
-
-export function addPRCheckParser(parser: ArgumentParser) {
-  addPr(parser);
-  addDryRun(parser);
-  addUrl(parser);
-  addOwner(parser);
-  addRepo(parser);
-  addContext(parser, false, 'ci/pr-check');
-
-  addSemverParser(parser);
-  addLoggingParser(parser);
-}
-
-export function addPRParser(parser: ArgumentParser) {
-  parser.addArgument(['--sha'], {
-    help:
-      'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
-  });
-
-  parser.addArgument(['--state'], {
-    required: true,
-    help: 'State of the PR',
-    optionStrings: ['pending', 'success', 'error', 'failure']
-  });
-
-  parser.addArgument(['--description'], {
-    help: 'A description of the status',
-    required: true
-  });
-
-  addUrl(parser);
-  addContext(parser);
-  addPr(parser);
-  addOwner(parser);
-  addRepo(parser);
-
-  addLoggingParser(parser);
-}
-
-export function addReleaseParser(parser: ArgumentParser) {
-  parser.addArgument(['-s', '--slack'], {
-    help:
-      'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
-  });
-
-  parser.addArgument(['--use-version'], {
-    help:
-      'Version number to publish as. Defaults to reading from the package.json.'
-  });
-
-  addJira(parser);
-  addNoVersionPrefix(parser);
-  addDryRun(parser);
-
-  addLoggingParser(parser);
-  addGitUser(parser);
-}
-
-export function addVersionParser(parser: ArgumentParser) {
-  parser.addArgument(['--noReleaseLabels'], {
-    help:
-      "Labels that will not create a release. Defaults to just 'no-release'",
-    type: Array
-  });
-
-  addSemverParser(parser);
-  addLoggingParser(parser);
-}
-
-export function addChangelogParser(parser: ArgumentParser) {
-  parser.addArgument(['--from'], {
-    help: 'Tag to start changelog generation on. Defaults to latest tag.'
-  });
-
-  parser.addArgument(['--to'], {
-    help: 'Tag to end changelog generation on. Defaults to HEAD.'
-  });
-
-  addJira(parser);
-  addNoVersionPrefix(parser);
-  addDryRun(parser);
-  addMessage(
-    parser,
-    'Message to commit the changelog with. Defaults to "Update CHANGELOG.md [skip ci]"'
-  );
-
-  addLoggingParser(parser);
-  addGitUser(parser);
-}
-
-export function addCommentParser(parser: ArgumentParser) {
-  addMessage(parser, 'Message to post to comment.', true);
-  addContext(parser, false);
-  addOwner(parser);
-  addRepo(parser);
-  addPr(parser);
-
-  addLoggingParser(parser);
-}
-
-export const PARSERS: [string, ParserFunction][] = [
-  ['label', addLabelParser],
-  ['pr', addPRParser],
-  ['pr-check', addPRCheckParser],
-  ['release', addReleaseParser],
-  ['version', addVersionParser],
-  ['comment', addCommentParser],
-  ['changelog', addChangelogParser],
-  ['init-labels', addLoggingParser],
-  ['init', () => undefined],
-  ['shipit', () => undefined]
+const mainDefinitions: commandLineUsage.OptionDefinition[] = [
+  { name: 'command', type: String, defaultOption: true },
+  {
+    ...help,
+    description: 'Display the help output. Works on each command as well'
+  }
+];
+const defaultOptions = [
+  {
+    ...help,
+    description: 'Display the help output for the command',
+    group: 'misc'
+  },
+  {
+    name: 'verbose',
+    alias: 'v',
+    type: Boolean,
+    description: 'Show some more logs',
+    group: 'misc'
+  },
+  {
+    name: 'very-verbose',
+    alias: 'w',
+    type: Boolean,
+    description: 'Show a lot more logs',
+    group: 'misc'
+  },
+  {
+    name: 'repo',
+    type: String,
+    description:
+      'The repo to set the status on. Defaults to looking in the package.json',
+    group: 'misc'
+  },
+  {
+    name: 'owner',
+    type: String,
+    description:
+      'Version number to publish as. Defaults to reading from the package.json',
+    group: 'misc'
+  },
+  {
+    name: 'githubApi',
+    type: String,
+    description: 'Github API to use',
+    group: 'misc'
+  }
 ];
 
-const rootParser = new ArgumentParser({
-  addHelp: true,
-  description: 'A CI/CD helper for releasing with GitHub'
-});
+const pr: commandLineUsage.OptionDefinition = {
+  name: 'pr',
+  type: Number,
+  description: 'The pull request number you want the labels of',
+  group: 'main'
+};
 
-const subParsers = rootParser.addSubparsers({
-  dest: 'command'
-});
+const dryRun: commandLineUsage.OptionDefinition = {
+  name: 'dry-run',
+  alias: 'd',
+  type: Boolean,
+  description: 'Dont actually commit status. Just print the request body',
+  group: 'main'
+};
 
-PARSERS.forEach(([parserName, parserFunction]) => {
-  parserFunction(
-    subParsers.addParser(parserName, {
-      addHelp: true
-    })
-  );
-});
+const url: commandLineUsage.OptionDefinition = {
+  name: 'url',
+  type: String,
+  description: 'URL to associate with this status',
+  group: 'main'
+};
+
+const noVersionPrefix: commandLineUsage.OptionDefinition = {
+  name: 'no-version-prefix',
+  type: Boolean,
+  description: "Use the version as the tag without the 'v' prefix",
+  group: 'main'
+};
+
+const jira: commandLineUsage.OptionDefinition = {
+  name: 'jira',
+  type: String,
+  description: 'Jira base URL',
+  group: 'main'
+};
+
+const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
+  name: 'onlyPublishWithReleaseLabel',
+  type: Boolean,
+  description: "Only bump version if 'release' label is on pull request",
+  group: 'main'
+};
+
+const major: commandLineUsage.OptionDefinition = {
+  name: 'major',
+  type: String,
+  description: 'The name of the tag for a major version bump',
+  group: 'main'
+};
+
+const minor: commandLineUsage.OptionDefinition = {
+  name: 'minor',
+  type: String,
+  description: 'The name of the tag for a minor version bump',
+  group: 'main'
+};
+
+const patch: commandLineUsage.OptionDefinition = {
+  name: 'patch',
+  type: String,
+  description: 'The name of the tag for a patch version bump',
+  group: 'main'
+};
+
+const semver = [onlyPublishWithReleaseLabel, major, minor, patch];
+
+const name: commandLineUsage.OptionDefinition = {
+  name: 'name',
+  type: String,
+  description: 'Git name to commit and release with. Defaults to package.json'
+};
+
+const email: commandLineUsage.OptionDefinition = {
+  name: 'email',
+  type: String,
+  description: 'Git email to commit with. Defaults to package.json'
+};
+
+const context: commandLineUsage.OptionDefinition = {
+  name: 'context',
+  type: String,
+  description: 'A string label to differentiate this status from others',
+  group: 'main'
+};
+
+const message: commandLineUsage.OptionDefinition = {
+  name: 'message',
+  group: 'main',
+  type: String,
+  alias: 'm'
+};
+
+const required = (options: ArgsType, option: keyof ArgsType) => {
+  if (!options[option]) {
+    throw new TypeError(`--${option} is required`);
+  }
+};
+
+interface ICommand {
+  name: string;
+  summary: string;
+  options?: commandLineUsage.OptionDefinition[];
+  require?: (keyof ArgsType)[];
+  examples: any[];
+}
+
+const commands: ICommand[] = [
+  {
+    name: 'init',
+    summary: 'Interactive setup for most configurable options',
+    examples: ['{green $} auto init']
+  },
+  {
+    name: 'init-labels',
+    summary: 'Create your projects labels on github.',
+    examples: ['{green $} auto init-labels'],
+    options: defaultOptions
+  },
+  {
+    name: 'label',
+    summary: 'Get the labels for a pull request',
+    require: ['pr'],
+    options: [pr, ...defaultOptions],
+    examples: ['{green $} auto label --pr 123']
+  },
+  {
+    name: 'pr-check',
+    summary: 'Check that a pull request has a SemVer label',
+    require: ['pr', 'url'],
+    options: [
+      pr,
+      url,
+      ...semver,
+      {
+        ...context,
+        defaultValue: 'ci/pr-check'
+      },
+      ...defaultOptions
+    ],
+    examples: [
+      '{green $} auto pr-check --pr 32 --url http://your-ci.com/build/123'
+    ]
+  },
+  {
+    name: 'pr',
+    summary: 'Set the status on a PR commit',
+    require: ['pr', 'state', 'description', 'context', 'url'],
+    options: [
+      {
+        name: 'sha',
+        type: String,
+        group: 'main',
+        description:
+          'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
+      },
+      pr,
+      url,
+      {
+        name: 'state',
+        type: String,
+        group: 'main',
+        description:
+          "State of the PR. ['pending', 'success', 'error', 'failure']"
+      },
+      {
+        name: 'description',
+        type: String,
+        group: 'main',
+        description: 'A description of the status'
+      },
+      {
+        name: 'context',
+        type: String,
+        group: 'main',
+        description: 'A string label to differentiate this status from others'
+      },
+      ...defaultOptions
+    ],
+    examples: [
+      `{green $} auto pr \\\\ \n   --pr 32 \\\\ \n   --url http://your-ci.com/build/123 \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
+    ]
+  },
+  {
+    name: 'version',
+    summary: 'Get the semantic version bump for the given changes.',
+    options: [
+      ...semver,
+      {
+        name: 'noReleaseLabels',
+        type: String,
+        group: 'main',
+        multiple: true,
+        description:
+          "Labels that will not create a release. Defaults to just 'no-release'"
+      },
+      ...defaultOptions
+    ],
+    examples: [
+      {
+        desc: 'Get the new version using the last release to head',
+        example: '{green $} auto version'
+      },
+      {
+        desc: 'Skip releases with multiple labels',
+        example: '{green $} auto version --noReleaseLabels documentation CI'
+      }
+    ]
+  },
+  {
+    name: 'changelog',
+    summary:
+      "Prepend release notes to 'CHANGELOG.md', create one if it doesn't exist, and commit the changes.",
+    options: [
+      dryRun,
+      noVersionPrefix,
+      name,
+      email,
+      jira,
+      {
+        name: 'from',
+        type: String,
+        group: 'main',
+        description:
+          'Tag to start changelog generation on. Defaults to latest tag.'
+      },
+      {
+        name: 'to',
+        type: String,
+        group: 'main',
+        description: 'Tag to end changelog generation on. Defaults to HEAD.'
+      },
+      {
+        ...message,
+        description:
+          "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
+      },
+      ...defaultOptions
+    ],
+    examples: [
+      {
+        desc: 'Generate a changelog from the last release to head',
+        example: '{green $} auto changelog'
+      },
+      {
+        desc: 'Generate a changelog across specific versions',
+        example: '{green $} auto changelog --from v0.20.1 --to v0.21.0'
+      }
+    ]
+  },
+  {
+    name: 'release',
+    summary: 'Auto-generate a github release',
+    options: [
+      dryRun,
+      noVersionPrefix,
+      name,
+      email,
+      jira,
+      {
+        name: 'use-version',
+        type: Boolean,
+        group: 'main',
+        description:
+          'Version number to publish as. Defaults to reading from the package.json.'
+      },
+      {
+        name: 'slack',
+        alias: 's',
+        type: String,
+        group: 'main',
+        description:
+          'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
+      },
+      ...defaultOptions
+    ],
+    examples: ['{green $} auto release']
+  },
+  {
+    name: 'comment',
+    summary: 'Comment on a pull request with a markdown message',
+    require: ['pr', 'message'],
+    options: [
+      pr,
+      context,
+      { ...message, description: 'Message to post to comment' },
+      ...defaultOptions
+    ],
+    examples: [
+      '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
+    ]
+  },
+  {
+    name: 'shipit',
+    summary: 'Run the full auto-release project. Detects if in a lerna project',
+    examples: ['{green $} auto shipit'],
+    options: defaultOptions
+  }
+];
+
+function printRootHelp() {
+  const options = [...mainDefinitions, ...defaultOptions];
+  options.forEach(option => styleTypes({} as ICommand, option));
+
+  const usage = commandLineUsage([
+    {
+      content: logo.replace(/\\/g, '\\\\'),
+      raw: true
+    },
+    {
+      content:
+        'Generate releases based on semantic version labels on pull requests'
+    },
+    {
+      header: 'Synopsis',
+      content: '$ auto <command> <options>'
+    },
+    {
+      header: 'Setup Commands',
+      content: commands
+        .filter(command => ['init', 'init-labels'].includes(command.name))
+        .map(command => ({
+          name: command.name,
+          summary: command.summary
+        }))
+    },
+    {
+      header: 'Release Commands',
+      content: commands
+        .filter(command =>
+          ['release', 'version', 'changelog', 'shipit'].includes(command.name)
+        )
+        .map(command => ({
+          name: command.name,
+          summary: command.summary
+        }))
+    },
+    {
+      header: 'Pull Request Interaction Commands',
+      content: commands
+        .filter(command =>
+          ['label', 'pr-check', 'pr', 'comment'].includes(command.name)
+        )
+        .map(command => ({
+          name: command.name,
+          summary: command.summary
+        }))
+    },
+    {
+      header: 'Global Options',
+      optionList: options,
+      group: 'misc'
+    }
+  ]);
+
+  console.log(usage);
+}
+
+function printCommandHelp(command: ICommand) {
+  const sections: commandLineUsage.Section[] = [
+    {
+      header: `auto ${command.name}`,
+      content: command.summary
+    }
+  ];
+
+  if (command.options) {
+    const hasLocalOptions = command.options.filter(
+      option => option.group === 'main'
+    );
+
+    if (hasLocalOptions.length > 0) {
+      sections.push({
+        header: 'Options',
+        optionList: command.options,
+        group: 'main'
+      });
+    }
+
+    sections.push({
+      header: 'Global Options',
+      optionList: command.options,
+      group: 'misc'
+    });
+  }
+
+  sections.push({
+    header: 'Examples',
+    content: command.examples,
+    raw: command.name === 'pr'
+  });
+
+  console.log(commandLineUsage(sections));
+}
+
+function styleTypes(
+  command: ICommand,
+  option: commandLineUsage.OptionDefinition
+) {
+  const isRequired =
+    command.require && command.require.includes(option.name as keyof ArgsType);
+
+  if (isRequired && option.type === Number) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline number}} [{rgb(254,91,92) required}]';
+  } else if (option.type === Number) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline number}}';
+  }
+
+  if (isRequired && option.type === String) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline string}} [{rgb(254,91,92) required}]';
+  } else if (option.multiple && option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string[]}}';
+  } else if (option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string}}';
+  }
+}
+
+export default function parseArgs(testArgs?: string[]) {
+  const mainOptions = commandLineArgs(mainDefinitions, {
+    stopAtFirstUnknown: true,
+    argv: testArgs
+  });
+  const argv = mainOptions._unknown || [];
+  const command = commands.find(c => c.name === mainOptions.command);
+
+  if (!command) {
+    return printRootHelp();
+  }
+
+  const options = command.options || [];
+
+  options.map(option => styleTypes(command, option));
+
+  if (mainOptions.help) {
+    return printCommandHelp(command);
+  }
+
+  const autoOptions: ArgsType = {
+    command: mainOptions.command,
+    ...commandLineArgs(options, { argv })._all
+  };
+
+  if (command.require) {
+    command.require.map(option => {
+      required(autoOptions, option);
+    });
+  }
+
+  return autoOptions;
+}
 
 export interface ISemverArgs {
   noReleaseLabels?: string[];
@@ -324,7 +591,3 @@ export type ArgsType = {
   IPRArgs &
   ILogArgs &
   IOwnerArgs;
-
-export default function parse(stuff?: string[]): ArgsType {
-  return rootParser.parseArgs(stuff);
-}

@@ -16,6 +16,8 @@ const listComments = jest.fn();
 const deleteComment = jest.fn();
 const listCommits = jest.fn();
 const getProject = jest.fn();
+const listLabelsForRepo = jest.fn();
+const createLabel = jest.fn();
 
 jest.mock('@octokit/rest', () => () => ({
   authenticate,
@@ -27,7 +29,9 @@ jest.mock('@octokit/rest', () => () => ({
     listLabelsOnIssue,
     createComment,
     listComments,
-    deleteComment
+    deleteComment,
+    listLabelsForRepo,
+    createLabel
   },
   repos: {
     createStatus,
@@ -55,6 +59,7 @@ describe('github', () => {
     createComment.mockClear();
     listComments.mockClear();
     deleteComment.mockClear();
+    listLabelsForRepo.mockClear();
   });
 
   describe('authenticate', () => {
@@ -422,6 +427,69 @@ describe('github', () => {
       });
 
       expect(gh.getLatestRelease()).rejects.toBeTruthy();
+    });
+  });
+
+  describe('getProjectLabels ', () => {
+    test('return labels', async () => {
+      const gh = new Github({
+        logger,
+        owner: 'Adam Dierkens',
+        repo: 'test',
+        token: 'MyToken'
+      });
+
+      listLabelsForRepo.mockReturnValueOnce({
+        data: [{ name: 'first label' }, { name: 'second label' }]
+      });
+
+      expect(await gh.getProjectLabels()).toEqual([
+        'first label',
+        'second label'
+      ]);
+    });
+
+    test('throw for errors', async () => {
+      const gh = new Github({
+        logger,
+        owner: 'Adam Dierkens',
+        repo: 'test',
+        token: 'MyToken'
+      });
+
+      expect(gh.getProjectLabels()).rejects.toBeTruthy();
+    });
+  });
+
+  describe('createLabel', () => {
+    test('should create a label', async () => {
+      const gh = new Github({
+        logger,
+        owner: 'Adam Dierkens',
+        repo: 'test',
+        token: 'MyToken'
+      });
+
+      await gh.createLabel('release', 'Foo bar');
+
+      expect(createLabel).toHaveBeenCalledWith(
+        expect.objectContaining({
+          owner: 'Adam Dierkens',
+          repo: 'test',
+          name: 'Foo bar'
+        })
+      );
+    });
+
+    test('throw for errors', async () => {
+      const gh = new Github({
+        logger,
+        owner: 'Adam Dierkens',
+        repo: 'test',
+        token: 'MyToken'
+      });
+
+      expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });
   });
 });

@@ -9,30 +9,30 @@ Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and com
 ```bash
 >  auto changelog -h
 
-usage: auto changelog [-h] [--from FROM] [--to TO] [--jira JIRA]
-                         [--no-version-prefix] [-d] [-m MESSAGE] [-v] [-vv]
-                         [--githubApi GITHUBAPI] [--name NAME] [--email EMAIL]
+Options
 
+  -d, --dry-run          Dont actually commit status. Just print the request body
+  --no-version-prefix    Use the version as the tag without the 'v' prefix
+  --jira string          Jira base URL
+  --from string          Tag to start changelog generation on. Defaults to latest tag.
+  --to string            Tag to end changelog generation on. Defaults to HEAD.
+  -m, --message string   Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip
+                         ci]'
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
-  --from FROM           Tag to start changelog generation on. Defaults to
-                        latest tag.
-  --to TO               Tag to end changelog generation on. Defaults to HEAD.
-  --jira JIRA           Jira base URL
-  --no-version-prefix   Use the version as the tag without the `v` prefix
-  -d, --dry-run         Dont actually commit status. Just print the request
-                        body
-  -m MESSAGE, --message MESSAGE
-                        Message to commit the changelog with. Defaults to
-                        "Update CHANGELOG.md [skip ci]"
+Global Options
+
+  -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
-  --name NAME           Git name to commit and release with. Defaults to
-                        package.json
-  --email EMAIL         Git email to commit with. Defaults to package.json
+  -w, --very-verbose    Show a lot more logs
+  --repo string         The repo to set the status on. Defaults to looking in the package.json
+  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --githubApi string    Github API to use
+
+Examples
+
+  Generate a changelog from the last release to head   $ auto changelog
+  Generate a changelog across specific versions        $ auto changelog --from v0.20.1 --to v0.21.0
+
 ```
 
 ## Jira

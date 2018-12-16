@@ -11,24 +11,22 @@ auto comment --pr 24 --message "You broke the build!" --context build
 ```bash
 >  auto version -h
 
-usage: auto comment [-h] -m MESSAGE [--context CONTEXT] [--owner OWNER]
-                         [--repo REPO] --pr PR [-v] [-vv]
-                         [--githubApi GITHUBAPI]
+Options
 
+  --pr number [required]            The pull request number you want the labels of
+  --context string                  A string label to differentiate this status from others
+  -m, --message string [required]   Message to post to comment
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
-  -m MESSAGE, --message MESSAGE
-                        Message to post to comment.
-  --context CONTEXT     A string label to differentiate this status from
-                        others
-  --owner OWNER         Version number to publish as. Defaults to reading
-                        from the package.json
-  --repo REPO           The repo to set the status on. Defaults to looking in
-                        the package.json
-  --pr PR               The pull request number you want the labels of
+Global Options
+
+  -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
+  -w, --very-verbose    Show a lot more logs
+  --repo string         The repo to set the status on. Defaults to looking in the package.json
+  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --githubApi string    Github API to use
+
+Examples
+
+  $ auto comment --pr 123 --comment "# Why you're wrong..."
 ```

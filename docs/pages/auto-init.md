@@ -9,10 +9,9 @@ Interactive setup for most configurable options.
 ```sh
 $ auto init --help
 
-usage: auto.js init [-h]
+Examples
 
-Optional arguments:
-  -h, --help  Show this help message and exit.
+  $ auto init
 ```
 
 ## `auto init-labels`
@@ -22,14 +21,18 @@ Create your projects labels on github.
 ```sh
 $ auto init-labels --help
 
-usage: auto.js init-labels [-h] [-v] [-vv] [--githubApi GITHUBAPI]
+Global Options
 
-Optional arguments:
-  -h, --help            Show this help message and exit.
+  -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
-  -vv, --very-verbose   Show a lot more logs
-  --githubApi GITHUBAPI
-                        Github API to use
+  -w, --very-verbose    Show a lot more logs
+  --repo string         The repo to set the status on. Defaults to looking in the package.json
+  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --githubApi string    Github API to use
+
+Examples
+
+  $ auto init-labels
 ```
 
 ::: message is-warning

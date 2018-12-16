@@ -37,13 +37,16 @@
   "dependencies": {
     "@octokit/rest": "^16.2.0",
     "@types/argparse": "1.0.35",
+    "@types/command-line-usage": "^5.0.1",
     "@types/cosmiconfig": "5.0.3",
     "@types/node-fetch": "2.1.4",
     "@types/parse-github-url": "1.0.0",
     "@types/semver": "^5.5.0",
     "@types/signale": "^1.2.0",
     "argparse": "1.0.10",
-    "chalk": "2.4.1",
+    "chalk": "^2.4.1",
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.5",
     "cosmiconfig": "5.0.7",
     "enquirer": "^2.1.1",
     "node-fetch": "2.3.0",
@@ -56,6 +59,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
     "@types/jest": "~23.3.10",
     "@types/node": "~10.12.15",
     "@types/url-join": "^0.8.2",

@@ -167,14 +167,14 @@ export default class Github {
     try {
       const labels = await this.ghub.issues.listLabelsForRepo(args);
       this.logger.veryVerbose.info(
-        'Got response for "listLabelsForRepo":\n',
+        'Got response for "getProjectLabels":\n',
         labels
       );
       this.logger.verbose.info('Found labels on project:\n', labels.data);
 
       return labels.data.map(l => l.name);
     } catch (e) {
-      throw new GithubAPIError('listLabelsOnIssue', args, e);
+      throw new GithubAPIError('getProjectLabels', args, e);
     }
   }
 
