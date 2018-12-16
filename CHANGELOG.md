@@ -1,3 +1,13 @@
+# 0.31.0 (Sun Dec 16 2018)
+
+#### 🚀  Enhancement
+- init flag to just get labels [#74](https://github.com/intuit/auto-release/pull/74) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.30.0 (Sun Dec 16 2018)
 
 #### 🚀  Enhancement
