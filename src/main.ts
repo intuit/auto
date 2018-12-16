@@ -256,9 +256,10 @@ export async function run(args: ArgsType) {
         new Map([
           ...semVerLabels,
           ...new Map(
-            Object.keys(defaultChangelogTitles).map(
-              (label): [string, string] => [label, label]
-            )
+            [
+              ...Object.keys(defaultChangelogTitles),
+              ...Object.keys(config.changelogTitles || {})
+            ].map((label): [string, string] => [label, label])
           )
         ]),
         args.onlyPublishWithReleaseLabel
