@@ -261,7 +261,7 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
-      `$ auto pr --pr 32 --url http://your-ci.com/build/123 --state pending --description "Build still running..." --context build-check`
+      `{green $} auto pr --pr 32 --url http://your-ci.com/build/123 --state pending --description "Build still running..." --context build-check`
     ]
   },
   {
