@@ -1,7 +1,7 @@
 {
   "name": "auto-release-cli",
   "description": "CLI tools to help facilitate semantic versioning based on Github PR labels.",
-  "version": "0.33.3",
+  "version": "0.33.4",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
