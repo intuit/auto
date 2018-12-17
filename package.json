@@ -32,7 +32,8 @@
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
     "docs:watch": "ignite --watch",
-    "docs:publish": "./scripts/publish-docs.sh"
+    "docs:publish": "./scripts/publish-docs.sh",
+    "pr-check": "chmod +x ./dist/bin/auto.js && ./dist/bin/auto.js pr-check --pr $CIRCLE_PR_NUMBER --url $CIRCLE_BUILD_URL"
   },
   "dependencies": {
     "@octokit/rest": "^16.2.0",

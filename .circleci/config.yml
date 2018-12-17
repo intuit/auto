@@ -78,6 +78,15 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/auto-release
+      - run:
+          name: Check PR for SemVer label
+          command: yarn pr-check
+
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/auto-release
       - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
@@ -111,6 +120,13 @@ workflows:
           requires:
             - install
 
+      - prCheck:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: master
+
       - release:
           requires:
             - build
@@ -118,13 +134,11 @@ workflows:
             - test
           filters:
             branches:
-              only:
-                - master
+              only: master
 
       - publishDocs:
           requires:
             - release
           filters:
             branches:
-              only:
-                - master
+              only: master
