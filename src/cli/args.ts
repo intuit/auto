@@ -349,7 +349,7 @@ const commands: ICommand[] = [
       {
         name: 'slack',
         alias: 's',
-        type: String,
+        type: Boolean,
         group: 'main',
         description:
           'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
