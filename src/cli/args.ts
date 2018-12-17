@@ -531,11 +531,13 @@ export default function parseArgs(testArgs?: string[]) {
       .map(option => `--${option}`);
     const multiple = missing.length > 1;
 
-    printCommandHelp(command);
-    signale.error(
-      `Missing required flag${multiple ? 's' : ''}: ${missing.join(', ')}`
-    );
-    process.exit(0);
+    if (missing.length > 0) {
+      printCommandHelp(command);
+      signale.error(
+        `Missing required flag${multiple ? 's' : ''}: ${missing.join(', ')}`
+      );
+      process.exit(0);
+    }
   }
 
   return autoOptions;
