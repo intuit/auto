@@ -1,3 +1,15 @@
+# 0.33.5 (Mon Dec 17 2018)
+
+#### 🐛  Bug Fix
+
+- pr-check wasn't getting semver labelTexts correctly [#98](https://github.com/intuit/auto-release/pull/98) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.4 (Mon Dec 17 2018)
 
 #### 🐛  Bug Fix
