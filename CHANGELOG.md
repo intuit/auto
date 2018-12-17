@@ -1,3 +1,15 @@
+# 0.33.4 (Mon Dec 17 2018)
+
+#### 🐛  Bug Fix
+
+- Change slack flag to boolean [#96](https://github.com/intuit/auto-release/pull/96) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.3 (Sun Dec 16 2018)
 
 #### 🐛  Bug Fix
