@@ -1,3 +1,15 @@
+# 0.33.3 (Sun Dec 16 2018)
+
+#### 🐛  Bug Fix
+
+- only error if there are actually missing args [#95](https://github.com/intuit/auto-release/pull/95) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.1 (Sun Dec 16 2018)
 
 #### 🐛  Bug Fix
