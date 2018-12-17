@@ -73,7 +73,7 @@ jobs:
           paths:
             - .
 
-  release:
+  prCheck:
     <<: *defaults
     steps:
       - attach_workspace:
