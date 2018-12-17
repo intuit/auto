@@ -342,7 +342,7 @@ export async function run(args: ArgsType) {
         args.sha = res.data.head.sha;
 
         const labels = await githubRelease.getLabels(args.pr!);
-        const labelTexts = Object.values(semVerLabels);
+        const labelTexts = [...semVerLabels.values()];
         const releaseTag = labels.find(l => l === 'release');
         const noReleaseLabels = args.noReleaseLabels || [];
 
