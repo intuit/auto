@@ -212,13 +212,6 @@ export async function run(args: ArgsType) {
 
   verbose.success('Loaded `auto-release` with config:', rawConfig);
 
-  Object.entries(args).forEach(([key, val]) => {
-    // tslint:disable-next-line
-    if (val === null) {
-      delete (args as any)[key];
-    }
-  });
-
   const config: IGithubReleaseOptions = {
     ...rawConfig,
     ...args,
