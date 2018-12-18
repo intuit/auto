@@ -1,6 +1,6 @@
 import GHub from '@octokit/rest';
 import * as fs from 'fs';
-import { ICommit } from 'parse-git';
+import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import signale from 'signale';
 import { promisify } from 'util';
@@ -168,7 +168,7 @@ export default class GithubRelease {
 
     await Promise.all(
       commits.map(async commit => {
-        commit.packages = await client.changedPackages(commit.id);
+        commit.packages = await client.changedPackages(commit.hash);
       })
     );
 
@@ -263,8 +263,8 @@ export default class GithubRelease {
               }
             })
           );
-        } else if (commit.author.email) {
-          const author = await client.getUserByEmail(commit.author.email);
+        } else if (commit.authorEmail) {
+          const author = await client.getUserByEmail(commit.authorEmail);
           resolvedAuthors.push(author);
         }
 

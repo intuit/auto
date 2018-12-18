@@ -1,7 +1,7 @@
 import { IExtendedCommit } from '../log-parse';
 
 const makeCommitFromMsg = (
-  comment: string,
+  subject: string,
   options: {
     name?: string;
     email?: string;
@@ -10,19 +10,17 @@ const makeCommitFromMsg = (
     packages?: string[];
   } = {}
 ): IExtendedCommit => ({
-  id: 'foo',
+  hash: 'foo',
   labels: options.labels || [],
-  author: {
-    name: options.name || 'Adam Dierkens',
-    email: options.email || 'adam@dierkens.com'
-  },
+  authorName: options.name || 'Adam Dierkens',
+  authorEmail: options.email || 'adam@dierkens.com',
   authors: [
     {
       name: options.name || 'Adam Dierkens',
       email: options.email || 'adam@dierkens.com'
     }
   ],
-  comment,
+  subject,
   packages: options.packages
 });
 

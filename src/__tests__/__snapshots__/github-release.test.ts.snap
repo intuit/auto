@@ -25,10 +25,8 @@ exports[`GithubRelease generateReleaseNotes should allow user to configure secti
 exports[`GithubRelease getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
-    "author": Object {
-      "email": "adam@dierkens.com",
-      "name": "Adam Dierkens",
-    },
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
         "login": "adam",
@@ -36,16 +34,14 @@ Array [
         "username": "adam",
       },
     ],
-    "comment": "First",
-    "id": "foo",
+    "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "subject": "First",
   },
   Object {
-    "author": Object {
-      "email": "lisowski54@gmail.com",
-      "name": "Andrew Lisowski",
-    },
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
         "login": "andrew",
@@ -53,19 +49,17 @@ Array [
         "username": "andrew",
       },
     ],
-    "comment": "Second",
-    "id": "foo",
+    "hash": "foo",
     "labels": undefined,
     "packages": undefined,
     "pullRequest": Object {
       "number": "123",
     },
+    "subject": "Second",
   },
   Object {
-    "author": Object {
-      "email": "adam@dierkens.com",
-      "name": "Adam Dierkens",
-    },
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
         "login": "adam",
@@ -73,10 +67,10 @@ Array [
         "username": "adam",
       },
     ],
-    "comment": "Third",
-    "id": "foo",
+    "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "subject": "Third",
   },
 ]
 `;

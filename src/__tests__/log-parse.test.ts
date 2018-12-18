@@ -19,22 +19,20 @@ test('createUserLink', () => {
         email: undefined
       },
       {
-        id: '1',
+        hash: '1',
         labels: [],
         pullRequest: {
           number: '22'
         },
-        author: {
-          name: 'none',
-          email: 'default@email.com'
-        },
+        authorName: 'none',
+        authorEmail: 'default@email.com',
         authors: [
           {
             name: 'none',
             email: undefined
           }
         ],
-        comment: ''
+        subject: ''
       },
       {
         owner: '',
@@ -64,7 +62,7 @@ describe('parsePR', () => {
         number: '1234',
         base: 'Another PR'
       },
-      comment: 'Comments about the PR'
+      subject: 'Comments about the PR'
     });
   });
 });
@@ -82,7 +80,7 @@ describe('parseSquashPR', () => {
       pullRequest: {
         number: '1234'
       },
-      comment: 'Some Message'
+      subject: 'Some Message'
     });
   });
 });
@@ -96,10 +94,8 @@ describe('filterServiceAccounts', () => {
   test('should filter the commit', () => {
     const commit = {
       ...makeCommitFromMsg('foo'),
-      author: {
-        name: 'pdbf',
-        email: ''
-      }
+      authorName: 'pdbf',
+      authorEmail: ''
     };
 
     expect(filterServiceAccounts(commit)).toBeUndefined();
@@ -180,10 +176,8 @@ describe('normalizeCommits', () => {
     ];
 
     expect(normalizeCommits(commits)[2]).toEqual({
-      author: {
-        email: 'adam@dierkens.com',
-        name: 'Adam Dierkens'
-      },
+      authorEmail: 'adam@dierkens.com',
+      authorName: 'Adam Dierkens',
       authors: [
         {
           email: 'adam@dierkens.com',
@@ -191,8 +185,8 @@ describe('normalizeCommits', () => {
         }
       ],
       labels: [],
-      comment: 'Add log',
-      id: 'foo',
+      subject: 'Add log',
+      hash: 'foo',
       jira: {
         number: ['PLAYA-5052']
       }
