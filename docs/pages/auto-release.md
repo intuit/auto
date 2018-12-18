@@ -32,8 +32,9 @@ Options
   --no-version-prefix    Use the version as the tag without the 'v' prefix
   --jira string          Jira base URL
   --use-version          Version number to publish as. Defaults to reading from the package.json.
-  -s, --slack            Post a message to slack about the release. Make sure the SLACK_TOKEN
-                         environment variable is set.
+  -s, --slack string     Url to post a slack message to about the release. If slack url supplied via
+                         autorc this flag can act as a boolean.  Make sure the SLACK_TOKEN environment
+                         variable is set.
 
 Global Options
 

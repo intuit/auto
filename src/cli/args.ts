@@ -330,10 +330,10 @@ const commands: ICommand[] = [
       {
         name: 'slack',
         alias: 's',
-        type: Boolean,
+        type: String,
         group: 'main',
         description:
-          'Post a message to slack about the release. Make sure the SLACK_TOKEN environment variable is set.'
+          'Url to post a slack message to about the release. If slack url supplied via autorc this flag can act as a boolean.  Make sure the SLACK_TOKEN environment variable is set.'
       },
       ...defaultOptions
     ],
@@ -528,7 +528,6 @@ export interface ISemverArgs {
   skipReleaseLabels?: string[];
   onlyPublishWithReleaseLabel?: boolean;
   jira?: string;
-  slack?: string;
   githubApi?: string;
 }
 
@@ -555,7 +554,7 @@ export interface IPRArgs {
 
 export interface IReleaseArgs {
   dry_run?: boolean;
-  slack?: string;
+  slack?: string | boolean;
   no_version_prefix?: boolean;
   use_version?: string;
 }
