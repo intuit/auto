@@ -201,7 +201,7 @@ export async function run(args: ArgsType) {
   const explorer = cosmiconfig('auto');
   const result = await explorer.search();
 
-  let rawConfig = {};
+  let rawConfig: cosmiconfig.Config = {};
 
   const prefixRelease = (release: string) =>
     args.no_version_prefix || release.startsWith('v') ? release : `v${release}`;
@@ -215,7 +215,8 @@ export async function run(args: ArgsType) {
   const config: IGithubReleaseOptions = {
     ...rawConfig,
     ...args,
-    logger
+    logger,
+    slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
   };
 
   await setGitUser(config);
