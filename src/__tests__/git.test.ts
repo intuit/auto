@@ -72,7 +72,9 @@ describe('github', () => {
       try {
         await gh.authenticate();
       } catch (error) {
-        expect(error.message.trim()).toBe('Auth needs a Github token.');
+        expect(error.message.trim()).toBe(
+          'Authentication needs a Github token. Try setting up an access token https://github.com/settings/tokens/new'
+        );
       }
     });
 

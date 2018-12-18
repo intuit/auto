@@ -96,6 +96,7 @@ export default class GithubRelease {
   private readonly logger: ILogger;
 
   private readonly jira?: string;
+  private readonly githubApi: string;
   private readonly slack?: string;
 
   constructor(
@@ -103,6 +104,7 @@ export default class GithubRelease {
     releaseOptions: IGithubReleaseOptions = { logger: dummyLog() }
   ) {
     this.jira = releaseOptions.jira;
+    this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
     this.slack = releaseOptions.slack;
     this.userLabels = releaseOptions.labels || new Map();
     this.changelogTitles = releaseOptions.changelogTitles || {};
@@ -118,8 +120,8 @@ export default class GithubRelease {
         ...options
       };
 
-      if (releaseOptions && releaseOptions.githubApi) {
-        args.baseUrl = releaseOptions.githubApi;
+      if (releaseOptions && this.githubApi) {
+        args.baseUrl = this.githubApi;
       }
 
       this.logger.verbose.info('Initializing Github API with:\n', args);
@@ -128,7 +130,7 @@ export default class GithubRelease {
       this.logger.verbose.info('Getting repo information from package.json');
 
       this.github = getConfigFromPackageJson().then(async gOptions => {
-        const token = await getGithubToken();
+        const token = await getGithubToken(this.githubApi);
 
         const finalOptions: IGithubReleaseOptions & IGithubOptions = {
           ...options,
@@ -137,8 +139,8 @@ export default class GithubRelease {
           token
         };
 
-        if (releaseOptions && releaseOptions.githubApi) {
-          finalOptions.baseUrl = releaseOptions.githubApi;
+        if (releaseOptions && this.githubApi) {
+          finalOptions.baseUrl = this.githubApi;
         }
 
         finalOptions.owner =
