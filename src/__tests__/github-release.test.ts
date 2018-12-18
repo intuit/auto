@@ -357,9 +357,9 @@ describe('GithubRelease', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['no-release', 'patch']);
-      getLabels.mockReturnValueOnce(['no-release', 'patch']);
-      getLabels.mockReturnValueOnce(['no-release', 'minor']);
+      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
+      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
+      getLabels.mockReturnValueOnce(['skip-release', 'minor']);
 
       expect(await gh.getSemverBump('1234', '123')).toBe('');
     });
@@ -374,8 +374,8 @@ describe('GithubRelease', () => {
 
       getGitLog.mockReturnValueOnce(commits);
       getLabels.mockReturnValueOnce(['patch']);
-      getLabels.mockReturnValueOnce(['no-release', 'patch']);
-      getLabels.mockReturnValueOnce(['no-release', 'minor']);
+      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
+      getLabels.mockReturnValueOnce(['skip-release', 'minor']);
 
       expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.minor);
     });
@@ -389,7 +389,7 @@ describe('GithubRelease', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['no-release']);
+      getLabels.mockReturnValueOnce(['skip-release']);
       getLabels.mockReturnValueOnce([]);
       getLabels.mockReturnValueOnce([]);
 
@@ -502,16 +502,16 @@ describe('GithubRelease', () => {
       expect(createLabel).toHaveBeenCalledWith('release', 'deploy');
     });
 
-    test('should add no-release label not in onlyPublishWithReleaseLabel mode', async () => {
+    test('should add skip-release label not in onlyPublishWithReleaseLabel mode', async () => {
       const gh = new GithubRelease();
       const labels = new Map<VersionLabel, string>();
-      labels.set('no-release', 'no!');
+      labels.set('skip-release', 'no!');
 
       await gh.addLabelsToProject(labels, true);
-      expect(createLabel).not.toHaveBeenCalledWith('no-release', 'no!');
+      expect(createLabel).not.toHaveBeenCalledWith('skip-release', 'no!');
 
       await gh.addLabelsToProject(labels);
-      expect(createLabel).toHaveBeenCalledWith('no-release', 'no!');
+      expect(createLabel).toHaveBeenCalledWith('skip-release', 'no!');
     });
   });
 });

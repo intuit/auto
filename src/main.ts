@@ -107,7 +107,7 @@ async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
     lastRelease,
     undefined,
     args.onlyPublishWithReleaseLabel,
-    args.noReleaseLabels
+    args.skipReleaseLabels
   );
 }
 
@@ -337,21 +337,21 @@ export async function run(args: ArgsType) {
         const labels = await githubRelease.getLabels(args.pr!);
         const labelTexts = [...semVerLabels.values()];
         const releaseTag = labels.find(l => l === 'release');
-        const noReleaseLabels = args.noReleaseLabels || [];
+        const skipReleaseLabels = args.skipReleaseLabels || [];
 
-        if (!noReleaseLabels.includes(semVerLabels.get('no-release')!)) {
-          noReleaseLabels.push(semVerLabels.get('no-release')!);
+        if (!skipReleaseLabels.includes(semVerLabels.get('skip-release')!)) {
+          skipReleaseLabels.push(semVerLabels.get('skip-release')!);
         }
 
-        const noReleaseTag = labels.find(l => noReleaseLabels.includes(l));
+        const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
         const semverTag = labels.find(
           l =>
             labelTexts.includes(l) &&
-            !noReleaseLabels.includes(l) &&
+            !skipReleaseLabels.includes(l) &&
             l !== 'release'
         );
 
-        if (semverTag === undefined && !noReleaseTag) {
+        if (semverTag === undefined && !skipReleaseTag) {
           throw new Error('No semver label!');
         }
 
@@ -359,7 +359,7 @@ export async function run(args: ArgsType) {
 
         let description;
 
-        if (noReleaseTag) {
+        if (skipReleaseTag) {
           description = 'PR will not create a release';
         } else if (releaseTag) {
           description = `PR will create release once merged - ${semverTag}`;

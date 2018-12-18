@@ -23,7 +23,7 @@
           "type": "string",
           "description": "Label used to mark a pull request as a patch release"
         },
-        "no-release": {
+        "skip-release": {
           "type": "string",
           "description": "Do not create a release for this PR. Is ignored when in `onlyPublishWithReleaseLabel` mode."
         },

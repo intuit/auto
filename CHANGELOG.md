@@ -12,7 +12,7 @@
 
 # 0.33.6 (Mon Dec 17 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - url isn't required for pr or pr-check [#99](https://github.com/intuit/auto-release/pull/99) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -24,7 +24,7 @@
 
 # 0.33.5 (Mon Dec 17 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - pr-check wasn't getting semver labelTexts correctly [#98](https://github.com/intuit/auto-release/pull/98) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -36,7 +36,7 @@
 
 # 0.33.4 (Mon Dec 17 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Change slack flag to boolean [#96](https://github.com/intuit/auto-release/pull/96) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -48,7 +48,7 @@
 
 # 0.33.3 (Sun Dec 16 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - only error if there are actually missing args [#95](https://github.com/intuit/auto-release/pull/95) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -60,17 +60,17 @@
 
 # 0.33.1 (Sun Dec 16 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - missed adding no release labels to `pr-check` [#89](https://github.com/intuit/auto-release/pull/89) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - update deps [#85](https://github.com/intuit/auto-release/pull/85) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - fix version number [#92](https://github.com/intuit/auto-release/pull/92) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - only publish docs with documentation label [#86](https://github.com/intuit/auto-release/pull/86) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - fix docs publish [#88](https://github.com/intuit/auto-release/pull/88) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Clearer wording [#87](https://github.com/intuit/auto-release/pull/87) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -83,7 +83,7 @@
 
 # 0.33.0 (Sun Dec 16 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Default `label` to last merged PR [#83](https://github.com/intuit/auto-release/pull/83) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -95,11 +95,11 @@
 
 # 0.32.2 (Sun Dec 16 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - unneeded long desc on chengelog cli [#81](https://github.com/intuit/auto-release/pull/81) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - doc ordering [#80](https://github.com/intuit/auto-release/pull/80) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -111,11 +111,11 @@
 
 # 0.32.1 (Sun Dec 16 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Formatted Changelogs [#79](https://github.com/intuit/auto-release/pull/79) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Document process for onboarding an already published repo [#78](https://github.com/intuit/auto-release/pull/78) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -193,7 +193,7 @@
 
 #### 📝 Documentation
 
-- Add docs for `noReleaseLabels` [#57](https://github.com/intuit/auto-release/pull/57) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add docs for `skipReleaseLabels` [#57](https://github.com/intuit/auto-release/pull/57) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Badge [#56](https://github.com/intuit/auto-release/pull/56) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
