@@ -1,10 +1,14 @@
 import GHub from '@octokit/rest';
-import { ICommit, parseGit } from 'parse-git';
+import gitlogNode, { ICommit } from 'gitlog';
+import { promisify } from 'util';
+
 import { Memoize } from 'typescript-memoize';
 
 import { defaultLabelsDescriptions, ILogger } from './github-release';
 import execPromise from './utils/exec-promise';
 import settingsUrl from './utils/settings-url';
+
+const gitlog = promisify(gitlogNode);
 
 export interface IGithubOptions {
   owner: string;
@@ -179,10 +183,11 @@ export default class Github {
   }
 
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
-    const gitlog = await execPromise(
-      `git log --name-status ${start.trim()}..${end.trim()}`
-    );
-    return parseGit(gitlog);
+    return gitlog({
+      repo: process.cwd(),
+      fields: ['hash', 'authorName', 'authorEmail', 'subject'],
+      branch: `${start.trim()}..${end.trim()}`
+    });
   }
 
   @Memoize()

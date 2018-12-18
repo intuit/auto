@@ -3,19 +3,16 @@
 exports[`github getGitLog  1`] = `
 Array [
   Object {
-    "author": Object {
-      "email": "lisowski54@gmail.com",
-      "name": "Andrew Lisowski",
-    },
-    "comment": "update tests",
-    "date": 2018-12-03T23:20:22.000Z,
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
     "files": Array [
-      Object {
-        "path": "src/__tests__/git.test.ts",
-        "type": "M",
-      },
+      "src/__tests__/git.test.ts",
     ],
-    "id": "a7f6634429731055a5a44bae24ac88c5f9822e58",
+    "hash": "a7f6634429731055a5a44bae24ac88c5f9822e58",
+    "status": Array [
+      "M",
+    ],
+    "subject": "update tests",
   },
 ]
 `;

@@ -1,4 +1,4 @@
-import { ICommit } from 'parse-git';
+import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
 import { ILogger } from './github-release';
@@ -48,7 +48,7 @@ export const createUserLink = (
 
   return author.username
     ? `[@${author.username}](${join(githubUrl, author.username)})`
-    : author.email || commit.author.email;
+    : author.email || commit.authorEmail;
 };
 
 const createUserLinkList = (
@@ -73,7 +73,7 @@ export function filterServiceAccounts(
 ): IExtendedCommit | undefined {
   const SERVICE_ACCOUNTS = ['pdbf'];
 
-  if (SERVICE_ACCOUNTS.includes(commit.author.name)) {
+  if (SERVICE_ACCOUNTS.includes(commit.authorName)) {
     return;
   }
 
@@ -82,7 +82,7 @@ export function filterServiceAccounts(
 
 export function parsePR(commit: IExtendedCommit): IExtendedCommit {
   const merge = /Merge pull request #(\d+) from (.+)\n([\S\s]+)/;
-  const prMatch = commit.comment.match(merge);
+  const prMatch = commit.subject.match(merge);
 
   if (!prMatch) {
     return commit;
@@ -94,14 +94,14 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
       number: prMatch[1],
       base: prMatch[2]
     },
-    comment: prMatch[3]
+    subject: prMatch[3]
   };
 }
 
 export function parseSquashPR(
   commit: IExtendedCommit
 ): IExtendedCommit | undefined {
-  const firstLine = commit.comment.split('\n')[0];
+  const firstLine = commit.subject.split('\n')[0];
   const squashMerge = /\(#(\d+)\)$/;
 
   const squashMergeMatch = firstLine.match(squashMerge);
@@ -115,7 +115,7 @@ export function parseSquashPR(
     pullRequest: {
       number: squashMergeMatch[1]
     },
-    comment: firstLine
+    subject: firstLine
       .substr(0, firstLine.length - squashMergeMatch[0].length)
       .trim()
   };
@@ -126,7 +126,7 @@ export function parseJira(commit: IExtendedCommit): IExtendedCommit {
   const jira = /^\[?([\w]{3,}-\d+)\]?:?\s?[-\s]*([\S ]+)?/;
   const matches = [];
 
-  let currentMatch = commit.comment.match(jira);
+  let currentMatch = commit.subject.match(jira);
 
   while (currentMatch) {
     matches.push(currentMatch);
@@ -142,7 +142,7 @@ export function parseJira(commit: IExtendedCommit): IExtendedCommit {
     jira: {
       number: matches.map(match => match[1])
     },
-    comment: matches[matches.length - 1][2]
+    subject: matches[matches.length - 1][2]
   };
 }
 
@@ -157,7 +157,7 @@ function normalizeCommit(commit: ICommit): IExtendedCommit | undefined {
   const extended: IExtendedCommit = {
     labels: [],
     ...commit,
-    authors: [commit.author]
+    authors: [{ name: commit.authorName, email: commit.authorEmail }]
   };
 
   return parsers.reduce(
@@ -190,7 +190,7 @@ function generateCommitNote(
 
   const user = createUserLinkList(commit, options);
 
-  return `- ${jira}${commit.comment} ${pr}${user ? ` (${user})` : ''}`;
+  return `- ${jira}${commit.subject} ${pr}${user ? ` (${user})` : ''}`;
 }
 
 const filterLabel = (commits: IExtendedCommit[], label: string) =>

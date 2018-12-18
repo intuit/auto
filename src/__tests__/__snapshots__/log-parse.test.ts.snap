@@ -90,52 +90,46 @@ exports[`generateReleaseNotes should use username if present 1`] = `
 exports[`normalizeCommits should do nothing with normal commits 1`] = `
 Array [
   Object {
-    "author": Object {
-      "email": "adam@dierkens.com",
-      "name": "Adam Dierkens",
-    },
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "comment": "First",
-    "id": "foo",
+    "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "subject": "First",
   },
   Object {
-    "author": Object {
-      "email": "adam@dierkens.com",
-      "name": "Adam Dierkens",
-    },
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "comment": "Second",
-    "id": "foo",
+    "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "subject": "Second",
   },
   Object {
-    "author": Object {
-      "email": "adam@dierkens.com",
-      "name": "Adam Dierkens",
-    },
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "comment": "Third",
-    "id": "foo",
+    "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "subject": "Third",
   },
 ]
 `;

@@ -19,22 +19,20 @@ test('createUserLink', () => {
         email: undefined
       },
       {
-        id: '1',
+        hash: '1',
         labels: [],
         pullRequest: {
           number: '22'
         },
-        author: {
-          name: 'none',
-          email: 'default@email.com'
-        },
+        authorName: 'none',
+        authorEmail: 'default@email.com',
         authors: [
           {
             name: 'none',
             email: undefined
           }
         ],
-        comment: ''
+        subject: ''
       },
       {
         owner: '',
@@ -64,7 +62,7 @@ describe('parsePR', () => {
         number: '1234',
         base: 'Another PR'
       },
-      comment: 'Comments about the PR'
+      subject: 'Comments about the PR'
     });
   });
 });
@@ -82,7 +80,7 @@ describe('parseSquashPR', () => {
       pullRequest: {
         number: '1234'
       },
-      comment: 'Some Message'
+      subject: 'Some Message'
     });
   });
 });
@@ -191,7 +189,7 @@ describe('normalizeCommits', () => {
         }
       ],
       labels: [],
-      comment: 'Add log',
+      subject: 'Add log',
       id: 'foo',
       jira: {
         number: ['PLAYA-5052']
