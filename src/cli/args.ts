@@ -220,7 +220,7 @@ const commands: ICommand[] = [
   {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
-    require: ['pr', 'url'],
+    require: ['pr'],
     options: [
       pr,
       url,
