@@ -20,22 +20,22 @@ describe('calculateSemVerBump', () => {
     );
   });
 
-  test('should be able to use multiple labels for no-release', () => {
+  test('should be able to use multiple labels for skip-release', () => {
     expect(
-      calculateSemVerBump([['no-release', 'major']], defaultLabels, {
-        noReleaseLabels: ['documentation']
+      calculateSemVerBump([['skip-release', 'major']], defaultLabels, {
+        skipReleaseLabels: ['documentation']
       })
     ).toBe(SEMVER.noVersion);
 
     expect(
       calculateSemVerBump([['documentation', 'major']], defaultLabels, {
-        noReleaseLabels: ['documentation']
+        skipReleaseLabels: ['documentation']
       })
     ).toBe(SEMVER.noVersion);
 
     expect(
       calculateSemVerBump([['major']], defaultLabels, {
-        noReleaseLabels: ['documentation']
+        skipReleaseLabels: ['documentation']
       })
     ).toBe(SEMVER.major);
   });

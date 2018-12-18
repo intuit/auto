@@ -82,7 +82,7 @@ To version, changelog, publish and release your code all at the same time, we've
 
 #### Detailed Setup
 
-The simplest workflow to get set up in just the `package.json` is by adding the following to your `package.json`. With this setup your application will not be able to use the `no-release` flag, but everything else will work just fine
+The simplest workflow to get set up in just the `package.json` is by adding the following to your `package.json`. With this setup your application will not be able to use the `skip-release` flag, but everything else will work just fine
 
 ```json
 {
@@ -94,9 +94,9 @@ The simplest workflow to get set up in just the `package.json` is by adding the 
 }
 ```
 
-##### Enabling `no-release` label
+##### Enabling `skip-release` label
 
-To use the `no-release` label you have to get a little more involved and use a shell script. We could do the `if` checks in the `package.json`, but this would get messy and hard to read very quickly.
+To use the `skip-release` label you have to get a little more involved and use a shell script. We could do the `if` checks in the `package.json`, but this would get messy and hard to read very quickly.
 
 ```json
 {
@@ -113,7 +113,7 @@ export PATH=$(npm bin):$PATH
 
 VERSION=`auto version`
 
-## Support for label 'no-release'
+## Support for label 'skip-release'
 if [ ! -z "$VERSION" ]; then
   ## Update Changelog
   auto changelog

@@ -21,7 +21,7 @@ export type VersionLabel =
   | SEMVER.major
   | SEMVER.minor
   | SEMVER.patch
-  | 'no-release'
+  | 'skip-release'
   | 'release'
   | 'prerelease';
 
@@ -29,7 +29,7 @@ export const defaultLabels = new Map<VersionLabel, string>();
 defaultLabels.set(SEMVER.major, 'major');
 defaultLabels.set(SEMVER.minor, 'minor');
 defaultLabels.set(SEMVER.patch, 'patch');
-defaultLabels.set('no-release', 'no-release');
+defaultLabels.set('skip-release', 'skip-release');
 defaultLabels.set('release', 'release');
 defaultLabels.set('prerelease', 'prerelease');
 
@@ -45,7 +45,7 @@ export const defaultLabelsDescriptions = new Map<string, string>();
 defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
 defaultLabelsDescriptions.set(SEMVER.minor, 'create a minor release');
 defaultLabelsDescriptions.set(SEMVER.patch, 'create a patch release');
-defaultLabelsDescriptions.set('no-release', 'do not create a release');
+defaultLabelsDescriptions.set('skip-release', 'do not create a release');
 defaultLabelsDescriptions.set(
   'release',
   'publish a release when this pr is merged'
@@ -337,7 +337,7 @@ export default class GithubRelease {
           return;
         }
 
-        if (versionLabel === 'no-release' && onlyPublishWithReleaseLabel) {
+        if (versionLabel === 'skip-release' && onlyPublishWithReleaseLabel) {
           return;
         }
 
@@ -350,11 +350,11 @@ export default class GithubRelease {
     from: string,
     to = 'HEAD',
     onlyPublishWithReleaseLabel = false,
-    noReleaseLabels: string[] = []
+    skipReleaseLabels: string[] = []
   ): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const options = { onlyPublishWithReleaseLabel, noReleaseLabels };
+    const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
     const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {

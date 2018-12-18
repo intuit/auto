@@ -8,7 +8,7 @@ Get the semantic version bump for the given changes. Requires all PRs to have la
 Options
 
   --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
-  --noReleaseLabels string[]       Labels that will not create a release. Defaults to just 'no-release'
+  --skipReleaseLabels string[]       Labels that will not create a release. Defaults to just 'skip-release'
 
 Global Options
 
@@ -22,7 +22,7 @@ Global Options
 Examples
 
   Get the new version using the last release to head   $ auto version
-  Skip releases with multiple labels                   $ auto version --noReleaseLabels documentation CI
+  Skip releases with multiple labels                   $ auto version --skipReleaseLabels documentation CI
 ```
 
 Useful in conjunction with `npm version` to auto-version releases.
@@ -33,18 +33,18 @@ To create a prerelease add the `prerelease` label to your pull request.
 
 ## No Release
 
-To not create a release for a pull request add the `no-release` label. Any pull request with this tag will make `auto version` return `''`.
+To not create a release for a pull request add the `skip-release` label. Any pull request with this tag will make `auto version` return `''`.
 
 ::: message is-warning
-:warning: You must check the return value of `auto version` in a bash script like in the example configuration for the `no-release` label to function properly.
+:warning: You must check the return value of `auto version` in a bash script like in the example configuration for the `skip-release` label to function properly.
 :::
 
 ### Multiple
 
-You can configure multiple labels to skip releasing as well. To do this use the `noReleaseLabels` options. This can also be configured via the [.autorc](./autorc.md#multiple-no-version).
+You can configure multiple labels to skip releasing as well. To do this use the `skipReleaseLabels` options. This can also be configured via the [.autorc](./autorc.md#multiple-no-version).
 
 ```sh
-auto version --noReleaseLabels project-files --noReleaseLabels documentation
+auto version --skipReleaseLabels project-files --skipReleaseLabels documentation
 ```
 
 ## Configure Versioning Labels

@@ -17,7 +17,7 @@ Options
   --url string                     URL to associate with this status
   --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
   --context string                 A string label to differentiate this status from others
-  --noReleaseLabels string[]       Labels that will not create a release. Defaults to just 'no-release'
+  --skipReleaseLabels string[]       Labels that will not create a release. Defaults to just 'skip-release'
 
 Global Options
 

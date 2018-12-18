@@ -78,7 +78,7 @@ async function getLabels() {
 major: #{major}
 minor: #{minor}
 patch: #{patch}
-no-release: #{no-release}
+skip-release: #{skip-release}
 release: #{release}
 prerelease: #{prerelease}
 internal: #{internal}

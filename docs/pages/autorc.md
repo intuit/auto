@@ -31,7 +31,7 @@ To override the label text used for versioning define new labels in the `.autorc
     "major": "Version: Major",
     "minor": "Version: Minor",
     "patch": "Version: Patch",
-    "no-release": "NO!",
+    "skip-release": "NO!",
     "release": "Autobots, rollout!",
     "prerelease": "beta"
   }
@@ -44,7 +44,7 @@ You can configure multiple labels to skip releases.
 
 ```json
 {
-  "noReleaseLabels": ["documentation", "project-files"]
+  "skipReleaseLabels": ["documentation", "project-files"]
 }
 ```
 
