@@ -220,7 +220,7 @@ const commands: ICommand[] = [
   {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
-    require: ['pr', 'url'],
+    require: ['pr'],
     options: [
       pr,
       url,
@@ -239,7 +239,7 @@ const commands: ICommand[] = [
   {
     name: 'pr',
     summary: 'Set the status on a PR commit',
-    require: ['pr', 'state', 'description', 'context', 'url'],
+    require: ['pr', 'state', 'description', 'context'],
     options: [
       {
         name: 'sha',
@@ -272,7 +272,7 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
-      `{green $} auto pr \\\\ \n   --pr 32 \\\\ \n   --url http://your-ci.com/build/123 \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
+      `{green $} auto pr \\\\ \n   --pr 32 \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
     ]
   },
   {
