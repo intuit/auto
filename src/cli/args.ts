@@ -121,29 +121,6 @@ const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const major: commandLineUsage.OptionDefinition = {
-  name: 'major',
-  type: String,
-  description: 'The name of the tag for a major version bump',
-  group: 'main'
-};
-
-const minor: commandLineUsage.OptionDefinition = {
-  name: 'minor',
-  type: String,
-  description: 'The name of the tag for a minor version bump',
-  group: 'main'
-};
-
-const patch: commandLineUsage.OptionDefinition = {
-  name: 'patch',
-  type: String,
-  description: 'The name of the tag for a patch version bump',
-  group: 'main'
-};
-
-const semver = [onlyPublishWithReleaseLabel, major, minor, patch];
-
 const name: commandLineUsage.OptionDefinition = {
   name: 'name',
   type: String,
@@ -224,7 +201,7 @@ const commands: ICommand[] = [
     options: [
       pr,
       url,
-      ...semver,
+      onlyPublishWithReleaseLabel,
       {
         ...context,
         defaultValue: 'ci/pr-check'
@@ -278,7 +255,7 @@ const commands: ICommand[] = [
   {
     name: 'version',
     summary: 'Get the semantic version bump for the given changes.',
-    options: [...semver, noReleaseLabels, ...defaultOptions],
+    options: [onlyPublishWithReleaseLabel, noReleaseLabels, ...defaultOptions],
     examples: [
       {
         desc: 'Get the new version using the last release to head',
@@ -546,9 +523,6 @@ export default function parseArgs(testArgs?: string[]) {
 export interface ISemverArgs {
   noReleaseLabels?: string[];
   onlyPublishWithReleaseLabel?: boolean;
-  major?: string;
-  minor?: string;
-  patch?: string;
   jira?: string;
   slack?: string;
   githubApi?: string;

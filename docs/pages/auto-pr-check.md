@@ -16,9 +16,6 @@ Options
   --pr number [required]           The pull request number you want the labels of
   --url string                     URL to associate with this status
   --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
-  --major string                   The name of the tag for a major version bump
-  --minor string                   The name of the tag for a minor version bump
-  --patch string                   The name of the tag for a patch version bump
   --context string                 A string label to differentiate this status from others
   --noReleaseLabels string[]       Labels that will not create a release. Defaults to just 'no-release'
 
