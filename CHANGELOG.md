@@ -1,3 +1,15 @@
+# 0.33.6 (Mon Dec 17 2018)
+
+#### 🐛  Bug Fix
+
+- url isn't required for pr or pr-check [#99](https://github.com/intuit/auto-release/pull/99) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.5 (Mon Dec 17 2018)
 
 #### 🐛  Bug Fix
