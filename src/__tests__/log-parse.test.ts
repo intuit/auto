@@ -94,10 +94,8 @@ describe('filterServiceAccounts', () => {
   test('should filter the commit', () => {
     const commit = {
       ...makeCommitFromMsg('foo'),
-      author: {
-        name: 'pdbf',
-        email: ''
-      }
+      authorName: 'pdbf',
+      authorEmail: ''
     };
 
     expect(filterServiceAccounts(commit)).toBeUndefined();
@@ -178,10 +176,8 @@ describe('normalizeCommits', () => {
     ];
 
     expect(normalizeCommits(commits)[2]).toEqual({
-      author: {
-        email: 'adam@dierkens.com',
-        name: 'Adam Dierkens'
-      },
+      authorEmail: 'adam@dierkens.com',
+      authorName: 'Adam Dierkens',
       authors: [
         {
           email: 'adam@dierkens.com',
@@ -190,7 +186,7 @@ describe('normalizeCommits', () => {
       ],
       labels: [],
       subject: 'Add log',
-      id: 'foo',
+      hash: 'foo',
       jira: {
         number: ['PLAYA-5052']
       }
