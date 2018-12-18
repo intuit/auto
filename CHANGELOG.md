@@ -1,3 +1,15 @@
+# 0.36.1 (Tue Dec 18 2018)
+
+#### 🐛  Bug Fix
+
+- print link to token create when there is no GH_TOKEN. [#104](https://github.com/intuit/auto-release/pull/104) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.36.0 (Tue Dec 18 2018)
 
 #### 🚀  Enhancement
