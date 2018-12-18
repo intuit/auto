@@ -1,3 +1,15 @@
+# 0.36.0 (Tue Dec 18 2018)
+
+#### 🚀  Enhancement
+
+- slack CLI flag can be the slack url [#103](https://github.com/intuit/auto-release/pull/103) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.35.0 (Mon Dec 17 2018)
 
 #### 🚀  Enhancement
