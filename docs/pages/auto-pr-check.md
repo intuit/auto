@@ -14,7 +14,7 @@ auto pr-check --pr 24 --url http://your-ci.com
 Options
 
   --pr number [required]           The pull request number you want the labels of
-  --url string [required]          URL to associate with this status
+  --url string                     URL to associate with this status
   --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
   --major string                   The name of the tag for a major version bump
   --minor string                   The name of the tag for a minor version bump

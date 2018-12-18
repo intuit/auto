@@ -12,7 +12,7 @@ Options
   --sha string                      Specify a custom git sha. Defaults to the HEAD for a git repo in the current
                                     repository
   --pr number [required]            The pull request number you want the labels of
-  --url string [required]           URL to associate with this status
+  --url string                      URL to associate with this status
   --state string [required]         State of the PR. ['pending', 'success', 'error', 'failure']
   --description string [required]   A description of the status
   --context string [required]       A string label to differentiate this status from others
