@@ -4,6 +4,7 @@ import { Memoize } from 'typescript-memoize';
 
 import { defaultLabelsDescriptions, ILogger } from './github-release';
 import execPromise from './utils/exec-promise';
+import settingsUrl from './utils/settings-url';
 
 export interface IGithubOptions {
   owner: string;
@@ -38,19 +39,18 @@ const makeCommentIdentifier = (context: string) =>
 
 export default class Github {
   public readonly ghub: GHub;
+  public readonly baseUrl: string;
   public readonly options: IGithubOptions;
   private readonly logger: ILogger;
 
   constructor(options: IGithubOptions) {
     this.logger = options.logger;
     this.options = options;
-    this.options.baseUrl = this.options.baseUrl || 'https://api.github.com';
+    this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
-    this.logger.veryVerbose.info(
-      `Initializing Github with: ${this.options.baseUrl}`
-    );
+    this.logger.veryVerbose.info(`Initializing Github with: ${this.baseUrl}`);
     this.ghub = new GHub({
-      baseUrl: this.options.baseUrl,
+      baseUrl: this.baseUrl,
       headers: {
         accept: 'application/vnd.github.symmetra-preview+json'
       }
@@ -60,7 +60,11 @@ export default class Github {
   @Memoize()
   public async authenticate(authToken?: string): Promise<void> {
     if (authToken === undefined && this.options.token === undefined) {
-      throw new Error('Auth needs a Github token.');
+      throw new Error(
+        `Authentication needs a Github token. Try setting up an access token ${settingsUrl(
+          this.baseUrl
+        )}`
+      );
     }
 
     const token = authToken || this.options.token;

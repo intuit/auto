@@ -517,7 +517,7 @@ export default function parseArgs(testArgs?: string[]) {
       signale.error(
         `Missing required flag${multiple ? 's' : ''}: ${missing.join(', ')}`
       );
-      process.exit(0);
+      return process.exit(1);
     }
   }
 

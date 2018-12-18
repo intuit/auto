@@ -2,19 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import registryUrl from 'registry-url';
 import { promisify } from 'util';
+import settingsUrl from './settings-url';
 
 const readFile = promisify(fs.readFile);
 const registry = registryUrl();
 // tslint:disable-next-line
 const normalizedRegistry = registry.replace('http:', '').replace('https:', '');
 
-export default async function getGithubToken(): Promise<string> {
+export default async function getGithubToken(apiUrl: string): Promise<string> {
   if (process.env.GH_TOKEN) {
     return process.env.GH_TOKEN;
   }
 
+  const helpText = `Try setting an access token up ${settingsUrl(apiUrl)}`;
+
   if (!process.env.HOME) {
-    throw new Error("Can't find the GH_TOKEN. No HOME defined.");
+    throw new Error(`Can't find the GH_TOKEN and no HOME defined. ${helpText}`);
   }
 
   const rcLocation = path.resolve(process.env.HOME, '.npmrc');
@@ -28,8 +31,8 @@ export default async function getGithubToken(): Promise<string> {
       return token[1];
     }
 
-    throw new Error('No token in the .npmrc.');
+    throw new Error(`No token in the .npmrc. ${helpText}`);
   }
 
-  throw new Error("Can't find a GitHub token to use.");
+  throw new Error(`Can't find a GitHub token to use. ${helpText}`);
 }

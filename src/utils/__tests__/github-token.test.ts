@@ -22,10 +22,10 @@ test('should throw if HOME undefined', async () => {
   delete process.env.HOME;
 
   try {
-    await token();
+    await token('https://github.com');
   } catch (error) {
-    expect(error.message.trim()).toBe(
-      "Can't find the GH_TOKEN. No HOME defined."
+    expect(error.message.trim()).toMatch(
+      "Can't find the GH_TOKEN and no HOME defined"
     );
   }
 });
@@ -37,9 +37,9 @@ test('should throw if no rc', async () => {
   delete process.env.GH_TOKEN;
 
   try {
-    await token();
+    await token('https://github.com');
   } catch (error) {
-    expect(error.message.trim()).toBe("Can't find a GitHub token to use.");
+    expect(error.message.trim()).toMatch("Can't find a GitHub token to use");
   }
 });
 
@@ -50,9 +50,9 @@ test('should try to use token in RC file', async () => {
   delete process.env.GH_TOKEN;
 
   try {
-    await token();
+    await token('https://github.com');
   } catch (error) {
-    expect(error.message.trim()).toBe('No token in the .npmrc.');
+    expect(error.message.trim()).toMatch('No token in the .npmrc');
   }
 });
 
@@ -63,11 +63,11 @@ test('should use token in RC file', async () => {
   existsResult = true;
   readResult = '//registry.yarnpkg.com/:_authToken=123456789';
 
-  expect(await token()).toBe('123456789');
+  expect(await token('https://github.com')).toBe('123456789');
 });
 
 test('should use process GH_TOKEN', async () => {
   process.env.GH_TOKEN = 'test';
-  expect(await token()).toBe('test');
+  expect(await token('https://github.com')).toBe('test');
   process.env.GH_TOKEN = undefined;
 });
