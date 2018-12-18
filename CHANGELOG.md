@@ -1,3 +1,15 @@
+# 0.35.0 (Mon Dec 17 2018)
+
+#### 🚀  Enhancement
+
+- Change `no-release` to `skip-release` [#101](https://github.com/intuit/auto-release/pull/101) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.34.0 (Mon Dec 17 2018)
 
 #### 🚀  Enhancement
