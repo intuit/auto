@@ -70,7 +70,7 @@ export interface IGithubReleaseOptions {
   labels?: IVersionLabels;
   logger: ILogger;
   jira?: string;
-  slack?: string;
+  'slack-url'?: string;
   githubApi?: string;
   name?: string;
   email?: string;
@@ -103,7 +103,7 @@ export default class GithubRelease {
     releaseOptions: IGithubReleaseOptions = { logger: dummyLog() }
   ) {
     this.jira = releaseOptions.jira;
-    this.slack = releaseOptions.slack;
+    this.slack = releaseOptions['slack-url'];
     this.userLabels = releaseOptions.labels || new Map();
     this.changelogTitles = releaseOptions.changelogTitles || {};
     this.logger = releaseOptions.logger;
