@@ -1,3 +1,15 @@
+# 0.34.0 (Mon Dec 17 2018)
+
+#### 🚀  Enhancement
+
+- Deprecate --major --minor --patch flags [#100](https://github.com/intuit/auto-release/pull/100) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.33.6 (Mon Dec 17 2018)
 
 #### 🐛  Bug Fix
