@@ -32,6 +32,7 @@ Visit [the docs](https://intuit.github.io/auto-release/) for more information.
 To get set up, fork and clone the project and run the following command:
 
 ```sh
+brew install automake
 yarn
 ```
 
