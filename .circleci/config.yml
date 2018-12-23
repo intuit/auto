@@ -13,12 +13,12 @@ aliases:
     keys:
       # Find a cache corresponding to this specific package.json checksum
       # when this file is changed, this key will fail
-      - auto-release-{{ .arch }}-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
-      - auto-release-{{ .arch }}-{{ checksum "yarn.lock" }}
+      - auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+      - auto-release-{{ checksum "yarn.lock" }}
       # Find the most recent cache used from any branch
       - auto-release-
   - &save-cache
-      key: auto-release-{{ .arch }}-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+      key: auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
       paths:
         - ~/.cache/yarn
         - node_modules
