@@ -44,11 +44,17 @@ jobs:
       - run: date
       - run: *yarn
       - save_cache: *save-cache
-      - run: *lint
       - persist_to_workspace:
           root: .
           paths:
             - .
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/auto-release
+      - run: *lint
 
   test:
     <<: *defaults
@@ -101,6 +107,10 @@ workflows:
   build_and_test:
     jobs:
       - install
+
+      - lint:
+          requires:
+            - install
 
       - test:
           requires:
