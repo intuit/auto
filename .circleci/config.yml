@@ -7,30 +7,43 @@ defaults: &defaults
   environment:
     TZ: '/usr/share/zoneinfo/America/Los_Angeles'
 
+aliases:
+  # Circle related commands
+  - &restore-cache
+    keys:
+      # Find a cache corresponding to this specific package.json checksum
+      # when this file is changed, this key will fail
+      - auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+      - auto-release-{{ checksum "yarn.lock" }}
+      # Find the most recent cache used from any branch
+      - auto-release-
+  - &save-cache
+      key: auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+      paths:
+        - ~/.cache/yarn
+        - node_modules
+  # Yarn commands
+  - &yarn
+    name: Install Dependencies
+    command: yarn install --frozen-lockfile --non-interactive --cache-folder=~/.cache/yarn
+  - &lint
+    name: Lint
+    command: yarn lint
+  - &test
+    name: Test
+    command: yarn test
+
+
+
 jobs:
   install:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            # Find a cache corresponding to this specific package.json checksum
-            # when this file is changed, this key will fail
-            - auto-release-{{ .Branch }}-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
-            - auto-release-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - auto-release-{{ .Branch }}
-            # Find the most recent cache used from any branch
-            - auto-release-master
-            - auto-release-
+      - restore_cache: *restore-cache
       - run: date
-      - run:
-          name: Install Dependencies
-          command: npm i
-      - save_cache:
-          key: auto-release-{{ .Branch }}-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
-          paths:
-            - node_modules
-
+      - run: *yarn
+      - save_cache: *save-cache
       - persist_to_workspace:
           root: .
           paths:
@@ -41,18 +54,14 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/auto-release
-      - run:
-          name: Lint
-          command: yarn lint
+      - run: *lint
 
   test:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/auto-release
-      - run:
-          name: Test
-          command: yarn test
+      - run: *test
       - run:
           name: Send CodeCov Results
           command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
@@ -114,7 +123,6 @@ workflows:
       - release:
           requires:
             - build
-            - lint
             - test
           filters:
             branches:
