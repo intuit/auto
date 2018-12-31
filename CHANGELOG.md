@@ -1,3 +1,15 @@
+# 0.37.1 (Mon Dec 31 2018)
+
+#### 🐛  Bug Fix
+
+- trim subjects for commit messages [#115](https://github.com/intuit/auto-release/pull/115) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.0 (Mon Dec 31 2018)
 
 #### 🚀  Enhancement
