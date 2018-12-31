@@ -33,6 +33,15 @@
         "infra",
         "test"
       ]
+    },
+    {
+      "login": "Aghassi",
+      "name": "David",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3680126?v=4",
+      "profile": "https://github.com/Aghassi",
+      "contributions": [
+        "infra"
+      ]
     }
   ]
 }
