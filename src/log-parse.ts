@@ -94,7 +94,7 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
       number: prMatch[1],
       base: prMatch[2]
     },
-    subject: prMatch[3]
+    subject: prMatch[3].trim()
   };
 }
 
@@ -142,7 +142,7 @@ export function parseJira(commit: IExtendedCommit): IExtendedCommit {
     jira: {
       number: matches.map(match => match[1])
     },
-    subject: matches[matches.length - 1][2]
+    subject: matches[matches.length - 1][2].trim()
   };
 }
 
