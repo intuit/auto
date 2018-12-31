@@ -183,11 +183,18 @@ export default class Github {
   }
 
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
-    return gitlog({
+    const log = await gitlog({
       repo: process.cwd(),
-      fields: ['hash', 'authorName', 'authorEmail', 'subject'],
+      fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
       branch: `${start.trim()}..${end.trim()}`
     });
+
+    return log.map(commit => ({
+      hash: commit.hash,
+      authorName: commit.authorName,
+      authorEmail: commit.authorEmail,
+      subject: commit.rawBody!
+    }));
   }
 
   @Memoize()

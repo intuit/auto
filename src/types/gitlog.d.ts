@@ -4,6 +4,7 @@ declare module 'gitlog' {
     authorName: string;
     authorEmail?: string;
     subject: string;
+    rawBody?: string;
     labels?: string[];
   }
 
