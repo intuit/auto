@@ -22,7 +22,8 @@
     "max-classes-per-file": [true, 5, "exclude-class-expressions"],
     "no-non-null-assertion": false,
     "no-floating-promises": false,
-    "no-console": false
+    "no-console": false,
+    "type-literal-delimiter": { "singleLine": "never" }
   },
   "rulesDirectory": []
 }
