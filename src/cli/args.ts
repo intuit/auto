@@ -1,3 +1,6 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
@@ -28,12 +31,20 @@ const help: commandLineUsage.OptionDefinition = {
   type: Boolean
 };
 
-const mainDefinitions: commandLineUsage.OptionDefinition[] = [
+const version = {
+  name: 'version',
+  alias: 'V',
+  type: Boolean,
+  description: "Display auto-release-cli's version"
+};
+
+const mainDefinitions = [
   { name: 'command', type: String, defaultOption: true },
   {
     ...help,
     description: 'Display the help output. Works on each command as well'
-  }
+  },
+  version
 ];
 
 const defaultOptions = [
@@ -371,7 +382,11 @@ function filterCommands(allCommands: ICommand[], include: string[]) {
 }
 
 function printRootHelp() {
-  const options = [...mainDefinitions, ...defaultOptions];
+  const options = [
+    { ...version, group: 'misc' },
+    ...mainDefinitions,
+    ...defaultOptions
+  ];
   options.forEach(option => styleTypes({} as ICommand, option));
 
   const usage = commandLineUsage([
@@ -457,6 +472,12 @@ function printCommandHelp(command: ICommand) {
   console.log(commandLineUsage(sections));
 }
 
+function printVersion() {
+  const packagePath = path.join(__dirname, '../../package.json');
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+  console.log(`v${packageJson.version}`);
+}
+
 function styleTypes(
   command: ICommand,
   option: commandLineUsage.OptionDefinition
@@ -488,6 +509,10 @@ export default function parseArgs(testArgs?: string[]) {
   });
   const argv = mainOptions._unknown || [];
   const command = commands.find(c => c.name === mainOptions.command);
+
+  if (!command && mainOptions.version) {
+    return printVersion();
+  }
 
   if (!command) {
     return printRootHelp();
