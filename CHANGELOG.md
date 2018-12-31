@@ -1,3 +1,16 @@
+# 0.36.6 (Mon Dec 31 2018)
+
+#### 🐛  Bug Fix
+
+- 
+update deps [#111](https://github.com/intuit/auto-release/pull/111) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.36.5 (Mon Dec 31 2018)
 
 #### 🐛  Bug Fix
