@@ -1,3 +1,21 @@
+# 0.37.0 (Mon Dec 31 2018)
+
+#### 🚀  Enhancement
+
+- 
+add --version flag [#113](https://github.com/intuit/auto-release/pull/113) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- 
+Add @Aghassi as a contributor [#112](https://github.com/intuit/auto-release/pull/112) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.36.6 (Mon Dec 31 2018)
 
 #### 🐛  Bug Fix
