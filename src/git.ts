@@ -193,7 +193,7 @@ export default class Github {
       hash: commit.hash,
       authorName: commit.authorName,
       authorEmail: commit.authorEmail,
-      subject: commit.rawBody || commit.subject
+      subject: commit.rawBody!
     }));
   }
 
