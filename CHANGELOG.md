@@ -1,3 +1,16 @@
+# 0.36.5 (Mon Dec 31 2018)
+
+#### 🐛  Bug Fix
+
+- 
+fix dry run [#109](https://github.com/intuit/auto-release/pull/109) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.36.4 (Mon Dec 31 2018)
 
 #### 🐛  Bug Fix
