@@ -553,7 +553,7 @@ export interface IPRArgs {
 }
 
 export interface IReleaseArgs {
-  dry_run?: boolean;
+  ['dry-run']?: boolean;
   slack?: string | boolean;
   no_version_prefix?: boolean;
   use_version?: string;

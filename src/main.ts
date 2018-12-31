@@ -127,7 +127,7 @@ async function makeChangelog(
 
   log.info('New Release Notes\n', releaseNotes);
 
-  if (!args.dry_run) {
+  if (!args['dry-run']) {
     const currentVersion = await getCurrentVersion(
       prefixRelease,
       lastRelease,
@@ -181,7 +181,7 @@ async function makeRelease(
   const prefixed = prefixRelease(version);
   log.info(`Publishing ${prefixed} to Github.`);
 
-  if (!args.dry_run) {
+  if (!args['dry-run']) {
     await githubRelease.publish(releaseNotes, prefixed);
 
     if (args.slack) {
@@ -381,7 +381,7 @@ export async function run(args: ArgsType) {
 
       verbose.info('Posting comment to Github\n', msg);
 
-      if (!args.dry_run) {
+      if (!args['dry-run']) {
         await githubRelease.createStatus({
           ...args,
           ...msg
@@ -412,7 +412,7 @@ export async function run(args: ArgsType) {
       args.target_url = args.url;
       delete args.url;
 
-      if (!args.dry_run) {
+      if (!args['dry-run']) {
         await githubRelease.createStatus(args as IPRInfo);
       } else {
         verbose.info('`pr` dry run complete.');
