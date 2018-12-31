@@ -31,19 +31,20 @@ const help: commandLineUsage.OptionDefinition = {
   type: Boolean
 };
 
+const version = {
+  name: 'version',
+  alias: 'V',
+  type: Boolean,
+  description: "Display auto-release-cli's version"
+};
+
 const mainDefinitions = [
   { name: 'command', type: String, defaultOption: true },
   {
     ...help,
     description: 'Display the help output. Works on each command as well'
   },
-  {
-    name: 'version',
-    alias: 'V',
-    type: Boolean,
-    description: "Display auto-release-cli's version",
-    group: 'misc'
-  }
+  version
 ];
 
 const defaultOptions = [
@@ -381,7 +382,11 @@ function filterCommands(allCommands: ICommand[], include: string[]) {
 }
 
 function printRootHelp() {
-  const options = [...mainDefinitions, ...defaultOptions];
+  const options = [
+    { ...version, group: 'misc' },
+    ...mainDefinitions,
+    ...defaultOptions
+  ];
   options.forEach(option => styleTypes({} as ICommand, option));
 
   const usage = commandLineUsage([
