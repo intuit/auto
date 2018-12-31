@@ -322,7 +322,7 @@ const commands: ICommand[] = [
       jira,
       {
         name: 'use-version',
-        type: Boolean,
+        type: String,
         group: 'main',
         description:
           'Version number to publish as. Defaults to reading from the package.json.'
@@ -553,10 +553,10 @@ export interface IPRArgs {
 }
 
 export interface IReleaseArgs {
-  dry_run?: boolean;
+  'dry-run'?: boolean;
   slack?: string | boolean;
-  no_version_prefix?: boolean;
-  use_version?: string;
+  'no-version-prefix'?: boolean;
+  'use-version'?: string;
 }
 
 export interface IChangelogArgs {
@@ -574,7 +574,7 @@ export interface IInitArgs {
 
 export interface ILogArgs {
   verbose?: boolean;
-  very_verbose?: boolean;
+  'very-verbose'?: boolean;
 }
 
 export type ArgsType = {

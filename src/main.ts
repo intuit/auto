@@ -127,7 +127,7 @@ async function makeChangelog(
 
   log.info('New Release Notes\n', releaseNotes);
 
-  if (!args.dry_run) {
+  if (!args['dry-run']) {
     const currentVersion = await getCurrentVersion(
       prefixRelease,
       lastRelease,
@@ -138,7 +138,7 @@ async function makeChangelog(
       releaseNotes,
       lastRelease,
       currentVersion,
-      args.no_version_prefix,
+      args['no-version-prefix'],
       args.message || undefined
     );
   } else {
@@ -170,7 +170,7 @@ async function makeRelease(
   log.info(`Using release notes:\n${releaseNotes}`);
 
   const version =
-    args.use_version ||
+    args['use-version'] ||
     (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose));
 
   if (!version) {
@@ -181,7 +181,7 @@ async function makeRelease(
   const prefixed = prefixRelease(version);
   log.info(`Publishing ${prefixed} to Github.`);
 
-  if (!args.dry_run) {
+  if (!args['dry-run']) {
     await githubRelease.publish(releaseNotes, prefixed);
 
     if (args.slack) {
@@ -195,7 +195,7 @@ async function makeRelease(
 
 export async function run(args: ArgsType) {
   const logger = createLog(
-    args.very_verbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
+    args['very-verbose'] ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
   );
   const { log, verbose, veryVerbose } = logger;
   const explorer = cosmiconfig('auto');
@@ -204,7 +204,9 @@ export async function run(args: ArgsType) {
   let rawConfig: cosmiconfig.Config = {};
 
   const prefixRelease = (release: string) =>
-    args.no_version_prefix || release.startsWith('v') ? release : `v${release}`;
+    args['no-version-prefix'] || release.startsWith('v')
+      ? release
+      : `v${release}`;
 
   if (result && result.config) {
     rawConfig = result.config;
@@ -381,7 +383,7 @@ export async function run(args: ArgsType) {
 
       verbose.info('Posting comment to Github\n', msg);
 
-      if (!args.dry_run) {
+      if (!args['dry-run']) {
         await githubRelease.createStatus({
           ...args,
           ...msg
@@ -412,7 +414,7 @@ export async function run(args: ArgsType) {
       args.target_url = args.url;
       delete args.url;
 
-      if (!args.dry_run) {
+      if (!args['dry-run']) {
         await githubRelease.createStatus(args as IPRInfo);
       } else {
         verbose.info('`pr` dry run complete.');
