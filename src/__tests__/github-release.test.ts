@@ -23,6 +23,7 @@ const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
 const getPullRequests = jest.fn();
+const getRepoMetadata = jest.fn();
 
 getProject.mockReturnValue({
   data: { html_url: 'https://custom-git.com' }
@@ -48,7 +49,8 @@ jest.mock('../git.ts', () => (...args) => {
     getUserByEmail,
     getProjectLabels,
     createLabel,
-    getPullRequests
+    getPullRequests,
+    getRepoMetadata
   };
 });
 
@@ -463,6 +465,12 @@ describe('GithubRelease', () => {
   });
 
   describe('addLabelsToProject', () => {
+    beforeEach(() => {
+      getRepoMetadata.mockResolvedValue({
+        html_url: 'https://github.com/web/site'
+      });
+    });
+
     test('should add labels', async () => {
       const gh = new GithubRelease();
       const labels = new Map<VersionLabel, string>();
@@ -487,9 +495,10 @@ describe('GithubRelease', () => {
 
       await gh.addLabelsToProject(labels);
 
-      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: ', [
-        'patch'
-      ]);
+      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: patch');
+      expect(mockLogger.log.log).toHaveBeenCalledWith(
+        '\nYou can see these, and more at https://github.com/web/site/labels'
+      );
     });
 
     test('should not add old labels', async () => {

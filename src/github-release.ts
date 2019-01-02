@@ -352,8 +352,13 @@ export default class GithubRelease {
       })
     );
 
+    const repoMetadata = await client.getRepoMetadata();
+
     const justLabelNames = labelsToCreate.map(([name]) => name);
-    this.logger.log.log('Created labels: ', justLabelNames);
+    this.logger.log.log(`Created labels: ${justLabelNames}`);
+    this.logger.log.log(
+      `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
+    );
   }
 
   public async getSemverBump(
