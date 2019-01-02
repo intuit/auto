@@ -74,6 +74,10 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
 :star: [html-webpack-insert-text-plugin](https://github.com/hipstersmoothie/html-webpack-insert-text-plugin) - Insert text into the head or body of your HTML
 
+:star: [react-glider](https://github.com/hipstersmoothie/react-glider) - A react wrapper for glider.js
+
+:star: [Ignite](https://github.com/intuit/Ignite) - Modern markdown documentation generator
+
 ## :nail_care: `auto-release` Badge :nail_care:
 
 Do you project use `auto-release`? Then use our custom badge!
