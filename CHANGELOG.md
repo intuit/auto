@@ -1,3 +1,15 @@
+# 0.37.3 (Wed Jan 02 2019)
+
+#### 🐛  Bug Fix
+
+- Don't crash when there is no author hash in the package.json [#119](https://github.com/intuit/auto-release/pull/119) ([@orta](https://github.com/orta))
+
+#### Authors: 1
+
+- Orta ([@orta](https://github.com/orta))
+
+---
+
 # 0.37.2 (Wed Jan 02 2019)
 
 #### 🐛  Bug Fix
