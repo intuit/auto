@@ -477,6 +477,21 @@ describe('GithubRelease', () => {
       expect(createLabel).toHaveBeenCalledWith(SEMVER.patch, '3');
     });
 
+    test('should log that it has created the labels', async () => {
+      const mockLogger = dummyLog();
+      mockLogger.log.log = jest.fn();
+
+      const gh = new GithubRelease(undefined, { logger: mockLogger });
+      const labels = new Map<VersionLabel, string>();
+      labels.set(SEMVER.patch, '3');
+
+      await gh.addLabelsToProject(labels);
+
+      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: ', [
+        'patch'
+      ]);
+    });
+
     test('should not add old labels', async () => {
       const gh = new GithubRelease();
       const labels = new Map<VersionLabel, string>();

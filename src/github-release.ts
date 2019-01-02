@@ -328,9 +328,8 @@ export default class GithubRelease {
   ) {
     const client = await this.github;
     const oldLabels = await client.getProjectLabels();
-
-    await Promise.all(
-      [...labels.entries()].map(async ([versionLabel, customLabel]) => {
+    const labelsToCreate = [...labels.entries()].filter(
+      ([versionLabel, customLabel]) => {
         if (oldLabels && oldLabels.includes(customLabel)) {
           return;
         }
@@ -343,9 +342,18 @@ export default class GithubRelease {
           return;
         }
 
+        return true;
+      }
+    );
+
+    await Promise.all(
+      labelsToCreate.map(async ([versionLabel, customLabel]) => {
         await client.createLabel(versionLabel, customLabel);
       })
     );
+
+    const justLabelNames = labelsToCreate.map(([name]) => name);
+    this.logger.log.log('Created labels: ', justLabelNames);
   }
 
   public async getSemverBump(
