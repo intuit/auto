@@ -10,7 +10,7 @@ import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
 
-export interface IGithubOptions {
+export interface IGitHubOptions {
   owner: string;
   repo: string;
   version?: string;
@@ -28,7 +28,7 @@ export interface IPRInfo {
   state: 'error' | 'failure' | 'pending' | 'success';
 }
 
-class GithubAPIError extends Error {
+class GitHubAPIError extends Error {
   constructor(api: string, args: object, origError: Error) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
@@ -41,18 +41,18 @@ class GithubAPIError extends Error {
 const makeCommentIdentifier = (context: string) =>
   `<!-- GITHUB_RELEASE COMMENT: ${context} -->`;
 
-export default class Github {
+export default class GitHub {
   public readonly ghub: GHub;
   public readonly baseUrl: string;
-  public readonly options: IGithubOptions;
+  public readonly options: IGitHubOptions;
   private readonly logger: ILogger;
 
-  constructor(options: IGithubOptions) {
+  constructor(options: IGitHubOptions) {
     this.logger = options.logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
-    this.logger.veryVerbose.info(`Initializing Github with: ${this.baseUrl}`);
+    this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     this.ghub = new GHub({
       baseUrl: this.baseUrl,
       headers: {
@@ -65,7 +65,7 @@ export default class Github {
   public async authenticate(authToken?: string): Promise<void> {
     if (authToken === undefined && this.options.token === undefined) {
       throw new Error(
-        `Authentication needs a Github token. Try setting up an access token ${settingsUrl(
+        `Authentication needs a GitHub token. Try setting up an access token ${settingsUrl(
           this.baseUrl
         )}`
       );
@@ -73,14 +73,14 @@ export default class Github {
 
     const token = authToken || this.options.token;
 
-    this.logger.veryVerbose.info('Authenticating with Github.');
+    this.logger.veryVerbose.info('Authenticating with GitHub.');
 
     this.ghub.authenticate({
       type: 'token',
       token: token!
     });
 
-    this.logger.veryVerbose.info('Sucessfully authenticated with Github.');
+    this.logger.veryVerbose.info('Sucessfully authenticated with GitHub.');
 
     return Promise.resolve();
   }
@@ -108,7 +108,7 @@ export default class Github {
     } catch (e) {
       if (e.status === 404) {
         this.logger.verbose.info(
-          "Couldn't find latest release on Github, using first commit."
+          "Couldn't find latest release on GitHub, using first commit."
         );
         return this.getFirstCommit();
       }
@@ -152,7 +152,7 @@ export default class Github {
 
       return labels.data.map(l => l.name);
     } catch (e) {
-      throw new GithubAPIError('listLabelsOnIssue', args, e);
+      throw new GitHubAPIError('listLabelsOnIssue', args, e);
     }
   }
 
@@ -178,7 +178,7 @@ export default class Github {
 
       return labels.data.map(l => l.name);
     } catch (e) {
-      throw new GithubAPIError('getProjectLabels', args, e);
+      throw new GitHubAPIError('getProjectLabels', args, e);
     }
   }
 
@@ -254,7 +254,7 @@ export default class Github {
     const result = await this.ghub.repos.createStatus(args);
 
     this.logger.veryVerbose.info('Got response from createStatues\n', result);
-    this.logger.verbose.info('Created status on Github.');
+    this.logger.verbose.info('Created status on GitHub.');
 
     return result;
   }
@@ -273,13 +273,13 @@ export default class Github {
     });
 
     this.logger.veryVerbose.info('Got response from createLabel\n', result);
-    this.logger.verbose.info('Created label on Github.');
+    this.logger.verbose.info('Created label on GitHub.');
 
     return result;
   }
 
   public async getProject() {
-    this.logger.verbose.info('Getting project from Github');
+    this.logger.verbose.info('Getting project from GitHub');
 
     await this.authenticate();
 
@@ -381,7 +381,7 @@ export default class Github {
   }
 
   public async publish(releaseNotes: string, tag: string) {
-    this.logger.verbose.info('Creating release on Github for tag:', tag);
+    this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
     await this.authenticate();
 
@@ -393,7 +393,7 @@ export default class Github {
     });
 
     this.logger.veryVerbose.info('Got response from createRelease\n', result);
-    this.logger.verbose.info('Created Github release.');
+    this.logger.verbose.info('Created GitHub release.');
 
     return result;
   }

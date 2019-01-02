@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GithubRelease generateReleaseNotes should allow user to configure section headings 1`] = `
+exports[`GitHubRelease generateReleaseNotes should allow user to configure section headings 1`] = `
 "#### 💥  Breaking Change
 
 - First [#1234](https://custom-git.com/pull/1234) (adam@dierkens.com)
@@ -22,7 +22,7 @@ exports[`GithubRelease generateReleaseNotes should allow user to configure secti
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`GithubRelease getCommits should resolve authors with PR commits 1`] = `
+exports[`GitHubRelease getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
     "authorEmail": "adam@dierkens.com",

@@ -29,4 +29,4 @@ Individuals or teams representing projects in official capacity, such as via off
 
 ## Attribution
 
-This Code of Conduct is partly inspired by and based on those of Amazon, CocoaPods, Github, Microsoft, thoughtbot, and on the Contributor Covenant version 1.4.1.
+This Code of Conduct is partly inspired by and based on those of Amazon, CocoaPods, GitHub, Microsoft, thoughtbot, and on the Contributor Covenant version 1.4.1.

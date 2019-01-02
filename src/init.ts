@@ -15,12 +15,12 @@ async function getFlags() {
     {
       type: 'input',
       name: 'repo',
-      message: 'Github Project Repository (press enter to use package.json)'
+      message: 'GitHub Project Repository (press enter to use package.json)'
     },
     {
       type: 'input',
       name: 'owner',
-      message: 'Github Project Owner (press enter to use package.json)'
+      message: 'GitHub Project Owner (press enter to use package.json)'
     },
     {
       type: 'confirm',
@@ -36,7 +36,7 @@ async function getFlags() {
     {
       type: 'input',
       name: 'githubApi',
-      message: 'Github API to use (press enter to use public)'
+      message: 'GitHub API to use (press enter to use public)'
     },
     {
       type: 'confirm',

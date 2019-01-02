@@ -84,7 +84,7 @@ const defaultOptions = [
   {
     name: 'githubApi',
     type: String,
-    description: 'Github API to use',
+    description: 'GitHub API to use',
     group: 'misc'
   }
 ];
