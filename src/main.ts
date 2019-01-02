@@ -7,10 +7,10 @@ import { promisify } from 'util';
 
 import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
-import GithubRelease, {
+import GitHubRelease, {
   defaultChangelogTitles,
   defaultLabels,
-  IGithubReleaseOptions
+  IGitHubReleaseOptions
 } from './github-release';
 
 import init from './init';
@@ -79,7 +79,7 @@ async function getCurrentVersion(
   return lastVersion;
 }
 
-async function setGitUser(args: IGithubReleaseOptions) {
+async function setGitUser(args: IGitHubReleaseOptions) {
   const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
   let { name, email } = args;
 
@@ -100,7 +100,7 @@ async function setGitUser(args: IGithubReleaseOptions) {
   }
 }
 
-async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
+async function getVersion(githubRelease: GitHubRelease, args: ArgsType) {
   const lastRelease = await githubRelease.getLatestRelease();
 
   return githubRelease.getSemverBump(
@@ -113,7 +113,7 @@ async function getVersion(githubRelease: GithubRelease, args: ArgsType) {
 
 async function makeChangelog(
   args: ArgsType,
-  githubRelease: GithubRelease,
+  githubRelease: GitHubRelease,
   log: signale.Signale<signale.DefaultMethods>,
   prefixRelease: (release: string) => string,
   veryVerbose: signale.Signale<signale.DefaultMethods>,
@@ -148,7 +148,7 @@ async function makeChangelog(
 
 async function makeRelease(
   args: ArgsType,
-  githubRelease: GithubRelease,
+  githubRelease: GitHubRelease,
   log: signale.Signale<signale.DefaultMethods>,
   prefixRelease: (release: string) => string,
   veryVerbose: signale.Signale<signale.DefaultMethods>,
@@ -179,7 +179,7 @@ async function makeRelease(
   }
 
   const prefixed = prefixRelease(version);
-  log.info(`Publishing ${prefixed} to Github.`);
+  log.info(`Publishing ${prefixed} to GitHub.`);
 
   if (!args['dry-run']) {
     await githubRelease.publish(releaseNotes, prefixed);
@@ -214,7 +214,7 @@ export async function run(args: ArgsType) {
 
   verbose.success('Loaded `auto-release` with config:', rawConfig);
 
-  const config: IGithubReleaseOptions = {
+  const config: IGitHubReleaseOptions = {
     ...rawConfig,
     ...args,
     logger,
@@ -234,7 +234,7 @@ export async function run(args: ArgsType) {
 
   verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
-  const githubRelease = new GithubRelease(
+  const githubRelease = new GitHubRelease(
     {
       owner: args.owner,
       repo: args.repo
@@ -381,7 +381,7 @@ export async function run(args: ArgsType) {
         };
       }
 
-      verbose.info('Posting comment to Github\n', msg);
+      verbose.info('Posting comment to GitHub\n', msg);
 
       if (!args['dry-run']) {
         await githubRelease.createStatus({

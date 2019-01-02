@@ -48,7 +48,7 @@ mkdir ~/.ssh/ && echo -e "Host github.YOUR_COMPANY.com\n\tStrictHostKeyChecking 
 
 If you've encountered any of these errors you'll probably run into this problem. If the whole release process doesn't complete you can end up in a state when `auto` published the new version, but doesn't push that back to github. To fix this just bump the version number to the "previously published version".
 
-## Cannot read owner and package name from Github URL in package.json
+## Cannot read owner and package name from GitHub URL in package.json
 
 This means that you do not have a repository set in your package.json. Add something along the line of:
 

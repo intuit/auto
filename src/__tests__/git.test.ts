@@ -1,4 +1,4 @@
-import Github from '../git';
+import GitHub from '../git';
 import { dummyLog } from '../utils/logger';
 
 const logger = dummyLog();
@@ -66,20 +66,20 @@ describe('github', () => {
 
   describe('authenticate', () => {
     test('should reject without token', async () => {
-      const gh = new Github({ logger, owner: 'Adam Dierkens', repo: 'test' });
+      const gh = new GitHub({ logger, owner: 'Adam Dierkens', repo: 'test' });
       expect.assertions(1);
 
       try {
         await gh.authenticate();
       } catch (error) {
         expect(error.message.trim()).toBe(
-          'Authentication needs a Github token. Try setting up an access token https://github.com/settings/tokens/new'
+          'Authentication needs a GitHub token. Try setting up an access token https://github.com/settings/tokens/new'
         );
       }
     });
 
     test('should use token', async () => {
-      const gh = new Github({ logger, owner: 'Adam Dierkens', repo: 'test' });
+      const gh = new GitHub({ logger, owner: 'Adam Dierkens', repo: 'test' });
 
       await gh.authenticate('MyToken');
       expect(authenticate).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ describe('github', () => {
     });
 
     test('should use options token', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -106,7 +106,7 @@ describe('github', () => {
 
   describe('getLabels', async () => {
     test('successful', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -131,7 +131,7 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -143,7 +143,7 @@ describe('github', () => {
   });
 
   test('publish', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -156,7 +156,7 @@ describe('github', () => {
   });
 
   test('getFirstCommit ', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -169,7 +169,7 @@ describe('github', () => {
   });
 
   test('getSha', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -180,7 +180,7 @@ describe('github', () => {
   });
 
   test('getGitLog ', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -196,7 +196,7 @@ describe('github', () => {
   });
 
   test('getUser', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -209,7 +209,7 @@ describe('github', () => {
   });
 
   test('createStatus', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -231,7 +231,7 @@ describe('github', () => {
   });
 
   test('getProject', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -245,7 +245,7 @@ describe('github', () => {
 
   describe('createComment', async () => {
     test('should post comment if none exists', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -259,7 +259,7 @@ describe('github', () => {
     });
 
     test('should delete old comment', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -283,7 +283,7 @@ describe('github', () => {
     });
 
     test('should be able to comment in different contexts', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -325,7 +325,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -341,7 +341,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -357,7 +357,7 @@ describe('github', () => {
   });
 
   test('getUserByUsername', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -375,7 +375,7 @@ describe('github', () => {
 
   describe('getUserByEmail', async () => {
     test('exists', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -392,7 +392,7 @@ describe('github', () => {
     });
 
     test('doesnt exist', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -411,7 +411,7 @@ describe('github', () => {
 
   describe('getLatestRelease ', async () => {
     test('has tag ', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -424,7 +424,7 @@ describe('github', () => {
     });
 
     test('no tags', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -439,7 +439,7 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -452,7 +452,7 @@ describe('github', () => {
 
   describe('getProjectLabels ', () => {
     test('return labels', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -470,7 +470,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -483,7 +483,7 @@ describe('github', () => {
 
   describe('createLabel', () => {
     test('should create a label', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',
@@ -502,7 +502,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new Github({
+      const gh = new GitHub({
         logger,
         owner: 'Adam Dierkens',
         repo: 'test',

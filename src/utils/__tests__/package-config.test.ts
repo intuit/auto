@@ -36,7 +36,7 @@ test('should throw without an owner', async () => {
     await packageConfig();
   } catch (error) {
     expect(error.message.trim()).toBe(
-      'Cannot read owner and package name from Github URL in package.json'
+      'Cannot read owner and package name from GitHub URL in package.json'
     );
   }
 });
@@ -54,7 +54,7 @@ test('should throw without an package name', async () => {
     await packageConfig();
   } catch (error) {
     expect(error.message.trim()).toBe(
-      'Cannot read owner and package name from Github URL in package.json'
+      'Cannot read owner and package name from GitHub URL in package.json'
     );
   }
 });

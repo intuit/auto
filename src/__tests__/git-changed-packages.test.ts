@@ -1,4 +1,4 @@
-import Github from '../git';
+import GitHub from '../git';
 import { dummyLog } from '../utils/logger';
 
 const exec = jest.fn();
@@ -10,7 +10,7 @@ jest.mock('../utils/exec-promise.ts', () => (...args) => exec(...args));
 
 describe('changedPackages ', async () => {
   test('should return nothing without a package directory', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -23,7 +23,7 @@ describe('changedPackages ', async () => {
   });
 
   test('should match files in package directory', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',
@@ -38,7 +38,7 @@ describe('changedPackages ', async () => {
   });
 
   test('should match files in package directory with @scope/ names', async () => {
-    const gh = new Github({
+    const gh = new GitHub({
       logger,
       owner: 'Adam Dierkens',
       repo: 'test',

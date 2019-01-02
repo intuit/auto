@@ -1,5 +1,5 @@
 import fs from 'fs';
-import parseGithubUrl from 'parse-github-url';
+import parseGitHubUrl from 'parse-github-url';
 import { promisify } from 'util';
 
 export interface IRepoConfig {
@@ -32,13 +32,13 @@ export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
   }
 
   const { owner, name } =
-    parseGithubUrl(
+    parseGitHubUrl(
       typeof repository === 'string' ? repository : repository.url
     ) || ({} as any);
 
   if (!owner || !name) {
     throw new Error(
-      'Cannot read owner and package name from Github URL in package.json'
+      'Cannot read owner and package name from GitHub URL in package.json'
     );
   }
 
