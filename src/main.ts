@@ -83,11 +83,11 @@ async function setGitUser(args: IGithubReleaseOptions) {
   const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
   let { name, email } = args;
 
-  if (!name) {
+  if (!name && packageJson.author) {
     ({ name } = packageJson.author);
   }
 
-  if (!email) {
+  if (!email && packageJson.author) {
     ({ email } = packageJson.author);
   }
 
