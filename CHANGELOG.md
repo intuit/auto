@@ -1,3 +1,21 @@
+# 0.37.2 (Wed Jan 02 2019)
+
+#### 🐛  Bug Fix
+
+- Convert 'Github' to 'GitHub' [#120](https://github.com/intuit/auto-release/pull/120) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- More Repo Usage [#118](https://github.com/intuit/auto-release/pull/118) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite [#117](https://github.com/intuit/auto-release/pull/117) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add snyk badge [#116](https://github.com/intuit/auto-release/pull/116) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.1 (Mon Dec 31 2018)
 
 #### 🐛  Bug Fix
