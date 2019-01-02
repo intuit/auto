@@ -9,7 +9,7 @@ const registry = registryUrl();
 // tslint:disable-next-line
 const normalizedRegistry = registry.replace('http:', '').replace('https:', '');
 
-export default async function getGithubToken(apiUrl: string): Promise<string> {
+export default async function getGitHubToken(apiUrl: string): Promise<string> {
   if (process.env.GH_TOKEN) {
     return process.env.GH_TOKEN;
   }

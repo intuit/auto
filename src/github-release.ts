@@ -5,14 +5,14 @@ import { inc, ReleaseType } from 'semver';
 import signale from 'signale';
 import { promisify } from 'util';
 
-import Github, { IGithubOptions, IPRInfo } from './git';
+import GitHub, { IGitHubOptions, IPRInfo } from './git';
 import generateReleaseNotes, {
   IExtendedCommit,
   normalizeCommits
 } from './log-parse';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import exec from './utils/exec-promise';
-import getGithubToken from './utils/github-token';
+import getGitHubToken from './utils/github-token';
 import { dummyLog } from './utils/logger';
 import getConfigFromPackageJson from './utils/package-config';
 import postToSlack from './utils/slack';
@@ -66,7 +66,7 @@ export interface ILogger {
   veryVerbose: signale.Signale<signale.DefaultMethods>;
 }
 
-export interface IGithubReleaseOptions {
+export interface IGitHubReleaseOptions {
   labels?: IVersionLabels;
   logger: ILogger;
   jira?: string;
@@ -79,7 +79,7 @@ export interface IGithubReleaseOptions {
   };
 }
 
-export interface IOptionalGithubOptions {
+export interface IOptionalGitHubOptions {
   owner?: string;
   repo?: string;
   baseUrl?: string;
@@ -89,8 +89,8 @@ export interface IOptionalGithubOptions {
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-export default class GithubRelease {
-  private readonly github: Promise<Github>;
+export default class GitHubRelease {
+  private readonly github: Promise<GitHub>;
   private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
   private readonly logger: ILogger;
@@ -100,8 +100,8 @@ export default class GithubRelease {
   private readonly slack?: string;
 
   constructor(
-    options?: IOptionalGithubOptions,
-    releaseOptions: IGithubReleaseOptions = { logger: dummyLog() }
+    options?: IOptionalGitHubOptions,
+    releaseOptions: IGitHubReleaseOptions = { logger: dummyLog() }
   ) {
     this.jira = releaseOptions.jira;
     this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
@@ -124,15 +124,15 @@ export default class GithubRelease {
         args.baseUrl = this.githubApi;
       }
 
-      this.logger.verbose.info('Initializing Github API with:\n', args);
-      this.github = Promise.resolve(new Github(args));
+      this.logger.verbose.info('Initializing GitHub API with:\n', args);
+      this.github = Promise.resolve(new GitHub(args));
     } else {
       this.logger.verbose.info('Getting repo information from package.json');
 
       this.github = getConfigFromPackageJson().then(async gOptions => {
-        const token = await getGithubToken(this.githubApi);
+        const token = await getGitHubToken(this.githubApi);
 
-        const finalOptions: IGithubReleaseOptions & IGithubOptions = {
+        const finalOptions: IGitHubReleaseOptions & IGitHubOptions = {
           ...options,
           ...gOptions,
           logger: this.logger,
@@ -149,11 +149,11 @@ export default class GithubRelease {
           options && options.repo ? options.repo : gOptions.repo;
 
         this.logger.verbose.info(
-          'Initializing Github API with:\n',
+          'Initializing GitHub API with:\n',
           finalOptions
         );
 
-        return new Github(finalOptions);
+        return new GitHub(finalOptions);
       });
     }
   }
