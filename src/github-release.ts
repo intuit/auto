@@ -328,9 +328,8 @@ export default class GitHubRelease {
   ) {
     const client = await this.github;
     const oldLabels = await client.getProjectLabels();
-
-    await Promise.all(
-      [...labels.entries()].map(async ([versionLabel, customLabel]) => {
+    const labelsToCreate = [...labels.entries()].filter(
+      ([versionLabel, customLabel]) => {
         if (oldLabels && oldLabels.includes(customLabel)) {
           return;
         }
@@ -343,8 +342,22 @@ export default class GitHubRelease {
           return;
         }
 
+        return true;
+      }
+    );
+
+    await Promise.all(
+      labelsToCreate.map(async ([versionLabel, customLabel]) => {
         await client.createLabel(versionLabel, customLabel);
       })
+    );
+
+    const repoMetadata = await client.getRepoMetadata();
+
+    const justLabelNames = labelsToCreate.map(([name]) => name);
+    this.logger.log.log(`Created labels: ${justLabelNames}`);
+    this.logger.log.log(
+      `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
     );
   }
 

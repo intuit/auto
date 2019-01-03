@@ -80,9 +80,19 @@ export default class GitHub {
       token: token!
     });
 
-    this.logger.veryVerbose.info('Sucessfully authenticated with GitHub.');
+    this.logger.veryVerbose.info('Successfully authenticated with GitHub.');
 
     return Promise.resolve();
+  }
+
+  // Looks like: https://developer.github.com/v3/repos/#get
+  public async getRepoMetadata() {
+    await this.authenticate();
+
+    return (await this.ghub.repos.get({
+      owner: this.options.owner.toLowerCase(),
+      repo: this.options.repo.toLowerCase()
+    })).data;
   }
 
   public async getLatestRelease(): Promise<string> {
