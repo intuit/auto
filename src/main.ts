@@ -80,23 +80,29 @@ async function getCurrentVersion(
 }
 
 async function setGitUser(args: IGitHubReleaseOptions) {
-  const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
-  let { name, email } = args;
+  try {
+    // If these values are not set git config will exit with an error
+    await execPromise(`git config user.email`);
+    await execPromise(`git config user.name`);
+  } catch (error) {
+    const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
+    let { name, email } = args;
 
-  if (!name && packageJson.author) {
-    ({ name } = packageJson.author);
-  }
+    if (!name && packageJson.author) {
+      ({ name } = packageJson.author);
+    }
 
-  if (!email && packageJson.author) {
-    ({ email } = packageJson.author);
-  }
+    if (!email && packageJson.author) {
+      ({ email } = packageJson.author);
+    }
 
-  if (email) {
-    await execPromise(`git config user.email "${email}"`);
-  }
+    if (email) {
+      await execPromise(`git config user.email "${email}"`);
+    }
 
-  if (name) {
-    await execPromise(`git config user.name "${name}"`);
+    if (name) {
+      await execPromise(`git config user.name "${name}"`);
+    }
   }
 }
 
