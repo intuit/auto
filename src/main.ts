@@ -80,23 +80,29 @@ async function getCurrentVersion(
 }
 
 async function setGitUser(args: IGitHubReleaseOptions) {
-  const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
-  let { name, email } = args;
+  try {
+    // If these values are not set git config will exit with an error
+    await execPromise(`git config user.email`);
+    await execPromise(`git config user.name`);
+  } catch (error) {
+    const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
+    let { name, email } = args;
 
-  if (!name && packageJson.author) {
-    ({ name } = packageJson.author);
-  }
+    if (!name && packageJson.author) {
+      ({ name } = packageJson.author);
+    }
 
-  if (!email && packageJson.author) {
-    ({ email } = packageJson.author);
-  }
+    if (!email && packageJson.author) {
+      ({ email } = packageJson.author);
+    }
 
-  if (email) {
-    await execPromise(`git config user.email "${email}"`);
-  }
+    if (email) {
+      await execPromise(`git config user.email "${email}"`);
+    }
 
-  if (name) {
-    await execPromise(`git config user.name "${name}"`);
+    if (name) {
+      await execPromise(`git config user.name "${name}"`);
+    }
   }
 }
 
@@ -221,8 +227,6 @@ export async function run(args: ArgsType) {
     slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
   };
 
-  await setGitUser(config);
-
   let semVerLabels = defaultLabels;
 
   if (config.labels) {
@@ -271,6 +275,8 @@ export async function run(args: ArgsType) {
       if (version === '') {
         return;
       }
+
+      await setGitUser(config);
 
       await makeChangelog(
         args, // change to config?
@@ -451,6 +457,8 @@ export async function run(args: ArgsType) {
     }
     case 'changelog': {
       verbose.info("Using command: 'changelog'");
+
+      await setGitUser(config);
 
       await makeChangelog(
         args,
