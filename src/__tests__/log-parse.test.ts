@@ -314,4 +314,22 @@ describe('generateReleaseNotes', () => {
 
     expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
   });
+
+  test("should use only email if author name doesn't exist", () => {
+    const commits = normalizeCommits([
+      {
+        hash: 'foo',
+        labels: [],
+        authorEmail: 'adam@dierkens.com',
+        subject: 'Another Feature (#1234)'
+      },
+      {
+        hash: 'foo',
+        labels: [],
+        subject: 'One Feature (#1235)'
+      }
+    ]);
+
+    expect(generateReleaseNotes(commits, options)).toMatchSnapshot();
+  });
 });

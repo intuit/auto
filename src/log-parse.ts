@@ -4,7 +4,7 @@ import join from 'url-join';
 import { ILogger } from './github-release';
 
 interface ICommitAuthor {
-  name: string;
+  name?: string;
   email?: string;
   username?: string;
 }
@@ -320,10 +320,12 @@ function createAuthorSection(
         }
 
         const user = createUserLink(author, commit, options);
-        const authorString = `- ${author.name} (${user})`;
+        const authorString =
+          author.name && user ? `${author.name} (${user})` : user;
+        const authorEntry = `- ${authorString}`;
 
-        if (!commitAuthors.includes(authorString)) {
-          commitAuthors.push(authorString);
+        if (authorString && !commitAuthors.includes(authorEntry)) {
+          commitAuthors.push(authorEntry);
         }
       });
 
