@@ -1,7 +1,7 @@
 declare module 'gitlog' {
   export interface ICommit {
     hash: string;
-    authorName: string;
+    authorName?: string;
     authorEmail?: string;
     subject: string;
     rawBody?: string;

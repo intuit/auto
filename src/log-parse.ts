@@ -73,7 +73,7 @@ export function filterServiceAccounts(
 ): IExtendedCommit | undefined {
   const SERVICE_ACCOUNTS = ['pdbf'];
 
-  if (SERVICE_ACCOUNTS.includes(commit.authorName)) {
+  if (commit.authorName && SERVICE_ACCOUNTS.includes(commit.authorName)) {
     return;
   }
 
