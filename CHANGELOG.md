@@ -1,3 +1,16 @@
+# 0.37.4 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- Include a log when creating a new labels about what those labels are [#121](https://github.com/intuit/auto-release/pull/121) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Orta ([@orta](https://github.com/orta))
+
+---
+
 # 0.37.3 (Wed Jan 02 2019)
 
 #### 🐛  Bug Fix
