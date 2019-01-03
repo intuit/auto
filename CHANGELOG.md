@@ -1,3 +1,15 @@
+# 0.37.6 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- only set git user if one isn't already set [#125](https://github.com/intuit/auto-release/pull/125) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.5 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
