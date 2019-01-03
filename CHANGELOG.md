@@ -1,3 +1,16 @@
+# 0.37.5 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- Move @types into devDependencies [#123](https://github.com/intuit/auto-release/pull/123) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Orta ([@orta](https://github.com/orta))
+
+---
+
 # 0.37.4 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
