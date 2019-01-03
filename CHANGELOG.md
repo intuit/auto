@@ -1,3 +1,15 @@
+# 0.37.7 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- print only email when name is not present [#126](https://github.com/intuit/auto-release/pull/126) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.6 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
