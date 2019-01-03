@@ -227,8 +227,6 @@ export async function run(args: ArgsType) {
     slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
   };
 
-  await setGitUser(config);
-
   let semVerLabels = defaultLabels;
 
   if (config.labels) {
@@ -277,6 +275,8 @@ export async function run(args: ArgsType) {
       if (version === '') {
         return;
       }
+
+      await setGitUser(config);
 
       await makeChangelog(
         args, // change to config?
@@ -457,6 +457,8 @@ export async function run(args: ArgsType) {
     }
     case 'changelog': {
       verbose.info("Using command: 'changelog'");
+
+      await setGitUser(config);
 
       await makeChangelog(
         args,
