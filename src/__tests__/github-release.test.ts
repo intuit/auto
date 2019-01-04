@@ -87,7 +87,7 @@ jest.mock('fs', () => ({
 const slackSpy = jest.fn();
 
 jest.mock('../utils/slack.ts', () => () => slackSpy());
-jest.mock('../utils/package-config', () => async () => ({}));
+jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
 jest.mock('../utils/github-token', () => async () => ({}));
 
 describe('GitHubRelease', () => {

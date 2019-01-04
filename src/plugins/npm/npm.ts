@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { ILogger } from '../github-release';
-import { IAutoHooks } from '../main';
-import SEMVER from '../semver';
-import execPromise from '../utils/exec-promise';
-import getConfigFromPackageJson from '../utils/package-config';
+import { ILogger } from '../../github-release';
+import { IAutoHooks } from '../../main';
+import SEMVER from '../../semver';
+import execPromise from '../../utils/exec-promise';
+import getConfigFromPackageJson from './package-config';
 
 const readFile = promisify(fs.readFile);
 
