@@ -6,4 +6,4 @@ Todo:
 
 - [ ] Add tests
 - [ ] Add docs
-- [ ] Add SemVer label
+- [ ] Add yourself to contributors
