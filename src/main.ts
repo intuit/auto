@@ -14,7 +14,9 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import init from './init';
+import NpmPlugin from './plugins/npm';
 import execPromise from './utils/exec-promise';
+import getGitHubToken from './utils/github-token';
 import createLog from './utils/logger';
 
 interface IAuthor {
@@ -25,13 +27,14 @@ interface IAuthor {
 interface IRepository {
   owner: string;
   repo: string;
+  token?: string;
 }
 
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getUser: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
-    [(release: string) => string, signale.Signale<signale.DefaultMethods>],
+    [(release: string) => string],
     string
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
@@ -61,10 +64,7 @@ async function getCurrentVersion(
     return prefixRelease('0.0.0');
   });
 
-  const lastVersion = await hooks.getPreviousVersion.promise(
-    prefixRelease,
-    veryVerbose
-  );
+  const lastVersion = await hooks.getPreviousVersion.promise(prefixRelease);
 
   if (lastRelease.match(/\d+\.\d+\.\d+/) && lastRelease > lastVersion) {
     veryVerbose.info('Using latest release as previous version');
@@ -191,16 +191,18 @@ async function makeRelease(
 }
 
 export async function run(args: ArgsType) {
-  const hooks: IAutoHooks = {
-    beforeRun: new SyncHook(['config']),
-    getUser: new AsyncSeriesBailHook([]),
-    getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease', 'logger']),
-    getRepository: new AsyncSeriesBailHook([])
-  };
-
   const logger = createLog(
     args['very-verbose'] ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
   );
+  const hooks: IAutoHooks = {
+    beforeRun: new SyncHook(['config']),
+    getUser: new AsyncSeriesBailHook([]),
+    getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
+    getRepository: new AsyncSeriesBailHook([])
+  };
+
+  new NpmPlugin().apply(hooks, logger);
+
   const { log, verbose, veryVerbose } = logger;
   const explorer = cosmiconfig('auto');
   const result = await explorer.search();
@@ -239,7 +241,8 @@ export async function run(args: ArgsType) {
   verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
   const repository = await getRepo(args, hooks);
-  const githubRelease = new GitHubRelease(repository, config);
+  const token = repository.token || (await getGitHubToken(config.githubApi));
+  const githubRelease = new GitHubRelease({ ...repository, token }, config);
 
   switch (args.command) {
     case 'init': {
