@@ -26,6 +26,7 @@
 :gear: Configuration
 
 - [.autorc](pages/autorc.md)
+- [Plugins](pages/plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
 ---
