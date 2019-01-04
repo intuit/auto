@@ -14,7 +14,9 @@
     "experimentalDecorators": true,
     "plugins": [
       { "name": "typescript-tslint-plugin", "configFile": "./tslint.json" }
-    ]
+    ],
+    "types": []
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }
