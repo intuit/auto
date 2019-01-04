@@ -13,6 +13,10 @@ Options
 
   --only-labels    Only run init for the labels. As most other options are for advanced users
 
+Global Options
+
+  --platform string   Platform to interact with (supported: NPM)
+
 Examples
 
   $ auto init

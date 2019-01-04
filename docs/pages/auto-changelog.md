@@ -16,24 +16,24 @@ Options
   --jira string          Jira base URL
   --from string          Tag to start changelog generation on. Defaults to latest tag.
   --to string            Tag to end changelog generation on. Defaults to HEAD.
-  -m, --message string   Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip
-                         ci]'
+  -m, --message string   Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'
 
 Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
-  --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
+  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
   --githubApi string    GitHub API to use
-  --platform string     Platform to interact with (supported: NPM <- default)
+  --platform string     Platform to interact with (supported: NPM)
 
 Examples
 
-  Generate a changelog from the last release to head   $ auto changelog
-  Generate a changelog across specific versions        $ auto changelog --from v0.20.1 --to v0.21.0
-
+  Generate a changelog from the last release     $ auto changelog
+  to head
+  Generate a changelog across specific           $ auto changelog --from v0.20.1 --to v0.21.0
+  versions
 ```
 
 ## Jira

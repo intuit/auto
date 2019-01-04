@@ -38,6 +38,13 @@ const version = {
   description: "Display auto-release-cli's version"
 };
 
+const platform: commandLineUsage.OptionDefinition = {
+  name: 'platform',
+  type: String,
+  description: 'Platform to interact with (supported: NPM)',
+  group: 'misc'
+};
+
 const mainDefinitions = [
   { name: 'command', type: String, defaultOption: true },
   {
@@ -87,12 +94,7 @@ const defaultOptions = [
     description: 'GitHub API to use',
     group: 'misc'
   },
-  {
-    name: 'platform',
-    type: String,
-    description: 'Platform to interact with (supported: NPM)',
-    group: 'misc'
-  }
+  platform
 ];
 
 const pr: commandLineUsage.OptionDefinition = {
@@ -195,7 +197,8 @@ const commands: ICommand[] = [
         group: 'main',
         description:
           'Only run init for the labels. As most other options are for advanced users'
-      }
+      },
+      platform
     ]
   },
   {
