@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
+import { gt } from 'semver';
 import signale from 'signale';
 
 import { ArgsType } from './cli/args';
@@ -62,7 +63,7 @@ async function getCurrentVersion(
 
   const lastVersion = await hooks.getPreviousVersion.promise(prefixRelease);
 
-  if (lastRelease.match(/\d+\.\d+\.\d+/) && lastRelease > lastVersion) {
+  if (lastRelease.match(/\d+\.\d+\.\d+/) && gt(lastRelease, lastVersion)) {
     veryVerbose.info('Using latest release as previous version');
     return lastRelease;
   }

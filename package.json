@@ -91,7 +91,7 @@
     ],
     "*.{ts,tsx}": [
       "prettier --parser typescript --write",
-      "npm run lint",
+      "npm run lint -- --fix",
       "git add"
     ]
   },
