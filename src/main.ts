@@ -3,7 +3,6 @@
 import cosmiconfig from 'cosmiconfig';
 import * as fs from 'fs';
 import signale from 'signale';
-import { promisify } from 'util';
 
 import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
@@ -13,88 +12,77 @@ import GitHubRelease, {
   IGitHubReleaseOptions
 } from './github-release';
 
+import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import init from './init';
 import execPromise from './utils/exec-promise';
 import createLog from './utils/logger';
 
-const readFile = promisify(fs.readFile);
+interface IAuthor {
+  name: string;
+  email: string;
+}
 
-const calcGreaterVersion = (
-  packageVersion: string,
-  monorepoVersion: string,
-  latestVersion: string
-) => {
-  const localVersion = monorepoVersion || packageVersion;
+interface IRepository {
+  owner: string;
+  repo: string;
+}
 
-  return localVersion > latestVersion ? localVersion : latestVersion;
-};
+export interface IAutoHooks {
+  beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  getUser: AsyncSeriesBailHook<[], IAuthor>;
+  getPreviousVersion: AsyncSeriesBailHook<
+    [(release: string) => string, signale.Signale<signale.DefaultMethods>],
+    string
+  >;
+  getRepository: AsyncSeriesBailHook<[], IRepository>;
+  // publish: AsyncSeriesHook;
+}
 
 function isMonorepo() {
   return fs.existsSync('lerna.json');
 }
 
+async function getRepo(args: ArgsType, hooks: IAutoHooks) {
+  hooks.getRepository.tap('None', () => args as IRepository);
+
+  return hooks.getRepository.promise();
+}
+
 async function getCurrentVersion(
   prefixRelease: (release: string) => string,
   lastRelease: string,
-  veryVerbose: signale.Signale<signale.DefaultMethods>
+  veryVerbose: signale.Signale<signale.DefaultMethods>,
+  hooks: IAutoHooks
 ) {
-  let lastVersion;
-  let packageVersion = '';
-  let monorepoVersion = '';
-
-  if (isMonorepo()) {
-    monorepoVersion = prefixRelease(
-      JSON.parse(await readFile('lerna.json', 'utf-8')).version
+  hooks.getPreviousVersion.tap('None', () => {
+    veryVerbose.info(
+      'No previous release found, using 0.0.0 as previous version.'
     );
-  }
+    return prefixRelease('0.0.0');
+  });
 
-  if (fs.existsSync('package.json')) {
-    packageVersion = prefixRelease(
-      JSON.parse(await readFile('package.json', 'utf-8')).version
-    );
-  }
-
-  if (lastRelease.match(/\d+\.\d+\.\d+/)) {
-    veryVerbose.info('Using latest release as previous version');
-    lastVersion = lastRelease;
-  } else if (monorepoVersion) {
-    veryVerbose.info('Using lerna.json as previous version');
-    lastVersion = monorepoVersion;
-  } else if (packageVersion) {
-    veryVerbose.info('Using package.json as previous version');
-    lastVersion = packageVersion;
-  } else {
-    veryVerbose.info('No previous release found, using 0.0.0 as the start.');
-    lastVersion = prefixRelease('0.0.0');
-  }
-
-  // This helps in situations where the latest release on github is wrong for some reason
-  // In this case we default to either the monorepo or package version
-  lastVersion = calcGreaterVersion(
-    packageVersion,
-    monorepoVersion,
-    lastRelease
+  const lastVersion = await hooks.getPreviousVersion.promise(
+    prefixRelease,
+    veryVerbose
   );
+
+  if (lastRelease.match(/\d+\.\d+\.\d+/) && lastRelease > lastVersion) {
+    veryVerbose.info('Using latest release as previous version');
+    return lastRelease;
+  }
 
   return lastVersion;
 }
 
-async function setGitUser(args: IGitHubReleaseOptions) {
+async function setGitUser(args: IGitHubReleaseOptions, hooks: IAutoHooks) {
   try {
     // If these values are not set git config will exit with an error
     await execPromise(`git config user.email`);
     await execPromise(`git config user.name`);
   } catch (error) {
-    const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
-    let { name, email } = args;
+    hooks.getUser.tap('Arguments', () => args as IAuthor);
 
-    if (!name && packageJson.author) {
-      ({ name } = packageJson.author);
-    }
-
-    if (!email && packageJson.author) {
-      ({ email } = packageJson.author);
-    }
+    const { name, email } = await hooks.getUser.promise();
 
     if (email) {
       await execPromise(`git config user.email "${email}"`);
@@ -123,7 +111,8 @@ async function makeChangelog(
   log: signale.Signale<signale.DefaultMethods>,
   prefixRelease: (release: string) => string,
   veryVerbose: signale.Signale<signale.DefaultMethods>,
-  verbose: signale.Signale<signale.DefaultMethods>
+  verbose: signale.Signale<signale.DefaultMethods>,
+  hooks: IAutoHooks
 ) {
   const lastRelease = args.from || (await githubRelease.getLatestRelease());
   const releaseNotes = await githubRelease.generateReleaseNotes(
@@ -137,7 +126,8 @@ async function makeChangelog(
     const currentVersion = await getCurrentVersion(
       prefixRelease,
       lastRelease,
-      veryVerbose
+      veryVerbose,
+      hooks
     );
 
     await githubRelease.addToChangelog(
@@ -158,7 +148,8 @@ async function makeRelease(
   log: signale.Signale<signale.DefaultMethods>,
   prefixRelease: (release: string) => string,
   veryVerbose: signale.Signale<signale.DefaultMethods>,
-  verbose: signale.Signale<signale.DefaultMethods>
+  verbose: signale.Signale<signale.DefaultMethods>,
+  hooks: IAutoHooks
 ) {
   let lastRelease = await githubRelease.getLatestRelease();
 
@@ -177,7 +168,7 @@ async function makeRelease(
 
   const version =
     args['use-version'] ||
-    (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose));
+    (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose, hooks));
 
   if (!version) {
     log.error('Could not calculate next version from last tag.');
@@ -200,6 +191,13 @@ async function makeRelease(
 }
 
 export async function run(args: ArgsType) {
+  const hooks: IAutoHooks = {
+    beforeRun: new SyncHook(['config']),
+    getUser: new AsyncSeriesBailHook([]),
+    getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease', 'logger']),
+    getRepository: new AsyncSeriesBailHook([])
+  };
+
   const logger = createLog(
     args['very-verbose'] ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
   );
@@ -227,6 +225,8 @@ export async function run(args: ArgsType) {
     slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
   };
 
+  hooks.beforeRun.call(config);
+
   let semVerLabels = defaultLabels;
 
   if (config.labels) {
@@ -238,13 +238,8 @@ export async function run(args: ArgsType) {
 
   verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
-  const githubRelease = new GitHubRelease(
-    {
-      owner: args.owner,
-      repo: args.repo
-    },
-    config
-  );
+  const repository = await getRepo(args, hooks);
+  const githubRelease = new GitHubRelease(repository, config);
 
   switch (args.command) {
     case 'init': {
@@ -276,7 +271,7 @@ export async function run(args: ArgsType) {
         return;
       }
 
-      await setGitUser(config);
+      await setGitUser(config, hooks);
 
       await makeChangelog(
         args, // change to config?
@@ -284,7 +279,8 @@ export async function run(args: ArgsType) {
         log,
         prefixRelease,
         veryVerbose,
-        verbose
+        verbose,
+        hooks
       );
 
       if (isMonorepo()) {
@@ -307,7 +303,8 @@ export async function run(args: ArgsType) {
         log,
         prefixRelease,
         veryVerbose,
-        verbose
+        verbose,
+        hooks
       );
 
       break;
@@ -458,7 +455,7 @@ export async function run(args: ArgsType) {
     case 'changelog': {
       verbose.info("Using command: 'changelog'");
 
-      await setGitUser(config);
+      await setGitUser(config, hooks);
 
       await makeChangelog(
         args,
@@ -466,7 +463,8 @@ export async function run(args: ArgsType) {
         log,
         prefixRelease,
         veryVerbose,
-        verbose
+        verbose,
+        hooks
       );
 
       break;
@@ -480,7 +478,8 @@ export async function run(args: ArgsType) {
         log,
         prefixRelease,
         veryVerbose,
-        verbose
+        verbose,
+        hooks
       );
 
       break;

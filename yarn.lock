@@ -1188,7 +1188,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/tapable@*":
+"@types/tapable@*", "@types/tapable@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.4.tgz#b4ffc7dc97b498c969b360a41eee247f82616370"
   integrity sha512-78AdXtlhpCHT0K3EytMpn4JNxaf5tbqbLcbIRoQIHzpTIyjpxLQKRoxU55ujBXAtg3Nl2h/XWvfDa9dsMOd0pQ==
@@ -10642,6 +10642,11 @@ tapable@^1.0.0, tapable@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.1.tgz#4d297923c5a72a42360de2ab52dadfaaec00018e"
   integrity sha512-9I2ydhj8Z9veORCw5PRm4u9uebCn0mcCa6scWoNcbZ6dAtoo2618u9UUzxgmsCOreJpqDDuv61LvwofW7hLcBA==
+
+tapable@^2.0.0-beta.2:
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.2.tgz#a12a84c61770ab8536abf8ae3efee108390ab3a2"
+  integrity sha512-O0OqFiXr9az2c+a0SY0DBH283vBftVCVR8aa6gmV9nBv47y1Qq/akJ0AlxfTWXt9R6ZNebo6Bt6eQKJ5WKu1rA==
 
 tar-stream@^1.5.2:
   version "1.6.2"
