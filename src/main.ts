@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
-import * as fs from 'fs';
 import signale from 'signale';
 
 import { ArgsType } from './cli/args';
@@ -12,9 +11,10 @@ import GitHubRelease, {
   IGitHubReleaseOptions
 } from './github-release';
 
-import { AsyncSeriesBailHook, SyncHook } from 'tapable';
+import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
 import NpmPlugin from './plugins/npm';
+import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
 import createLog from './utils/logger';
@@ -38,11 +38,7 @@ export interface IAutoHooks {
     string
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
-  // publish: AsyncSeriesHook;
-}
-
-function isMonorepo() {
-  return fs.existsSync('lerna.json');
+  publish: AsyncSeriesHook<[SEMVER]>;
 }
 
 async function getRepo(args: ArgsType, hooks: IAutoHooks) {
@@ -198,7 +194,8 @@ export async function run(args: ArgsType) {
     beforeRun: new SyncHook(['config']),
     getUser: new AsyncSeriesBailHook([]),
     getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
-    getRepository: new AsyncSeriesBailHook([])
+    getRepository: new AsyncSeriesBailHook([]),
+    publish: new AsyncSeriesHook(['version'])
   };
 
   new NpmPlugin().apply(hooks, logger);
@@ -277,7 +274,7 @@ export async function run(args: ArgsType) {
       await setGitUser(config, hooks);
 
       await makeChangelog(
-        args, // change to config?
+        args,
         githubRelease,
         log,
         prefixRelease,
@@ -286,22 +283,10 @@ export async function run(args: ArgsType) {
         hooks
       );
 
-      if (isMonorepo()) {
-        await execPromise(
-          `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
-        );
-      } else {
-        await execPromise(
-          `npm version ${version} -m "Bump version to: %s [skip ci]"`
-        );
-        await execPromise('npm publish');
-        await execPromise(
-          'git push --follow-tags --set-upstream origin $branch'
-        );
-      }
+      hooks.publish.promise(version);
 
       await makeRelease(
-        args, // change to config?
+        args,
         githubRelease,
         log,
         prefixRelease,

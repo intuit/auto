@@ -3,6 +3,8 @@ import { promisify } from 'util';
 
 import { ILogger } from '../github-release';
 import { IAutoHooks } from '../main';
+import SEMVER from '../semver';
+import execPromise from '../utils/exec-promise';
 import getConfigFromPackageJson from '../utils/package-config';
 
 const readFile = promisify(fs.readFile);
@@ -55,6 +57,22 @@ export default class NPMPlugin {
     auto.getRepository.tapPromise('NPM', async () => {
       logger.log.info('NPM: getting repo information from package.json');
       return getConfigFromPackageJson();
+    });
+
+    auto.publish.tapPromise('NPM', async (version: SEMVER) => {
+      if (isMonorepo()) {
+        await execPromise(
+          `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
+        );
+      } else {
+        await execPromise(
+          `npm version ${version} -m "Bump version to: %s [skip ci]"`
+        );
+        await execPromise('npm publish');
+        await execPromise(
+          'git push --follow-tags --set-upstream origin $branch'
+        );
+      }
     });
   }
 }
