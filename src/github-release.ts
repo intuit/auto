@@ -129,7 +129,18 @@ export default class GitHubRelease {
         args.baseUrl = this.githubApi;
       }
 
-      this.logger.verbose.info('Initializing GitHub API with:\n', args);
+      // So that --verbose can be used on public CIs
+      const tokenlessArgs = {
+        ...args,
+        token: args.token
+          ? `[Token starting with ${args.token.substring(0, 4)}]`
+          : undefined
+      };
+
+      this.logger.verbose.info(
+        'Initializing GitHub API with:\n',
+        tokenlessArgs
+      );
       this.github = Promise.resolve(new GitHub(args));
     } else {
       this.logger.verbose.info('Getting repo information from package.json');
