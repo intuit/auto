@@ -1,3 +1,15 @@
+# 0.37.9 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- Changes the verbose logging so that it doesn't leak tokens [#130](https://github.com/intuit/auto-release/pull/130) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.8 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
