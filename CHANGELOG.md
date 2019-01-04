@@ -1,3 +1,15 @@
+# 0.37.8 (Thu Jan 03 2019)
+
+#### 🐛  Bug Fix
+
+- Fix custom labels not respected by the semver checker [#128](https://github.com/intuit/auto-release/pull/128) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # 0.37.7 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
