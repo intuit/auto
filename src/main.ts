@@ -198,8 +198,6 @@ export async function run(args: ArgsType) {
     publish: new AsyncSeriesHook(['version'])
   };
 
-  new NpmPlugin().apply(hooks, logger);
-
   const { log, verbose, veryVerbose } = logger;
   const explorer = cosmiconfig('auto');
   const result = await explorer.search();
@@ -223,6 +221,13 @@ export async function run(args: ArgsType) {
     logger,
     slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
   };
+
+  switch (config.platform) {
+    case 'npm':
+    default:
+      verbose.info('Using NPM Plugin...');
+      new NpmPlugin().apply(hooks, logger);
+  }
 
   hooks.beforeRun.call(config);
 

@@ -65,6 +65,7 @@ export interface ILogger {
 }
 
 export interface IGitHubReleaseOptions {
+  platform?: 'npm';
   labels?: {
     [label: string]: string;
   };
@@ -114,7 +115,7 @@ export default class GitHubRelease {
     ][]);
 
     if (!options.owner || !options.repo || !options.token) {
-      throw new Error('Owner, repo, token');
+      throw new Error('Must set owner, repo, and GitHub token.');
     }
 
     this.logger.verbose.info('Options contain repo information.');
