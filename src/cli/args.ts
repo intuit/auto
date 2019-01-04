@@ -86,6 +86,12 @@ const defaultOptions = [
     type: String,
     description: 'GitHub API to use',
     group: 'misc'
+  },
+  {
+    name: 'platform',
+    type: String,
+    description: 'Platform to interact with (supported: NPM)',
+    group: 'misc'
   }
 ];
 
@@ -554,6 +560,7 @@ export interface ISemverArgs {
   onlyPublishWithReleaseLabel?: boolean;
   jira?: string;
   githubApi?: string;
+  platform?: 'npm';
 }
 
 export interface IOwnerArgs {
