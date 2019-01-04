@@ -32,7 +32,7 @@ interface IRepository {
 
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
-  getUser: AsyncSeriesBailHook<[], IAuthor>;
+  getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
@@ -76,9 +76,9 @@ async function setGitUser(args: IGitHubReleaseOptions, hooks: IAutoHooks) {
     await execPromise(`git config user.email`);
     await execPromise(`git config user.name`);
   } catch (error) {
-    hooks.getUser.tap('Arguments', () => args as IAuthor);
+    hooks.getAuthor.tap('Arguments', () => args as IAuthor);
 
-    const { name, email } = await hooks.getUser.promise();
+    const { name, email } = await hooks.getAuthor.promise();
 
     if (email) {
       await execPromise(`git config user.email "${email}"`);
@@ -192,7 +192,7 @@ export async function run(args: ArgsType) {
   );
   const hooks: IAutoHooks = {
     beforeRun: new SyncHook(['config']),
-    getUser: new AsyncSeriesBailHook([]),
+    getAuthor: new AsyncSeriesBailHook([]),
     getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
     getRepository: new AsyncSeriesBailHook([]),
     publish: new AsyncSeriesHook(['version'])

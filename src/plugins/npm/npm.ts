@@ -15,7 +15,7 @@ function isMonorepo() {
 
 export default class NPMPlugin {
   public apply(auto: IAutoHooks, logger: ILogger) {
-    auto.getUser.tapPromise('NPM', async () => {
+    auto.getAuthor.tapPromise('NPM', async () => {
       logger.log.info('NPM: Getting repo information from package.json');
       const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
 
