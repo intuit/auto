@@ -431,11 +431,12 @@ describe('GitHubRelease', () => {
     });
 
     test('should be able to configure labels', async () => {
-      const labels = new Map();
-      labels.set(SEMVER.major, 'Version: Major');
-      labels.set(SEMVER.minor, 'Version: Minor');
-      labels.set(SEMVER.patch, 'Version: Patch');
-      labels.set('release', 'Deploy');
+      const labels = {
+        [SEMVER.major]: 'Version: Major',
+        [SEMVER.minor]: 'Version: Minor',
+        [SEMVER.patch]: 'Version: Patch',
+        release: 'Deploy'
+      };
 
       const gh = new GitHubRelease(undefined, {
         logger,

@@ -67,7 +67,9 @@ export interface ILogger {
 }
 
 export interface IGitHubReleaseOptions {
-  labels?: IVersionLabels;
+  labels?: {
+    [label: string]: string;
+  };
   logger: ILogger;
   jira?: string;
   slack?: string;
@@ -106,9 +108,12 @@ export default class GitHubRelease {
     this.jira = releaseOptions.jira;
     this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
     this.slack = releaseOptions.slack;
-    this.userLabels = releaseOptions.labels || new Map();
     this.changelogTitles = releaseOptions.changelogTitles || {};
     this.logger = releaseOptions.logger;
+    this.userLabels = new Map(Object.entries(releaseOptions.labels || {}) as [
+      VersionLabel,
+      string
+    ][]);
 
     if (options && options.owner && options.repo && options.token) {
       this.logger.verbose.info('Options contain repo information.');
