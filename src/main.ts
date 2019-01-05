@@ -33,6 +33,7 @@ interface IRepository {
 }
 
 export interface IPlugin {
+  name: string;
   apply(auto: IAutoHooks, logger: ILogger): void;
 }
 
@@ -77,7 +78,7 @@ export class AutoRelease {
     };
 
     plugins.map(plugin => {
-      this.logger.verbose.info('Using NPM Plugin...');
+      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
       plugin.apply(this.hooks, this.logger);
     });
   }
