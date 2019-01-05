@@ -20,26 +20,26 @@ To create a plugin simply make a class with an `apply` method and tap into the h
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { IAutoHooks, ILogger, SEMVER, execPromise } from 'auto';
+import { IAutoHooks, AutoRelease, SEMVER, execPromise } from 'auto';
 import getConfigFromPackageJson from './package-config';
 
 const readFile = promisify(fs.readFile);
 
 export default class NPMPlugin {
-  public apply(auto: IAutoHooks, logger: ILogger) {
-    auto.getAuthor.tapPromise('NPM', async () => {
+  public apply(auto: AutoRelease) {
+    auto.hooks.getAuthor.tapPromise('NPM', async () => {
       const { author } = JSON.parse(await readFile('package.json', 'utf-8'));
 
       if (author) {
-        logger.log.info('NPM: Got author information from package.json');
+        auto.logger.log.info('NPM: Got author information from package.json');
         return author;
       }
     });
 
-    auto.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
       const { version } = JSON.parse(await readFile('package.json', 'utf-8'));
 
-      logger.log.info(
+      auto.logger.log.info(
         'NPM: Got previous version from package.json - ',
         version
       );
@@ -51,12 +51,12 @@ export default class NPMPlugin {
       }
     });
 
-    auto.getRepository.tapPromise('NPM', async () => {
-      logger.log.info('NPM: getting repo information from package.json');
+    auto.hooks.getRepository.tapPromise('NPM', async () => {
+      auto.logger.log.info('NPM: getting repo information from package.json');
       return getConfigFromPackageJson();
     });
 
-    auto.publish.tapPromise('NPM', async (version: SEMVER) => {
+    auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       await execPromise(
         `npm version ${version} -m "Bump version to: %s [skip ci]"`
       );
