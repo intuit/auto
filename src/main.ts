@@ -127,7 +127,7 @@ class AutoRelease {
       this.semVerLabels &&
       !skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)
     ) {
-      rawConfig.skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
+      skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
     this.config = {

@@ -259,7 +259,7 @@ describe('GitHubRelease', () => {
 
     test("creates new changelog if one didn't exist", async () => {
       const gh = new GitHubRelease(options);
-      await gh.addToChangelog('# My new Notes', 'v1.0.0', 'v1.0.0', false);
+      await gh.addToChangelog('# My new Notes', 'v1.0.0', 'v1.0.0');
 
       expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
     });
@@ -289,7 +289,6 @@ describe('GitHubRelease', () => {
         '# My new Notes',
         'asdklfhlkh24387513',
         'v0.0.0',
-        false,
         message
       );
       expect(execSpy.mock.calls[1][0].includes(message)).toBe(true);
@@ -299,7 +298,8 @@ describe('GitHubRelease', () => {
   test('postToSlack', async () => {
     const gh = new GitHubRelease(options, {
       logger: dummyLog(),
-      slack: 'https://custom-slack-url'
+      slack: 'https://custom-slack-url',
+      skipReleaseLabels: []
     });
     await gh.postToSlack('# My Notes', 'v1.0.0');
     expect(slackSpy).toHaveBeenCalled();
@@ -413,7 +413,11 @@ describe('GitHubRelease', () => {
     });
 
     test('should not publish a release in onlyPublishWithReleaseLabel without label', async () => {
-      const gh = new GitHubRelease(options);
+      const gh = new GitHubRelease(options, {
+        onlyPublishWithReleaseLabel: true,
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
@@ -425,11 +429,15 @@ describe('GitHubRelease', () => {
       getLabels.mockReturnValueOnce(['major']);
       getLabels.mockReturnValueOnce(['patch']);
 
-      expect(await gh.getSemverBump('1234', '123', true)).toBe('');
+      expect(await gh.getSemverBump('1234', '123')).toBe('');
     });
 
     test('should publish a release in onlyPublishWithReleaseLabel with label', async () => {
-      const gh = new GitHubRelease(options);
+      const gh = new GitHubRelease(options, {
+        onlyPublishWithReleaseLabel: true,
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
@@ -441,7 +449,7 @@ describe('GitHubRelease', () => {
       getLabels.mockReturnValueOnce(['patch']);
       getLabels.mockReturnValueOnce(['minor']);
 
-      expect(await gh.getSemverBump('1234', '123', true)).toBe(SEMVER.minor);
+      expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.minor);
     });
 
     test('should be able to configure labels', async () => {
@@ -453,6 +461,8 @@ describe('GitHubRelease', () => {
       };
 
       const gh = new GitHubRelease(options, {
+        onlyPublishWithReleaseLabel: true,
+        skipReleaseLabels: [],
         logger,
         labels
       });
@@ -468,14 +478,14 @@ describe('GitHubRelease', () => {
       getLabels.mockReturnValueOnce(['Version: Patch']);
       getLabels.mockReturnValueOnce(['Version: Minor', 'release']);
 
-      expect(await gh.getSemverBump('1234', '123', true)).toBe('');
+      expect(await gh.getSemverBump('1234', '123')).toBe('');
 
       getGitLog.mockReturnValueOnce(commits);
       getLabels.mockReturnValueOnce(['Version: Minor', 'Deploy']);
       getLabels.mockReturnValueOnce(['Version: Major']);
       getLabels.mockReturnValueOnce(['Version: Patch']);
 
-      expect(await gh.getSemverBump('1234', '123', true)).toBe(SEMVER.major);
+      expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.major);
     });
   });
 
@@ -504,7 +514,10 @@ describe('GitHubRelease', () => {
       const mockLogger = dummyLog();
       mockLogger.log.log = jest.fn();
 
-      const gh = new GitHubRelease(options, { logger: mockLogger });
+      const gh = new GitHubRelease(options, {
+        logger: mockLogger,
+        skipReleaseLabels: []
+      });
       const labels = new Map<VersionLabel, string>();
       labels.set(SEMVER.patch, '3');
 
@@ -530,25 +543,41 @@ describe('GitHubRelease', () => {
     });
 
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
-      const gh = new GitHubRelease(options);
+      let gh = new GitHubRelease(options, {
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
       const labels = new Map<VersionLabel, string>();
       labels.set('release', 'deploy');
 
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('release', 'deploy');
 
-      await gh.addLabelsToProject(labels, true);
+      gh = new GitHubRelease(options, {
+        onlyPublishWithReleaseLabel: true,
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
+      await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('release', 'deploy');
     });
 
     test('should add skip-release label not in onlyPublishWithReleaseLabel mode', async () => {
-      const gh = new GitHubRelease(options);
+      let gh = new GitHubRelease(options, {
+        onlyPublishWithReleaseLabel: true,
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
       const labels = new Map<VersionLabel, string>();
       labels.set('skip-release', 'no!');
 
-      await gh.addLabelsToProject(labels, true);
+      await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('skip-release', 'no!');
 
+      gh = new GitHubRelease(options, {
+        skipReleaseLabels: [],
+        logger: dummyLog()
+      });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('skip-release', 'no!');
     });
