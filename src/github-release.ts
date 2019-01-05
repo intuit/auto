@@ -75,6 +75,8 @@ export interface IGitHubReleaseOptions {
   githubApi?: string;
   name?: string;
   email?: string;
+  owner?: string;
+  repo?: string;
   skipReleaseLabels: string[];
   onlyPublishWithReleaseLabel?: boolean;
   'no-version-prefix'?: boolean;

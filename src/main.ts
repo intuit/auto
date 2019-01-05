@@ -43,32 +43,6 @@ export interface IAutoHooks {
   publish: AsyncSeriesHook<[SEMVER]>;
 }
 
-async function getRepo(args: ArgsType, hooks: IAutoHooks) {
-  hooks.getRepository.tap('None', () => args as IRepository);
-
-  return hooks.getRepository.promise();
-}
-
-async function setGitUser(args: IGitHubReleaseOptions, hooks: IAutoHooks) {
-  try {
-    // If these values are not set git config will exit with an error
-    await execPromise(`git config user.email`);
-    await execPromise(`git config user.name`);
-  } catch (error) {
-    hooks.getAuthor.tap('Arguments', () => args as IAuthor);
-
-    const { name, email } = await hooks.getAuthor.promise();
-
-    if (email) {
-      await execPromise(`git config user.email "${email}"`);
-    }
-
-    if (name) {
-      await execPromise(`git config user.name "${name}"`);
-    }
-  }
-}
-
 class AutoRelease {
   public hooks: IAutoHooks;
   public logger?: ILogger;
@@ -153,7 +127,7 @@ class AutoRelease {
       this.semVerLabels
     );
 
-    const repository = await getRepo(args, this.hooks);
+    const repository = await this.getRepo();
     const token =
       repository.token || (await getGitHubToken(this.config.githubApi));
     this.githubRelease = new GitHubRelease(
@@ -171,7 +145,7 @@ class AutoRelease {
   }
 
   public async createLabels() {
-    if (!this.githubRelease || !this.config || !this.args) {
+    if (!this.githubRelease || !this.config) {
       throw this.createErrorMessage();
     }
 
@@ -189,7 +163,7 @@ class AutoRelease {
   }
 
   public async label() {
-    if (!this.logger || !this.config || !this.githubRelease || !this.args) {
+    if (!this.logger || !this.githubRelease || !this.args) {
       throw this.createErrorMessage();
     }
 
@@ -341,14 +315,12 @@ class AutoRelease {
   }
 
   public async version() {
-    if (!this.logger || !this.args || !this.githubRelease) {
+    if (!this.logger) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'version'");
-
     const bump = await this.getVersion();
-
     console.log(bump);
   }
 
@@ -358,36 +330,27 @@ class AutoRelease {
     }
 
     this.logger.verbose.info("Using command: 'release'");
-
     await this.makeRelease();
   }
 
   public async shipit() {
-    if (!this.config || !this.githubRelease) {
-      throw this.createErrorMessage();
-    }
-
     const version = await this.getVersion();
 
     if (version === '') {
       return;
     }
 
-    await setGitUser(this.config, this.hooks);
     await this.makeChangelog();
     this.hooks.publish.promise(version);
     await this.makeRelease();
   }
 
   public async changelog() {
-    if (!this.logger || !this.config) {
+    if (!this.logger) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'changelog'");
-
-    await setGitUser(this.config, this.hooks);
-
     await this.makeChangelog();
   }
 
@@ -397,8 +360,7 @@ class AutoRelease {
     }
 
     const lastRelease = await this.githubRelease.getLatestRelease();
-
-    return this.githubRelease.getSemverBump(lastRelease, undefined);
+    return this.githubRelease.getSemverBump(lastRelease);
   }
 
   private async getCurrentVersion(lastRelease: string) {
@@ -414,7 +376,6 @@ class AutoRelease {
       this.logger.veryVerbose.info(
         'No previous release found, using 0.0.0 as previous version.'
       );
-
       return this.prefixRelease('0.0.0');
     });
 
@@ -431,9 +392,11 @@ class AutoRelease {
   }
 
   private async makeChangelog() {
-    if (!this.logger || !this.githubRelease || !this.args) {
+    if (!this.logger || !this.githubRelease || !this.args || !this.config) {
       throw this.createErrorMessage();
     }
+
+    await this.setGitUser();
 
     const lastRelease =
       this.args.from || (await this.githubRelease.getLatestRelease());
@@ -503,7 +466,7 @@ class AutoRelease {
     }
   }
 
-  private prefixRelease(release: string) {
+  private readonly prefixRelease = (release: string) => {
     if (!this.config) {
       throw this.createErrorMessage();
     }
@@ -511,12 +474,37 @@ class AutoRelease {
     return this.config['no-version-prefix'] || release.startsWith('v')
       ? release
       : `v${release}`;
-  }
+  };
 
   private createErrorMessage() {
     return new Error(
       `AutoRelease is not initialized! Make sure the have run AutoRelease.loadConfig`
     );
+  }
+
+  private async setGitUser() {
+    try {
+      // If these values are not set git config will exit with an error
+      await execPromise(`git config user.email`);
+      await execPromise(`git config user.name`);
+    } catch (error) {
+      this.hooks.getAuthor.tap('Arguments', () => this.config as IAuthor);
+
+      const { name, email } = await this.hooks.getAuthor.promise();
+
+      if (email) {
+        await execPromise(`git config user.email "${email}"`);
+      }
+
+      if (name) {
+        await execPromise(`git config user.name "${name}"`);
+      }
+    }
+  }
+
+  private async getRepo() {
+    this.hooks.getRepository.tap('None', () => this.config as IRepository);
+    return this.hooks.getRepository.promise();
   }
 }
 
