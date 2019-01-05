@@ -4,8 +4,6 @@ import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
-const logger = dummyLog();
-
 const constructor = jest.fn();
 const getGitLog = jest.fn();
 const publish = jest.fn();
@@ -297,7 +295,6 @@ describe('GitHubRelease', () => {
 
   test('postToSlack', async () => {
     const gh = new GitHubRelease(options, {
-      logger: dummyLog(),
       slack: 'https://custom-slack-url',
       skipReleaseLabels: []
     });
@@ -415,8 +412,7 @@ describe('GitHubRelease', () => {
     test('should not publish a release in onlyPublishWithReleaseLabel without label', async () => {
       const gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -435,8 +431,7 @@ describe('GitHubRelease', () => {
     test('should publish a release in onlyPublishWithReleaseLabel with label', async () => {
       const gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -463,7 +458,6 @@ describe('GitHubRelease', () => {
       const gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        logger,
         labels
       });
       const commits = [
@@ -514,10 +508,13 @@ describe('GitHubRelease', () => {
       const mockLogger = dummyLog();
       mockLogger.log.log = jest.fn();
 
-      const gh = new GitHubRelease(options, {
-        logger: mockLogger,
-        skipReleaseLabels: []
-      });
+      const gh = new GitHubRelease(
+        options,
+        {
+          skipReleaseLabels: []
+        },
+        mockLogger
+      );
       const labels = new Map<VersionLabel, string>();
       labels.set(SEMVER.patch, '3');
 
@@ -544,8 +541,7 @@ describe('GitHubRelease', () => {
 
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new GitHubRelease(options, {
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       const labels = new Map<VersionLabel, string>();
       labels.set('release', 'deploy');
@@ -555,8 +551,7 @@ describe('GitHubRelease', () => {
 
       gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('release', 'deploy');
@@ -565,8 +560,7 @@ describe('GitHubRelease', () => {
     test('should add skip-release label not in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       const labels = new Map<VersionLabel, string>();
       labels.set('skip-release', 'no!');
@@ -575,8 +569,7 @@ describe('GitHubRelease', () => {
       expect(createLabel).not.toHaveBeenCalledWith('skip-release', 'no!');
 
       gh = new GitHubRelease(options, {
-        skipReleaseLabels: [],
-        logger: dummyLog()
+        skipReleaseLabels: []
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('skip-release', 'no!');
