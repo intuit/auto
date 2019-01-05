@@ -32,6 +32,10 @@ interface IRepository {
   token?: string;
 }
 
+export interface IPlugin {
+  apply(auto: IAutoHooks, logger: ILogger): void;
+}
+
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
@@ -43,26 +47,19 @@ export interface IAutoHooks {
   publish: AsyncSeriesHook<[SEMVER]>;
 }
 
-class AutoRelease {
+export class AutoRelease {
   public hooks: IAutoHooks;
-  public logger?: ILogger;
+  public logger: ILogger;
+  public args: ArgsType;
   public githubRelease?: GitHubRelease;
   public semVerLabels?: Map<VersionLabel, string>;
   public config?: IGitHubReleaseOptions;
   public skipReleaseLabels?: string[];
-  public args?: ArgsType;
 
-  constructor() {
-    this.hooks = {
-      beforeRun: new SyncHook(['config']),
-      getAuthor: new AsyncSeriesBailHook([]),
-      getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
-      getRepository: new AsyncSeriesBailHook([]),
-      publish: new AsyncSeriesHook(['version'])
-    };
-  }
-
-  public async loadConfig(args: ArgsType) {
+  constructor({
+    plugins = [new NpmPlugin()],
+    ...args
+  }: ArgsType & { plugins?: IPlugin[] }) {
     this.args = args;
     this.logger = createLog(
       args['very-verbose']
@@ -72,6 +69,21 @@ class AutoRelease {
         : undefined
     );
 
+    this.hooks = {
+      beforeRun: new SyncHook(['config']),
+      getAuthor: new AsyncSeriesBailHook([]),
+      getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
+      getRepository: new AsyncSeriesBailHook([]),
+      publish: new AsyncSeriesHook(['version'])
+    };
+
+    plugins.map(plugin => {
+      this.logger.verbose.info('Using NPM Plugin...');
+      plugin.apply(this.hooks, this.logger);
+    });
+  }
+
+  public async loadConfig() {
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
 
@@ -106,10 +118,11 @@ class AutoRelease {
 
     this.config = {
       ...rawConfig,
-      ...args,
+      ...this.args,
       skipReleaseLabels,
       logger: this.logger,
-      slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
+      slack:
+        typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
     };
 
     switch (this.config.platform) {
@@ -137,10 +150,6 @@ class AutoRelease {
   }
 
   public async init() {
-    if (!this.args) {
-      throw this.createErrorMessage();
-    }
-
     await init(this.args['only-labels']);
   }
 
@@ -163,7 +172,7 @@ class AutoRelease {
   }
 
   public async label() {
-    if (!this.logger || !this.githubRelease || !this.args) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -187,7 +196,7 @@ class AutoRelease {
   }
 
   public async pr() {
-    if (!this.logger || !this.args || !this.githubRelease) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -217,13 +226,7 @@ class AutoRelease {
   }
 
   public async prCheck() {
-    if (
-      !this.config ||
-      !this.logger ||
-      !this.args ||
-      !this.githubRelease ||
-      !this.semVerLabels
-    ) {
+    if (!this.config || !this.githubRelease || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
 
@@ -299,7 +302,7 @@ class AutoRelease {
   }
 
   public async comment() {
-    if (!this.logger || !this.args || !this.githubRelease) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -315,20 +318,12 @@ class AutoRelease {
   }
 
   public async version() {
-    if (!this.logger) {
-      throw this.createErrorMessage();
-    }
-
     this.logger.verbose.info("Using command: 'version'");
     const bump = await this.getVersion();
     console.log(bump);
   }
 
   public async release() {
-    if (!this.logger) {
-      throw this.createErrorMessage();
-    }
-
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease();
   }
@@ -346,10 +341,6 @@ class AutoRelease {
   }
 
   public async changelog() {
-    if (!this.logger) {
-      throw this.createErrorMessage();
-    }
-
     this.logger.verbose.info("Using command: 'changelog'");
     await this.makeChangelog();
   }
@@ -364,15 +355,7 @@ class AutoRelease {
   }
 
   private async getCurrentVersion(lastRelease: string) {
-    if (!this.logger) {
-      throw this.createErrorMessage();
-    }
-
     this.hooks.getPreviousVersion.tap('None', () => {
-      if (!this.logger) {
-        throw this.createErrorMessage();
-      }
-
       this.logger.veryVerbose.info(
         'No previous release found, using 0.0.0 as previous version.'
       );
@@ -392,7 +375,7 @@ class AutoRelease {
   }
 
   private async makeChangelog() {
-    if (!this.logger || !this.githubRelease || !this.args || !this.config) {
+    if (!this.githubRelease || !this.config) {
       throw this.createErrorMessage();
     }
 
@@ -422,7 +405,7 @@ class AutoRelease {
   }
 
   private async makeRelease() {
-    if (!this.logger || !this.githubRelease || !this.args) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -509,9 +492,9 @@ class AutoRelease {
 }
 
 export async function run(args: ArgsType) {
-  const auto = new AutoRelease();
+  const auto = new AutoRelease(args);
 
-  await auto.loadConfig(args);
+  await auto.loadConfig();
 
   switch (args.command) {
     case 'init':

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { promisify } from 'util';
 
 import { ILogger } from '../../github-release';
-import { IAutoHooks } from '../../main';
+import { IAutoHooks, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
 import getConfigFromPackageJson from './package-config';
@@ -13,7 +13,9 @@ function isMonorepo() {
   return fs.existsSync('lerna.json');
 }
 
-export default class NPMPlugin {
+export default class NPMPlugin implements IPlugin {
+  public name = 'NPM';
+
   public apply(auto: IAutoHooks, logger: ILogger) {
     auto.getAuthor.tapPromise('NPM', async () => {
       logger.verbose.info('NPM: Getting repo information from package.json');
