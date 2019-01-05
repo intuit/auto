@@ -13,7 +13,7 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
-import NpmPlugin from './plugins/npm';
+import NpmPlugin from './plugins/npm/npm';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
@@ -490,3 +490,9 @@ export default async function main(args: ArgsType) {
     console.log(error);
   }
 }
+
+// Plugin Utils
+
+export { ILogger } from './github-release';
+export { default as SEMVER } from './semver';
+export { default as execPromise } from './utils/exec-promise';
