@@ -104,6 +104,12 @@ export class AutoRelease {
       };
     }
 
+    this.logger.verbose.success(
+      'Using SEMVER labels:',
+      '\n',
+      this.semVerLabels
+    );
+
     const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
 
     if (
@@ -112,6 +118,11 @@ export class AutoRelease {
     ) {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
+
+    this.plugins.map(plugin => {
+      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
+      plugin.apply(this);
+    });
 
     const config = {
       ...rawConfig,
@@ -122,18 +133,7 @@ export class AutoRelease {
         typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
     };
 
-    this.plugins.map(plugin => {
-      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
-      plugin.apply(this);
-    });
-
     this.hooks.beforeRun.call(config);
-
-    this.logger.verbose.success(
-      'Using SEMVER labels:',
-      '\n',
-      this.semVerLabels
-    );
 
     const repository = await this.getRepo();
     const token = repository.token || (await getGitHubToken(config.githubApi));
