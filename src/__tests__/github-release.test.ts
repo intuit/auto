@@ -223,9 +223,8 @@ describe('GitHubRelease', () => {
     await gh.createStatus({
       state: 'pending',
       sha: '',
-      number: 22,
       context: 'foo',
-      url: 'google.com',
+      target_url: 'google.com',
       description: 'testing'
     });
     expect(getLatestRelease).toHaveBeenCalled();

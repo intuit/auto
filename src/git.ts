@@ -6,7 +6,7 @@ import { Memoize } from 'typescript-memoize';
 
 import { defaultLabelsDescriptions } from './github-release';
 import execPromise from './utils/exec-promise';
-import { ILogger } from './utils/logger';
+import { dummyLog, ILogger } from './utils/logger';
 import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
@@ -42,7 +42,7 @@ export default class GitHub {
   public readonly options: IGitHubOptions;
   private readonly logger: ILogger;
 
-  constructor(options: IGitHubOptions, logger: ILogger) {
+  constructor(options: IGitHubOptions, logger: ILogger = dummyLog()) {
     this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
