@@ -1,3 +1,25 @@
+# 1.0.0 (Sat Jan 05 2019)
+
+#### 💥  Breaking Change
+
+- Release v1.0.0 [#137](https://github.com/intuit/auto-release/pull/137) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update PULL_REQUEST_TEMPLATE.md [#133](https://github.com/intuit/auto-release/pull/133) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Add Prior Art section to Readme [#136](https://github.com/intuit/auto-release/pull/136) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add artsy/reaction to the list of projects using auto [#134](https://github.com/intuit/auto-release/pull/134) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # 0.37.9 (Thu Jan 03 2019)
 
 #### 🐛  Bug Fix
