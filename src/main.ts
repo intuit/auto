@@ -128,7 +128,6 @@ export class AutoRelease {
       ...rawConfig,
       ...this.args,
       skipReleaseLabels,
-      logger: this.logger,
       slack:
         typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
     };
@@ -137,7 +136,11 @@ export class AutoRelease {
 
     const repository = await this.getRepo();
     const token = repository.token || (await getGitHubToken(config.githubApi));
-    this.githubRelease = new GitHubRelease({ ...repository, token }, config);
+    this.githubRelease = new GitHubRelease(
+      { ...repository, token },
+      config,
+      this.logger
+    );
   }
 
   public async init() {

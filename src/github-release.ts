@@ -68,7 +68,6 @@ export interface IGitHubReleaseOptions {
   labels?: {
     [label: string]: string;
   };
-  logger: ILogger;
   jira?: string;
   slack?: string;
   githubApi?: string;
@@ -97,6 +96,7 @@ const writeFile = promisify(fs.writeFile);
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
 
+  private readonly logger: ILogger;
   private readonly github: GitHub;
   private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
@@ -105,10 +105,11 @@ export default class GitHubRelease {
   constructor(
     options: IOptionalGitHubOptions,
     releaseOptions: IGitHubReleaseOptions = {
-      logger: dummyLog(),
       skipReleaseLabels: []
-    }
+    },
+    logger: ILogger = dummyLog()
   ) {
+    this.logger = logger;
     this.releaseOptions = releaseOptions;
     this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
     this.changelogTitles = releaseOptions.changelogTitles || {};
@@ -121,14 +122,12 @@ export default class GitHubRelease {
       throw new Error('Must set owner, repo, and GitHub token.');
     }
 
-    this.releaseOptions.logger.verbose.info(
-      'Options contain repo information.'
-    );
+    this.logger.verbose.info('Options contain repo information.');
 
     const args = {
       owner: options.owner,
       repo: options.repo,
-      logger: this.releaseOptions.logger,
+      logger: this.logger,
       ...options
     };
 
@@ -144,10 +143,7 @@ export default class GitHubRelease {
         : undefined
     };
 
-    this.releaseOptions.logger.verbose.info(
-      'Initializing GitHub API with:\n',
-      tokenlessArgs
-    );
+    this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
     this.github = new GitHub(args);
   }
 
@@ -169,7 +165,7 @@ export default class GitHubRelease {
       repo: this.github.options.repo,
       baseUrl: project.data.html_url,
       jira: this.releaseOptions.jira,
-      logger: this.releaseOptions.logger,
+      logger: this.logger,
       changelogTitles: {
         ...defaultChangelogTitles,
         ...this.changelogTitles
@@ -183,7 +179,7 @@ export default class GitHubRelease {
     currentVersion: string,
     message = 'Update CHANGELOG.md [skip ci]'
   ) {
-    this.releaseOptions.logger.verbose.info('Adding new changes to changelog.');
+    this.logger.verbose.info('Adding new changes to changelog.');
 
     let version;
 
@@ -194,10 +190,7 @@ export default class GitHubRelease {
       version = inc(currentVersion, bump as ReleaseType);
     }
 
-    this.releaseOptions.logger.verbose.info(
-      'Calculated next version to be:',
-      version
-    );
+    this.logger.verbose.info('Calculated next version to be:', version);
 
     const date = new Date().toDateString();
     const prefixed =
@@ -209,41 +202,32 @@ export default class GitHubRelease {
     let newChangelog = `# ${prefixed} (${date})\n\n${releaseNotes}`;
 
     if (fs.existsSync('CHANGELOG.md')) {
-      this.releaseOptions.logger.verbose.info(
-        'Old changelog exists, prepending changes.'
-      );
+      this.logger.verbose.info('Old changelog exists, prepending changes.');
       const oldChangelog = await readFile('CHANGELOG.md', 'utf8');
       newChangelog = `${newChangelog}\n\n---\n\n${oldChangelog}`;
     }
 
     await writeFile('CHANGELOG.md', newChangelog);
-    this.releaseOptions.logger.verbose.info(
-      'Wrote new changelog to filesystem.'
-    );
+    this.logger.verbose.info('Wrote new changelog to filesystem.');
 
     await exec('git add CHANGELOG.md');
     await exec(`git commit -m '${message}' --no-verify`);
-    this.releaseOptions.logger.verbose.info('Commited new changelog.');
+    this.logger.verbose.info('Commited new changelog.');
   }
 
   public async getCommits(
     from: string,
     to = 'HEAD'
   ): Promise<IExtendedCommit[]> {
-    this.releaseOptions.logger.verbose.info(
-      `Getting commits from ${from} to ${to}`
-    );
+    this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
     const gitlog = await this.github.getGitLog(from, to);
 
-    this.releaseOptions.logger.veryVerbose.info('Got gitlog:\n', gitlog);
+    this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
     const commits = await this.addLabelsToCommits(gitlog);
 
-    this.releaseOptions.logger.veryVerbose.info(
-      'Added labels to commits:\n',
-      commits
-    );
+    this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
     await Promise.all(
       commits.map(async commit => {
@@ -276,9 +260,7 @@ export default class GitHubRelease {
         }));
 
         commit.authors.map(author => {
-          this.releaseOptions.logger.veryVerbose.info(
-            `Found author: ${author.username}`
-          );
+          this.logger.veryVerbose.info(`Found author: ${author.username}`);
         });
       })
     );
@@ -354,15 +336,13 @@ export default class GitHubRelease {
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
     if (justLabelNames.length > 0) {
-      this.releaseOptions.logger.log.log(
-        `Created labels: ${justLabelNames.join(', ')}`
-      );
+      this.logger.log.log(`Created labels: ${justLabelNames.join(', ')}`);
     } else {
-      this.releaseOptions.logger.log.log(
+      this.logger.log.log(
         'No labels were created, they must have already been present on your project.'
       );
     }
-    this.releaseOptions.logger.log.log(
+    this.logger.log.log(
       `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
     );
   }
@@ -377,21 +357,15 @@ export default class GitHubRelease {
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
     const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
-    this.releaseOptions.logger.verbose.info(
-      'Calculating SEMVER bump using:\n',
-      {
-        labels,
-        versionLabels,
-        options
-      }
-    );
+    this.logger.verbose.info('Calculating SEMVER bump using:\n', {
+      labels,
+      versionLabels,
+      options
+    });
 
     const result = calculateSemVerBump(labels, versionLabels, options);
 
-    this.releaseOptions.logger.verbose.success(
-      'Calculated SEMVER bump:',
-      result
-    );
+    this.logger.verbose.success('Calculated SEMVER bump:', result);
 
     return result;
   }
@@ -403,7 +377,7 @@ export default class GitHubRelease {
 
     const project = await this.github.getProject();
 
-    this.releaseOptions.logger.verbose.info('Posting release notes to slack.');
+    this.logger.verbose.info('Posting release notes to slack.');
 
     await postToSlack(releaseNotes, {
       tag,
@@ -413,7 +387,7 @@ export default class GitHubRelease {
       slackUrl: this.releaseOptions.slack
     });
 
-    this.releaseOptions.logger.verbose.info('Posted release notes to slack.');
+    this.logger.verbose.info('Posted release notes to slack.');
   }
 
   public async calcNextVersion(lastTag: string) {
