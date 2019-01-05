@@ -1,8 +1,7 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { ILogger } from '../../github-release';
-import { IAutoHooks, IPlugin } from '../../main';
+import { AutoRelease, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
 import getConfigFromPackageJson from './package-config';
@@ -16,9 +15,11 @@ function isMonorepo() {
 export default class NPMPlugin implements IPlugin {
   public name = 'NPM';
 
-  public apply(auto: IAutoHooks, logger: ILogger) {
-    auto.getAuthor.tapPromise('NPM', async () => {
-      logger.verbose.info('NPM: Getting repo information from package.json');
+  public apply(auto: AutoRelease) {
+    auto.hooks.getAuthor.tapPromise('NPM', async () => {
+      auto.logger.verbose.info(
+        'NPM: Getting repo information from package.json'
+      );
       const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
 
       if (packageJson.author) {
@@ -26,7 +27,7 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
-    auto.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
       let packageVersion = '';
       let monorepoVersion = '';
 
@@ -43,12 +44,12 @@ export default class NPMPlugin implements IPlugin {
       }
 
       if (monorepoVersion) {
-        logger.veryVerbose.info('Using lerna.json as previous version');
+        auto.logger.veryVerbose.info('Using lerna.json as previous version');
       } else if (packageVersion) {
-        logger.veryVerbose.info('Using package.json as previous version');
+        auto.logger.veryVerbose.info('Using package.json as previous version');
       }
 
-      logger.verbose.info(
+      auto.logger.verbose.info(
         'NPM: Trying to get previous version from package.json',
         monorepoVersion || packageVersion
       );
@@ -56,12 +57,14 @@ export default class NPMPlugin implements IPlugin {
       return monorepoVersion || packageVersion;
     });
 
-    auto.getRepository.tapPromise('NPM', async () => {
-      logger.verbose.info('NPM: getting repo information from package.json');
+    auto.hooks.getRepository.tapPromise('NPM', async () => {
+      auto.logger.verbose.info(
+        'NPM: getting repo information from package.json'
+      );
       return getConfigFromPackageJson();
     });
 
-    auto.publish.tapPromise('NPM', async (version: SEMVER) => {
+    auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
         await execPromise(
           `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`

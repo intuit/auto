@@ -34,7 +34,7 @@ interface IRepository {
 
 export interface IPlugin {
   name: string;
-  apply(auto: IAutoHooks, logger: ILogger): void;
+  apply(auto: AutoRelease): void;
 }
 
 export interface IAutoHooks {
@@ -52,6 +52,7 @@ export class AutoRelease {
   public hooks: IAutoHooks;
   public logger: ILogger;
   public args: ArgsType;
+  public plugins: IPlugin[];
 
   public githubRelease?: GitHubRelease;
   public semVerLabels?: Map<VersionLabel, string>;
@@ -61,6 +62,7 @@ export class AutoRelease {
     ...args
   }: ArgsType & { plugins?: IPlugin[] }) {
     this.args = args;
+    this.plugins = plugins;
     this.logger = createLog(
       args['very-verbose']
         ? 'veryVerbose'
@@ -76,11 +78,6 @@ export class AutoRelease {
       getRepository: new AsyncSeriesBailHook([]),
       publish: new AsyncSeriesHook(['version'])
     };
-
-    plugins.map(plugin => {
-      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
-      plugin.apply(this.hooks, this.logger);
-    });
   }
 
   public async loadConfig() {
@@ -124,6 +121,11 @@ export class AutoRelease {
       slack:
         typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
     };
+
+    this.plugins.map(plugin => {
+      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
+      plugin.apply(this);
+    });
 
     this.hooks.beforeRun.call(config);
 
@@ -316,12 +318,19 @@ export class AutoRelease {
     console.log(bump);
   }
 
+  public async changelog() {
+    this.logger.verbose.info("Using command: 'changelog'");
+    await this.makeChangelog();
+  }
+
   public async release() {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease();
   }
 
   public async shipit() {
+    this.logger.verbose.info("Using command: 'shipit'");
+
     const version = await this.getVersion();
 
     if (version === '') {
@@ -333,13 +342,8 @@ export class AutoRelease {
     await this.makeRelease();
   }
 
-  public async changelog() {
-    this.logger.verbose.info("Using command: 'changelog'");
-    await this.makeChangelog();
-  }
-
   private async getVersion() {
-    if (!this.githubRelease || !this.githubRelease.releaseOptions) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -368,7 +372,7 @@ export class AutoRelease {
   }
 
   private async makeChangelog() {
-    if (!this.githubRelease || !this.githubRelease.releaseOptions) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
