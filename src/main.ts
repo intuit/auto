@@ -2,7 +2,6 @@
 
 import cosmiconfig from 'cosmiconfig';
 import { gt } from 'semver';
-import signale from 'signale';
 
 import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
@@ -67,52 +66,6 @@ async function setGitUser(args: IGitHubReleaseOptions, hooks: IAutoHooks) {
     if (name) {
       await execPromise(`git config user.name "${name}"`);
     }
-  }
-}
-
-export async function run(args: ArgsType) {
-  const auto = new AutoRelease();
-
-  await auto.loadConfig(args);
-
-  switch (args.command) {
-    case 'init':
-      auto.init();
-      break;
-    case 'create-labels':
-      auto.createLabels();
-      break;
-    case 'label':
-      auto.label();
-      break;
-    case 'pr-check':
-      auto.prCheck();
-      break;
-    case 'pr':
-      auto.pr();
-      break;
-    case 'comment':
-      auto.comment();
-      break;
-    case 'version':
-      auto.version();
-      break;
-    case 'release':
-      auto.release();
-      break;
-    case 'shipit':
-      auto.shipit();
-      break;
-    default:
-      throw new Error(`idk what i'm doing.`);
-  }
-}
-
-export default async function main(args: ArgsType) {
-  try {
-    await run(args);
-  } catch (error) {
-    console.log(error);
   }
 }
 
@@ -564,6 +517,52 @@ class AutoRelease {
     return new Error(
       `AutoRelease is not initialized! Make sure the have run AutoRelease.loadConfig`
     );
+  }
+}
+
+export async function run(args: ArgsType) {
+  const auto = new AutoRelease();
+
+  await auto.loadConfig(args);
+
+  switch (args.command) {
+    case 'init':
+      auto.init();
+      break;
+    case 'create-labels':
+      auto.createLabels();
+      break;
+    case 'label':
+      auto.label();
+      break;
+    case 'pr-check':
+      auto.prCheck();
+      break;
+    case 'pr':
+      auto.pr();
+      break;
+    case 'comment':
+      auto.comment();
+      break;
+    case 'version':
+      auto.version();
+      break;
+    case 'release':
+      auto.release();
+      break;
+    case 'shipit':
+      auto.shipit();
+      break;
+    default:
+      throw new Error(`idk what i'm doing.`);
+  }
+}
+
+export default async function main(args: ArgsType) {
+  try {
+    await run(args);
+  } catch (error) {
+    console.log(error);
   }
 }
 
