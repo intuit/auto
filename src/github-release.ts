@@ -147,12 +147,11 @@ export default class GitHubRelease {
       })
     );
 
-    return generateReleaseNotes(commits, {
+    return generateReleaseNotes(commits, this.logger, {
       owner: this.github.options.owner,
       repo: this.github.options.repo,
       baseUrl: project.data.html_url,
       jira: this.releaseOptions.jira,
-      logger: this.logger,
       changelogTitles: {
         ...defaultChangelogTitles,
         ...this.changelogTitles
