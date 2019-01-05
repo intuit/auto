@@ -96,11 +96,11 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 export default class GitHubRelease {
+  public readonly releaseOptions: IGitHubReleaseOptions;
+
   private readonly github: GitHub;
-  private readonly releaseOptions: IGitHubReleaseOptions;
   private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
-
   private readonly githubApi: string;
 
   constructor(

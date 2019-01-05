@@ -22,13 +22,13 @@ import getGitHubToken from './utils/github-token';
 import createLog from './utils/logger';
 
 interface IAuthor {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 interface IRepository {
-  owner: string;
-  repo: string;
+  owner?: string;
+  repo?: string;
   token?: string;
 }
 
@@ -54,7 +54,6 @@ export class AutoRelease {
 
   public githubRelease?: GitHubRelease;
   public semVerLabels?: Map<VersionLabel, string>;
-  public config?: IGitHubReleaseOptions;
 
   constructor({
     plugins = [new NpmPlugin()],
@@ -116,7 +115,7 @@ export class AutoRelease {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
-    this.config = {
+    const config = {
       ...rawConfig,
       ...this.args,
       skipReleaseLabels,
@@ -125,14 +124,7 @@ export class AutoRelease {
         typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
     };
 
-    switch (this.config.platform) {
-      case 'npm':
-      default:
-        this.logger.verbose.info('Using NPM Plugin...');
-        new NpmPlugin().apply(this.hooks, this.logger);
-    }
-
-    this.hooks.beforeRun.call(this.config);
+    this.hooks.beforeRun.call(config);
 
     this.logger.verbose.success(
       'Using SEMVER labels:',
@@ -141,12 +133,8 @@ export class AutoRelease {
     );
 
     const repository = await this.getRepo();
-    const token =
-      repository.token || (await getGitHubToken(this.config.githubApi));
-    this.githubRelease = new GitHubRelease(
-      { ...repository, token },
-      this.config
-    );
+    const token = repository.token || (await getGitHubToken(config.githubApi));
+    this.githubRelease = new GitHubRelease({ ...repository, token }, config);
   }
 
   public async init() {
@@ -154,7 +142,7 @@ export class AutoRelease {
   }
 
   public async createLabels() {
-    if (!this.githubRelease || !this.config) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
@@ -164,7 +152,9 @@ export class AutoRelease {
         ...new Map(
           [
             ...Object.keys(defaultChangelogTitles),
-            ...Object.keys(this.config.changelogTitles || {})
+            ...Object.keys(
+              this.githubRelease.releaseOptions.changelogTitles || {}
+            )
           ].map((label): [string, string] => [label, label])
         )
       ])
@@ -226,7 +216,7 @@ export class AutoRelease {
   }
 
   public async prCheck() {
-    if (!this.config || !this.githubRelease || !this.semVerLabels) {
+    if (!this.githubRelease || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
 
@@ -248,13 +238,15 @@ export class AutoRelease {
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseTag = labels.find(
-        l => !!this.config && this.config.skipReleaseLabels.includes(l)
+        l =>
+          !!this.githubRelease &&
+          this.githubRelease.releaseOptions.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelTexts.includes(l) &&
-          !!this.config &&
-          !this.config.skipReleaseLabels.includes(l) &&
+          !!this.githubRelease &&
+          !this.githubRelease.releaseOptions.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 
@@ -346,7 +338,7 @@ export class AutoRelease {
   }
 
   private async getVersion() {
-    if (!this.githubRelease || !this.config) {
+    if (!this.githubRelease || !this.githubRelease.releaseOptions) {
       throw this.createErrorMessage();
     }
 
@@ -375,7 +367,7 @@ export class AutoRelease {
   }
 
   private async makeChangelog() {
-    if (!this.githubRelease || !this.config) {
+    if (!this.githubRelease || !this.githubRelease.releaseOptions) {
       throw this.createErrorMessage();
     }
 
@@ -450,11 +442,12 @@ export class AutoRelease {
   }
 
   private readonly prefixRelease = (release: string) => {
-    if (!this.config) {
+    if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
-    return this.config['no-version-prefix'] || release.startsWith('v')
+    return this.githubRelease.releaseOptions['no-version-prefix'] ||
+      release.startsWith('v')
       ? release
       : `v${release}`;
   };
@@ -471,7 +464,9 @@ export class AutoRelease {
       await execPromise(`git config user.email`);
       await execPromise(`git config user.name`);
     } catch (error) {
-      this.hooks.getAuthor.tap('Arguments', () => this.config as IAuthor);
+      this.hooks.getAuthor.tap('Arguments', () =>
+        this.githubRelease ? (this.githubRelease.releaseOptions as IAuthor) : {}
+      );
 
       const { name, email } = await this.hooks.getAuthor.promise();
 
@@ -486,7 +481,11 @@ export class AutoRelease {
   }
 
   private async getRepo() {
-    this.hooks.getRepository.tap('None', () => this.config as IRepository);
+    this.hooks.getRepository.tap('None', () =>
+      this.githubRelease
+        ? (this.githubRelease.releaseOptions as IRepository)
+        : {}
+    );
     return this.hooks.getRepository.promise();
   }
 }
