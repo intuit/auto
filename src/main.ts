@@ -15,7 +15,7 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
-import NpmPlugin from './plugins/npm/npm';
+import NpmPlugin from './plugins/npm';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
