@@ -13,10 +13,6 @@ Options
 
   --only-labels    Only run init for the labels. As most other options are for advanced users
 
-Global Options
-
-  --platform string   Platform to interact with (supported: NPM)
-
 Examples
 
   $ auto init
@@ -37,7 +33,6 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package.json
   --owner string        Version number to publish as. Defaults to reading from the package.json
   --githubApi string    GitHub API to use
-  --platform string     Platform to interact with (supported: NPM <- default)
 
 Examples
 

@@ -65,7 +65,6 @@ export interface ILogger {
 }
 
 export interface IGitHubReleaseOptions {
-  platform?: 'npm';
   labels?: {
     [label: string]: string;
   };

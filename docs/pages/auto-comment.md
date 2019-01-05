@@ -25,7 +25,6 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
   --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
   --githubApi string    GitHub API to use
-  --platform string     Platform to interact with (supported: NPM)
 
 Examples
 
