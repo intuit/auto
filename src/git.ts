@@ -19,7 +19,6 @@ export type IPRInfo = Omit<GHub.ReposCreateStatusParams, 'owner' | 'repo'>;
 export interface IGitHubOptions {
   owner: string;
   repo: string;
-  version?: string;
   baseUrl?: string;
   token?: string;
 }
