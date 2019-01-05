@@ -9,7 +9,6 @@ import GitHubRelease, {
   defaultChangelogTitles,
   defaultLabels,
   IGitHubReleaseOptions,
-  ILogger,
   VersionLabel
 } from './github-release';
 
@@ -19,7 +18,7 @@ import NpmPlugin from './plugins/npm';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import createLog from './utils/logger';
+import createLog, { ILogger } from './utils/logger';
 
 interface IAuthor {
   name?: string;
@@ -32,12 +31,7 @@ interface IRepository {
   token?: string;
 }
 
-export interface IPlugin {
-  name: string;
-  apply(auto: AutoRelease): void;
-}
-
-export interface IAutoHooks {
+interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
@@ -46,6 +40,11 @@ export interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
+}
+
+export interface IPlugin {
+  name: string;
+  apply(auto: AutoRelease): void;
 }
 
 export class AutoRelease {
@@ -546,6 +545,6 @@ export default async function main(args: ArgsType) {
 
 // Plugin Utils
 
-export { ILogger } from './github-release';
+export { ILogger } from './utils/logger';
 export { default as SEMVER } from './semver';
 export { default as execPromise } from './utils/exec-promise';

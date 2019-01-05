@@ -1,4 +1,10 @@
-import { Signale } from 'signale';
+import signale, { Signale } from 'signale';
+
+export interface ILogger {
+  log: signale.Signale<signale.DefaultMethods>;
+  verbose: signale.Signale<signale.DefaultMethods>;
+  veryVerbose: signale.Signale<signale.DefaultMethods>;
+}
 
 export function dummyLog() {
   return {

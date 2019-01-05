@@ -4,8 +4,9 @@ import { promisify } from 'util';
 
 import { Memoize } from 'typescript-memoize';
 
-import { defaultLabelsDescriptions, ILogger } from './github-release';
+import { defaultLabelsDescriptions } from './github-release';
 import execPromise from './utils/exec-promise';
+import { ILogger } from './utils/logger';
 import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
@@ -16,7 +17,6 @@ export interface IGitHubOptions {
   version?: string;
   baseUrl?: string;
   token?: string;
-  logger: ILogger;
 }
 
 export interface IPRInfo {
@@ -47,8 +47,8 @@ export default class GitHub {
   public readonly options: IGitHubOptions;
   private readonly logger: ILogger;
 
-  constructor(options: IGitHubOptions) {
-    this.logger = options.logger;
+  constructor(options: IGitHubOptions, logger: ILogger) {
+    this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 

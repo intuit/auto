@@ -2,7 +2,6 @@ import GHub from '@octokit/rest';
 import * as fs from 'fs';
 import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
-import signale from 'signale';
 import { promisify } from 'util';
 
 import GitHub, { IPRInfo } from './git';
@@ -12,7 +11,7 @@ import generateReleaseNotes, {
 } from './log-parse';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import exec from './utils/exec-promise';
-import { dummyLog } from './utils/logger';
+import { dummyLog, ILogger } from './utils/logger';
 import postToSlack from './utils/slack';
 
 export type VersionLabel =
@@ -22,6 +21,32 @@ export type VersionLabel =
   | 'skip-release'
   | 'release'
   | 'prerelease';
+
+export interface IGitHubReleaseOptions {
+  labels?: {
+    [label: string]: string;
+  };
+  jira?: string;
+  slack?: string;
+  githubApi?: string;
+  name?: string;
+  email?: string;
+  owner?: string;
+  repo?: string;
+  skipReleaseLabels: string[];
+  onlyPublishWithReleaseLabel?: boolean;
+  'no-version-prefix'?: boolean;
+  changelogTitles?: {
+    [label: string]: string;
+  };
+}
+
+export interface IOptionalGitHubOptions {
+  owner?: string;
+  repo?: string;
+  baseUrl?: string;
+  token?: string;
+}
 
 export const defaultLabels = new Map<VersionLabel, string>();
 defaultLabels.set(SEMVER.major, 'major');
@@ -57,38 +82,6 @@ defaultLabelsDescriptions.set(
   'documentation',
   'changes only effect documentation'
 );
-
-export interface ILogger {
-  log: signale.Signale<signale.DefaultMethods>;
-  verbose: signale.Signale<signale.DefaultMethods>;
-  veryVerbose: signale.Signale<signale.DefaultMethods>;
-}
-
-export interface IGitHubReleaseOptions {
-  labels?: {
-    [label: string]: string;
-  };
-  jira?: string;
-  slack?: string;
-  githubApi?: string;
-  name?: string;
-  email?: string;
-  owner?: string;
-  repo?: string;
-  skipReleaseLabels: string[];
-  onlyPublishWithReleaseLabel?: boolean;
-  'no-version-prefix'?: boolean;
-  changelogTitles?: {
-    [label: string]: string;
-  };
-}
-
-export interface IOptionalGitHubOptions {
-  owner?: string;
-  repo?: string;
-  baseUrl?: string;
-  token?: string;
-}
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -127,7 +120,6 @@ export default class GitHubRelease {
     const args = {
       owner: options.owner,
       repo: options.repo,
-      logger: this.logger,
       ...options
     };
 
@@ -144,7 +136,7 @@ export default class GitHubRelease {
     };
 
     this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
-    this.github = new GitHub(args);
+    this.github = new GitHub(args, this.logger);
   }
 
   public async generateReleaseNotes(
