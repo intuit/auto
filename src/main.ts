@@ -135,7 +135,7 @@ class AutoRelease {
     };
   }
 
-  async loadConfig(args: ArgsType) {
+  public async loadConfig(args: ArgsType) {
     this.args = args;
     this.logger = createLog(
       args['very-verbose']
@@ -231,8 +231,7 @@ class AutoRelease {
             ...Object.keys(this.config.changelogTitles || {})
           ].map((label): [string, string] => [label, label])
         )
-      ]),
-      this.config.onlyPublishWithReleaseLabel
+      ])
     );
   }
 
@@ -446,12 +445,7 @@ class AutoRelease {
 
     const lastRelease = await this.githubRelease.getLatestRelease();
 
-    return this.githubRelease.getSemverBump(
-      lastRelease,
-      undefined,
-      this.config.onlyPublishWithReleaseLabel,
-      this.skipReleaseLabels
-    );
+    return this.githubRelease.getSemverBump(lastRelease, undefined);
   }
 
   private async getCurrentVersion(lastRelease: string) {
@@ -504,7 +498,6 @@ class AutoRelease {
         releaseNotes,
         lastRelease,
         currentVersion,
-        this.args['no-version-prefix'],
         this.args.message || undefined
       );
     } else {
