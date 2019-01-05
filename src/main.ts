@@ -51,10 +51,10 @@ export class AutoRelease {
   public hooks: IAutoHooks;
   public logger: ILogger;
   public args: ArgsType;
+
   public githubRelease?: GitHubRelease;
   public semVerLabels?: Map<VersionLabel, string>;
   public config?: IGitHubReleaseOptions;
-  public skipReleaseLabels?: string[];
 
   constructor({
     plugins = [new NpmPlugin()],
