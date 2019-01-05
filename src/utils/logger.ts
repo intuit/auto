@@ -6,7 +6,7 @@ export interface ILogger {
   veryVerbose: signale.Signale<signale.DefaultMethods>;
 }
 
-export function dummyLog() {
+export function dummyLog(): ILogger {
   return {
     log: new Signale({ disabled: true }),
     verbose: new Signale({ disabled: true }),
@@ -14,7 +14,9 @@ export function dummyLog() {
   };
 }
 
-export default function createLog(mode: 'verbose' | 'veryVerbose' | undefined) {
+export default function createLog(
+  mode: 'verbose' | 'veryVerbose' | undefined
+): ILogger {
   return {
     log: new Signale(),
     verbose: new Signale({
