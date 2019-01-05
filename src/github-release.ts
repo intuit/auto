@@ -75,6 +75,9 @@ export interface IGitHubReleaseOptions {
   githubApi?: string;
   name?: string;
   email?: string;
+  skipReleaseLabels: string[];
+  onlyPublishWithReleaseLabel?: boolean;
+  'no-version-prefix'?: boolean;
   changelogTitles?: {
     [label: string]: string;
   };
@@ -102,7 +105,10 @@ export default class GitHubRelease {
 
   constructor(
     options: IOptionalGitHubOptions,
-    releaseOptions: IGitHubReleaseOptions = { logger: dummyLog() }
+    releaseOptions: IGitHubReleaseOptions = {
+      logger: dummyLog(),
+      skipReleaseLabels: []
+    }
   ) {
     this.jira = releaseOptions.jira;
     this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
