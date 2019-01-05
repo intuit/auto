@@ -16,7 +16,7 @@ function isMonorepo() {
 export default class NPMPlugin {
   public apply(auto: IAutoHooks, logger: ILogger) {
     auto.getAuthor.tapPromise('NPM', async () => {
-      logger.log.info('NPM: Getting repo information from package.json');
+      logger.verbose.info('NPM: Getting repo information from package.json');
       const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
 
       if (packageJson.author) {
@@ -46,7 +46,7 @@ export default class NPMPlugin {
         logger.veryVerbose.info('Using package.json as previous version');
       }
 
-      logger.log.info(
+      logger.verbose.info(
         'NPM: Trying to get previous version from package.json',
         monorepoVersion || packageVersion
       );
@@ -55,7 +55,7 @@ export default class NPMPlugin {
     });
 
     auto.getRepository.tapPromise('NPM', async () => {
-      logger.log.info('NPM: getting repo information from package.json');
+      logger.verbose.info('NPM: getting repo information from package.json');
       return getConfigFromPackageJson();
     });
 

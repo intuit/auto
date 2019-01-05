@@ -352,7 +352,15 @@ export default class GitHubRelease {
     const repoMetadata = await this.github.getRepoMetadata();
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
-    this.releaseOptions.logger.log.log(`Created labels: ${justLabelNames}`);
+    if (justLabelNames.length > 0) {
+      this.releaseOptions.logger.log.log(
+        `Created labels: ${justLabelNames.join(', ')}`
+      );
+    } else {
+      this.releaseOptions.logger.log.log(
+        'No labels were created, they must have already been present on your project.'
+      );
+    }
     this.releaseOptions.logger.log.log(
       `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
     );
