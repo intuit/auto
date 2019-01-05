@@ -11,21 +11,17 @@ import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
+  Partial<Pick<T, K>>;
+
+export type IPRInfo = Omit<GHub.ReposCreateStatusParams, 'owner' | 'repo'>;
+
 export interface IGitHubOptions {
   owner: string;
   repo: string;
   version?: string;
   baseUrl?: string;
   token?: string;
-}
-
-export interface IPRInfo {
-  number: number;
-  context: string;
-  url: string;
-  description: string;
-  sha: string;
-  state: 'error' | 'failure' | 'pending' | 'success';
 }
 
 class GitHubAPIError extends Error {

@@ -4,7 +4,7 @@ import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
-import GitHub, { IPRInfo } from './git';
+import GitHub, { IGitHubOptions, IPRInfo } from './git';
 import generateReleaseNotes, {
   IExtendedCommit,
   normalizeCommits
@@ -39,13 +39,6 @@ export interface IGitHubReleaseOptions {
   changelogTitles?: {
     [label: string]: string;
   };
-}
-
-export interface IOptionalGitHubOptions {
-  owner?: string;
-  repo?: string;
-  baseUrl?: string;
-  token?: string;
 }
 
 export const defaultLabels = new Map<VersionLabel, string>();
@@ -96,7 +89,7 @@ export default class GitHubRelease {
   private readonly githubApi: string;
 
   constructor(
-    options: IOptionalGitHubOptions,
+    options: Partial<IGitHubOptions>,
     releaseOptions: IGitHubReleaseOptions = {
       skipReleaseLabels: []
     },
@@ -117,26 +110,28 @@ export default class GitHubRelease {
 
     this.logger.verbose.info('Options contain repo information.');
 
-    const args = {
-      owner: options.owner,
-      repo: options.repo,
-      ...options
-    };
-
     if (releaseOptions && this.githubApi) {
-      args.baseUrl = this.githubApi;
+      options.baseUrl = this.githubApi;
     }
 
     // So that --verbose can be used on public CIs
     const tokenlessArgs = {
-      ...args,
-      token: args.token
-        ? `[Token starting with ${args.token.substring(0, 4)}]`
+      ...options,
+      token: options.token
+        ? `[Token starting with ${options.token.substring(0, 4)}]`
         : undefined
     };
 
     this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
-    this.github = new GitHub(args, this.logger);
+    this.github = new GitHub(
+      {
+        owner: options.owner,
+        repo: options.repo,
+        token: options.token,
+        baseUrl: options.baseUrl
+      },
+      this.logger
+    );
   }
 
   public async generateReleaseNotes(
