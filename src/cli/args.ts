@@ -86,6 +86,13 @@ const defaultOptions = [
     type: String,
     description: 'GitHub API to use',
     group: 'misc'
+  },
+  {
+    name: 'plugins',
+    type: String,
+    multiple: true,
+    description: 'Plugins to load auto-release with. (defaults to just npm)',
+    group: 'misc'
   }
 ];
 
@@ -623,6 +630,7 @@ export interface ICommentCommandOptions {
 type GlobalFlags = {
   command: string;
   githubApi?: string;
+  plugins?: string[];
 } & IRepoArgs &
   ILogArgs;
 
