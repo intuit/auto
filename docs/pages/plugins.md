@@ -6,7 +6,7 @@
 
 To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins).
 
-There are three ways to load a plugins.
+There are three ways to load a plugin.
 
 ### 1. Official Plugins
 
@@ -18,7 +18,7 @@ auto shipit --plugins npm
 
 ### 2. `npm` package
 
-If you are using a plugin distributed on `npm` simply supply the name
+If you are using a plugin distributed on `npm` simply supply the name.
 
 ```sh
 auto shipit --plugins NPM_PACKAGE_NAME
