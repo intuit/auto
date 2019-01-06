@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { IPlugin } from '../main';
 import NPMPlugin from '../plugins/npm';
 
@@ -15,5 +16,9 @@ export default function loadPlugin(
     return plugins.get(pluginPath);
   }
 
-  return require(pluginPath);
+  try {
+    return require(pluginPath);
+  } catch (error) {
+    return require(path.join(process.cwd(), pluginPath));
+  }
 }
