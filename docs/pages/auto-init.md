@@ -20,7 +20,7 @@ Examples
 
 ## `auto create-labels`
 
-Create your projects labels on github.
+Create your project's labels on github.
 
 ```sh
 $ auto create-labels --help
