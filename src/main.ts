@@ -63,11 +63,7 @@ export class AutoRelease {
     this.args = args;
     this.plugins = plugins;
     this.logger = createLog(
-      args['very-verbose']
-        ? 'veryVerbose'
-        : args.verbose
-        ? 'verbose'
-        : undefined
+      args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
 
     this.hooks = {
@@ -143,7 +139,7 @@ export class AutoRelease {
   }
 
   public async init() {
-    await init(this.args['only-labels']);
+    await init(this.args.onlyLabels);
   }
 
   public async createLabels() {
@@ -211,7 +207,7 @@ export class AutoRelease {
     this.args.target_url = this.args.url;
     delete this.args.url;
 
-    if (!this.args['dry-run']) {
+    if (!this.args.dryRun) {
       await this.githubRelease.createStatus(this.args as IPRInfo);
     } else {
       this.logger.verbose.info('`pr` dry run complete.');
@@ -284,7 +280,7 @@ export class AutoRelease {
 
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
-    if (!this.args['dry-run']) {
+    if (!this.args.dryRun) {
       await this.githubRelease.createStatus({
         ...this.args,
         ...msg
@@ -389,7 +385,7 @@ export class AutoRelease {
 
     this.logger.log.info('New Release Notes\n', releaseNotes);
 
-    if (!this.args['dry-run']) {
+    if (!this.args.dryRun) {
       const currentVersion = await this.getCurrentVersion(lastRelease);
 
       await this.githubRelease.addToChangelog(
@@ -426,7 +422,7 @@ export class AutoRelease {
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
     const version =
-      this.args['use-version'] || (await this.getCurrentVersion(lastRelease));
+      this.args.useVersion || (await this.getCurrentVersion(lastRelease));
 
     if (!version) {
       this.logger.log.error('Could not calculate next version from last tag.');
@@ -436,7 +432,7 @@ export class AutoRelease {
     const prefixed = this.prefixRelease(version);
     this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
 
-    if (!this.args['dry-run']) {
+    if (!this.args.dryRun) {
       await this.githubRelease.publish(releaseNotes, prefixed);
 
       if (this.args.slack) {
@@ -453,7 +449,7 @@ export class AutoRelease {
       throw this.createErrorMessage();
     }
 
-    return this.githubRelease.releaseOptions['no-version-prefix'] ||
+    return this.githubRelease.releaseOptions.noVersionPrefix ||
       release.startsWith('v')
       ? release
       : `v${release}`;

@@ -25,7 +25,7 @@ async function getFlags() {
     },
     {
       type: 'confirm',
-      name: 'no-version-prefix',
+      name: 'noVersionPrefix',
       message: 'Use the version as the tag without the `v` prefix?',
       initial: 'no'
     },

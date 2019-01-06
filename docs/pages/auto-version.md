@@ -7,8 +7,8 @@ Get the semantic version bump for the given changes. Requires all PRs to have la
 
 Options
 
-  --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
-  --skipReleaseLabels string[]     Labels that will not create a release. Defaults to just 'skip-release'
+  --only-publish-with-release-label    Only bump version if 'release' label is on pull request
+  --skip-release-labels string[]       Labels that will not create a release. Defaults to just 'skip-release'
 
 Global Options
 
@@ -17,13 +17,13 @@ Global Options
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
   --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
-  --githubApi string    GitHub API to use
+  --github-api string   GitHub API to use
 
 Examples
 
   Get the new version using the last release     $ auto version
   to head
-  Skip releases with multiple labels             $ auto version --skipReleaseLabels
+  Skip releases with multiple labels             $ auto version --skip-release-labels
                                                  documentation CI
 
 ```
@@ -47,7 +47,7 @@ To not create a release for a pull request add the `skip-release` label. Any pul
 You can configure multiple labels to skip releasing as well. To do this use the `skipReleaseLabels` options. This can also be configured via the [.autorc](./autorc.md#multiple-no-version).
 
 ```sh
-auto version --skipReleaseLabels project-files --skipReleaseLabels documentation
+auto version --skip-release-labels project-files --skip-release-labels documentation
 ```
 
 ## Configure Versioning Labels

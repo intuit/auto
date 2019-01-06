@@ -8,7 +8,7 @@ yarn add -D auto-release-cli
 
 ## Enterprise
 
-If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--githubApi`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
+If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
 
 ### Project already published
 
