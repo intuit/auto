@@ -52,7 +52,7 @@ Plugins work by hooking into various actions that `auto` has to do in order to f
 - getRepository - Get owner/repo
 - publish - Publish the package
 
-## Example Plugin - NPM
+### Example Plugin - NPM
 
 To create a plugin simply make a class with an `apply` method and tap into the hooks you need.
 
