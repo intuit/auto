@@ -125,25 +125,20 @@ const jira: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
-  name: 'only-publish-with-release-label',
-  type: Boolean,
-  description: "Only bump version if 'release' label is on pull request",
-  group: 'main'
-};
-
 const name: commandLineUsage.OptionDefinition = {
   name: 'name',
   type: String,
   description:
-    'Git name to commit and release with. Defaults to package definition for the platform'
+    'Git name to commit and release with. Defaults to package definition for the platform',
+  group: 'main'
 };
 
 const email: commandLineUsage.OptionDefinition = {
   name: 'email',
   type: String,
   description:
-    'Git email to commit with. Defaults to package definition for the platform'
+    'Git email to commit with. Defaults to package definition for the platform',
+  group: 'main'
 };
 
 const context: commandLineUsage.OptionDefinition = {
@@ -173,7 +168,7 @@ interface ICommand {
   name: string;
   summary: string;
   options?: commandLineUsage.OptionDefinition[];
-  require?: (keyof ArgsType)[];
+  require?: Flags[];
   examples: any[];
 }
 
@@ -194,7 +189,7 @@ const commands: ICommand[] = [
   },
   {
     name: 'create-labels',
-    summary: 'Create your projects labels on github.',
+    summary: "Create your project's labels on github.",
     examples: ['{green $} auto create-labels'],
     options: defaultOptions
   },
@@ -210,11 +205,11 @@ const commands: ICommand[] = [
   {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
-    require: ['pr'],
+    require: ['pr', 'url'],
     options: [
       pr,
       url,
-      onlyPublishWithReleaseLabel,
+      dryRun,
       {
         ...context,
         defaultValue: 'ci/pr-check'
@@ -229,7 +224,7 @@ const commands: ICommand[] = [
   {
     name: 'pr',
     summary: 'Set the status on a PR commit',
-    require: ['pr', 'state', 'description', 'context'],
+    require: ['state', 'url', 'description', 'context'],
     options: [
       {
         name: 'sha',
@@ -238,7 +233,7 @@ const commands: ICommand[] = [
         description:
           'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
       },
-      pr,
+      { ...pr, description: 'PR to set the status on' },
       url,
       {
         name: 'state',
@@ -269,7 +264,12 @@ const commands: ICommand[] = [
     name: 'version',
     summary: 'Get the semantic version bump for the given changes.',
     options: [
-      onlyPublishWithReleaseLabel,
+      {
+        name: 'only-publish-with-release-label',
+        type: Boolean,
+        description: "Only bump version if 'release' label is on pull request",
+        group: 'main'
+      },
       skipReleaseLabels,
       ...defaultOptions
     ],
@@ -346,7 +346,7 @@ const commands: ICommand[] = [
         type: String,
         group: 'main',
         description:
-          'Url to post a slack message to about the release. If slack url supplied via autorc this flag can act as a boolean.  Make sure the SLACK_TOKEN environment variable is set.'
+          'Url to post a slack message to about the release. Make sure the SLACK_TOKEN environment variable is set.'
       },
       ...defaultOptions
     ],
@@ -536,7 +536,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (command.require) {
     const missing = command.require
-      .filter(option => !autoOptions[option])
+      .filter(option => !autoOptions.hasOwnProperty(option))
       .map(option => `--${option}`);
     const multiple = missing.length > 1;
 
@@ -552,67 +552,96 @@ export default function parseArgs(testArgs?: string[]) {
   return autoOptions;
 }
 
-export interface ISemverArgs {
-  skipReleaseLabels?: string[];
-  onlyPublishWithReleaseLabel?: boolean;
-  jira?: string;
-  githubApi?: string;
-}
-
-export interface IOwnerArgs {
+interface IAuthorArgs {
   name?: string;
   email?: string;
 }
 
-export interface IRepoArgs {
+interface IRepoArgs {
   owner?: string;
   repo?: string;
-  sha?: string;
-  pr?: number;
 }
-
-export interface IPRArgs {
-  state?: 'pending' | 'success' | 'error' | 'failure';
-  context?: string;
-  number?: number;
-  url?: string;
-  target_url?: string;
-  description?: string;
-}
-
-export interface IReleaseArgs {
-  dryRun?: boolean;
-  slack?: string | boolean;
-  noVersionPrefix?: boolean;
-  useVersion?: string;
-}
-
-export interface IChangelogArgs {
-  from?: string;
-  to?: string;
-}
-
-export interface ICommentArgs {
-  message?: string;
-}
-
-export interface IInitArgs {
-  onlyLabels?: boolean;
-}
-
-export interface ILogArgs {
+interface ILogArgs {
   verbose?: boolean;
   veryVerbose?: boolean;
 }
 
-export type ArgsType = {
+export interface IInitCommandOptions {
+  onlyLabels?: boolean;
+}
+
+export interface ILabelCommandOptions {
+  pr: number;
+}
+
+export interface IPRCheckCommandOptions {
+  pr: number;
+  url?: string;
+  skipReleaseLabels?: string[];
+  context?: string;
+  dryRun?: boolean;
+}
+
+export interface IPRCommandOptions {
+  sha?: string;
+  pr?: number;
+  url: string;
+  state: 'pending' | 'success' | 'error' | 'failure';
+  description: string;
+  context: string;
+  dryRun?: boolean;
+}
+
+export interface IVersionCommandOptions {
+  skipReleaseLabels?: string[];
+  onlyPublishWithReleaseLabel?: boolean;
+}
+
+export interface IChangelogOptions extends IAuthorArgs {
+  noVersionPrefix?: boolean;
+  jira?: string;
+  dryRun?: boolean;
+  from?: string;
+  to?: string;
+  message?: string;
+}
+
+export interface IReleaseOptions extends IAuthorArgs {
+  noVersionPrefix?: boolean;
+  jira?: string;
+  dryRun?: boolean;
+  useVersion?: string;
+  slack?: string;
+}
+
+export interface ICommentCommandOptions {
+  pr: number;
+  message: string;
+  context?: string;
+}
+
+type GlobalFlags = {
   command: string;
-} & ISemverArgs &
-  IRepoArgs &
-  IChangelogArgs &
-  IReleaseArgs &
-  ICommentArgs &
-  IPRArgs &
-  ILogArgs &
-  IOwnerArgs &
-  IInitArgs;
+  githubApi?: string;
+} & IRepoArgs &
+  ILogArgs;
+
+export type ArgsType = GlobalFlags &
+  (
+    | IInitCommandOptions
+    | ILabelCommandOptions
+    | IPRCheckCommandOptions
+    | IPRCommandOptions
+    | ICommentCommandOptions
+    | IReleaseOptions
+    | IVersionCommandOptions);
+
+type Flags =
+  | keyof GlobalFlags
+  | keyof IInitCommandOptions
+  | keyof ILabelCommandOptions
+  | keyof IPRCheckCommandOptions
+  | keyof IPRCommandOptions
+  | keyof ICommentCommandOptions
+  | keyof IReleaseOptions
+  | keyof IVersionCommandOptions;
