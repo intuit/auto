@@ -32,7 +32,7 @@ Global Options
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package.json
   --owner string        Version number to publish as. Defaults to reading from the package.json
-  --githubApi string    GitHub API to use
+  --github-api string    GitHub API to use
 
 Examples
 

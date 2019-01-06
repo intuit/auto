@@ -82,7 +82,7 @@ const defaultOptions = [
     group: 'misc'
   },
   {
-    name: 'githubApi',
+    name: 'github-api',
     type: String,
     description: 'GitHub API to use',
     group: 'misc'
@@ -126,7 +126,7 @@ const jira: commandLineUsage.OptionDefinition = {
 };
 
 const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
-  name: 'onlyPublishWithReleaseLabel',
+  name: 'only-publish-with-release-label',
   type: Boolean,
   description: "Only bump version if 'release' label is on pull request",
   group: 'main'
@@ -161,7 +161,7 @@ const message: commandLineUsage.OptionDefinition = {
 };
 
 const skipReleaseLabels: commandLineUsage.OptionDefinition = {
-  name: 'skipReleaseLabels',
+  name: 'skip-release-labels',
   type: String,
   group: 'main',
   multiple: true,
@@ -280,7 +280,7 @@ const commands: ICommand[] = [
       },
       {
         desc: 'Skip releases with multiple labels',
-        example: '{green $} auto version --skipReleaseLabels documentation CI'
+        example: '{green $} auto version --skip-release-labels documentation CI'
       }
     ]
   },
@@ -507,6 +507,7 @@ function styleTypes(
 export default function parseArgs(testArgs?: string[]) {
   const mainOptions = commandLineArgs(mainDefinitions, {
     stopAtFirstUnknown: true,
+    camelCase: true,
     argv: testArgs
   });
   const argv = mainOptions._unknown || [];
@@ -580,10 +581,10 @@ export interface IPRArgs {
 }
 
 export interface IReleaseArgs {
-  'dry-run'?: boolean;
+  dryRun?: boolean;
   slack?: string | boolean;
-  'no-version-prefix'?: boolean;
-  'use-version'?: string;
+  noVersionPrefix?: boolean;
+  useVersion?: string;
 }
 
 export interface IChangelogArgs {
@@ -596,12 +597,12 @@ export interface ICommentArgs {
 }
 
 export interface IInitArgs {
-  'only-labels'?: boolean;
+  onlyLabels?: boolean;
 }
 
 export interface ILogArgs {
   verbose?: boolean;
-  'very-verbose'?: boolean;
+  veryVerbose?: boolean;
 }
 
 export type ArgsType = {

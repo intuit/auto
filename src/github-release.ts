@@ -35,7 +35,7 @@ export interface IGitHubReleaseOptions {
   repo?: string;
   skipReleaseLabels: string[];
   onlyPublishWithReleaseLabel?: boolean;
-  'no-version-prefix'?: boolean;
+  noVersionPrefix?: boolean;
   changelogTitles?: {
     [label: string]: string;
   };
@@ -180,7 +180,7 @@ export default class GitHubRelease {
 
     const date = new Date().toDateString();
     const prefixed =
-      this.releaseOptions['no-version-prefix'] ||
+      this.releaseOptions.noVersionPrefix ||
       (version && version.startsWith('v'))
         ? version
         : `v${version}`;
