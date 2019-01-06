@@ -23,10 +23,10 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
-import NpmPlugin from './plugins/npm';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
+import loadPlugin from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 
 interface IAuthor {
@@ -60,17 +60,12 @@ export class AutoRelease {
   public hooks: IAutoHooks;
   public logger: ILogger;
   public args: ArgsType;
-  public plugins: IPlugin[];
 
   public githubRelease?: GitHubRelease;
   public semVerLabels?: Map<VersionLabel, string>;
 
-  constructor({
-    plugins = [new NpmPlugin()],
-    ...args
-  }: ArgsType & { plugins?: IPlugin[] }) {
+  constructor(args: ArgsType) {
     this.args = args;
-    this.plugins = plugins;
     this.logger = createLog(
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
@@ -123,10 +118,7 @@ export class AutoRelease {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
-    this.plugins.forEach(plugin => {
-      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
-      plugin.apply(this);
-    });
+    this.loadPlugins();
 
     const config = {
       ...rawConfig,
@@ -511,42 +503,62 @@ export class AutoRelease {
     );
     return this.hooks.getRepository.promise();
   }
+
+  private loadPlugins() {
+    const pluginsPaths = this.args.plugins || ['npm'];
+
+    pluginsPaths
+      .map(loadPlugin)
+      .filter((plugin): plugin is IPlugin => !!plugin)
+      .forEach(plugin => {
+        this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
+        plugin.apply(this);
+      });
+  }
 }
 
 export async function run(args: ArgsType) {
   const auto = new AutoRelease(args);
 
-  await auto.loadConfig();
-
   switch (args.command) {
     case 'init':
+      await auto.loadConfig();
       await auto.init(args as IInitCommandOptions);
       break;
     case 'create-labels':
+      await auto.loadConfig();
       await auto.createLabels();
       break;
     case 'label':
+      await auto.loadConfig();
       await auto.label(args as ILabelCommandOptions);
       break;
     case 'pr-check':
+      await auto.loadConfig();
       await auto.prCheck(args as IPRCheckCommandOptions);
       break;
     case 'pr':
+      await auto.loadConfig();
       await auto.pr(args as IPRCommandOptions);
       break;
     case 'comment':
+      await auto.loadConfig();
       await auto.comment(args as ICommentCommandOptions);
       break;
     case 'version':
+      await auto.loadConfig();
       await auto.version();
       break;
     case 'changelog':
+      await auto.loadConfig();
       await auto.changelog(args as IChangelogOptions);
       break;
     case 'release':
+      await auto.loadConfig();
       await auto.release(args as IReleaseOptions);
       break;
     case 'shipit':
+      await auto.loadConfig();
       await auto.shipit();
       break;
     default:
