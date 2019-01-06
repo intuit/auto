@@ -94,7 +94,7 @@ The following are options that might be more useful to set in the `.autorc` rath
 
 ### Plugins
 
-It is useful to specify you plugins in the rc file rather than supply them in all the commands.
+It is useful to specify your plugins in the rc file rather than in all the commands.
 
 ```json
 {
