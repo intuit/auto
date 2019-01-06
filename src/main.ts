@@ -92,10 +92,11 @@ export class AutoRelease {
     this.semVerLabels = defaultLabels;
 
     if (rawConfig.labels) {
-      this.semVerLabels = {
-        ...defaultLabels,
-        ...rawConfig.labels
-      };
+      const configLabels = new Map(Object.entries(rawConfig.labels || {}) as [
+        VersionLabel,
+        string
+      ][]);
+      this.semVerLabels = new Map([...defaultLabels, ...configLabels]);
     }
 
     this.logger.verbose.success(
@@ -106,10 +107,7 @@ export class AutoRelease {
 
     const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
 
-    if (
-      this.semVerLabels &&
-      !skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)
-    ) {
+    if (!skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)) {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
@@ -118,6 +116,7 @@ export class AutoRelease {
     const config = {
       ...rawConfig,
       ...this.args,
+      versionLabels: this.semVerLabels,
       skipReleaseLabels
     };
 
@@ -126,7 +125,7 @@ export class AutoRelease {
     const repository = await this.getRepo();
     const token = repository.token || (await getGitHubToken(config.githubApi));
     this.githubRelease = new GitHubRelease(
-      { ...repository, token },
+      { owner: config.owner, repo: config.repo, ...repository, token },
       config,
       this.logger
     );

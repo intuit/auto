@@ -80,16 +80,6 @@ export default class GitHub {
     return Promise.resolve();
   }
 
-  // Looks like: https://developer.github.com/v3/repos/#get
-  public async getRepoMetadata() {
-    await this.authenticate();
-
-    return (await this.ghub.repos.get({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase()
-    })).data;
-  }
-
   public async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
@@ -288,10 +278,10 @@ export default class GitHub {
 
     await this.authenticate();
 
-    const result = await this.ghub.repos.get({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase()
-    });
+    const result = (await this.ghub.repos.get({
+      owner: this.options.owner,
+      repo: this.options.repo
+    })).data;
 
     this.logger.veryVerbose.info('Got response from repos\n', result);
     this.logger.verbose.info('Got project information.');

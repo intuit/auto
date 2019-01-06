@@ -3,19 +3,19 @@
 exports[`GitHubRelease generateReleaseNotes should allow user to configure section headings 1`] = `
 "#### 💥  Breaking Change
 
-- First [#1234](https://custom-git.com/pull/1234) (adam@dierkens.com)
+- First [#1234](https://github.com/web/site/pull/1234) (adam@dierkens.com)
 
 #### 🚀  Enhancement
 
-- Second [#1235](https://custom-git.com/pull/1235) (adam@dierkens.com)
+- Second [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
 
 #### 🐛  Bug Fix
 
-- Fourth [#1237](https://custom-git.com/pull/1237) (adam@dierkens.com)
+- Fourth [#1237](https://github.com/web/site/pull/1237) (adam@dierkens.com)
 
 #### 🏠  Internal
 
-- Third [#1236](https://custom-git.com/pull/1236) (adam@dierkens.com)
+- Third [#1236](https://github.com/web/site/pull/1236) (adam@dierkens.com)
 
 #### Authors: 1
 
