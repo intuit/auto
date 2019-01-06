@@ -91,7 +91,7 @@ const defaultOptions = [
     name: 'plugins',
     type: String,
     multiple: true,
-    description: 'Plugins to load auto-release with.',
+    description: 'Plugins to load auto-release with. (defaults to just npm)',
     group: 'misc'
   }
 ];
