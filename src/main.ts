@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
+import envCi from 'env-ci';
 import { gt } from 'semver';
 
 import {
@@ -470,6 +471,20 @@ export class AutoRelease {
   }
 
   private async setGitUser() {
+    const { isCi } = envCi();
+
+    if (!isCi) {
+      this.logger.log.note(
+        `Detected CI environment, will not set git user.
+
+If a command fails manually run:
+
+  - git config user.email your@email.com
+  - git config user.name "Your Name"`
+      );
+      return;
+    }
+
     try {
       // If these values are not set git config will exit with an error
       await execPromise(`git config user.email`);
