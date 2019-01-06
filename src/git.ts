@@ -123,11 +123,11 @@ export default class GitHub {
   }
 
   public async getFirstCommit(): Promise<string> {
-    return execPromise('git rev-list HEAD | tail -n 1');
+    return execPromise('git', ['rev-list', 'HEAD', '|', 'tail', '-n', '1']);
   }
 
   public async getSha(): Promise<string> {
-    const result = await execPromise('git rev-parse HEAD');
+    const result = await execPromise('git', ['rev-parse', 'HEAD']);
 
     this.logger.verbose.info(`Got commit SHA from HEAD: ${result}`);
 
@@ -405,9 +405,13 @@ export default class GitHub {
 
   public async changedPackages(sha: string) {
     const packages = new Set<string>();
-    const changedFiles = await execPromise(
-      `git show --first-parent ${sha} --name-only --pretty=`
-    );
+    const changedFiles = await execPromise('git', [
+      'show',
+      '--first-parent',
+      sha,
+      '--name-only',
+      '--pretty='
+    ]);
 
     changedFiles.split('\n').forEach(filePath => {
       const parts = filePath.split('/');

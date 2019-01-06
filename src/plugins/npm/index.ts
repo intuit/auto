@@ -66,17 +66,30 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
-        await execPromise(
-          `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
-        );
+        await execPromise('npx', [
+          'lerna',
+          'publish',
+          '--yes',
+          '--force-publish=*',
+          version,
+          '-m',
+          "'%v [skip ci]'"
+        ]);
       } else {
-        await execPromise(
-          `npm version ${version} -m "Bump version to: %s [skip ci]"`
-        );
-        await execPromise('npm publish');
-        await execPromise(
-          'git push --follow-tags --set-upstream origin $branch'
-        );
+        await execPromise('npm', [
+          'version',
+          version,
+          '-m',
+          'Bump version to: %s [skip ci]'
+        ]);
+        await execPromise('npm', ['publish']);
+        await execPromise('git', [
+          'push',
+          '--follow-tags',
+          '--set-upstream',
+          'origin',
+          '$branch'
+        ]);
       }
     });
   }

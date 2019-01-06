@@ -464,8 +464,8 @@ export class AutoRelease {
   private async setGitUser() {
     try {
       // If these values are not set git config will exit with an error
-      await execPromise(`git config user.email`);
-      await execPromise(`git config user.name`);
+      await execPromise('git', ['config', 'user.email']);
+      await execPromise('git', ['config', 'user.name']);
     } catch (error) {
       this.hooks.getAuthor.tap('Arguments', () =>
         this.githubRelease ? (this.githubRelease.releaseOptions as IAuthor) : {}
@@ -474,11 +474,11 @@ export class AutoRelease {
       const { name, email } = await this.hooks.getAuthor.promise();
 
       if (email) {
-        await execPromise(`git config user.email "${email}"`);
+        await execPromise('git', ['config', 'user.email', `"${email}"`]);
       }
 
       if (name) {
-        await execPromise(`git config user.name "${name}"`);
+        await execPromise('git', ['config', 'user.name', `"${name}"`]);
       }
     }
   }
