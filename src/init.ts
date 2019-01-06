@@ -15,12 +15,13 @@ async function getFlags() {
     {
       type: 'input',
       name: 'repo',
-      message: 'GitHub Project Repository (press enter to use package.json)'
+      message:
+        'GitHub Project Repository (press enter to use package definition)'
     },
     {
       type: 'input',
       name: 'owner',
-      message: 'GitHub Project Owner (press enter to use package.json)'
+      message: 'GitHub Project Owner (press enter to use package definition)'
     },
     {
       type: 'confirm',
@@ -48,12 +49,13 @@ async function getFlags() {
       type: 'input',
       name: 'name',
       message:
-        'Git name to commit and release with (press enter to use package.json)'
+        'Git name to commit and release with (press enter to use package definition)'
     },
     {
       type: 'input',
       name: 'email',
-      message: 'Git email to commit with (press enter to use package.json)'
+      message:
+        'Git email to commit with (press enter to use package definition)'
     }
   ]);
 }

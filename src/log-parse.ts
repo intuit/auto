@@ -1,7 +1,7 @@
 import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
-import { ILogger } from './github-release';
+import { ILogger } from './utils/logger';
 
 interface ICommitAuthor {
   name?: string;
@@ -14,7 +14,6 @@ interface IGenerateReleaseNotesOptions {
   repo: string;
   baseUrl: string;
   jira?: string;
-  logger: ILogger;
   changelogTitles: { [label: string]: string };
 }
 
@@ -341,32 +340,33 @@ function createAuthorSection(
 
 export default function generateReleaseNotes(
   commits: IExtendedCommit[],
+  logger: ILogger,
   options: IGenerateReleaseNotesOptions
 ): string {
   if (commits.length === 0) {
     return '';
   }
 
-  options.logger.verbose.info('Generating release notes for:\n', commits);
+  logger.verbose.info('Generating release notes for:\n', commits);
 
   const split = splitCommits(commits, options.changelogTitles);
 
-  options.logger.verbose.info('Split commits into groups');
-  options.logger.veryVerbose.info('\n', split);
+  logger.verbose.info('Split commits into groups');
+  logger.veryVerbose.info('\n', split);
 
   const sections: string[] = [];
 
   createLabelSection(split, options, sections);
 
-  options.logger.verbose.info('Added groups to changelog');
+  logger.verbose.info('Added groups to changelog');
 
   createAuthorSection(split, options, sections);
 
-  options.logger.verbose.info('Added authors to changelog');
+  logger.verbose.info('Added authors to changelog');
 
   const result = sections.join('\n\n');
 
-  options.logger.verbose.info('Successfully generated release notes.');
+  logger.verbose.info('Successfully generated release notes.');
 
   return result;
 }

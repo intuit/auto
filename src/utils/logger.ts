@@ -1,6 +1,12 @@
-import { Signale } from 'signale';
+import signale, { Signale } from 'signale';
 
-export function dummyLog() {
+export interface ILogger {
+  log: signale.Signale<signale.DefaultMethods>;
+  verbose: signale.Signale<signale.DefaultMethods>;
+  veryVerbose: signale.Signale<signale.DefaultMethods>;
+}
+
+export function dummyLog(): ILogger {
   return {
     log: new Signale({ disabled: true }),
     verbose: new Signale({ disabled: true }),
@@ -8,7 +14,9 @@ export function dummyLog() {
   };
 }
 
-export default function createLog(mode: 'verbose' | 'veryVerbose' | undefined) {
+export default function createLog(
+  mode: 'verbose' | 'veryVerbose' | undefined
+): ILogger {
   return {
     log: new Signale(),
     verbose: new Signale({

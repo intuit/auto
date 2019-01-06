@@ -8,21 +8,24 @@ Get the semantic version bump for the given changes. Requires all PRs to have la
 Options
 
   --onlyPublishWithReleaseLabel    Only bump version if 'release' label is on pull request
-  --skipReleaseLabels string[]       Labels that will not create a release. Defaults to just 'skip-release'
+  --skipReleaseLabels string[]     Labels that will not create a release. Defaults to just 'skip-release'
 
 Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
-  --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
+  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
   --githubApi string    GitHub API to use
 
 Examples
 
-  Get the new version using the last release to head   $ auto version
-  Skip releases with multiple labels                   $ auto version --skipReleaseLabels documentation CI
+  Get the new version using the last release     $ auto version
+  to head
+  Skip releases with multiple labels             $ auto version --skipReleaseLabels
+                                                 documentation CI
+
 ```
 
 Useful in conjunction with `npm version` to auto-version releases.

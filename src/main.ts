@@ -1,491 +1,535 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
-import * as fs from 'fs';
-import signale from 'signale';
-import { promisify } from 'util';
+import { gt } from 'semver';
 
 import { ArgsType } from './cli/args';
 import { IPRInfo } from './git';
 import GitHubRelease, {
   defaultChangelogTitles,
   defaultLabels,
-  IGitHubReleaseOptions
+  IGitHubReleaseOptions,
+  VersionLabel
 } from './github-release';
 
+import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
+import NpmPlugin from './plugins/npm';
+import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
-import createLog from './utils/logger';
+import getGitHubToken from './utils/github-token';
+import createLog, { ILogger } from './utils/logger';
 
-const readFile = promisify(fs.readFile);
-
-const calcGreaterVersion = (
-  packageVersion: string,
-  monorepoVersion: string,
-  latestVersion: string
-) => {
-  const localVersion = monorepoVersion || packageVersion;
-
-  return localVersion > latestVersion ? localVersion : latestVersion;
-};
-
-function isMonorepo() {
-  return fs.existsSync('lerna.json');
+interface IAuthor {
+  name?: string;
+  email?: string;
 }
 
-async function getCurrentVersion(
-  prefixRelease: (release: string) => string,
-  lastRelease: string,
-  veryVerbose: signale.Signale<signale.DefaultMethods>
-) {
-  let lastVersion;
-  let packageVersion = '';
-  let monorepoVersion = '';
+interface IRepository {
+  owner?: string;
+  repo?: string;
+  token?: string;
+}
 
-  if (isMonorepo()) {
-    monorepoVersion = prefixRelease(
-      JSON.parse(await readFile('lerna.json', 'utf-8')).version
+interface IAutoHooks {
+  beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  getAuthor: AsyncSeriesBailHook<[], IAuthor>;
+  getPreviousVersion: AsyncSeriesBailHook<
+    [(release: string) => string],
+    string
+  >;
+  getRepository: AsyncSeriesBailHook<[], IRepository>;
+  publish: AsyncSeriesHook<[SEMVER]>;
+}
+
+export interface IPlugin {
+  name: string;
+  apply(auto: AutoRelease): void;
+}
+
+export class AutoRelease {
+  public hooks: IAutoHooks;
+  public logger: ILogger;
+  public args: ArgsType;
+  public plugins: IPlugin[];
+
+  public githubRelease?: GitHubRelease;
+  public semVerLabels?: Map<VersionLabel, string>;
+
+  constructor({
+    plugins = [new NpmPlugin()],
+    ...args
+  }: ArgsType & { plugins?: IPlugin[] }) {
+    this.args = args;
+    this.plugins = plugins;
+    this.logger = createLog(
+      args['very-verbose']
+        ? 'veryVerbose'
+        : args.verbose
+        ? 'verbose'
+        : undefined
+    );
+
+    this.hooks = {
+      beforeRun: new SyncHook(['config']),
+      getAuthor: new AsyncSeriesBailHook([]),
+      getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
+      getRepository: new AsyncSeriesBailHook([]),
+      publish: new AsyncSeriesHook(['version'])
+    };
+  }
+
+  public async loadConfig() {
+    const explorer = cosmiconfig('auto');
+    const result = await explorer.search();
+
+    let rawConfig: cosmiconfig.Config = {};
+
+    if (result && result.config) {
+      rawConfig = result.config;
+    }
+
+    this.logger.verbose.success(
+      'Loaded `auto-release` with config:',
+      rawConfig
+    );
+
+    this.semVerLabels = defaultLabels;
+
+    if (rawConfig.labels) {
+      this.semVerLabels = {
+        ...defaultLabels,
+        ...rawConfig.labels
+      };
+    }
+
+    this.logger.verbose.success(
+      'Using SEMVER labels:',
+      '\n',
+      this.semVerLabels
+    );
+
+    const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
+
+    if (
+      this.semVerLabels &&
+      !skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)
+    ) {
+      skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
+    }
+
+    this.plugins.forEach(plugin => {
+      this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
+      plugin.apply(this);
+    });
+
+    const config = {
+      ...rawConfig,
+      ...this.args,
+      skipReleaseLabels,
+      slack:
+        typeof this.args.slack === 'string' ? this.args.slack : rawConfig.slack
+    };
+
+    this.hooks.beforeRun.call(config);
+
+    const repository = await this.getRepo();
+    const token = repository.token || (await getGitHubToken(config.githubApi));
+    this.githubRelease = new GitHubRelease(
+      { ...repository, token },
+      config,
+      this.logger
     );
   }
 
-  if (fs.existsSync('package.json')) {
-    packageVersion = prefixRelease(
-      JSON.parse(await readFile('package.json', 'utf-8')).version
+  public async init() {
+    await init(this.args['only-labels']);
+  }
+
+  public async createLabels() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    await this.githubRelease.addLabelsToProject(
+      new Map([
+        ...this.semVerLabels,
+        ...new Map(
+          [
+            ...Object.keys(defaultChangelogTitles),
+            ...Object.keys(
+              this.githubRelease.releaseOptions.changelogTitles || {}
+            )
+          ].map((label): [string, string] => [label, label])
+        )
+      ])
     );
   }
 
-  if (lastRelease.match(/\d+\.\d+\.\d+/)) {
-    veryVerbose.info('Using latest release as previous version');
-    lastVersion = lastRelease;
-  } else if (monorepoVersion) {
-    veryVerbose.info('Using lerna.json as previous version');
-    lastVersion = monorepoVersion;
-  } else if (packageVersion) {
-    veryVerbose.info('Using package.json as previous version');
-    lastVersion = packageVersion;
-  } else {
-    veryVerbose.info('No previous release found, using 0.0.0 as the start.');
-    lastVersion = prefixRelease('0.0.0');
+  public async label() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    this.logger.verbose.info("Using command: 'label'");
+    let labels: string[] = [];
+
+    if (!this.args.pr) {
+      const pulls = await this.githubRelease.getPullRequests({
+        state: 'closed'
+      });
+      const lastMerged = pulls.find(pull => !!pull.merged_at);
+
+      if (lastMerged) {
+        labels = lastMerged.labels.map(label => label.name);
+      }
+    } else {
+      labels = await this.githubRelease.getLabels(this.args.pr);
+    }
+
+    console.log(labels.join('\n'));
   }
 
-  // This helps in situations where the latest release on github is wrong for some reason
-  // In this case we default to either the monorepo or package version
-  lastVersion = calcGreaterVersion(
-    packageVersion,
-    monorepoVersion,
-    lastRelease
-  );
-
-  return lastVersion;
-}
-
-async function setGitUser(args: IGitHubReleaseOptions) {
-  try {
-    // If these values are not set git config will exit with an error
-    await execPromise(`git config user.email`);
-    await execPromise(`git config user.name`);
-  } catch (error) {
-    const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
-    let { name, email } = args;
-
-    if (!name && packageJson.author) {
-      ({ name } = packageJson.author);
+  public async pr() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
     }
 
-    if (!email && packageJson.author) {
-      ({ email } = packageJson.author);
+    this.logger.verbose.info("Using command: 'pr'");
+
+    if (!this.args.sha && this.args.pr) {
+      this.logger.verbose.info('Getting commit SHA from PR.');
+      const res = await this.githubRelease.getPullRequest(this.args.pr);
+      this.args.sha = res.data.head.sha;
+    } else if (!this.args.sha) {
+      this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
+      this.args.sha = await this.githubRelease.getSha();
     }
 
-    if (email) {
-      await execPromise(`git config user.email "${email}"`);
+    this.logger.verbose.info('Found PR SHA:', this.args.sha);
+
+    this.args.target_url = this.args.url;
+    delete this.args.url;
+
+    if (!this.args['dry-run']) {
+      await this.githubRelease.createStatus(this.args as IPRInfo);
+    } else {
+      this.logger.verbose.info('`pr` dry run complete.');
     }
 
-    if (name) {
-      await execPromise(`git config user.name "${name}"`);
-    }
+    this.logger.verbose.success('Finished `pr` command');
   }
-}
 
-async function getVersion(githubRelease: GitHubRelease, args: ArgsType) {
-  const lastRelease = await githubRelease.getLatestRelease();
+  public async prCheck() {
+    if (!this.githubRelease || !this.semVerLabels) {
+      throw this.createErrorMessage();
+    }
 
-  return githubRelease.getSemverBump(
-    lastRelease,
-    undefined,
-    args.onlyPublishWithReleaseLabel,
-    args.skipReleaseLabels
-  );
-}
+    this.logger.verbose.info(
+      `Using command: 'pr-check' for '${this.args.url}'`
+    );
 
-async function makeChangelog(
-  args: ArgsType,
-  githubRelease: GitHubRelease,
-  log: signale.Signale<signale.DefaultMethods>,
-  prefixRelease: (release: string) => string,
-  veryVerbose: signale.Signale<signale.DefaultMethods>,
-  verbose: signale.Signale<signale.DefaultMethods>
-) {
-  const lastRelease = args.from || (await githubRelease.getLatestRelease());
-  const releaseNotes = await githubRelease.generateReleaseNotes(
-    lastRelease,
-    args.to || undefined
-  );
+    this.args.target_url = this.args.url;
+    delete this.args.url;
 
-  log.info('New Release Notes\n', releaseNotes);
+    let msg;
 
-  if (!args['dry-run']) {
-    const currentVersion = await getCurrentVersion(
-      prefixRelease,
+    try {
+      const res = await this.githubRelease.getPullRequest(this.args.pr!);
+      this.args.sha = res.data.head.sha;
+
+      const labels = await this.githubRelease.getLabels(this.args.pr!);
+      const labelTexts = [...this.semVerLabels.values()];
+      const releaseTag = labels.find(l => l === 'release');
+
+      const skipReleaseTag = labels.find(
+        l =>
+          !!this.githubRelease &&
+          this.githubRelease.releaseOptions.skipReleaseLabels.includes(l)
+      );
+      const semverTag = labels.find(
+        l =>
+          labelTexts.includes(l) &&
+          !!this.githubRelease &&
+          !this.githubRelease.releaseOptions.skipReleaseLabels.includes(l) &&
+          l !== 'release'
+      );
+
+      if (semverTag === undefined && !skipReleaseTag) {
+        throw new Error('No semver label!');
+      }
+
+      this.logger.log.success(`PR is using label: ${semverTag}`);
+
+      let description;
+
+      if (skipReleaseTag) {
+        description = 'PR will not create a release';
+      } else if (releaseTag) {
+        description = `PR will create release once merged - ${semverTag}`;
+      } else {
+        description = `CI - ${semverTag}`;
+      }
+
+      msg = {
+        description,
+        state: 'success'
+      };
+    } catch (error) {
+      msg = {
+        description: error.message,
+        state: 'error'
+      };
+    }
+
+    this.logger.verbose.info('Posting comment to GitHub\n', msg);
+
+    if (!this.args['dry-run']) {
+      await this.githubRelease.createStatus({
+        ...this.args,
+        ...msg
+      } as IPRInfo);
+
+      this.logger.log.success('Posted status to Pull Request.');
+    } else {
+      this.logger.verbose.info('`pr-check` dry run complete.');
+    }
+
+    this.logger.verbose.success('Finished `pr-check` command');
+  }
+
+  public async comment() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    this.logger.verbose.info("Using command: 'comment'");
+
+    await this.githubRelease.createComment(
+      this.args.message!,
+      this.args.pr!,
+      this.args.context || undefined
+    );
+
+    this.logger.log.success(`Commented on PR #${this.args.pr}`);
+  }
+
+  public async version() {
+    this.logger.verbose.info("Using command: 'version'");
+    const bump = await this.getVersion();
+    console.log(bump);
+  }
+
+  public async changelog() {
+    this.logger.verbose.info("Using command: 'changelog'");
+    await this.makeChangelog();
+  }
+
+  public async release() {
+    this.logger.verbose.info("Using command: 'release'");
+    await this.makeRelease();
+  }
+
+  public async shipit() {
+    this.logger.verbose.info("Using command: 'shipit'");
+
+    const version = await this.getVersion();
+
+    if (version === '') {
+      return;
+    }
+
+    await this.makeChangelog();
+    this.hooks.publish.promise(version);
+    await this.makeRelease();
+  }
+
+  private async getVersion() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    const lastRelease = await this.githubRelease.getLatestRelease();
+    return this.githubRelease.getSemverBump(lastRelease);
+  }
+
+  private async getCurrentVersion(lastRelease: string) {
+    this.hooks.getPreviousVersion.tap('None', () => {
+      this.logger.veryVerbose.info(
+        'No previous release found, using 0.0.0 as previous version.'
+      );
+      return this.prefixRelease('0.0.0');
+    });
+
+    const lastVersion = await this.hooks.getPreviousVersion.promise(
+      this.prefixRelease
+    );
+
+    if (lastRelease.match(/\d+\.\d+\.\d+/) && gt(lastRelease, lastVersion)) {
+      this.logger.veryVerbose.info('Using latest release as previous version');
+      return lastRelease;
+    }
+
+    return lastVersion;
+  }
+
+  private async makeChangelog() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    await this.setGitUser();
+
+    const lastRelease =
+      this.args.from || (await this.githubRelease.getLatestRelease());
+    const releaseNotes = await this.githubRelease.generateReleaseNotes(
       lastRelease,
-      veryVerbose
+      this.args.to || undefined
     );
 
-    await githubRelease.addToChangelog(
-      releaseNotes,
-      lastRelease,
-      currentVersion,
-      args['no-version-prefix'],
-      args.message || undefined
-    );
-  } else {
-    verbose.info('`changelog` dry run complete.');
-  }
-}
+    this.logger.log.info('New Release Notes\n', releaseNotes);
 
-async function makeRelease(
-  args: ArgsType,
-  githubRelease: GitHubRelease,
-  log: signale.Signale<signale.DefaultMethods>,
-  prefixRelease: (release: string) => string,
-  veryVerbose: signale.Signale<signale.DefaultMethods>,
-  verbose: signale.Signale<signale.DefaultMethods>
-) {
-  let lastRelease = await githubRelease.getLatestRelease();
+    if (!this.args['dry-run']) {
+      const currentVersion = await this.getCurrentVersion(lastRelease);
 
-  // Find base commit or latest release to generate the changelog to HEAD (new tag)
-  veryVerbose.info(`Using ${lastRelease} as previous release.`);
-
-  if (lastRelease.match(/\d+\.\d+\.\d+/)) {
-    lastRelease = prefixRelease(lastRelease);
-  }
-
-  log.info('Last used release:', lastRelease);
-
-  const releaseNotes = await githubRelease.generateReleaseNotes(lastRelease);
-
-  log.info(`Using release notes:\n${releaseNotes}`);
-
-  const version =
-    args['use-version'] ||
-    (await getCurrentVersion(prefixRelease, lastRelease, veryVerbose));
-
-  if (!version) {
-    log.error('Could not calculate next version from last tag.');
-    return;
-  }
-
-  const prefixed = prefixRelease(version);
-  log.info(`Publishing ${prefixed} to GitHub.`);
-
-  if (!args['dry-run']) {
-    await githubRelease.publish(releaseNotes, prefixed);
-
-    if (args.slack) {
-      log.info('Posting release to slack');
-      await githubRelease.postToSlack(releaseNotes, prefixed);
+      await this.githubRelease.addToChangelog(
+        releaseNotes,
+        lastRelease,
+        currentVersion,
+        this.args.message || undefined
+      );
+    } else {
+      this.logger.verbose.info('`changelog` dry run complete.');
     }
-  } else {
-    verbose.info('Release dry run complete.');
+  }
+
+  private async makeRelease() {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    let lastRelease = await this.githubRelease.getLatestRelease();
+
+    // Find base commit or latest release to generate the changelog to HEAD (new tag)
+    this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
+
+    if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+      lastRelease = this.prefixRelease(lastRelease);
+    }
+
+    this.logger.log.info('Last used release:', lastRelease);
+
+    const releaseNotes = await this.githubRelease.generateReleaseNotes(
+      lastRelease
+    );
+
+    this.logger.log.info(`Using release notes:\n${releaseNotes}`);
+
+    const version =
+      this.args['use-version'] || (await this.getCurrentVersion(lastRelease));
+
+    if (!version) {
+      this.logger.log.error('Could not calculate next version from last tag.');
+      return;
+    }
+
+    const prefixed = this.prefixRelease(version);
+    this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
+
+    if (!this.args['dry-run']) {
+      await this.githubRelease.publish(releaseNotes, prefixed);
+
+      if (this.args.slack) {
+        this.logger.log.info('Posting release to slack');
+        await this.githubRelease.postToSlack(releaseNotes, prefixed);
+      }
+    } else {
+      this.logger.verbose.info('Release dry run complete.');
+    }
+  }
+
+  private readonly prefixRelease = (release: string) => {
+    if (!this.githubRelease) {
+      throw this.createErrorMessage();
+    }
+
+    return this.githubRelease.releaseOptions['no-version-prefix'] ||
+      release.startsWith('v')
+      ? release
+      : `v${release}`;
+  };
+
+  private createErrorMessage() {
+    return new Error(
+      `AutoRelease is not initialized! Make sure the have run AutoRelease.loadConfig`
+    );
+  }
+
+  private async setGitUser() {
+    try {
+      // If these values are not set git config will exit with an error
+      await execPromise(`git config user.email`);
+      await execPromise(`git config user.name`);
+    } catch (error) {
+      this.hooks.getAuthor.tap('Arguments', () =>
+        this.githubRelease ? (this.githubRelease.releaseOptions as IAuthor) : {}
+      );
+
+      const { name, email } = await this.hooks.getAuthor.promise();
+
+      if (email) {
+        await execPromise(`git config user.email "${email}"`);
+      }
+
+      if (name) {
+        await execPromise(`git config user.name "${name}"`);
+      }
+    }
+  }
+
+  private async getRepo() {
+    this.hooks.getRepository.tap('None', () =>
+      this.githubRelease
+        ? (this.githubRelease.releaseOptions as IRepository)
+        : {}
+    );
+    return this.hooks.getRepository.promise();
   }
 }
 
 export async function run(args: ArgsType) {
-  const logger = createLog(
-    args['very-verbose'] ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
-  );
-  const { log, verbose, veryVerbose } = logger;
-  const explorer = cosmiconfig('auto');
-  const result = await explorer.search();
+  const auto = new AutoRelease(args);
 
-  let rawConfig: cosmiconfig.Config = {};
-
-  const prefixRelease = (release: string) =>
-    args['no-version-prefix'] || release.startsWith('v')
-      ? release
-      : `v${release}`;
-
-  if (result && result.config) {
-    rawConfig = result.config;
-  }
-
-  verbose.success('Loaded `auto-release` with config:', rawConfig);
-
-  const config: IGitHubReleaseOptions = {
-    ...rawConfig,
-    ...args,
-    logger,
-    slack: typeof args.slack === 'string' ? args.slack : rawConfig.slack
-  };
-
-  let semVerLabels = defaultLabels;
-
-  if (config.labels) {
-    semVerLabels = {
-      ...defaultLabels,
-      ...config.labels
-    };
-  }
-
-  verbose.success('Using SEMVER labels:', '\n', semVerLabels);
-
-  const githubRelease = new GitHubRelease(
-    {
-      owner: args.owner,
-      repo: args.repo
-    },
-    config
-  );
+  await auto.loadConfig();
 
   switch (args.command) {
-    case 'init': {
-      await init(args['only-labels']);
+    case 'init':
+      auto.init();
       break;
-    }
-    case 'create-labels': {
-      await githubRelease.addLabelsToProject(
-        new Map([
-          ...semVerLabels,
-          ...new Map(
-            [
-              ...Object.keys(defaultChangelogTitles),
-              ...Object.keys(config.changelogTitles || {})
-            ].map((label): [string, string] => [label, label])
-          )
-        ]),
-        args.onlyPublishWithReleaseLabel
-      );
+    case 'create-labels':
+      auto.createLabels();
       break;
-    }
-    case 'shipit': {
-      const version = await getVersion(githubRelease, {
-        ...config,
-        command: args.command
-      });
-
-      if (version === '') {
-        return;
-      }
-
-      await setGitUser(config);
-
-      await makeChangelog(
-        args, // change to config?
-        githubRelease,
-        log,
-        prefixRelease,
-        veryVerbose,
-        verbose
-      );
-
-      if (isMonorepo()) {
-        await execPromise(
-          `npx lerna publish --yes --force-publish=* ${version} -m '%v [skip ci]'`
-        );
-      } else {
-        await execPromise(
-          `npm version ${version} -m "Bump version to: %s [skip ci]"`
-        );
-        await execPromise('npm publish');
-        await execPromise(
-          'git push --follow-tags --set-upstream origin $branch'
-        );
-      }
-
-      await makeRelease(
-        args, // change to config?
-        githubRelease,
-        log,
-        prefixRelease,
-        veryVerbose,
-        verbose
-      );
-
+    case 'label':
+      auto.label();
       break;
-    }
-    // PR Interaction
-    case 'label': {
-      verbose.info("Using command: 'label'");
-      let labels: string[] = [];
-
-      if (!args.pr) {
-        const pulls = await githubRelease.getPullRequests({ state: 'closed' });
-        const lastMerged = pulls.find(pull => !!pull.merged_at);
-
-        if (lastMerged) {
-          labels = lastMerged.labels.map(label => label.name);
-        }
-      } else {
-        labels = await githubRelease.getLabels(args.pr);
-      }
-
-      console.log(labels.join('\n'));
+    case 'pr-check':
+      auto.prCheck();
       break;
-    }
-    case 'pr-check': {
-      verbose.info(`Using command: 'pr-check' for '${args.url}'`);
-
-      args.target_url = args.url;
-      delete args.url;
-
-      let msg;
-
-      try {
-        const res = await githubRelease.getPullRequest(args.pr!);
-        args.sha = res.data.head.sha;
-
-        const labels = await githubRelease.getLabels(args.pr!);
-        const labelTexts = [...semVerLabels.values()];
-        const releaseTag = labels.find(l => l === 'release');
-        const skipReleaseLabels = args.skipReleaseLabels || [];
-
-        if (!skipReleaseLabels.includes(semVerLabels.get('skip-release')!)) {
-          skipReleaseLabels.push(semVerLabels.get('skip-release')!);
-        }
-
-        const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
-        const semverTag = labels.find(
-          l =>
-            labelTexts.includes(l) &&
-            !skipReleaseLabels.includes(l) &&
-            l !== 'release'
-        );
-
-        if (semverTag === undefined && !skipReleaseTag) {
-          throw new Error('No semver label!');
-        }
-
-        log.success(`PR is using label: ${semverTag}`);
-
-        let description;
-
-        if (skipReleaseTag) {
-          description = 'PR will not create a release';
-        } else if (releaseTag) {
-          description = `PR will create release once merged - ${semverTag}`;
-        } else {
-          description = `CI - ${semverTag}`;
-        }
-
-        msg = {
-          description,
-          state: 'success'
-        };
-      } catch (error) {
-        msg = {
-          description: error.message,
-          state: 'error'
-        };
-      }
-
-      verbose.info('Posting comment to GitHub\n', msg);
-
-      if (!args['dry-run']) {
-        await githubRelease.createStatus({
-          ...args,
-          ...msg
-        } as IPRInfo);
-        log.success('Posted status to Pull Request.');
-      } else {
-        verbose.info('`pr-check` dry run complete.');
-      }
-
-      verbose.success('Finished `pr-check` command');
-
+    case 'pr':
+      auto.pr();
       break;
-    }
-    case 'pr': {
-      verbose.info("Using command: 'pr'");
-
-      if (!args.sha && args.pr) {
-        verbose.info('Getting commit SHA from PR.');
-        const res = await githubRelease.getPullRequest(args.pr);
-        args.sha = res.data.head.sha;
-      } else if (!args.sha) {
-        verbose.info('No PR found, getting commit SHA from HEAD.');
-        args.sha = await githubRelease.getSha();
-      }
-
-      verbose.info('Found PR SHA:', args.sha);
-
-      args.target_url = args.url;
-      delete args.url;
-
-      if (!args['dry-run']) {
-        await githubRelease.createStatus(args as IPRInfo);
-      } else {
-        verbose.info('`pr` dry run complete.');
-      }
-
-      verbose.success('Finished `pr` command');
-
+    case 'comment':
+      auto.comment();
       break;
-    }
-    case 'comment': {
-      verbose.info("Using command: 'comment'");
-
-      await githubRelease.createComment(
-        args.message!,
-        args.pr!,
-        args.context || undefined
-      );
-
-      log.success(`Commented on PR #${args.pr}`);
+    case 'version':
+      auto.version();
       break;
-    }
-    // Release
-    case 'version': {
-      verbose.info("Using command: 'version'");
-
-      const bump = await getVersion(githubRelease, {
-        command: args.command,
-        ...config
-      });
-
-      console.log(bump);
-
+    case 'release':
+      auto.release();
       break;
-    }
-    case 'changelog': {
-      verbose.info("Using command: 'changelog'");
-
-      await setGitUser(config);
-
-      await makeChangelog(
-        args,
-        githubRelease,
-        log,
-        prefixRelease,
-        veryVerbose,
-        verbose
-      );
-
+    case 'shipit':
+      auto.shipit();
       break;
-    }
-    case 'release': {
-      verbose.info("Using command: 'release'");
-
-      await makeRelease(
-        args,
-        githubRelease,
-        log,
-        prefixRelease,
-        veryVerbose,
-        verbose
-      );
-
-      break;
-    }
-
     default:
       throw new Error(`idk what i'm doing.`);
   }
@@ -498,3 +542,9 @@ export default async function main(args: ArgsType) {
     console.log(error);
   }
 }
+
+// Plugin Utils
+
+export { ILogger } from './utils/logger';
+export { default as SEMVER } from './semver';
+export { default as execPromise } from './utils/exec-promise';

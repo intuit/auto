@@ -31,18 +31,18 @@ Options
   -d, --dry-run          Dont actually commit status. Just print the request body
   --no-version-prefix    Use the version as the tag without the 'v' prefix
   --jira string          Jira base URL
-  --use-version          Version number to publish as. Defaults to reading from the package.json.
-  -s, --slack string     Url to post a slack message to about the release. If slack url supplied via
-                         autorc this flag can act as a boolean.  Make sure the SLACK_TOKEN environment
-                         variable is set.
+  --use-version string   Version number to publish as. Defaults to reading from the package definition for the platform.
+  -s, --slack string     Url to post a slack message to about the release. If slack url
+                         supplied via autorc this flag can act as a boolean.  Make sure the
+                         SLACK_TOKEN environment variable is set.
 
 Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
-  --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
+  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
   --githubApi string    GitHub API to use
 
 Examples

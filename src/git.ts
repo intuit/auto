@@ -4,28 +4,23 @@ import { promisify } from 'util';
 
 import { Memoize } from 'typescript-memoize';
 
-import { defaultLabelsDescriptions, ILogger } from './github-release';
+import { defaultLabelsDescriptions } from './github-release';
 import execPromise from './utils/exec-promise';
+import { dummyLog, ILogger } from './utils/logger';
 import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
+  Partial<Pick<T, K>>;
+
+export type IPRInfo = Omit<GHub.ReposCreateStatusParams, 'owner' | 'repo'>;
+
 export interface IGitHubOptions {
   owner: string;
   repo: string;
-  version?: string;
   baseUrl?: string;
   token?: string;
-  logger: ILogger;
-}
-
-export interface IPRInfo {
-  number: number;
-  context: string;
-  url: string;
-  description: string;
-  sha: string;
-  state: 'error' | 'failure' | 'pending' | 'success';
 }
 
 class GitHubAPIError extends Error {
@@ -47,8 +42,8 @@ export default class GitHub {
   public readonly options: IGitHubOptions;
   private readonly logger: ILogger;
 
-  constructor(options: IGitHubOptions) {
-    this.logger = options.logger;
+  constructor(options: IGitHubOptions, logger: ILogger = dummyLog()) {
+    this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 

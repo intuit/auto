@@ -7,15 +7,15 @@ Get the labels for a pull request. Doesn't do much, but the return value lets yo
 
 Options
 
-  --pr number   The pull request number you want the labels of (default to last merged PR)
+  --pr number   The pull request number you want the labels of (defaults to last merged PR)
 
 Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
-  --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
+  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
   --githubApi string    GitHub API to use
 
 Examples

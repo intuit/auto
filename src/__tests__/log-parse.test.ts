@@ -38,7 +38,6 @@ test('createUserLink', () => {
         owner: '',
         repo: '',
         baseUrl: 'https://github.custom.com/',
-        logger: dummyLog(),
         changelogTitles: {}
       }
     )
@@ -218,6 +217,7 @@ describe('generateReleaseNotes', () => {
           makeCommitFromMsg('Second'),
           makeCommitFromMsg('Third')
         ],
+        dummyLog(),
         options
       )
     ).toBe('');
@@ -230,7 +230,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Third')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should create note for PR commits without labels', () => {
@@ -240,7 +242,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Third')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should create note for jira commits without labels', () => {
@@ -250,7 +254,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Third')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should use username if present', () => {
@@ -265,7 +271,9 @@ describe('generateReleaseNotes', () => {
 
     normalized[1].authors[0].username = 'adam';
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should create note for JIRA commits', () => {
@@ -279,7 +287,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Fourth')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should combine pr w/no label and labelled pr', () => {
@@ -289,7 +299,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Fourth')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test('should create sections for packages', () => {
@@ -312,7 +324,9 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Third')
     ]);
 
-    expect(generateReleaseNotes(normalized, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 
   test("should use only email if author name doesn't exist", () => {
@@ -330,6 +344,8 @@ describe('generateReleaseNotes', () => {
       }
     ]);
 
-    expect(generateReleaseNotes(commits, options)).toMatchSnapshot();
+    expect(
+      generateReleaseNotes(commits, dummyLog(), options)
+    ).toMatchSnapshot();
   });
 });

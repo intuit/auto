@@ -10643,6 +10643,11 @@ tapable@^1.0.0, tapable@^1.1.0:
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.1.tgz#4d297923c5a72a42360de2ab52dadfaaec00018e"
   integrity sha512-9I2ydhj8Z9veORCw5PRm4u9uebCn0mcCa6scWoNcbZ6dAtoo2618u9UUzxgmsCOreJpqDDuv61LvwofW7hLcBA==
 
+tapable@^2.0.0-beta.2:
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.2.tgz#a12a84c61770ab8536abf8ae3efee108390ab3a2"
+  integrity sha512-O0OqFiXr9az2c+a0SY0DBH283vBftVCVR8aa6gmV9nBv47y1Qq/akJ0AlxfTWXt9R6ZNebo6Bt6eQKJ5WKu1rA==
+
 tar-stream@^1.5.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-1.6.2.tgz#8ea55dab37972253d9a9af90fdcd559ae435c555"

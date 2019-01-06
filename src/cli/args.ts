@@ -71,14 +71,14 @@ const defaultOptions = [
     name: 'repo',
     type: String,
     description:
-      'The repo to set the status on. Defaults to looking in the package.json',
+      'The repo to set the status on. Defaults to looking in the package definition for the platform',
     group: 'misc'
   },
   {
     name: 'owner',
     type: String,
     description:
-      'Version number to publish as. Defaults to reading from the package.json',
+      'Version number to publish as. Defaults to reading from the package definition for the platform',
     group: 'misc'
   },
   {
@@ -135,13 +135,15 @@ const onlyPublishWithReleaseLabel: commandLineUsage.OptionDefinition = {
 const name: commandLineUsage.OptionDefinition = {
   name: 'name',
   type: String,
-  description: 'Git name to commit and release with. Defaults to package.json'
+  description:
+    'Git name to commit and release with. Defaults to package definition for the platform'
 };
 
 const email: commandLineUsage.OptionDefinition = {
   name: 'email',
   type: String,
-  description: 'Git email to commit with. Defaults to package.json'
+  description:
+    'Git email to commit with. Defaults to package definition for the platform'
 };
 
 const context: commandLineUsage.OptionDefinition = {
@@ -336,7 +338,7 @@ const commands: ICommand[] = [
         type: String,
         group: 'main',
         description:
-          'Version number to publish as. Defaults to reading from the package.json.'
+          'Version number to publish as. Defaults to reading from the package definition for the platform.'
       },
       {
         name: 'slack',
