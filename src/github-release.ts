@@ -9,7 +9,7 @@ import generateReleaseNotes, {
   IExtendedCommit,
   normalizeCommits
 } from './log-parse';
-import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
+import SEMVER, { calculateSemVerBump } from './semver';
 import exec from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import postToSlack from './utils/slack';
@@ -23,9 +23,6 @@ export type VersionLabel =
   | 'prerelease';
 
 export interface IGitHubReleaseOptions {
-  labels?: {
-    [label: string]: string;
-  };
   jira?: string;
   slack?: string;
   githubApi?: string;
@@ -39,6 +36,7 @@ export interface IGitHubReleaseOptions {
   changelogTitles?: {
     [label: string]: string;
   };
+  versionLabels?: Map<VersionLabel, string>;
 }
 
 export const defaultLabels = new Map<VersionLabel, string>();
@@ -84,9 +82,9 @@ export default class GitHubRelease {
 
   private readonly logger: ILogger;
   private readonly github: GitHub;
-  private readonly userLabels: IVersionLabels;
   private readonly changelogTitles: { [label: string]: string };
   private readonly githubApi: string;
+  private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
     options: Partial<IGitHubOptions>,
@@ -95,14 +93,12 @@ export default class GitHubRelease {
     },
     logger: ILogger = dummyLog()
   ) {
+    this.versionLabels = releaseOptions.versionLabels || defaultLabels;
     this.logger = logger;
     this.releaseOptions = releaseOptions;
     this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
+    options.baseUrl = this.githubApi;
     this.changelogTitles = releaseOptions.changelogTitles || {};
-    this.userLabels = new Map(Object.entries(releaseOptions.labels || {}) as [
-      VersionLabel,
-      string
-    ][]);
 
     if (!options.owner || !options.repo || !options.token) {
       throw new Error('Must set owner, repo, and GitHub token.');
@@ -110,16 +106,10 @@ export default class GitHubRelease {
 
     this.logger.verbose.info('Options contain repo information.');
 
-    if (releaseOptions && this.githubApi) {
-      options.baseUrl = this.githubApi;
-    }
-
     // So that --verbose can be used on public CIs
     const tokenlessArgs = {
       ...options,
-      token: options.token
-        ? `[Token starting with ${options.token.substring(0, 4)}]`
-        : undefined
+      token: `[Token starting with ${options.token.substring(0, 4)}]`
     };
 
     this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
@@ -150,7 +140,7 @@ export default class GitHubRelease {
     return generateReleaseNotes(commits, this.logger, {
       owner: this.github.options.owner,
       repo: this.github.options.repo,
-      baseUrl: project.data.html_url,
+      baseUrl: project.html_url,
       jira: this.releaseOptions.jira,
       changelogTitles: {
         ...defaultChangelogTitles,
@@ -318,7 +308,7 @@ export default class GitHubRelease {
       })
     );
 
-    const repoMetadata = await this.github.getRepoMetadata();
+    const repoMetadata = await this.github.getProject();
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
     if (justLabelNames.length > 0) {
@@ -341,15 +331,14 @@ export default class GitHubRelease {
       skipReleaseLabels
     } = this.releaseOptions;
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
-    const versionLabels = new Map([...defaultLabels, ...this.userLabels]);
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
-      versionLabels,
+      versionLabels: this.versionLabels,
       options
     });
 
-    const result = calculateSemVerBump(labels, versionLabels, options);
+    const result = calculateSemVerBump(labels, this.versionLabels, options);
 
     this.logger.verbose.success('Calculated SEMVER bump:', result);
 
@@ -369,7 +358,7 @@ export default class GitHubRelease {
       tag,
       owner: this.github.options.owner,
       repo: this.github.options.repo,
-      baseUrl: project.data.html_url,
+      baseUrl: project.html_url,
       slackUrl: this.releaseOptions.slack
     });
 

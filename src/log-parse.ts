@@ -173,12 +173,12 @@ export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
 function generateCommitNote(
   commit: IExtendedCommit,
   options: IGenerateReleaseNotesOptions
-): string | undefined {
+) {
   let jira = '';
   let pr = '';
 
   if (commit.jira && options.jira) {
-    const link = options.jira ? join(options.jira, ...commit.jira.number) : '';
+    const link = join(options.jira, ...commit.jira.number);
     jira = `[${commit.jira.number}](${link}): `;
   }
 
@@ -240,25 +240,23 @@ interface INotePartition {
  */
 function partitionPackages(
   labelCommits: IExtendedCommit[],
-  lineRender: (commit: IExtendedCommit) => string | undefined
+  lineRender: (commit: IExtendedCommit) => string
 ) {
   const packageCommits: INotePartition = {};
 
   labelCommits.map(commit => {
     const line = lineRender(commit);
 
-    if (line) {
-      const packages =
-        commit.packages && commit.packages.length
-          ? commit.packages.map(p => `\`${p}\``).join(', ')
-          : 'monorepo';
+    const packages =
+      commit.packages && commit.packages.length
+        ? commit.packages.map(p => `\`${p}\``).join(', ')
+        : 'monorepo';
 
-      if (!packageCommits[packages]) {
-        packageCommits[packages] = [];
-      }
-
-      packageCommits[packages].push(line);
+    if (!packageCommits[packages]) {
+      packageCommits[packages] = [];
     }
+
+    packageCommits[packages].push(line);
   });
 
   return packageCommits;

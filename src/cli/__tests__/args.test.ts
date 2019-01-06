@@ -1,6 +1,14 @@
 import parseArgs from '../args';
 
 describe('root parser', () => {
+  test('should print version', () => {
+    console.log = jest.fn();
+
+    parseArgs('--version'.split(' '));
+
+    expect(console.log).toHaveBeenCalled();
+  });
+
   test('should print help', () => {
     console.log = jest.fn();
 
