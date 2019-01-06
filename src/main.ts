@@ -118,7 +118,7 @@ export class AutoRelease {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
-    this.plugins.map(plugin => {
+    this.plugins.forEach(plugin => {
       this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
       plugin.apply(this);
     });
