@@ -26,7 +26,7 @@ import init from './init';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import loadPlugin from './utils/load-plugins';
+import loadPlugin, { IPlugin, IPluginConstructor } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 
 interface IAuthor {
@@ -49,11 +49,6 @@ interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
-}
-
-export interface IPlugin {
-  name: string;
-  apply(auto: AutoRelease): void;
 }
 
 export class AutoRelease {
@@ -509,8 +504,9 @@ export class AutoRelease {
 
     pluginsPaths
       .map(loadPlugin)
-      .filter((plugin): plugin is IPlugin => !!plugin)
-      .forEach(plugin => {
+      .filter((plugin): plugin is IPluginConstructor => !!plugin)
+      .forEach(pluginConstructor => {
+        const plugin = new pluginConstructor();
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);
       });
@@ -579,5 +575,6 @@ export default async function main(args: ArgsType) {
 // Plugin Utils
 
 export { ILogger } from './utils/logger';
+export { IPlugin } from './utils/load-plugins';
 export { default as SEMVER } from './semver';
 export { default as execPromise } from './utils/exec-promise';

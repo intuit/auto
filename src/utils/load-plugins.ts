@@ -1,9 +1,18 @@
 import * as path from 'path';
-import { IPlugin } from '../main';
+import { AutoRelease } from '../main';
 import NPMPlugin from '../plugins/npm';
 
+export type IPluginConstructor = new () => IPlugin;
+
+export interface IPlugin {
+  name: string;
+  apply(auto: AutoRelease): void;
+}
+
 type SupportedPlugin = 'npm';
-const plugins = new Map<SupportedPlugin, IPlugin>([['npm', NPMPlugin]]);
+const plugins = new Map<SupportedPlugin, IPluginConstructor>([
+  ['npm', NPMPlugin]
+]);
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
   return !!plugins.get(key as SupportedPlugin);
@@ -11,7 +20,7 @@ function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
 
 export default function loadPlugin(
   pluginPath: SupportedPlugin | string
-): IPlugin | undefined {
+): IPluginConstructor | undefined {
   if (isSupported(pluginPath)) {
     return plugins.get(pluginPath);
   }
