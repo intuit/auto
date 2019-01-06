@@ -94,11 +94,10 @@ Do you project use `auto-release`? Then use our custom badge!
 
 ## :art: Prior Art :art:
 
-`auto-release` is inspired by some excellent tech that came before it. 
+`auto-release` is inspired by some excellent tech that came before it.
 
 - [github-semantic-version](https://github.com/ericclemmons/github-semantic-version) - Automated semantic version releases powered by Github Issues.
 - [lerna-changelog](https://github.com/lerna/lerna-changelog) - 📖 PR-based changelog generator with monorepo support
-
 
 ## Contributors
 
@@ -106,8 +105,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars1.githubusercontent.com/u/13004162?v=4" width="100px;"/><br /><sub><b>Adam Dierkens</b></sub>](https://adamdierkens.com)<br />[💻](https://github.com/intuit/auto-release/commits?author=adierkens "Code") [📖](https://github.com/intuit/auto-release/commits?author=adierkens "Documentation") [🤔](#ideas-adierkens "Ideas, Planning, & Feedback") [⚠️](https://github.com/intuit/auto-release/commits?author=adierkens "Tests") | [<img src="https://avatars3.githubusercontent.com/u/1192452?v=4" width="100px;"/><br /><sub><b>Andrew Lisowski</b></sub>](http://hipstersmoothie.com)<br />[💻](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Code") [📖](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Documentation") [🤔](#ideas-hipstersmoothie "Ideas, Planning, & Feedback") [🚇](#infra-hipstersmoothie "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Tests") | [<img src="https://avatars2.githubusercontent.com/u/3680126?v=4" width="100px;"/><br /><sub><b>David</b></sub>](https://github.com/Aghassi)<br />[🚇](#infra-Aghassi "Infrastructure (Hosting, Build-Tools, etc)") |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [<img src="https://avatars1.githubusercontent.com/u/13004162?v=4" width="100px;"/><br /><sub><b>Adam Dierkens</b></sub>](https://adamdierkens.com)<br />[💻](https://github.com/intuit/auto-release/commits?author=adierkens "Code") [📖](https://github.com/intuit/auto-release/commits?author=adierkens "Documentation") [🤔](#ideas-adierkens "Ideas, Planning, & Feedback") [⚠️](https://github.com/intuit/auto-release/commits?author=adierkens "Tests") | [<img src="https://avatars3.githubusercontent.com/u/1192452?v=4" width="100px;"/><br /><sub><b>Andrew Lisowski</b></sub>](http://hipstersmoothie.com)<br />[💻](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Code") [📖](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Documentation") [🤔](#ideas-hipstersmoothie "Ideas, Planning, & Feedback") [🚇](#infra-hipstersmoothie "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/intuit/auto-release/commits?author=hipstersmoothie "Tests") | [<img src="https://avatars2.githubusercontent.com/u/3680126?v=4" width="100px;"/><br /><sub><b>David</b></sub>](https://github.com/Aghassi)<br />[🚇](#infra-Aghassi "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars2.githubusercontent.com/u/49038?v=4" width="100px;"/><br /><sub><b>Orta</b></sub>](http://orta.io)<br />[💻](https://github.com/intuit/auto-release/commits?author=orta "Code") |
+| :---: | :---: | :---: | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
