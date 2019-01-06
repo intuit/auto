@@ -334,7 +334,7 @@ export default class GitHubRelease {
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
-      vresionLabels: this.versionLabels,
+      versionLabels: this.versionLabels,
       options
     });
 
