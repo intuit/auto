@@ -578,7 +578,7 @@ export interface IInitCommandOptions {
 }
 
 export interface ILabelCommandOptions {
-  pr: number;
+  pr?: number;
 }
 
 export interface IPRCheckCommandOptions {

@@ -155,7 +155,7 @@ export class AutoRelease {
     );
   }
 
-  public async label({ pr }: ILabelCommandOptions) {
+  public async label({ pr }: ILabelCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
@@ -176,7 +176,9 @@ export class AutoRelease {
       labels = await this.githubRelease.getLabels(pr);
     }
 
-    console.log(labels.join('\n'));
+    if (labels.length) {
+      console.log(labels.join('\n'));
+    }
   }
 
   public async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
@@ -315,7 +317,7 @@ export class AutoRelease {
     console.log(bump);
   }
 
-  public async changelog(options: IChangelogOptions) {
+  public async changelog(options?: IChangelogOptions) {
     this.logger.verbose.info("Using command: 'changelog'");
     await this.makeChangelog(options);
   }
