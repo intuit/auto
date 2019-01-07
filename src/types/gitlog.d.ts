@@ -12,6 +12,7 @@ declare module 'gitlog' {
     repo: string;
     fields: string[];
     branch: string;
+    number: number;
   }
 
   export default function gitlog(

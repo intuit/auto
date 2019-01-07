@@ -224,7 +224,7 @@ describe('github', () => {
       token: 'MyToken'
     });
 
-    getProject.mockReturnValueOnce(true);
+    getProject.mockReturnValueOnce({ data: true });
 
     expect(await gh.getProject()).toBeTruthy();
   });
