@@ -95,7 +95,7 @@ export class AutoRelease {
     if (rawConfig.labels) {
       this.semVerLabels = new Map<VersionLabel, string>([
         ...defaultLabels,
-        ...(Object.entries(rawConfig.labels) as any)
+        ...(Object.entries(rawConfig.labels) as [VersionLabel, string][])
       ]);
     }
 
