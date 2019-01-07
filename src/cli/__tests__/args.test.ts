@@ -47,4 +47,11 @@ describe('root parser', () => {
       command: 'label'
     });
   });
+
+  test('should parse args as camelCase', () => {
+    expect(parseArgs('changelog -d'.split(' '))).toEqual({
+      command: 'changelog',
+      dryRun: true
+    });
+  });
 });
