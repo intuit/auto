@@ -180,6 +180,7 @@ export default class GitHub {
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),
+      number: 99999999,
       fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
       branch: `${start.trim()}..${end.trim()}`
     });
