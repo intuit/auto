@@ -93,11 +93,10 @@ export class AutoRelease {
     this.semVerLabels = defaultLabels;
 
     if (rawConfig.labels) {
-      const configLabels = new Map(Object.entries(rawConfig.labels) as [
-        VersionLabel,
-        string
-      ][]);
-      this.semVerLabels = new Map([...defaultLabels, ...configLabels]);
+      this.semVerLabels = new Map<VersionLabel, string>([
+        ...defaultLabels,
+        ...(Object.entries(rawConfig.labels) as [VersionLabel, string][])
+      ]);
     }
 
     this.logger.verbose.success(
