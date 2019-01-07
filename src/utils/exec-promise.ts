@@ -17,18 +17,16 @@ export default async function execPromise(cmd: string, args?: string[]) {
       allStdout += stdout;
     });
 
-    const allStderr = '';
+    let allStderr = '';
     child.stderr.on('data', data => {
-      const stdout = data.toString();
-      allStdout += stdout;
+      const stderr = data.toString();
+      allStderr += stderr;
     });
 
     // This usually occurs during dev-time, when you have the wrong command
     child.on('error', err => {
       reject(
-        new Error(
-          `Running command '${cmd}' - ${err.message} \n\n\n${allStderr}`
-        )
+        new Error(`Failed to run '${cmd}' - ${err.message} \n\n\n${allStderr}`)
       );
     });
 

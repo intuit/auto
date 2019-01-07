@@ -123,7 +123,8 @@ export default class GitHub {
   }
 
   public async getFirstCommit(): Promise<string> {
-    return execPromise('git', ['rev-list', 'HEAD', '|', 'tail', '-n', '1']);
+    const list = await execPromise('git', ['rev-list', 'HEAD']);
+    return list.split('\n').pop() as string;
   }
 
   public async getSha(): Promise<string> {
