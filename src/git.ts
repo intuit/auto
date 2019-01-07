@@ -80,16 +80,6 @@ export default class GitHub {
     return Promise.resolve();
   }
 
-  // Looks like: https://developer.github.com/v3/repos/#get
-  public async getRepoMetadata() {
-    await this.authenticate();
-
-    return (await this.ghub.repos.get({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase()
-    })).data;
-  }
-
   public async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
@@ -190,6 +180,7 @@ export default class GitHub {
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),
+      number: Number.MAX_SAFE_INTEGER,
       fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
       branch: `${start.trim()}..${end.trim()}`
     });
@@ -288,10 +279,10 @@ export default class GitHub {
 
     await this.authenticate();
 
-    const result = await this.ghub.repos.get({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase()
-    });
+    const result = (await this.ghub.repos.get({
+      owner: this.options.owner,
+      repo: this.options.repo
+    })).data;
 
     this.logger.veryVerbose.info('Got response from repos\n', result);
     this.logger.verbose.info('Got project information.');

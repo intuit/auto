@@ -1,14 +1,14 @@
 # 1.0.0 (Sat Jan 05 2019)
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - Release v1.0.0 [#137](https://github.com/intuit/auto-release/pull/137) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update PULL_REQUEST_TEMPLATE.md [#133](https://github.com/intuit/auto-release/pull/133) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Add Prior Art section to Readme [#136](https://github.com/intuit/auto-release/pull/136) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Add artsy/reaction to the list of projects using auto [#134](https://github.com/intuit/auto-release/pull/134) ([@adierkens](https://github.com/adierkens))
@@ -22,7 +22,7 @@
 
 # 0.37.9 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Changes the verbose logging so that it doesn't leak tokens [#130](https://github.com/intuit/auto-release/pull/130) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -34,7 +34,7 @@
 
 # 0.37.8 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Fix custom labels not respected by the semver checker [#128](https://github.com/intuit/auto-release/pull/128) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -46,7 +46,7 @@
 
 # 0.37.7 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - print only email when name is not present [#126](https://github.com/intuit/auto-release/pull/126) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -58,7 +58,7 @@
 
 # 0.37.6 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - only set git user if one isn't already set [#125](https://github.com/intuit/auto-release/pull/125) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -70,7 +70,7 @@
 
 # 0.37.5 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Move @types into devDependencies [#123](https://github.com/intuit/auto-release/pull/123) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
 
@@ -83,7 +83,7 @@
 
 # 0.37.4 (Thu Jan 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Include a log when creating a new labels about what those labels are [#121](https://github.com/intuit/auto-release/pull/121) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
 
@@ -96,7 +96,7 @@
 
 # 0.37.3 (Wed Jan 02 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Don't crash when there is no author hash in the package.json [#119](https://github.com/intuit/auto-release/pull/119) ([@orta](https://github.com/orta))
 
@@ -108,11 +108,11 @@
 
 # 0.37.2 (Wed Jan 02 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Convert 'Github' to 'GitHub' [#120](https://github.com/intuit/auto-release/pull/120) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - More Repo Usage [#118](https://github.com/intuit/auto-release/pull/118) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - update ignite [#117](https://github.com/intuit/auto-release/pull/117) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -126,7 +126,7 @@
 
 # 0.37.1 (Mon Dec 31 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - trim subjects for commit messages [#115](https://github.com/intuit/auto-release/pull/115) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -138,14 +138,16 @@
 
 # 0.37.0 (Mon Dec 31 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
-- 
+-
+
 add --version flag [#113](https://github.com/intuit/auto-release/pull/113) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
-- 
+-
+
 Add @Aghassi as a contributor [#112](https://github.com/intuit/auto-release/pull/112) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
@@ -156,9 +158,10 @@ Add @Aghassi as a contributor [#112](https://github.com/intuit/auto-release/pull
 
 # 0.36.6 (Mon Dec 31 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- 
+-
+
 update deps [#111](https://github.com/intuit/auto-release/pull/111) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
@@ -169,9 +172,10 @@ update deps [#111](https://github.com/intuit/auto-release/pull/111) ([@hipstersm
 
 # 0.36.5 (Mon Dec 31 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- 
+-
+
 fix dry run [#109](https://github.com/intuit/auto-release/pull/109) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
@@ -182,9 +186,10 @@ fix dry run [#109](https://github.com/intuit/auto-release/pull/109) ([@hipstersm
 
 # 0.36.4 (Mon Dec 31 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- 
+-
+
 fix version parsing [#110](https://github.com/intuit/auto-release/pull/110) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
@@ -195,19 +200,15 @@ fix version parsing [#110](https://github.com/intuit/auto-release/pull/110) ([@h
 
 # 0.36.3 (Mon Dec 24 2018)
 
-
-
 ---
 
 # 0.36.2 (Tue Dec 18 2018)
-
-
 
 ---
 
 # 0.36.1 (Tue Dec 18 2018)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - print link to token create when there is no GH_TOKEN. [#104](https://github.com/intuit/auto-release/pull/104) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -219,7 +220,7 @@ fix version parsing [#110](https://github.com/intuit/auto-release/pull/110) ([@h
 
 # 0.36.0 (Tue Dec 18 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - slack CLI flag can be the slack url [#103](https://github.com/intuit/auto-release/pull/103) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -231,7 +232,7 @@ fix version parsing [#110](https://github.com/intuit/auto-release/pull/110) ([@h
 
 # 0.35.0 (Mon Dec 17 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Change `no-release` to `skip-release` [#101](https://github.com/intuit/auto-release/pull/101) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -243,7 +244,7 @@ fix version parsing [#110](https://github.com/intuit/auto-release/pull/110) ([@h
 
 # 0.34.0 (Mon Dec 17 2018)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Deprecate --major --minor --patch flags [#100](https://github.com/intuit/auto-release/pull/100) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 

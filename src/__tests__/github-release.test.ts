@@ -21,10 +21,9 @@ const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
 const getPullRequests = jest.fn();
-const getRepoMetadata = jest.fn();
 
-getProject.mockReturnValue({
-  data: { html_url: 'https://custom-git.com' }
+getProject.mockResolvedValue({
+  html_url: 'https://github.com/web/site'
 });
 
 // @ts-ignore
@@ -47,8 +46,7 @@ jest.mock('../git.ts', () => (...args) => {
     getUserByEmail,
     getProjectLabels,
     createLabel,
-    getPullRequests,
-    getRepoMetadata
+    getPullRequests
   };
 });
 
@@ -110,6 +108,10 @@ describe('GitHubRelease', () => {
 
     expect(constructor.mock.calls[0][0].owner).toBe('Andrew');
     expect(constructor.mock.calls[0][0].repo).toBe('test');
+  });
+
+  test('should throw without options owner, repo, and token', async () => {
+    expect(() => new GitHubRelease({})).toThrow();
   });
 
   describe('getCommits', async () => {
@@ -261,6 +263,16 @@ describe('GitHubRelease', () => {
       expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
     });
 
+    test('creates changelog with v in versions', async () => {
+      const gh = new GitHubRelease(options, {
+        noVersionPrefix: true,
+        skipReleaseLabels: ['skip-release']
+      });
+      await gh.addToChangelog('# My new Notes', '1.0.0', '1.0.0');
+
+      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+    });
+
     test('prepends to old changelog', async () => {
       const gh = new GitHubRelease(options);
 
@@ -292,13 +304,22 @@ describe('GitHubRelease', () => {
     });
   });
 
-  test('postToSlack', async () => {
-    const gh = new GitHubRelease(options, {
-      slack: 'https://custom-slack-url',
-      skipReleaseLabels: []
+  describe('postToSlack', () => {
+    test('throws without slack url', async () => {
+      const gh = new GitHubRelease(options, {
+        skipReleaseLabels: []
+      });
+      expect(gh.postToSlack('# My Notes', 'v1.0.0')).rejects.toBeTruthy();
     });
-    await gh.postToSlack('# My Notes', 'v1.0.0');
-    expect(slackSpy).toHaveBeenCalled();
+
+    test('successful', async () => {
+      const gh = new GitHubRelease(options, {
+        slack: 'https://custom-slack-url',
+        skipReleaseLabels: []
+      });
+      await gh.postToSlack('# My Notes', 'v1.0.0');
+      expect(slackSpy).toHaveBeenCalled();
+    });
   });
 
   describe('generateReleaseNotes', async () => {
@@ -447,17 +468,16 @@ describe('GitHubRelease', () => {
     });
 
     test('should be able to configure labels', async () => {
-      const labels = {
-        [SEMVER.major]: 'Version: Major',
-        [SEMVER.minor]: 'Version: Minor',
-        [SEMVER.patch]: 'Version: Patch',
-        release: 'Deploy'
-      };
+      const versionLabels = new Map();
+      versionLabels.set(SEMVER.major, 'Version: Major');
+      versionLabels.set(SEMVER.minor, 'Version: Minor');
+      versionLabels.set(SEMVER.patch, 'Version: Patch');
+      versionLabels.set('release', 'Deploy');
 
       const gh = new GitHubRelease(options, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels
+        versionLabels
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -483,12 +503,6 @@ describe('GitHubRelease', () => {
   });
 
   describe('addLabelsToProject', () => {
-    beforeEach(() => {
-      getRepoMetadata.mockResolvedValue({
-        html_url: 'https://github.com/web/site'
-      });
-    });
-
     test('should add labels', async () => {
       const gh = new GitHubRelease(options);
       const labels = new Map<VersionLabel, string>();

@@ -11,37 +11,73 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 const logger = dummyLog();
 
-test('createUserLink', () => {
-  expect(
-    createUserLink(
-      {
-        name: 'none',
-        email: undefined
-      },
-      {
-        hash: '1',
-        labels: [],
-        pullRequest: {
-          number: '22'
+describe('createUserLink', () => {
+  test('should ', () => {
+    expect(
+      createUserLink(
+        {
+          name: 'none',
+          email: undefined,
+          username: 'invalid-email-address'
         },
-        authorName: 'none',
-        authorEmail: 'default@email.com',
-        authors: [
-          {
-            name: 'none',
-            email: undefined
-          }
-        ],
-        subject: ''
-      },
-      {
-        owner: '',
-        repo: '',
-        baseUrl: 'https://github.custom.com/',
-        changelogTitles: {}
-      }
-    )
-  ).toBe('default@email.com');
+        {
+          hash: '1',
+          labels: [],
+          pullRequest: {
+            number: '22'
+          },
+          authorName: 'none',
+          authorEmail: 'default@email.com',
+          authors: [
+            {
+              name: 'none',
+              email: undefined
+            }
+          ],
+          subject: ''
+        },
+        {
+          owner: '',
+          repo: '',
+          baseUrl: 'https://github.custom.com/',
+          changelogTitles: {}
+        }
+      )
+    ).toBe(undefined);
+  });
+
+  test('should find email', () => {
+    expect(
+      createUserLink(
+        {
+          name: 'none',
+          email: undefined
+        },
+        {
+          hash: '1',
+          labels: [],
+          pullRequest: {
+            number: '22'
+          },
+          authorName: 'none',
+          authorEmail: 'default@email.com',
+          authors: [
+            {
+              name: 'none',
+              email: undefined
+            }
+          ],
+          subject: ''
+        },
+        {
+          owner: '',
+          repo: '',
+          baseUrl: 'https://github.custom.com/',
+          changelogTitles: {}
+        }
+      )
+    ).toBe('default@email.com');
+  });
 });
 
 describe('parsePR', () => {
