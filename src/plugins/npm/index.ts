@@ -80,7 +80,7 @@ export default class NPMPlugin implements IPlugin {
           'version',
           version,
           '-m',
-          'Bump version to: %s [skip ci]'
+          '"Bump version to: %s [skip ci]"'
         ]);
         await execPromise('npm', ['publish']);
         await execPromise('git', [
