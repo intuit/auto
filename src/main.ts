@@ -489,11 +489,15 @@ If a command fails manually run:
         return;
       }
 
-      this.hooks.getAuthor.tap('Arguments', () =>
-        this.githubRelease ? (this.githubRelease.releaseOptions as IAuthor) : {}
-      );
+      if (!this.githubRelease) {
+        return;
+      }
 
-      const { name, email } = await this.hooks.getAuthor.promise();
+      let { email, name } = this.githubRelease.releaseOptions;
+      const packageAuthor = await this.hooks.getAuthor.promise();
+
+      email = email || packageAuthor.email;
+      name = name || packageAuthor.name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);
