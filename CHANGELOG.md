@@ -1,3 +1,15 @@
+# v2.1.2 (Tue Jan 08 2019)
+
+#### 🐛  Bug Fix
+
+- Fix generating the changelog with custom labels [#167](https://github.com/intuit/auto-release/pull/167) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.1.1 (Mon Jan 07 2019)
 
 #### 🐛  Bug Fix
