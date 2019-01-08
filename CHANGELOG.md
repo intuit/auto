@@ -1,3 +1,15 @@
+# v2.1.1 (Mon Jan 07 2019)
+
+#### 🐛  Bug Fix
+
+- Config takes precedence for author and repo [#166](https://github.com/intuit/auto-release/pull/166) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.1.0 (Mon Jan 07 2019)
 
 #### 🚀  Enhancement
