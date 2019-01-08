@@ -1,3 +1,34 @@
+# v2.0.0 (Mon Jan 07 2019)
+
+#### 💥  Breaking Change
+
+- Flags all snake-case and autorc options all camelCase [#138](https://github.com/intuit/auto-release/pull/138) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Tappable Auto - Plugin System [#131](https://github.com/intuit/auto-release/pull/131) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- Only set git user in CI env [#151](https://github.com/intuit/auto-release/pull/151) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Plugins Options: load official, npm package, or path [#144](https://github.com/intuit/auto-release/pull/144) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- A few missed "await exec" refactors [#154](https://github.com/intuit/auto-release/pull/154) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Raise an error, and fail execution when a sub-command fails [#146](https://github.com/intuit/auto-release/pull/146) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
+- Ensure semVerLabels stays a map as expected [#148](https://github.com/intuit/auto-release/pull/148) ([@zephraph](https://github.com/zephraph))
+- convert subcommand flags camelcase too [#152](https://github.com/intuit/auto-release/pull/152) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Increase number of commits to scan for [#150](https://github.com/intuit/auto-release/pull/150) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Get test Coverage back above 80% [#145](https://github.com/intuit/auto-release/pull/145) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Actually load plugins [#149](https://github.com/intuit/auto-release/pull/149) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Improve API Usage, Better Args Typing [#139](https://github.com/intuit/auto-release/pull/139) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Orta ([@orta](https://github.com/orta))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # 1.0.0 (Sat Jan 05 2019)
 
 #### 💥 Breaking Change
