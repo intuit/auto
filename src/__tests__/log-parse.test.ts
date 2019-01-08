@@ -1,3 +1,4 @@
+import { defaultLabels } from '../github-release';
 import generateReleaseNotes, {
   createUserLink,
   filterServiceAccounts,
@@ -40,7 +41,8 @@ describe('createUserLink', () => {
           owner: '',
           repo: '',
           baseUrl: 'https://github.custom.com/',
-          changelogTitles: {}
+          changelogTitles: {},
+          versionLabels: defaultLabels
         }
       )
     ).toBe(undefined);
@@ -73,7 +75,8 @@ describe('createUserLink', () => {
           owner: '',
           repo: '',
           baseUrl: 'https://github.custom.com/',
-          changelogTitles: {}
+          changelogTitles: {},
+          versionLabels: defaultLabels
         }
       )
     ).toBe('default@email.com');
@@ -235,6 +238,7 @@ const options = {
   baseUrl: 'https://github.custom.com/foobar/auto-release',
   jira: 'https://jira.custom.com/browse',
   logger,
+  versionLabels: defaultLabels,
   changelogTitles: {
     major: '💥  Breaking Change',
     minor: '🚀  Enhancement',

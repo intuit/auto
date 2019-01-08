@@ -1,6 +1,7 @@
 import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
+import { VersionLabel } from './github-release';
 import { ILogger } from './utils/logger';
 
 interface ICommitAuthor {
@@ -15,6 +16,7 @@ interface IGenerateReleaseNotesOptions {
   baseUrl: string;
   jira?: string;
   changelogTitles: { [label: string]: string };
+  versionLabels: Map<VersionLabel, string>;
 }
 
 export type IExtendedCommit = ICommit & {
@@ -200,7 +202,8 @@ const filterLabel = (commits: IExtendedCommit[], label: string) =>
  */
 function splitCommits(
   commits: IExtendedCommit[],
-  changelogTitles: { [label: string]: string }
+  changelogTitles: { [label: string]: string },
+  versionLabels: Map<VersionLabel, string>
 ): { [key: string]: IExtendedCommit[] } {
   let currentCommits = [...commits];
 
@@ -214,7 +217,10 @@ function splitCommits(
   return Object.assign(
     {},
     ...Object.keys(changelogTitles).map(label => {
-      const matchedCommits = filterLabel(currentCommits, label);
+      const matchedCommits = filterLabel(
+        currentCommits,
+        versionLabels.get(label as VersionLabel) || label
+      );
 
       if (matchedCommits.length === 0) {
         return {};
@@ -347,7 +353,11 @@ export default function generateReleaseNotes(
 
   logger.verbose.info('Generating release notes for:\n', commits);
 
-  const split = splitCommits(commits, options.changelogTitles);
+  const split = splitCommits(
+    commits,
+    options.changelogTitles,
+    options.versionLabels
+  );
 
   logger.verbose.info('Split commits into groups');
   logger.veryVerbose.info('\n', split);
