@@ -510,11 +510,14 @@ If a command fails manually run:
   }
 
   private async getRepo() {
-    this.hooks.getRepository.tap('None', () =>
-      this.githubRelease
-        ? (this.githubRelease.releaseOptions as IRepository)
-        : {}
-    );
+    if (
+      this.githubRelease &&
+      this.githubRelease.releaseOptions.repo &&
+      this.githubRelease.releaseOptions.owner
+    ) {
+      return this.githubRelease.releaseOptions as IRepository;
+    }
+
     return this.hooks.getRepository.promise();
   }
 
