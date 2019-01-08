@@ -12,21 +12,7 @@
 
 # v2.0.1 (Mon Jan 07 2019)
 
-#### 🐛  Bug Fix
-
-- Ensure commit messages are strings [#158](https://github.com/intuit/auto-release/pull/158) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Maintain context when spawning git process [#157](https://github.com/intuit/auto-release/pull/157) ([@zephraph](https://github.com/zephraph))
-
-#### Authors: 2
-
-- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- Justin Bennett ([@zephraph](https://github.com/zephraph))
-
----
-
-# v2.0.1 (Mon Jan 07 2019)
-
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Ensure commit messages are strings [#158](https://github.com/intuit/auto-release/pull/158) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Maintain context when spawning git process [#157](https://github.com/intuit/auto-release/pull/157) ([@zephraph](https://github.com/zephraph))
@@ -40,17 +26,17 @@
 
 # v2.0.0 (Mon Jan 07 2019)
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - Flags all snake-case and autorc options all camelCase [#138](https://github.com/intuit/auto-release/pull/138) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Tappable Auto - Plugin System [#131](https://github.com/intuit/auto-release/pull/131) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Only set git user in CI env [#151](https://github.com/intuit/auto-release/pull/151) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Plugins Options: load official, npm package, or path [#144](https://github.com/intuit/auto-release/pull/144) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - A few missed "await exec" refactors [#154](https://github.com/intuit/auto-release/pull/154) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Raise an error, and fail execution when a sub-command fails [#146](https://github.com/intuit/auto-release/pull/146) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@orta](https://github.com/orta))
