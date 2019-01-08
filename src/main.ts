@@ -472,23 +472,23 @@ export class AutoRelease {
   private async setGitUser() {
     const { isCi } = envCi();
 
-    if (!isCi) {
-      this.logger.log.note(
-        `Detected CI environment, will not set git user.
-
-If a command fails manually run:
-
-  - git config user.email your@email.com
-  - git config user.name "Your Name"`
-      );
-      return;
-    }
-
     try {
       // If these values are not set git config will exit with an error
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
+      if (!isCi) {
+        this.logger.log.note(
+          `Detected CI environment, will not set git user.
+
+If a command fails manually run:
+
+  - git config user.email your@email.com
+  - git config user.name "Your Name"`
+        );
+        return;
+      }
+
       this.hooks.getAuthor.tap('Arguments', () =>
         this.githubRelease ? (this.githubRelease.releaseOptions as IAuthor) : {}
       );
