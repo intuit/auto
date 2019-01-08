@@ -337,7 +337,7 @@ export class AutoRelease {
     }
 
     await this.makeChangelog();
-    this.hooks.publish.promise(version);
+    await this.hooks.publish.promise(version);
     await this.makeRelease();
   }
 
