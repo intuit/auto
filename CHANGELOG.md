@@ -1,3 +1,15 @@
+# v2.0.2 (Mon Jan 07 2019)
+
+#### 🐛  Bug Fix
+
+- Await all hook promises [#162](https://github.com/intuit/auto-release/pull/162) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.0.1 (Mon Jan 07 2019)
 
 #### 🐛  Bug Fix
