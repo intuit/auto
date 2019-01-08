@@ -9,7 +9,11 @@ import { spawn } from 'child_process';
  */
 export default async function execPromise(cmd: string, args?: string[]) {
   return new Promise<string>((completed, reject) => {
-    const child = spawn(cmd, args || []);
+    const child = spawn(cmd, args || [], {
+      cwd: process.cwd(),
+      env: process.env,
+      shell: true
+    });
 
     let allStdout = '';
     child.stdout.on('data', async data => {
