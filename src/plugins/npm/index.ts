@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
 import { AutoRelease, IPlugin } from '../../main';
@@ -23,7 +24,13 @@ export default class NPMPlugin implements IPlugin {
       const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
 
       if (packageJson.author) {
-        return packageJson.author;
+        const { author } = packageJson;
+
+        if (typeof author === 'string') {
+          return parseAuthor(author);
+        }
+
+        return author;
       }
     });
 
