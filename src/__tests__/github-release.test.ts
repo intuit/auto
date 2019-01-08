@@ -300,7 +300,7 @@ describe('GitHubRelease', () => {
         'v0.0.0',
         message
       );
-      expect(execSpy.mock.calls[1][0].includes(message)).toBe(true);
+      expect(execSpy.mock.calls[1][1].includes(message)).toBe(true);
     });
   });
 
