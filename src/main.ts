@@ -479,7 +479,7 @@ export class AutoRelease {
     } catch (error) {
       if (!isCi) {
         this.logger.log.note(
-          `Detected CI environment, will not set git user.
+          `Detected local environment, will not set git user. This happens automatically in a CI environment.
 
 If a command fails manually run:
 
