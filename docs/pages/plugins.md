@@ -97,11 +97,20 @@ export default class NPMPlugin {
     });
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
-      await execPromise(
-        `npm version ${version} -m "Bump version to: %s [skip ci]"`
-      );
-      await execPromise('npm publish');
-      await execPromise('git push --follow-tags --set-upstream origin $branch');
+      await execPromise('npm', [
+        'version',
+        version,
+        '-m',
+        'Bump version to: %s [skip ci]'
+      ]);
+      await execPromise('npm', ['publish']);
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        'origin',
+        '$branch'
+      ]);
     });
   }
 }

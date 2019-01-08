@@ -44,6 +44,15 @@
       ]
     },
     {
+      "login": "orta",
+      "name": "Orta",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/49038?v=4",
+      "profile": "http://orta.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "zephraph",
       "name": "Justin Bennett",
       "avatar_url": "https://avatars1.githubusercontent.com/u/3087225?v=4",
