@@ -1,3 +1,15 @@
+# v2.0.3 (Mon Jan 07 2019)
+
+#### 🐛  Bug Fix
+
+- Only warn about git user when it isn't set [#160](https://github.com/intuit/auto-release/pull/160) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.0.2 (Mon Jan 07 2019)
 
 #### 🐛  Bug Fix
