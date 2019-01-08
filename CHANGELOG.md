@@ -1,3 +1,15 @@
+# v2.1.0 (Mon Jan 07 2019)
+
+#### 🚀  Enhancement
+
+- Parse string authors [#165](https://github.com/intuit/auto-release/pull/165) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.0.4 (Mon Jan 07 2019)
 
 #### 🐛  Bug Fix
