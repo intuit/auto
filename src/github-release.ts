@@ -10,7 +10,7 @@ import generateReleaseNotes, {
   normalizeCommits
 } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
-import exec from './utils/exec-promise';
+import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import postToSlack from './utils/slack';
 
@@ -186,8 +186,8 @@ export default class GitHubRelease {
     await writeFile('CHANGELOG.md', newChangelog);
     this.logger.verbose.info('Wrote new changelog to filesystem.');
 
-    await exec('git add CHANGELOG.md');
-    await exec(`git commit -m '${message}' --no-verify`);
+    await execPromise('git', ['add', 'CHANGELOG.md']);
+    await execPromise('git', ['commit', '-m', message, '--no-verify']);
     this.logger.verbose.info('Commited new changelog.');
   }
 
