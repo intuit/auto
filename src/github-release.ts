@@ -187,7 +187,7 @@ export default class GitHubRelease {
     this.logger.verbose.info('Wrote new changelog to filesystem.');
 
     await execPromise('git', ['add', 'CHANGELOG.md']);
-    await execPromise('git', ['commit', '-m', message, '--no-verify']);
+    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
     this.logger.verbose.info('Commited new changelog.');
   }
 
