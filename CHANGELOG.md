@@ -12,6 +12,20 @@
 
 ---
 
+# v2.0.1 (Mon Jan 07 2019)
+
+#### 🐛  Bug Fix
+
+- Ensure commit messages are strings [#158](https://github.com/intuit/auto-release/pull/158) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Maintain context when spawning git process [#157](https://github.com/intuit/auto-release/pull/157) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v2.0.0 (Mon Jan 07 2019)
 
 #### 💥  Breaking Change
