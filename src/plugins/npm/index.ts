@@ -88,7 +88,7 @@ export default class NPMPlugin implements IPlugin {
           '--follow-tags',
           '--set-upstream',
           'origin',
-          '$branch'
+          'HEAD'
         ]);
       }
     });
