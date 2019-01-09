@@ -34,9 +34,15 @@ describe('root parser', () => {
   });
 
   test('should exit when required arg is not included', () => {
-    // @ts-ignore
-    process.exit = jest.fn();
+    process.exit = jest.fn() as any;
     parseArgs(['pr']);
+    expect(process.exit).toHaveBeenCalled();
+  });
+
+  test('should exit when required string is provided as flag', () => {
+    console.log = jest.fn() as any;
+    process.exit = jest.fn() as any;
+    parseArgs(['pr-check', '--pr', '24', '--url']);
     expect(process.exit).toHaveBeenCalled();
   });
 
