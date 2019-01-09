@@ -1,3 +1,19 @@
+# v2.1.3 (Tue Jan 08 2019)
+
+#### 🐛  Bug Fix
+
+- When errors are caught fail the process [#171](https://github.com/intuit/auto-release/pull/171) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- update contributors badge [#168](https://github.com/intuit/auto-release/pull/168) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.1.2 (Tue Jan 08 2019)
 
 #### 🐛  Bug Fix
