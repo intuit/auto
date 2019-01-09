@@ -543,7 +543,12 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (command.require) {
     const missing = command.require
-      .filter(option => !autoOptions.hasOwnProperty(option))
+      .filter(
+        option =>
+          !autoOptions.hasOwnProperty(option) ||
+          // tslint:disable-next-line strict-type-predicates
+          autoOptions[option as keyof ArgsType] === null
+      )
       .map(option => `--${option}`);
     const multiple = missing.length > 1;
 
