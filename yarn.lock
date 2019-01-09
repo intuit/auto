@@ -4745,6 +4745,14 @@ get-line-from-pos@1.0.0:
   resolved "https://registry.yarnpkg.com/get-line-from-pos/-/get-line-from-pos-1.0.0.tgz#e3ca483035eef374ad40fff4d43df3fa2da328b3"
   integrity sha1-48pIMDXu83StQP/01D3z+i2jKLM=
 
+get-monorepo-packages@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/get-monorepo-packages/-/get-monorepo-packages-1.1.0.tgz#e0f61024ecdfb65bfc93e14dc4005c73a3315499"
+  integrity sha512-UGtCx1GOyGB2YRaT+0B2wsJjLflrFs58y4Yik0jXhp2dTI1vBSMKTDuR24iNDrXkoyGlx9kJ3tn0KNPonhuu0Q==
+  dependencies:
+    globby "^7.1.1"
+    load-json-file "^4.0.0"
+
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.0.tgz#b877b49a5c16aefac3655f2ed2ea5b684df8d203"
