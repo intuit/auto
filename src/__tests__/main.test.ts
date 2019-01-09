@@ -1,5 +1,5 @@
 import { IPRCommandOptions } from '../cli/args';
-import { AutoRelease, run } from '../main';
+import main, { AutoRelease, run } from '../main';
 
 test('throws error for unknown args', async () => {
   expect.assertions(1);
@@ -11,6 +11,16 @@ test('throws error for unknown args', async () => {
   } catch (error) {
     expect(error).toEqual(new Error("idk what i'm doing."));
   }
+});
+
+test('throws exits for caught error', async () => {
+  process.exit = jest.fn() as any;
+
+  await main({
+    command: 'foo'
+  });
+
+  expect(process.exit).toHaveBeenCalledWith(1);
 });
 
 const defaults = {
