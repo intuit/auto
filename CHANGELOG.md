@@ -1,3 +1,15 @@
+# v2.2.0 (Wed Jan 09 2019)
+
+#### 🚀  Enhancement
+
+- NPM Plugin: getPreviousVersion compare against published version [#173](https://github.com/intuit/auto-release/pull/173) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.1.4 (Wed Jan 09 2019)
 
 #### 🐛  Bug Fix
