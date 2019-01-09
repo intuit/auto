@@ -14,6 +14,7 @@ test('throws error for unknown args', async () => {
 });
 
 test('throws exits for caught error', async () => {
+  console.log = jest.fn() as any;
   process.exit = jest.fn() as any;
 
   await main({

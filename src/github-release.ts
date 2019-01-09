@@ -163,6 +163,7 @@ export default class GitHubRelease {
     if (lastRelease.match(/\d+\.\d+\.\d+/)) {
       version = await this.calcNextVersion(lastRelease);
     } else {
+      // lastRelease is a git sha. no releases have been made
       const bump = await this.getSemverBump(lastRelease);
       version = inc(currentVersion, bump as ReleaseType);
     }

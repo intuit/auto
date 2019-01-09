@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
+import getPackages from 'get-monorepo-packages';
+import { gt } from 'semver';
 import { AutoRelease, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
@@ -11,6 +13,20 @@ const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
   return fs.existsSync('lerna.json');
+}
+
+async function greaterRelease(
+  prefixRelease: (release: string) => string,
+  name: any,
+  packageVersion: string
+) {
+  const publishedVersion = prefixRelease(
+    await execPromise('npm', ['view', name, 'version'])
+  );
+
+  return gt(packageVersion, publishedVersion)
+    ? packageVersion
+    : publishedVersion;
 }
 
 export default class NPMPlugin implements IPlugin {
@@ -35,33 +51,60 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
-      let packageVersion = '';
-      let monorepoVersion = '';
+      let previousVersion = '';
 
       if (isMonorepo()) {
-        monorepoVersion = prefixRelease(
+        auto.logger.veryVerbose.info(
+          'Using monorepo to calculate previous release'
+        );
+        const monorepoVersion = prefixRelease(
           JSON.parse(await readFile('lerna.json', 'utf-8')).version
         );
-      }
 
-      if (fs.existsSync('package.json')) {
-        packageVersion = prefixRelease(
-          JSON.parse(await readFile('package.json', 'utf-8')).version
+        const packages = getPackages(process.cwd());
+        const releasedPackage = packages.reduce(
+          (greatest, subPackage) => {
+            if (subPackage.package.version && !subPackage.package.private) {
+              return gt(greatest.version!, subPackage.package.version)
+                ? greatest
+                : subPackage.package;
+            }
+
+            return greatest;
+          },
+          { version: '0.0.0' } as IPackageJSON
         );
-      }
 
-      if (monorepoVersion) {
-        auto.logger.veryVerbose.info('Using lerna.json as previous version');
-      } else if (packageVersion) {
-        auto.logger.veryVerbose.info('Using package.json as previous version');
+        if (!releasedPackage) {
+          previousVersion = monorepoVersion;
+        } else {
+          previousVersion = await greaterRelease(
+            prefixRelease,
+            releasedPackage.name,
+            monorepoVersion
+          );
+        }
+      } else if (fs.existsSync('package.json')) {
+        auto.logger.veryVerbose.info(
+          'Using package.json to calculate previous version'
+        );
+        const { version, name } = JSON.parse(
+          await readFile('package.json', 'utf-8')
+        );
+
+        previousVersion = await greaterRelease(
+          prefixRelease,
+          name,
+          prefixRelease(version)
+        );
       }
 
       auto.logger.verbose.info(
-        'NPM: Trying to get previous version from package.json',
-        monorepoVersion || packageVersion
+        'NPM: Got previous version from package.json',
+        previousVersion
       );
 
-      return monorepoVersion || packageVersion;
+      return previousVersion;
     });
 
     auto.hooks.getRepository.tapPromise('NPM', async () => {
