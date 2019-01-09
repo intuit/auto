@@ -1,3 +1,15 @@
+# v2.1.4 (Wed Jan 09 2019)
+
+#### 🐛  Bug Fix
+
+- String arg parse fail on null [#174](https://github.com/intuit/auto-release/pull/174) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.1.3 (Tue Jan 08 2019)
 
 #### 🐛  Bug Fix
