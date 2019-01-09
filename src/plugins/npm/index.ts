@@ -62,9 +62,17 @@ export default class NPMPlugin implements IPlugin {
         );
 
         const packages = getPackages(process.cwd());
-        const releasedPackage = packages.find(
-          subPackage =>
-            !!subPackage.package.version && !subPackage.package.private
+        const releasedPackage = packages.reduce(
+          (greatest, subPackage) => {
+            if (subPackage.package.version && !subPackage.package.private) {
+              return gt(greatest.version!, subPackage.package.version)
+                ? greatest
+                : subPackage.package;
+            }
+
+            return greatest;
+          },
+          { version: '0.0.0' } as IPackageJSON
         );
 
         if (!releasedPackage) {
@@ -72,7 +80,7 @@ export default class NPMPlugin implements IPlugin {
         } else {
           previousVersion = await greaterRelease(
             prefixRelease,
-            releasedPackage.package.name,
+            releasedPackage.name,
             monorepoVersion
           );
         }
