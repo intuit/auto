@@ -590,6 +590,7 @@ export default async function main(args: ArgsType) {
   } catch (error) {
     if (error) {
       console.log(error);
+      process.exit(1);
     }
   }
 }
