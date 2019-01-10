@@ -90,11 +90,11 @@ export default class GitHubRelease {
 
   constructor(
     options: Partial<IGitHubOptions>,
+    hooks: IAutoHooks,
     releaseOptions: IGitHubReleaseOptions = {
       skipReleaseLabels: []
     },
-    logger: ILogger = dummyLog(),
-    hooks: IAutoHooks
+    logger: ILogger = dummyLog()
   ) {
     this.hooks = hooks;
     this.versionLabels = releaseOptions.versionLabels || defaultLabels;

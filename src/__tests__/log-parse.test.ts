@@ -1,3 +1,4 @@
+import { AsyncSeriesBailHook } from 'tapable';
 import { defaultLabels } from '../github-release';
 import generateReleaseNotes, {
   createUserLink,
@@ -42,7 +43,8 @@ describe('createUserLink', () => {
           repo: '',
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
-          versionLabels: defaultLabels
+          versionLabels: defaultLabels,
+          modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender'])
         }
       )
     ).toBe(undefined);
@@ -76,7 +78,8 @@ describe('createUserLink', () => {
           repo: '',
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
-          versionLabels: defaultLabels
+          versionLabels: defaultLabels,
+          modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender'])
         }
       )
     ).toBe('default@email.com');
@@ -239,6 +242,7 @@ const options = {
   jira: 'https://jira.custom.com/browse',
   logger,
   versionLabels: defaultLabels,
+  modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender']),
   changelogTitles: {
     major: '💥  Breaking Change',
     minor: '🚀  Enhancement',
@@ -249,9 +253,9 @@ const options = {
 };
 
 describe('generateReleaseNotes', () => {
-  test('should not create notes for normal commits', () => {
+  test('should not create notes for normal commits', async () => {
     expect(
-      generateReleaseNotes(
+      await generateReleaseNotes(
         [
           makeCommitFromMsg('First'),
           makeCommitFromMsg('Second'),
@@ -263,7 +267,7 @@ describe('generateReleaseNotes', () => {
     ).toBe('');
   });
 
-  test('should create note for PR commits', () => {
+  test('should create note for PR commits', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('First'),
       makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] }),
@@ -271,11 +275,11 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should create note for PR commits without labels', () => {
+  test('should create note for PR commits without labels', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('First'),
       makeCommitFromMsg('Some Feature (#1234)'),
@@ -283,11 +287,11 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should create note for jira commits without labels', () => {
+  test('should create note for jira commits without labels', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('First'),
       makeCommitFromMsg('[PLAYA-5052] - Fix P0'),
@@ -295,11 +299,11 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should use username if present', () => {
+  test('should use username if present', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('First'),
       makeCommitFromMsg('Some Feature (#1234)', {
@@ -312,11 +316,11 @@ describe('generateReleaseNotes', () => {
     normalized[1].authors[0].username = 'adam';
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should create note for JIRA commits', () => {
+  test('should create note for JIRA commits', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
         labels: ['major'],
@@ -328,11 +332,11 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should combine pr w/no label and labelled pr', () => {
+  test('should combine pr w/no label and labelled pr', async () => {
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)'),
       makeCommitFromMsg('Third', { labels: ['patch'] }),
@@ -340,36 +344,11 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), options)
     ).toMatchSnapshot();
   });
 
-  test('should create sections for packages', () => {
-    const normalized = normalizeCommits([
-      makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
-        labels: ['major'],
-        packages: ['foobar/release', 'foobar/party']
-      }),
-      makeCommitFromMsg('[PLAYA-5052] - Some Feature - Revert (#12345)', {
-        labels: ['major'],
-        packages: ['foobar/release', 'foobar/party']
-      }),
-      makeCommitFromMsg('woot (#12343)', {
-        labels: ['major']
-      }),
-      makeCommitFromMsg('Another Feature (#1234)', {
-        labels: ['internal'],
-        packages: ['foobar/release']
-      }),
-      makeCommitFromMsg('Third')
-    ]);
-
-    expect(
-      generateReleaseNotes(normalized, dummyLog(), options)
-    ).toMatchSnapshot();
-  });
-
-  test("should use only email if author name doesn't exist", () => {
+  test("should use only email if author name doesn't exist", async () => {
     const commits = normalizeCommits([
       {
         hash: 'foo',
@@ -385,7 +364,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      generateReleaseNotes(commits, dummyLog(), options)
+      await generateReleaseNotes(commits, dummyLog(), options)
     ).toMatchSnapshot();
   });
 });

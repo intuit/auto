@@ -59,24 +59,6 @@ exports[`generateReleaseNotes should create note for jira commits without labels
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`generateReleaseNotes should create sections for packages 1`] = `
-"#### 💥  Breaking Change
-
-- woot [#12343](https://github.custom.com/foobar/auto-release/pull/12343) (adam@dierkens.com)
-- \`foobar/release\`, \`foobar/party\`
-  - [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052): Some Feature [#12345](https://github.custom.com/foobar/auto-release/pull/12345) (adam@dierkens.com)
-  - [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052): Some Feature - Revert [#12345](https://github.custom.com/foobar/auto-release/pull/12345) (adam@dierkens.com)
-
-#### 🏠  Internal
-
-- \`foobar/release\`
-  - Another Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
-`;
-
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
 "#### 🐛  Bug Fix
 

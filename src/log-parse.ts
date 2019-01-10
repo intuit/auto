@@ -239,7 +239,7 @@ function splitCommits(
   );
 }
 
-function createLabelSection(
+async function createLabelSection(
   split: { [key: string]: IExtendedCommit[] },
   options: IGenerateReleaseNotesOptions,
   sections: string[]
@@ -248,14 +248,17 @@ function createLabelSection(
     commits.map(commit => renderLine(commit))
   );
 
-  Object.entries(split).forEach(async ([label, labelCommits]) => {
-    const title = `#### ${options.changelogTitles[label]}\n`;
-    const lines = await options.modifyChangelog.promise(labelCommits, commit =>
-      generateCommitNote(commit, options)
-    );
+  await Promise.all(
+    Object.entries(split).map(async ([label, labelCommits]) => {
+      const title = `#### ${options.changelogTitles[label]}\n`;
+      const lines = await options.modifyChangelog.promise(
+        labelCommits,
+        commit => generateCommitNote(commit, options)
+      );
 
-    sections.push([title, ...lines].join('\n'));
-  });
+      sections.push([title, ...lines].join('\n'));
+    })
+  );
 }
 
 function createAuthorSection(
@@ -297,11 +300,11 @@ function createAuthorSection(
   }
 }
 
-export default function generateReleaseNotes(
+export default async function generateReleaseNotes(
   commits: IExtendedCommit[],
   logger: ILogger,
   options: IGenerateReleaseNotesOptions
-): string {
+): Promise<string> {
   if (commits.length === 0) {
     return '';
   }
@@ -319,7 +322,7 @@ export default function generateReleaseNotes(
 
   const sections: string[] = [];
 
-  createLabelSection(split, options, sections);
+  await createLabelSection(split, options, sections);
 
   logger.verbose.info('Added groups to changelog');
 

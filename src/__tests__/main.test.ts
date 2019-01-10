@@ -412,19 +412,24 @@ describe('AutoRelease', () => {
       auto.githubRelease!.addToChangelog = addToChangelog;
       auto.githubRelease!.generateReleaseNotes = jest.fn();
 
-      await auto.changelog({ dryRun: true });
+      await auto.changelog({ from: 'v1.0.0', dryRun: true });
       expect(addToChangelog).not.toHaveBeenCalled();
     });
 
     test('should add to changelog', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new AutoRelease({
+        command: 'changelog',
+        plugins: [],
+        ...defaults
+      });
+      auto.hooks.getRepository.tap('test', () => ({ token: '1234' }));
       await auto.loadConfig();
 
       const addToChangelog = jest.fn();
       auto.githubRelease!.addToChangelog = addToChangelog;
       auto.githubRelease!.generateReleaseNotes = jest.fn();
 
-      await auto.changelog();
+      await auto.changelog({ from: 'v1.0.0' });
       expect(addToChangelog).toHaveBeenCalled();
     });
   });

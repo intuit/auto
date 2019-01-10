@@ -31,7 +31,7 @@ async function greaterRelease(
     : publishedVersion;
 }
 
-async function changedPackages(sha: string, logger: ILogger) {
+export async function changedPackages(sha: string, logger: ILogger) {
   const packages = new Set<string>();
   const changedFiles = await execPromise('git', [
     'show',

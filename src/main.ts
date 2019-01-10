@@ -134,14 +134,14 @@ export class AutoRelease {
     const token = repository.token || (await getGitHubToken(config.githubApi));
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
+      this.hooks,
       config,
-      this.logger,
-      this.hooks
+      this.logger
     );
   }
 
-  public async init({ onlyLabels }: IInitCommandOptions) {
-    await init(onlyLabels);
+  public async init(options: IInitCommandOptions = {}) {
+    await init(options.onlyLabels);
   }
 
   public async createLabels() {

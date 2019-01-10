@@ -1,49 +1,32 @@
-import GitHub from '../git';
+import { changedPackages } from '../';
+import { dummyLog } from '../../../utils/logger';
 
 const exec = jest.fn();
 
 // @ts-ignore
-jest.mock('../utils/exec-promise.ts', () => (...args) => exec(...args));
+jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
 
 describe('changedPackages ', async () => {
   test('should return nothing without a package directory', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
-
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
-    expect(await gh.changedPackages('sha')).toEqual([]);
+    expect(await changedPackages('sha', dummyLog())).toEqual([]);
   });
 
   test('should match files in package directory', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
-
     exec.mockReturnValueOnce(
       `packages/foo/README.md\npackages/bar/package.json`
     );
 
-    expect(await gh.changedPackages('sha')).toEqual(['foo', 'bar']);
+    expect(await changedPackages('sha', dummyLog())).toEqual(['foo', 'bar']);
   });
 
   test('should match files in package directory with @scope/ names', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
-
     exec.mockReturnValueOnce(
       `packages/@scope/foo/README.md\npackages/@scope/bar/package.json`
     );
 
-    expect(await gh.changedPackages('sha')).toEqual([
+    expect(await changedPackages('sha', dummyLog())).toEqual([
       '@scope/foo',
       '@scope/bar'
     ]);
