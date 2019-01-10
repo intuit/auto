@@ -24,10 +24,11 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
+import { IExtendedCommit } from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import loadPlugin, { IPlugin, IPluginConstructor } from './utils/load-plugins';
+import loadPlugin, { IPluginConstructor } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 
 interface IAuthor {
@@ -41,13 +42,19 @@ interface IRepository {
   token?: string;
 }
 
-interface IAutoHooks {
+export type ModifyChangelogHook = AsyncSeriesBailHook<
+  [IExtendedCommit[], (commit: IExtendedCommit) => string],
+  string[] | void
+>;
+
+export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
   >;
+  modifyChangelog: ModifyChangelogHook;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
 }
@@ -71,6 +78,7 @@ export class AutoRelease {
       getAuthor: new AsyncSeriesBailHook([]),
       getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
       getRepository: new AsyncSeriesBailHook([]),
+      modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender']),
       publish: new AsyncSeriesHook(['version'])
     };
   }
@@ -127,7 +135,8 @@ export class AutoRelease {
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
       config,
-      this.logger
+      this.logger,
+      this.hooks
     );
   }
 

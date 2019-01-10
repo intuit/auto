@@ -2,6 +2,7 @@ import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
 import { VersionLabel } from './github-release';
+import { ModifyChangelogHook } from './main';
 import { ILogger } from './utils/logger';
 
 interface ICommitAuthor {
@@ -17,6 +18,7 @@ interface IGenerateReleaseNotesOptions {
   jira?: string;
   changelogTitles: { [label: string]: string };
   versionLabels: Map<VersionLabel, string>;
+  modifyChangelog: ModifyChangelogHook;
 }
 
 export type IExtendedCommit = ICommit & {
@@ -237,69 +239,22 @@ function splitCommits(
   );
 }
 
-interface INotePartition {
-  [key: string]: string[];
-}
-
-/**
- * Attempt to create a map of monorepo packages
- */
-function partitionPackages(
-  labelCommits: IExtendedCommit[],
-  lineRender: (commit: IExtendedCommit) => string
-) {
-  const packageCommits: INotePartition = {};
-
-  labelCommits.map(commit => {
-    const line = lineRender(commit);
-
-    const packages =
-      commit.packages && commit.packages.length
-        ? commit.packages.map(p => `\`${p}\``).join(', ')
-        : 'monorepo';
-
-    if (!packageCommits[packages]) {
-      packageCommits[packages] = [];
-    }
-
-    packageCommits[packages].push(line);
-  });
-
-  return packageCommits;
-}
-
 function createLabelSection(
   split: { [key: string]: IExtendedCommit[] },
   options: IGenerateReleaseNotesOptions,
   sections: string[]
 ) {
-  Object.entries(split).forEach(([label, labelCommits]) => {
-    const packageCommits = partitionPackages(labelCommits, commit =>
+  options.modifyChangelog.tap('Default', (commits, renderLine) =>
+    commits.map(commit => renderLine(commit))
+  );
+
+  Object.entries(split).forEach(async ([label, labelCommits]) => {
+    const title = `#### ${options.changelogTitles[label]}\n`;
+    const lines = await options.modifyChangelog.promise(labelCommits, commit =>
       generateCommitNote(commit, options)
     );
 
-    const pkgCount = Object.keys(packageCommits).length;
-    const title = `#### ${options.changelogTitles[label]}\n`;
-    const hasRepoCommits =
-      packageCommits.monorepo && packageCommits.monorepo.length > 0;
-
-    if (pkgCount > 0 && (pkgCount !== 1 || !packageCommits.monorepo)) {
-      const section = [title];
-
-      if (hasRepoCommits) {
-        packageCommits.monorepo.forEach(note => section.push(note));
-        delete packageCommits.monorepo;
-      }
-
-      Object.entries(packageCommits).map(([pkg, commits]) => {
-        section.push(`- ${pkg}`);
-        commits.map(note => section.push(`  ${note}`));
-      });
-
-      sections.push(section.join('\n'));
-    } else if (hasRepoCommits) {
-      sections.push([title, ...packageCommits.monorepo].join('\n'));
-    }
+    sections.push([title, ...lines].join('\n'));
   });
 }
 

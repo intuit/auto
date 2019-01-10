@@ -4,9 +4,11 @@ import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
 import { gt } from 'semver';
+import { IExtendedCommit } from '../../log-parse';
 import { AutoRelease, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
+import { ILogger } from '../../utils/logger';
 import getConfigFromPackageJson from './package-config';
 
 const readFile = promisify(fs.readFile);
@@ -27,6 +29,68 @@ async function greaterRelease(
   return gt(packageVersion, publishedVersion)
     ? packageVersion
     : publishedVersion;
+}
+
+async function changedPackages(sha: string, logger: ILogger) {
+  const packages = new Set<string>();
+  const changedFiles = await execPromise('git', [
+    'show',
+    '--first-parent',
+    sha,
+    '--name-only',
+    '--pretty='
+  ]);
+
+  changedFiles.split('\n').forEach(filePath => {
+    const parts = filePath.split('/');
+
+    if (parts[0] !== 'packages' || parts.length < 3) {
+      return;
+    }
+
+    packages.add(
+      parts.length > 3 && parts[1][0] === '@'
+        ? `${parts[1]}/${parts[2]}`
+        : parts[1]
+    );
+  });
+
+  if (packages.size > 0) {
+    logger.veryVerbose.info(`Got changed packages for ${sha}:\n`, packages);
+  }
+
+  return [...packages];
+}
+
+interface INotePartition {
+  [key: string]: string[];
+}
+
+/**
+ * Attempt to create a map of monorepo packages
+ */
+function partitionPackages(
+  labelCommits: IExtendedCommit[],
+  lineRender: (commit: IExtendedCommit) => string
+) {
+  const packageCommits: INotePartition = {};
+
+  labelCommits.map(commit => {
+    const line = lineRender(commit);
+
+    const packages =
+      commit.packages && commit.packages.length
+        ? commit.packages.map(p => `\`${p}\``).join(', ')
+        : 'monorepo';
+
+    if (!packageCommits[packages]) {
+      packageCommits[packages] = [];
+    }
+
+    packageCommits[packages].push(line);
+  });
+
+  return packageCommits;
 }
 
 export default class NPMPlugin implements IPlugin {
@@ -113,6 +177,40 @@ export default class NPMPlugin implements IPlugin {
       );
       return getConfigFromPackageJson();
     });
+
+    auto.hooks.modifyChangelog.tapPromise(
+      'NPM',
+      async (commits, renderLine) => {
+        if (isMonorepo()) {
+          await Promise.all(
+            commits.map(async commit => {
+              commit.packages = await changedPackages(commit.hash, auto.logger);
+            })
+          );
+
+          const packageCommits = partitionPackages(commits, renderLine);
+          const pkgCount = Object.keys(packageCommits).length;
+          const hasRepoCommits =
+            packageCommits.monorepo && packageCommits.monorepo.length > 0;
+
+          if (pkgCount > 0 && (pkgCount !== 1 || !packageCommits.monorepo)) {
+            const section: string[] = [];
+
+            if (hasRepoCommits) {
+              packageCommits.monorepo.forEach(note => section.push(note));
+              delete packageCommits.monorepo;
+            }
+
+            Object.entries(packageCommits).map(([pkg, lines]) => {
+              section.push(`- ${pkg}`);
+              lines.map(note => section.push(`  ${note}`));
+            });
+
+            return section;
+          }
+        }
+      }
+    );
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
