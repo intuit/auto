@@ -1,10 +1,10 @@
 import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import { makeHooks } from '../../../__tests__/utils';
 import { defaultChangelogTitles, defaultLabels } from '../../../github-release';
 import generateReleaseNotes, { normalizeCommits } from '../../../log-parse';
 import { AutoRelease } from '../../../main';
 import { dummyLog } from '../../../utils/logger';
+import { makeHooks } from '../../../utils/make-hooks';
 
 const exec = jest.fn();
 
@@ -64,7 +64,7 @@ test('should create sections for packages', async () => {
         baseUrl: 'https://github.custom.com/',
         changelogTitles: defaultChangelogTitles,
         versionLabels: defaultLabels,
-        renderChangelogLine: hooks.renderChangelogLine
+        hooks
       }
     )
   ).toMatchSnapshot();

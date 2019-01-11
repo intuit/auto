@@ -2,8 +2,8 @@ import GitHubRelease, { VersionLabel } from '../github-release';
 import { normalizeCommits } from '../log-parse';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
+import { makeHooks } from '../utils/make-hooks';
 import makeCommitFromMsg from './make-commit-from-msg';
-import { makeHooks } from './utils';
 
 const constructor = jest.fn();
 const getGitLog = jest.fn();

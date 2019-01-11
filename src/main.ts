@@ -24,12 +24,17 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
-import { IExtendedCommit } from './log-parse';
+import {
+  ICommitAuthor,
+  IExtendedCommit,
+  IGenerateReleaseNotesOptions
+} from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPluginConstructor } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
+import { makeHooks } from './utils/make-hooks';
 
 interface IAuthor {
   name?: string;
@@ -42,11 +47,6 @@ interface IRepository {
   token?: string;
 }
 
-export type renderChangelogLineHook = AsyncSeriesBailHook<
-  [IExtendedCommit[], (commit: IExtendedCommit) => string],
-  string[] | void
->;
-
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
@@ -54,7 +54,22 @@ export interface IAutoHooks {
     [(release: string) => string],
     string
   >;
-  renderChangelogLine: renderChangelogLineHook;
+  renderChangelogLine: AsyncSeriesBailHook<
+    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
+    string[] | void
+  >;
+  renderChangelogTitle: AsyncSeriesBailHook<
+    [string, { [label: string]: string }],
+    string | void
+  >;
+  renderChangelogAuthor: AsyncSeriesBailHook<
+    [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
+    string | void
+  >;
+  renderChangelogAuthorLine: AsyncSeriesBailHook<
+    [ICommitAuthor, string],
+    string | void
+  >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
 }
@@ -72,15 +87,7 @@ export class AutoRelease {
     this.logger = createLog(
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
-
-    this.hooks = {
-      beforeRun: new SyncHook(['config']),
-      getAuthor: new AsyncSeriesBailHook([]),
-      getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
-      getRepository: new AsyncSeriesBailHook([]),
-      renderChangelogLine: new AsyncSeriesBailHook(['commits', 'lineRender']),
-      publish: new AsyncSeriesHook(['version'])
-    };
+    this.hooks = makeHooks();
   }
 
   public async loadConfig() {

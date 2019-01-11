@@ -1,4 +1,3 @@
-import { AsyncSeriesBailHook } from 'tapable';
 import { defaultLabels } from '../github-release';
 import generateReleaseNotes, {
   createUserLink,
@@ -9,8 +8,8 @@ import generateReleaseNotes, {
   parseSquashPR
 } from '../log-parse';
 
-import { renderChangelogLineHook } from '../main';
 import { dummyLog } from '../utils/logger';
+import { makeHooks } from '../utils/make-hooks';
 import makeCommitFromMsg from './make-commit-from-msg';
 
 const logger = dummyLog();
@@ -46,10 +45,7 @@ describe('createUserLink', () => {
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
           versionLabels: defaultLabels,
-          renderChangelogLine: new AsyncSeriesBailHook([
-            'commits',
-            'lineRender'
-          ])
+          hooks: makeHooks()
         }
       )
     ).toBe(undefined);
@@ -84,10 +80,7 @@ describe('createUserLink', () => {
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
           versionLabels: defaultLabels,
-          renderChangelogLine: new AsyncSeriesBailHook([
-            'commits',
-            'lineRender'
-          ])
+          hooks: makeHooks()
         }
       )
     ).toBe('default@email.com');
@@ -243,7 +236,7 @@ describe('normalizeCommits', () => {
   });
 });
 
-const options = {
+const testOptions = () => ({
   owner: 'foobar',
   repo: 'auto-release',
   baseUrl: 'https://github.custom.com/foobar/auto-release',
@@ -251,10 +244,7 @@ const options = {
   logger,
   versionLabels: defaultLabels,
   // tslint:disable-next-line no-unnecessary-type-assertion
-  renderChangelogLine: new AsyncSeriesBailHook([
-    'commits',
-    'lineRender'
-  ]) as renderChangelogLineHook,
+  hooks: makeHooks(),
   changelogTitles: {
     major: '💥  Breaking Change',
     minor: '🚀  Enhancement',
@@ -262,7 +252,50 @@ const options = {
     internal: '🏠  Internal',
     documentation: '📝  Documentation'
   }
-};
+});
+
+describe('Hooks', () => {
+  test('title', async () => {
+    const options = testOptions();
+    const normalized = normalizeCommits([
+      makeCommitFromMsg('First'),
+      makeCommitFromMsg('Some Feature (#1234)'),
+      makeCommitFromMsg('Third')
+    ]);
+
+    options.hooks.renderChangelogTitle.tap(
+      'test',
+      (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
+    );
+
+    expect(
+      await generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
+  });
+
+  test('author', async () => {
+    const options = testOptions();
+    const normalized = normalizeCommits([
+      makeCommitFromMsg('First'),
+      makeCommitFromMsg('Some Feature (#1234)'),
+      makeCommitFromMsg('Third')
+    ]);
+
+    options.hooks.renderChangelogAuthor.tap(
+      'test',
+      (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
+    );
+
+    options.hooks.renderChangelogAuthorLine.tap(
+      'test',
+      (author, user) => `:shipit: ${author.name} (${user})`
+    );
+
+    expect(
+      await generateReleaseNotes(normalized, dummyLog(), options)
+    ).toMatchSnapshot();
+  });
+});
 
 describe('generateReleaseNotes', () => {
   test('should not create notes for normal commits', async () => {
@@ -274,7 +307,7 @@ describe('generateReleaseNotes', () => {
           makeCommitFromMsg('Third')
         ],
         dummyLog(),
-        options
+        testOptions()
       )
     ).toBe('');
   });
@@ -287,7 +320,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -299,7 +332,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -311,7 +344,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -328,7 +361,7 @@ describe('generateReleaseNotes', () => {
     normalized[1].authors[0].username = 'adam';
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -344,7 +377,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -356,7 +389,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(normalized, dummyLog(), options)
+      await generateReleaseNotes(normalized, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 
@@ -376,7 +409,7 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(
-      await generateReleaseNotes(commits, dummyLog(), options)
+      await generateReleaseNotes(commits, dummyLog(), testOptions())
     ).toMatchSnapshot();
   });
 });

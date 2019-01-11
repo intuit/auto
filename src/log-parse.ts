@@ -2,23 +2,23 @@ import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
 import { VersionLabel } from './github-release';
-import { renderChangelogLineHook } from './main';
+import { IAutoHooks } from './main';
 import { ILogger } from './utils/logger';
 
-interface ICommitAuthor {
+export interface ICommitAuthor {
   name?: string;
   email?: string;
   username?: string;
 }
 
-interface IGenerateReleaseNotesOptions {
+export interface IGenerateReleaseNotesOptions {
   owner: string;
   repo: string;
   baseUrl: string;
   jira?: string;
   changelogTitles: { [label: string]: string };
   versionLabels: Map<VersionLabel, string>;
-  renderChangelogLine: renderChangelogLineHook;
+  hooks: IAutoHooks;
 }
 
 export type IExtendedCommit = ICommit & {
@@ -54,19 +54,25 @@ export const createUserLink = (
     : author.email || commit.authorEmail;
 };
 
-const createUserLinkList = (
+const createUserLinkList = async (
   commit: IExtendedCommit,
   options: IGenerateReleaseNotesOptions
 ) => {
   const result = new Set<string>();
 
-  commit.authors.forEach(author => {
-    const link = createUserLink(author, commit, options);
+  await Promise.all(
+    commit.authors.map(async author => {
+      const link = await options.hooks.renderChangelogAuthor.promise(
+        author,
+        commit,
+        options
+      );
 
-    if (link) {
-      result.add(link);
-    }
-  });
+      if (link) {
+        result.add(link);
+      }
+    })
+  );
 
   return [...result].join(' ');
 };
@@ -174,7 +180,7 @@ export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
   return commits.map(normalizeCommit).filter(Boolean) as IExtendedCommit[];
 }
 
-function generateCommitNote(
+async function generateCommitNote(
   commit: IExtendedCommit,
   options: IGenerateReleaseNotesOptions
 ) {
@@ -191,7 +197,7 @@ function generateCommitNote(
     pr = `[#${commit.pullRequest.number}](${prLink})`;
   }
 
-  const user = createUserLinkList(commit, options);
+  const user = await createUserLinkList(commit, options);
 
   return `- ${jira}${commit.subject} ${pr}${user ? ` (${user})` : ''}`;
 }
@@ -244,16 +250,15 @@ async function createLabelSection(
   options: IGenerateReleaseNotesOptions,
   sections: string[]
 ) {
-  options.renderChangelogLine.tap('Default', (commits, renderLine) =>
-    commits.map(commit => renderLine(commit))
-  );
-
   await Promise.all(
     Object.entries(split).map(async ([label, labelCommits]) => {
-      const title = `#### ${options.changelogTitles[label]}\n`;
-      const lines = await options.renderChangelogLine.promise(
+      const title = await options.hooks.renderChangelogTitle.promise(
+        label,
+        options.changelogTitles
+      );
+      const lines = await options.hooks.renderChangelogLine.promise(
         labelCommits,
-        commit => generateCommitNote(commit, options)
+        async commit => generateCommitNote(commit, options)
       );
 
       sections.push([title, ...lines].join('\n'));
@@ -261,41 +266,47 @@ async function createLabelSection(
   );
 }
 
-function createAuthorSection(
+async function createAuthorSection(
   split: { [key: string]: IExtendedCommit[] },
   options: IGenerateReleaseNotesOptions,
   sections: string[]
 ) {
-  const authors = Object.values(split)
-    .reduce(
-      (
-        labeledCommits: IExtendedCommit[],
-        sectionCommits: IExtendedCommit[]
-      ) => [...labeledCommits, ...sectionCommits],
-      []
-    )
-    .reduce((commitAuthors: string[], commit) => {
-      commit.authors.map(author => {
+  const authors = new Set<string>();
+  const commits = Object.values(split).reduce(
+    (labeledCommits: IExtendedCommit[], sectionCommits: IExtendedCommit[]) => [
+      ...labeledCommits,
+      ...sectionCommits
+    ],
+    []
+  );
+
+  await Promise.all(
+    commits.map(async commit => {
+      commit.authors.map(async author => {
         if (author.username === 'invalid-email-address') {
-          return commitAuthors;
+          return;
         }
 
-        const user = createUserLink(author, commit, options);
-        const authorString =
-          author.name && user ? `${author.name} (${user})` : user;
-        const authorEntry = `- ${authorString}`;
+        const user = await options.hooks.renderChangelogAuthor.promise(
+          author,
+          commit,
+          options
+        );
+        const authorEntry = await options.hooks.renderChangelogAuthorLine.promise(
+          author,
+          user as string
+        );
 
-        if (authorString && !commitAuthors.includes(authorEntry)) {
-          commitAuthors.push(authorEntry);
+        if (authorEntry && !authors.has(authorEntry)) {
+          authors.add(authorEntry);
         }
       });
+    })
+  );
 
-      return commitAuthors;
-    }, []);
-
-  if (authors.length > 0) {
-    let authorSection = `#### Authors: ${authors.length}\n\n`;
-    authorSection += authors.join('\n');
+  if (authors.size > 0) {
+    let authorSection = `#### Authors: ${authors.size}\n\n`;
+    authorSection += [...authors].join('\n');
     sections.push(authorSection);
   }
 }
@@ -310,6 +321,22 @@ export default async function generateReleaseNotes(
   }
 
   logger.verbose.info('Generating release notes for:\n', commits);
+
+  options.hooks.renderChangelogAuthor.tap('Default', createUserLink);
+  options.hooks.renderChangelogAuthorLine.tap('Default', (author, user) => {
+    const authorString =
+      author.name && user ? `${author.name} (${user})` : user;
+    return authorString ? `- ${authorString}` : undefined;
+  });
+  options.hooks.renderChangelogLine.tapPromise(
+    'Default',
+    async (currCommits, renderLine) =>
+      Promise.all(currCommits.map(async commit => renderLine(commit)))
+  );
+  options.hooks.renderChangelogTitle.tap(
+    'Default',
+    (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
+  );
 
   const split = splitCommits(
     commits,
@@ -326,7 +353,7 @@ export default async function generateReleaseNotes(
 
   logger.verbose.info('Added groups to changelog');
 
-  createAuthorSection(split, options, sections);
+  await createAuthorSection(split, options, sections);
 
   logger.verbose.info('Added authors to changelog');
 

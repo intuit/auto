@@ -141,7 +141,7 @@ export default class GitHubRelease {
       baseUrl: project.html_url,
       jira: this.releaseOptions.jira,
       versionLabels: this.versionLabels,
-      renderChangelogLine: this.hooks.renderChangelogLine,
+      hooks: this.hooks,
       changelogTitles: {
         ...defaultChangelogTitles,
         ...this.changelogTitles

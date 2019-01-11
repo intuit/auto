@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Hooks author 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234) (:heart: Adam Dierkens/adam@dierkens.com :heart:)
+
+#### Authors: 1
+
+:shipit: Adam Dierkens (:heart: Adam Dierkens/adam@dierkens.com :heart:)"
+`;
+
+exports[`Hooks title 1`] = `
+":heart: 🐛  Bug Fix :heart:
+- Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] = `
 "#### 🐛  Bug Fix
 

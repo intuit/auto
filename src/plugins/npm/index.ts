@@ -69,26 +69,28 @@ interface INotePartition {
 /**
  * Attempt to create a map of monorepo packages
  */
-function partitionPackages(
+async function partitionPackages(
   labelCommits: IExtendedCommit[],
-  lineRender: (commit: IExtendedCommit) => string
+  lineRender: (commit: IExtendedCommit) => Promise<string>
 ) {
   const packageCommits: INotePartition = {};
 
-  labelCommits.map(commit => {
-    const line = lineRender(commit);
+  await Promise.all(
+    labelCommits.map(async commit => {
+      const line = await lineRender(commit);
 
-    const packages =
-      commit.packages && commit.packages.length
-        ? commit.packages.map(p => `\`${p}\``).join(', ')
-        : 'monorepo';
+      const packages =
+        commit.packages && commit.packages.length
+          ? commit.packages.map(p => `\`${p}\``).join(', ')
+          : 'monorepo';
 
-    if (!packageCommits[packages]) {
-      packageCommits[packages] = [];
-    }
+      if (!packageCommits[packages]) {
+        packageCommits[packages] = [];
+      }
 
-    packageCommits[packages].push(line);
-  });
+      packageCommits[packages].push(line);
+    })
+  );
 
   return packageCommits;
 }
@@ -188,7 +190,7 @@ export default class NPMPlugin implements IPlugin {
             })
           );
 
-          const packageCommits = partitionPackages(commits, renderLine);
+          const packageCommits = await partitionPackages(commits, renderLine);
           const pkgCount = Object.keys(packageCommits).length;
           const hasRepoCommits =
             packageCommits.monorepo && packageCommits.monorepo.length > 0;
