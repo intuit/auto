@@ -90,7 +90,7 @@ auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
 
 #### getRepository
 
-Get owner and repo. Typically from a package distribution description file.
+Get owner and repository. Typically from a package distribution description file.
 
 ```ts
 auto.hooks.getRepository.tapPromise('NPM', async () => {
@@ -106,12 +106,12 @@ auto.hooks.getRepository.tapPromise('NPM', async () => {
 
 #### modifyChangelog
 
-Change how the changelog renders lines. The hooks provides the default line renderer so you don't have to change much.
+Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
 
-This plugin would change all the bullet points in the changelog to star emojis.
+The following plugin would change all the bullet points in the changelog to star emojis.
 
 ```ts
-auto.hooks.modifyChangelog.tapPromise('NPM', async (commits, renderLine) =>
+auto.hooks.modifyChangelog.tapPromise('Stars', async (commits, renderLine) =>
   commits.map(commit =>
     renderLine(commit).map(line => `${line.replace('-', ':star:')}\n`)
   )
@@ -120,7 +120,7 @@ auto.hooks.modifyChangelog.tapPromise('NPM', async (commits, renderLine) =>
 
 #### publish
 
-Publish the package to some package distributor. Must push the tags to github!
+Publish the package to some package distributor. You must push the tags to github!
 
 ```ts
 auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
