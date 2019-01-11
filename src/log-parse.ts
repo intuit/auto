@@ -176,7 +176,9 @@ export default class LogParse {
   }
 
   public loadDefaultHooks() {
-    this.hooks.renderChangelogAuthor.tap('Default', this.createUserLink);
+    this.hooks.renderChangelogAuthor.tap('Default', (author, commit) =>
+      this.createUserLink(author, commit)
+    );
     this.hooks.renderChangelogAuthorLine.tap('Default', (author, user) => {
       const authorString =
         author.name && user ? `${author.name} (${user})` : user;
@@ -224,6 +226,18 @@ export default class LogParse {
     return result;
   }
 
+  public createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
+    const githubUrl = new URL(this.options.baseUrl).origin;
+
+    if (author.username === 'invalid-email-address') {
+      return;
+    }
+
+    return author.username
+      ? `[@${author.username}](${join(githubUrl, author.username)})`
+      : author.email || commit.authorEmail;
+  }
+
   /**
    * Split commits into changelogTitle sections
    */
@@ -260,18 +274,6 @@ export default class LogParse {
         };
       })
     );
-  }
-
-  private createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
-    const githubUrl = new URL(this.options.baseUrl).origin;
-
-    if (author.username === 'invalid-email-address') {
-      return;
-    }
-
-    return author.username
-      ? `[@${author.username}](${join(githubUrl, author.username)})`
-      : author.email || commit.authorEmail;
   }
 
   private async createUserLinkList(commit: IExtendedCommit) {
@@ -373,7 +375,7 @@ export default class LogParse {
         );
         const lines = await this.hooks.renderChangelogLine.promise(
           labelCommits,
-          this.generateCommitNote
+          async commit => this.generateCommitNote(commit)
         );
 
         sections.push([title, ...lines].join('\n'));

@@ -238,6 +238,7 @@ describe('AutoRelease', () => {
   });
 
   describe('pr-check', () => {
+    jest.setTimeout(10 * 1000);
     let createStatus: jest.Mock;
 
     beforeEach(() => {
