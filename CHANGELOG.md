@@ -1,3 +1,23 @@
+# v2.3.0 (Fri Jan 11 2019)
+
+#### 🚀  Enhancement
+
+- Tappable Changelog [#178](https://github.com/intuit/auto-release/pull/178) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Switch to circleCI 2.1 [#181](https://github.com/intuit/auto-release/pull/181) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- add docs deploy note [#179](https://github.com/intuit/auto-release/pull/179) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.2.0 (Wed Jan 09 2019)
 
 #### 🚀  Enhancement
