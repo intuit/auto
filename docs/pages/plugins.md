@@ -118,6 +118,39 @@ auto.hooks.renderChangelogLine.tapPromise(
 );
 ```
 
+#### renderChangelogTitle
+
+Change how the changelog renders titles. The hook provides the current label for the section and all the configured changelog titles.
+
+```ts
+auto.hooks.renderChangelogTitle.tap(
+  'My Titles',
+  (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
+);
+```
+
+#### renderChangelogAuthor
+
+Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile.
+
+```ts
+auto.hooks.renderChangelogAuthor.tap(
+  'test',
+  (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
+);
+```
+
+#### renderChangelogAuthorLine
+
+Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
+
+```ts
+auto.hooks.renderChangelogAuthorLine.tap(
+  'test',
+  (author, user) => `:shipit: ${author.name} (${user})\n`
+);
+```
+
 #### publish
 
 Publish the package to some package distributor. You must push the tags to github!
