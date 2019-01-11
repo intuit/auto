@@ -8,6 +8,8 @@ import generateReleaseNotes, {
   parsePR,
   parseSquashPR
 } from '../log-parse';
+
+import { ModifyChangelogHook } from '../main';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
@@ -242,7 +244,11 @@ const options = {
   jira: 'https://jira.custom.com/browse',
   logger,
   versionLabels: defaultLabels,
-  modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender']),
+  // tslint:disable-next-line no-unnecessary-type-assertion
+  modifyChangelog: new AsyncSeriesBailHook([
+    'commits',
+    'lineRender'
+  ]) as ModifyChangelogHook,
   changelogTitles: {
     major: '💥  Breaking Change',
     minor: '🚀  Enhancement',

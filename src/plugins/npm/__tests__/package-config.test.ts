@@ -71,7 +71,6 @@ test('should correctly parse package info', async () => {
 
   expect(await packageConfig()).toEqual({
     repo: 'operation-foo',
-    owner: 'black-panther',
-    version: '1.0.0'
+    owner: 'black-panther'
   });
 });
