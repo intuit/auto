@@ -4,15 +4,13 @@ import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
+import { SyncHook } from 'tapable';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
-import generateReleaseNotes, {
-  IExtendedCommit,
-  normalizeCommits
-} from './log-parse';
-import { IAutoHooks } from './main';
+import LogParse, { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
+import { makeGitHubReleaseHooks } from './utils/make-hooks';
 import postToSlack from './utils/slack';
 
 export type VersionLabel =
@@ -78,10 +76,14 @@ defaultLabelsDescriptions.set(
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
+export interface IGitHubReleaseHooks {
+  onCreateLogParse: SyncHook<[LogParse]>;
+}
+
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
+  public readonly hooks: IGitHubReleaseHooks;
 
-  private readonly hooks: IAutoHooks;
   private readonly logger: ILogger;
   private readonly github: GitHub;
   private readonly changelogTitles: { [label: string]: string };
@@ -90,13 +92,12 @@ export default class GitHubRelease {
 
   constructor(
     options: Partial<IGitHubOptions>,
-    hooks: IAutoHooks,
     releaseOptions: IGitHubReleaseOptions = {
       skipReleaseLabels: []
     },
     logger: ILogger = dummyLog()
   ) {
-    this.hooks = hooks;
+    this.hooks = makeGitHubReleaseHooks();
     this.versionLabels = releaseOptions.versionLabels || defaultLabels;
     this.logger = logger;
     this.releaseOptions = releaseOptions;
@@ -134,19 +135,21 @@ export default class GitHubRelease {
   ): Promise<string> {
     const commits = await this.getCommits(from, to);
     const project = await this.github.getProject();
-
-    return generateReleaseNotes(commits, this.logger, {
+    const logParser = new LogParse(this.logger, {
       owner: this.github.options.owner,
       repo: this.github.options.repo,
       baseUrl: project.html_url,
       jira: this.releaseOptions.jira,
       versionLabels: this.versionLabels,
-      hooks: this.hooks,
       changelogTitles: {
         ...defaultChangelogTitles,
         ...this.changelogTitles
       }
     });
+    this.hooks.onCreateLogParse.call(logParser);
+    logParser.loadDefaultHooks();
+
+    return logParser.generateReleaseNotes(commits);
   }
 
   public async addToChangelog(

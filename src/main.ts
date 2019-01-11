@@ -24,11 +24,7 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
-import {
-  ICommitAuthor,
-  IExtendedCommit,
-  IGenerateReleaseNotesOptions
-} from './log-parse';
+import LogParse from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
@@ -54,24 +50,10 @@ export interface IAutoHooks {
     [(release: string) => string],
     string
   >;
-  renderChangelogLine: AsyncSeriesBailHook<
-    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
-    string[] | void
-  >;
-  renderChangelogTitle: AsyncSeriesBailHook<
-    [string, { [label: string]: string }],
-    string | void
-  >;
-  renderChangelogAuthor: AsyncSeriesBailHook<
-    [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
-    string | void
-  >;
-  renderChangelogAuthorLine: AsyncSeriesBailHook<
-    [ICommitAuthor, string],
-    string | void
-  >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
+  onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
+  onCreateLogParse: SyncHook<[LogParse]>;
 }
 
 export class AutoRelease {
@@ -139,12 +121,22 @@ export class AutoRelease {
 
     const repository = await this.getRepo();
     const token = repository.token || (await getGitHubToken(config.githubApi));
+
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
-      this.hooks,
       config,
       this.logger
     );
+    this.hooks.onCreateGitHubRelease.tap(
+      'Link onCreateLogParse',
+      githubRelease => {
+        githubRelease.hooks.onCreateLogParse.tap(
+          'Link onCreateLogParse',
+          logParse => this.hooks.onCreateLogParse.call(logParse)
+        );
+      }
+    );
+    this.hooks.onCreateGitHubRelease.call(this.githubRelease);
   }
 
   public async init(options: IInitCommandOptions = {}) {

@@ -1,9 +1,10 @@
 import { ICommit } from 'gitlog';
+import { AsyncSeriesBailHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 import { VersionLabel } from './github-release';
-import { IAutoHooks } from './main';
 import { ILogger } from './utils/logger';
+import { makeLogHooks } from './utils/make-hooks';
 
 export interface ICommitAuthor {
   name?: string;
@@ -18,7 +19,6 @@ export interface IGenerateReleaseNotesOptions {
   jira?: string;
   changelogTitles: { [label: string]: string };
   versionLabels: Map<VersionLabel, string>;
-  hooks: IAutoHooks;
 }
 
 export type IExtendedCommit = ICommit & {
@@ -38,44 +38,24 @@ type CommitParseFunction = (
   commit: IExtendedCommit
 ) => IExtendedCommit | undefined;
 
-export const createUserLink = (
-  author: ICommitAuthor,
-  commit: IExtendedCommit,
-  options: IGenerateReleaseNotesOptions
-) => {
-  const githubUrl = new URL(options.baseUrl).origin;
-
-  if (author.username === 'invalid-email-address') {
-    return;
-  }
-
-  return author.username
-    ? `[@${author.username}](${join(githubUrl, author.username)})`
-    : author.email || commit.authorEmail;
-};
-
-const createUserLinkList = async (
-  commit: IExtendedCommit,
-  options: IGenerateReleaseNotesOptions
-) => {
-  const result = new Set<string>();
-
-  await Promise.all(
-    commit.authors.map(async author => {
-      const link = await options.hooks.renderChangelogAuthor.promise(
-        author,
-        commit,
-        options
-      );
-
-      if (link) {
-        result.add(link);
-      }
-    })
-  );
-
-  return [...result].join(' ');
-};
+export interface ILogParseHooks {
+  renderChangelogLine: AsyncSeriesBailHook<
+    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
+    string[] | void
+  >;
+  renderChangelogTitle: AsyncSeriesBailHook<
+    [string, { [label: string]: string }],
+    string | void
+  >;
+  renderChangelogAuthor: AsyncSeriesBailHook<
+    [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
+    string | void
+  >;
+  renderChangelogAuthorLine: AsyncSeriesBailHook<
+    [ICommitAuthor, string],
+    string | void
+  >;
+}
 
 export function filterServiceAccounts(
   commit: IExtendedCommit
@@ -180,186 +160,224 @@ export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
   return commits.map(normalizeCommit).filter(Boolean) as IExtendedCommit[];
 }
 
-async function generateCommitNote(
-  commit: IExtendedCommit,
-  options: IGenerateReleaseNotesOptions
-) {
-  let jira = '';
-  let pr = '';
-
-  if (commit.jira && options.jira) {
-    const link = join(options.jira, ...commit.jira.number);
-    jira = `[${commit.jira.number}](${link}): `;
-  }
-
-  if (commit.pullRequest) {
-    const prLink = join(options.baseUrl, 'pull', commit.pullRequest.number);
-    pr = `[#${commit.pullRequest.number}](${prLink})`;
-  }
-
-  const user = await createUserLinkList(commit, options);
-
-  return `- ${jira}${commit.subject} ${pr}${user ? ` (${user})` : ''}`;
-}
-
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));
 
-/**
- * Split commits into changelogTitle sections
- */
-function splitCommits(
-  commits: IExtendedCommit[],
-  changelogTitles: { [label: string]: string },
-  versionLabels: Map<VersionLabel, string>
-): { [key: string]: IExtendedCommit[] } {
-  let currentCommits = [...commits];
+export default class LogParse {
+  public readonly hooks: ILogParseHooks;
 
-  commits
-    .filter(
-      commit =>
-        (commit.pullRequest || commit.jira) && commit.labels.length === 0
-    )
-    .map(commit => commit.labels.push('patch'));
+  private readonly logger: ILogger;
+  private readonly options: IGenerateReleaseNotesOptions;
 
-  return Object.assign(
-    {},
-    ...Object.keys(changelogTitles).map(label => {
-      const matchedCommits = filterLabel(
-        currentCommits,
-        versionLabels.get(label as VersionLabel) || label
-      );
+  constructor(logger: ILogger, options: IGenerateReleaseNotesOptions) {
+    this.logger = logger;
+    this.options = options;
+    this.hooks = makeLogHooks();
+  }
 
-      if (matchedCommits.length === 0) {
-        return {};
-      }
+  public loadDefaultHooks() {
+    this.hooks.renderChangelogAuthor.tap('Default', this.createUserLink);
+    this.hooks.renderChangelogAuthorLine.tap('Default', (author, user) => {
+      const authorString =
+        author.name && user ? `${author.name} (${user})` : user;
+      return authorString ? `- ${authorString}` : undefined;
+    });
+    this.hooks.renderChangelogLine.tapPromise(
+      'Default',
+      async (currCommits, renderLine) =>
+        Promise.all(currCommits.map(async commit => renderLine(commit)))
+    );
+    this.hooks.renderChangelogTitle.tap(
+      'Default',
+      (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
+    );
+  }
 
-      currentCommits = currentCommits.filter(
-        commit => !matchedCommits.includes(commit)
-      );
+  public async generateReleaseNotes(
+    commits: IExtendedCommit[]
+  ): Promise<string> {
+    if (commits.length === 0) {
+      return '';
+    }
 
-      return {
-        [label]: matchedCommits
-      };
-    })
-  );
-}
+    this.logger.verbose.info('Generating release notes for:\n', commits);
 
-async function createLabelSection(
-  split: { [key: string]: IExtendedCommit[] },
-  options: IGenerateReleaseNotesOptions,
-  sections: string[]
-) {
-  await Promise.all(
-    Object.entries(split).map(async ([label, labelCommits]) => {
-      const title = await options.hooks.renderChangelogTitle.promise(
-        label,
-        options.changelogTitles
-      );
-      const lines = await options.hooks.renderChangelogLine.promise(
-        labelCommits,
-        async commit => generateCommitNote(commit, options)
-      );
+    const split = this.splitCommits(commits);
 
-      sections.push([title, ...lines].join('\n'));
-    })
-  );
-}
+    this.logger.verbose.info('Split commits into groups');
+    this.logger.veryVerbose.info('\n', split);
 
-async function createAuthorSection(
-  split: { [key: string]: IExtendedCommit[] },
-  options: IGenerateReleaseNotesOptions,
-  sections: string[]
-) {
-  const authors = new Set<string>();
-  const commits = Object.values(split).reduce(
-    (labeledCommits: IExtendedCommit[], sectionCommits: IExtendedCommit[]) => [
-      ...labeledCommits,
-      ...sectionCommits
-    ],
-    []
-  );
+    const sections: string[] = [];
 
-  await Promise.all(
-    commits.map(async commit => {
-      commit.authors.map(async author => {
-        if (author.username === 'invalid-email-address') {
-          return;
+    await this.createLabelSection(split, sections);
+
+    this.logger.verbose.info('Added groups to changelog');
+
+    await this.createAuthorSection(split, sections);
+
+    this.logger.verbose.info('Added authors to changelog');
+
+    const result = sections.join('\n\n');
+
+    this.logger.verbose.info('Successfully generated release notes.');
+
+    return result;
+  }
+
+  /**
+   * Split commits into changelogTitle sections
+   */
+  private splitCommits(
+    commits: IExtendedCommit[]
+  ): { [key: string]: IExtendedCommit[] } {
+    let currentCommits = [...commits];
+
+    commits
+      .filter(
+        commit =>
+          (commit.pullRequest || commit.jira) && commit.labels.length === 0
+      )
+      .map(commit => commit.labels.push('patch'));
+
+    return Object.assign(
+      {},
+      ...Object.keys(this.options.changelogTitles).map(label => {
+        const matchedCommits = filterLabel(
+          currentCommits,
+          this.options.versionLabels.get(label as VersionLabel) || label
+        );
+
+        if (matchedCommits.length === 0) {
+          return {};
         }
 
-        const user = await options.hooks.renderChangelogAuthor.promise(
+        currentCommits = currentCommits.filter(
+          commit => !matchedCommits.includes(commit)
+        );
+
+        return {
+          [label]: matchedCommits
+        };
+      })
+    );
+  }
+
+  private createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
+    const githubUrl = new URL(this.options.baseUrl).origin;
+
+    if (author.username === 'invalid-email-address') {
+      return;
+    }
+
+    return author.username
+      ? `[@${author.username}](${join(githubUrl, author.username)})`
+      : author.email || commit.authorEmail;
+  }
+
+  private async createUserLinkList(commit: IExtendedCommit) {
+    const result = new Set<string>();
+
+    await Promise.all(
+      commit.authors.map(async author => {
+        const link = await this.hooks.renderChangelogAuthor.promise(
           author,
           commit,
-          options
-        );
-        const authorEntry = await options.hooks.renderChangelogAuthorLine.promise(
-          author,
-          user as string
+          this.options
         );
 
-        if (authorEntry && !authors.has(authorEntry)) {
-          authors.add(authorEntry);
+        if (link) {
+          result.add(link);
         }
-      });
-    })
-  );
+      })
+    );
 
-  if (authors.size > 0) {
-    let authorSection = `#### Authors: ${authors.size}\n\n`;
-    authorSection += [...authors].join('\n');
-    sections.push(authorSection);
-  }
-}
-
-export default async function generateReleaseNotes(
-  commits: IExtendedCommit[],
-  logger: ILogger,
-  options: IGenerateReleaseNotesOptions
-): Promise<string> {
-  if (commits.length === 0) {
-    return '';
+    return [...result].join(' ');
   }
 
-  logger.verbose.info('Generating release notes for:\n', commits);
+  private async generateCommitNote(commit: IExtendedCommit) {
+    let jira = '';
+    let pr = '';
 
-  options.hooks.renderChangelogAuthor.tap('Default', createUserLink);
-  options.hooks.renderChangelogAuthorLine.tap('Default', (author, user) => {
-    const authorString =
-      author.name && user ? `${author.name} (${user})` : user;
-    return authorString ? `- ${authorString}` : undefined;
-  });
-  options.hooks.renderChangelogLine.tapPromise(
-    'Default',
-    async (currCommits, renderLine) =>
-      Promise.all(currCommits.map(async commit => renderLine(commit)))
-  );
-  options.hooks.renderChangelogTitle.tap(
-    'Default',
-    (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
-  );
+    if (commit.jira && this.options.jira) {
+      const link = join(this.options.jira, ...commit.jira.number);
+      jira = `[${commit.jira.number}](${link}): `;
+    }
 
-  const split = splitCommits(
-    commits,
-    options.changelogTitles,
-    options.versionLabels
-  );
+    if (commit.pullRequest) {
+      const prLink = join(
+        this.options.baseUrl,
+        'pull',
+        commit.pullRequest.number
+      );
+      pr = `[#${commit.pullRequest.number}](${prLink})`;
+    }
 
-  logger.verbose.info('Split commits into groups');
-  logger.veryVerbose.info('\n', split);
+    const user = await this.createUserLinkList(commit);
 
-  const sections: string[] = [];
+    return `- ${jira}${commit.subject} ${pr}${user ? ` (${user})` : ''}`;
+  }
 
-  await createLabelSection(split, options, sections);
+  private async createAuthorSection(
+    split: { [key: string]: IExtendedCommit[] },
+    sections: string[]
+  ) {
+    const authors = new Set<string>();
+    const commits = Object.values(split).reduce(
+      (
+        labeledCommits: IExtendedCommit[],
+        sectionCommits: IExtendedCommit[]
+      ) => [...labeledCommits, ...sectionCommits],
+      []
+    );
 
-  logger.verbose.info('Added groups to changelog');
+    await Promise.all(
+      commits.map(async commit => {
+        commit.authors.map(async author => {
+          if (author.username === 'invalid-email-address') {
+            return;
+          }
 
-  await createAuthorSection(split, options, sections);
+          const user = await this.hooks.renderChangelogAuthor.promise(
+            author,
+            commit,
+            this.options
+          );
+          const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
+            author,
+            user as string
+          );
 
-  logger.verbose.info('Added authors to changelog');
+          if (authorEntry && !authors.has(authorEntry)) {
+            authors.add(authorEntry);
+          }
+        });
+      })
+    );
 
-  const result = sections.join('\n\n');
+    if (authors.size > 0) {
+      let authorSection = `#### Authors: ${authors.size}\n\n`;
+      authorSection += [...authors].join('\n');
+      sections.push(authorSection);
+    }
+  }
 
-  logger.verbose.info('Successfully generated release notes.');
+  private async createLabelSection(
+    split: { [key: string]: IExtendedCommit[] },
+    sections: string[]
+  ) {
+    await Promise.all(
+      Object.entries(split).map(async ([label, labelCommits]) => {
+        const title = await this.hooks.renderChangelogTitle.promise(
+          label,
+          this.options.changelogTitles
+        );
+        const lines = await this.hooks.renderChangelogLine.promise(
+          labelCommits,
+          this.generateCommitNote
+        );
 
-  return result;
+        sections.push([title, ...lines].join('\n'));
+      })
+    );
+  }
 }

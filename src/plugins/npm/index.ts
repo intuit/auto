@@ -180,39 +180,44 @@ export default class NPMPlugin implements IPlugin {
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.renderChangelogLine.tapPromise(
-      'NPM',
-      async (commits, renderLine) => {
-        if (isMonorepo()) {
-          await Promise.all(
-            commits.map(async commit => {
-              commit.packages = await changedPackages(commit.hash, auto.logger);
-            })
-          );
+    auto.hooks.onCreateLogParse.tap('NPM', async logParser => {
+      logParser.hooks.renderChangelogLine.tapPromise(
+        'NPM - Monorepo',
+        async (commits, renderLine) => {
+          if (isMonorepo()) {
+            await Promise.all(
+              commits.map(async commit => {
+                commit.packages = await changedPackages(
+                  commit.hash,
+                  auto.logger
+                );
+              })
+            );
 
-          const packageCommits = await partitionPackages(commits, renderLine);
-          const pkgCount = Object.keys(packageCommits).length;
-          const hasRepoCommits =
-            packageCommits.monorepo && packageCommits.monorepo.length > 0;
+            const packageCommits = await partitionPackages(commits, renderLine);
+            const pkgCount = Object.keys(packageCommits).length;
+            const hasRepoCommits =
+              packageCommits.monorepo && packageCommits.monorepo.length > 0;
 
-          if (pkgCount > 0 && (pkgCount !== 1 || !packageCommits.monorepo)) {
-            const section: string[] = [];
+            if (pkgCount > 0 && (pkgCount !== 1 || !packageCommits.monorepo)) {
+              const section: string[] = [];
 
-            if (hasRepoCommits) {
-              packageCommits.monorepo.forEach(note => section.push(note));
-              delete packageCommits.monorepo;
+              if (hasRepoCommits) {
+                packageCommits.monorepo.forEach(note => section.push(note));
+                delete packageCommits.monorepo;
+              }
+
+              Object.entries(packageCommits).map(([pkg, lines]) => {
+                section.push(`- ${pkg}`);
+                lines.map(note => section.push(`  ${note}`));
+              });
+
+              return section;
             }
-
-            Object.entries(packageCommits).map(([pkg, lines]) => {
-              section.push(`- ${pkg}`);
-              lines.map(note => section.push(`  ${note}`));
-            });
-
-            return section;
           }
         }
-      }
-    );
+      );
+    });
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
