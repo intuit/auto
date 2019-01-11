@@ -46,13 +46,143 @@ auto shipit --plugins npm NPM_PACKAGE_NAME ../path/to/plugin.js
 
 Plugins work by hooking into various actions that `auto` has to do in order to facilitate a release or interact with your GitHub repo. The hooks that it exposes are:
 
-- beforeRun - Happens before anything is done. This is a great place to check for platform specific secrets such as a NPM token.
-- getAuthor - Get git author
-- getPreviousVersion - Get the previous version
-- getRepository - Get owner/repo
-- publish - Publish the package
+#### beforeRun
 
-### Example Plugin - NPM
+Happens before anything is done. This is a great place to check for platform specific secrets such as a NPM token.
+
+```ts
+auto.hooks.beforeRun.tapPromise('NPM', async config => {
+  if (!process.env.NPM_TOKEN) {
+    throw new Error('NPM Token is needed for the NPM plugin!');
+  }
+});
+```
+
+#### getAuthor
+
+Get git author. Typically from a package distribution description file.
+
+```ts
+auto.hooks.getAuthor.tapPromise('NPM', async () => {
+  const { author } = JSON.parse(await readFile('package.json', 'utf-8'));
+
+  if (author) {
+    return author;
+  }
+});
+```
+
+#### getPreviousVersion
+
+Get the previous version. Typically from a package distribution description file.
+
+```ts
+auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+  const { version } = JSON.parse(await readFile('package.json', 'utf-8'));
+
+  if (version) {
+    return prefixRelease(
+      JSON.parse(await readFile('package.json', 'utf-8')).version
+    );
+  }
+});
+```
+
+#### getRepository
+
+Get owner and repository. Typically from a package distribution description file.
+
+```ts
+auto.hooks.getRepository.tapPromise('NPM', async () => {
+  const owner = // get the owner from package.json
+  const repo = // get the repo from package.json
+
+  return {
+    owner,
+    repo
+  }
+});
+```
+
+#### renderChangelogLine
+
+Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
+
+The following plugin would change all the bullet points in the changelog to star emojis.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
+  logParser.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async (commits, renderLine) =>
+      commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
+  );
+);
+```
+
+#### renderChangelogTitle
+
+Change how the changelog renders titles. The hook provides the current label for the section and all the configured changelog titles.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
+  logParser.hooks.renderChangelogTitle.tap(
+    'My Titles',
+    (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
+  );
+);
+```
+
+#### renderChangelogAuthor
+
+Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
+  logParser.hooks.renderChangelogAuthor.tap(
+    'test',
+    (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
+  );
+);
+```
+
+#### renderChangelogAuthorLine
+
+Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
+  logParser.hooks.renderChangelogAuthorLine.tap(
+    'test',
+    (author, user) => `:shipit: ${author.name} (${user})\n`
+  );
+);
+```
+
+#### publish
+
+Publish the package to some package distributor. You must push the tags to github!
+
+```ts
+auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
+  await execPromise('npm', [
+    'version',
+    version,
+    '-m',
+    'Bump version to: %s [skip ci]'
+  ]);
+  await execPromise('npm', ['publish']);
+  await execPromise('git', [
+    'push',
+    '--follow-tags',
+    '--set-upstream',
+    'origin',
+    '$branch'
+  ]);
+});
+```
+
+### Example Plugin - NPM (simple)
 
 To create a plugin simply make a class with an `apply` method and tap into the hooks you need.
 

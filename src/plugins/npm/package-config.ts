@@ -5,27 +5,17 @@ import { promisify } from 'util';
 export interface IRepoConfig {
   owner: string;
   repo: string;
-  version: string;
-}
-
-interface IPackageConfig {
-  version: string;
-  repository?:
-    | {
-        url: string;
-      }
-    | 'string';
 }
 
 const readFile = promisify(fs.readFile);
 
-const getPackageConfig = async (): Promise<IPackageConfig> => {
+const getPackageConfig = async (): Promise<IPackageJSON> => {
   const pkgConfig = await readFile('./package.json', 'utf-8');
   return JSON.parse(pkgConfig);
 };
 
 export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
-  const { repository, version } = await getPackageConfig();
+  const { repository } = await getPackageConfig();
 
   if (!repository) {
     throw new Error('Cannot read repo info from package.json');
@@ -44,7 +34,6 @@ export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
 
   return {
     repo: name,
-    owner,
-    version
+    owner
   };
 }

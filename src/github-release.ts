@@ -4,14 +4,13 @@ import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
+import { SyncHook } from 'tapable';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
-import generateReleaseNotes, {
-  IExtendedCommit,
-  normalizeCommits
-} from './log-parse';
+import LogParse, { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
+import { makeGitHubReleaseHooks } from './utils/make-hooks';
 import postToSlack from './utils/slack';
 
 export type VersionLabel =
@@ -77,8 +76,13 @@ defaultLabelsDescriptions.set(
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
+export interface IGitHubReleaseHooks {
+  onCreateLogParse: SyncHook<[LogParse]>;
+}
+
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
+  public readonly hooks: IGitHubReleaseHooks;
 
   private readonly logger: ILogger;
   private readonly github: GitHub;
@@ -93,6 +97,7 @@ export default class GitHubRelease {
     },
     logger: ILogger = dummyLog()
   ) {
+    this.hooks = makeGitHubReleaseHooks();
     this.versionLabels = releaseOptions.versionLabels || defaultLabels;
     this.logger = logger;
     this.releaseOptions = releaseOptions;
@@ -130,14 +135,7 @@ export default class GitHubRelease {
   ): Promise<string> {
     const commits = await this.getCommits(from, to);
     const project = await this.github.getProject();
-
-    await Promise.all(
-      commits.map(async commit => {
-        commit.packages = await this.github.changedPackages(commit.hash);
-      })
-    );
-
-    return generateReleaseNotes(commits, this.logger, {
+    const logParser = new LogParse(this.logger, {
       owner: this.github.options.owner,
       repo: this.github.options.repo,
       baseUrl: project.html_url,
@@ -148,6 +146,10 @@ export default class GitHubRelease {
         ...this.changelogTitles
       }
     });
+    this.hooks.onCreateLogParse.call(logParser);
+    logParser.loadDefaultHooks();
+
+    return logParser.generateReleaseNotes(commits);
   }
 
   public async addToChangelog(

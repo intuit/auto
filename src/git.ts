@@ -394,38 +394,4 @@ export default class GitHub {
 
     return result;
   }
-
-  public async changedPackages(sha: string) {
-    const packages = new Set<string>();
-    const changedFiles = await execPromise('git', [
-      'show',
-      '--first-parent',
-      sha,
-      '--name-only',
-      '--pretty='
-    ]);
-
-    changedFiles.split('\n').forEach(filePath => {
-      const parts = filePath.split('/');
-
-      if (parts[0] !== 'packages' || parts.length < 3) {
-        return;
-      }
-
-      packages.add(
-        parts.length > 3 && parts[1][0] === '@'
-          ? `${parts[1]}/${parts[2]}`
-          : parts[1]
-      );
-    });
-
-    if (packages.size > 0) {
-      this.logger.veryVerbose.info(
-        `Got changed packages for ${sha}:\n`,
-        packages
-      );
-    }
-
-    return [...packages];
-  }
 }

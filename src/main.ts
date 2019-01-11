@@ -24,11 +24,13 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import init from './init';
+import LogParse from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import loadPlugin, { IPlugin, IPluginConstructor } from './utils/load-plugins';
+import loadPlugin, { IPluginConstructor } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
+import { makeHooks } from './utils/make-hooks';
 
 interface IAuthor {
   name?: string;
@@ -41,7 +43,7 @@ interface IRepository {
   token?: string;
 }
 
-interface IAutoHooks {
+export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
@@ -50,6 +52,8 @@ interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
+  onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
+  onCreateLogParse: SyncHook<[LogParse]>;
 }
 
 export class AutoRelease {
@@ -65,14 +69,7 @@ export class AutoRelease {
     this.logger = createLog(
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
-
-    this.hooks = {
-      beforeRun: new SyncHook(['config']),
-      getAuthor: new AsyncSeriesBailHook([]),
-      getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
-      getRepository: new AsyncSeriesBailHook([]),
-      publish: new AsyncSeriesHook(['version'])
-    };
+    this.hooks = makeHooks();
   }
 
   public async loadConfig() {
@@ -124,15 +121,26 @@ export class AutoRelease {
 
     const repository = await this.getRepo();
     const token = repository.token || (await getGitHubToken(config.githubApi));
+
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
       config,
       this.logger
     );
+    this.hooks.onCreateGitHubRelease.tap(
+      'Link onCreateLogParse',
+      githubRelease => {
+        githubRelease.hooks.onCreateLogParse.tap(
+          'Link onCreateLogParse',
+          logParse => this.hooks.onCreateLogParse.call(logParse)
+        );
+      }
+    );
+    this.hooks.onCreateGitHubRelease.call(this.githubRelease);
   }
 
-  public async init({ onlyLabels }: IInitCommandOptions) {
-    await init(onlyLabels);
+  public async init(options: IInitCommandOptions = {}) {
+    await init(options.onlyLabels);
   }
 
   public async createLabels() {
