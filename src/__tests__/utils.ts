@@ -6,6 +6,6 @@ export const makeHooks = (): IAutoHooks => ({
   getAuthor: new AsyncSeriesBailHook([]),
   getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
   getRepository: new AsyncSeriesBailHook([]),
-  modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender']),
+  renderChangelogLine: new AsyncSeriesBailHook(['commits', 'lineRender']),
   publish: new AsyncSeriesHook(['version'])
 });

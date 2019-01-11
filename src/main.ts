@@ -42,7 +42,7 @@ interface IRepository {
   token?: string;
 }
 
-export type ModifyChangelogHook = AsyncSeriesBailHook<
+export type renderChangelogLineHook = AsyncSeriesBailHook<
   [IExtendedCommit[], (commit: IExtendedCommit) => string],
   string[] | void
 >;
@@ -54,7 +54,7 @@ export interface IAutoHooks {
     [(release: string) => string],
     string
   >;
-  modifyChangelog: ModifyChangelogHook;
+  renderChangelogLine: renderChangelogLineHook;
   getRepository: AsyncSeriesBailHook<[], IRepository>;
   publish: AsyncSeriesHook<[SEMVER]>;
 }
@@ -78,7 +78,7 @@ export class AutoRelease {
       getAuthor: new AsyncSeriesBailHook([]),
       getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
       getRepository: new AsyncSeriesBailHook([]),
-      modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender']),
+      renderChangelogLine: new AsyncSeriesBailHook(['commits', 'lineRender']),
       publish: new AsyncSeriesHook(['version'])
     };
   }

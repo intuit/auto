@@ -9,7 +9,7 @@ import generateReleaseNotes, {
   parseSquashPR
 } from '../log-parse';
 
-import { ModifyChangelogHook } from '../main';
+import { renderChangelogLineHook } from '../main';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
@@ -46,7 +46,10 @@ describe('createUserLink', () => {
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
           versionLabels: defaultLabels,
-          modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender'])
+          renderChangelogLine: new AsyncSeriesBailHook([
+            'commits',
+            'lineRender'
+          ])
         }
       )
     ).toBe(undefined);
@@ -81,7 +84,10 @@ describe('createUserLink', () => {
           baseUrl: 'https://github.custom.com/',
           changelogTitles: {},
           versionLabels: defaultLabels,
-          modifyChangelog: new AsyncSeriesBailHook(['commits', 'lineRender'])
+          renderChangelogLine: new AsyncSeriesBailHook([
+            'commits',
+            'lineRender'
+          ])
         }
       )
     ).toBe('default@email.com');
@@ -245,10 +251,10 @@ const options = {
   logger,
   versionLabels: defaultLabels,
   // tslint:disable-next-line no-unnecessary-type-assertion
-  modifyChangelog: new AsyncSeriesBailHook([
+  renderChangelogLine: new AsyncSeriesBailHook([
     'commits',
     'lineRender'
-  ]) as ModifyChangelogHook,
+  ]) as renderChangelogLineHook,
   changelogTitles: {
     major: '💥  Breaking Change',
     minor: '🚀  Enhancement',

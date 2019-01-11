@@ -64,7 +64,7 @@ test('should create sections for packages', async () => {
         baseUrl: 'https://github.custom.com/',
         changelogTitles: defaultChangelogTitles,
         versionLabels: defaultLabels,
-        modifyChangelog: hooks.modifyChangelog
+        renderChangelogLine: hooks.renderChangelogLine
       }
     )
   ).toMatchSnapshot();

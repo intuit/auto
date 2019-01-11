@@ -2,7 +2,7 @@ import { ICommit } from 'gitlog';
 import { URL } from 'url';
 import join from 'url-join';
 import { VersionLabel } from './github-release';
-import { ModifyChangelogHook } from './main';
+import { renderChangelogLineHook } from './main';
 import { ILogger } from './utils/logger';
 
 interface ICommitAuthor {
@@ -18,7 +18,7 @@ interface IGenerateReleaseNotesOptions {
   jira?: string;
   changelogTitles: { [label: string]: string };
   versionLabels: Map<VersionLabel, string>;
-  modifyChangelog: ModifyChangelogHook;
+  renderChangelogLine: renderChangelogLineHook;
 }
 
 export type IExtendedCommit = ICommit & {
@@ -244,14 +244,14 @@ async function createLabelSection(
   options: IGenerateReleaseNotesOptions,
   sections: string[]
 ) {
-  options.modifyChangelog.tap('Default', (commits, renderLine) =>
+  options.renderChangelogLine.tap('Default', (commits, renderLine) =>
     commits.map(commit => renderLine(commit))
   );
 
   await Promise.all(
     Object.entries(split).map(async ([label, labelCommits]) => {
       const title = `#### ${options.changelogTitles[label]}\n`;
-      const lines = await options.modifyChangelog.promise(
+      const lines = await options.renderChangelogLine.promise(
         labelCommits,
         commit => generateCommitNote(commit, options)
       );

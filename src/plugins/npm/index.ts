@@ -178,7 +178,7 @@ export default class NPMPlugin implements IPlugin {
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.modifyChangelog.tapPromise(
+    auto.hooks.renderChangelogLine.tapPromise(
       'NPM',
       async (commits, renderLine) => {
         if (isMonorepo()) {

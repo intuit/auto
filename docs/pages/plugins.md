@@ -104,17 +104,17 @@ auto.hooks.getRepository.tapPromise('NPM', async () => {
 });
 ```
 
-#### modifyChangelog
+#### renderChangelogLine
 
 Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
 
 The following plugin would change all the bullet points in the changelog to star emojis.
 
 ```ts
-auto.hooks.modifyChangelog.tapPromise('Stars', async (commits, renderLine) =>
-  commits.map(commit =>
-    renderLine(commit).map(line => `${line.replace('-', ':star:')}\n`)
-  )
+auto.hooks.renderChangelogLine.tapPromise(
+  'Stars',
+  async (commits, renderLine) =>
+    commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
 );
 ```
 
