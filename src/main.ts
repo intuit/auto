@@ -120,7 +120,10 @@ export class AutoRelease {
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo();
-    const token = repository.token || (await getGitHubToken(config.githubApi));
+    const token =
+      repository && repository.token
+        ? repository.token
+        : await getGitHubToken(config.githubApi);
 
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
