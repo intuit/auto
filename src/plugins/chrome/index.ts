@@ -113,6 +113,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       ]);
 
       // push to github
+      await execPromise('git', ['tag', manifest.version]);
       await execPromise('git', [
         'push',
         '--follow-tags',
