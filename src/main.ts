@@ -50,7 +50,7 @@ export interface IAutoHooks {
     [(release: string) => string],
     string
   >;
-  getRepository: AsyncSeriesBailHook<[], IRepository>;
+  getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
   onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
   onCreateLogParse: SyncHook<[LogParse]>;
