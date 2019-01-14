@@ -212,3 +212,6 @@ GitHub.sublime-settings
 .history
 
 # End of https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
+
+# Ignore auto generated json schema
+config-schema.json

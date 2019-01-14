@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "semver:check": "./scripts/post-install.sh",
+    "prebuild": "npm run generate-config-schema",
     "build": "tsc -p tsconfig.build.json",
     "build:watch": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
@@ -33,7 +34,8 @@
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
     "docs:watch": "ignite --watch",
-    "docs:publish": "./scripts/publish-docs.sh"
+    "docs:publish": "./scripts/publish-docs.sh",
+    "generate-config-schema": "quicktype --src-lang ts -l schema -o src/config-schema.json ./src/config.ts"
   },
   "dependencies": {
     "@octokit/rest": "^16.3.0",
@@ -73,6 +75,7 @@
     "jest": "~23.6.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
+    "quicktype": "^15.0.167",
     "ts-jest": "~23.10.5",
     "tslint": "~5.12.0",
     "tslint-config-prettier": "~1.17.0",
