@@ -23,6 +23,7 @@ import GitHubRelease, {
 } from './github-release';
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
+import { Config } from './config';
 import init from './init';
 import LogParse from './log-parse';
 import SEMVER from './semver';
@@ -76,7 +77,7 @@ export class AutoRelease {
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
 
-    let rawConfig: cosmiconfig.Config = {};
+    let rawConfig: Config = {};
 
     if (result && result.config) {
       rawConfig = result.config;
