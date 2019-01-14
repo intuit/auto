@@ -2,6 +2,10 @@
 
 This plugin allows you to automate the publishing of chrome extensions.
 
+::: message is-success
+Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
+:::
+
 ## Package Configuration
 
 You must first pack/zip your plugin before running `auto`.
