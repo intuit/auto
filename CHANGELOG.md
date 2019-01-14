@@ -1,3 +1,15 @@
+# v2.3.1 (Sun Jan 13 2019)
+
+#### 🐛  Bug Fix
+
+- also log stdout on errors [#185](https://github.com/intuit/auto-release/pull/185) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.3.0 (Fri Jan 11 2019)
 
 #### 🚀  Enhancement
