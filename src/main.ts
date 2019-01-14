@@ -108,8 +108,6 @@ export class AutoRelease {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
-    this.loadPlugins();
-
     const config = {
       ...rawConfig,
       ...this.args,
@@ -117,6 +115,7 @@ export class AutoRelease {
       skipReleaseLabels
     };
 
+    this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo();
@@ -532,8 +531,8 @@ If a command fails manually run:
     return this.hooks.getRepository.promise();
   }
 
-  private loadPlugins() {
-    const pluginsPaths = this.args.plugins || ['npm'];
+  private loadPlugins(config: IGitHubReleaseOptions) {
+    const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
       .map(loadPlugin)
@@ -551,7 +550,6 @@ export async function run(args: ArgsType) {
 
   switch (args.command) {
     case 'init':
-      await auto.loadConfig();
       await auto.init(args as IInitCommandOptions);
       break;
     case 'create-labels':
