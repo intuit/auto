@@ -15,29 +15,37 @@ export default class ChromeWebStorePlugin implements IPlugin {
   public apply(auto: AutoRelease) {
     auto.hooks.beforeRun.tap(this.name, () => {
       if (!process.env.CLIENT_ID) {
-        throw new Error(
+        auto.logger.log.warn(
           `${this.name}: CLIENT_ID environment variable must be set`
         );
       }
 
       if (!process.env.CLIENT_SECRET) {
-        throw new Error(
+        auto.logger.log.warn(
           `${this.name}: CLIENT_SECRET environment variable must be set`
         );
       }
 
       if (!process.env.REFRESH_TOKEN) {
-        throw new Error(
+        auto.logger.log.warn(
           `${this.name}: REFRESH_TOKEN environment variable must be set`
         );
       }
 
       if (!fs.existsSync('manifest.json')) {
-        throw new Error(`${this.name}: "manifest.json" must exist to publish`);
+        auto.logger.log.warn(
+          `${this.name}: "manifest.json" must exist to publish`
+        );
+      }
+
+      if (!process.env.EXTENSION_ID) {
+        auto.logger.log.warn(
+          `${this.name}: EXTENSION_ID environment variable must be set`
+        );
       }
 
       if (!fs.existsSync('extension.zip')) {
-        throw new Error(
+        auto.logger.log.warn(
           `${this.name}: Plugin must already be built as "extension.zip"`
         );
       }
@@ -94,7 +102,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       const manifestPath = 'manifest.json';
       const manifest = JSON.parse(await readFile(manifestPath, 'utf-8'));
       manifest.version = inc(manifest.version, version as ReleaseType);
-      await writeFile(manifestPath, JSON.stringify(manifest));
+      await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
       // commit new version
       await execPromise('git', ['add', manifestPath]);
@@ -107,6 +115,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
       // publish extension
       await execPromise('webstore', [
+        'upload',
+        '--extension-id',
+        process.env.EXTENSION_ID!,
         '--source',
         'extension.zip',
         '--auto-publish'
