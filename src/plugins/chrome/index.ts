@@ -9,6 +9,8 @@ import execPromise from '../../utils/exec-promise';
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
+const DEFAULT_ZIP = 'extension.zip';
+
 export default class ChromeWebStorePlugin implements IPlugin {
   public name = 'Chrome Web Store';
 
@@ -44,9 +46,13 @@ export default class ChromeWebStorePlugin implements IPlugin {
         );
       }
 
-      if (!fs.existsSync('extension.zip')) {
+      if (
+        !fs.existsSync(DEFAULT_ZIP) ||
+        (process.env.EXTENSION_ZIP && !fs.existsSync(process.env.EXTENSION_ZIP))
+      ) {
         auto.logger.log.warn(
-          `${this.name}: Plugin must already be built as "extension.zip"`
+          `${this.name}: Plugin must already be built as "${process.env
+            .EXTENSION_ZIP || DEFAULT_ZIP}"`
         );
       }
     });
@@ -119,7 +125,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         '--extension-id',
         process.env.EXTENSION_ID!,
         '--source',
-        'extension.zip',
+        process.env.EXTENSION_ZIP || DEFAULT_ZIP,
         '--auto-publish'
       ]);
 
