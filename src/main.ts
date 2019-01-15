@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import Ajv from 'ajv';
 import cosmiconfig from 'cosmiconfig';
 import envCi from 'env-ci';
 import { gt } from 'semver';
@@ -24,6 +25,7 @@ import GitHubRelease, {
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import { Config } from './config';
+import schema from './config-schema.json';
 import init from './init';
 import LogParse from './log-parse';
 import SEMVER from './semver';
@@ -74,14 +76,34 @@ export class AutoRelease {
   }
 
   public async loadConfig() {
+    const ajv = new Ajv({
+      allErrors: true,
+      // removeAdditional: 'failing',
+      useDefaults: true,
+      verbose: true
+    });
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
-
-    let rawConfig: Config = {};
-
-    if (result && result.config) {
-      rawConfig = result.config;
+    console.log(result);
+    let validate: any = () => new Error('Not implemented');
+    try {
+      validate = ajv.compile({
+        $ref: '#/definitions/Config',
+        ...schema
+      });
+    } catch (e) {
+      console.log(e);
     }
+    const valid = validate((result && result.config) || {});
+
+    console.log('valid?', valid);
+
+    if (!valid) {
+      console.log('error message', ajv.errorsText(), validate.errors);
+      throw new Error(`Invalid configuration ${ajv.errorsText()}`);
+    }
+
+    const rawConfig = (valid as unknown) as Config;
 
     this.logger.verbose.success(
       'Loaded `auto-release` with config:',

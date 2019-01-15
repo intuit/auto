@@ -1,6 +1,5 @@
 /* tslint:disable:no-inferrable-types */
-
-class Labels {
+export class Labels {
   public major: string = 'major';
   public minor: string = 'minor';
   public patch: string = 'patch';
@@ -19,11 +18,15 @@ class ChangelogTitles {
 }
 
 export class Config {
+  public noVersionPrefix?: boolean;
+  public onlyPublishWithReleaseLabel?: boolean;
   public name?: string;
   public email?: string;
-  public labels: Labels = new Labels();
-  public changelogTitles: ChangelogTitles = new ChangelogTitles();
-  public skipReleaseLabels: string[] = [];
+  public owner?: string;
+  public repo?: string;
+  public labels?: Labels = new Labels();
+  public changelogTitles?: ChangelogTitles = new ChangelogTitles();
+  public skipReleaseLabels?: string[] = [];
   public slack?: string;
   public jira?: string;
   public githubApi?: string;

@@ -28,6 +28,7 @@
     "build:watch": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
+    "pretest": "npm run generate-config-schema",
     "test": "jest",
     "release": "chmod +x ./dist/bin/auto.js && ./dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
@@ -39,6 +40,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^16.3.0",
+    "ajv": "^6.7.0",
     "chalk": "^2.4.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
