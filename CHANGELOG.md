@@ -1,3 +1,15 @@
+# v2.4.1 (Tue Jan 15 2019)
+
+#### 🐛  Bug Fix
+
+- add shipit to docs [#190](https://github.com/intuit/auto-release/pull/190) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.4.0 (Tue Jan 15 2019)
 
 #### 🚀  Enhancement
