@@ -45,12 +45,13 @@ interface IRepository {
 
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  beforeShipit: SyncHook<[]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
   >;
-  getRepository: AsyncSeriesBailHook<[], IRepository>;
+  getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
   onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
   onCreateLogParse: SyncHook<[LogParse]>;
@@ -108,8 +109,6 @@ export class AutoRelease {
       skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
     }
 
-    this.loadPlugins();
-
     const config = {
       ...rawConfig,
       ...this.args,
@@ -117,10 +116,14 @@ export class AutoRelease {
       skipReleaseLabels
     };
 
+    this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo();
-    const token = repository.token || (await getGitHubToken(config.githubApi));
+    const token =
+      repository && repository.token
+        ? repository.token
+        : await getGitHubToken(config.githubApi);
 
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
@@ -337,6 +340,7 @@ export class AutoRelease {
 
   public async shipit() {
     this.logger.verbose.info("Using command: 'shipit'");
+    this.hooks.beforeShipit.call();
 
     const version = await this.getVersion();
 
@@ -529,8 +533,8 @@ If a command fails manually run:
     return this.hooks.getRepository.promise();
   }
 
-  private loadPlugins() {
-    const pluginsPaths = this.args.plugins || ['npm'];
+  private loadPlugins(config: IGitHubReleaseOptions) {
+    const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
       .map(loadPlugin)
@@ -548,7 +552,6 @@ export async function run(args: ArgsType) {
 
   switch (args.command) {
     case 'init':
-      await auto.loadConfig();
       await auto.init(args as IInitCommandOptions);
       break;
     case 'create-labels':

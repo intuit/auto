@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { AutoRelease } from '../main';
+import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
 
 export type IPluginConstructor = new () => IPlugin;
@@ -9,9 +10,10 @@ export interface IPlugin {
   apply(auto: AutoRelease): void;
 }
 
-type SupportedPlugin = 'npm';
+type SupportedPlugin = 'npm' | 'chrome';
 const plugins = new Map<SupportedPlugin, IPluginConstructor>([
-  ['npm', NPMPlugin]
+  ['npm', NPMPlugin],
+  ['chrome', ChromeWebStorePlugin]
 ]);
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {

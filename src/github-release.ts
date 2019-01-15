@@ -36,6 +36,7 @@ export interface IGitHubReleaseOptions {
     [label: string]: string;
   };
   versionLabels?: Map<VersionLabel, string>;
+  plugins?: string[];
 }
 
 export const defaultLabels = new Map<VersionLabel, string>();

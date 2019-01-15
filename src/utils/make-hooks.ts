@@ -5,6 +5,7 @@ import { IAutoHooks } from '../main';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
+  beforeShipit: new SyncHook([]),
   onCreateGitHubRelease: new SyncHook(['config']),
   onCreateLogParse: new SyncHook(['gitHubReleaseConfig']),
   getAuthor: new AsyncSeriesBailHook([]),
