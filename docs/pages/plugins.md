@@ -53,6 +53,18 @@ Happens before anything is done. This is a great place to check for platform spe
 ```ts
 auto.hooks.beforeRun.tapPromise('NPM', async config => {
   if (!process.env.NPM_TOKEN) {
+    auto.logger.log.warn('NPM Token is needed for the NPM plugin!');
+  }
+});
+```
+
+#### beforeShipIt
+
+Happens before `shipit` is run. This is a great throw an error if a token or key is not present.
+
+```ts
+auto.hooks.beforeRun.tapPromise('NPM', async config => {
+  if (!process.env.NPM_TOKEN) {
     throw new Error('NPM Token is needed for the NPM plugin!');
   }
 });
