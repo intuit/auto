@@ -23,6 +23,12 @@ export interface IGitHubOptions {
   token?: string;
 }
 
+export function getRandomColor() {
+  return Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, '0');
+}
+
 class GitHubAPIError extends Error {
   constructor(api: string, args: object, origError: Error) {
     super(
@@ -265,7 +271,7 @@ export default class GitHub {
       name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: Math.floor(Math.random() * 16777215).toString(16),
+      color: getRandomColor(),
       description: defaultLabelsDescriptions.get(label)
     });
 
