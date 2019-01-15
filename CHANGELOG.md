@@ -1,3 +1,15 @@
+# v2.4.0 (Tue Jan 15 2019)
+
+#### 🚀  Enhancement
+
+- Chrome Web Store Plugin [#182](https://github.com/intuit/auto-release/pull/182) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.3.2 (Tue Jan 15 2019)
 
 #### 🐛  Bug Fix
