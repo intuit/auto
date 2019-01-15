@@ -1,3 +1,15 @@
+# v2.3.2 (Tue Jan 15 2019)
+
+#### 🐛  Bug Fix
+
+- Pad color to be 6 digits long [#189](https://github.com/intuit/auto-release/pull/189) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v2.3.1 (Sun Jan 13 2019)
 
 #### 🐛  Bug Fix
