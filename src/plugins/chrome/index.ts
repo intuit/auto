@@ -58,7 +58,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       }
     });
 
-    auto.hooks.beforeShipit.tap(this.name, () => {
+    auto.hooks.beforeShipIt.tap(this.name, () => {
       if (
         !process.env.CLIENT_ID ||
         !process.env.CLIENT_SECRET ||
