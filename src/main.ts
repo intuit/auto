@@ -45,6 +45,7 @@ interface IRepository {
 
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  beforeShipit: SyncHook<[]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
@@ -339,6 +340,7 @@ export class AutoRelease {
 
   public async shipit() {
     this.logger.verbose.info("Using command: 'shipit'");
+    this.hooks.beforeShipit.call();
 
     const version = await this.getVersion();
 

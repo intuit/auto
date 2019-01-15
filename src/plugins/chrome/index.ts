@@ -11,6 +11,10 @@ const writeFile = promisify(fs.writeFile);
 
 const DEFAULT_ZIP = 'extension.zip';
 
+const zipExists = () =>
+  fs.existsSync(DEFAULT_ZIP) ||
+  (process.env.EXTENSION_ZIP && fs.existsSync(process.env.EXTENSION_ZIP));
+
 export default class ChromeWebStorePlugin implements IPlugin {
   public name = 'Chrome Web Store';
 
@@ -46,13 +50,25 @@ export default class ChromeWebStorePlugin implements IPlugin {
         );
       }
 
-      if (
-        !fs.existsSync(DEFAULT_ZIP) ||
-        (process.env.EXTENSION_ZIP && !fs.existsSync(process.env.EXTENSION_ZIP))
-      ) {
+      if (!zipExists()) {
         auto.logger.log.warn(
           `${this.name}: Plugin must already be built as "${process.env
             .EXTENSION_ZIP || DEFAULT_ZIP}"`
+        );
+      }
+    });
+
+    auto.hooks.beforeShipit.tap(this.name, () => {
+      if (
+        !process.env.CLIENT_ID ||
+        !process.env.CLIENT_SECRET ||
+        !process.env.REFRESH_TOKEN ||
+        !fs.existsSync('manifest.json') ||
+        !process.env.EXTENSION_ID ||
+        !zipExists()
+      ) {
+        throw new Error(
+          "You don't have all necessary config set up! Check the warnings."
         );
       }
     });
