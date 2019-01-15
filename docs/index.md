@@ -27,6 +27,7 @@
 
 - [.autorc](pages/autorc.md)
 - [Plugins](pages/plugins.md)
+  - [Writing Plugins](pages/writing-plugins.md)
   - [Chrome Web Store](pages/chrome.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
