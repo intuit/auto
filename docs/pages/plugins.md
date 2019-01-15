@@ -2,6 +2,11 @@
 
 `auto` uses the package [tapable](https://github.com/webpack/tapable) to expose a plugin system. If you've ever written a webpack plugin it's a lot like that.
 
+A plugin definition is:
+
+- a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
+- a constructor where you can load plugin specific config
+
 ## Using Plugins
 
 To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins).
@@ -40,7 +45,66 @@ If you want to use multiple plugins you can supply multiple.
 auto shipit --plugins npm NPM_PACKAGE_NAME ../path/to/plugin.js
 ```
 
+### Plugin Configuration
+
+To provide plugin specific config change the following:
+
+```json
+{
+  "plugins": ["chrome"]
+}
+```
+
+To this:
+
+```json
+{
+  "plugins": [
+    ["chrome", { "extensionId": "1234", "zip": "my-compiled-extension.zip" }]
+  ]
+}
+```
+
 ## Writing Plugins
+
+A plugin is simply a javascript class with an `apply` function and an optional constructor.
+
+```ts
+import { AutoRelease, IPlugin } from 'auto-release-cli';
+
+export default class TestPlugin implements IPlugin {
+  private readonly config: any;
+
+  constructor(config: any) {
+    this.config = config;
+  }
+
+  apply(auto: AutoRelease) {
+    // hook into auto
+  }
+}
+```
+
+### Constructor
+
+In the constructor you have access to any plugin specific config provided in the `.autorc`. It might be useful to write a more type-safe interface for your config.
+
+```ts
+import { AutoRelease, IPlugin } from 'auto-release-cli';
+
+interface ITestPluginConfig {
+  foo?: string;
+  bar?: boolean;
+}
+
+export default class TestPlugin implements IPlugin {
+  private readonly config: ITestPluginConfig;
+
+  constructor(config: ITestPluginConfig) {
+    this.config = config;
+  }
+}
+```
 
 ### Hooks
 
