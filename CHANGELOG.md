@@ -1,3 +1,15 @@
+# v2.4.2 (Wed Jan 16 2019)
+
+#### 🐛  Bug Fix
+
+- Fix github repo lookup [#193](https://github.com/intuit/auto-release/pull/193) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v2.4.1 (Tue Jan 15 2019)
 
 #### 🐛  Bug Fix
