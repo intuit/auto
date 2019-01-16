@@ -9,51 +9,67 @@ import execPromise from '../../utils/exec-promise';
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const DEFAULT_ZIP = 'extension.zip';
-
-const zipExists = () =>
-  fs.existsSync(DEFAULT_ZIP) ||
-  (process.env.EXTENSION_ZIP && fs.existsSync(process.env.EXTENSION_ZIP));
-
 export default class ChromeWebStorePlugin implements IPlugin {
-  public name = 'Chrome Web Store';
+  public readonly name = 'Chrome Web Store';
+
+  private readonly id: string;
+  private readonly manifest: string;
+  private readonly build: string;
+
+  constructor(config: any) {
+    this.id = config.id || process.env.EXTENSION_ID;
+    this.manifest = config.manifest || 'manifest.json';
+    this.build = config.build || process.env.EXTENSION_BUILD || 'extension.zip';
+  }
+
+  public reportWarning(auto: AutoRelease, message: string) {
+    auto.logger.log.warn(`${this.name}: ${message}`);
+  }
 
   public apply(auto: AutoRelease) {
     auto.hooks.beforeRun.tap(this.name, () => {
-      if (!process.env.CLIENT_ID) {
-        auto.logger.log.warn(
-          `${this.name}: CLIENT_ID environment variable must be set`
+      if (!this.id) {
+        this.reportWarning(
+          auto,
+          'EXTENSION_ID environment variable must be set or "id" in autorc'
         );
       }
 
+      if (!fs.existsSync(this.manifest)) {
+        this.reportWarning(
+          auto,
+          `"${
+            this.manifest
+          }" must exist to publish. Or provide a custom path in you autorc`
+        );
+      }
+
+      if (!fs.existsSync(this.build)) {
+        this.reportWarning(
+          auto,
+          `Path to either a zip file, or a directory to be zipped at ${
+            this.build
+          }`
+        );
+      }
+
+      // Secrets
+
+      if (!process.env.CLIENT_ID) {
+        this.reportWarning(auto, 'CLIENT_ID environment variable must be set');
+      }
+
       if (!process.env.CLIENT_SECRET) {
-        auto.logger.log.warn(
-          `${this.name}: CLIENT_SECRET environment variable must be set`
+        this.reportWarning(
+          auto,
+          'CLIENT_SECRET environment variable must be set'
         );
       }
 
       if (!process.env.REFRESH_TOKEN) {
-        auto.logger.log.warn(
-          `${this.name}: REFRESH_TOKEN environment variable must be set`
-        );
-      }
-
-      if (!fs.existsSync('manifest.json')) {
-        auto.logger.log.warn(
-          `${this.name}: "manifest.json" must exist to publish`
-        );
-      }
-
-      if (!process.env.EXTENSION_ID) {
-        auto.logger.log.warn(
-          `${this.name}: EXTENSION_ID environment variable must be set`
-        );
-      }
-
-      if (!zipExists()) {
-        auto.logger.log.warn(
-          `${this.name}: Plugin must already be built as "${process.env
-            .EXTENSION_ZIP || DEFAULT_ZIP}"`
+        this.reportWarning(
+          auto,
+          'REFRESH_TOKEN environment variable must be set'
         );
       }
     });
@@ -63,9 +79,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
         !process.env.CLIENT_ID ||
         !process.env.CLIENT_SECRET ||
         !process.env.REFRESH_TOKEN ||
-        !fs.existsSync('manifest.json') ||
-        !process.env.EXTENSION_ID ||
-        !zipExists()
+        !fs.existsSync(this.manifest) ||
+        !this.id ||
+        !fs.existsSync(this.build)
       ) {
         throw new Error(
           "You don't have all necessary config set up! Check the warnings."
@@ -78,7 +94,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         `${this.name}: Getting author information from package.json`
       );
 
-      const manifest = JSON.parse(await readFile('manifest.json', 'utf-8'));
+      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
 
       if (manifest.author) {
         const { author } = manifest;
@@ -100,7 +116,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
-      const manifest = JSON.parse(await readFile('manifest.json', 'utf-8'));
+      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
       const version = prefixRelease(manifest.version);
 
       auto.logger.verbose.info(
@@ -121,13 +137,12 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
       // increment version
-      const manifestPath = 'manifest.json';
-      const manifest = JSON.parse(await readFile(manifestPath, 'utf-8'));
+      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
       manifest.version = inc(manifest.version, version as ReleaseType);
-      await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+      await writeFile(this.manifest, JSON.stringify(manifest, null, 2));
 
       // commit new version
-      await execPromise('git', ['add', manifestPath]);
+      await execPromise('git', ['add', this.manifest]);
       await execPromise('git', [
         'commit',
         '-m',
@@ -139,9 +154,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
       await execPromise('webstore', [
         'upload',
         '--extension-id',
-        process.env.EXTENSION_ID!,
+        this.id,
         '--source',
-        process.env.EXTENSION_ZIP || DEFAULT_ZIP,
+        this.build,
         '--auto-publish'
       ]);
 
