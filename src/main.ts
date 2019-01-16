@@ -119,7 +119,7 @@ export class AutoRelease {
     this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
-    const repository = await this.getRepo();
+    const repository = await this.getRepo(config);
     const token =
       repository && repository.token
         ? repository.token
@@ -521,13 +521,9 @@ If a command fails manually run:
     }
   }
 
-  private async getRepo() {
-    if (
-      this.githubRelease &&
-      this.githubRelease.releaseOptions.repo &&
-      this.githubRelease.releaseOptions.owner
-    ) {
-      return this.githubRelease.releaseOptions as IRepository;
+  private async getRepo(config: IGitHubReleaseOptions) {
+    if (config.owner && config.repo) {
+      return config as IRepository;
     }
 
     return this.hooks.getRepository.promise();
