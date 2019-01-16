@@ -41,6 +41,7 @@
   "dependencies": {
     "@octokit/rest": "^16.3.0",
     "ajv": "^6.7.0",
+    "better-ajv-errors": "^0.6.1",
     "chalk": "^2.4.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",

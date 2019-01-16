@@ -55,14 +55,10 @@ describe('AutoRelease', () => {
     expect(auto.githubRelease).toBeDefined();
   });
 
-  test.only('should fail if config is invalid', async () => {
-    search.mockReturnValueOnce({ config: { ...defaults, invalid: true } });
+  test.only('should fail if config contains extra property', () => {
+    search.mockReturnValueOnce({ config: { invalid: true } });
     const auto = new AutoRelease({ command: 'init' });
-    try {
-      await expect(auto.loadConfig()).rejects.toMatch('error');
-    } catch (e) {
-      console.log(e);
-    }
+    return expect(auto.loadConfig()).rejects.toThrowError();
   });
 
   test('should use labels from config config', async () => {

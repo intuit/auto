@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import Ajv from 'ajv';
+import betterErrors from 'better-ajv-errors';
 import cosmiconfig from 'cosmiconfig';
 import envCi from 'env-ci';
 import { gt } from 'semver';
@@ -76,31 +77,54 @@ export class AutoRelease {
   }
 
   public async loadConfig() {
+    // Make schema fail for any invalid property
+    const strictSchema = {
+      ...schema,
+      $ref: '#/definitions/Config',
+      definitions: Object.entries(schema.definitions)
+        .map(([name, definition]) => ({
+          [name]: {
+            ...definition,
+            additionalProperties: (definition as any).additionalProperties
+              ? (definition as any).additionalProperties
+              : false
+          }
+        }))
+        .reduce((curr, prev) => ({
+          ...curr,
+          ...prev
+        }))
+    };
+
     const ajv = new Ajv({
       allErrors: true,
-      // removeAdditional: 'failing',
-      useDefaults: true,
-      verbose: true
+      verbose: true,
+      jsonPointers: true
     });
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
     console.log(result);
     let validate: any = () => new Error('Not implemented');
     try {
-      validate = ajv.compile({
-        $ref: '#/definitions/Config',
-        ...schema
-      });
+      validate = ajv.compile(strictSchema);
     } catch (e) {
       console.log(e);
     }
-    const valid = validate((result && result.config) || {});
+    const valid = validate({
+      ...new Config(),
+      ...((result && result.config) || {})
+    });
 
     console.log('valid?', valid);
 
     if (!valid) {
-      console.log('error message', ajv.errorsText(), validate.errors);
-      throw new Error(`Invalid configuration ${ajv.errorsText()}`);
+      const output = betterErrors(
+        schema,
+        (result && result.config) || {},
+        validate.errors
+      );
+      console.error(output);
+      throw new Error();
     }
 
     const rawConfig = (valid as unknown) as Config;
