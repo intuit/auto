@@ -433,5 +433,26 @@ describe('AutoRelease', () => {
       await auto.changelog({ from: 'v1.0.0' });
       expect(addToChangelog).toHaveBeenCalled();
     });
+
+    test('should skip getRepository hook if passed in via cli', async () => {
+      const auto = new AutoRelease({
+        command: 'pr',
+        repo: 'test',
+        owner: 'adierkens'
+      });
+
+      const hookFn = jest.fn();
+      auto.hooks.getRepository.tap('test', hookFn);
+      await auto.loadConfig();
+      await auto.pr({
+        url: 'foo.bar',
+        state: 'pending',
+        description: 'Waiting for stuffs',
+        context: 'tests',
+        dryRun: true
+      });
+
+      expect(hookFn).not.toBeCalled();
+    });
   });
 });
