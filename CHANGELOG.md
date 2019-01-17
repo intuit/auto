@@ -1,3 +1,15 @@
+# v2.5.1 (Wed Jan 16 2019)
+
+#### 🐛  Bug Fix
+
+- `auto label`: must sort PRs first because they can get merged out of order [#197](https://github.com/intuit/auto-release/pull/197) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.0 (Wed Jan 16 2019)
 
 #### 🚀  Enhancement
