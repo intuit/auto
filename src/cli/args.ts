@@ -78,7 +78,7 @@ const defaultOptions = [
     name: 'owner',
     type: String,
     description:
-      'Version number to publish as. Defaults to reading from the package definition for the platform',
+      'The owner of the GitHub repo. Defaults to reading from the package definition for the platform',
     group: 'misc'
   },
   {
