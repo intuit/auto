@@ -1,3 +1,15 @@
+# v2.5.2 (Thu Jan 17 2019)
+
+#### 🐛  Bug Fix
+
+- correct help message for owner [#199](https://github.com/intuit/auto-release/pull/199) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.1 (Wed Jan 16 2019)
 
 #### 🐛  Bug Fix
