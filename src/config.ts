@@ -1,11 +1,24 @@
 /* tslint:disable:no-inferrable-types */
+export enum Label {
+  major = 'major',
+  minor = 'minor',
+  patch = 'patch',
+  release = 'release',
+  prerelease = 'prerelease',
+  skipRelease = 'skipRelease'
+}
+
 export class Labels {
-  public major: string = 'major';
-  public minor: string = 'minor';
-  public patch: string = 'patch';
-  public skipRelease: string = 'skip-release';
-  public release: string = 'release';
-  public prerelease: string = 'prerelease';
+  public [Label.major]: string = 'major';
+  public [Label.minor]: string = 'minor';
+  public [Label.patch]: string = 'patch';
+  public [Label.skipRelease]: string = 'skip-release';
+  /**
+   * @deprecated
+   */
+  public 'skip-release': string = 'skip-release';
+  public [Label.release]: string = 'release';
+  public [Label.prerelease]: string = 'prerelease';
 }
 
 class ChangelogTitles {

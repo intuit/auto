@@ -55,7 +55,7 @@ describe('AutoRelease', () => {
     expect(auto.githubRelease).toBeDefined();
   });
 
-  test.only('should fail if config contains extra property', () => {
+  test.only('should fail if config contains extra property', async () => {
     search.mockReturnValueOnce({ config: { invalid: true } });
     const auto = new AutoRelease({ command: 'init' });
     return expect(auto.loadConfig()).rejects.toThrowError();
