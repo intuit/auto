@@ -1,3 +1,15 @@
+# v2.5.0 (Wed Jan 16 2019)
+
+#### 🚀  Enhancement
+
+- Plugin Config [#192](https://github.com/intuit/auto-release/pull/192) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.4.2 (Wed Jan 16 2019)
 
 #### 🐛  Bug Fix
