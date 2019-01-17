@@ -31,7 +31,7 @@ Global Options
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --owner string        The owner of the GitHub repo. Defaults to reading from the package.json
   --github-api string   GitHub API to use
   --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
 
