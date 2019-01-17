@@ -3,7 +3,7 @@ import { AutoRelease } from '../main';
 import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
 
-export type IPluginConstructor = new (options: any) => IPlugin;
+export type IPluginConstructor = new (options?: any) => IPlugin;
 
 export interface IPlugin {
   name: string;

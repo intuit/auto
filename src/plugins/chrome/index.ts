@@ -9,6 +9,12 @@ import execPromise from '../../utils/exec-promise';
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
+interface IChromeWebStoreConfig {
+  id?: string;
+  manifest?: string;
+  build: string;
+}
+
 export default class ChromeWebStorePlugin implements IPlugin {
   public readonly name = 'Chrome Web Store';
 
@@ -16,8 +22,8 @@ export default class ChromeWebStorePlugin implements IPlugin {
   private readonly manifest: string;
   private readonly build: string;
 
-  constructor(config: any) {
-    this.id = config.id || process.env.EXTENSION_ID;
+  constructor(config: IChromeWebStoreConfig) {
+    this.id = config.id || process.env.EXTENSION_ID!;
     this.manifest = config.manifest || 'manifest.json';
     this.build = config.build || process.env.EXTENSION_BUILD || 'extension.zip';
   }

@@ -60,7 +60,7 @@ To this:
 ```json
 {
   "plugins": [
-    ["chrome", { "extensionId": "1234", "zip": "my-compiled-extension.zip" }]
+    ["chrome", { "extensionId": "1234", "build": "my-compiled-extension.zip" }]
   ]
 }
 ```
