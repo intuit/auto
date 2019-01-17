@@ -30,7 +30,7 @@ export type IExtendedCommit = ICommit & {
   jira?: {
     number: string[];
   };
-  labels: string[];
+  labels?: string[];
   packages?: string[];
 };
 
@@ -161,7 +161,7 @@ export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
 }
 
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
-  commits.filter(commit => commit.labels.includes(label));
+  commits.filter(commit => commit.labels && commit.labels.includes(label));
 
 export default class LogParse {
   public readonly hooks: ILogParseHooks;
@@ -246,12 +246,14 @@ export default class LogParse {
   ): { [key: string]: IExtendedCommit[] } {
     let currentCommits = [...commits];
 
+    // Add 'patch' labels to PRs without any labels
     commits
       .filter(
         commit =>
-          (commit.pullRequest || commit.jira) && commit.labels.length === 0
+          (commit.pullRequest || commit.jira) &&
+          (!commit.labels || commit.labels.length === 0)
       )
-      .map(commit => commit.labels.push('patch'));
+      .forEach(commit => (commit.labels = ['patch']));
 
     return Object.assign(
       {},

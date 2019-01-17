@@ -322,7 +322,18 @@ describe('generateReleaseNotes', () => {
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('First'),
-      makeCommitFromMsg('Some Feature (#1234)'),
+      {
+        hash: 'foo',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        authors: [
+          {
+            name: 'Adam Dierkens',
+            email: 'adam@dierkens.com'
+          }
+        ],
+        subject: 'Some Feature (#1234)'
+      },
       makeCommitFromMsg('Third')
     ]);
 

@@ -330,7 +330,11 @@ export default class GitHubRelease {
 
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
-    const labels = commits.map(commit => commit.labels);
+    const labels = commits
+      .map(commit => commit.labels)
+      .filter(
+        (list): list is string[] => Array.isArray(list) && list.length > 0
+      );
     const {
       onlyPublishWithReleaseLabel,
       skipReleaseLabels
@@ -384,9 +388,7 @@ export default class GitHubRelease {
 
     await Promise.all(
       eCommits.map(async commit => {
-        if (!commit.pullRequest) {
-          commit.labels = [];
-        } else {
+        if (commit.pullRequest) {
           commit.labels = await this.getLabels(
             parseInt(commit.pullRequest.number, 10)
           );

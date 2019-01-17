@@ -384,6 +384,7 @@ describe('GitHubRelease', () => {
     test('should not publish a release', async () => {
       const gh = new GitHubRelease(options);
       const commits = [
+        makeCommitFromMsg("I will be ignored since I'm not a PR"),
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
         makeCommitFromMsg('Third (#1236)')
