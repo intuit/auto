@@ -140,7 +140,14 @@ describe('AutoRelease', () => {
       const getPullRequests = jest.fn();
       auto.githubRelease!.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([
-        { merged_at: true, labels: [{ name: 'foo' }, { name: 'bar' }] }
+        {
+          merged_at: '2019-01-08T03:45:33.000Z',
+          labels: [{ name: 'wubbalublub' }]
+        },
+        {
+          merged_at: '2019-01-10T03:45:33.000Z',
+          labels: [{ name: 'foo' }, { name: 'bar' }]
+        }
       ]);
       console.log = jest.fn();
 

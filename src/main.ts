@@ -178,7 +178,12 @@ export class AutoRelease {
       const pulls = await this.githubRelease.getPullRequests({
         state: 'closed'
       });
-      const lastMerged = pulls.find(pull => !!pull.merged_at);
+      const lastMerged = pulls
+        .sort(
+          (a, b) =>
+            new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
+        )
+        .find(pull => !!pull.merged_at);
 
       if (lastMerged) {
         labels = lastMerged.labels.map(label => label.name);
