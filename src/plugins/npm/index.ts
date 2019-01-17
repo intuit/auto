@@ -22,13 +22,17 @@ async function greaterRelease(
   name: any,
   packageVersion: string
 ) {
-  const publishedVersion = prefixRelease(
-    await execPromise('npm', ['view', name, 'version'])
-  );
+  try {
+    const publishedVersion = prefixRelease(
+      await execPromise('npm', ['view', name, 'version'])
+    );
 
-  return gt(packageVersion, publishedVersion)
-    ? packageVersion
-    : publishedVersion;
+    return gt(packageVersion, publishedVersion)
+      ? packageVersion
+      : publishedVersion;
+  } catch (error) {
+    return packageVersion;
+  }
 }
 
 export async function changedPackages(sha: string, logger: ILogger) {
