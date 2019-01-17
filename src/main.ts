@@ -28,7 +28,7 @@ import LogParse from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import loadPlugin, { IPluginConstructor } from './utils/load-plugins';
+import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
@@ -533,10 +533,12 @@ If a command fails manually run:
     const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
+      .map(plugin =>
+        typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
+      )
       .map(loadPlugin)
-      .filter((plugin): plugin is IPluginConstructor => !!plugin)
-      .forEach(pluginConstructor => {
-        const plugin = new pluginConstructor();
+      .filter((plugin): plugin is IPlugin => !!plugin)
+      .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);
       });

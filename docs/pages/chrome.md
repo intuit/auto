@@ -12,8 +12,25 @@ You must first pack/zip your plugin before running `auto`.
 
 These environment variables tell `auto` what to publish.
 
-- EXTENSION_ID - your chrome extensions unique ID
-- EXTENSION_ZIP - defaults to `extension.zip`
+- EXTENSION_ID - your chrome extensions unique ID (REQUIRED)
+- EXTENSION_BUILD - Path to either a zip file, or a directory to be zip. defaults to `extension.zip`
+
+Or you can set these values in the autorc:
+
+```json
+{
+  "plugins": [
+    [
+      "chrome",
+      {
+        "id": "1234",
+        "build": "path/to/zip/or/folder",
+        "manifest": "path/tp/manifest.json"
+      }
+    ]
+  ]
+}
+```
 
 ::: message is-warning
 :warning: You must have a manifest.json for this plugin to work.
