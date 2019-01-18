@@ -1,3 +1,15 @@
+# v2.5.4 (Thu Jan 17 2019)
+
+#### 🐛  Bug Fix
+
+- NPM Plugin: to publish a scoped package `--access public` is needed [#207](https://github.com/intuit/auto-release/pull/207) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.3 (Thu Jan 17 2019)
 
 #### 🐛  Bug Fix
