@@ -541,7 +541,7 @@ If a command fails manually run:
       .map(plugin =>
         typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
       )
-      .map(loadPlugin)
+      .map(plugin => loadPlugin(plugin, this.logger))
       .filter((plugin): plugin is IPlugin => !!plugin)
       .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);

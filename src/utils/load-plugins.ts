@@ -2,6 +2,7 @@ import * as path from 'path';
 import { AutoRelease } from '../main';
 import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
+import { ILogger } from './logger';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -20,23 +21,32 @@ function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
   return !!plugins.get(key as SupportedPlugin);
 }
 
-export default function loadPlugin([pluginPath, options]: [
-  SupportedPlugin | string,
-  any
-]): IPlugin | undefined {
+function tryRequire(tryPath: string) {
+  try {
+    return require(tryPath);
+  } catch (error) {
+    return null;
+  }
+}
+
+export default function loadPlugin(
+  [pluginPath, options]: [SupportedPlugin | string, any],
+  logger: ILogger
+): IPlugin | undefined {
   let plugin: IPluginConstructor | undefined;
 
   if (isSupported(pluginPath)) {
     plugin = plugins.get(pluginPath);
   } else {
-    try {
-      plugin = require(pluginPath);
-    } catch (error) {
-      plugin = require(path.join(process.cwd(), pluginPath));
+    plugin = tryRequire(pluginPath);
+
+    if (!plugin) {
+      plugin = tryRequire(path.join(process.cwd(), pluginPath));
     }
   }
 
   if (!plugin) {
+    logger.log.warn(`Could not find plugin: ${pluginPath}`);
     return;
   }
 

@@ -78,6 +78,12 @@ exports[`generateReleaseNotes should create note for jira commits without labels
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
+"#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234)"
+`;
+
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
 "#### 🐛  Bug Fix
 
