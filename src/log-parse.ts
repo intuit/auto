@@ -21,12 +21,14 @@ export interface IGenerateReleaseNotesOptions {
   versionLabels: Map<VersionLabel, string>;
 }
 
+export interface IPullRequest {
+  number: string;
+  base?: string;
+}
+
 export type IExtendedCommit = ICommit & {
   authors: ICommitAuthor[];
-  pullRequest?: {
-    number: string;
-    base?: string;
-  };
+  pullRequest?: IPullRequest;
   jira?: {
     number: string[];
   };
