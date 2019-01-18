@@ -207,7 +207,7 @@ export default class GitHubRelease {
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
     const labeledCommits = await this.addLabelsToCommits(gitlog);
-    const commits = await this.getPRForRebaseCommits(labeledCommits);
+    const commits = await this.getPRForRebasedCommits(labeledCommits);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -396,7 +396,7 @@ export default class GitHubRelease {
     return eCommits;
   }
 
-  private async getPRForRebaseCommits(commits: IExtendedCommit[]) {
+  private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
     const lastRelease = await this.github.getLatestReleaseInfo();
 
     if (!lastRelease || !lastRelease.published_at) {
@@ -406,25 +406,18 @@ export default class GitHubRelease {
     const prsSinceLastRelease = await this.github.searchRepo({
       q: `is:pr is:merged merged:>=${lastRelease.published_at}`
     });
-    const prsWithCommits = await Promise.all(prsSinceLastRelease.items.map(
+    const pullRequests = await Promise.all(prsSinceLastRelease.items.map(
       async (pr: { number: number }) =>
         this.github.getPullRequest(Number(pr.number))
     ) as GHub.Response<GHub.PullsGetResponse>[]);
-    const representedPRs = commits
-      .filter(commit => commit.pullRequest)
-      .map(commit => commit.pullRequest!.number);
 
     await Promise.all(
       commits.map(async commit => {
-        const matchPr = prsWithCommits.find(
+        const matchPr = pullRequests.find(
           pr => pr.data.merge_commit_sha === commit.hash
         );
 
-        if (
-          !commit.pullRequest &&
-          matchPr &&
-          !representedPRs.includes(matchPr.data.number)
-        ) {
+        if (!commit.pullRequest && matchPr) {
           commit.labels = matchPr.data.labels.map(label => label.name) || [];
           commit.pullRequest = {
             number: matchPr.data.number

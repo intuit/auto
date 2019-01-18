@@ -22,6 +22,70 @@ exports[`GitHubRelease generateReleaseNotes should allow user to configure secti
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`GitHubRelease getCommits should ignore rebased commits if no last release 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "hash": "foo",
+    "labels": undefined,
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "Second",
+  },
+]
+`;
+
+exports[`GitHubRelease getCommits should match rebased commits to PRs 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "hash": "foo",
+    "labels": undefined,
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 124,
+    },
+    "subject": "Feature",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "hash": "1a2b",
+    "labels": Array [
+      "skip-release",
+      "minor",
+    ],
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "I was rebased",
+  },
+]
+`;
+
 exports[`GitHubRelease getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {

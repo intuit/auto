@@ -25,7 +25,7 @@ async function getPublishedVersion(name: string) {
   }
 }
 
-async function greaterRelease(
+export async function greaterRelease(
   prefixRelease: (release: string) => string,
   name: string,
   packageVersion: string
@@ -74,12 +74,12 @@ export async function changedPackages(sha: string, logger: ILogger) {
   return [...packages];
 }
 
-function getMonorepoPackage() {
+export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
 
   return packages.reduce(
     (greatest, subPackage) => {
-      if (subPackage.package.version && !subPackage.package.private) {
+      if (subPackage.package.version) {
         return gt(greatest.version!, subPackage.package.version)
           ? greatest
           : subPackage.package;
@@ -158,7 +158,7 @@ export default class NPMPlugin implements IPlugin {
 
         const releasedPackage = getMonorepoPackage();
 
-        if (!releasedPackage) {
+        if (releasedPackage.version === '0.0.0') {
           previousVersion = monorepoVersion;
         } else {
           previousVersion = await greaterRelease(

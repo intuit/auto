@@ -317,6 +317,17 @@ describe('generateReleaseNotes', () => {
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
+  test('should omit authors with invalid email addresses', async () => {
+    const logParse = new LogParse(dummyLog(), testOptions());
+    logParse.loadDefaultHooks();
+    const normalized = normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
+    ]);
+    normalized[0].authors[0].username = 'invalid-email-address';
+
+    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
   test('should create note for PR commits without labels', async () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();

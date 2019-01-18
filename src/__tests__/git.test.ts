@@ -14,6 +14,7 @@ const deleteComment = jest.fn();
 const listCommits = jest.fn();
 const getProject = jest.fn();
 const listLabelsForRepo = jest.fn();
+const issuesAndPullRequests = jest.fn();
 const createLabel = jest.fn();
 const list = jest.fn();
 
@@ -39,12 +40,19 @@ jest.mock('@octokit/rest', () => () => ({
     get: getProject
   },
   search: {
-    users: getUser
+    users: getUser,
+    issuesAndPullRequests
   },
   users: {
     getByUsername
   }
 }));
+
+const options = {
+  owner: 'Adam Dierkens',
+  repo: 'test',
+  token: 'MyToken'
+};
 
 describe('github', () => {
   beforeEach(() => {
@@ -86,11 +94,7 @@ describe('github', () => {
     });
 
     test('should use options token', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       await gh.authenticate();
       expect(authenticate).toHaveBeenCalledWith({
@@ -102,11 +106,7 @@ describe('github', () => {
 
   describe('getLabels', async () => {
     test('successful', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       listLabelsOnIssue.mockReturnValueOnce({
         data: [
@@ -126,22 +126,14 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       expect(gh.getLabels(123)).rejects.toBeTruthy();
     });
   });
 
   test('publish', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     await gh.publish('releaseNotes', 'tag');
 
@@ -149,11 +141,7 @@ describe('github', () => {
   });
 
   test('getFirstCommit ', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     expect(await gh.getFirstCommit()).toBe(
       '0b2af75d8b55c8869cda93d0e5589ad9f2677e18'
@@ -161,21 +149,13 @@ describe('github', () => {
   });
 
   test('getSha', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     expect(await gh.getSha()).toBeDefined();
   });
 
   test('getGitLog ', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     expect(
       await gh.getGitLog(
@@ -186,11 +166,7 @@ describe('github', () => {
   });
 
   test('getUser', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     getPr.mockReturnValueOnce('asdfasdf');
 
@@ -198,11 +174,7 @@ describe('github', () => {
   });
 
   test('createStatus', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     createStatus.mockReturnValueOnce(true);
 
@@ -217,12 +189,23 @@ describe('github', () => {
     ).toBeTruthy();
   });
 
-  test('getProject', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
+  test('search', async () => {
+    const gh = new GitHub(options);
+
+    issuesAndPullRequests.mockReturnValueOnce({ data: true });
+    await gh.searchRepo({
+      q: 'is:pr is:open',
+      order: 'desc'
     });
+
+    expect(issuesAndPullRequests).toHaveBeenCalledWith({
+      q: 'repo:Adam Dierkens/test is:pr is:open',
+      order: 'desc'
+    });
+  });
+
+  test('getProject', async () => {
+    const gh = new GitHub(options);
 
     getProject.mockReturnValueOnce({ data: true });
 
@@ -231,11 +214,7 @@ describe('github', () => {
 
   describe('createComment', async () => {
     test('should post comment if none exists', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       listComments.mockReturnValueOnce({ data: [] });
       await gh.createComment('Some long thing', 22, 'default');
@@ -244,11 +223,7 @@ describe('github', () => {
     });
 
     test('should delete old comment', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       listComments.mockReturnValueOnce({
         data: [
@@ -267,11 +242,7 @@ describe('github', () => {
     });
 
     test('should be able to comment in different contexts', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       listComments.mockReturnValueOnce({
         data: [
@@ -308,11 +279,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     listCommits.mockReturnValueOnce({
       data: undefined
@@ -323,11 +290,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     list.mockReturnValueOnce({
       data: undefined
@@ -338,11 +301,7 @@ describe('github', () => {
   });
 
   test('getUserByUsername', async () => {
-    const gh = new GitHub({
-      owner: 'Adam Dierkens',
-      repo: 'test',
-      token: 'MyToken'
-    });
+    const gh = new GitHub(options);
 
     getByUsername.mockReturnValueOnce({
       data: { name: 'Andrew Lisowski' }
@@ -355,11 +314,7 @@ describe('github', () => {
 
   describe('getUserByEmail', async () => {
     test('exists', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       getUser.mockReturnValueOnce({
         data: { items: [{ login: 'hipstersmoothie' }] }
@@ -371,11 +326,7 @@ describe('github', () => {
     });
 
     test('doesnt exist', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       getUser.mockReturnValueOnce({
         data: undefined
@@ -389,11 +340,7 @@ describe('github', () => {
 
   describe('getLatestRelease ', async () => {
     test('has tag ', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       getLatestRelease.mockReturnValueOnce({ data: { tag_name: '1.0.0' } });
 
@@ -401,11 +348,7 @@ describe('github', () => {
     });
 
     test('no tags', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       getLatestRelease.mockRejectedValueOnce({ status: 404 });
 
@@ -415,11 +358,7 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       expect(gh.getLatestRelease()).rejects.toBeTruthy();
     });
@@ -427,11 +366,7 @@ describe('github', () => {
 
   describe('getProjectLabels ', () => {
     test('return labels', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       listLabelsForRepo.mockReturnValueOnce({
         data: [{ name: 'first label' }, { name: 'second label' }]
@@ -444,11 +379,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });
@@ -456,11 +387,7 @@ describe('github', () => {
 
   describe('createLabel', () => {
     test('should create a label', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       await gh.createLabel('release', 'Foo bar');
 
@@ -474,11 +401,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new GitHub({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'MyToken'
-      });
+      const gh = new GitHub(options);
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });

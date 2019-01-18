@@ -20,6 +20,14 @@ function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
   return !!plugins.get(key as SupportedPlugin);
 }
 
+function tryRequire(tryPath: string) {
+  try {
+    return require(tryPath);
+  } catch (error) {
+    return null;
+  }
+}
+
 export default function loadPlugin([pluginPath, options]: [
   SupportedPlugin | string,
   any
@@ -29,10 +37,10 @@ export default function loadPlugin([pluginPath, options]: [
   if (isSupported(pluginPath)) {
     plugin = plugins.get(pluginPath);
   } else {
-    try {
-      plugin = require(pluginPath);
-    } catch (error) {
-      plugin = require(path.join(process.cwd(), pluginPath));
+    plugin = tryRequire(pluginPath);
+
+    if (!plugin) {
+      plugin = tryRequire(path.join(process.cwd(), pluginPath));
     }
   }
 

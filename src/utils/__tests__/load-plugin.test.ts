@@ -2,6 +2,10 @@ import loadPlugin from '../load-plugins';
 
 describe('loadPlugins', () => {
   test('should use supported plugin', async () => {
+    expect(loadPlugin(['foobar', {}])).toBeUndefined();
+  });
+
+  test('should use supported plugin', async () => {
     expect(loadPlugin(['npm', {}])).toEqual({ name: 'NPM' });
   });
 

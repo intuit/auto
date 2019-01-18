@@ -47,8 +47,12 @@ export default async function execPromise(cmd: string, args?: string[]) {
         // The command bailed for whatever reason, print a verbose error message
         // with the stdout underneath
         let appendedStdErr = '';
-        appendedStdErr = allStdout.length ? `\n\n${allStdout}` : '';
-        appendedStdErr = allStderr.length ? `\n\n${allStderr}` : '';
+        appendedStdErr += allStdout.length ? `\n\n${allStdout}` : '';
+        appendedStdErr += allStderr.length ? `\n\n${allStderr}` : '';
+
+        console.log(allStdout, allStderr);
+
+        console.log(appendedStdErr);
 
         reject(new Error(`Running command '${cmd}' failed${appendedStdErr}`));
       }

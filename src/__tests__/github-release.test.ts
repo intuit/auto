@@ -22,6 +22,7 @@ const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
 const getPullRequests = jest.fn();
 const getLatestReleaseInfo = jest.fn();
+const searchRepo = jest.fn();
 
 getProject.mockResolvedValue({
   html_url: 'https://github.com/web/site'
@@ -48,7 +49,8 @@ jest.mock('../git.ts', () => (...args) => {
     getProjectLabels,
     createLabel,
     getPullRequests,
-    getLatestReleaseInfo
+    getLatestReleaseInfo,
+    searchRepo
   };
 });
 
@@ -124,11 +126,7 @@ describe('GitHubRelease', () => {
     });
 
     test('should use configured HEAD', async () => {
-      const gh = new GitHubRelease({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'test'
-      });
+      const gh = new GitHubRelease(options);
       await gh.getCommits('12345', '1234');
       expect(getGitLog).toHaveBeenCalled();
     });
@@ -141,11 +139,7 @@ describe('GitHubRelease', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      const gh = new GitHubRelease({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'test'
-      });
+      const gh = new GitHubRelease(options);
       await gh.getCommits('12345', '1234');
       expect(getUserByUsername).not.toHaveBeenCalled();
     });
@@ -181,14 +175,47 @@ describe('GitHubRelease', () => {
         name: 'Adam Dierkens'
       });
 
-      const gh = new GitHubRelease({
-        owner: 'Adam Dierkens',
-        repo: 'test',
-        token: 'test'
-      });
+      const gh = new GitHubRelease(options);
       const modifiedCommits = await gh.getCommits('12345', '1234');
       expect(getUserByUsername).toHaveBeenCalled();
       expect(modifiedCommits).toMatchSnapshot();
+    });
+
+    test('should ignore rebased commits if no last release', async () => {
+      const gh = new GitHubRelease(options);
+
+      getLatestReleaseInfo.mockReturnValueOnce({});
+      const commits = normalizeCommits([makeCommitFromMsg('Second (#123)')]);
+
+      getGitLog.mockReturnValueOnce(commits);
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should match rebased commits to PRs', async () => {
+      const gh = new GitHubRelease(options);
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          makeCommitFromMsg('I was rebased', {
+            hash: '1a2b'
+          })
+        ])
+      );
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
   });
 
