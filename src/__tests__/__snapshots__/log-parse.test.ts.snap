@@ -84,6 +84,20 @@ exports[`generateReleaseNotes should omit authors with invalid email addresses 1
 - Some Feature [#1234](https://github.custom.com/foobar/auto-release/pull/1234)"
 `;
 
+exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto-release/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I should be included  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
 "#### 🐛  Bug Fix
 

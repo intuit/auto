@@ -390,7 +390,7 @@ describe('generateReleaseNotes', () => {
     expect(await logParse.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test.only('should include PR-less commits as patches', async () => {
+  test('should include PR-less commits as patches', async () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();
 
@@ -410,6 +410,6 @@ describe('generateReleaseNotes', () => {
       }
     ]);
 
-    expect(await logParse.generateReleaseNotes(commits)).toBe('');
+    expect(await logParse.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 });
