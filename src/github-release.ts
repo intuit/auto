@@ -52,7 +52,9 @@ export const defaultChangelogTitles = {
   minor: '🚀  Enhancement',
   patch: '🐛  Bug Fix',
   internal: '🏠  Internal',
-  documentation: '📝  Documentation'
+  documentation: '📝  Documentation',
+  'push-to-master':
+    'The following was pushed directly to master and treated as `patch`'
 };
 
 export const defaultLabelsDescriptions = new Map<string, string>();
@@ -148,11 +150,20 @@ export default class GitHubRelease {
         },
         Promise.resolve([]) as Promise<string[]>
       );
-    const commits = allCommits.filter(
-      commit =>
-        !allPrCommitHashes.includes(commit.hash) &&
-        !commit.subject.includes('[skip ci]')
-    );
+    const commits = allCommits
+      .filter(
+        commit =>
+          !allPrCommitHashes.includes(commit.hash) &&
+          !commit.subject.includes('[skip ci]')
+      )
+      .map(commit => {
+        if (commit.pullRequest) {
+          return commit;
+        }
+
+        commit.labels = ['push-to-master'];
+        return commit;
+      });
 
     const project = await this.github.getProject();
     const logParser = new LogParse(this.logger, {

@@ -1,4 +1,4 @@
-import { defaultLabels } from '../github-release';
+import { defaultChangelogTitles, defaultLabels } from '../github-release';
 import LogParse, {
   filterServiceAccounts,
   IGenerateReleaseNotesOptions,
@@ -241,13 +241,7 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   baseUrl: 'https://github.custom.com/foobar/auto-release',
   jira: 'https://jira.custom.com/browse',
   versionLabels: defaultLabels,
-  changelogTitles: {
-    major: '💥  Breaking Change',
-    minor: '🚀  Enhancement',
-    patch: '🐛  Bug Fix',
-    internal: '🏠  Internal',
-    documentation: '📝  Documentation'
-  }
+  changelogTitles: defaultChangelogTitles
 });
 
 describe('Hooks', () => {
@@ -399,7 +393,8 @@ describe('generateReleaseNotes', () => {
         hash: '1',
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
-        subject: 'I should be included'
+        subject: 'I was a push to master',
+        labels: ['push-to-master']
       },
       {
         hash: '2',
