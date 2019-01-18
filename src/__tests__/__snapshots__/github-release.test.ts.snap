@@ -65,7 +65,7 @@ Array [
       },
     ],
     "hash": "foo",
-    "labels": undefined,
+    "labels": Array [],
     "packages": undefined,
     "pullRequest": Object {
       "number": 123,
@@ -87,7 +87,7 @@ Array [
       },
     ],
     "hash": "foo",
-    "labels": undefined,
+    "labels": Array [],
     "packages": undefined,
     "pullRequest": Object {
       "number": 124,
@@ -145,7 +145,7 @@ Array [
       },
     ],
     "hash": "foo",
-    "labels": undefined,
+    "labels": Array [],
     "packages": undefined,
     "pullRequest": Object {
       "number": 123,
