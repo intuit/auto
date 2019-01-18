@@ -74,6 +74,23 @@ export async function changedPackages(sha: string, logger: ILogger) {
   return [...packages];
 }
 
+function getMonorepoPackage() {
+  const packages = getPackages(process.cwd());
+
+  return packages.reduce(
+    (greatest, subPackage) => {
+      if (subPackage.package.version && !subPackage.package.private) {
+        return gt(greatest.version!, subPackage.package.version)
+          ? greatest
+          : subPackage.package;
+      }
+
+      return greatest;
+    },
+    { version: '0.0.0' } as IPackageJSON
+  );
+}
+
 interface INotePartition {
   [key: string]: string[];
 }
@@ -139,19 +156,7 @@ export default class NPMPlugin implements IPlugin {
           JSON.parse(await readFile('lerna.json', 'utf-8')).version
         );
 
-        const packages = getPackages(process.cwd());
-        const releasedPackage = packages.reduce(
-          (greatest, subPackage) => {
-            if (subPackage.package.version && !subPackage.package.private) {
-              return gt(greatest.version!, subPackage.package.version)
-                ? greatest
-                : subPackage.package;
-            }
-
-            return greatest;
-          },
-          { version: '0.0.0' } as IPackageJSON
-        );
+        const releasedPackage = getMonorepoPackage();
 
         if (!releasedPackage) {
           previousVersion = monorepoVersion;
@@ -233,12 +238,19 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
+        const releasedPackage = getMonorepoPackage();
+        const publishedVersion = await getPublishedVersion(
+          releasedPackage.name
+        );
+        const publishedBumped =
+          publishedVersion && inc(publishedVersion, version as ReleaseType);
+
         await execPromise('npx', [
           'lerna',
           'publish',
           '--yes',
           '--force-publish=*',
-          version,
+          publishedBumped || version,
           '-m',
           "'%v [skip ci]'"
         ]);
