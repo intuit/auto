@@ -81,6 +81,11 @@ export interface IGitHubReleaseHooks {
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
+interface IPRInfoFull {
+  number: string;
+  commits: GHub.PullsListCommitsResponseItem[];
+}
+
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
   public readonly hooks: IGitHubReleaseHooks;
@@ -202,11 +207,12 @@ export default class GitHubRelease {
   ): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
-    const gitlog = await this.github.getGitLog(from, to);
+    const gitlog = await this.github.getGitLog('v2.4.0', to);
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
-    const commits = await this.addLabelsToCommits(gitlog);
+    const labeledCommits = await this.addLabelsToCommits(gitlog);
+    const commits = await this.getPRForRebaseCommits(labeledCommits);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -395,5 +401,43 @@ export default class GitHubRelease {
     );
 
     return eCommits;
+  }
+
+  private async getPRForRebaseCommits(commits: IExtendedCommit[]) {
+    const lastRelease = await this.github.getLatestReleaseInfo();
+    const prsSinceLastMerge = await this.github.searchRepo({
+      q: `is:pr is:merged merged:>=${lastRelease.published_at.replace(
+        '01-18',
+        '01-16'
+      )}`
+    });
+    const prsWithCommits = await Promise.all(prsSinceLastMerge.items.map(
+      async (pr: IPRInfoFull) => {
+        pr.commits = await this.github.getCommitsForPR(Number(pr.number));
+        return pr;
+      }
+    ) as IPRInfoFull[]);
+    const representedPRs = commits
+      .filter(commit => commit.pullRequest)
+      .map(commit => commit.pullRequest!.number);
+
+    await Promise.all(
+      commits.map(async commit => {
+        const matchPr = prsWithCommits.find(
+          pr =>
+            pr.commits && pr.commits[pr.commits.length - 1].sha === commit.hash
+        );
+
+        if (
+          !commit.pullRequest &&
+          matchPr &&
+          !representedPRs.includes(matchPr.number.toString())
+        ) {
+          commit.pullRequest = matchPr;
+        }
+      })
+    );
+
+    return commits;
   }
 }
