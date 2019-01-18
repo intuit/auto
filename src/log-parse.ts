@@ -22,7 +22,7 @@ export interface IGenerateReleaseNotesOptions {
 }
 
 export interface IPullRequest {
-  number: string;
+  number: number;
   base?: string;
 }
 
@@ -82,7 +82,7 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
   return {
     ...commit,
     pullRequest: {
-      number: prMatch[1],
+      number: Number(prMatch[1]),
       base: prMatch[2]
     },
     subject: prMatch[3].trim()
@@ -104,7 +104,7 @@ export function parseSquashPR(
   return {
     ...commit,
     pullRequest: {
-      number: squashMergeMatch[1]
+      number: Number(squashMergeMatch[1])
     },
     subject: firstLine
       .substr(0, firstLine.length - squashMergeMatch[0].length)
@@ -311,7 +311,7 @@ export default class LogParse {
       const prLink = join(
         this.options.baseUrl,
         'pull',
-        commit.pullRequest.number
+        commit.pullRequest.number.toString()
       );
       pr = `[#${commit.pullRequest.number}](${prLink})`;
     }

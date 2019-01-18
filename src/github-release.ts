@@ -81,11 +81,6 @@ export interface IGitHubReleaseHooks {
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
-interface IPRInfoFull {
-  number: string;
-  commits: GHub.PullsListCommitsResponseItem[];
-}
-
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
   public readonly hooks: IGitHubReleaseHooks;
@@ -393,9 +388,7 @@ export default class GitHubRelease {
         if (!commit.pullRequest) {
           commit.labels = [];
         } else {
-          commit.labels = await this.getLabels(
-            parseInt(commit.pullRequest.number, 10)
-          );
+          commit.labels = await this.getLabels(commit.pullRequest.number);
         }
       })
     );
@@ -409,11 +402,10 @@ export default class GitHubRelease {
       q: `is:pr is:merged merged:>=${lastRelease.published_at}`
     });
     const prsWithCommits = await Promise.all(prsSinceLastMerge.items.map(
-      async (pr: IPRInfoFull) => {
-        pr.commits = await this.github.getCommitsForPR(Number(pr.number));
-        return pr;
-      }
-    ) as IPRInfoFull[]);
+      async (pr: { number: number }) =>
+        this.github.getPullRequest(Number(pr.number))
+    ) as GHub.Response<GHub.PullsGetResponse>[]);
+
     const representedPRs = commits
       .filter(commit => commit.pullRequest)
       .map(commit => commit.pullRequest!.number);
@@ -421,16 +413,18 @@ export default class GitHubRelease {
     await Promise.all(
       commits.map(async commit => {
         const matchPr = prsWithCommits.find(
-          pr =>
-            pr.commits && pr.commits[pr.commits.length - 1].sha === commit.hash
+          pr => pr.data.merge_commit_sha === commit.hash
         );
 
         if (
           !commit.pullRequest &&
           matchPr &&
-          !representedPRs.includes(matchPr.number.toString())
+          !representedPRs.includes(matchPr.data.number)
         ) {
-          commit.pullRequest = matchPr;
+          commit.labels = matchPr.data.labels.map(label => label.name) || [];
+          commit.pullRequest = {
+            number: matchPr.data.number
+          };
         }
       })
     );
