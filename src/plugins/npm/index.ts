@@ -235,13 +235,24 @@ export default class NPMPlugin implements IPlugin {
           "'%v [skip ci]'"
         ]);
       } else {
+        const { private: isPrivate, name } = JSON.parse(
+          await readFile('package.json', 'utf-8')
+        );
+        const isScopedPackage = name.match(/@\S+\/\S+/);
+
         await execPromise('npm', [
           'version',
           version,
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
-        await execPromise('npm', ['publish']);
+
+        await execPromise(
+          'npm',
+          !isPrivate && isScopedPackage
+            ? ['publish', '--access', 'public']
+            : ['publish']
+        );
         await execPromise('git', [
           'push',
           '--follow-tags',
