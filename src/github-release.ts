@@ -207,7 +207,7 @@ export default class GitHubRelease {
   ): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
-    const gitlog = await this.github.getGitLog('v2.4.0', to);
+    const gitlog = await this.github.getGitLog(from, to);
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
@@ -406,10 +406,7 @@ export default class GitHubRelease {
   private async getPRForRebaseCommits(commits: IExtendedCommit[]) {
     const lastRelease = await this.github.getLatestReleaseInfo();
     const prsSinceLastMerge = await this.github.searchRepo({
-      q: `is:pr is:merged merged:>=${lastRelease.published_at.replace(
-        '01-18',
-        '01-16'
-      )}`
+      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
     });
     const prsWithCommits = await Promise.all(prsSinceLastMerge.items.map(
       async (pr: IPRInfoFull) => {
