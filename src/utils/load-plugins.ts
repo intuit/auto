@@ -2,6 +2,7 @@ import * as path from 'path';
 import { AutoRelease } from '../main';
 import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
+import { ILogger } from './logger';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -28,10 +29,10 @@ function tryRequire(tryPath: string) {
   }
 }
 
-export default function loadPlugin([pluginPath, options]: [
-  SupportedPlugin | string,
-  any
-]): IPlugin | undefined {
+export default function loadPlugin(
+  [pluginPath, options]: [SupportedPlugin | string, any],
+  logger: ILogger
+): IPlugin | undefined {
   let plugin: IPluginConstructor | undefined;
 
   if (isSupported(pluginPath)) {
@@ -45,6 +46,7 @@ export default function loadPlugin([pluginPath, options]: [
   }
 
   if (!plugin) {
+    logger.log.warn(`Could not find plugin: ${pluginPath}`);
     return;
   }
 

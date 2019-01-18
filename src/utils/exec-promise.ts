@@ -50,10 +50,6 @@ export default async function execPromise(cmd: string, args?: string[]) {
         appendedStdErr += allStdout.length ? `\n\n${allStdout}` : '';
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : '';
 
-        console.log(allStdout, allStderr);
-
-        console.log(appendedStdErr);
-
         reject(new Error(`Running command '${cmd}' failed${appendedStdErr}`));
       }
     });
