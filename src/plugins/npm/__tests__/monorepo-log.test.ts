@@ -46,8 +46,7 @@ const commits = normalizeCommits([
   }),
   makeCommitFromMsg('Another Feature (#1234)', {
     labels: ['internal']
-  }),
-  makeCommitFromMsg('Third')
+  })
 ]);
 
 test('should create sections for packages', async () => {

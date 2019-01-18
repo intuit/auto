@@ -134,7 +134,26 @@ export default class GitHubRelease {
     from: string,
     to = 'HEAD'
   ): Promise<string> {
-    const commits = await this.getCommits(from, to);
+    const allCommits = await this.getCommits(from, to);
+    const allPrHashes = await allCommits
+      .filter(commit => commit.pullRequest)
+      .reduce(
+        async (lastResult, commit) => {
+          const prHashes = await lastResult;
+          const more = await this.github.getCommitsForPR(
+            Number(commit.pullRequest!.number)
+          );
+
+          return [...prHashes, ...(more || []).map(subCommit => subCommit.sha)];
+        },
+        Promise.resolve([]) as Promise<string[]>
+      );
+    const commits = allCommits.filter(
+      commit =>
+        !allPrHashes.includes(commit.hash) &&
+        !commit.subject.includes('[skip ci]')
+    );
+
     const project = await this.github.getProject();
     const logParser = new LogParse(this.logger, {
       owner: this.github.options.owner,

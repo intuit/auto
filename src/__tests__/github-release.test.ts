@@ -362,6 +362,59 @@ describe('GitHubRelease', () => {
       expect(await gh.generateReleaseNotes('1234', '123')).toBe('');
     });
 
+    test('should include PR-less commits', async () => {
+      const gh = new GitHubRelease(options);
+
+      const commits = [
+        {
+          hash: '1',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'I should be included'
+        },
+        {
+          hash: '2',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'First Feature',
+          pullRequest: {
+            number: '1235'
+          }
+        },
+        {
+          hash: '3',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'Random Commit for pr 1235'
+        }
+      ];
+
+      getGitLog.mockReturnValueOnce(commits);
+      getCommitsForPR.mockReturnValueOnce(undefined);
+      getLabels.mockReturnValueOnce(['minor']);
+      getCommitsForPR.mockReturnValueOnce([{ sha: '3' }]);
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
     test('should allow user to configure section headings', async () => {
       const gh = new GitHubRelease(options);
 

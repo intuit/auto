@@ -254,9 +254,7 @@ describe('Hooks', () => {
   test('title', async () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('Some Feature (#1234)'),
-      makeCommitFromMsg('Third')
+      makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
     logParse.hooks.renderChangelogTitle.tap(
@@ -271,9 +269,7 @@ describe('Hooks', () => {
   test('author', async () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('Some Feature (#1234)'),
-      makeCommitFromMsg('Third')
+      makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
     logParse.hooks.renderChangelogAuthor.tap(
@@ -292,26 +288,11 @@ describe('Hooks', () => {
 });
 
 describe('generateReleaseNotes', () => {
-  test('should not create notes for normal commits', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
-
-    expect(
-      await logParse.generateReleaseNotes([
-        makeCommitFromMsg('First'),
-        makeCommitFromMsg('Second'),
-        makeCommitFromMsg('Third')
-      ])
-    ).toBe('');
-  });
-
   test('should create note for PR commits', async () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] }),
-      makeCommitFromMsg('Third')
+      makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
     ]);
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -332,9 +313,7 @@ describe('generateReleaseNotes', () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('Some Feature (#1234)'),
-      makeCommitFromMsg('Third')
+      makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -344,9 +323,7 @@ describe('generateReleaseNotes', () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('[PLAYA-5052] - Fix P0'),
-      makeCommitFromMsg('Third')
+      makeCommitFromMsg('[PLAYA-5052] - Fix P0')
     ]);
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -356,15 +333,13 @@ describe('generateReleaseNotes', () => {
     const logParse = new LogParse(dummyLog(), testOptions());
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
-      makeCommitFromMsg('First'),
       makeCommitFromMsg('Some Feature (#1234)', {
         labels: ['minor'],
         username: 'adam'
-      }),
-      makeCommitFromMsg('Third')
+      })
     ]);
 
-    normalized[1].authors[0].username = 'adam';
+    normalized[0].authors[0].username = 'adam';
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
@@ -378,8 +353,7 @@ describe('generateReleaseNotes', () => {
         packages: []
       }),
       makeCommitFromMsg('Some Feature (#1234)', { labels: ['internal'] }),
-      makeCommitFromMsg('Third', { labels: ['patch'] }),
-      makeCommitFromMsg('Fourth')
+      makeCommitFromMsg('Third', { labels: ['patch'] })
     ]);
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -390,8 +364,7 @@ describe('generateReleaseNotes', () => {
     logParse.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)'),
-      makeCommitFromMsg('Third', { labels: ['patch'] }),
-      makeCommitFromMsg('Fourth')
+      makeCommitFromMsg('Third', { labels: ['patch'] })
     ]);
 
     expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -415,5 +388,28 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(await logParse.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test.only('should include PR-less commits as patches', async () => {
+    const logParse = new LogParse(dummyLog(), testOptions());
+    logParse.loadDefaultHooks();
+
+    const commits = normalizeCommits([
+      {
+        hash: '1',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'I should be included'
+      },
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+
+    expect(await logParse.generateReleaseNotes(commits)).toBe('');
   });
 });

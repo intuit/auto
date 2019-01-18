@@ -86,6 +86,21 @@ Array [
 ]
 `;
 
+exports[`GitHubRelease generateReleaseNotes should include PR-less commits 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I should be included  (adam@dierkens.com)
+
+#### Authors: 2
+
+- Adam Dierkens (adam@dierkens.com)
+- adam@dierkens.com"
+`;
+
 exports[`GitHubRelease getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
