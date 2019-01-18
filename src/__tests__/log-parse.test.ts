@@ -33,7 +33,7 @@ describe('createUserLink', () => {
           hash: '1',
           labels: [],
           pullRequest: {
-            number: '22'
+            number: 22
           },
           authorName: 'none',
           authorEmail: 'default@email.com',
@@ -69,7 +69,7 @@ describe('createUserLink', () => {
           hash: '1',
           labels: [],
           pullRequest: {
-            number: '22'
+            number: 22
           },
           authorName: 'none',
           authorEmail: 'default@email.com',
@@ -100,7 +100,7 @@ describe('parsePR', () => {
     expect(parsePR(commit)).toEqual({
       ...commit,
       pullRequest: {
-        number: '1234',
+        number: 1234,
         base: 'Another PR'
       },
       subject: 'Comments about the PR'
@@ -119,7 +119,7 @@ describe('parseSquashPR', () => {
     expect(parseSquashPR(commit)).toEqual({
       ...commit,
       pullRequest: {
-        number: '1234'
+        number: 1234
       },
       subject: 'Some Message'
     });

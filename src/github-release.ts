@@ -398,14 +398,18 @@ export default class GitHubRelease {
 
   private async getPRForRebaseCommits(commits: IExtendedCommit[]) {
     const lastRelease = await this.github.getLatestReleaseInfo();
-    const prsSinceLastMerge = await this.github.searchRepo({
+
+    if (!lastRelease || !lastRelease.published_at) {
+      return commits;
+    }
+
+    const prsSinceLastRelease = await this.github.searchRepo({
       q: `is:pr is:merged merged:>=${lastRelease.published_at}`
     });
-    const prsWithCommits = await Promise.all(prsSinceLastMerge.items.map(
+    const prsWithCommits = await Promise.all(prsSinceLastRelease.items.map(
       async (pr: { number: number }) =>
         this.github.getPullRequest(Number(pr.number))
     ) as GHub.Response<GHub.PullsGetResponse>[]);
-
     const representedPRs = commits
       .filter(commit => commit.pullRequest)
       .map(commit => commit.pullRequest!.number);

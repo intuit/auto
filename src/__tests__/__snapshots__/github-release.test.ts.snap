@@ -53,7 +53,7 @@ Array [
     "labels": undefined,
     "packages": undefined,
     "pullRequest": Object {
-      "number": "123",
+      "number": 123,
     },
     "subject": "Second",
   },

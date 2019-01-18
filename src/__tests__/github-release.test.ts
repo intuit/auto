@@ -21,6 +21,7 @@ const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
 const getPullRequests = jest.fn();
+const getLatestReleaseInfo = jest.fn();
 
 getProject.mockResolvedValue({
   html_url: 'https://github.com/web/site'
@@ -46,7 +47,8 @@ jest.mock('../git.ts', () => (...args) => {
     getUserByEmail,
     getProjectLabels,
     createLabel,
-    getPullRequests
+    getPullRequests,
+    getLatestReleaseInfo
   };
 });
 
