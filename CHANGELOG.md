@@ -1,3 +1,15 @@
+# v2.5.6 (Fri Jan 18 2019)
+
+#### 🐛  Bug Fix
+
+- fix rebased PRs [#209](https://github.com/intuit/auto-release/pull/209) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.5 (Thu Jan 17 2019)
 
 #### 🐛  Bug Fix
