@@ -86,26 +86,28 @@ export default class GitHub {
     return Promise.resolve();
   }
 
+  public async getLatestReleaseInfo() {
+    const latestRelease = await this.ghub.repos.getLatestRelease({
+      owner: this.options.owner,
+      repo: this.options.repo
+    });
+
+    return latestRelease.data;
+  }
+
   public async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
-    const args = {
-      owner: this.options.owner,
-      repo: this.options.repo
-    };
-
     try {
-      this.logger.verbose.info('Getting latest release using:\n', args);
-
-      const latestRelease = await this.ghub.repos.getLatestRelease(args);
+      const latestRelease = await this.getLatestReleaseInfo();
 
       this.logger.veryVerbose.info(
         'Got response for "getLatestRelease":\n',
         latestRelease
       );
-      this.logger.verbose.info('Got latest release:\n', latestRelease.data);
+      this.logger.verbose.info('Got latest release:\n', latestRelease);
 
-      return latestRelease.data.tag_name;
+      return latestRelease.tag_name;
     } catch (e) {
       if (e.status === 404) {
         this.logger.verbose.info(
@@ -241,6 +243,22 @@ export default class GitHub {
     this.logger.verbose.info('Got pull request info');
 
     return result;
+  }
+
+  public async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
+    await this.authenticate();
+
+    const repo = `repo:${this.options.owner}/${this.options.repo}`;
+    options.q = `${repo} ${options.q}`;
+
+    this.logger.verbose.info('Searching repo using:\n', options);
+
+    const result = await this.ghub.search.issuesAndPullRequests(options);
+
+    this.logger.veryVerbose.info('Got response from search\n', result);
+    this.logger.verbose.info('Searched repo on GitHub.');
+
+    return result.data;
   }
 
   public async createStatus(prInfo: IPRInfo) {
