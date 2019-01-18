@@ -1,3 +1,15 @@
+# v2.5.5 (Thu Jan 17 2019)
+
+#### 🐛  Bug Fix
+
+- NPM Plugin: increment published version if available [#208](https://github.com/intuit/auto-release/pull/208) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.4 (Thu Jan 17 2019)
 
 #### 🐛  Bug Fix
