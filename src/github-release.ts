@@ -135,7 +135,7 @@ export default class GitHubRelease {
     to = 'HEAD'
   ): Promise<string> {
     const allCommits = await this.getCommits(from, to);
-    const allPrHashes = await allCommits
+    const allPrCommitHashes = await allCommits
       .filter(commit => commit.pullRequest)
       .reduce(
         async (lastResult, commit) => {
@@ -150,7 +150,7 @@ export default class GitHubRelease {
       );
     const commits = allCommits.filter(
       commit =>
-        !allPrHashes.includes(commit.hash) &&
+        !allPrCommitHashes.includes(commit.hash) &&
         !commit.subject.includes('[skip ci]')
     );
 
@@ -407,7 +407,8 @@ export default class GitHubRelease {
         if (!commit.pullRequest) {
           commit.labels = [];
         } else {
-          commit.labels = await this.getLabels(commit.pullRequest.number);
+          commit.labels =
+            (await this.getLabels(commit.pullRequest.number)) || [];
         }
       })
     );

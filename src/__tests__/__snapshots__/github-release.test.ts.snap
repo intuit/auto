@@ -22,6 +22,37 @@ exports[`GitHubRelease generateReleaseNotes should allow user to configure secti
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`GitHubRelease generateReleaseNotes should include PR-less commits 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I should be included  (adam@dierkens.com)
+
+#### Authors: 2
+
+- Adam Dierkens (adam@dierkens.com)
+- adam@dierkens.com"
+`;
+
+exports[`GitHubRelease generateReleaseNotes should match rebased commits to PRs 1`] = `
+"#### 🚀  Enhancement
+
+- Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
+- I was rebased [#123](https://github.com/web/site/pull/123) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I am a commit to master  (adam@dierkens.com)
+
+#### Authors: 2
+
+- Adam Dierkens (adam@dierkens.com)
+- adam@dierkens.com"
+`;
+
 exports[`GitHubRelease getCommits should ignore rebased commits if no last release 1`] = `
 Array [
   Object {
@@ -84,21 +115,6 @@ Array [
     "subject": "I was rebased",
   },
 ]
-`;
-
-exports[`GitHubRelease generateReleaseNotes should include PR-less commits 1`] = `
-"#### 🚀  Enhancement
-
-- First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
-
-#### 🐛  Bug Fix
-
-- I should be included  (adam@dierkens.com)
-
-#### Authors: 2
-
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
 `;
 
 exports[`GitHubRelease getCommits should resolve authors with PR commits 1`] = `
