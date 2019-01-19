@@ -1,3 +1,15 @@
+# v2.5.7 (Fri Jan 18 2019)
+
+#### 🐛  Bug Fix
+
+- When there are no releases use first commit date for rebased PRs [#212](https://github.com/intuit/auto-release/pull/212) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.6 (Fri Jan 18 2019)
 
 #### 🐛  Bug Fix
