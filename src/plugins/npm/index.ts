@@ -2,6 +2,8 @@ import setToken from '@hutson/set-npm-auth-token-for-ci';
 import * as fs from 'fs';
 import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
+import * as path from 'path';
+import userHome from 'user-home';
 import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
@@ -145,7 +147,7 @@ export default class NPMPlugin implements IPlugin {
         return;
       }
 
-      setToken();
+      setToken(path.join(userHome, '.npmrc'));
 
       if (!process.env.NPM_TOKEN) {
         throw new Error('NPM Token is needed for the NPM plugin!');
