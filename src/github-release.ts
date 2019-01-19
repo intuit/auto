@@ -56,22 +56,33 @@ export const defaultChangelogTitles = {
 };
 
 export const defaultLabelsDescriptions = new Map<string, string>();
-defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
-defaultLabelsDescriptions.set(SEMVER.minor, 'create a minor release');
-defaultLabelsDescriptions.set(SEMVER.patch, 'create a patch release');
-defaultLabelsDescriptions.set('skip-release', 'do not create a release');
 defaultLabelsDescriptions.set(
-  'release',
-  'publish a release when this pr is merged'
+  SEMVER.major,
+  'Increment the major version when merged'
 );
-defaultLabelsDescriptions.set('prerelease', 'create pre release');
+defaultLabelsDescriptions.set(
+  SEMVER.minor,
+  'Increment the minor version when merged'
+);
+defaultLabelsDescriptions.set(
+  SEMVER.patch,
+  'Increment the patch version when merged'
+);
+defaultLabelsDescriptions.set(
+  'skip-release',
+  'Preserve the current version when merged'
+);
+defaultLabelsDescriptions.set(
+  'prerelease',
+  'Create a pre-release version when merged'
+);
 defaultLabelsDescriptions.set(
   'internal',
-  'changes are internal to the project'
+  'Changes only affect the internal API'
 );
 defaultLabelsDescriptions.set(
   'documentation',
-  'changes only effect documentation'
+  'Changes only affect the documentation'
 );
 
 const readFile = promisify(fs.readFile);
