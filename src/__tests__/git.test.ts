@@ -148,6 +148,14 @@ describe('github', () => {
     );
   });
 
+  test('getCommitDate ', async () => {
+    const gh = new GitHub(options);
+
+    expect(
+      await gh.getCommitDate('0b2af75d8b55c8869cda93d0e5589ad9f2677e18')
+    ).toBe('2018-12-03T15:19:38-0800');
+  });
+
   test('getSha', async () => {
     const gh = new GitHub(options);
 
