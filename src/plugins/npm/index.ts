@@ -1,3 +1,5 @@
+import setToken from '@hutson/set-npm-auth-token-for-ci';
+import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
@@ -124,15 +126,27 @@ async function partitionPackages(
   return packageCommits;
 }
 
+async function loadPackageJson() {
+  return JSON.parse(await readFile('package.json', 'utf-8'));
+}
+
 export default class NPMPlugin implements IPlugin {
   public name = 'NPM';
 
   public apply(auto: AutoRelease) {
-    auto.hooks.getAuthor.tapPromise('NPM', async () => {
+    auto.hooks.beforeShipIt.tap(this.name, async () => {
+      const { isCi } = envCi();
+
+      if (isCi) {
+        setToken();
+      }
+    });
+
+    auto.hooks.getAuthor.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
         'NPM: Getting repo information from package.json'
       );
-      const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
+      const packageJson = await loadPackageJson();
 
       if (packageJson.author) {
         const { author } = packageJson;
@@ -145,7 +159,7 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
       let previousVersion = '';
 
       if (isMonorepo()) {
@@ -171,9 +185,7 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.veryVerbose.info(
           'Using package.json to calculate previous version'
         );
-        const { version, name } = JSON.parse(
-          await readFile('package.json', 'utf-8')
-        );
+        const { version, name } = await loadPackageJson();
 
         previousVersion = await greaterRelease(
           prefixRelease,
@@ -190,14 +202,14 @@ export default class NPMPlugin implements IPlugin {
       return previousVersion;
     });
 
-    auto.hooks.getRepository.tapPromise('NPM', async () => {
+    auto.hooks.getRepository.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
         'NPM: getting repo information from package.json'
       );
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.onCreateLogParse.tap('NPM', async logParser => {
+    auto.hooks.onCreateLogParse.tap(this.name, async logParser => {
       logParser.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async (commits, renderLine) => {
@@ -236,7 +248,7 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
+    auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
         const releasedPackage = getMonorepoPackage();
         const publishedVersion = await getPublishedVersion(
@@ -255,15 +267,13 @@ export default class NPMPlugin implements IPlugin {
           "'%v [skip ci]'"
         ]);
       } else {
-        const { private: isPrivate, name } = JSON.parse(
-          await readFile('package.json', 'utf-8')
-        );
+        const { private: isPrivate, name } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);
         const publishedVersion = await getPublishedVersion(name);
         const publishedBumped =
           publishedVersion && inc(publishedVersion, version as ReleaseType);
 
-        await execPromise('npm', [
+        await execPromise(this.name, [
           'version',
           publishedBumped || version,
           '-m',
@@ -271,7 +281,7 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         await execPromise(
-          'npm',
+          this.name,
           !isPrivate && isScopedPackage
             ? ['publish', '--access', 'public']
             : ['publish']
