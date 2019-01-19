@@ -1,3 +1,15 @@
+# v2.5.8 (Fri Jan 18 2019)
+
+#### 📝  Documentation
+
+- Proper Error Catching [#213](https://github.com/intuit/auto-release/pull/213) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.5.7 (Fri Jan 18 2019)
 
 #### 🐛  Bug Fix
