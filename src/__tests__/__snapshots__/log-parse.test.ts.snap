@@ -83,7 +83,7 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto-release/pull/1235) (adam@dierkens.com)
 
-#### The following was pushed directly to master and treated as \`patch\`
+#### ⚠️  Pushed to master
 
 - I was a push to master  (adam@dierkens.com)
 

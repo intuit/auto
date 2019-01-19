@@ -13,7 +13,6 @@ exports[`AutoRelease createLabels should create the labels 1`] = `
         "prerelease" => "prerelease",
         "internal" => "internal",
         "documentation" => "documentation",
-        "push-to-master" => "push-to-master",
       },
     ],
   ],

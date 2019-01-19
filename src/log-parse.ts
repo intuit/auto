@@ -175,6 +175,7 @@ export default class LogParse {
     this.logger = logger;
     this.options = options;
     this.hooks = makeLogHooks();
+    this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
   }
 
   public loadDefaultHooks() {

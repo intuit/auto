@@ -52,9 +52,7 @@ export const defaultChangelogTitles = {
   minor: '🚀  Enhancement',
   patch: '🐛  Bug Fix',
   internal: '🏠  Internal',
-  documentation: '📝  Documentation',
-  'push-to-master':
-    '⚠️  Pushed to master'
+  documentation: '📝  Documentation'
 };
 
 export const defaultLabelsDescriptions = new Map<string, string>();
@@ -161,7 +159,7 @@ export default class GitHubRelease {
           return commit;
         }
 
-        commit.labels = ['push-to-master'];
+        commit.labels = ['pushToMaster'];
         return commit;
       });
 
