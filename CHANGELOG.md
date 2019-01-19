@@ -1,3 +1,20 @@
+# v2.6.0 (Sat Jan 19 2019)
+
+#### 🚀  Enhancement
+
+- Pushes to master create changelog entry [#204](https://github.com/intuit/auto-release/pull/204) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@zephraph](https://github.com/zephraph))
+
+#### 🏠  Internal
+
+- fix test [#214](https://github.com/intuit/auto-release/pull/214) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v2.5.8 (Fri Jan 18 2019)
 
 #### 📝  Documentation
