@@ -45,7 +45,7 @@ workflows:
 If you are having problems make sure you have done the following:
 
 - `GH_TOKEN` is set
-- `NPM_TOKEN` is set
+- `NPM_TOKEN` is set (with the NPM plugin)
 
 ### Problems pushing tags to github?
 
