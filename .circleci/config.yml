@@ -86,7 +86,6 @@ jobs:
       - attach_workspace:
           at: ~/auto-release
       - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
           name: Release
           command: yarn run release
