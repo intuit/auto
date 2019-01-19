@@ -17,15 +17,10 @@ import {
   IReleaseOptions
 } from './cli/args';
 import { IPRInfo } from './git';
-import GitHubRelease, {
-  defaultChangelogTitles,
-  defaultLabels,
-  IGitHubReleaseOptions,
-  VersionLabel
-} from './github-release';
+import GitHubRelease, { IGitHubReleaseOptions } from './github-release';
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
-import { Config } from './config';
+import { ChangelogTitles, Config, Label, Labels } from './config';
 import schema from './config-schema.json';
 import init from './init';
 import LogParse from './log-parse';
@@ -66,7 +61,7 @@ export class AutoRelease {
   public args: ArgsType;
 
   public githubRelease?: GitHubRelease;
-  public semVerLabels?: Map<VersionLabel, string>;
+  public semVerLabels?: Labels;
 
   constructor(args: ArgsType) {
     this.args = args;
@@ -77,7 +72,10 @@ export class AutoRelease {
   }
 
   public async loadConfig() {
-    // Make schema fail for any invalid property
+    /**
+     * Converts to a schema to ensure it only allows additional properties where explicitly stated
+     * Also sets the Config object as the top level thing being validated
+     */
     const strictSchema = {
       ...schema,
       $ref: '#/definitions/Config',
@@ -101,21 +99,26 @@ export class AutoRelease {
       verbose: true,
       jsonPointers: true
     });
+
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
-    console.log(result);
+
     let validate: any = () => new Error('Not implemented');
-    try {
-      validate = ajv.compile(strictSchema);
-    } catch (e) {
-      console.log(e);
+    validate = ajv.compile(strictSchema);
+
+    const userConfig = (result && result.config) || {};
+
+    if (userConfig.labels && userConfig.labels['skip-release']) {
+      console.warn(
+        'labels.skip-release is deprecated in favor of skipRelease and will lbe removed in v3+'
+      );
+      userConfig.labels.skipRelease = userConfig.labels['skip-release'];
     }
+
     const valid = validate({
       ...new Config(),
-      ...((result && result.config) || {})
+      ...userConfig
     });
-
-    console.log('valid?', valid);
 
     if (!valid) {
       const output = betterErrors(
@@ -134,14 +137,7 @@ export class AutoRelease {
       rawConfig
     );
 
-    this.semVerLabels = defaultLabels;
-
-    if (rawConfig.labels) {
-      this.semVerLabels = new Map<VersionLabel, string>([
-        ...defaultLabels,
-        ...(Object.entries(rawConfig.labels) as [VersionLabel, string][])
-      ]);
-    }
+    this.semVerLabels = rawConfig.labels;
 
     this.logger.verbose.success(
       'Using SEMVER labels:',
@@ -149,11 +145,9 @@ export class AutoRelease {
       this.semVerLabels
     );
 
-    const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
-
-    if (!skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)) {
-      skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
-    }
+    const skipReleaseLabels = Array.from(
+      new Set([...rawConfig.skipReleaseLabels, rawConfig.labels!.skipRelease])
+    );
 
     this.loadPlugins();
 
@@ -200,7 +194,7 @@ export class AutoRelease {
         ...this.semVerLabels,
         ...new Map(
           [
-            ...Object.keys(defaultChangelogTitles),
+            ...Object.keys(new ChangelogTitles()),
             ...Object.keys(
               this.githubRelease.releaseOptions.changelogTitles || {}
             )
@@ -295,20 +289,22 @@ export class AutoRelease {
       sha = res.data.head.sha;
 
       const labels = await this.githubRelease.getLabels(pr);
-      const labelTexts = [...this.semVerLabels.values()];
-      const releaseTag = labels.find(l => l === 'release');
+      const labelTexts = Object.values(this.semVerLabels);
+      const releaseTag = labels.find(label => label === Label.release);
 
       const skipReleaseTag = labels.find(
-        l =>
+        label =>
           !!this.githubRelease &&
-          this.githubRelease.releaseOptions.skipReleaseLabels.includes(l)
+          this.githubRelease.releaseOptions.skipReleaseLabels.includes(label)
       );
       const semverTag = labels.find(
-        l =>
-          labelTexts.includes(l) &&
+        label =>
+          labelTexts.includes(label) &&
           !!this.githubRelease &&
-          !this.githubRelease.releaseOptions.skipReleaseLabels.includes(l) &&
-          l !== 'release'
+          !this.githubRelease.releaseOptions.skipReleaseLabels.includes(
+            label
+          ) &&
+          label !== Label.release
       );
 
       if (semverTag === undefined && !skipReleaseTag) {

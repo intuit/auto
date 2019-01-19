@@ -1,3 +1,4 @@
+import { Labels } from '../config';
 import GitHubRelease, { VersionLabel } from '../github-release';
 import { normalizeCommits } from '../log-parse';
 import SEMVER from '../semver';
@@ -505,10 +506,10 @@ describe('GitHubRelease', () => {
   describe('addLabelsToProject', () => {
     test('should add labels', async () => {
       const gh = new GitHubRelease(options);
-      const labels = new Map<VersionLabel, string>();
-      labels.set(SEMVER.major, '1');
-      labels.set(SEMVER.minor, '2');
-      labels.set(SEMVER.patch, '3');
+      const labels = new Labels();
+      labels.major = '1';
+      labels.minor = '2';
+      labels.patch = '3';
 
       await gh.addLabelsToProject(labels);
 
@@ -528,8 +529,8 @@ describe('GitHubRelease', () => {
         },
         mockLogger
       );
-      const labels = new Map<VersionLabel, string>();
-      labels.set(SEMVER.patch, '3');
+      const labels = new Labels();
+      labels.patch = '3';
 
       await gh.addLabelsToProject(labels);
 
@@ -541,9 +542,9 @@ describe('GitHubRelease', () => {
 
     test('should not add old labels', async () => {
       const gh = new GitHubRelease(options);
-      const labels = new Map<VersionLabel, string>();
-      labels.set(SEMVER.major, '1');
-      labels.set(SEMVER.minor, '2');
+      const labels = new Labels();
+      labels.major = '1';
+      labels.minor = '2';
 
       getProjectLabels.mockReturnValueOnce(['1']);
       await gh.addLabelsToProject(labels);
@@ -556,8 +557,8 @@ describe('GitHubRelease', () => {
       let gh = new GitHubRelease(options, {
         skipReleaseLabels: []
       });
-      const labels = new Map<VersionLabel, string>();
-      labels.set('release', 'deploy');
+      const labels = new Labels();
+      labels.release = 'deploy';
 
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('release', 'deploy');
@@ -575,8 +576,8 @@ describe('GitHubRelease', () => {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: []
       });
-      const labels = new Map<VersionLabel, string>();
-      labels.set('skip-release', 'no!');
+      const labels = new Labels();
+      labels['skip-release'] = 'no!';
 
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('skip-release', 'no!');

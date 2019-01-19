@@ -1,6 +1,7 @@
 import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import { defaultChangelogTitles, defaultLabels } from '../../../github-release';
+import { ChangelogTitles } from '../../../config';
+import { defaultLabels } from '../../../github-release';
 import LogParse, { normalizeCommits } from '../../../log-parse';
 import { AutoRelease } from '../../../main';
 import { dummyLog } from '../../../utils/logger';
@@ -58,7 +59,7 @@ test('should create sections for packages', async () => {
     repo: 'test',
     jira: 'jira.com',
     baseUrl: 'https://github.custom.com/',
-    changelogTitles: defaultChangelogTitles,
+    changelogTitles: new ChangelogTitles(),
     versionLabels: defaultLabels
   });
 

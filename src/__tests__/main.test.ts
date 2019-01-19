@@ -68,7 +68,7 @@ describe('AutoRelease', () => {
     const auto = new AutoRelease({ command: 'init' });
     await auto.loadConfig();
 
-    expect([...auto.semVerLabels!.values()]).toEqual([
+    expect(Object.values(auto.semVerLabels!)).toEqual([
       'Version: Major',
       'Version: Minor',
       'Version: Patch',

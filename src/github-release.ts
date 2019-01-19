@@ -5,6 +5,7 @@ import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import { ChangelogTitles, Label, Labels } from './config';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
 import LogParse, { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
@@ -45,14 +46,6 @@ defaultLabels.set(SEMVER.patch, 'patch');
 defaultLabels.set('skip-release', 'skip-release');
 defaultLabels.set('release', 'release');
 defaultLabels.set('prerelease', 'prerelease');
-
-export const defaultChangelogTitles = {
-  major: '💥  Breaking Change',
-  minor: '🚀  Enhancement',
-  patch: '🐛  Bug Fix',
-  internal: '🏠  Internal',
-  documentation: '📝  Documentation'
-};
 
 export const defaultLabelsDescriptions = new Map<string, string>();
 defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
@@ -142,7 +135,7 @@ export default class GitHubRelease {
       jira: this.releaseOptions.jira,
       versionLabels: this.versionLabels,
       changelogTitles: {
-        ...defaultChangelogTitles,
+        ...new ChangelogTitles(),
         ...this.changelogTitles
       }
     });
@@ -280,23 +273,29 @@ export default class GitHubRelease {
     return this.github.getPullRequests(options);
   }
 
-  public async addLabelsToProject(labels: Map<string, string>) {
+  /**
+   * Creates new labels on a project that don't already currently exist. If the label
+   * is not applicable to the current setup then that label will not be added.
+   *
+   * @param labels A list of labels to be added to the project
+   */
+  public async addLabelsToProject(labels: Labels) {
     const oldLabels = await this.github.getProjectLabels();
-    const labelsToCreate = [...labels.entries()].filter(
+    const labelsToCreate = Object.entries(labels).filter(
       ([versionLabel, customLabel]) => {
         if (oldLabels && oldLabels.includes(customLabel)) {
           return;
         }
 
         if (
-          versionLabel === 'release' &&
+          versionLabel === Label.release &&
           !this.releaseOptions.onlyPublishWithReleaseLabel
         ) {
           return;
         }
 
         if (
-          versionLabel === 'skip-release' &&
+          versionLabel === Label.skipRelease &&
           this.releaseOptions.onlyPublishWithReleaseLabel
         ) {
           return;

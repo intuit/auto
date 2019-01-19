@@ -21,7 +21,7 @@ export class Labels {
   public [Label.prerelease]: string = 'prerelease';
 }
 
-class ChangelogTitles {
+export class ChangelogTitles {
   public major = '💥  Breaking Change';
   public minor = '🚀  Enhancement';
   public patch = '🐛  Bug Fix';

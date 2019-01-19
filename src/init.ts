@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
-import { defaultChangelogTitles } from './github-release';
+import { ChangelogTitles } from './config';
 
 const writeFile = promisify(fs.writeFile);
 const isObject = (value: any) => typeof value === 'object' && value !== null;
@@ -121,7 +121,7 @@ async function getChangelogTitles() {
       name: 'value',
       message:
         "Fill out the custom changelog titles (you can add as many as you want when you're done)",
-      initial: defaultChangelogTitles,
+      initial: new ChangelogTitles(),
       // @ts-ignore
       template: `
 major: #{major}
@@ -132,7 +132,7 @@ documentation: #{documentation}
       `
     });
 
-    const titles = Object.values(defaultChangelogTitles);
+    const titles = Object.values(new ChangelogTitles());
 
     changelogTitles = Object.entries(response.value.values as {
       [key: string]: string;
@@ -160,7 +160,7 @@ documentation: #{documentation}
       type: 'snippet',
       name: 'value',
       message: 'Add another changelog title:',
-      initial: defaultChangelogTitles,
+      initial: new ChangelogTitles(),
       // @ts-ignore
       template: `
 #{githubLabel}: #{changelogTitle}
