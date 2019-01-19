@@ -23,6 +23,8 @@ const createLabel = jest.fn();
 const getPullRequests = jest.fn();
 const getLatestReleaseInfo = jest.fn();
 const searchRepo = jest.fn();
+const getCommitDate = jest.fn();
+const getFirstCommit = jest.fn();
 
 getProject.mockResolvedValue({
   html_url: 'https://github.com/web/site'
@@ -50,7 +52,9 @@ jest.mock('../git.ts', () => (...args) => {
     createLabel,
     getPullRequests,
     getLatestReleaseInfo,
-    searchRepo
+    searchRepo,
+    getCommitDate,
+    getFirstCommit
   };
 });
 
@@ -198,6 +202,33 @@ describe('GitHubRelease', () => {
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
       });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          makeCommitFromMsg('I was rebased', {
+            hash: '1a2b'
+          })
+        ])
+      );
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should match rebased commits to PRs with first commit', async () => {
+      const gh = new GitHubRelease(options);
+
+      getLatestReleaseInfo.mockImplementationOnce(() => {
+        throw new Error('no releases yet');
+      });
+      getCommitDate.mockReturnValueOnce('2019-01-16');
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
       getPullRequest.mockReturnValueOnce({
         data: {

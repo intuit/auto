@@ -120,6 +120,13 @@ export default class GitHub {
     }
   }
 
+  public async getCommitDate(sha: string): Promise<string> {
+    const date = await execPromise('git', ['show', '-s', '--format=%ci', sha]);
+    const [day, time, timezone] = date.split(' ');
+
+    return `${day}T${time}${timezone}`;
+  }
+
   public async getFirstCommit(): Promise<string> {
     const list = await execPromise('git', ['rev-list', 'HEAD']);
     return list.split('\n').pop() as string;

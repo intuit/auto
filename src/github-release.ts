@@ -397,7 +397,16 @@ export default class GitHubRelease {
   }
 
   private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
-    const lastRelease = await this.github.getLatestReleaseInfo();
+    let lastRelease: { published_at: string };
+
+    try {
+      lastRelease = await this.github.getLatestReleaseInfo();
+    } catch (error) {
+      const firstCommit = await this.github.getFirstCommit();
+      lastRelease = {
+        published_at: await this.github.getCommitDate(firstCommit)
+      };
+    }
 
     if (!lastRelease || !lastRelease.published_at) {
       return commits;
