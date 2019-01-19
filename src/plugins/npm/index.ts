@@ -285,7 +285,7 @@ export default class NPMPlugin implements IPlugin {
         const publishedBumped =
           publishedVersion && inc(publishedVersion, version as ReleaseType);
 
-        await execPromise(this.name, [
+        await execPromise('npm', [
           'version',
           publishedBumped || version,
           '-m',
@@ -293,7 +293,7 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         await execPromise(
-          this.name,
+          'npm',
           !isPrivate && isScopedPackage
             ? ['publish', '--access', 'public']
             : ['publish']
