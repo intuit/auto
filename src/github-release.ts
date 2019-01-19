@@ -54,7 +54,7 @@ export const defaultChangelogTitles = {
   internal: '🏠  Internal',
   documentation: '📝  Documentation',
   'push-to-master':
-    'The following was pushed directly to master and treated as `patch`'
+    '⚠️  Pushed to master'
 };
 
 export const defaultLabelsDescriptions = new Map<string, string>();
