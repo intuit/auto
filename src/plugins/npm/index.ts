@@ -1,6 +1,6 @@
 import setToken from '@hutson/set-npm-auth-token-for-ci';
-import envCi from 'env-ci';
 import * as fs from 'fs';
+import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
@@ -141,9 +141,7 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
-      const { isCi } = envCi();
-
-      if (!isCi) {
+      if (!isCI) {
         return;
       }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
-import envCi from 'env-ci';
+import isCI from 'is-ci';
 import { gt } from 'semver';
 
 import {
@@ -487,14 +487,12 @@ export class AutoRelease {
   }
 
   private async setGitUser() {
-    const { isCi } = envCi();
-
     try {
       // If these values are not set git config will exit with an error
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
-      if (!isCi) {
+      if (!isCI) {
         this.logger.log.note(
           `Detected local environment, will not set git user. This happens automatically in a CI environment.
 
