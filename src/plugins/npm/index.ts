@@ -19,7 +19,7 @@ function isMonorepo() {
 
 async function getPublishedVersion(name: string) {
   try {
-    return execPromise('npm', ['view', name, 'version']);
+    return await execPromise('npm', ['view', name, 'version']);
   } catch (error) {
     return null;
   }
