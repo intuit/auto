@@ -1,3 +1,15 @@
+# v2.6.2 (Sat Jan 19 2019)
+
+#### 🐛  Bug Fix
+
+- add label description for `release` label back [#225](https://github.com/intuit/auto-release/pull/225) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.6.1 (Sat Jan 19 2019)
 
 #### 🐛  Bug Fix
