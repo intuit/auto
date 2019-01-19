@@ -23,11 +23,11 @@ These options can be set exclusively in the `.autorc` and do not exist as CLI fl
 
 ### Extending
 
-If you want to share your auto configuration between projects you can use the `extends` property. This property will load an autorc object or a function that returns an autorc object and merge it with your projects autorc.
+If you want to share your auto configuration between projects you can use the `extends` property. This property will load an autorc object or a function that returns an autorc object and merge it with your project's `.autorc`.
 
 Auto can load `extends` configs in the following ways:
 
-- from a path
+- from a path `path/to/config`
 - from a scoped package `@YOUR_SCOPE/auto-config`
 - from a package `auto-config-YOUR_NAME`
 
