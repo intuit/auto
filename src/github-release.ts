@@ -134,7 +134,36 @@ export default class GitHubRelease {
     from: string,
     to = 'HEAD'
   ): Promise<string> {
-    const commits = await this.getCommits(from, to);
+    const allCommits = await this.getCommits(from, to);
+    const allPrCommits = await Promise.all(
+      allCommits
+        .filter(commit => commit.pullRequest)
+        .map(async commit =>
+          this.github.getCommitsForPR(Number(commit.pullRequest!.number))
+        )
+    );
+    const allPrCommitHashes = allPrCommits
+      .filter(Boolean)
+      .reduce(
+        (all, pr) => [...all, ...pr.map(subCommit => subCommit.sha)],
+        [] as string[]
+      );
+
+    const commits = allCommits
+      .filter(
+        commit =>
+          !allPrCommitHashes.includes(commit.hash) &&
+          !commit.subject.includes('[skip ci]')
+      )
+      .map(commit => {
+        if (commit.pullRequest) {
+          return commit;
+        }
+
+        commit.labels = ['pushToMaster'];
+        return commit;
+      });
+
     const project = await this.github.getProject();
     const logParser = new LogParse(this.logger, {
       owner: this.github.options.owner,
@@ -388,7 +417,8 @@ export default class GitHubRelease {
         if (!commit.pullRequest) {
           commit.labels = [];
         } else {
-          commit.labels = await this.getLabels(commit.pullRequest.number);
+          commit.labels =
+            (await this.getLabels(commit.pullRequest.number)) || [];
         }
       })
     );

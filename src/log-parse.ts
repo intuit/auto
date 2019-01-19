@@ -175,6 +175,7 @@ export default class LogParse {
     this.logger = logger;
     this.options = options;
     this.hooks = makeLogHooks();
+    this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
   }
 
   public loadDefaultHooks() {
@@ -197,6 +198,7 @@ export default class LogParse {
     );
   }
 
+  // Every Commit will either be a PR, jira story, or push to master (patch)
   public async generateReleaseNotes(
     commits: IExtendedCommit[]
   ): Promise<string> {
@@ -241,7 +243,7 @@ export default class LogParse {
   }
 
   /**
-   * Split commits into changelogTitle sections
+   * Split commits into changelogTitle sections.
    */
   private splitCommits(
     commits: IExtendedCommit[]
@@ -249,10 +251,7 @@ export default class LogParse {
     let currentCommits = [...commits];
 
     commits
-      .filter(
-        commit =>
-          (commit.pullRequest || commit.jira) && commit.labels.length === 0
-      )
+      .filter(commit => commit.labels.length === 0)
       .map(commit => commit.labels.push('patch'));
 
     return Object.assign(

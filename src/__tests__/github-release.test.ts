@@ -393,6 +393,59 @@ describe('GitHubRelease', () => {
       expect(await gh.generateReleaseNotes('1234', '123')).toBe('');
     });
 
+    test('should include PR-less commits', async () => {
+      const gh = new GitHubRelease(options);
+
+      const commits = [
+        {
+          hash: '1',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'I should be included'
+        },
+        {
+          hash: '2',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'First Feature',
+          pullRequest: {
+            number: '1235'
+          }
+        },
+        {
+          hash: '3',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          authors: [
+            {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
+          ],
+          subject: 'Random Commit for pr 1235'
+        }
+      ];
+
+      getGitLog.mockReturnValueOnce(commits);
+      getCommitsForPR.mockReturnValueOnce(undefined);
+      getLabels.mockReturnValueOnce(['minor']);
+      getCommitsForPR.mockReturnValueOnce([{ sha: '3' }]);
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
     test('should allow user to configure section headings', async () => {
       const gh = new GitHubRelease(options);
 
@@ -410,6 +463,43 @@ describe('GitHubRelease', () => {
       getLabels.mockReturnValueOnce(['patch']);
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
+    test('should match rebased commits to PRs', async () => {
+      const gh = new GitHubRelease(options);
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      getCommitsForPR.mockReturnValueOnce(undefined);
+      // Rebased PR will have different commit SHAs than the commits in master
+      getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
+
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getLabels.mockReturnValueOnce(['minor']);
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          makeCommitFromMsg('I was rebased', {
+            hash: '1a2b'
+          }),
+          {
+            hash: '1',
+            authorName: 'Adam Dierkens',
+            authorEmail: 'adam@dierkens.com',
+            subject: 'I am a commit to master'
+          }
+        ])
+      );
+
+      expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
     });
   });
 
