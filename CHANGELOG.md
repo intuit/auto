@@ -1,3 +1,15 @@
+# v2.6.1 (Sat Jan 19 2019)
+
+#### 🐛  Bug Fix
+
+- improve default label descriptions [#219](https://github.com/intuit/auto-release/pull/219) ([@aleclarson](https://github.com/aleclarson))
+
+#### Authors: 1
+
+- Alec Larson ([@aleclarson](https://github.com/aleclarson))
+
+---
+
 # v2.6.0 (Sat Jan 19 2019)
 
 #### 🚀  Enhancement
