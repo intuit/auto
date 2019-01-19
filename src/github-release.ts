@@ -73,6 +73,10 @@ defaultLabelsDescriptions.set(
   'Preserve the current version when merged'
 );
 defaultLabelsDescriptions.set(
+  'release',
+  'Create a release when this pr is merged'
+);
+defaultLabelsDescriptions.set(
   'prerelease',
   'Create a pre-release version when merged'
 );
