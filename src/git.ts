@@ -86,6 +86,7 @@ export default class GitHub {
     return Promise.resolve();
   }
 
+  @Memoize()
   public async getLatestReleaseInfo() {
     const latestRelease = await this.ghub.repos.getLatestRelease({
       owner: this.options.owner,
@@ -95,6 +96,7 @@ export default class GitHub {
     return latestRelease.data;
   }
 
+  @Memoize()
   public async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
@@ -133,6 +135,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
@@ -224,6 +227,7 @@ export default class GitHub {
     })).data;
   }
 
+  @Memoize()
   public async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
@@ -299,6 +303,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
@@ -332,6 +337,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
