@@ -3,6 +3,7 @@ import { AutoRelease } from '../main';
 import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
 import { ILogger } from './logger';
+import tryRequire from './try-require';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -19,14 +20,6 @@ const plugins = new Map<SupportedPlugin, IPluginConstructor>([
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
   return !!plugins.get(key as SupportedPlugin);
-}
-
-function tryRequire(tryPath: string) {
-  try {
-    return require(tryPath);
-  } catch (error) {
-    return null;
-  }
 }
 
 export default function loadPlugin(

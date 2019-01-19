@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
+import merge from 'deepmerge';
 import envCi from 'env-ci';
 import { gt } from 'semver';
 
@@ -31,6 +32,9 @@ import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
+import tryRequire from './utils/try-require';
+
+type ConfigLoader = () => cosmiconfig.Config;
 
 interface IAuthor {
   name?: string;
@@ -73,6 +77,24 @@ export class AutoRelease {
     this.hooks = makeHooks();
   }
 
+  public loadExtendConfig(extend: string) {
+    let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
+
+    if (!config) {
+      config = tryRequire(`${extend}/auto-config`);
+    }
+
+    if (!config) {
+      config = tryRequire(`auto-config-${extend}`);
+    }
+
+    if (typeof config === 'function') {
+      return (config as ConfigLoader)();
+    }
+
+    return config || {};
+  }
+
   public async loadConfig() {
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
@@ -81,6 +103,10 @@ export class AutoRelease {
 
     if (result && result.config) {
       rawConfig = result.config;
+    }
+
+    if (rawConfig.extends) {
+      rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
     }
 
     this.logger.verbose.success(
