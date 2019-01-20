@@ -1,14 +1,39 @@
+import { AsyncSeriesBailHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
+
 import { VersionLabel } from './github-release';
-import {
-  IChangelogHooks,
-  ICommitAuthor,
-  IExtendedCommit,
-  IGenerateReleaseNotesOptions
-} from './log-parse';
+import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
+
+export interface IGenerateReleaseNotesOptions {
+  owner: string;
+  repo: string;
+  baseUrl: string;
+  jira?: string;
+  changelogTitles: { [label: string]: string };
+  versionLabels: Map<VersionLabel, string>;
+}
+
+export interface IChangelogHooks {
+  renderChangelogLine: AsyncSeriesBailHook<
+    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
+    string[] | void
+  >;
+  renderChangelogTitle: AsyncSeriesBailHook<
+    [string, { [label: string]: string }],
+    string | void
+  >;
+  renderChangelogAuthor: AsyncSeriesBailHook<
+    [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
+    string | void
+  >;
+  renderChangelogAuthorLine: AsyncSeriesBailHook<
+    [ICommitAuthor, string],
+    string | void
+  >;
+}
 
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));

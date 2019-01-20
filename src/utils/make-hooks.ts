@@ -1,6 +1,6 @@
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
+import { IChangelogHooks } from '../changelog';
 import { IGitHubReleaseHooks } from '../github-release';
-import { IChangelogHooks } from '../log-parse';
 import { IAutoHooks } from '../main';
 
 export const makeHooks = (): IAutoHooks => ({

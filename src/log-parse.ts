@@ -1,20 +1,9 @@
 import { ICommit } from 'gitlog';
-import { AsyncSeriesBailHook } from 'tapable';
-import { VersionLabel } from './github-release';
 
 export interface ICommitAuthor {
   name?: string;
   email?: string;
   username?: string;
-}
-
-export interface IGenerateReleaseNotesOptions {
-  owner: string;
-  repo: string;
-  baseUrl: string;
-  jira?: string;
-  changelogTitles: { [label: string]: string };
-  versionLabels: Map<VersionLabel, string>;
 }
 
 export interface IPullRequest {
@@ -35,25 +24,6 @@ export type IExtendedCommit = ICommit & {
 type CommitParseFunction = (
   commit: IExtendedCommit
 ) => IExtendedCommit | undefined;
-
-export interface IChangelogHooks {
-  renderChangelogLine: AsyncSeriesBailHook<
-    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
-    string[] | void
-  >;
-  renderChangelogTitle: AsyncSeriesBailHook<
-    [string, { [label: string]: string }],
-    string | void
-  >;
-  renderChangelogAuthor: AsyncSeriesBailHook<
-    [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
-    string | void
-  >;
-  renderChangelogAuthorLine: AsyncSeriesBailHook<
-    [ICommitAuthor, string],
-    string | void
-  >;
-}
 
 export function filterServiceAccounts(
   commit: IExtendedCommit
