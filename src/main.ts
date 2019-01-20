@@ -319,14 +319,26 @@ export class AutoRelease {
     this.logger.verbose.success('Finished `pr-check` command');
   }
 
-  public async comment({ message, pr, context }: ICommentCommandOptions) {
+  public async comment({
+    message,
+    pr,
+    context = 'default',
+    dryRun
+  }: ICommentCommandOptions) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-    await this.githubRelease.createComment(message, pr, context);
-    this.logger.log.success(`Commented on PR #${pr}`);
+
+    if (dryRun) {
+      this.logger.log.info(
+        `Would have commented on ${pr} under "${context}" context:\n\n${message}`
+      );
+    } else {
+      await this.githubRelease.createComment(message, pr, context);
+      this.logger.log.success(`Commented on PR #${pr}`);
+    }
   }
 
   public async version() {

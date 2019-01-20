@@ -16,6 +16,7 @@ Options
   --pr number [required]            The pull request number you want the labels of
   --context string                  A string label to differentiate this status from others
   -m, --message string [required]   Message to post to comment
+  -d, --dry-run                     Report what command will do but do not actually do anything
 
 Global Options
 

@@ -368,6 +368,7 @@ const commands: ICommand[] = [
       pr,
       context,
       { ...message, description: 'Message to post to comment' },
+      dryRun,
       ...defaultOptions
     ],
     examples: [
@@ -636,6 +637,7 @@ export interface ICommentCommandOptions {
   pr: number;
   message: string;
   context?: string;
+  dryRun?: boolean;
 }
 
 type GlobalFlags = {
