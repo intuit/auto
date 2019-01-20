@@ -11,7 +11,7 @@ Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and com
 
 Options
 
-  -d, --dry-run          Dont actually commit status. Just print the request body
+  -d, --dry-run          Report what command will do but do not actually do anything
   --no-version-prefix    Use the version as the tag without the 'v' prefix
   --jira string          Jira base URL
   --from string          Tag to start changelog generation on. Defaults to latest tag.

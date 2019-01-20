@@ -12,6 +12,10 @@ auto shipit
 
 $ auto shipit --help
 
+Options
+
+  -d, --dry-run    Report what command will do but do not actually do anything
+
 Global Options
 
   -h, --help            Display the help output for the command

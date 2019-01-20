@@ -107,7 +107,7 @@ const dryRun: commandLineUsage.OptionDefinition = {
   name: 'dry-run',
   alias: 'd',
   type: Boolean,
-  description: 'Dont actually commit status. Just print the request body',
+  description: 'Report what command will do but do not actually do anything',
   group: 'main'
 };
 
@@ -191,14 +191,15 @@ const commands: ICommand[] = [
         group: 'main',
         description:
           'Only run init for the labels. As most other options are for advanced users'
-      }
+      },
+      dryRun
     ]
   },
   {
     name: 'create-labels',
     summary: "Create your project's labels on github.",
     examples: ['{green $} auto create-labels'],
-    options: defaultOptions
+    options: [...defaultOptions, dryRun]
   },
   {
     name: 'label',
@@ -261,6 +262,7 @@ const commands: ICommand[] = [
         group: 'main',
         description: 'A string label to differentiate this status from others'
       },
+      dryRun,
       ...defaultOptions
     ],
     examples: [
@@ -367,6 +369,7 @@ const commands: ICommand[] = [
       pr,
       context,
       { ...message, description: 'Message to post to comment' },
+      dryRun,
       ...defaultOptions
     ],
     examples: [
@@ -377,7 +380,7 @@ const commands: ICommand[] = [
     name: 'shipit',
     summary: 'Run the full auto-release project. Detects if in a lerna project',
     examples: ['{green $} auto shipit'],
-    options: defaultOptions
+    options: [...defaultOptions, dryRun]
   }
 ];
 
@@ -580,6 +583,11 @@ interface ILogArgs {
 
 export interface IInitCommandOptions {
   onlyLabels?: boolean;
+  dryRun?: boolean;
+}
+
+export interface ICreateLabelsCommandOptions {
+  dryRun?: boolean;
 }
 
 export interface ILabelCommandOptions {
@@ -630,6 +638,11 @@ export interface ICommentCommandOptions {
   pr: number;
   message: string;
   context?: string;
+  dryRun?: boolean;
+}
+
+export interface IShipItCommandOptions {
+  dryRun?: boolean;
 }
 
 type GlobalFlags = {
@@ -642,19 +655,23 @@ type GlobalFlags = {
 export type ArgsType = GlobalFlags &
   (
     | IInitCommandOptions
+    | ICreateLabelsCommandOptions
     | ILabelCommandOptions
     | IPRCheckCommandOptions
     | IPRCommandOptions
     | ICommentCommandOptions
     | IReleaseOptions
-    | IVersionCommandOptions);
+    | IVersionCommandOptions
+    | IShipItCommandOptions);
 
 type Flags =
   | keyof GlobalFlags
   | keyof IInitCommandOptions
+  | keyof ICreateLabelsCommandOptions
   | keyof ILabelCommandOptions
   | keyof IPRCheckCommandOptions
   | keyof IPRCommandOptions
   | keyof ICommentCommandOptions
   | keyof IReleaseOptions
-  | keyof IVersionCommandOptions;
+  | keyof IVersionCommandOptions
+  | keyof IShipItCommandOptions;
