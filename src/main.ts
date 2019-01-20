@@ -61,7 +61,8 @@ export class AutoRelease {
   public args: ArgsType;
 
   public githubRelease?: GitHubRelease;
-  public semVerLabels?: Labels;
+  public semVerLabels: Labels = new Labels();
+  public changelogTitles: ChangelogTitles = new ChangelogTitles();
 
   constructor(args: ArgsType) {
     this.args = args;
@@ -137,7 +138,8 @@ export class AutoRelease {
       rawConfig
     );
 
-    this.semVerLabels = rawConfig.labels;
+    this.semVerLabels = rawConfig.labels!;
+    this.changelogTitles = rawConfig.changelogTitles!;
 
     this.logger.verbose.success(
       'Using SEMVER labels:',
@@ -189,19 +191,10 @@ export class AutoRelease {
       throw this.createErrorMessage();
     }
 
-    await this.githubRelease.addLabelsToProject(
-      new Map([
-        ...this.semVerLabels,
-        ...new Map(
-          [
-            ...Object.keys(new ChangelogTitles()),
-            ...Object.keys(
-              this.githubRelease.releaseOptions.changelogTitles || {}
-            )
-          ].map((label): [string, string] => [label, label])
-        )
-      ])
-    );
+    await this.githubRelease.addLabelsToProject({
+      ...this.semVerLabels!,
+      ...Object.keys(this.changelogTitles!).map(label => [label, label])
+    });
   }
 
   public async label({ pr }: ILabelCommandOptions = {}) {

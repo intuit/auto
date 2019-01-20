@@ -1,5 +1,5 @@
 import { Labels } from '../config';
-import GitHubRelease, { VersionLabel } from '../github-release';
+import GitHubRelease from '../github-release';
 import { normalizeCommits } from '../log-parse';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
