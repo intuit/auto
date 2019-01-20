@@ -27,8 +27,8 @@ import GitHubRelease, {
 } from './github-release';
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
+import Changelog from './changelog';
 import init from './init';
-import Changelog from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';

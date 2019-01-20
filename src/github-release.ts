@@ -5,9 +5,10 @@ import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
-import Changelog, { IExtendedCommit, normalizeCommits } from './log-parse';
+import { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';

@@ -1,7 +1,8 @@
 import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
+import Changelog from '../../../changelog';
 import { defaultChangelogTitles, defaultLabels } from '../../../github-release';
-import Changelog, { normalizeCommits } from '../../../log-parse';
+import { normalizeCommits } from '../../../log-parse';
 import { AutoRelease } from '../../../main';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
