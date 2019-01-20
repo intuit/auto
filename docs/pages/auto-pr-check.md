@@ -18,6 +18,7 @@ Options
   --only-publish-with-release-label    Only bump version if 'release' label is on pull request
   --context string                     A string label to differentiate this status from others
   --skip-release-labels string[]       Labels that will not create a release. Defaults to just 'skip-release'
+  -d, --dry-run                        Report what command will do but do not actually do anything
 
 Global Options
 

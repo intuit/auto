@@ -262,6 +262,7 @@ const commands: ICommand[] = [
         group: 'main',
         description: 'A string label to differentiate this status from others'
       },
+      dryRun,
       ...defaultOptions
     ],
     examples: [
