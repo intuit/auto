@@ -285,15 +285,21 @@ export default class NPMPlugin implements IPlugin {
 
         await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
-        const { private: isPrivate, name } = await loadPackageJson();
+        const {
+          private: isPrivate,
+          name,
+          version: localVersion
+        } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);
         const publishedVersion = await getPublishedVersion(name);
-        const publishedBumped =
-          publishedVersion && inc(publishedVersion, version as ReleaseType);
+        const latestVersion =
+          publishedVersion && gt(publishedVersion, localVersion)
+            ? publishedVersion
+            : localVersion;
 
         await execPromise('npm', [
           'version',
-          publishedBumped || version,
+          inc(latestVersion, version as ReleaseType) || version,
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
