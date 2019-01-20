@@ -1,6 +1,6 @@
-import Changelog from '../changelog';
+import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import { defaultChangelogTitles, defaultLabels } from '../github-release';
-import { IGenerateReleaseNotesOptions, normalizeCommits } from '../log-parse';
+import { normalizeCommits } from '../log-parse';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
