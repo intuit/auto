@@ -269,13 +269,15 @@ export default class NPMPlugin implements IPlugin {
 
         await execPromise('npx', [
           'lerna',
-          'publish',
-          '--yes',
-          '--force-publish=*',
+          'version',
           publishedBumped || version,
+          '--force-publish',
+          '--yes',
           '-m',
           "'%v [skip ci]'"
         ]);
+
+        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
         const { private: isPrivate, name } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);

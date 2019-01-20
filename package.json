@@ -64,7 +64,7 @@
     "@types/command-line-usage": "^5.0.1",
     "@types/cosmiconfig": "5.0.3",
     "@types/dotenv": "^6.1.0",
-    "@types/is-ci": "^1.1.0",,
+    "@types/is-ci": "^1.1.0",
     "@types/jest": "~23.3.12",
     "@types/node": "~10.12.18",
     "@types/node-fetch": "2.1.4",
