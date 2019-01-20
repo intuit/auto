@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
+import merge from 'deepmerge';
+import env from 'dotenv';
 import isCI from 'is-ci';
-import { gt } from 'semver';
+import { gt, inc, ReleaseType } from 'semver';
 
 import {
   ArgsType,
   IChangelogOptions,
   ICommentCommandOptions,
+  ICreateLabelsCommandOptions,
   IInitCommandOptions,
   ILabelCommandOptions,
   IPRCheckCommandOptions,
   IPRCommandOptions,
-  IReleaseOptions
+  IReleaseOptions,
+  IShipItCommandOptions
 } from './cli/args';
 import { IPRInfo } from './git';
 import GitHubRelease, {
@@ -31,6 +35,9 @@ import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
+import tryRequire from './utils/try-require';
+
+type ConfigLoader = () => cosmiconfig.Config;
 
 interface IAuthor {
   name?: string;
@@ -71,6 +78,26 @@ export class AutoRelease {
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
     this.hooks = makeHooks();
+
+    env.config();
+  }
+
+  public loadExtendConfig(extend: string) {
+    let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
+
+    if (!config) {
+      config = tryRequire(`${extend}/auto-config`);
+    }
+
+    if (!config) {
+      config = tryRequire(`auto-config-${extend}`);
+    }
+
+    if (typeof config === 'function') {
+      return (config as ConfigLoader)();
+    }
+
+    return config || {};
   }
 
   public async loadConfig() {
@@ -81,6 +108,10 @@ export class AutoRelease {
 
     if (result && result.config) {
       rawConfig = result.config;
+    }
+
+    if (rawConfig.extends) {
+      rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
     }
 
     this.logger.verbose.success(
@@ -143,10 +174,10 @@ export class AutoRelease {
   }
 
   public async init(options: IInitCommandOptions = {}) {
-    await init(options.onlyLabels);
+    await init(options, this.logger);
   }
 
-  public async createLabels() {
+  public async createLabels(options: ICreateLabelsCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
@@ -162,7 +193,8 @@ export class AutoRelease {
             )
           ].map((label): [string, string] => [label, label])
         )
-      ])
+      ]),
+      options
     );
   }
 
@@ -317,14 +349,26 @@ export class AutoRelease {
     this.logger.verbose.success('Finished `pr-check` command');
   }
 
-  public async comment({ message, pr, context }: ICommentCommandOptions) {
+  public async comment({
+    message,
+    pr,
+    context = 'default',
+    dryRun
+  }: ICommentCommandOptions) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-    await this.githubRelease.createComment(message, pr, context);
-    this.logger.log.success(`Commented on PR #${pr}`);
+
+    if (dryRun) {
+      this.logger.log.info(
+        `Would have commented on ${pr} under "${context}" context:\n\n${message}`
+      );
+    } else {
+      await this.githubRelease.createComment(message, pr, context);
+      this.logger.log.success(`Commented on PR #${pr}`);
+    }
   }
 
   public async version() {
@@ -343,7 +387,7 @@ export class AutoRelease {
     await this.makeRelease(options);
   }
 
-  public async shipit() {
+  public async shipit(options: IShipItCommandOptions) {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
@@ -353,9 +397,26 @@ export class AutoRelease {
       return;
     }
 
-    await this.makeChangelog();
-    await this.hooks.publish.promise(version);
-    await this.makeRelease();
+    await this.makeChangelog(options);
+
+    if (!options.dryRun) {
+      await this.hooks.publish.promise(version);
+    }
+
+    await this.makeRelease(options);
+
+    if (options.dryRun) {
+      this.logger.log.warn(
+        "The version reported in the line above hasn't been incremneted during `dry-run`"
+      );
+
+      const lastRelease = await this.githubRelease!.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      this.logger.log.warn(
+        `Published version would be ${inc(current, version as ReleaseType)}`
+      );
+    }
   }
 
   private async getVersion() {
@@ -557,7 +618,7 @@ export async function run(args: ArgsType) {
       break;
     case 'create-labels':
       await auto.loadConfig();
-      await auto.createLabels();
+      await auto.createLabels(args as ICreateLabelsCommandOptions);
       break;
     case 'label':
       await auto.loadConfig();
@@ -589,7 +650,7 @@ export async function run(args: ArgsType) {
       break;
     case 'shipit':
       await auto.loadConfig();
-      await auto.shipit();
+      await auto.shipit(args as IShipItCommandOptions);
       break;
     default:
       throw new Error(`idk what i'm doing.`);

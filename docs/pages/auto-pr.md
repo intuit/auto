@@ -15,6 +15,7 @@ Options
   --state string [required]         State of the PR. ['pending', 'success', 'error', 'failure']
   --description string [required]   A description of the status
   --context string [required]       A string label to differentiate this status from others
+  -d, --dry-run                     Report what command will do but do not actually do anything
 
 Global Options
 

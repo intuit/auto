@@ -14,6 +14,7 @@ exports[`AutoRelease createLabels should create the labels 1`] = `
         "internal" => "internal",
         "documentation" => "documentation",
       },
+      Object {},
     ],
   ],
   "results": Array [
@@ -22,5 +23,27 @@ exports[`AutoRelease createLabels should create the labels 1`] = `
       "value": undefined,
     },
   ],
+}
+`;
+
+exports[`AutoRelease should extend config 1`] = `
+Object {
+  "command": "init",
+  "extends": "@artsy",
+  "onlyPublishWithReleaseLabel": true,
+  "owner": "foo",
+  "repo": "bar",
+  "skipReleaseLabels": Array [
+    "skip-release",
+  ],
+  "token": "XXXX",
+  "versionLabels": Map {
+    "major" => "major",
+    "minor" => "minor",
+    "patch" => "patch",
+    "skip-release" => "skip-release",
+    "release" => "release",
+    "prerelease" => "prerelease",
+  },
 }
 `;
