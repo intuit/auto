@@ -19,6 +19,12 @@ function isMonorepo() {
   return fs.existsSync('lerna.json');
 }
 
+function setTokenOnCI() {
+  if (isCI) {
+    setToken();
+  }
+}
+
 async function getPublishedVersion(name: string) {
   try {
     return await execPromise('npm', ['view', name, 'version']);
@@ -144,8 +150,6 @@ export default class NPMPlugin implements IPlugin {
       if (!isCI) {
         return;
       }
-
-      setToken();
 
       if (!process.env.NPM_TOKEN) {
         throw new Error('NPM Token is needed for the NPM plugin!');
@@ -277,6 +281,8 @@ export default class NPMPlugin implements IPlugin {
           "'%v [skip ci]'"
         ]);
 
+        setTokenOnCI();
+
         await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
         const { private: isPrivate, name } = await loadPackageJson();
@@ -291,6 +297,8 @@ export default class NPMPlugin implements IPlugin {
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
+
+        setTokenOnCI();
 
         await execPromise(
           'npm',
