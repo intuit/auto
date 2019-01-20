@@ -7,7 +7,7 @@
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "declaration": true,
     "lib": ["es6", "es2017", "es2017.object"],
     "esModuleInterop": true,
