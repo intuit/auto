@@ -11,7 +11,7 @@ Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and com
 
 Options
 
-  -d, --dry-run          Dont actually commit status. Just print the request body
+  -d, --dry-run          Report what command will do but do not actually do anything
   --no-version-prefix    Use the version as the tag without the 'v' prefix
   --jira string          Jira base URL
   --from string          Tag to start changelog generation on. Defaults to latest tag.
@@ -24,7 +24,7 @@ Global Options
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
-  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
+  --owner string        The owner of the GitHub repo. Defaults to reading from the package definition for the platform
   --github-api string   GitHub API to use
   --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
 

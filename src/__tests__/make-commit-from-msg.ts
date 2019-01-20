@@ -4,13 +4,14 @@ const makeCommitFromMsg = (
   subject: string,
   options: {
     name?: string;
+    hash?: string;
     email?: string;
     labels?: string[];
     username?: string;
     packages?: string[];
   } = {}
 ): IExtendedCommit => ({
-  hash: 'foo',
+  hash: options.hash || 'foo',
   labels: options.labels || [],
   authorName: options.name || 'Adam Dierkens',
   authorEmail: options.email || 'adam@dierkens.com',

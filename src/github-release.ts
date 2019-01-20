@@ -37,6 +37,7 @@ export interface IGitHubReleaseOptions {
     [label: string]: string;
   };
   versionLabels?: Map<VersionLabel, string>;
+  plugins?: (string | [string, any])[];
 }
 
 export const defaultLabels = new Map<VersionLabel, string>();
@@ -48,22 +49,37 @@ defaultLabels.set('release', 'release');
 defaultLabels.set('prerelease', 'prerelease');
 
 export const defaultLabelsDescriptions = new Map<string, string>();
-defaultLabelsDescriptions.set(SEMVER.major, 'create a major release');
-defaultLabelsDescriptions.set(SEMVER.minor, 'create a minor release');
-defaultLabelsDescriptions.set(SEMVER.patch, 'create a patch release');
-defaultLabelsDescriptions.set('skip-release', 'do not create a release');
+defaultLabelsDescriptions.set(
+  SEMVER.major,
+  'Increment the major version when merged'
+);
+defaultLabelsDescriptions.set(
+  SEMVER.minor,
+  'Increment the minor version when merged'
+);
+defaultLabelsDescriptions.set(
+  SEMVER.patch,
+  'Increment the patch version when merged'
+);
+defaultLabelsDescriptions.set(
+  'skip-release',
+  'Preserve the current version when merged'
+);
 defaultLabelsDescriptions.set(
   'release',
-  'publish a release when this pr is merged'
+  'Create a release when this pr is merged'
 );
-defaultLabelsDescriptions.set('prerelease', 'create pre release');
+defaultLabelsDescriptions.set(
+  'prerelease',
+  'Create a pre-release version when merged'
+);
 defaultLabelsDescriptions.set(
   'internal',
-  'changes are internal to the project'
+  'Changes only affect the internal API'
 );
 defaultLabelsDescriptions.set(
   'documentation',
-  'changes only effect documentation'
+  'Changes only affect the documentation'
 );
 
 const readFile = promisify(fs.readFile);
@@ -126,7 +142,36 @@ export default class GitHubRelease {
     from: string,
     to = 'HEAD'
   ): Promise<string> {
-    const commits = await this.getCommits(from, to);
+    const allCommits = await this.getCommits(from, to);
+    const allPrCommits = await Promise.all(
+      allCommits
+        .filter(commit => commit.pullRequest)
+        .map(async commit =>
+          this.github.getCommitsForPR(Number(commit.pullRequest!.number))
+        )
+    );
+    const allPrCommitHashes = allPrCommits
+      .filter(Boolean)
+      .reduce(
+        (all, pr) => [...all, ...pr.map(subCommit => subCommit.sha)],
+        [] as string[]
+      );
+
+    const commits = allCommits
+      .filter(
+        commit =>
+          !allPrCommitHashes.includes(commit.hash) &&
+          !commit.subject.includes('[skip ci]')
+      )
+      .map(commit => {
+        if (commit.pullRequest) {
+          return commit;
+        }
+
+        commit.labels = ['pushToMaster'];
+        return commit;
+      });
+
     const project = await this.github.getProject();
     const logParser = new LogParse(this.logger, {
       owner: this.github.options.owner,
@@ -198,7 +243,8 @@ export default class GitHubRelease {
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
-    const commits = await this.addLabelsToCommits(gitlog);
+    const labeledCommits = await this.addLabelsToCommits(gitlog);
+    const commits = await this.getPRForRebasedCommits(labeledCommits);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -305,25 +351,32 @@ export default class GitHubRelease {
       }
     );
 
-    await Promise.all(
-      labelsToCreate.map(async ([versionLabel, customLabel]) => {
-        await this.github.createLabel(versionLabel, customLabel);
-      })
-    );
+    if (!options.dryRun) {
+      await Promise.all(
+        labelsToCreate.map(async ([versionLabel, customLabel]) => {
+          await this.github.createLabel(versionLabel, customLabel);
+        })
+      );
+    }
 
     const repoMetadata = await this.github.getProject();
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
     if (justLabelNames.length > 0) {
-      this.logger.log.log(`Created labels: ${justLabelNames.join(', ')}`);
+      const state = options.dryRun ? 'Would have created' : 'Created';
+      this.logger.log.log(`${state} labels: ${justLabelNames.join(', ')}`);
     } else {
+      const state = options.dryRun ? 'would have been' : 'were';
       this.logger.log.log(
-        'No labels were created, they must have already been present on your project.'
+        `No labels ${state} created, they must have already been present on your project.`
       );
     }
-    this.logger.log.log(
-      `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
-    );
+
+    if (!options.dryRun) {
+      this.logger.log.log(
+        `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
+      );
+    }
   }
 
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
@@ -385,13 +438,54 @@ export default class GitHubRelease {
         if (!commit.pullRequest) {
           commit.labels = [];
         } else {
-          commit.labels = await this.getLabels(
-            parseInt(commit.pullRequest.number, 10)
-          );
+          commit.labels =
+            (await this.getLabels(commit.pullRequest.number)) || [];
         }
       })
     );
 
     return eCommits;
+  }
+
+  private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
+    let lastRelease: { published_at: string };
+
+    try {
+      lastRelease = await this.github.getLatestReleaseInfo();
+    } catch (error) {
+      const firstCommit = await this.github.getFirstCommit();
+      lastRelease = {
+        published_at: await this.github.getCommitDate(firstCommit)
+      };
+    }
+
+    if (!lastRelease || !lastRelease.published_at) {
+      return commits;
+    }
+
+    const prsSinceLastRelease = await this.github.searchRepo({
+      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
+    });
+    const pullRequests = await Promise.all(prsSinceLastRelease.items.map(
+      async (pr: { number: number }) =>
+        this.github.getPullRequest(Number(pr.number))
+    ) as GHub.Response<GHub.PullsGetResponse>[]);
+
+    await Promise.all(
+      commits.map(async commit => {
+        const matchPr = pullRequests.find(
+          pr => pr.data.merge_commit_sha === commit.hash
+        );
+
+        if (!commit.pullRequest && matchPr) {
+          commit.labels = matchPr.data.labels.map(label => label.name) || [];
+          commit.pullRequest = {
+            number: matchPr.data.number
+          };
+        }
+      })
+    );
+
+    return commits;
   }
 }

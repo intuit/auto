@@ -15,6 +15,7 @@ Options
   --state string [required]         State of the PR. ['pending', 'success', 'error', 'failure']
   --description string [required]   A description of the status
   --context string [required]       A string label to differentiate this status from others
+  -d, --dry-run                     Report what command will do but do not actually do anything
 
 Global Options
 
@@ -22,7 +23,7 @@ Global Options
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
-  --owner string        Version number to publish as. Defaults to reading from the package definition for the platform
+  --owner string        The owner of the GitHub repo. Defaults to reading from the package definition for the platform
   --github-api string   GitHub API to use
   --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
 

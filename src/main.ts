@@ -3,18 +3,21 @@
 import Ajv from 'ajv';
 import betterErrors from 'better-ajv-errors';
 import cosmiconfig from 'cosmiconfig';
+import env from 'dotenv';
 import envCi from 'env-ci';
-import { gt } from 'semver';
+import { gt, inc, ReleaseType } from 'semver';
 
 import {
   ArgsType,
   IChangelogOptions,
   ICommentCommandOptions,
+  ICreateLabelsCommandOptions,
   IInitCommandOptions,
   ILabelCommandOptions,
   IPRCheckCommandOptions,
   IPRCommandOptions,
-  IReleaseOptions
+  IReleaseOptions,
+  IShipItCommandOptions
 } from './cli/args';
 import { IPRInfo } from './git';
 import GitHubRelease, { IGitHubReleaseOptions } from './github-release';
@@ -27,7 +30,7 @@ import LogParse from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
-import loadPlugin, { IPluginConstructor } from './utils/load-plugins';
+import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
@@ -44,12 +47,13 @@ interface IRepository {
 
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  beforeShipIt: SyncHook<[]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
   >;
-  getRepository: AsyncSeriesBailHook<[], IRepository>;
+  getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
   onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
   onCreateLogParse: SyncHook<[LogParse]>;
@@ -70,6 +74,8 @@ export class AutoRelease {
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
     this.hooks = makeHooks();
+
+    env.config();
   }
 
   public async loadConfig() {
@@ -151,8 +157,6 @@ export class AutoRelease {
       new Set([...rawConfig.skipReleaseLabels, rawConfig.labels!.skipRelease])
     );
 
-    this.loadPlugins();
-
     const config = {
       ...rawConfig,
       ...this.args,
@@ -160,10 +164,14 @@ export class AutoRelease {
       skipReleaseLabels
     };
 
+    this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
-    const repository = await this.getRepo();
-    const token = repository.token || (await getGitHubToken(config.githubApi));
+    const repository = await this.getRepo(config);
+    const token =
+      repository && repository.token
+        ? repository.token
+        : await getGitHubToken(config.githubApi);
 
     this.githubRelease = new GitHubRelease(
       { owner: config.owner, repo: config.repo, ...repository, token },
@@ -183,17 +191,17 @@ export class AutoRelease {
   }
 
   public async init(options: IInitCommandOptions = {}) {
-    await init(options.onlyLabels);
+    await init(options, this.logger);
   }
 
-  public async createLabels() {
+  public async createLabels(options: ICreateLabelsCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
     await this.githubRelease.addLabelsToProject({
-      ...this.semVerLabels!,
-      ...Object.keys(this.changelogTitles!).map(label => [label, label])
+      ...this.semVerLabels,
+      ...Object.keys(this.changelogTitles).map(label => [label, label])
     });
   }
 
@@ -209,7 +217,12 @@ export class AutoRelease {
       const pulls = await this.githubRelease.getPullRequests({
         state: 'closed'
       });
-      const lastMerged = pulls.find(pull => !!pull.merged_at);
+      const lastMerged = pulls
+        .sort(
+          (a, b) =>
+            new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
+        )
+        .find(pull => !!pull.merged_at);
 
       if (lastMerged) {
         labels = lastMerged.labels.map(label => label.name);
@@ -345,14 +358,26 @@ export class AutoRelease {
     this.logger.verbose.success('Finished `pr-check` command');
   }
 
-  public async comment({ message, pr, context }: ICommentCommandOptions) {
+  public async comment({
+    message,
+    pr,
+    context = 'default',
+    dryRun
+  }: ICommentCommandOptions) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-    await this.githubRelease.createComment(message, pr, context);
-    this.logger.log.success(`Commented on PR #${pr}`);
+
+    if (dryRun) {
+      this.logger.log.info(
+        `Would have commented on ${pr} under "${context}" context:\n\n${message}`
+      );
+    } else {
+      await this.githubRelease.createComment(message, pr, context);
+      this.logger.log.success(`Commented on PR #${pr}`);
+    }
   }
 
   public async version() {
@@ -371,8 +396,9 @@ export class AutoRelease {
     await this.makeRelease(options);
   }
 
-  public async shipit() {
+  public async shipit(options: IShipItCommandOptions) {
     this.logger.verbose.info("Using command: 'shipit'");
+    this.hooks.beforeShipIt.call();
 
     const version = await this.getVersion();
 
@@ -380,9 +406,26 @@ export class AutoRelease {
       return;
     }
 
-    await this.makeChangelog();
-    await this.hooks.publish.promise(version);
-    await this.makeRelease();
+    await this.makeChangelog(options);
+
+    if (!options.dryRun) {
+      await this.hooks.publish.promise(version);
+    }
+
+    await this.makeRelease(options);
+
+    if (options.dryRun) {
+      this.logger.log.warn(
+        "The version reported in the line above hasn't been incremneted during `dry-run`"
+      );
+
+      const lastRelease = await this.githubRelease!.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      this.logger.log.warn(
+        `Published version would be ${inc(current, version as ReleaseType)}`
+      );
+    }
   }
 
   private async getVersion() {
@@ -553,26 +596,24 @@ If a command fails manually run:
     }
   }
 
-  private async getRepo() {
-    if (
-      this.githubRelease &&
-      this.githubRelease.releaseOptions.repo &&
-      this.githubRelease.releaseOptions.owner
-    ) {
-      return this.githubRelease.releaseOptions as IRepository;
+  private async getRepo(config: IGitHubReleaseOptions) {
+    if (config.owner && config.repo) {
+      return config as IRepository;
     }
 
     return this.hooks.getRepository.promise();
   }
 
-  private loadPlugins() {
-    const pluginsPaths = this.args.plugins || ['npm'];
+  private loadPlugins(config: IGitHubReleaseOptions) {
+    const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
-      .map(loadPlugin)
-      .filter((plugin): plugin is IPluginConstructor => !!plugin)
-      .forEach(pluginConstructor => {
-        const plugin = new pluginConstructor();
+      .map(plugin =>
+        typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
+      )
+      .map(plugin => loadPlugin(plugin, this.logger))
+      .filter((plugin): plugin is IPlugin => !!plugin)
+      .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);
       });
@@ -584,12 +625,11 @@ export async function run(args: ArgsType) {
 
   switch (args.command) {
     case 'init':
-      await auto.loadConfig();
       await auto.init(args as IInitCommandOptions);
       break;
     case 'create-labels':
       await auto.loadConfig();
-      await auto.createLabels();
+      await auto.createLabels(args as ICreateLabelsCommandOptions);
       break;
     case 'label':
       await auto.loadConfig();
@@ -621,7 +661,7 @@ export async function run(args: ArgsType) {
       break;
     case 'shipit':
       await auto.loadConfig();
-      await auto.shipit();
+      await auto.shipit(args as IShipItCommandOptions);
       break;
     default:
       throw new Error(`idk what i'm doing.`);

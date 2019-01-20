@@ -1,33 +1,54 @@
 import * as path from 'path';
 import { AutoRelease } from '../main';
+import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
+import { ILogger } from './logger';
 
-export type IPluginConstructor = new () => IPlugin;
+export type IPluginConstructor = new (options?: any) => IPlugin;
 
 export interface IPlugin {
   name: string;
   apply(auto: AutoRelease): void;
 }
 
-type SupportedPlugin = 'npm';
+type SupportedPlugin = 'npm' | 'chrome';
 const plugins = new Map<SupportedPlugin, IPluginConstructor>([
-  ['npm', NPMPlugin]
+  ['npm', NPMPlugin],
+  ['chrome', ChromeWebStorePlugin]
 ]);
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
   return !!plugins.get(key as SupportedPlugin);
 }
 
+function tryRequire(tryPath: string) {
+  try {
+    return require(tryPath);
+  } catch (error) {
+    return null;
+  }
+}
+
 export default function loadPlugin(
-  pluginPath: SupportedPlugin | string
-): IPluginConstructor | undefined {
+  [pluginPath, options]: [SupportedPlugin | string, any],
+  logger: ILogger
+): IPlugin | undefined {
+  let plugin: IPluginConstructor | undefined;
+
   if (isSupported(pluginPath)) {
-    return plugins.get(pluginPath);
+    plugin = plugins.get(pluginPath);
+  } else {
+    plugin = tryRequire(pluginPath);
+
+    if (!plugin) {
+      plugin = tryRequire(path.join(process.cwd(), pluginPath));
+    }
   }
 
-  try {
-    return require(pluginPath);
-  } catch (error) {
-    return require(path.join(process.cwd(), pluginPath));
+  if (!plugin) {
+    logger.log.warn(`Could not find plugin: ${pluginPath}`);
+    return;
   }
+
+  return new plugin(options);
 }

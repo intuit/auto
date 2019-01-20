@@ -68,7 +68,7 @@ describe('AutoRelease', () => {
     const auto = new AutoRelease({ command: 'init' });
     await auto.loadConfig();
 
-    expect(Object.values(auto.semVerLabels!)).toEqual([
+    expect(Object.values(auto.semVerLabels)).toEqual([
       'Version: Major',
       'Version: Minor',
       'Version: Patch',
@@ -146,7 +146,14 @@ describe('AutoRelease', () => {
       const getPullRequests = jest.fn();
       auto.githubRelease!.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([
-        { merged_at: true, labels: [{ name: 'foo' }, { name: 'bar' }] }
+        {
+          merged_at: '2019-01-08T03:45:33.000Z',
+          labels: [{ name: 'wubbalublub' }]
+        },
+        {
+          merged_at: '2019-01-10T03:45:33.000Z',
+          labels: [{ name: 'foo' }, { name: 'bar' }]
+        }
       ]);
       console.log = jest.fn();
 
@@ -438,6 +445,27 @@ describe('AutoRelease', () => {
 
       await auto.changelog({ from: 'v1.0.0' });
       expect(addToChangelog).toHaveBeenCalled();
+    });
+
+    test('should skip getRepository hook if passed in via cli', async () => {
+      const auto = new AutoRelease({
+        command: 'pr',
+        repo: 'test',
+        owner: 'adierkens'
+      });
+
+      const hookFn = jest.fn();
+      auto.hooks.getRepository.tap('test', hookFn);
+      await auto.loadConfig();
+      await auto.pr({
+        url: 'foo.bar',
+        state: 'pending',
+        description: 'Waiting for stuffs',
+        context: 'tests',
+        dryRun: true
+      });
+
+      expect(hookFn).not.toBeCalled();
     });
   });
 });

@@ -11,13 +11,24 @@ test('fails correctly', async () => {
   );
 });
 
-// Some tools log to stderr even with no error
-test.skip('throws stderr', async () => {
+test('appends stdout and stderr', async () => {
   expect.assertions(1);
+  return expect(
+    exec('echo', ['foo', '&&', '>&2', 'echo', '"this error"', '&&', 'false'])
+  ).rejects.toMatchInlineSnapshot(`
+[Error: Running command 'echo' failed
 
-  try {
-    await exec('echo', ['error', '1>&2']);
-  } catch (error) {
-    expect(error.message.trim()).toBe('error');
-  }
+foo
+
+
+this error
+]
+`);
+});
+
+test('prints stderr when exec exits without a code', async () => {
+  console.log = jest.fn();
+  await exec('>&2 echo "this error"');
+
+  return expect(console.log).toHaveBeenCalledWith('this error\n');
 });

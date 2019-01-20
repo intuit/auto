@@ -12,6 +12,7 @@ $ auto init --help
 Options
 
   --only-labels    Only run init for the labels. As most other options are for advanced users
+  -d, --dry-run    Report what command will do but do not actually do anything
 
 Examples
 
@@ -25,13 +26,17 @@ Create your project's labels on github.
 ```sh
 $ auto create-labels --help
 
+Options
+
+  -d, --dry-run    Report what command will do but do not actually do anything
+
 Global Options
 
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
   -w, --very-verbose    Show a lot more logs
   --repo string         The repo to set the status on. Defaults to looking in the package.json
-  --owner string        Version number to publish as. Defaults to reading from the package.json
+  --owner string        The owner of the GitHub repo. Defaults to reading from the package.json
   --github-api string   GitHub API to use
   --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
 

@@ -21,12 +21,14 @@ export interface IGenerateReleaseNotesOptions {
   versionLabels: Map<VersionLabel, string>;
 }
 
+export interface IPullRequest {
+  number: number;
+  base?: string;
+}
+
 export type IExtendedCommit = ICommit & {
   authors: ICommitAuthor[];
-  pullRequest?: {
-    number: string;
-    base?: string;
-  };
+  pullRequest?: IPullRequest;
   jira?: {
     number: string[];
   };
@@ -80,7 +82,7 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
   return {
     ...commit,
     pullRequest: {
-      number: prMatch[1],
+      number: Number(prMatch[1]),
       base: prMatch[2]
     },
     subject: prMatch[3].trim()
@@ -102,7 +104,7 @@ export function parseSquashPR(
   return {
     ...commit,
     pullRequest: {
-      number: squashMergeMatch[1]
+      number: Number(squashMergeMatch[1])
     },
     subject: firstLine
       .substr(0, firstLine.length - squashMergeMatch[0].length)
@@ -173,6 +175,7 @@ export default class LogParse {
     this.logger = logger;
     this.options = options;
     this.hooks = makeLogHooks();
+    this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
   }
 
   public loadDefaultHooks() {
@@ -195,6 +198,7 @@ export default class LogParse {
     );
   }
 
+  // Every Commit will either be a PR, jira story, or push to master (patch)
   public async generateReleaseNotes(
     commits: IExtendedCommit[]
   ): Promise<string> {
@@ -239,7 +243,7 @@ export default class LogParse {
   }
 
   /**
-   * Split commits into changelogTitle sections
+   * Split commits into changelogTitle sections.
    */
   private splitCommits(
     commits: IExtendedCommit[]
@@ -247,10 +251,7 @@ export default class LogParse {
     let currentCommits = [...commits];
 
     commits
-      .filter(
-        commit =>
-          (commit.pullRequest || commit.jira) && commit.labels.length === 0
-      )
+      .filter(commit => commit.labels.length === 0)
       .map(commit => commit.labels.push('patch'));
 
     return Object.assign(
@@ -309,7 +310,7 @@ export default class LogParse {
       const prLink = join(
         this.options.baseUrl,
         'pull',
-        commit.pullRequest.number
+        commit.pullRequest.number.toString()
       );
       pr = `[#${commit.pullRequest.number}](${prLink})`;
     }

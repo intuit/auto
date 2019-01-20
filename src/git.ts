@@ -23,6 +23,12 @@ export interface IGitHubOptions {
   token?: string;
 }
 
+export function getRandomColor() {
+  return Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, '0');
+}
+
 class GitHubAPIError extends Error {
   constructor(api: string, args: object, origError: Error) {
     super(
@@ -80,26 +86,30 @@ export default class GitHub {
     return Promise.resolve();
   }
 
+  @Memoize()
+  public async getLatestReleaseInfo() {
+    const latestRelease = await this.ghub.repos.getLatestRelease({
+      owner: this.options.owner,
+      repo: this.options.repo
+    });
+
+    return latestRelease.data;
+  }
+
+  @Memoize()
   public async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
-    const args = {
-      owner: this.options.owner,
-      repo: this.options.repo
-    };
-
     try {
-      this.logger.verbose.info('Getting latest release using:\n', args);
-
-      const latestRelease = await this.ghub.repos.getLatestRelease(args);
+      const latestRelease = await this.getLatestReleaseInfo();
 
       this.logger.veryVerbose.info(
         'Got response for "getLatestRelease":\n',
         latestRelease
       );
-      this.logger.verbose.info('Got latest release:\n', latestRelease.data);
+      this.logger.verbose.info('Got latest release:\n', latestRelease);
 
-      return latestRelease.data.tag_name;
+      return latestRelease.tag_name;
     } catch (e) {
       if (e.status === 404) {
         this.logger.verbose.info(
@@ -110,6 +120,13 @@ export default class GitHub {
 
       throw e;
     }
+  }
+
+  public async getCommitDate(sha: string): Promise<string> {
+    const date = await execPromise('git', ['show', '-s', '--format=%ci', sha]);
+    const [day, time, timezone] = date.split(' ');
+
+    return `${day}T${time}${timezone}`;
   }
 
   public async getFirstCommit(): Promise<string> {
@@ -125,6 +142,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
@@ -216,6 +234,7 @@ export default class GitHub {
     })).data;
   }
 
+  @Memoize()
   public async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
@@ -235,6 +254,22 @@ export default class GitHub {
     this.logger.verbose.info('Got pull request info');
 
     return result;
+  }
+
+  public async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
+    await this.authenticate();
+
+    const repo = `repo:${this.options.owner}/${this.options.repo}`;
+    options.q = `${repo} ${options.q}`;
+
+    this.logger.verbose.info('Searching repo using:\n', options);
+
+    const result = await this.ghub.search.issuesAndPullRequests(options);
+
+    this.logger.veryVerbose.info('Got response from search\n', result);
+    this.logger.verbose.info('Searched repo on GitHub.');
+
+    return result.data;
   }
 
   public async createStatus(prInfo: IPRInfo) {
@@ -265,7 +300,7 @@ export default class GitHub {
       name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: Math.floor(Math.random() * 16777215).toString(16),
+      color: getRandomColor(),
       description: defaultLabelsDescriptions.get(label)
     });
 
@@ -275,6 +310,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
@@ -308,6 +344,7 @@ export default class GitHub {
     return result;
   }
 
+  @Memoize()
   public async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 

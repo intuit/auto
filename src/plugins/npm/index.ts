@@ -3,7 +3,7 @@ import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
-import { gt } from 'semver';
+import { gt, inc, ReleaseType } from 'semver';
 import { IExtendedCommit } from '../../log-parse';
 import { AutoRelease, IPlugin } from '../../main';
 import SEMVER from '../../semver';
@@ -17,18 +17,30 @@ function isMonorepo() {
   return fs.existsSync('lerna.json');
 }
 
-async function greaterRelease(
+async function getPublishedVersion(name: string) {
+  try {
+    return await execPromise('npm', ['view', name, 'version']);
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function greaterRelease(
   prefixRelease: (release: string) => string,
-  name: any,
+  name: string,
   packageVersion: string
 ) {
-  const publishedVersion = prefixRelease(
-    await execPromise('npm', ['view', name, 'version'])
-  );
+  const publishedVersion = await getPublishedVersion(name);
 
-  return gt(packageVersion, publishedVersion)
+  if (!publishedVersion) {
+    return packageVersion;
+  }
+
+  const publishedPrefixed = prefixRelease(publishedVersion);
+
+  return gt(packageVersion, publishedPrefixed)
     ? packageVersion
-    : publishedVersion;
+    : publishedPrefixed;
 }
 
 export async function changedPackages(sha: string, logger: ILogger) {
@@ -60,6 +72,23 @@ export async function changedPackages(sha: string, logger: ILogger) {
   }
 
   return [...packages];
+}
+
+export function getMonorepoPackage() {
+  const packages = getPackages(process.cwd());
+
+  return packages.reduce(
+    (greatest, subPackage) => {
+      if (subPackage.package.version) {
+        return gt(greatest.version!, subPackage.package.version)
+          ? greatest
+          : subPackage.package;
+      }
+
+      return greatest;
+    },
+    { version: '0.0.0' } as IPackageJSON
+  );
 }
 
 interface INotePartition {
@@ -127,21 +156,9 @@ export default class NPMPlugin implements IPlugin {
           JSON.parse(await readFile('lerna.json', 'utf-8')).version
         );
 
-        const packages = getPackages(process.cwd());
-        const releasedPackage = packages.reduce(
-          (greatest, subPackage) => {
-            if (subPackage.package.version && !subPackage.package.private) {
-              return gt(greatest.version!, subPackage.package.version)
-                ? greatest
-                : subPackage.package;
-            }
+        const releasedPackage = getMonorepoPackage();
 
-            return greatest;
-          },
-          { version: '0.0.0' } as IPackageJSON
-        );
-
-        if (!releasedPackage) {
+        if (releasedPackage.version === '0.0.0') {
           previousVersion = monorepoVersion;
         } else {
           previousVersion = await greaterRelease(
@@ -221,23 +238,44 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
       if (isMonorepo()) {
+        const releasedPackage = getMonorepoPackage();
+        const publishedVersion = await getPublishedVersion(
+          releasedPackage.name
+        );
+        const publishedBumped =
+          publishedVersion && inc(publishedVersion, version as ReleaseType);
+
         await execPromise('npx', [
           'lerna',
           'publish',
           '--yes',
           '--force-publish=*',
-          version,
+          publishedBumped || version,
           '-m',
           "'%v [skip ci]'"
         ]);
       } else {
+        const { private: isPrivate, name } = JSON.parse(
+          await readFile('package.json', 'utf-8')
+        );
+        const isScopedPackage = name.match(/@\S+\/\S+/);
+        const publishedVersion = await getPublishedVersion(name);
+        const publishedBumped =
+          publishedVersion && inc(publishedVersion, version as ReleaseType);
+
         await execPromise('npm', [
           'version',
-          version,
+          publishedBumped || version,
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
-        await execPromise('npm', ['publish']);
+
+        await execPromise(
+          'npm',
+          !isPrivate && isScopedPackage
+            ? ['publish', '--access', 'public']
+            : ['publish']
+        );
         await execPromise('git', [
           'push',
           '--follow-tags',

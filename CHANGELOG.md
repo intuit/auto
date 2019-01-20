@@ -1,14 +1,251 @@
+# v2.8.0 (Sat Jan 19 2019)
+
+#### 🚀 Enhancement
+
+- load env vars from .env file [#227](https://github.com/intuit/auto-release/pull/227) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.7.0 (Sat Jan 19 2019)
+
+#### 🚀 Enhancement
+
+- Add dry-run flag for the rest of the commands [#226](https://github.com/intuit/auto-release/pull/226) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.6.2 (Sat Jan 19 2019)
+
+#### 🐛 Bug Fix
+
+- add label description for `release` label back [#225](https://github.com/intuit/auto-release/pull/225) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.6.1 (Sat Jan 19 2019)
+
+#### 🐛 Bug Fix
+
+- improve default label descriptions [#219](https://github.com/intuit/auto-release/pull/219) ([@aleclarson](https://github.com/aleclarson))
+
+#### Authors: 1
+
+- Alec Larson ([@aleclarson](https://github.com/aleclarson))
+
+---
+
+# v2.6.0 (Sat Jan 19 2019)
+
+#### 🚀 Enhancement
+
+- Pushes to master create changelog entry [#204](https://github.com/intuit/auto-release/pull/204) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@zephraph](https://github.com/zephraph))
+
+#### 🏠 Internal
+
+- fix test [#214](https://github.com/intuit/auto-release/pull/214) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v2.5.8 (Fri Jan 18 2019)
+
+#### 📝 Documentation
+
+- Proper Error Catching [#213](https://github.com/intuit/auto-release/pull/213) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.7 (Fri Jan 18 2019)
+
+#### 🐛 Bug Fix
+
+- When there are no releases use first commit date for rebased PRs [#212](https://github.com/intuit/auto-release/pull/212) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.6 (Fri Jan 18 2019)
+
+#### 🐛 Bug Fix
+
+- fix rebased PRs [#209](https://github.com/intuit/auto-release/pull/209) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.5 (Thu Jan 17 2019)
+
+#### 🐛 Bug Fix
+
+- NPM Plugin: increment published version if available [#208](https://github.com/intuit/auto-release/pull/208) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.4 (Thu Jan 17 2019)
+
+#### 🐛 Bug Fix
+
+- NPM Plugin: to publish a scoped package `--access public` is needed [#207](https://github.com/intuit/auto-release/pull/207) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.3 (Thu Jan 17 2019)
+
+#### 🐛 Bug Fix
+
+- NPM Plugin: if there is no published version default to package.json version [#205](https://github.com/intuit/auto-release/pull/205) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- release documentation only when files in `docs/` have changed [#200](https://github.com/intuit/auto-release/pull/200) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.2 (Thu Jan 17 2019)
+
+#### 🐛 Bug Fix
+
+- correct help message for owner [#199](https://github.com/intuit/auto-release/pull/199) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.1 (Wed Jan 16 2019)
+
+#### 🐛 Bug Fix
+
+- `auto label`: must sort PRs first because they can get merged out of order [#197](https://github.com/intuit/auto-release/pull/197) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.5.0 (Wed Jan 16 2019)
+
+#### 🚀 Enhancement
+
+- Plugin Config [#192](https://github.com/intuit/auto-release/pull/192) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.4.2 (Wed Jan 16 2019)
+
+#### 🐛 Bug Fix
+
+- Fix github repo lookup [#193](https://github.com/intuit/auto-release/pull/193) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
+# v2.4.1 (Tue Jan 15 2019)
+
+#### 🐛 Bug Fix
+
+- add shipit to docs [#190](https://github.com/intuit/auto-release/pull/190) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.4.0 (Tue Jan 15 2019)
+
+#### 🚀 Enhancement
+
+- Chrome Web Store Plugin [#182](https://github.com/intuit/auto-release/pull/182) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v2.3.2 (Tue Jan 15 2019)
+
+#### 🐛 Bug Fix
+
+- Pad color to be 6 digits long [#189](https://github.com/intuit/auto-release/pull/189) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
+# v2.3.1 (Sun Jan 13 2019)
+
+#### 🐛 Bug Fix
+
+- also log stdout on errors [#185](https://github.com/intuit/auto-release/pull/185) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.3.0 (Fri Jan 11 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Tappable Changelog [#178](https://github.com/intuit/auto-release/pull/178) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Switch to circleCI 2.1 [#181](https://github.com/intuit/auto-release/pull/181) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - add docs deploy note [#179](https://github.com/intuit/auto-release/pull/179) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -20,7 +257,7 @@
 
 # v2.2.0 (Wed Jan 09 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - NPM Plugin: getPreviousVersion compare against published version [#173](https://github.com/intuit/auto-release/pull/173) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -32,7 +269,7 @@
 
 # v2.1.4 (Wed Jan 09 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - String arg parse fail on null [#174](https://github.com/intuit/auto-release/pull/174) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -44,11 +281,11 @@
 
 # v2.1.3 (Tue Jan 08 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - When errors are caught fail the process [#171](https://github.com/intuit/auto-release/pull/171) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - update contributors badge [#168](https://github.com/intuit/auto-release/pull/168) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -60,7 +297,7 @@
 
 # v2.1.2 (Tue Jan 08 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Fix generating the changelog with custom labels [#167](https://github.com/intuit/auto-release/pull/167) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -72,7 +309,7 @@
 
 # v2.1.1 (Mon Jan 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Config takes precedence for author and repo [#166](https://github.com/intuit/auto-release/pull/166) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -84,7 +321,7 @@
 
 # v2.1.0 (Mon Jan 07 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Parse string authors [#165](https://github.com/intuit/auto-release/pull/165) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -96,7 +333,7 @@
 
 # v2.0.4 (Mon Jan 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Improve setGitUser messaging [#163](https://github.com/intuit/auto-release/pull/163) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -108,7 +345,7 @@
 
 # v2.0.3 (Mon Jan 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Only warn about git user when it isn't set [#160](https://github.com/intuit/auto-release/pull/160) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -120,7 +357,7 @@
 
 # v2.0.2 (Mon Jan 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Await all hook promises [#162](https://github.com/intuit/auto-release/pull/162) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
