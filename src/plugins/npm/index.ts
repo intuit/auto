@@ -88,14 +88,18 @@ export function getMonorepoPackage() {
   return packages.reduce(
     (greatest, subPackage) => {
       if (subPackage.package.version) {
-        return gt(greatest.version!, subPackage.package.version)
+        if (!greatest.version) {
+          return subPackage.package;
+        }
+
+        return gt(greatest.version, subPackage.package.version)
           ? greatest
           : subPackage.package;
       }
 
       return greatest;
     },
-    { version: '0.0.0' } as IPackageJSON
+    {} as IPackageJSON
   );
 }
 
@@ -186,7 +190,7 @@ export default class NPMPlugin implements IPlugin {
 
         const releasedPackage = getMonorepoPackage();
 
-        if (releasedPackage.version === '0.0.0') {
+        if (!releasedPackage.name && !releasedPackage.version) {
           previousVersion = monorepoVersion;
         } else {
           previousVersion = await greaterRelease(
