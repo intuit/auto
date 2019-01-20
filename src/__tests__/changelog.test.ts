@@ -1,4 +1,4 @@
-import Changelog from '../Changelog';
+import Changelog from '../changelog';
 import { defaultChangelogTitles, defaultLabels } from '../github-release';
 import { IGenerateReleaseNotesOptions, normalizeCommits } from '../log-parse';
 import { dummyLog } from '../utils/logger';
