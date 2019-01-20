@@ -1,6 +1,6 @@
 import { ICommit } from 'gitlog';
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
-import { IGitHubReleaseOptions } from './github-release';
+import { defaultLabels, VersionLabel } from './github-release';
 import { makeLogParseHooks } from './utils/make-hooks';
 
 export interface ICommitAuthor {
@@ -103,11 +103,14 @@ export interface ILogParseHooks {
 
 export default class LogParse {
   public hooks: ILogParseHooks;
-  public options: IGitHubReleaseOptions;
+  public options: { versionLabels: Map<VersionLabel, string> };
 
-  constructor(options: IGitHubReleaseOptions) {
+  constructor(options: { versionLabels?: Map<VersionLabel, string> } = {}) {
     this.hooks = makeLogParseHooks();
-    this.options = options;
+    this.options = {
+      ...options,
+      versionLabels: options.versionLabels || defaultLabels
+    };
 
     this.hooks.parseCommit.tap('Merge Commit', parsePR);
     this.hooks.parseCommit.tap('Squash Merge Commit', parseSquashPR);

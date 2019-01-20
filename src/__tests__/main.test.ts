@@ -609,7 +609,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [logParse.options.versionLabels!.get(SEMVER.major)!];
+          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
           return commit;
         });
       });
@@ -629,7 +629,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [logParse.options.versionLabels!.get(SEMVER.major)!];
+          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
           return commit;
         });
       });
