@@ -1,3 +1,15 @@
+# v2.8.0 (Sat Jan 19 2019)
+
+#### 🚀  Enhancement
+
+- load env vars from .env file [#227](https://github.com/intuit/auto-release/pull/227) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.7.0 (Sat Jan 19 2019)
 
 #### 🚀  Enhancement
