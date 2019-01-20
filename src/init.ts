@@ -5,7 +5,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
+import { IInitCommandOptions } from './cli/args';
 import { defaultChangelogTitles } from './github-release';
+import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);
 const isObject = (value: any) => typeof value === 'object' && value !== null;
@@ -189,7 +191,10 @@ documentation: #{documentation}
   return changelogTitles;
 }
 
-export default async function init(onlyLabels?: boolean) {
+export default async function init(
+  { onlyLabels, dryRun }: IInitCommandOptions,
+  logger: ILogger
+) {
   const flags = onlyLabels ? {} : await getFlags();
   const labels = await getLabels();
   const changelogTitles = await getChangelogTitles();
@@ -217,8 +222,11 @@ export default async function init(onlyLabels?: boolean) {
     return;
   }
 
-  await writeFile(
-    path.join(process.cwd(), '.autorc'),
-    JSON.stringify(autoRc, null, 2)
-  );
+  const jsonString = JSON.stringify(autoRc, null, 2);
+
+  if (dryRun) {
+    logger.log.note(`Initialization options would be:\n${jsonString}`);
+  } else {
+    await writeFile(path.join(process.cwd(), '.autorc'), jsonString);
+  }
 }
