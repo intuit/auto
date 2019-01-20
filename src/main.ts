@@ -29,6 +29,7 @@ import GitHubRelease, {
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import Changelog from './changelog';
 import init from './init';
+import LogParse from './log-parse';
 import SEMVER from './semver';
 import execPromise from './utils/exec-promise';
 import getGitHubToken from './utils/github-token';
@@ -61,6 +62,7 @@ export interface IAutoHooks {
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
   onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
+  onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
 }
 
@@ -179,6 +181,15 @@ export class AutoRelease {
         githubRelease.hooks.onCreateChangelog.tap(
           'Link onCreateChangelog',
           changelog => this.hooks.onCreateChangelog.call(changelog)
+        );
+      }
+    );
+    this.hooks.onCreateGitHubRelease.tap(
+      'Link onCreateLogParse',
+      githubRelease => {
+        githubRelease.hooks.onCreateLogParse.tap(
+          'Link onCreateLogParse',
+          logParse => this.hooks.onCreateLogParse.call(logParse)
         );
       }
     );
