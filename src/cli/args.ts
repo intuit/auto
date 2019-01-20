@@ -380,7 +380,7 @@ const commands: ICommand[] = [
     name: 'shipit',
     summary: 'Run the full auto-release project. Detects if in a lerna project',
     examples: ['{green $} auto shipit'],
-    options: defaultOptions
+    options: [...defaultOptions, dryRun]
   }
 ];
 
@@ -641,6 +641,10 @@ export interface ICommentCommandOptions {
   dryRun?: boolean;
 }
 
+export interface IShipItCommandOptions {
+  dryRun?: boolean;
+}
+
 type GlobalFlags = {
   command: string;
   githubApi?: string;
@@ -651,19 +655,23 @@ type GlobalFlags = {
 export type ArgsType = GlobalFlags &
   (
     | IInitCommandOptions
+    | ICreateLabelsCommandOptions
     | ILabelCommandOptions
     | IPRCheckCommandOptions
     | IPRCommandOptions
     | ICommentCommandOptions
     | IReleaseOptions
-    | IVersionCommandOptions);
+    | IVersionCommandOptions
+    | IShipItCommandOptions);
 
 type Flags =
   | keyof GlobalFlags
   | keyof IInitCommandOptions
+  | keyof ICreateLabelsCommandOptions
   | keyof ILabelCommandOptions
   | keyof IPRCheckCommandOptions
   | keyof IPRCommandOptions
   | keyof ICommentCommandOptions
   | keyof IReleaseOptions
-  | keyof IVersionCommandOptions;
+  | keyof IVersionCommandOptions
+  | keyof IShipItCommandOptions;
