@@ -132,7 +132,7 @@ async function partitionPackages(
   return packageCommits;
 }
 
-async function loadPackageJson() {
+async function loadPackageJson(): Promise<IPackageJSON> {
   return JSON.parse(await readFile('package.json', 'utf-8'));
 }
 
@@ -201,11 +201,9 @@ export default class NPMPlugin implements IPlugin {
         );
         const { version, name } = await loadPackageJson();
 
-        previousVersion = await greaterRelease(
-          prefixRelease,
-          name,
-          prefixRelease(version)
-        );
+        previousVersion = version
+          ? await greaterRelease(prefixRelease, name, prefixRelease(version))
+          : '0.0.0';
       }
 
       auto.logger.verbose.info(
@@ -265,12 +263,17 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
         const { name, version: localVersion } = getMonorepoPackage();
-        const latestVersion = greaterRelease(s => s, name, localVersion);
+        const latestVersion = localVersion
+          ? await greaterRelease(s => s, name, localVersion)
+          : null;
+        const latestBump = latestVersion
+          ? inc(latestVersion, version as ReleaseType)
+          : version;
 
         await execPromise('npx', [
           'lerna',
           'version',
-          inc(latestVersion, version as ReleaseType) || version,
+          latestBump || version,
           '--force-publish',
           '--yes',
           '-m',
@@ -287,11 +290,16 @@ export default class NPMPlugin implements IPlugin {
           version: localVersion
         } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);
-        const latestVersion = greaterRelease(s => s, name, localVersion);
+        const latestVersion = localVersion
+          ? await greaterRelease(s => s, name, localVersion)
+          : null;
+        const latestBump = latestVersion
+          ? inc(latestVersion, version as ReleaseType)
+          : version;
 
         await execPromise('npm', [
           'version',
-          inc(latestVersion, version as ReleaseType) || version,
+          latestBump || version,
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);

@@ -53,7 +53,7 @@ interface IRepository {
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
-  getAuthor: AsyncSeriesBailHook<[], IAuthor>;
+  getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
@@ -572,8 +572,8 @@ If a command fails manually run:
       let { email, name } = this.githubRelease.releaseOptions;
       const packageAuthor = await this.hooks.getAuthor.promise();
 
-      email = email || packageAuthor.email;
-      name = name || packageAuthor.name;
+      email = packageAuthor ? packageAuthor.email : email;
+      name = packageAuthor ? packageAuthor.name : name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);
