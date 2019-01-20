@@ -107,7 +107,7 @@ const dryRun: commandLineUsage.OptionDefinition = {
   name: 'dry-run',
   alias: 'd',
   type: Boolean,
-  description: 'Dont actually commit status. Just print the request body',
+  description: 'Report what command will do but do not actually do anything',
   group: 'main'
 };
 
@@ -199,7 +199,7 @@ const commands: ICommand[] = [
     name: 'create-labels',
     summary: "Create your project's labels on github.",
     examples: ['{green $} auto create-labels'],
-    options: defaultOptions
+    options: [...defaultOptions, dryRun]
   },
   {
     name: 'label',
@@ -581,6 +581,10 @@ interface ILogArgs {
 
 export interface IInitCommandOptions {
   onlyLabels?: boolean;
+  dryRun?: boolean;
+}
+
+export interface ICreateLabelsCommandOptions {
   dryRun?: boolean;
 }
 

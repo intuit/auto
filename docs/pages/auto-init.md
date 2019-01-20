@@ -12,7 +12,8 @@ $ auto init --help
 Options
 
   --only-labels    Only run init for the labels. As most other options are for advanced users
-  -d, --dry-run    Dont actually commit status. Just print the request body
+  -d, --dry-run    Report what command will do but do not actually do anything
+
 Examples
 
   $ auto init
@@ -24,6 +25,10 @@ Create your project's labels on github.
 
 ```sh
 $ auto create-labels --help
+
+Options
+
+  -d, --dry-run    Report what command will do but do not actually do anything
 
 Global Options
 

@@ -8,6 +8,7 @@ import {
   ArgsType,
   IChangelogOptions,
   ICommentCommandOptions,
+  ICreateLabelsCommandOptions,
   IInitCommandOptions,
   ILabelCommandOptions,
   IPRCheckCommandOptions,
@@ -146,7 +147,7 @@ export class AutoRelease {
     await init(options, this.logger);
   }
 
-  public async createLabels() {
+  public async createLabels(options: ICreateLabelsCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
     }
@@ -162,7 +163,8 @@ export class AutoRelease {
             )
           ].map((label): [string, string] => [label, label])
         )
-      ])
+      ]),
+      options
     );
   }
 
@@ -559,7 +561,7 @@ export async function run(args: ArgsType) {
       break;
     case 'create-labels':
       await auto.loadConfig();
-      await auto.createLabels();
+      await auto.createLabels(args as ICreateLabelsCommandOptions);
       break;
     case 'label':
       await auto.loadConfig();

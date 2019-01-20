@@ -5,6 +5,7 @@ import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import { ICreateLabelsCommandOptions } from './cli/args';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
 import LogParse, { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
@@ -326,7 +327,10 @@ export default class GitHubRelease {
     return this.github.getPullRequests(options);
   }
 
-  public async addLabelsToProject(labels: Map<string, string>) {
+  public async addLabelsToProject(
+    labels: Map<string, string>,
+    options: ICreateLabelsCommandOptions
+  ) {
     const oldLabels = await this.github.getProjectLabels();
     const labelsToCreate = [...labels.entries()].filter(
       ([versionLabel, customLabel]) => {
@@ -352,25 +356,32 @@ export default class GitHubRelease {
       }
     );
 
-    await Promise.all(
-      labelsToCreate.map(async ([versionLabel, customLabel]) => {
-        await this.github.createLabel(versionLabel, customLabel);
-      })
-    );
+    if (!options.dryRun) {
+      await Promise.all(
+        labelsToCreate.map(async ([versionLabel, customLabel]) => {
+          await this.github.createLabel(versionLabel, customLabel);
+        })
+      );
+    }
 
     const repoMetadata = await this.github.getProject();
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
     if (justLabelNames.length > 0) {
-      this.logger.log.log(`Created labels: ${justLabelNames.join(', ')}`);
+      const state = options.dryRun ? 'Would have created' : 'Created';
+      this.logger.log.log(`${state} labels: ${justLabelNames.join(', ')}`);
     } else {
+      const state = options.dryRun ? 'would have been' : 'were';
       this.logger.log.log(
-        'No labels were created, they must have already been present on your project.'
+        `No labels ${state} created, they must have already been present on your project.`
       );
     }
-    this.logger.log.log(
-      `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
-    );
+
+    if (!options.dryRun) {
+      this.logger.log.log(
+        `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
+      );
+    }
   }
 
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
