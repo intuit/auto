@@ -1,3 +1,15 @@
+# v2.7.0 (Sat Jan 19 2019)
+
+#### 🚀  Enhancement
+
+- Add dry-run flag for the rest of the commands [#226](https://github.com/intuit/auto-release/pull/226) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.6.2 (Sat Jan 19 2019)
 
 #### 🐛  Bug Fix
