@@ -58,6 +58,13 @@ You must configure some environment variables for publishing and releasing to wo
 - `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
 - `NPM_TOKEN` - Used to publish to npm.
 
+You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys!
+
+```bash
+GH_TOKEN=YOUR_TOKEN
+NPM_TOKEN=PUBLISH_TOKEN
+```
+
 If you are publishing from the CI you must inject the `NPM_TOKEN` into your `.npmrc`.
 
 ```sh

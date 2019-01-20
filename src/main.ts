@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import cosmiconfig from 'cosmiconfig';
+import env from 'dotenv';
 import envCi from 'env-ci';
 import { gt, inc, ReleaseType } from 'semver';
 
@@ -73,6 +74,8 @@ export class AutoRelease {
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
     this.hooks = makeHooks();
+
+    env.config();
   }
 
   public async loadConfig() {
