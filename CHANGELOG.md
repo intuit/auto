@@ -1,3 +1,15 @@
+# v2.9.0 (Sun Jan 20 2019)
+
+#### 🚀  Enhancement
+
+- Shared Configuration [#215](https://github.com/intuit/auto-release/pull/215) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.8.0 (Sat Jan 19 2019)
 
 #### 🚀  Enhancement
