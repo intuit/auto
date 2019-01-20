@@ -329,7 +329,7 @@ export default class GitHubRelease {
 
   public async addLabelsToProject(
     labels: Map<string, string>,
-    options: ICreateLabelsCommandOptions
+    options: ICreateLabelsCommandOptions = {}
   ) {
     const oldLabels = await this.github.getProjectLabels();
     const labelsToCreate = [...labels.entries()].filter(
