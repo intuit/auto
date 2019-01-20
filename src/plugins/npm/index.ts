@@ -264,17 +264,13 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
-        const releasedPackage = getMonorepoPackage();
-        const publishedVersion = await getPublishedVersion(
-          releasedPackage.name
-        );
-        const publishedBumped =
-          publishedVersion && inc(publishedVersion, version as ReleaseType);
+        const { name, version: localVersion } = getMonorepoPackage();
+        const latestVersion = greaterRelease(s => s, name, localVersion);
 
         await execPromise('npx', [
           'lerna',
           'version',
-          publishedBumped || version,
+          inc(latestVersion, version as ReleaseType) || version,
           '--force-publish',
           '--yes',
           '-m',
@@ -291,11 +287,7 @@ export default class NPMPlugin implements IPlugin {
           version: localVersion
         } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);
-        const publishedVersion = await getPublishedVersion(name);
-        const latestVersion =
-          publishedVersion && gt(publishedVersion, localVersion)
-            ? publishedVersion
-            : localVersion;
+        const latestVersion = greaterRelease(s => s, name, localVersion);
 
         await execPromise('npm', [
           'version',
