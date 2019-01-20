@@ -191,7 +191,8 @@ const commands: ICommand[] = [
         group: 'main',
         description:
           'Only run init for the labels. As most other options are for advanced users'
-      }
+      },
+      dryRun
     ]
   },
   {
@@ -580,6 +581,7 @@ interface ILogArgs {
 
 export interface IInitCommandOptions {
   onlyLabels?: boolean;
+  dryRun?: boolean;
 }
 
 export interface ILabelCommandOptions {

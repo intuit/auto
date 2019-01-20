@@ -12,7 +12,7 @@ $ auto init --help
 Options
 
   --only-labels    Only run init for the labels. As most other options are for advanced users
-
+  -d, --dry-run    Dont actually commit status. Just print the request body
 Examples
 
   $ auto init

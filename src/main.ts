@@ -143,7 +143,7 @@ export class AutoRelease {
   }
 
   public async init(options: IInitCommandOptions = {}) {
-    await init(options.onlyLabels);
+    await init(options, this.logger);
   }
 
   public async createLabels() {
