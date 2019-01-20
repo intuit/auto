@@ -1,6 +1,38 @@
 import { IPRCommandOptions } from '../cli/args';
 import main, { AutoRelease, run } from '../main';
 
+jest.mock(
+  '@artsy/auto-config',
+  () => ({
+    onlyPublishWithReleaseLabel: true
+  }),
+  { virtual: true }
+);
+
+jest.mock(
+  'auto-config-fuego',
+  () => ({
+    noVersionPrefix: true
+  }),
+  { virtual: true }
+);
+
+jest.mock(
+  '../fake/path.json',
+  () => ({
+    jira: 'url'
+  }),
+  { virtual: true }
+);
+
+jest.mock(
+  '../fake/path.js',
+  () => () => ({
+    slack: 'url'
+  }),
+  { virtual: true }
+);
+
 test('throws error for unknown args', async () => {
   expect.assertions(1);
 
@@ -53,6 +85,13 @@ describe('AutoRelease', () => {
     const auto = new AutoRelease({ command: 'init' });
     await auto.loadConfig();
     expect(auto.githubRelease).toBeDefined();
+  });
+
+  test('should extend config', async () => {
+    search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
+    const auto = new AutoRelease({ command: 'init' });
+    await auto.loadConfig();
+    expect(auto.githubRelease!.releaseOptions).toMatchSnapshot();
   });
 
   test('should use labels from config config', async () => {
@@ -460,6 +499,40 @@ describe('AutoRelease', () => {
       });
 
       expect(hookFn).not.toBeCalled();
+    });
+  });
+
+  describe('loadExtendConfig', () => {
+    test('should work when no config found', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      expect(auto.loadExtendConfig('nothing')).toEqual({});
+    });
+
+    test('should load file path', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      expect(auto.loadExtendConfig('../fake/path.json')).toEqual({
+        jira: 'url'
+      });
+    });
+
+    test('should load @NAME/auto-config', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      expect(auto.loadExtendConfig('@artsy')).toEqual({
+        onlyPublishWithReleaseLabel: true
+      });
+    });
+
+    test('should load auto-config-NAME', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      expect(auto.loadExtendConfig('fuego')).toEqual({
+        noVersionPrefix: true
+      });
+    });
+    test('should load extend config from function', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      expect(auto.loadExtendConfig('../fake/path.js')).toEqual({
+        slack: 'url'
+      });
     });
   });
 });

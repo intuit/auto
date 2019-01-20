@@ -21,6 +21,16 @@ auto init
 
 These options can be set exclusively in the `.autorc` and do not exist as CLI flags.
 
+### Extending
+
+If you want to share your auto configuration between projects you can use the `extends` property. This property will load an autorc object or a function that returns an autorc object and merge it with your project's `.autorc`.
+
+Auto can load `extends` configs in the following ways:
+
+- from a path `path/to/config`
+- from a scoped package `@YOUR_SCOPE/auto-config`
+- from a package `auto-config-YOUR_NAME`
+
 ### Versioning Labels
 
 To override the label text used for versioning define new labels in the `.autorc`.
