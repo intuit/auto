@@ -7,7 +7,7 @@ import { promisify } from 'util';
 import { SyncHook } from 'tapable';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
-import GitHub, { IGitHubOptions, IPRInfo } from './git';
+import GitHub, { IGitHubOptions } from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
@@ -105,9 +105,9 @@ export interface IGitHubReleaseHooks {
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
   public readonly hooks: IGitHubReleaseHooks;
+  public readonly github: GitHub;
 
   private readonly logger: ILogger;
-  private readonly github: GitHub;
   private readonly changelogTitles: { [label: string]: string };
   private readonly githubApi: string;
   private readonly versionLabels: Map<VersionLabel, string>;
@@ -320,38 +320,6 @@ export default class GitHubRelease {
     return commits;
   }
 
-  public async publish(releaseNotes: string, tag: string) {
-    return this.github.publish(releaseNotes, tag);
-  }
-
-  public async getLabels(pr: number) {
-    return this.github.getLabels(pr);
-  }
-
-  public async createStatus(prInfo: IPRInfo) {
-    return this.github.createStatus(prInfo);
-  }
-
-  public async getSha() {
-    return this.github.getSha();
-  }
-
-  public async getLatestRelease(): Promise<string> {
-    return this.github.getLatestRelease();
-  }
-
-  public async getPullRequest(pr: number) {
-    return this.github.getPullRequest(pr);
-  }
-
-  public async createComment(message: string, pr: number, context = 'default') {
-    return this.github.createComment(message, pr, context);
-  }
-
-  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
-    return this.github.getPullRequests(options);
-  }
-
   public async addLabelsToProject(
     labels: Map<string, string>,
     options: ICreateLabelsCommandOptions = {}
@@ -488,7 +456,7 @@ export default class GitHubRelease {
           commit.labels = commit.labels || [];
         } else {
           commit.labels = [
-            ...((await this.getLabels(commit.pullRequest.number)) || []),
+            ...((await this.github.getLabels(commit.pullRequest.number)) || []),
             ...commit.labels
           ];
         }

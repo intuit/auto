@@ -243,7 +243,7 @@ export class AutoRelease {
     let labels: string[] = [];
 
     if (!pr) {
-      const pulls = await this.githubRelease.getPullRequests({
+      const pulls = await this.githubRelease.github.getPullRequests({
         state: 'closed'
       });
       const lastMerged = pulls
@@ -257,7 +257,7 @@ export class AutoRelease {
         labels = lastMerged.labels.map(label => label.name);
       }
     } else {
-      labels = await this.githubRelease.getLabels(pr);
+      labels = await this.githubRelease.github.getLabels(pr);
     }
 
     if (labels.length) {
@@ -280,11 +280,11 @@ export class AutoRelease {
 
     if (!sha && pr) {
       this.logger.verbose.info('Getting commit SHA from PR.');
-      const res = await this.githubRelease.getPullRequest(pr);
+      const res = await this.githubRelease.github.getPullRequest(pr);
       sha = res.data.head.sha;
     } else if (!sha) {
       this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
-      sha = await this.githubRelease.getSha();
+      sha = await this.githubRelease.github.getSha();
     }
 
     this.logger.verbose.info('Found PR SHA:', sha);
@@ -293,7 +293,7 @@ export class AutoRelease {
     const target_url = url;
 
     if (!dryRun) {
-      await this.githubRelease.createStatus({
+      await this.githubRelease.github.createStatus({
         ...options,
         sha,
         target_url
@@ -330,10 +330,10 @@ export class AutoRelease {
     let sha;
 
     try {
-      const res = await this.githubRelease.getPullRequest(pr);
+      const res = await this.githubRelease.github.getPullRequest(pr);
       sha = res.data.head.sha;
 
-      const labels = await this.githubRelease.getLabels(pr);
+      const labels = await this.githubRelease.github.getLabels(pr);
       const labelTexts = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
@@ -380,7 +380,7 @@ export class AutoRelease {
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
     if (!dryRun) {
-      await this.githubRelease.createStatus({
+      await this.githubRelease.github.createStatus({
         ...options,
         ...msg,
         target_url,
@@ -418,7 +418,7 @@ export class AutoRelease {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      await this.githubRelease.createComment(message, pr, context);
+      await this.githubRelease.github.createComment(message, pr, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
   }
@@ -479,7 +479,7 @@ export class AutoRelease {
         "The version reported in the line above hasn't been incremneted during `dry-run`"
       );
 
-      const lastRelease = await this.githubRelease!.getLatestRelease();
+      const lastRelease = await this.githubRelease!.github.getLatestRelease();
       const current = await this.getCurrentVersion(lastRelease);
 
       this.logger.log.warn(
@@ -493,7 +493,7 @@ export class AutoRelease {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = await this.githubRelease.getLatestRelease();
+    const lastRelease = await this.githubRelease.github.getLatestRelease();
     return this.githubRelease.getSemverBump(lastRelease);
   }
 
@@ -529,7 +529,8 @@ export class AutoRelease {
 
     await this.setGitUser();
 
-    const lastRelease = from || (await this.githubRelease.getLatestRelease());
+    const lastRelease =
+      from || (await this.githubRelease.github.getLatestRelease());
     const releaseNotes = await this.githubRelease.generateReleaseNotes(
       lastRelease,
       to || undefined
@@ -560,7 +561,7 @@ export class AutoRelease {
       throw this.createErrorMessage();
     }
 
-    let lastRelease = await this.githubRelease.getLatestRelease();
+    let lastRelease = await this.githubRelease.github.getLatestRelease();
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -588,7 +589,7 @@ export class AutoRelease {
     this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
 
     if (!dryRun) {
-      await this.githubRelease.publish(releaseNotes, prefixed);
+      await this.githubRelease.github.publish(releaseNotes, prefixed);
 
       if (slack) {
         this.logger.log.info('Posting release to slack');

@@ -364,7 +364,7 @@ export default class GitHub {
     return result;
   }
 
-  public async createComment(message: string, pr: number, context: string) {
+  public async createComment(message: string, pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Using comment identifier:', commentIdentifier);

@@ -192,7 +192,7 @@ describe('AutoRelease', () => {
       await auto.loadConfig();
 
       const getLabels = jest.fn();
-      auto.githubRelease!.getLabels = getLabels;
+      auto.githubRelease!.github.getLabels = getLabels;
       getLabels.mockReturnValueOnce(['foo']);
       console.log = jest.fn();
 
@@ -207,7 +207,7 @@ describe('AutoRelease', () => {
       await auto.loadConfig();
 
       const getPullRequests = jest.fn();
-      auto.githubRelease!.getPullRequests = getPullRequests;
+      auto.githubRelease!.github.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([
         {
           merged_at: '2019-01-08T03:45:33.000Z',
@@ -231,7 +231,7 @@ describe('AutoRelease', () => {
       await auto.loadConfig();
 
       const getPullRequests = jest.fn();
-      auto.githubRelease!.getPullRequests = getPullRequests;
+      auto.githubRelease!.github.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([]);
       console.log = jest.fn();
 
@@ -276,7 +276,7 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       await auto.pr({ ...required, sha: '1234' });
       expect(createStatus).toHaveBeenCalledWith(
@@ -291,10 +291,10 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getSha = jest.fn();
-      auto.githubRelease!.getSha = getSha;
+      auto.githubRelease!.github.getSha = getSha;
       getSha.mockReturnValueOnce('abc');
 
       await auto.pr({ ...required });
@@ -310,10 +310,10 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getPullRequest = jest.fn();
-      auto.githubRelease!.getPullRequest = getPullRequest;
+      auto.githubRelease!.github.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'deep' } } });
 
       await auto.pr({ ...required, pr: 14 });
@@ -357,7 +357,7 @@ describe('AutoRelease', () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       await auto.prCheck({ ...required, pr: 13 });
       expect(createStatus).toHaveBeenCalledWith(
@@ -372,14 +372,14 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getPullRequest = jest.fn();
-      auto.githubRelease!.getPullRequest = getPullRequest;
+      auto.githubRelease!.github.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'sha' } } });
 
       const getLabels = jest.fn();
-      auto.githubRelease!.getLabels = getLabels;
+      auto.githubRelease!.github.getLabels = getLabels;
       getLabels.mockReturnValueOnce([]);
 
       await auto.prCheck({ ...required, pr: 13 });
@@ -395,14 +395,14 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getPullRequest = jest.fn();
-      auto.githubRelease!.getPullRequest = getPullRequest;
+      auto.githubRelease!.github.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'sha' } } });
 
       const getLabels = jest.fn();
-      auto.githubRelease!.getLabels = getLabels;
+      auto.githubRelease!.github.getLabels = getLabels;
       getLabels.mockReturnValueOnce(['major']);
 
       await auto.prCheck({ ...required, pr: 13 });
@@ -418,14 +418,14 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getPullRequest = jest.fn();
-      auto.githubRelease!.getPullRequest = getPullRequest;
+      auto.githubRelease!.github.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'sha' } } });
 
       const getLabels = jest.fn();
-      auto.githubRelease!.getLabels = getLabels;
+      auto.githubRelease!.github.getLabels = getLabels;
       getLabels.mockReturnValueOnce(['major', 'skip-release']);
 
       await auto.prCheck({ ...required, pr: 13 });
@@ -441,14 +441,14 @@ describe('AutoRelease', () => {
       auto.logger = dummyLog();
 
       await auto.loadConfig();
-      auto.githubRelease!.createStatus = createStatus;
+      auto.githubRelease!.github.createStatus = createStatus;
 
       const getPullRequest = jest.fn();
-      auto.githubRelease!.getPullRequest = getPullRequest;
+      auto.githubRelease!.github.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'sha' } } });
 
       const getLabels = jest.fn();
-      auto.githubRelease!.getLabels = getLabels;
+      auto.githubRelease!.github.getLabels = getLabels;
       getLabels.mockReturnValueOnce(['major', 'release']);
 
       await auto.prCheck({ ...required, pr: 13 });
@@ -474,7 +474,7 @@ describe('AutoRelease', () => {
       await auto.loadConfig();
 
       const createComment = jest.fn();
-      auto.githubRelease!.createComment = createComment;
+      auto.githubRelease!.github.createComment = createComment;
 
       await auto.comment({ pr: 10, message: 'foo' });
       expect(createComment).toHaveBeenCalled();
@@ -494,7 +494,7 @@ describe('AutoRelease', () => {
       await auto.loadConfig();
 
       const getSemverBump = jest.fn();
-      auto.githubRelease!.getLatestRelease = jest.fn();
+      auto.githubRelease!.github.getLatestRelease = jest.fn();
       auto.githubRelease!.getSemverBump = getSemverBump;
       getSemverBump.mockReturnValueOnce('patch');
       console.log = jest.fn();
@@ -545,6 +545,7 @@ describe('AutoRelease', () => {
     });
 
     test('should skip getRepository hook if passed in via cli', async () => {
+      process.env.GH_TOKEN = 'XXXX';
       const auto = new AutoRelease({
         command: 'pr',
         repo: 'test',
@@ -615,7 +616,7 @@ describe('hooks', () => {
       });
 
       await auto.loadConfig();
-      auto.githubRelease!.getLatestRelease = async () =>
+      auto.githubRelease!.github.getLatestRelease = async () =>
         Promise.resolve('1.0.0');
 
       console.log = jest.fn();
@@ -643,7 +644,7 @@ describe('hooks', () => {
       });
 
       await auto.loadConfig();
-      auto.githubRelease!.getLatestRelease = async () =>
+      auto.githubRelease!.github.getLatestRelease = async () =>
         Promise.resolve('1.0.0');
 
       console.log = jest.fn();

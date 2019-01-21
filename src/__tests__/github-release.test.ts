@@ -254,60 +254,6 @@ describe('GitHubRelease', () => {
     });
   });
 
-  test('publish', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.publish('release notes', '1.2.3');
-    expect(publish).toHaveBeenCalled();
-  });
-
-  test('getLabels', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.getLabels(123);
-    expect(getLabels).toHaveBeenCalled();
-  });
-
-  test('getLatestRelease', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.getLatestRelease();
-    expect(getLatestRelease).toHaveBeenCalled();
-  });
-
-  test('getLatestRelease', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.getPullRequest(22);
-    expect(getLatestRelease).toHaveBeenCalled();
-  });
-
-  test('getSha', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.getSha();
-    expect(getLatestRelease).toHaveBeenCalled();
-  });
-
-  test('createStatus', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.createStatus({
-      state: 'pending',
-      sha: '',
-      context: 'foo',
-      target_url: 'google.com',
-      description: 'testing'
-    });
-    expect(getLatestRelease).toHaveBeenCalled();
-  });
-
-  test('createComment', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.createComment('Some long message', 22);
-    expect(createComment).toHaveBeenCalled();
-  });
-
-  test('getPullRequests', async () => {
-    const gh = new GitHubRelease(options);
-    await gh.getPullRequests({ state: 'closed' });
-    expect(getPullRequests).toHaveBeenCalled();
-  });
-
   describe('addToChangelog', async () => {
     test("creates new changelog if one didn't exist", async () => {
       const gh = new GitHubRelease(options);
