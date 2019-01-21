@@ -2,7 +2,6 @@ import setToken from '@hutson/set-npm-auth-token-for-ci';
 import * as fs from 'fs';
 import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
-import * as path from 'path';
 import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
@@ -22,24 +21,7 @@ function isMonorepo() {
 
 async function setTokenOnCI() {
   if (isCI) {
-    process.env.DEBUG = 'set-npm-auth-token-for-ci';
-    const result = setToken();
-    console.log('Set NPM Token in npmrc', result);
-
-    try {
-      console.log('cat root');
-      await execPromise('cat', ['~/.npmrc']);
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      console.log('cat project root');
-      console.log(
-        await execPromise('cat', [path.join(process.cwd(), '.npmrc')])
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    setToken();
   }
 }
 
