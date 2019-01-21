@@ -1,3 +1,30 @@
+# v2.10.2 (Sun Jan 20 2019)
+
+#### ⚠️  Pushed to master
+
+- :pray:
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- increase debugging further
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- run debug another way
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- run debug
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- this seems flaky?
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- catch the errors
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- more logging
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- hope and pray
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 1
+
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v2.10.1 (Sun Jan 20 2019)
 
 #### ⚠️  Pushed to master
