@@ -7,7 +7,7 @@ import { SyncHook } from 'tapable';
 import { Memoize } from 'typescript-memoize';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
-import Git, { IGitOptions } from './git';
+import Git from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
@@ -105,14 +105,14 @@ export interface IReleaseHooks {
 export default class Release {
   public readonly options: IReleaseOptions;
   public readonly hooks: IReleaseHooks;
-  public readonly git: Git;
 
+  private readonly git: Git;
   private readonly logger: ILogger;
   private readonly changelogTitles: { [label: string]: string };
   private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
-    gitOptions: Partial<IGitOptions>,
+    git: Git,
     options: IReleaseOptions = {
       skipReleaseLabels: []
     },
@@ -123,30 +123,7 @@ export default class Release {
     this.hooks = makeReleaseHooks();
     this.versionLabels = options.versionLabels || defaultLabels;
     this.changelogTitles = options.changelogTitles || {};
-    gitOptions.baseUrl = options.githubApi || 'https://api.github.com';
-
-    if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
-      throw new Error('Must set owner, repo, and GitHub token.');
-    }
-
-    this.logger.verbose.info('Options contain repo information.');
-
-    // So that --verbose can be used on public CIs
-    const tokenlessArgs = {
-      ...gitOptions,
-      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
-    };
-
-    this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
-    this.git = new Git(
-      {
-        owner: gitOptions.owner,
-        repo: gitOptions.repo,
-        token: gitOptions.token,
-        baseUrl: gitOptions.baseUrl
-      },
-      this.logger
-    );
+    this.git = git;
   }
 
   /**

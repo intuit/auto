@@ -19,7 +19,7 @@ import {
 } from './cli/args';
 
 import Changelog from './changelog';
-import { IPRInfo } from './git';
+import Git, { IGitOptions, IPRInfo } from './git';
 import init from './init';
 import LogParse from './log-parse';
 import { execPromise } from './main';
@@ -70,6 +70,7 @@ export default class AutoRelease {
   public args: ArgsType;
 
   public release?: Release;
+  public git?: Git;
   public semVerLabels?: Map<VersionLabel, string>;
 
   constructor(args: ArgsType) {
@@ -178,12 +179,16 @@ export default class AutoRelease {
       repository && repository.token
         ? repository.token
         : await getGitHubToken(config.githubApi);
+    const githubOptions = {
+      owner: config.owner,
+      repo: config.repo,
+      ...repository,
+      token,
+      baseUrl: config.githubApi || 'https://api.github.com'
+    };
 
-    this.release = new Release(
-      { owner: config.owner, repo: config.repo, ...repository, token },
-      config,
-      this.logger
-    );
+    this.git = this.startGit(githubOptions as IGitOptions);
+    this.release = new Release(this.git, config, this.logger);
 
     this.hooks.onCreateRelease.call(this.release);
   }
@@ -225,7 +230,7 @@ export default class AutoRelease {
    * @param options Options for the createLabels functionality
    */
   public async label({ pr }: ILabelCommandOptions = {}) {
-    if (!this.release) {
+    if (!this.git) {
       throw this.createErrorMessage();
     }
 
@@ -233,7 +238,7 @@ export default class AutoRelease {
     let labels: string[] = [];
 
     if (!pr) {
-      const pulls = await this.release.git.getPullRequests({
+      const pulls = await this.git.getPullRequests({
         state: 'closed'
       });
       const lastMerged = pulls
@@ -247,7 +252,7 @@ export default class AutoRelease {
         labels = lastMerged.labels.map(label => label.name);
       }
     } else {
-      labels = await this.release.git.getLabels(pr);
+      labels = await this.git.getLabels(pr);
     }
 
     if (labels.length) {
@@ -261,7 +266,7 @@ export default class AutoRelease {
    * @param options Options for the pr status functionality
    */
   public async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
-    if (!this.release) {
+    if (!this.git) {
       throw this.createErrorMessage();
     }
 
@@ -270,11 +275,11 @@ export default class AutoRelease {
 
     if (!sha && pr) {
       this.logger.verbose.info('Getting commit SHA from PR.');
-      const res = await this.release.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(pr);
       sha = res.data.head.sha;
     } else if (!sha) {
       this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
-      sha = await this.release.git.getSha();
+      sha = await this.git.getSha();
     }
 
     this.logger.verbose.info('Found PR SHA:', sha);
@@ -283,7 +288,7 @@ export default class AutoRelease {
     const target_url = url;
 
     if (!dryRun) {
-      await this.release.git.createStatus({
+      await this.git.createStatus({
         ...options,
         sha,
         target_url
@@ -308,7 +313,7 @@ export default class AutoRelease {
     url,
     ...options
   }: IPRCheckCommandOptions) {
-    if (!this.release || !this.semVerLabels) {
+    if (!this.git || !this.release || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
 
@@ -320,10 +325,10 @@ export default class AutoRelease {
     let sha;
 
     try {
-      const res = await this.release.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(pr);
       sha = res.data.head.sha;
 
-      const labels = await this.release.git.getLabels(pr);
+      const labels = await this.git.getLabels(pr);
       const labelTexts = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
@@ -369,7 +374,7 @@ export default class AutoRelease {
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
     if (!dryRun) {
-      await this.release.git.createStatus({
+      await this.git.createStatus({
         ...options,
         ...msg,
         target_url,
@@ -396,7 +401,7 @@ export default class AutoRelease {
     context = 'default',
     dryRun
   }: ICommentCommandOptions) {
-    if (!this.release) {
+    if (!this.git) {
       throw this.createErrorMessage();
     }
 
@@ -407,7 +412,7 @@ export default class AutoRelease {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      await this.release.git.createComment(message, pr, context);
+      await this.git.createComment(message, pr, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
   }
@@ -446,6 +451,10 @@ export default class AutoRelease {
    * 4. Create a release
    */
   public async shipit(options: IShipItCommandOptions) {
+    if (!this.git) {
+      throw this.createErrorMessage();
+    }
+
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
@@ -468,7 +477,7 @@ export default class AutoRelease {
         "The version reported in the line above hasn't been incremneted during `dry-run`"
       );
 
-      const lastRelease = await this.release!.git.getLatestRelease();
+      const lastRelease = await this.git.getLatestRelease();
       const current = await this.getCurrentVersion(lastRelease);
 
       this.logger.log.warn(
@@ -477,12 +486,37 @@ export default class AutoRelease {
     }
   }
 
+  private startGit(gitOptions: IGitOptions) {
+    if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
+      throw new Error('Must set owner, repo, and GitHub token.');
+    }
+
+    this.logger.verbose.info('Options contain repo information.');
+
+    // So that --verbose can be used on public CIs
+    const tokenlessArgs = {
+      ...gitOptions,
+      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
+    };
+
+    this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
+    return new Git(
+      {
+        owner: gitOptions.owner,
+        repo: gitOptions.repo,
+        token: gitOptions.token,
+        baseUrl: gitOptions.baseUrl
+      },
+      this.logger
+    );
+  }
+
   private async getVersion() {
-    if (!this.release) {
+    if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = await this.release.git.getLatestRelease();
+    const lastRelease = await this.git.getLatestRelease();
     return this.release.getSemverBump(lastRelease);
   }
 
@@ -512,13 +546,13 @@ export default class AutoRelease {
     to,
     message
   }: IChangelogOptions = {}) {
-    if (!this.release) {
+    if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
 
     await this.setGitUser();
 
-    const lastRelease = from || (await this.release.git.getLatestRelease());
+    const lastRelease = from || (await this.git.getLatestRelease());
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to || undefined
@@ -545,11 +579,11 @@ export default class AutoRelease {
     useVersion,
     slack
   }: IReleaseCommandOptions = {}) {
-    if (!this.release) {
+    if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
 
-    let lastRelease = await this.release.git.getLatestRelease();
+    let lastRelease = await this.git.getLatestRelease();
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -575,7 +609,7 @@ export default class AutoRelease {
     this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
 
     if (!dryRun) {
-      await this.release.git.publish(releaseNotes, prefixed);
+      await this.git.publish(releaseNotes, prefixed);
 
       if (slack) {
         this.logger.log.info('Posting release to slack');
