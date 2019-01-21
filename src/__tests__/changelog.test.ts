@@ -1,6 +1,6 @@
 import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
-import { defaultChangelogTitles, defaultLabels } from '../release-client';
+import { defaultChangelogTitles, defaultLabels } from '../release';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 

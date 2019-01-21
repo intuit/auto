@@ -3,7 +3,7 @@ import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
 import Changelog from '../../../changelog';
 import LogParse from '../../../log-parse';
 import { AutoRelease } from '../../../main';
-import { defaultChangelogTitles, defaultLabels } from '../../../release-client';
+import { defaultChangelogTitles, defaultLabels } from '../../../release';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
 

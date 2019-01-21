@@ -6,7 +6,7 @@ import * as path from 'path';
 import { promisify } from 'util';
 
 import { IInitCommandOptions } from './cli/args';
-import { defaultChangelogTitles } from './release-client';
+import { defaultChangelogTitles } from './release';
 import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);

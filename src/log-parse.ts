@@ -1,6 +1,6 @@
 import { ICommit } from 'gitlog';
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
-import { defaultLabels, VersionLabel } from './release-client';
+import { defaultLabels, VersionLabel } from './release';
 import { makeLogParseHooks } from './utils/make-hooks';
 
 export interface ICommitAuthor {

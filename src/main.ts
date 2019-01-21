@@ -11,7 +11,7 @@ import {
   ILabelCommandOptions,
   IPRCheckCommandOptions,
   IPRCommandOptions,
-  IReleaseOptions,
+  IReleaseCommandOptions,
   IShipItCommandOptions
 } from './cli/args';
 
@@ -52,7 +52,7 @@ export async function run(args: ArgsType) {
       break;
     case 'release':
       await auto.loadConfig();
-      await auto.release(args as IReleaseOptions);
+      await auto.runRelease(args as IReleaseCommandOptions);
       break;
     case 'shipit':
       await auto.loadConfig();

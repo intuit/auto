@@ -1,4 +1,4 @@
-import GitHub from '../git';
+import Git from '../git';
 
 const authenticate = jest.fn();
 const listLabelsOnIssue = jest.fn();
@@ -71,7 +71,7 @@ describe('github', () => {
 
   describe('authenticate', () => {
     test('should reject without token', async () => {
-      const gh = new GitHub({ owner: 'Adam Dierkens', repo: 'test' });
+      const gh = new Git({ owner: 'Adam Dierkens', repo: 'test' });
       expect.assertions(1);
 
       try {
@@ -84,7 +84,7 @@ describe('github', () => {
     });
 
     test('should use token', async () => {
-      const gh = new GitHub({ owner: 'Adam Dierkens', repo: 'test' });
+      const gh = new Git({ owner: 'Adam Dierkens', repo: 'test' });
 
       await gh.authenticate('MyToken');
       expect(authenticate).toHaveBeenCalledWith({
@@ -94,7 +94,7 @@ describe('github', () => {
     });
 
     test('should use options token', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       await gh.authenticate();
       expect(authenticate).toHaveBeenCalledWith({
@@ -106,7 +106,7 @@ describe('github', () => {
 
   describe('getLabels', async () => {
     test('successful', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       listLabelsOnIssue.mockReturnValueOnce({
         data: [
@@ -126,14 +126,14 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       expect(gh.getLabels(123)).rejects.toBeTruthy();
     });
   });
 
   test('publish', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     await gh.publish('releaseNotes', 'tag');
 
@@ -141,7 +141,7 @@ describe('github', () => {
   });
 
   test('getFirstCommit ', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     expect(await gh.getFirstCommit()).toBe(
       '0b2af75d8b55c8869cda93d0e5589ad9f2677e18'
@@ -149,7 +149,7 @@ describe('github', () => {
   });
 
   test('getCommitDate ', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     expect(
       await gh.getCommitDate('0b2af75d8b55c8869cda93d0e5589ad9f2677e18')
@@ -157,13 +157,13 @@ describe('github', () => {
   });
 
   test('getSha', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     expect(await gh.getSha()).toBeDefined();
   });
 
   test('getGitLog ', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     expect(
       await gh.getGitLog(
@@ -174,7 +174,7 @@ describe('github', () => {
   });
 
   test('getUser', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     getPr.mockReturnValueOnce('asdfasdf');
 
@@ -182,7 +182,7 @@ describe('github', () => {
   });
 
   test('createStatus', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     createStatus.mockReturnValueOnce(true);
 
@@ -198,7 +198,7 @@ describe('github', () => {
   });
 
   test('search', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     issuesAndPullRequests.mockReturnValueOnce({ data: true });
     await gh.searchRepo({
@@ -213,7 +213,7 @@ describe('github', () => {
   });
 
   test('getProject', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     getProject.mockReturnValueOnce({ data: true });
 
@@ -222,7 +222,7 @@ describe('github', () => {
 
   describe('createComment', async () => {
     test('should post comment if none exists', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       listComments.mockReturnValueOnce({ data: [] });
       await gh.createComment('Some long thing', 22, 'default');
@@ -231,7 +231,7 @@ describe('github', () => {
     });
 
     test('should delete old comment', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       listComments.mockReturnValueOnce({
         data: [
@@ -250,7 +250,7 @@ describe('github', () => {
     });
 
     test('should be able to comment in different contexts', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       listComments.mockReturnValueOnce({
         data: [
@@ -287,7 +287,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     listCommits.mockReturnValueOnce({
       data: undefined
@@ -298,7 +298,7 @@ describe('github', () => {
   });
 
   test('getCommitsForPR', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     list.mockReturnValueOnce({
       data: undefined
@@ -309,7 +309,7 @@ describe('github', () => {
   });
 
   test('getUserByUsername', async () => {
-    const gh = new GitHub(options);
+    const gh = new Git(options);
 
     getByUsername.mockReturnValueOnce({
       data: { name: 'Andrew Lisowski' }
@@ -322,7 +322,7 @@ describe('github', () => {
 
   describe('getUserByEmail', async () => {
     test('exists', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       getUser.mockReturnValueOnce({
         data: { items: [{ login: 'hipstersmoothie' }] }
@@ -334,7 +334,7 @@ describe('github', () => {
     });
 
     test('doesnt exist', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       getUser.mockReturnValueOnce({
         data: undefined
@@ -348,7 +348,7 @@ describe('github', () => {
 
   describe('getLatestRelease ', async () => {
     test('has tag ', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       getLatestRelease.mockReturnValueOnce({ data: { tag_name: '1.0.0' } });
 
@@ -356,7 +356,7 @@ describe('github', () => {
     });
 
     test('no tags', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       getLatestRelease.mockRejectedValueOnce({ status: 404 });
 
@@ -366,7 +366,7 @@ describe('github', () => {
     });
 
     test('handles errors', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       expect(gh.getLatestRelease()).rejects.toBeTruthy();
     });
@@ -374,7 +374,7 @@ describe('github', () => {
 
   describe('getProjectLabels ', () => {
     test('return labels', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       listLabelsForRepo.mockReturnValueOnce({
         data: [{ name: 'first label' }, { name: 'second label' }]
@@ -387,7 +387,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });
@@ -395,7 +395,7 @@ describe('github', () => {
 
   describe('createLabel', () => {
     test('should create a label', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       await gh.createLabel('release', 'Foo bar');
 
@@ -409,7 +409,7 @@ describe('github', () => {
     });
 
     test('throw for errors', async () => {
-      const gh = new GitHub(options);
+      const gh = new Git(options);
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });

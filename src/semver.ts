@@ -1,4 +1,4 @@
-import { VersionLabel } from './release-client';
+import { VersionLabel } from './release';
 
 enum SEMVER {
   major = 'major',

@@ -7,7 +7,7 @@ import {
 import { IAutoHooks } from '../auto-release';
 import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
-import { IReleaseClientHooks } from '../release-client';
+import { IReleaseHooks } from '../release';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
@@ -21,7 +21,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncSeriesHook(['version'])
 });
 
-export const makeGitHubReleaseHooks = (): IReleaseClientHooks => ({
+export const makeGitHubReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse'])
 });

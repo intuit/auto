@@ -14,7 +14,7 @@ import {
   ILabelCommandOptions,
   IPRCheckCommandOptions,
   IPRCommandOptions,
-  IReleaseOptions,
+  IReleaseCommandOptions,
   IShipItCommandOptions
 } from './cli/args';
 
@@ -23,12 +23,12 @@ import { IPRInfo } from './git';
 import init from './init';
 import LogParse from './log-parse';
 import { execPromise } from './main';
-import ReleaseClient, {
+import Release, {
   defaultChangelogTitles,
   defaultLabels,
-  IReleaseClientOptions,
+  IReleaseOptions,
   VersionLabel
-} from './release-client';
+} from './release';
 import SEMVER from './semver';
 import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
@@ -50,7 +50,7 @@ interface IRepository {
 }
 
 export interface IAutoHooks {
-  beforeRun: SyncHook<[IReleaseClientOptions]>;
+  beforeRun: SyncHook<[IReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
@@ -59,7 +59,7 @@ export interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
-  onCreateGitHubRelease: SyncHook<[ReleaseClient]>;
+  onCreateGitHubRelease: SyncHook<[Release]>;
   onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
 }
@@ -69,7 +69,7 @@ export default class AutoRelease {
   public logger: ILogger;
   public args: ArgsType;
 
-  public githubRelease?: ReleaseClient;
+  public release?: Release;
   public semVerLabels?: Map<VersionLabel, string>;
 
   constructor(args: ArgsType) {
@@ -168,7 +168,7 @@ export default class AutoRelease {
         ? repository.token
         : await getGitHubToken(config.githubApi);
 
-    this.githubRelease = new ReleaseClient(
+    this.release = new Release(
       { owner: config.owner, repo: config.repo, ...repository, token },
       config,
       this.logger
@@ -191,7 +191,7 @@ export default class AutoRelease {
         );
       }
     );
-    this.hooks.onCreateGitHubRelease.call(this.githubRelease);
+    this.hooks.onCreateGitHubRelease.call(this.release);
   }
 
   /**
@@ -207,19 +207,17 @@ export default class AutoRelease {
    * @param options Options for the createLabels functionality
    */
   public async createLabels(options: ICreateLabelsCommandOptions = {}) {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
-    await this.githubRelease.addLabelsToProject(
+    await this.release.addLabelsToProject(
       new Map([
         ...this.semVerLabels,
         ...new Map(
           [
             ...Object.keys(defaultChangelogTitles),
-            ...Object.keys(
-              this.githubRelease.releaseOptions.changelogTitles || {}
-            )
+            ...Object.keys(this.release.releaseOptions.changelogTitles || {})
           ].map((label): [string, string] => [label, label])
         )
       ]),
@@ -233,7 +231,7 @@ export default class AutoRelease {
    * @param options Options for the createLabels functionality
    */
   public async label({ pr }: ILabelCommandOptions = {}) {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
@@ -241,7 +239,7 @@ export default class AutoRelease {
     let labels: string[] = [];
 
     if (!pr) {
-      const pulls = await this.githubRelease.github.getPullRequests({
+      const pulls = await this.release.git.getPullRequests({
         state: 'closed'
       });
       const lastMerged = pulls
@@ -255,7 +253,7 @@ export default class AutoRelease {
         labels = lastMerged.labels.map(label => label.name);
       }
     } else {
-      labels = await this.githubRelease.github.getLabels(pr);
+      labels = await this.release.git.getLabels(pr);
     }
 
     if (labels.length) {
@@ -269,7 +267,7 @@ export default class AutoRelease {
    * @param options Options for the pr status functionality
    */
   public async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
@@ -278,11 +276,11 @@ export default class AutoRelease {
 
     if (!sha && pr) {
       this.logger.verbose.info('Getting commit SHA from PR.');
-      const res = await this.githubRelease.github.getPullRequest(pr);
+      const res = await this.release.git.getPullRequest(pr);
       sha = res.data.head.sha;
     } else if (!sha) {
       this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
-      sha = await this.githubRelease.github.getSha();
+      sha = await this.release.git.getSha();
     }
 
     this.logger.verbose.info('Found PR SHA:', sha);
@@ -291,7 +289,7 @@ export default class AutoRelease {
     const target_url = url;
 
     if (!dryRun) {
-      await this.githubRelease.github.createStatus({
+      await this.release.git.createStatus({
         ...options,
         sha,
         target_url
@@ -316,7 +314,7 @@ export default class AutoRelease {
     url,
     ...options
   }: IPRCheckCommandOptions) {
-    if (!this.githubRelease || !this.semVerLabels) {
+    if (!this.release || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
 
@@ -328,23 +326,23 @@ export default class AutoRelease {
     let sha;
 
     try {
-      const res = await this.githubRelease.github.getPullRequest(pr);
+      const res = await this.release.git.getPullRequest(pr);
       sha = res.data.head.sha;
 
-      const labels = await this.githubRelease.github.getLabels(pr);
+      const labels = await this.release.git.getLabels(pr);
       const labelTexts = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseTag = labels.find(
         l =>
-          !!this.githubRelease &&
-          this.githubRelease.releaseOptions.skipReleaseLabels.includes(l)
+          !!this.release &&
+          this.release.releaseOptions.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelTexts.includes(l) &&
-          !!this.githubRelease &&
-          !this.githubRelease.releaseOptions.skipReleaseLabels.includes(l) &&
+          !!this.release &&
+          !this.release.releaseOptions.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 
@@ -378,7 +376,7 @@ export default class AutoRelease {
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
     if (!dryRun) {
-      await this.githubRelease.github.createStatus({
+      await this.release.git.createStatus({
         ...options,
         ...msg,
         target_url,
@@ -405,7 +403,7 @@ export default class AutoRelease {
     context = 'default',
     dryRun
   }: ICommentCommandOptions) {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
@@ -416,7 +414,7 @@ export default class AutoRelease {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      await this.githubRelease.github.createComment(message, pr, context);
+      await this.release.git.createComment(message, pr, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
   }
@@ -441,7 +439,7 @@ export default class AutoRelease {
   /**
    * Make a release to the git remote with the changes.
    */
-  public async release(options: IReleaseOptions) {
+  public async runRelease(options: IReleaseCommandOptions) {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease(options);
   }
@@ -477,7 +475,7 @@ export default class AutoRelease {
         "The version reported in the line above hasn't been incremneted during `dry-run`"
       );
 
-      const lastRelease = await this.githubRelease!.github.getLatestRelease();
+      const lastRelease = await this.release!.git.getLatestRelease();
       const current = await this.getCurrentVersion(lastRelease);
 
       this.logger.log.warn(
@@ -487,12 +485,12 @@ export default class AutoRelease {
   }
 
   private async getVersion() {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = await this.githubRelease.github.getLatestRelease();
-    return this.githubRelease.getSemverBump(lastRelease);
+    const lastRelease = await this.release.git.getLatestRelease();
+    return this.release.getSemverBump(lastRelease);
   }
 
   private async getCurrentVersion(lastRelease: string) {
@@ -521,15 +519,14 @@ export default class AutoRelease {
     to,
     message
   }: IChangelogOptions = {}) {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
     await this.setGitUser();
 
-    const lastRelease =
-      from || (await this.githubRelease.github.getLatestRelease());
-    const releaseNotes = await this.githubRelease.generateReleaseNotes(
+    const lastRelease = from || (await this.release.git.getLatestRelease());
+    const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to || undefined
     );
@@ -539,7 +536,7 @@ export default class AutoRelease {
     if (!dryRun) {
       const currentVersion = await this.getCurrentVersion(lastRelease);
 
-      await this.githubRelease.addToChangelog(
+      await this.release.addToChangelog(
         releaseNotes,
         lastRelease,
         currentVersion,
@@ -554,12 +551,12 @@ export default class AutoRelease {
     dryRun,
     useVersion,
     slack
-  }: IReleaseOptions = {}) {
-    if (!this.githubRelease) {
+  }: IReleaseCommandOptions = {}) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
-    let lastRelease = await this.githubRelease.github.getLatestRelease();
+    let lastRelease = await this.release.git.getLatestRelease();
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -570,9 +567,7 @@ export default class AutoRelease {
 
     this.logger.log.info('Last used release:', lastRelease);
 
-    const releaseNotes = await this.githubRelease.generateReleaseNotes(
-      lastRelease
-    );
+    const releaseNotes = await this.release.generateReleaseNotes(lastRelease);
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
@@ -587,11 +582,11 @@ export default class AutoRelease {
     this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
 
     if (!dryRun) {
-      await this.githubRelease.github.publish(releaseNotes, prefixed);
+      await this.release.git.publish(releaseNotes, prefixed);
 
       if (slack) {
         this.logger.log.info('Posting release to slack');
-        await this.githubRelease.postToSlack(releaseNotes, prefixed);
+        await this.release.postToSlack(releaseNotes, prefixed);
       }
     } else {
       this.logger.verbose.info('Release dry run complete.');
@@ -599,11 +594,11 @@ export default class AutoRelease {
   }
 
   private readonly prefixRelease = (release: string) => {
-    if (!this.githubRelease) {
+    if (!this.release) {
       throw this.createErrorMessage();
     }
 
-    return this.githubRelease.releaseOptions.noVersionPrefix ||
+    return this.release.releaseOptions.noVersionPrefix ||
       release.startsWith('v')
       ? release
       : `v${release}`;
@@ -636,11 +631,11 @@ If a command fails manually run:
         return;
       }
 
-      if (!this.githubRelease) {
+      if (!this.release) {
         return;
       }
 
-      let { email, name } = this.githubRelease.releaseOptions;
+      let { email, name } = this.release.releaseOptions;
       const packageAuthor = await this.hooks.getAuthor.promise();
 
       email = packageAuthor ? packageAuthor.email : email;
@@ -656,7 +651,7 @@ If a command fails manually run:
     }
   }
 
-  private async getRepo(config: IReleaseClientOptions) {
+  private async getRepo(config: IReleaseOptions) {
     if (config.owner && config.repo) {
       return config as IRepository;
     }
@@ -667,7 +662,7 @@ If a command fails manually run:
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IReleaseClientOptions) {
+  private loadPlugins(config: IReleaseOptions) {
     const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths

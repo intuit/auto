@@ -3,7 +3,7 @@ import { URL } from 'url';
 import join from 'url-join';
 
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
-import { VersionLabel } from './release-client';
+import { VersionLabel } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 
