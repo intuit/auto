@@ -1,3 +1,16 @@
+# v2.10.1 (Sun Jan 20 2019)
+
+#### ⚠️  Pushed to master
+
+- test out manually setting root
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 1
+
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v2.10.0 (Sun Jan 20 2019)
 
 #### 🚀  Enhancement
