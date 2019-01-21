@@ -2,6 +2,7 @@ import setToken from '@hutson/set-npm-auth-token-for-ci';
 import * as fs from 'fs';
 import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
+import * as path from 'path';
 import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
@@ -19,9 +20,13 @@ function isMonorepo() {
   return fs.existsSync('lerna.json');
 }
 
-function setTokenOnCI() {
+async function setTokenOnCI() {
   if (isCI) {
-    setToken();
+    const result = setToken();
+    console.log('Set NPM Token in npmrc', result);
+
+    await execPromise('cat', ['~/.npmrc']);
+    await execPromise('cat', [path.join(process.cwd(), '/.npmrc')]);
   }
 }
 
@@ -284,7 +289,7 @@ export default class NPMPlugin implements IPlugin {
           "'%v [skip ci]'"
         ]);
 
-        setTokenOnCI();
+        await setTokenOnCI();
 
         await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
@@ -308,7 +313,7 @@ export default class NPMPlugin implements IPlugin {
           '"Bump version to: %s [skip ci]"'
         ]);
 
-        setTokenOnCI();
+        await setTokenOnCI();
 
         await execPromise(
           'npm',
