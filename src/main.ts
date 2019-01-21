@@ -82,6 +82,14 @@ export class AutoRelease {
     env.config();
   }
 
+  /**
+   * Loads a config from a path, package name, or special `auto-config` pattern
+   *
+   * ex: auto-config-MY_CONFIG
+   * ex: @MY_CONFIG/auto-config
+   *
+   * @param extend Path or name of config to find
+   */
   public loadExtendConfig(extend: string) {
     let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
 
@@ -100,6 +108,10 @@ export class AutoRelease {
     return config || {};
   }
 
+  /**
+   * Load the .autorc from the file system, set up defaults, combine with CLI args
+   * load the extends property, load the plugins and start the git remote interface.
+   */
   public async loadConfig() {
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
@@ -173,10 +185,18 @@ export class AutoRelease {
     this.hooks.onCreateGitHubRelease.call(this.githubRelease);
   }
 
+  /**
+   * Interactive prompt for initializing an .autorc
+   */
   public async init(options: IInitCommandOptions = {}) {
     await init(options, this.logger);
   }
 
+  /**
+   * Create all of the user's labels on the git remote if the don't already exist
+   *
+   * @param options Options for the createLabels functionality
+   */
   public async createLabels(options: ICreateLabelsCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
@@ -198,6 +218,11 @@ export class AutoRelease {
     );
   }
 
+  /**
+   * Get the labels on a specific PR. Defaults to the labels of the last merged PR
+   *
+   * @param options Options for the createLabels functionality
+   */
   public async label({ pr }: ILabelCommandOptions = {}) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
@@ -229,6 +254,11 @@ export class AutoRelease {
     }
   }
 
+  /**
+   * Create a status on a PR.
+   *
+   * @param options Options for the pr status functionality
+   */
   public async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
     if (!this.githubRelease) {
       throw this.createErrorMessage();
@@ -266,6 +296,11 @@ export class AutoRelease {
     this.logger.verbose.success('Finished `pr` command');
   }
 
+  /**
+   * Check that a PR has a SEMVER label. Set a success status on the PR.
+   *
+   * @param options Options for the pr check functionality
+   */
   public async prCheck({
     dryRun,
     pr,
@@ -349,6 +384,12 @@ export class AutoRelease {
     this.logger.verbose.success('Finished `pr-check` command');
   }
 
+  /**
+   * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
+   * You can use the "context" option to multiple comments on a PR.
+   *
+   * @param options Options for the comment functionality
+   */
   public async comment({
     message,
     pr,
@@ -371,22 +412,39 @@ export class AutoRelease {
     }
   }
 
+  /**
+   * Calculate the version bump for the current state of the repository.
+   */
   public async version() {
     this.logger.verbose.info("Using command: 'version'");
     const bump = await this.getVersion();
     console.log(bump);
   }
 
+  /**
+   * Calculate the the changelog and commit it.
+   */
   public async changelog(options?: IChangelogOptions) {
     this.logger.verbose.info("Using command: 'changelog'");
     await this.makeChangelog(options);
   }
 
+  /**
+   * Make a release to the git remote with the changes.
+   */
   public async release(options: IReleaseOptions) {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease(options);
   }
 
+  /**
+   * Run the full workflow.
+   *
+   * 1. Calculate version
+   * 2. Make changelog
+   * 3. Publish code
+   * 4. Create a release
+   */
   public async shipit(options: IShipItCommandOptions) {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
@@ -547,6 +605,9 @@ export class AutoRelease {
     );
   }
 
+  /**
+   * Set the git user to make releases and commit with.
+   */
   private async setGitUser() {
     try {
       // If these values are not set git config will exit with an error
@@ -593,6 +654,9 @@ If a command fails manually run:
     return this.hooks.getRepository.promise();
   }
 
+  /**
+   * Apply all of the plugins in the config.
+   */
   private loadPlugins(config: IGitHubReleaseOptions) {
     const pluginsPaths = config.plugins || ['npm'];
 
