@@ -58,6 +58,8 @@ jest.mock('../git.ts', () => (...args) => {
   };
 });
 
+getGitLog.mockReturnValue([]);
+
 const execSpy = jest.fn();
 // @ts-ignore
 jest.mock('../utils/exec-promise.ts', () => (...args) => execSpy(...args));

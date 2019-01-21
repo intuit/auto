@@ -198,6 +198,7 @@ export default class Git {
     }
   }
 
+  @Memoize()
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),

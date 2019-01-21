@@ -1,10 +1,10 @@
 import GHub from '@octokit/rest';
 import * as fs from 'fs';
-import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import { Memoize } from 'typescript-memoize';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
 import Git, { IGitOptions } from './git';
@@ -274,8 +274,8 @@ export default class Release {
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
-    const labeledCommits = await this.addLabelsToCommits(gitlog);
-    const commits = await this.getPRForRebasedCommits(labeledCommits);
+    const logParse = await this.createLogParse();
+    const commits = await logParse.normalizeCommits(gitlog);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -434,34 +434,74 @@ export default class Release {
     return inc(lastTag, bump as ReleaseType);
   }
 
-  /**
-   * Parse the commits messages for PRs and attach their labels
-   *
-   * @param commits Commits to modify
-   */
-  private async addLabelsToCommits(commits: ICommit[]) {
-    if (!commits) {
+  @Memoize()
+  private async createLogParse() {
+    const logParse = new LogParse(this.releaseOptions);
+
+    logParse.hooks.parseCommit.tapPromise('Labels', async commit =>
+      this.addLabelsToCommit(commit)
+    );
+    logParse.hooks.parseCommit.tapPromise('PR Commits', async commit => {
+      const prsSinceLastRelease = await this.getPRsSinceLastRelease();
+      return this.getPRForRebasedCommits(commit, prsSinceLastRelease);
+    });
+
+    this.hooks.onCreateLogParse.call(logParse);
+
+    return logParse;
+  }
+
+  @Memoize()
+  private async getPRsSinceLastRelease() {
+    let lastRelease: { published_at: string };
+
+    try {
+      lastRelease = await this.git.getLatestReleaseInfo();
+    } catch (error) {
+      const firstCommit = await this.git.getFirstCommit();
+
+      lastRelease = {
+        published_at: await this.git.getCommitDate(firstCommit)
+      };
+    }
+
+    if (!lastRelease) {
       return [];
     }
 
-    const logParse = new LogParse(this.releaseOptions);
-    this.hooks.onCreateLogParse.call(logParse);
-    const eCommits = await logParse.normalizeCommits(commits);
+    const prsSinceLastRelease = await this.git.searchRepo({
+      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
+    });
 
-    await Promise.all(
-      eCommits.map(async commit => {
-        if (!commit.pullRequest) {
-          commit.labels = commit.labels || [];
-        } else {
-          commit.labels = [
-            ...((await this.git.getLabels(commit.pullRequest.number)) || []),
-            ...commit.labels
-          ];
-        }
-      })
-    );
+    if (!prsSinceLastRelease || !prsSinceLastRelease.items) {
+      return [];
+    }
 
-    return eCommits;
+    const data = await Promise.all(prsSinceLastRelease.items.map(
+      async (pr: { number: number }) =>
+        this.git.getPullRequest(Number(pr.number))
+    ) as GHub.Response<GHub.PullsGetResponse>[]);
+
+    return data.map(item => item.data);
+  }
+
+  /**
+   * Add the PR labels to the commit
+   *
+   * @param commits Commits to modify
+   */
+  private async addLabelsToCommit(commit: IExtendedCommit) {
+    if (!commit.labels) {
+      commit.labels = [];
+    }
+
+    if (commit.pullRequest) {
+      const labels =
+        (await this.git.getLabels(commit.pullRequest.number)) || [];
+      commit.labels = [...labels, ...commit.labels];
+    }
+
+    return commit;
   }
 
   /**
@@ -471,48 +511,22 @@ export default class Release {
    *
    * @param commits Commits to modify
    */
-  private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
-    let lastRelease: { published_at: string };
+  private getPRForRebasedCommits(
+    commit: IExtendedCommit,
+    pullRequests: GHub.PullsGetResponse[]
+  ) {
+    const matchPr = pullRequests.find(
+      pr => pr.merge_commit_sha === commit.hash
+    );
 
-    try {
-      lastRelease = await this.git.getLatestReleaseInfo();
-    } catch (error) {
-      const firstCommit = await this.git.getFirstCommit();
-      lastRelease = {
-        published_at: await this.git.getCommitDate(firstCommit)
+    if (!commit.pullRequest && matchPr) {
+      const labels = matchPr.labels.map(label => label.name) || [];
+      commit.labels = [...labels, ...commit.labels];
+      commit.pullRequest = {
+        number: matchPr.number
       };
     }
 
-    if (!lastRelease || !lastRelease.published_at) {
-      return commits;
-    }
-
-    const prsSinceLastRelease = await this.git.searchRepo({
-      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
-    });
-    const pullRequests = await Promise.all(prsSinceLastRelease.items.map(
-      async (pr: { number: number }) =>
-        this.git.getPullRequest(Number(pr.number))
-    ) as GHub.Response<GHub.PullsGetResponse>[]);
-
-    await Promise.all(
-      commits.map(async commit => {
-        const matchPr = pullRequests.find(
-          pr => pr.data.merge_commit_sha === commit.hash
-        );
-
-        if (!commit.pullRequest && matchPr) {
-          commit.labels = [
-            ...(matchPr.data.labels.map(label => label.name) || []),
-            ...commit.labels
-          ];
-          commit.pullRequest = {
-            number: matchPr.data.number
-          };
-        }
-      })
-    );
-
-    return commits;
+    return commit;
   }
 }

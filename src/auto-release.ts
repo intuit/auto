@@ -79,6 +79,25 @@ export default class AutoRelease {
     );
     this.hooks = makeHooks();
 
+    this.hooks.onCreateGitHubRelease.tap(
+      'Link onCreateChangelog',
+      githubRelease => {
+        githubRelease.hooks.onCreateChangelog.tap(
+          'Link onCreateChangelog',
+          changelog => this.hooks.onCreateChangelog.call(changelog)
+        );
+      }
+    );
+    this.hooks.onCreateGitHubRelease.tap(
+      'Link onCreateLogParse',
+      githubRelease => {
+        githubRelease.hooks.onCreateLogParse.tap(
+          'Link onCreateLogParse',
+          logParse => this.hooks.onCreateLogParse.call(logParse)
+        );
+      }
+    );
+
     env.config();
   }
 
@@ -173,24 +192,7 @@ export default class AutoRelease {
       config,
       this.logger
     );
-    this.hooks.onCreateGitHubRelease.tap(
-      'Link onCreateChangelog',
-      githubRelease => {
-        githubRelease.hooks.onCreateChangelog.tap(
-          'Link onCreateChangelog',
-          changelog => this.hooks.onCreateChangelog.call(changelog)
-        );
-      }
-    );
-    this.hooks.onCreateGitHubRelease.tap(
-      'Link onCreateLogParse',
-      githubRelease => {
-        githubRelease.hooks.onCreateLogParse.tap(
-          'Link onCreateLogParse',
-          logParse => this.hooks.onCreateLogParse.call(logParse)
-        );
-      }
-    );
+
     this.hooks.onCreateGitHubRelease.call(this.release);
   }
 
