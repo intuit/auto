@@ -91,7 +91,7 @@ describe('AutoRelease', () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
     const auto = new AutoRelease({ command: 'init' });
     await auto.loadConfig();
-    expect(auto.release!.releaseOptions).toMatchSnapshot();
+    expect(auto.release!.options).toMatchSnapshot();
   });
 
   test('should use labels from config config', async () => {
@@ -125,7 +125,7 @@ describe('AutoRelease', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.releaseOptions.skipReleaseLabels).toEqual(['NOPE']);
+    expect(auto.release!.options.skipReleaseLabels).toEqual(['NOPE']);
   });
 
   describe('createLabels', () => {

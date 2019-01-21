@@ -12,7 +12,7 @@ import { IReleaseHooks } from '../release';
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   beforeShipIt: new SyncHook([]),
-  onCreateGitHubRelease: new SyncHook(['gitHubReleaseConfig']),
+  onCreateRelease: new SyncHook(['options']),
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse']),
   getAuthor: new AsyncSeriesBailHook([]),
@@ -21,7 +21,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncSeriesHook(['version'])
 });
 
-export const makeGitHubReleaseHooks = (): IReleaseHooks => ({
+export const makeReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse'])
 });

@@ -145,9 +145,9 @@ auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
 });
 ```
 
-#### onCreateGitHubRelease
+#### onCreateRelease
 
-Tap into the things the GithuRelease class makes.
+Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work.
 
 Available hooks:
 
@@ -155,12 +155,12 @@ Available hooks:
 - onCreateChangelog (detailed [below]())
 
 ```ts
-this.hooks.onCreateGitHubRelease.tap('MyPlugin', githubRelease => {
-  githubRelease.hooks.onCreateLogParse.tap('Change log parseing', logParse =>
+this.hooks.onCreateRelease.tap('MyPlugin', release => {
+  release.hooks.onCreateLogParse.tap('Change log parseing', logParse =>
     // extend logParse
   );
 
-  githubRelease.hooks.onCreateChangelog.tap(
+  release.hooks.onCreateChangelog.tap(
     'Change changelog',
     changelog => {
       // extend changelog
@@ -171,11 +171,11 @@ this.hooks.onCreateGitHubRelease.tap('MyPlugin', githubRelease => {
 
 #### onCreateChangelog
 
-This is where you hook into the changelog's hooks. See usage [below](#changelog-hooks). This hook is exposed for convience on during `this.hooks.onCreateGitHubRelease` and at the root `this.hooks`
+This is where you hook into the changelog's hooks. See usage [below](#changelog-hooks). This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks`
 
 #### onCreateLogParse
 
-This is where you hook into the LogParse's hooks. See usage [below](#logparse-hooks). This hook is exposed for convience on during `this.hooks.onCreateGitHubRelease` and at the root `this.hooks`
+This is where you hook into the LogParse's hooks. See usage [below](#logparse-hooks). This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks`
 
 ---
 

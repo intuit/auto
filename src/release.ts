@@ -12,7 +12,7 @@ import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
-import { makeGitHubReleaseHooks } from './utils/make-hooks';
+import { makeReleaseHooks } from './utils/make-hooks';
 import postToSlack from './utils/slack';
 
 export type VersionLabel =
@@ -103,7 +103,7 @@ export interface IReleaseHooks {
  * A class for interacting with the git remote
  */
 export default class Release {
-  public readonly releaseOptions: IReleaseOptions;
+  public readonly options: IReleaseOptions;
   public readonly hooks: IReleaseHooks;
   public readonly git: Git;
 
@@ -112,20 +112,20 @@ export default class Release {
   private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
-    options: Partial<IGitOptions>,
-    releaseOptions: IReleaseOptions = {
+    gitOptions: Partial<IGitOptions>,
+    options: IReleaseOptions = {
       skipReleaseLabels: []
     },
     logger: ILogger = dummyLog()
   ) {
-    this.hooks = makeGitHubReleaseHooks();
-    this.versionLabels = releaseOptions.versionLabels || defaultLabels;
+    this.options = options;
     this.logger = logger;
-    this.releaseOptions = releaseOptions;
-    this.changelogTitles = releaseOptions.changelogTitles || {};
-    options.baseUrl = releaseOptions.githubApi || 'https://api.github.com';
+    this.hooks = makeReleaseHooks();
+    this.versionLabels = options.versionLabels || defaultLabels;
+    this.changelogTitles = options.changelogTitles || {};
+    gitOptions.baseUrl = options.githubApi || 'https://api.github.com';
 
-    if (!options.owner || !options.repo || !options.token) {
+    if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
       throw new Error('Must set owner, repo, and GitHub token.');
     }
 
@@ -133,17 +133,17 @@ export default class Release {
 
     // So that --verbose can be used on public CIs
     const tokenlessArgs = {
-      ...options,
-      token: `[Token starting with ${options.token.substring(0, 4)}]`
+      ...gitOptions,
+      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
     };
 
     this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
     this.git = new Git(
       {
-        owner: options.owner,
-        repo: options.repo,
-        token: options.token,
-        baseUrl: options.baseUrl
+        owner: gitOptions.owner,
+        repo: gitOptions.repo,
+        token: gitOptions.token,
+        baseUrl: gitOptions.baseUrl
       },
       this.logger
     );
@@ -194,7 +194,7 @@ export default class Release {
       owner: this.git.options.owner,
       repo: this.git.options.repo,
       baseUrl: project.html_url,
-      jira: this.releaseOptions.jira,
+      jira: this.options.jira,
       versionLabels: this.versionLabels,
       changelogTitles: {
         ...defaultChangelogTitles,
@@ -237,8 +237,7 @@ export default class Release {
 
     const date = new Date().toDateString();
     const prefixed =
-      this.releaseOptions.noVersionPrefix ||
-      (version && version.startsWith('v'))
+      this.options.noVersionPrefix || (version && version.startsWith('v'))
         ? version
         : `v${version}`;
 
@@ -331,14 +330,14 @@ export default class Release {
 
         if (
           versionLabel === 'release' &&
-          !this.releaseOptions.onlyPublishWithReleaseLabel
+          !this.options.onlyPublishWithReleaseLabel
         ) {
           return;
         }
 
         if (
           versionLabel === 'skip-release' &&
-          this.releaseOptions.onlyPublishWithReleaseLabel
+          this.options.onlyPublishWithReleaseLabel
         ) {
           return;
         }
@@ -384,10 +383,7 @@ export default class Release {
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const {
-      onlyPublishWithReleaseLabel,
-      skipReleaseLabels
-    } = this.releaseOptions;
+    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
@@ -410,7 +406,7 @@ export default class Release {
    * @param tag Version to include in the title of the slack message
    */
   public async postToSlack(releaseNotes: string, tag: string) {
-    if (!this.releaseOptions.slack) {
+    if (!this.options.slack) {
       throw new Error('Slack url must be set to post a message to slack.');
     }
 
@@ -423,7 +419,7 @@ export default class Release {
       owner: this.git.options.owner,
       repo: this.git.options.repo,
       baseUrl: project.html_url,
-      slackUrl: this.releaseOptions.slack
+      slackUrl: this.options.slack
     });
 
     this.logger.verbose.info('Posted release notes to slack.');
@@ -436,7 +432,7 @@ export default class Release {
 
   @Memoize()
   private async createLogParse() {
-    const logParse = new LogParse(this.releaseOptions);
+    const logParse = new LogParse(this.options);
 
     logParse.hooks.parseCommit.tapPromise('Labels', async commit =>
       this.addLabelsToCommit(commit)

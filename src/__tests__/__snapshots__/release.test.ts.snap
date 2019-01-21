@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GitHubRelease generateReleaseNotes should allow user to configure section headings 1`] = `
+exports[`Release generateReleaseNotes should allow user to configure section headings 1`] = `
 "#### 💥  Breaking Change
 
 - First [#1234](https://github.com/web/site/pull/1234) (adam@dierkens.com)
@@ -22,7 +22,7 @@ exports[`GitHubRelease generateReleaseNotes should allow user to configure secti
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`GitHubRelease generateReleaseNotes should include PR-less commits 1`] = `
+exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 "#### 🚀  Enhancement
 
 - First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
@@ -37,7 +37,7 @@ exports[`GitHubRelease generateReleaseNotes should include PR-less commits 1`] =
 - adam@dierkens.com"
 `;
 
-exports[`GitHubRelease generateReleaseNotes should match rebased commits to PRs 1`] = `
+exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
 "#### 🚀  Enhancement
 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
@@ -53,7 +53,7 @@ exports[`GitHubRelease generateReleaseNotes should match rebased commits to PRs 
 - adam@dierkens.com"
 `;
 
-exports[`GitHubRelease getCommits should ignore rebased commits if no last release 1`] = `
+exports[`Release getCommits should ignore rebased commits if no last release 1`] = `
 Array [
   Object {
     "authorEmail": "adam@dierkens.com",
@@ -75,7 +75,7 @@ Array [
 ]
 `;
 
-exports[`GitHubRelease getCommits should match rebased commits to PRs 1`] = `
+exports[`Release getCommits should match rebased commits to PRs 1`] = `
 Array [
   Object {
     "authorEmail": "adam@dierkens.com",
@@ -117,7 +117,7 @@ Array [
 ]
 `;
 
-exports[`GitHubRelease getCommits should match rebased commits to PRs with first commit 1`] = `
+exports[`Release getCommits should match rebased commits to PRs with first commit 1`] = `
 Array [
   Object {
     "authorEmail": "adam@dierkens.com",
@@ -159,7 +159,7 @@ Array [
 ]
 `;
 
-exports[`GitHubRelease getCommits should resolve authors with PR commits 1`] = `
+exports[`Release getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
     "authorEmail": "adam@dierkens.com",

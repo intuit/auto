@@ -98,7 +98,7 @@ jest.mock('../utils/github-token', () => async () => ({}));
 
 const logParse = new LogParse();
 
-describe('GitHubRelease', () => {
+describe('Release', () => {
   beforeEach(() => {
     getGitLog.mockClear();
     publish.mockClear();

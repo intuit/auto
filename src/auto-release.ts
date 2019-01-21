@@ -59,7 +59,7 @@ export interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
-  onCreateGitHubRelease: SyncHook<[Release]>;
+  onCreateRelease: SyncHook<[Release]>;
   onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
 }
@@ -79,24 +79,16 @@ export default class AutoRelease {
     );
     this.hooks = makeHooks();
 
-    this.hooks.onCreateGitHubRelease.tap(
-      'Link onCreateChangelog',
-      githubRelease => {
-        githubRelease.hooks.onCreateChangelog.tap(
-          'Link onCreateChangelog',
-          changelog => this.hooks.onCreateChangelog.call(changelog)
-        );
-      }
-    );
-    this.hooks.onCreateGitHubRelease.tap(
-      'Link onCreateLogParse',
-      githubRelease => {
-        githubRelease.hooks.onCreateLogParse.tap(
-          'Link onCreateLogParse',
-          logParse => this.hooks.onCreateLogParse.call(logParse)
-        );
-      }
-    );
+    this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
+      release.hooks.onCreateChangelog.tap('Link onCreateChangelog', changelog =>
+        this.hooks.onCreateChangelog.call(changelog)
+      );
+    });
+    this.hooks.onCreateRelease.tap('Link onCreateLogParse', release => {
+      release.hooks.onCreateLogParse.tap('Link onCreateLogParse', logParse =>
+        this.hooks.onCreateLogParse.call(logParse)
+      );
+    });
 
     env.config();
   }
@@ -193,7 +185,7 @@ export default class AutoRelease {
       this.logger
     );
 
-    this.hooks.onCreateGitHubRelease.call(this.release);
+    this.hooks.onCreateRelease.call(this.release);
   }
 
   /**
@@ -219,7 +211,7 @@ export default class AutoRelease {
         ...new Map(
           [
             ...Object.keys(defaultChangelogTitles),
-            ...Object.keys(this.release.releaseOptions.changelogTitles || {})
+            ...Object.keys(this.release.options.changelogTitles || {})
           ].map((label): [string, string] => [label, label])
         )
       ]),
@@ -337,14 +329,13 @@ export default class AutoRelease {
 
       const skipReleaseTag = labels.find(
         l =>
-          !!this.release &&
-          this.release.releaseOptions.skipReleaseLabels.includes(l)
+          !!this.release && this.release.options.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelTexts.includes(l) &&
           !!this.release &&
-          !this.release.releaseOptions.skipReleaseLabels.includes(l) &&
+          !this.release.options.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 
@@ -600,8 +591,7 @@ export default class AutoRelease {
       throw this.createErrorMessage();
     }
 
-    return this.release.releaseOptions.noVersionPrefix ||
-      release.startsWith('v')
+    return this.release.options.noVersionPrefix || release.startsWith('v')
       ? release
       : `v${release}`;
   };
@@ -637,7 +627,7 @@ If a command fails manually run:
         return;
       }
 
-      let { email, name } = this.release.releaseOptions;
+      let { email, name } = this.release.options;
       const packageAuthor = await this.hooks.getAuthor.promise();
 
       email = packageAuthor ? packageAuthor.email : email;
