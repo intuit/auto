@@ -26,12 +26,14 @@ async function setTokenOnCI() {
     console.log('Set NPM Token in npmrc', result);
 
     try {
+      console.log('cat root');
       await execPromise('cat', ['~/.npmrc']);
     } catch (error) {
       console.log(error);
     }
     try {
-      await execPromise('cat', [path.join(process.cwd(), '/.npmrc')]);
+      console.log('cat project root');
+      await execPromise('cat', [path.join(process.cwd(), '.npmrc')]);
     } catch (error) {
       console.log(error);
     }
