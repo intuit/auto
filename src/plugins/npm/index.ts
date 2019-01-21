@@ -21,7 +21,7 @@ function isMonorepo() {
 
 function setTokenOnCI() {
   if (isCI) {
-    console.log(setToken());
+    setToken();
   }
 }
 
