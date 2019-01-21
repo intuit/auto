@@ -1,3 +1,15 @@
+# v2.10.4 (Sun Jan 20 2019)
+
+#### 🐛  Bug Fix
+
+- test switching registry back [#233](https://github.com/intuit/auto-release/pull/233) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.10.3 (Sun Jan 20 2019)
 
 #### 🐛  Bug Fix
