@@ -1,5 +1,5 @@
 import { defaultChangelogTitles, defaultLabels } from '../github-release';
-import LogParse, {
+import Changelog, {
   filterServiceAccounts,
   IGenerateReleaseNotesOptions,
   normalizeCommits,
@@ -13,17 +13,17 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 describe('createUserLink', () => {
   test('should ', () => {
-    const logParse = new LogParse(dummyLog(), {
+    const changelog = new Changelog(dummyLog(), {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
       changelogTitles: {},
       versionLabels: defaultLabels
     });
-    logParse.loadDefaultHooks();
+    changelog.loadDefaultHooks();
 
     expect(
-      logParse.createUserLink(
+      changelog.createUserLink(
         {
           name: 'none',
           email: undefined,
@@ -50,17 +50,17 @@ describe('createUserLink', () => {
   });
 
   test('should find email', () => {
-    const logParse = new LogParse(dummyLog(), {
+    const changelog = new Changelog(dummyLog(), {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
       changelogTitles: {},
       versionLabels: defaultLabels
     });
-    logParse.loadDefaultHooks();
+    changelog.loadDefaultHooks();
 
     expect(
-      logParse.createUserLink(
+      changelog.createUserLink(
         {
           name: 'none',
           email: undefined
@@ -246,86 +246,86 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
 
 describe('Hooks', () => {
   test('title', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
+    const changelog = new Changelog(dummyLog(), testOptions());
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
-    logParse.hooks.renderChangelogTitle.tap(
+    changelog.hooks.renderChangelogTitle.tap(
       'test',
       (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
     );
-    logParse.loadDefaultHooks();
+    changelog.loadDefaultHooks();
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('author', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
+    const changelog = new Changelog(dummyLog(), testOptions());
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
-    logParse.hooks.renderChangelogAuthor.tap(
+    changelog.hooks.renderChangelogAuthor.tap(
       'test',
       (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
     );
 
-    logParse.hooks.renderChangelogAuthorLine.tap(
+    changelog.hooks.renderChangelogAuthorLine.tap(
       'test',
       (author, user) => `:shipit: ${author.name} (${user})`
     );
-    logParse.loadDefaultHooks();
+    changelog.loadDefaultHooks();
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 });
 
 describe('generateReleaseNotes', () => {
   test('should create note for PR commits', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
     ]);
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should omit authors with invalid email addresses', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
     ]);
     normalized[0].authors[0].username = 'invalid-email-address';
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should create note for PR commits without labels', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)')
     ]);
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should create note for jira commits without labels', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Fix P0')
     ]);
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should use username if present', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)', {
         labels: ['minor'],
@@ -335,12 +335,12 @@ describe('generateReleaseNotes', () => {
 
     normalized[0].authors[0].username = 'adam';
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should create note for JIRA commits', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
         labels: ['major'],
@@ -350,23 +350,23 @@ describe('generateReleaseNotes', () => {
       makeCommitFromMsg('Third', { labels: ['patch'] })
     ]);
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test('should combine pr w/no label and labelled pr', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const normalized = normalizeCommits([
       makeCommitFromMsg('Some Feature (#1234)'),
       makeCommitFromMsg('Third', { labels: ['patch'] })
     ]);
 
-    expect(await logParse.generateReleaseNotes(normalized)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
   test("should use only email if author name doesn't exist", async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
     const commits = normalizeCommits([
       {
         hash: 'foo',
@@ -381,12 +381,12 @@ describe('generateReleaseNotes', () => {
       }
     ]);
 
-    expect(await logParse.generateReleaseNotes(commits)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
   test('should include PR-less commits as patches', async () => {
-    const logParse = new LogParse(dummyLog(), testOptions());
-    logParse.loadDefaultHooks();
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
 
     const commits = normalizeCommits([
       {
@@ -405,6 +405,6 @@ describe('generateReleaseNotes', () => {
       }
     ]);
 
-    expect(await logParse.generateReleaseNotes(commits)).toMatchSnapshot();
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 });

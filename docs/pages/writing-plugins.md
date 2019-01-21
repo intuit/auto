@@ -125,8 +125,8 @@ Change how the changelog renders lines. This hook provides the default line rend
 The following plugin would change all the bullet points in the changelog to star emojis.
 
 ```ts
-auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
-  logParser.hooks.renderChangelogLine.tapPromise(
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
     'Stars',
     async (commits, renderLine) =>
       commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
@@ -139,8 +139,8 @@ auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
 Change how the changelog renders titles. The hook provides the current label for the section and all the configured changelog titles.
 
 ```ts
-auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
-  logParser.hooks.renderChangelogTitle.tap(
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogTitle.tap(
     'My Titles',
     (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
   );
@@ -152,8 +152,8 @@ auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
 Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile.
 
 ```ts
-auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
-  logParser.hooks.renderChangelogAuthor.tap(
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthor.tap(
     'test',
     (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
   );
@@ -165,8 +165,8 @@ auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
 Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
 
 ```ts
-auto.hooks.onCreateLogParse.tapPromise('Stars', (logParser) =>
-  logParser.hooks.renderChangelogAuthorLine.tap(
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthorLine.tap(
     'test',
     (author, user) => `:shipit: ${author.name} (${user})\n`
   );

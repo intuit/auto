@@ -1,7 +1,7 @@
 import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
 import { defaultChangelogTitles, defaultLabels } from '../../../github-release';
-import LogParse, { normalizeCommits } from '../../../log-parse';
+import Changelog, { normalizeCommits } from '../../../log-parse';
 import { AutoRelease } from '../../../main';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
@@ -52,7 +52,7 @@ const commits = normalizeCommits([
 test('should create sections for packages', async () => {
   const plugin = new NpmPlugin();
   const hooks = makeHooks();
-  const logParser = new LogParse(dummyLog(), {
+  const changelog = new Changelog(dummyLog(), {
     owner: 'andrew',
     repo: 'test',
     jira: 'jira.com',
@@ -62,8 +62,8 @@ test('should create sections for packages', async () => {
   });
 
   plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
-  hooks.onCreateLogParse.call(logParser);
-  logParser.loadDefaultHooks();
+  hooks.onCreateChangelog.call(changelog);
+  changelog.loadDefaultHooks();
 
-  expect(await logParser.generateReleaseNotes(commits)).toMatchSnapshot();
+  expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
 });

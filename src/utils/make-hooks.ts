@@ -1,13 +1,13 @@
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import { IGitHubReleaseHooks } from '../github-release';
-import { ILogParseHooks } from '../log-parse';
+import { IChangelogHooks } from '../log-parse';
 import { IAutoHooks } from '../main';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   beforeShipIt: new SyncHook([]),
   onCreateGitHubRelease: new SyncHook(['config']),
-  onCreateLogParse: new SyncHook(['gitHubReleaseConfig']),
+  onCreateChangelog: new SyncHook(['gitHubReleaseConfig']),
   getAuthor: new AsyncSeriesBailHook([]),
   getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
   getRepository: new AsyncSeriesBailHook([]),
@@ -15,10 +15,10 @@ export const makeHooks = (): IAutoHooks => ({
 });
 
 export const makeGitHubReleaseHooks = (): IGitHubReleaseHooks => ({
-  onCreateLogParse: new SyncHook(['logParser'])
+  onCreateChangelog: new SyncHook(['changelog'])
 });
 
-export const makeLogHooks = (): ILogParseHooks => ({
+export const makeChangelogHooks = (): IChangelogHooks => ({
   renderChangelogLine: new AsyncSeriesBailHook(['commits', 'lineRender']),
   renderChangelogTitle: new AsyncSeriesBailHook(['commits', 'lineRender']),
   renderChangelogAuthor: new AsyncSeriesBailHook([

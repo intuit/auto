@@ -4,7 +4,7 @@ import { URL } from 'url';
 import join from 'url-join';
 import { VersionLabel } from './github-release';
 import { ILogger } from './utils/logger';
-import { makeLogHooks } from './utils/make-hooks';
+import { makeChangelogHooks } from './utils/make-hooks';
 
 export interface ICommitAuthor {
   name?: string;
@@ -40,7 +40,7 @@ type CommitParseFunction = (
   commit: IExtendedCommit
 ) => IExtendedCommit | undefined;
 
-export interface ILogParseHooks {
+export interface IChangelogHooks {
   renderChangelogLine: AsyncSeriesBailHook<
     [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
     string[] | void
@@ -165,8 +165,8 @@ export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));
 
-export default class LogParse {
-  public readonly hooks: ILogParseHooks;
+export default class Changelog {
+  public readonly hooks: IChangelogHooks;
 
   private readonly logger: ILogger;
   private readonly options: IGenerateReleaseNotesOptions;
@@ -174,7 +174,7 @@ export default class LogParse {
   constructor(logger: ILogger, options: IGenerateReleaseNotesOptions) {
     this.logger = logger;
     this.options = options;
-    this.hooks = makeLogHooks();
+    this.hooks = makeChangelogHooks();
     this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
   }
 
