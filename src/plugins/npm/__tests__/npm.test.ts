@@ -17,6 +17,7 @@ let readResult = '{}';
 
 // @ts-ignore
 jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
+jest.mock('is-ci', () => false);
 jest.mock('get-monorepo-packages', () => () => monorepoPackages());
 jest.mock('fs', () => ({
   // @ts-ignore
