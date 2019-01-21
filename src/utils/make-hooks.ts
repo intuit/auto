@@ -4,9 +4,9 @@ import {
   AsyncSeriesWaterfallHook,
   SyncHook
 } from 'tapable';
+import { IAutoHooks } from '../auto-release';
 import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
-import { IAutoHooks } from '../main';
 import { IReleaseClientHooks } from '../release-client';
 
 export const makeHooks = (): IAutoHooks => ({
