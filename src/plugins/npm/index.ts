@@ -22,6 +22,7 @@ function isMonorepo() {
 
 async function setTokenOnCI() {
   if (isCI) {
+    process.env.DEBUG = 'set-npm-auth-token-for-ci';
     const result = setToken();
     console.log('Set NPM Token in npmrc', result);
 
