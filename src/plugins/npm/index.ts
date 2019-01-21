@@ -34,7 +34,9 @@ async function setTokenOnCI() {
     }
     try {
       console.log('cat project root');
-      await execPromise('cat', [path.join(process.cwd(), '.npmrc')]);
+      console.log(
+        await execPromise('cat', [path.join(process.cwd(), '.npmrc')])
+      );
     } catch (error) {
       console.log(error);
     }
