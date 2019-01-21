@@ -1,3 +1,30 @@
+# v2.10.0 (Sun Jan 20 2019)
+
+#### 🚀  Enhancement
+
+- NPM Plugin: Inject NPM_TOKEN into `.npmrc` during `shipit` [#223](https://github.com/intuit/auto-release/pull/223) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- use "inlineSourceMap" [#231](https://github.com/intuit/auto-release/pull/231) ([@aleclarson](https://github.com/aleclarson))
+
+#### ⚠️  Pushed to master
+
+- another test
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- test local rc
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- test code
+  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Alec Larson ([@aleclarson](https://github.com/aleclarson))
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v2.9.0 (Sun Jan 20 2019)
 
 #### 🚀  Enhancement
