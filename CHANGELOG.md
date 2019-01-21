@@ -1,3 +1,15 @@
+# v2.10.3 (Sun Jan 20 2019)
+
+#### 🐛  Bug Fix
+
+- remove debug logs [#232](https://github.com/intuit/auto-release/pull/232) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.10.2 (Sun Jan 20 2019)
 
 #### ⚠️  Pushed to master
