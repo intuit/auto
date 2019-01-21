@@ -2,8 +2,8 @@ import { AsyncSeriesBailHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
-import { VersionLabel } from './github-release';
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
+import { VersionLabel } from './release-client';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 

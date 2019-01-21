@@ -23,7 +23,7 @@ export type VersionLabel =
   | 'release'
   | 'prerelease';
 
-export interface IGitHubReleaseOptions {
+export interface IReleaseClientOptions {
   jira?: string;
   slack?: string;
   githubApi?: string;
@@ -94,7 +94,7 @@ defaultLabelsDescriptions.set(
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-export interface IGitHubReleaseHooks {
+export interface IReleaseClientHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
   onCreateLogParse: SyncHook<[LogParse]>;
 }
@@ -102,19 +102,18 @@ export interface IGitHubReleaseHooks {
 /**
  * A class for interacting with the git remote
  */
-export default class GitHubRelease {
-  public readonly releaseOptions: IGitHubReleaseOptions;
-  public readonly hooks: IGitHubReleaseHooks;
+export default class ReleaseClient {
+  public readonly releaseOptions: IReleaseClientOptions;
+  public readonly hooks: IReleaseClientHooks;
   public readonly github: GitHub;
 
   private readonly logger: ILogger;
   private readonly changelogTitles: { [label: string]: string };
-  private readonly githubApi: string;
   private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
     options: Partial<IGitHubOptions>,
-    releaseOptions: IGitHubReleaseOptions = {
+    releaseOptions: IReleaseClientOptions = {
       skipReleaseLabels: []
     },
     logger: ILogger = dummyLog()
@@ -123,9 +122,8 @@ export default class GitHubRelease {
     this.versionLabels = releaseOptions.versionLabels || defaultLabels;
     this.logger = logger;
     this.releaseOptions = releaseOptions;
-    this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
-    options.baseUrl = this.githubApi;
     this.changelogTitles = releaseOptions.changelogTitles || {};
+    options.baseUrl = releaseOptions.githubApi || 'https://api.github.com';
 
     if (!options.owner || !options.repo || !options.token) {
       throw new Error('Must set owner, repo, and GitHub token.');

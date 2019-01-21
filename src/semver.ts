@@ -1,4 +1,4 @@
-import { VersionLabel } from './github-release';
+import { VersionLabel } from './release-client';
 
 enum SEMVER {
   major = 'major',

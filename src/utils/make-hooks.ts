@@ -5,9 +5,9 @@ import {
   SyncHook
 } from 'tapable';
 import { IChangelogHooks } from '../changelog';
-import { IGitHubReleaseHooks } from '../github-release';
 import { ILogParseHooks } from '../log-parse';
 import { IAutoHooks } from '../main';
+import { IReleaseClientHooks } from '../release-client';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
@@ -21,7 +21,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncSeriesHook(['version'])
 });
 
-export const makeGitHubReleaseHooks = (): IGitHubReleaseHooks => ({
+export const makeGitHubReleaseHooks = (): IReleaseClientHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse'])
 });

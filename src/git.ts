@@ -4,7 +4,7 @@ import { promisify } from 'util';
 
 import { Memoize } from 'typescript-memoize';
 
-import { defaultLabelsDescriptions } from './github-release';
+import { defaultLabelsDescriptions } from './release-client';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import settingsUrl from './utils/settings-url';

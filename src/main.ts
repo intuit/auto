@@ -19,12 +19,12 @@ import {
   IShipItCommandOptions
 } from './cli/args';
 import { IPRInfo } from './git';
-import GitHubRelease, {
+import ReleaseClient, {
   defaultChangelogTitles,
   defaultLabels,
-  IGitHubReleaseOptions,
+  IReleaseClientOptions,
   VersionLabel
-} from './github-release';
+} from './release-client';
 
 import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
 import Changelog from './changelog';
@@ -52,7 +52,7 @@ interface IRepository {
 }
 
 export interface IAutoHooks {
-  beforeRun: SyncHook<[IGitHubReleaseOptions]>;
+  beforeRun: SyncHook<[IReleaseClientOptions]>;
   beforeShipIt: SyncHook<[]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
@@ -61,7 +61,7 @@ export interface IAutoHooks {
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   publish: AsyncSeriesHook<[SEMVER]>;
-  onCreateGitHubRelease: SyncHook<[GitHubRelease]>;
+  onCreateGitHubRelease: SyncHook<[ReleaseClient]>;
   onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
 }
@@ -71,7 +71,7 @@ export class AutoRelease {
   public logger: ILogger;
   public args: ArgsType;
 
-  public githubRelease?: GitHubRelease;
+  public githubRelease?: ReleaseClient;
   public semVerLabels?: Map<VersionLabel, string>;
 
   constructor(args: ArgsType) {
@@ -170,7 +170,7 @@ export class AutoRelease {
         ? repository.token
         : await getGitHubToken(config.githubApi);
 
-    this.githubRelease = new GitHubRelease(
+    this.githubRelease = new ReleaseClient(
       { owner: config.owner, repo: config.repo, ...repository, token },
       config,
       this.logger
@@ -658,7 +658,7 @@ If a command fails manually run:
     }
   }
 
-  private async getRepo(config: IGitHubReleaseOptions) {
+  private async getRepo(config: IReleaseClientOptions) {
     if (config.owner && config.repo) {
       return config as IRepository;
     }
@@ -669,7 +669,7 @@ If a command fails manually run:
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IGitHubReleaseOptions) {
+  private loadPlugins(config: IReleaseClientOptions) {
     const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
