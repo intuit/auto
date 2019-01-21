@@ -17,6 +17,7 @@ let readResult = '{}';
 
 // @ts-ignore
 jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
+jest.mock('is-ci', () => false);
 jest.mock('get-monorepo-packages', () => () => monorepoPackages());
 jest.mock('fs', () => ({
   // @ts-ignore
@@ -80,7 +81,7 @@ describe('changedPackages ', async () => {
 describe('getMonorepoPackage', () => {
   test('should default to 0.0.0', () => {
     monorepoPackages.mockReturnValueOnce([]);
-    expect(getMonorepoPackage()).toEqual({ version: '0.0.0' });
+    expect(getMonorepoPackage()).toEqual({});
   });
 
   test('should find greatest package version', () => {
@@ -170,6 +171,22 @@ describe('getAuthor', () => {
 });
 
 describe('getPreviousVersion', () => {
+  test('should get use 0 if not version in package.json', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    existsSync.mockReturnValueOnce(false);
+    existsSync.mockReturnValueOnce(true);
+    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+    expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.0.0');
+  });
+
   test('should get version from the package.json', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -227,6 +244,10 @@ describe('getPreviousVersion', () => {
 });
 
 describe('publish', () => {
+  beforeEach(() => {
+    exec.mockClear();
+  });
+
   test('should use string semver if no published package', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -248,7 +269,7 @@ describe('publish', () => {
     ]);
   });
 
-  test('monorepo - should use string semver if no published package', async () => {
+  test('monorepo - should use start version at 0 if no published package', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -266,12 +287,19 @@ describe('publish', () => {
     await hooks.publish.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
-      'publish',
+      'version',
+      'patch',
+      '--force-publish',
       '--yes',
-      '--force-publish=*',
-      SEMVER.patch,
       '-m',
       "'%v [skip ci]'"
+    ]);
+
+    expect(exec).toHaveBeenCalledWith('npx', [
+      'lerna',
+      'publish',
+      '--yes',
+      'from-git'
     ]);
   });
 
@@ -285,7 +313,8 @@ describe('publish', () => {
 
     readResult = `
       {
-        "name": "test"
+        "name": "test",
+        "version": "0.0.0"
       }
     `;
 
@@ -315,14 +344,20 @@ describe('publish', () => {
     `;
 
     await hooks.publish.promise(SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith('npx', [
+    expect(exec).toHaveBeenNthCalledWith(2, 'npx', [
+      'lerna',
+      'version',
+      '1.0.1',
+      '--force-publish',
+      '--yes',
+      '-m',
+      "'%v [skip ci]'"
+    ]);
+    expect(exec).toHaveBeenNthCalledWith(3, 'npx', [
       'lerna',
       'publish',
       '--yes',
-      '--force-publish=*',
-      '1.0.1',
-      '-m',
-      "'%v [skip ci]'"
+      'from-git'
     ]);
   });
 
@@ -340,6 +375,23 @@ describe('publish', () => {
 
     await hooks.publish.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', ['publish', '--access', 'public']);
+  });
+
+  test('should publish private scoped packages to private', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+
+    readResult = `
+      {
+        "name": "@scope/test",
+        "private": true
+      }
+    `;
+
+    await hooks.publish.promise(SEMVER.patch);
+    expect(exec).toHaveBeenCalledWith('npm', ['publish']);
   });
 
   test('should publish private scoped packages to private', async () => {

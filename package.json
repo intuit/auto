@@ -36,6 +36,7 @@
     "docs:publish": "./scripts/publish-docs.sh"
   },
   "dependencies": {
+    "@hutson/set-npm-auth-token-for-ci": "^3.0.0",
     "@octokit/rest": "^16.10.0",
     "chalk": "^2.4.2",
     "chrome-webstore-upload-cli": "^1.2.0",
@@ -45,9 +46,9 @@
     "deepmerge": "^3.1.0",
     "dotenv": "^6.2.0",
     "enquirer": "^2.3.0",
-    "env-ci": "^3.2.0",
     "get-monorepo-packages": "^1.1.0",
     "gitlog": "^3.1.2",
+    "is-ci": "^2.0.0",
     "node-fetch": "2.3.0",
     "parse-author": "^2.0.0",
     "parse-github-url": "1.0.2",
@@ -63,7 +64,7 @@
     "@types/command-line-usage": "^5.0.1",
     "@types/cosmiconfig": "5.0.3",
     "@types/dotenv": "^6.1.0",
-    "@types/env-ci": "^3.1.0",
+    "@types/is-ci": "^1.1.0",
     "@types/jest": "~23.3.12",
     "@types/node": "~10.12.18",
     "@types/node-fetch": "2.1.4",

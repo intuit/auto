@@ -1,5 +1,6 @@
 import { IPRCommandOptions } from '../cli/args';
 import main, { AutoRelease, run } from '../main';
+import { dummyLog } from '../utils/logger';
 
 jest.mock(
   '@artsy/auto-config',
@@ -76,6 +77,7 @@ jest.mock('cosmiconfig', () => () => ({
 describe('AutoRelease', () => {
   test('should use args', async () => {
     const auto = new AutoRelease({ command: 'init', ...defaults });
+    auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.githubRelease).toBeDefined();
   });
@@ -83,6 +85,7 @@ describe('AutoRelease', () => {
   test('should load config', async () => {
     search.mockReturnValueOnce({ config: defaults });
     const auto = new AutoRelease({ command: 'init' });
+    auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.githubRelease).toBeDefined();
   });
@@ -99,6 +102,7 @@ describe('AutoRelease', () => {
       config: { ...defaults, labels }
     });
     const auto = new AutoRelease({ command: 'init' });
+    auto.logger = dummyLog();
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toEqual([
@@ -121,6 +125,7 @@ describe('AutoRelease', () => {
       }
     });
     const auto = new AutoRelease({ command: 'init' });
+    auto.logger = dummyLog();
     await auto.loadConfig();
 
     expect(auto.githubRelease!.releaseOptions.skipReleaseLabels).toEqual([
@@ -134,6 +139,7 @@ describe('AutoRelease', () => {
         config: { ...defaults, labels }
       });
       const auto = new AutoRelease({ command: 'create-labels' });
+      auto.logger = dummyLog();
       expect(auto.createLabels()).rejects.toBeTruthy();
     });
 
@@ -142,6 +148,7 @@ describe('AutoRelease', () => {
         config: { ...defaults, labels }
       });
       const auto = new AutoRelease({ command: 'create-labels' });
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       auto.githubRelease!.addLabelsToProject = jest.fn();
@@ -156,11 +163,13 @@ describe('AutoRelease', () => {
         config: { ...defaults, labels }
       });
       const auto = new AutoRelease({ command: 'labels' });
+      auto.logger = dummyLog();
       expect(auto.label({ pr: 13 })).rejects.toBeTruthy();
     });
 
     test('should get labels', async () => {
       const auto = new AutoRelease({ command: 'labels', ...defaults });
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       const getLabels = jest.fn();
@@ -174,6 +183,8 @@ describe('AutoRelease', () => {
 
     test('should get labels for last merged PR', async () => {
       const auto = new AutoRelease({ command: 'labels', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
 
       const getPullRequests = jest.fn();
@@ -196,6 +207,8 @@ describe('AutoRelease', () => {
 
     test('should do nothing when no last merge found', async () => {
       const auto = new AutoRelease({ command: 'labels', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
 
       const getPullRequests = jest.fn();
@@ -224,11 +237,15 @@ describe('AutoRelease', () => {
 
     test('should throw when not initialized', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       expect(auto.pr(required)).rejects.toBeTruthy();
     });
 
     test('should do nothing with dryRun', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
 
       await auto.pr({ ...required, sha: '1234', dryRun: true });
@@ -237,6 +254,8 @@ describe('AutoRelease', () => {
 
     test('should use provided SHA', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -250,6 +269,8 @@ describe('AutoRelease', () => {
 
     test('should use HEAD SHA', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -267,6 +288,8 @@ describe('AutoRelease', () => {
 
     test('should use lookup SHA for PR', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -297,11 +320,14 @@ describe('AutoRelease', () => {
 
     test('should throw when not initialized', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       expect(auto.prCheck({ pr: 13, ...required })).rejects.toBeTruthy();
     });
 
     test('should do nothing with dryRun', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       await auto.prCheck({ ...required, pr: 13, dryRun: true });
@@ -310,6 +336,7 @@ describe('AutoRelease', () => {
 
     test('should catch errors', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -323,6 +350,8 @@ describe('AutoRelease', () => {
 
     test('should error with no label', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -344,6 +373,8 @@ describe('AutoRelease', () => {
 
     test('should pass with semver label', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -365,6 +396,8 @@ describe('AutoRelease', () => {
 
     test('should pass with skip release label', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -386,6 +419,8 @@ describe('AutoRelease', () => {
 
     test('should pass with skip release label', async () => {
       const auto = new AutoRelease({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+
       await auto.loadConfig();
       auto.githubRelease!.createStatus = createStatus;
 
@@ -409,11 +444,14 @@ describe('AutoRelease', () => {
   describe('comment', () => {
     test('should throw when not initialized', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
       expect(auto.comment({ pr: 10, message: 'foo' })).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       const createComment = jest.fn();
@@ -427,11 +465,13 @@ describe('AutoRelease', () => {
   describe('version', () => {
     test('should throw when not initialized', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
       expect(auto.version()).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       const getSemverBump = jest.fn();
@@ -448,11 +488,15 @@ describe('AutoRelease', () => {
   describe('changelog', () => {
     test('should throw when not initialized', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
       expect(auto.changelog()).rejects.toBeTruthy();
     });
 
     test('should do nothing on a dryRun', async () => {
       const auto = new AutoRelease({ command: 'comment', ...defaults });
+
+      auto.logger = dummyLog();
       await auto.loadConfig();
 
       const addToChangelog = jest.fn();
@@ -469,6 +513,7 @@ describe('AutoRelease', () => {
         plugins: [],
         ...defaults
       });
+      auto.logger = dummyLog();
       auto.hooks.getRepository.tap('test', () => ({ token: '1234' }));
       await auto.loadConfig();
 
@@ -486,6 +531,7 @@ describe('AutoRelease', () => {
         repo: 'test',
         owner: 'adierkens'
       });
+      auto.logger = dummyLog();
 
       const hookFn = jest.fn();
       auto.hooks.getRepository.tap('test', hookFn);

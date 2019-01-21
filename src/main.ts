@@ -3,7 +3,7 @@
 import cosmiconfig from 'cosmiconfig';
 import merge from 'deepmerge';
 import env from 'dotenv';
-import envCi from 'env-ci';
+import isCI from 'is-ci';
 import { gt, inc, ReleaseType } from 'semver';
 
 import {
@@ -53,7 +53,7 @@ interface IRepository {
 export interface IAutoHooks {
   beforeRun: SyncHook<[IGitHubReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
-  getAuthor: AsyncSeriesBailHook<[], IAuthor>;
+  getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
@@ -548,14 +548,12 @@ export class AutoRelease {
   }
 
   private async setGitUser() {
-    const { isCi } = envCi();
-
     try {
       // If these values are not set git config will exit with an error
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
-      if (!isCi) {
+      if (!isCI) {
         this.logger.log.note(
           `Detected local environment, will not set git user. This happens automatically in a CI environment.
 
@@ -574,8 +572,8 @@ If a command fails manually run:
       let { email, name } = this.githubRelease.releaseOptions;
       const packageAuthor = await this.hooks.getAuthor.promise();
 
-      email = email || packageAuthor.email;
-      name = name || packageAuthor.name;
+      email = packageAuthor ? packageAuthor.email : email;
+      name = packageAuthor ? packageAuthor.name : name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);

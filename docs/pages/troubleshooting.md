@@ -10,11 +10,7 @@ To version and publish you cannot have any changes in the git repo during publis
 
 ## npm ERR! need auth auth required for publishing
 
-This error will occur when you either do not have a `NPM_TOKEN` set or you did not inject it into your `.npmrc` file. The following command will inject the `NPM_TOKEN` into your `.npmrc`
-
-```sh
-echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-```
+This error will occur when you do not have a `NPM_TOKEN` set.
 
 ### Still getting errors?!
 

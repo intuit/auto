@@ -1,4 +1,6 @@
+import setToken from '@hutson/set-npm-auth-token-for-ci';
 import * as fs from 'fs';
+import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
@@ -15,6 +17,12 @@ const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
   return fs.existsSync('lerna.json');
+}
+
+function setTokenOnCI() {
+  if (isCI) {
+    setToken();
+  }
 }
 
 async function getPublishedVersion(name: string) {
@@ -80,14 +88,18 @@ export function getMonorepoPackage() {
   return packages.reduce(
     (greatest, subPackage) => {
       if (subPackage.package.version) {
-        return gt(greatest.version!, subPackage.package.version)
+        if (!greatest.version) {
+          return subPackage.package;
+        }
+
+        return gt(greatest.version, subPackage.package.version)
           ? greatest
           : subPackage.package;
       }
 
       return greatest;
     },
-    { version: '0.0.0' } as IPackageJSON
+    {} as IPackageJSON
   );
 }
 
@@ -124,15 +136,35 @@ async function partitionPackages(
   return packageCommits;
 }
 
+async function loadPackageJson(): Promise<IPackageJSON> {
+  return JSON.parse(await readFile('package.json', 'utf-8'));
+}
+
 export default class NPMPlugin implements IPlugin {
   public name = 'NPM';
 
   public apply(auto: AutoRelease) {
-    auto.hooks.getAuthor.tapPromise('NPM', async () => {
+    auto.hooks.beforeRun.tap(this.name, async () => {
+      if (!process.env.NPM_TOKEN) {
+        auto.logger.log.warn('NPM Token is needed for the NPM plugin!');
+      }
+    });
+
+    auto.hooks.beforeShipIt.tap(this.name, async () => {
+      if (!isCI) {
+        return;
+      }
+
+      if (!process.env.NPM_TOKEN) {
+        throw new Error('NPM Token is needed for the NPM plugin!');
+      }
+    });
+
+    auto.hooks.getAuthor.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
         'NPM: Getting repo information from package.json'
       );
-      const packageJson = JSON.parse(await readFile('package.json', 'utf-8'));
+      const packageJson = await loadPackageJson();
 
       if (packageJson.author) {
         const { author } = packageJson;
@@ -145,7 +177,7 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
       let previousVersion = '';
 
       if (isMonorepo()) {
@@ -158,7 +190,7 @@ export default class NPMPlugin implements IPlugin {
 
         const releasedPackage = getMonorepoPackage();
 
-        if (releasedPackage.version === '0.0.0') {
+        if (!releasedPackage.name && !releasedPackage.version) {
           previousVersion = monorepoVersion;
         } else {
           previousVersion = await greaterRelease(
@@ -171,15 +203,11 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.veryVerbose.info(
           'Using package.json to calculate previous version'
         );
-        const { version, name } = JSON.parse(
-          await readFile('package.json', 'utf-8')
-        );
+        const { version, name } = await loadPackageJson();
 
-        previousVersion = await greaterRelease(
-          prefixRelease,
-          name,
-          prefixRelease(version)
-        );
+        previousVersion = version
+          ? await greaterRelease(prefixRelease, name, prefixRelease(version))
+          : '0.0.0';
       }
 
       auto.logger.verbose.info(
@@ -190,14 +218,14 @@ export default class NPMPlugin implements IPlugin {
       return previousVersion;
     });
 
-    auto.hooks.getRepository.tapPromise('NPM', async () => {
+    auto.hooks.getRepository.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
         'NPM: getting repo information from package.json'
       );
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.onCreateLogParse.tap('NPM', async logParser => {
+    auto.hooks.onCreateLogParse.tap(this.name, async logParser => {
       logParser.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async (commits, renderLine) => {
@@ -236,39 +264,51 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
+    auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
-        const releasedPackage = getMonorepoPackage();
-        const publishedVersion = await getPublishedVersion(
-          releasedPackage.name
-        );
-        const publishedBumped =
-          publishedVersion && inc(publishedVersion, version as ReleaseType);
+        const { name, version: localVersion } = getMonorepoPackage();
+        const latestVersion = localVersion
+          ? await greaterRelease(s => s, name, localVersion)
+          : null;
+        const latestBump = latestVersion
+          ? inc(latestVersion, version as ReleaseType)
+          : version;
 
         await execPromise('npx', [
           'lerna',
-          'publish',
+          'version',
+          latestBump || version,
+          '--force-publish',
           '--yes',
-          '--force-publish=*',
-          publishedBumped || version,
           '-m',
           "'%v [skip ci]'"
         ]);
+
+        setTokenOnCI();
+
+        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
-        const { private: isPrivate, name } = JSON.parse(
-          await readFile('package.json', 'utf-8')
-        );
+        const {
+          private: isPrivate,
+          name,
+          version: localVersion
+        } = await loadPackageJson();
         const isScopedPackage = name.match(/@\S+\/\S+/);
-        const publishedVersion = await getPublishedVersion(name);
-        const publishedBumped =
-          publishedVersion && inc(publishedVersion, version as ReleaseType);
+        const latestVersion = localVersion
+          ? await greaterRelease(s => s, name, localVersion)
+          : null;
+        const latestBump = latestVersion
+          ? inc(latestVersion, version as ReleaseType)
+          : version;
 
         await execPromise('npm', [
           'version',
-          publishedBumped || version,
+          latestBump || version,
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
+
+        setTokenOnCI();
 
         await execPromise(
           'npm',

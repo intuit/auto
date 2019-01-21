@@ -56,19 +56,13 @@ GH_TOKEN=YOUR_TOKEN auto create-labels
 You must configure some environment variables for publishing and releasing to work properly.
 
 - `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
-- `NPM_TOKEN` - Used to publish to npm.
+- `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
 
 You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys!
 
 ```bash
 GH_TOKEN=YOUR_TOKEN
 NPM_TOKEN=PUBLISH_TOKEN
-```
-
-If you are publishing from the CI you must inject the `NPM_TOKEN` into your `.npmrc`.
-
-```sh
-echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 ```
 
 ### 4. Script
