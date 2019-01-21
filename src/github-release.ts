@@ -97,6 +97,9 @@ export interface IGitHubReleaseHooks {
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
+/**
+ * A class for interacting with the git remote
+ */
 export default class GitHubRelease {
   public readonly releaseOptions: IGitHubReleaseOptions;
   public readonly hooks: IGitHubReleaseHooks;
@@ -146,6 +149,12 @@ export default class GitHubRelease {
     );
   }
 
+  /**
+   * Generate a changelog from a range of commits.
+   *
+   * @param from sha or tag to start changelog from
+   * @param to sha or tag to end changelog at (defaults to HEAD)
+   */
   public async generateReleaseNotes(
     from: string,
     to = 'HEAD'
@@ -198,6 +207,14 @@ export default class GitHubRelease {
     return logParser.generateReleaseNotes(commits);
   }
 
+  /**
+   * Prepend a set of release notes to the changelog.md
+   *
+   * @param releaseNotes Release notes to prepend to the changelog
+   * @param lastRelease Last release version of the code. Could be the first commit SHA
+   * @param currentVersion Current version of the code
+   * @param message Message to commit the changelog with
+   */
   public async addToChangelog(
     releaseNotes: string,
     lastRelease: string,
@@ -241,6 +258,12 @@ export default class GitHubRelease {
     this.logger.verbose.info('Commited new changelog.');
   }
 
+  /**
+   * Get a range of commits. The commits will have PR numbers and labels attached
+   *
+   * @param from Tag or SHA to start at
+   * @param to Tage or SHA to end at (defaults to HEAD)
+   */
   public async getCommits(
     from: string,
     to = 'HEAD'
@@ -384,6 +407,12 @@ export default class GitHubRelease {
     }
   }
 
+  /**
+   * Calculate the SEMVER bump over a range of commits using the PR labels
+   *
+   * @param from Tag or SHA to start at
+   * @param to Tage or SHA to end at (defaults to HEAD)
+   */
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
@@ -406,6 +435,12 @@ export default class GitHubRelease {
     return result;
   }
 
+  /**
+   * Post the release notes to slack.
+   *
+   * @param releaseNotes Release notes to post to slack
+   * @param tag Version to include in the title of the slack message
+   */
   public async postToSlack(releaseNotes: string, tag: string) {
     if (!this.releaseOptions.slack) {
       throw new Error('Slack url must be set to post a message to slack.');
@@ -431,6 +466,11 @@ export default class GitHubRelease {
     return inc(lastTag, bump as ReleaseType);
   }
 
+  /**
+   * Parse the commits messages for PRs and attach their labels
+   *
+   * @param commits Commits to modify
+   */
   private async addLabelsToCommits(commits: ICommit[]) {
     if (!commits) {
       return [];
@@ -452,6 +492,13 @@ export default class GitHubRelease {
     return eCommits;
   }
 
+  /**
+   * Commits from rebased PRs do not have messages that tie them to a PR
+   * Instead we have to find all PRs since the last release and try to match
+   * their merge commit SHAs.
+   *
+   * @param commits Commits to modify
+   */
   private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
     let lastRelease: { published_at: string };
 

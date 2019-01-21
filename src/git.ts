@@ -42,6 +42,8 @@ class GitHubAPIError extends Error {
 const makeCommentIdentifier = (context: string) =>
   `<!-- GITHUB_RELEASE COMMENT: ${context} -->`;
 
+// A class to interact with the local git instance and the git remote.
+// currently it only interfaces with GitHub.
 export default class GitHub {
   public readonly ghub: GHub;
   public readonly baseUrl: string;
