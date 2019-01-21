@@ -259,7 +259,7 @@ auto.hooks.onCreateLogParse.tapPromise('Stars', logParse =>
 
 #### omitCommit
 
-Choose to omit certian commits. If you return true the commit will be omitted.
+Choose to omit certain commits. If you return true the commit will be omitted. Be sure to return nothing if you don't want the commit omitted.
 
 ```ts
 auto.hooks.onCreateLogParse.tapPromise('Stars', changelog =>

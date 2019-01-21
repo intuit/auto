@@ -187,7 +187,7 @@ export default class GitHubRelease {
           return commit;
         }
 
-        commit.labels = ['pushToMaster'];
+        commit.labels = ['pushToMaster', ...commit.labels];
         return commit;
       });
 
@@ -485,10 +485,12 @@ export default class GitHubRelease {
     await Promise.all(
       eCommits.map(async commit => {
         if (!commit.pullRequest) {
-          commit.labels = [];
+          commit.labels = commit.labels || [];
         } else {
-          commit.labels =
-            (await this.getLabels(commit.pullRequest.number)) || [];
+          commit.labels = [
+            ...((await this.getLabels(commit.pullRequest.number)) || []),
+            ...commit.labels
+          ];
         }
       })
     );
@@ -534,7 +536,10 @@ export default class GitHubRelease {
         );
 
         if (!commit.pullRequest && matchPr) {
-          commit.labels = matchPr.data.labels.map(label => label.name) || [];
+          commit.labels = [
+            ...(matchPr.data.labels.map(label => label.name) || []),
+            ...commit.labels
+          ];
           commit.pullRequest = {
             number: matchPr.data.number
           };
