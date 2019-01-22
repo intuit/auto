@@ -399,7 +399,9 @@ function printRootHelp() {
     ...mainDefinitions,
     ...defaultOptions
   ];
-  options.forEach(option => styleTypes({} as ICommand, option));
+  options.forEach(option => {
+    styleTypes({} as ICommand, option);
+  });
 
   const usage = commandLineUsage([
     {
@@ -524,19 +526,24 @@ export default function parseArgs(testArgs?: string[]) {
   const command = commands.find(c => c.name === mainOptions.command);
 
   if (!command && mainOptions.version) {
-    return printVersion();
+    printVersion();
+    return;
   }
 
   if (!command) {
-    return printRootHelp();
+    printRootHelp();
+    return;
   }
 
   const options = command.options || [];
 
-  options.map(option => styleTypes(command, option));
+  options.forEach(option => {
+    styleTypes(command, option);
+  });
 
   if (mainOptions.help) {
-    return printCommandHelp(command);
+    printCommandHelp(command);
+    return;
   }
 
   const autoOptions: ArgsType = {

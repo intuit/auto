@@ -23,6 +23,9 @@
     "no-non-null-assertion": false,
     "no-floating-promises": false,
     "no-console": false,
+    "no-unsafe-any": false,
+    "no-object-literal-type-assertion": false,
+    "no-unnecessary-callback-wrapper": false,
     "type-literal-delimiter": { "singleLine": "never" }
   },
   "rulesDirectory": []

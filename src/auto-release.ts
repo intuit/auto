@@ -81,14 +81,17 @@ export default class AutoRelease {
     this.hooks = makeHooks();
 
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
-      release.hooks.onCreateChangelog.tap('Link onCreateChangelog', changelog =>
-        this.hooks.onCreateChangelog.call(changelog)
+      release.hooks.onCreateChangelog.tap(
+        'Link onCreateChangelog',
+        changelog => {
+          this.hooks.onCreateChangelog.call(changelog);
+        }
       );
     });
     this.hooks.onCreateRelease.tap('Link onCreateLogParse', release => {
-      release.hooks.onCreateLogParse.tap('Link onCreateLogParse', logParse =>
-        this.hooks.onCreateLogParse.call(logParse)
-      );
+      release.hooks.onCreateLogParse.tap('Link onCreateLogParse', logParse => {
+        this.hooks.onCreateLogParse.call(logParse);
+      });
     });
 
     env.config();
