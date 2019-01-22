@@ -1,6 +1,6 @@
 {
   "name": "auto",
-  "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels.",
+  "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
   "version": "2.10.4",
   "main": "dist/main.js",
   "author": {
@@ -27,7 +27,7 @@
     "build:watch": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "release": "chmod +x ./dist/bin/auto.js && ./dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
