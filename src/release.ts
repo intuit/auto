@@ -409,7 +409,7 @@ export default class Release {
 
   @Memoize()
   private async createLogParse() {
-    const logParse = new LogParse();
+    const logParse = new LogParse(this.options);
 
     logParse.hooks.parseCommit.tapPromise('Labels', async commit =>
       this.addLabelsToCommit(commit)
