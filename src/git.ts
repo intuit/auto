@@ -58,7 +58,8 @@ export default class Git {
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     this.ghub = new GHub({
       baseUrl: this.baseUrl,
-      auth: this.options.token
+      auth: this.options.token,
+      previews: ['symmetra-preview']
     });
   }
 
