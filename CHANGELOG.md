@@ -1,3 +1,15 @@
+# v3.0.2 (Tue Jan 22 2019)
+
+#### 🐛  Bug Fix
+
+- Fix `Push to Master` Changelog entries newline [#240](https://github.com/intuit/auto/pull/240) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v3.0.1 (Tue Jan 22 2019)
 
 #### 🏠  Internal
