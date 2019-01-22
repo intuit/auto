@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@hutson/set-npm-auth-token-for-ci": "^3.0.2",
-    "@octokit/rest": "^16.13.0",
+    "@octokit/rest": "^16.13.1",
     "chalk": "^2.4.2",
     "chrome-webstore-upload-cli": "^1.2.0",
     "command-line-args": "^5.0.2",
@@ -77,13 +77,13 @@
     "ignite": "^1.6.8",
     "jest": "~23.6.0",
     "lint-staged": "^8.1.0",
-    "prettier": "^1.16.0",
+    "prettier": "^1.16.1",
     "ts-jest": "~23.10.5",
     "tslint": "~5.12.1",
     "tslint-config-prettier": "~1.17.0",
     "tslint-xo": "~0.12.0",
     "typescript": "~3.2.4",
-    "typescript-tslint-plugin": "^0.2.1"
+    "typescript-tslint-plugin": "^0.3.0"
   },
   "prettier": {
     "singleQuote": true
