@@ -1,3 +1,26 @@
+# v3.0.0 (Tue Jan 22 2019)
+
+#### 💥  Breaking Change
+
+- Rename package from `auto-release-cli` to `auto` [#237](https://github.com/intuit/auto/pull/237) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Rename onCreateGitHubRelease to onCreateRelease [#235](https://github.com/intuit/auto/pull/235) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Rename onCreateLogParse to onCreateChangelog [#228](https://github.com/intuit/auto/pull/228) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- Tappable parse log [#229](https://github.com/intuit/auto/pull/229) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update deps and move git class [#236](https://github.com/intuit/auto/pull/236) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add some comments to the code [#234](https://github.com/intuit/auto/pull/234) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v2.10.4 (Sun Jan 20 2019)
 
 #### 🐛  Bug Fix
