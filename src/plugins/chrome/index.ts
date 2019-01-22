@@ -16,7 +16,7 @@ interface IChromeWebStoreConfig {
 }
 
 export default class ChromeWebStorePlugin implements IPlugin {
-  public readonly name = 'Chrome Web Store';
+  readonly name = 'Chrome Web Store';
 
   private readonly id: string;
   private readonly manifest: string;
@@ -28,11 +28,11 @@ export default class ChromeWebStorePlugin implements IPlugin {
     this.build = config.build || process.env.EXTENSION_BUILD || 'extension.zip';
   }
 
-  public reportWarning(auto: AutoRelease, message: string) {
+  reportWarning(auto: AutoRelease, message: string) {
     auto.logger.log.warn(`${this.name}: ${message}`);
   }
 
-  public apply(auto: AutoRelease) {
+  apply(auto: AutoRelease) {
     auto.hooks.beforeRun.tap(this.name, () => {
       if (!this.id) {
         this.reportWarning(
@@ -145,7 +145,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       // increment version
       const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
       manifest.version = inc(manifest.version, version as ReleaseType);
-      await writeFile(this.manifest, JSON.stringify(manifest, null, 2));
+      await writeFile(this.manifest, JSON.stringify(manifest, undefined, 2));
 
       // commit new version
       await execPromise('git', ['add', this.manifest]);

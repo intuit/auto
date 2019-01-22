@@ -29,7 +29,7 @@ async function getPublishedVersion(name: string) {
   try {
     return await execPromise('npm', ['view', name, 'version']);
   } catch (error) {
-    return null;
+    return;
   }
 }
 
@@ -141,9 +141,9 @@ async function loadPackageJson(): Promise<IPackageJSON> {
 }
 
 export default class NPMPlugin implements IPlugin {
-  public name = 'NPM';
+  name = 'NPM';
 
-  public apply(auto: AutoRelease) {
+  apply(auto: AutoRelease) {
     auto.hooks.beforeRun.tap(this.name, async () => {
       if (!process.env.NPM_TOKEN) {
         auto.logger.log.warn('NPM Token is needed for the NPM plugin!');
@@ -269,7 +269,7 @@ export default class NPMPlugin implements IPlugin {
         const { name, version: localVersion } = getMonorepoPackage();
         const latestVersion = localVersion
           ? await greaterRelease(s => s, name, localVersion)
-          : null;
+          : undefined;
         const latestBump = latestVersion
           ? inc(latestVersion, version as ReleaseType)
           : version;
@@ -296,7 +296,7 @@ export default class NPMPlugin implements IPlugin {
         const isScopedPackage = name.match(/@\S+\/\S+/);
         const latestVersion = localVersion
           ? await greaterRelease(s => s, name, localVersion)
-          : null;
+          : undefined;
         const latestBump = latestVersion
           ? inc(latestVersion, version as ReleaseType)
           : version;

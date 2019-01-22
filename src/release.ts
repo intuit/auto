@@ -7,7 +7,7 @@ import { SyncHook } from 'tapable';
 import { Memoize } from 'typescript-memoize';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
-import Git, { IGitOptions } from './git';
+import Git from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
@@ -103,16 +103,16 @@ export interface IReleaseHooks {
  * A class for interacting with the git remote
  */
 export default class Release {
-  public readonly options: IReleaseOptions;
-  public readonly hooks: IReleaseHooks;
-  public readonly git: Git;
+  readonly options: IReleaseOptions;
+  readonly hooks: IReleaseHooks;
 
+  private readonly git: Git;
   private readonly logger: ILogger;
   private readonly changelogTitles: { [label: string]: string };
   private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
-    gitOptions: Partial<IGitOptions>,
+    git: Git,
     options: IReleaseOptions = {
       skipReleaseLabels: []
     },
@@ -123,30 +123,7 @@ export default class Release {
     this.hooks = makeReleaseHooks();
     this.versionLabels = options.versionLabels || defaultLabels;
     this.changelogTitles = options.changelogTitles || {};
-    gitOptions.baseUrl = options.githubApi || 'https://api.github.com';
-
-    if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
-      throw new Error('Must set owner, repo, and GitHub token.');
-    }
-
-    this.logger.verbose.info('Options contain repo information.');
-
-    // So that --verbose can be used on public CIs
-    const tokenlessArgs = {
-      ...gitOptions,
-      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
-    };
-
-    this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
-    this.git = new Git(
-      {
-        owner: gitOptions.owner,
-        repo: gitOptions.repo,
-        token: gitOptions.token,
-        baseUrl: gitOptions.baseUrl
-      },
-      this.logger
-    );
+    this.git = git;
   }
 
   /**
@@ -155,10 +132,7 @@ export default class Release {
    * @param from sha or tag to start changelog from
    * @param to sha or tag to end changelog at (defaults to HEAD)
    */
-  public async generateReleaseNotes(
-    from: string,
-    to = 'HEAD'
-  ): Promise<string> {
+  async generateReleaseNotes(from: string, to = 'HEAD'): Promise<string> {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
       allCommits
@@ -215,7 +189,7 @@ export default class Release {
    * @param currentVersion Current version of the code
    * @param message Message to commit the changelog with
    */
-  public async addToChangelog(
+  async addToChangelog(
     releaseNotes: string,
     lastRelease: string,
     currentVersion: string,
@@ -263,10 +237,7 @@ export default class Release {
    * @param from Tag or SHA to start at
    * @param to Tage or SHA to end at (defaults to HEAD)
    */
-  public async getCommits(
-    from: string,
-    to = 'HEAD'
-  ): Promise<IExtendedCommit[]> {
+  async getCommits(from: string, to = 'HEAD'): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
     const gitlog = await this.git.getGitLog(from, to);
@@ -317,7 +288,7 @@ export default class Release {
     return commits;
   }
 
-  public async addLabelsToProject(
+  async addLabelsToProject(
     labels: Map<string, string>,
     options: ICreateLabelsCommandOptions = {}
   ) {
@@ -380,7 +351,7 @@ export default class Release {
    * @param from Tag or SHA to start at
    * @param to Tage or SHA to end at (defaults to HEAD)
    */
-  public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
+  async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
     const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
@@ -405,7 +376,7 @@ export default class Release {
    * @param releaseNotes Release notes to post to slack
    * @param tag Version to include in the title of the slack message
    */
-  public async postToSlack(releaseNotes: string, tag: string) {
+  async postToSlack(releaseNotes: string, tag: string) {
     if (!this.options.slack) {
       throw new Error('Slack url must be set to post a message to slack.');
     }
@@ -425,7 +396,7 @@ export default class Release {
     this.logger.verbose.info('Posted release notes to slack.');
   }
 
-  public async calcNextVersion(lastTag: string) {
+  async calcNextVersion(lastTag: string) {
     const bump = await this.getSemverBump(lastTag);
     return inc(lastTag, bump as ReleaseType);
   }

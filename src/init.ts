@@ -89,7 +89,9 @@ internal: #{internal}
       `
     });
 
-    labels = Object.entries(response.value.values).reduce(
+    labels = Object.entries(response.value.values as {
+      [key: string]: string;
+    }).reduce(
       (all, [key, label]) => {
         if (!label) {
           return all;
@@ -100,7 +102,7 @@ internal: #{internal}
           [key]: label
         };
       },
-      {}
+      {} as { [key: string]: string }
     );
   }
 
@@ -138,16 +140,19 @@ documentation: #{documentation}
 
     changelogTitles = Object.entries(response.value.values as {
       [key: string]: string;
-    }).reduce((all, [key, title]) => {
-      if (titles.includes(title)) {
-        return all;
-      }
+    }).reduce(
+      (all, [key, title]) => {
+        if (titles.includes(title)) {
+          return all;
+        }
 
-      return {
-        ...all,
-        [key]: title
-      };
-    }, {});
+        return {
+          ...all,
+          [key]: title
+        };
+      },
+      {} as { [key: string]: string }
+    );
   }
 
   let getAnotherTitle: { value?: boolean } = await prompt({
@@ -203,26 +208,29 @@ export default async function init(
     ...flags,
     labels,
     changelogTitles
-  }).reduce((all, [key, value]) => {
-    if (
-      value === '' ||
-      value === false ||
-      (isObject(value) && Object.keys(value).length === 0)
-    ) {
-      return all;
-    }
+  } as { [key: string]: any }).reduce(
+    (all, [key, value]) => {
+      if (
+        value === '' ||
+        value === false ||
+        (isObject(value) && Object.keys(value).length === 0)
+      ) {
+        return all;
+      }
 
-    return {
-      ...all,
-      [key]: value
-    };
-  }, {});
+      return {
+        ...all,
+        [key]: value
+      };
+    },
+    {} as { [key: string]: any }
+  );
 
   if (Object.keys(autoRc).length === 0) {
     return;
   }
 
-  const jsonString = JSON.stringify(autoRc, null, 2);
+  const jsonString = JSON.stringify(autoRc, undefined, 2);
 
   if (dryRun) {
     logger.log.note(`Initialization options would be:\n${jsonString}`);

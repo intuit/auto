@@ -10,7 +10,7 @@ jest.mock('registry-url', () => () => '//registry.yarnpkg.com/');
 jest.mock('fs', () => ({
   // @ts-ignore
   readFile: (a, b, cb) => {
-    cb(null, readResult);
+    cb(undefined, readResult);
   },
   existsSync: () => existsResult
 }));

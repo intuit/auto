@@ -14,7 +14,7 @@ export type IVersionLabels = Map<VersionLabel, string>;
 
 export default SEMVER;
 
-export function getHigherSemverTag(left: string, right: string): SEMVER {
+export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
   if (left === SEMVER.major || right === SEMVER.major) {
     return SEMVER.major;
   }
@@ -42,12 +42,12 @@ export function calculateSemVerBump(
     skipReleaseLabels.push(labelMap.get('skip-release')!);
   }
 
-  labels.map(pr =>
+  labels.map(pr => {
     pr.forEach(label => {
       const userLabel = [...labelMap.entries()].find(pair => pair[1] === label);
       labelSet.add(userLabel ? userLabel[0] : label);
-    })
-  );
+    });
+  });
 
   let skipRelease = false;
   let isPrerelease = false;
@@ -59,10 +59,7 @@ export function calculateSemVerBump(
       : !!labels[0].find(label => skipReleaseLabels.includes(label));
   }
 
-  const version = [...labelSet].reduce(
-    (semver: SEMVER, nextLabel) => getHigherSemverTag(semver, nextLabel),
-    SEMVER.patch
-  );
+  const version = [...labelSet].reduce(getHigherSemverTag, SEMVER.patch);
 
   if (skipRelease) {
     return SEMVER.noVersion;

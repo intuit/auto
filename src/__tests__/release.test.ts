@@ -1,3 +1,4 @@
+import Git from '../git';
 import LogParse from '../log-parse';
 import Release, { VersionLabel } from '../release';
 import SEMVER from '../semver';
@@ -6,7 +7,6 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 const constructor = jest.fn();
 const getGitLog = jest.fn();
-const publish = jest.fn();
 const getLabels = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
@@ -36,7 +36,6 @@ jest.mock('../git.ts', () => (...args) => {
   return {
     options: { owner: 'test', repo: 'test', version: '1.0.0' },
     getGitLog,
-    publish,
     getLabels,
     getLatestRelease,
     getPullRequest,
@@ -69,14 +68,12 @@ const writeSpy = jest.fn();
 
 let readResult = '{}';
 
-const options = { owner: 'Adam Dierkens', repo: 'test', token: 'MY_TOKENss' };
-
 jest.mock('fs', () => ({
   // @ts-ignore
   existsSync: (...args) => existsSync(...args),
   // @ts-ignore
   readFile: (a, b, cb) => {
-    cb(null, readResult);
+    cb(undefined, readResult);
   },
   // @ts-ignore
   ReadStream: () => undefined,
@@ -86,7 +83,7 @@ jest.mock('fs', () => ({
   closeSync: () => undefined,
   // @ts-ignore
   writeFile: (file, data, cb) => {
-    cb(null, writeSpy(file, data));
+    cb(undefined, writeSpy(file, data));
   }
 }));
 
@@ -97,11 +94,15 @@ jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
 jest.mock('../utils/github-token', () => async () => ({}));
 
 const logParse = new LogParse();
+const git = new Git({
+  owner: 'Andrew',
+  repo: 'test',
+  token: 'MY_TOKEN'
+});
 
 describe('Release', () => {
   beforeEach(() => {
     getGitLog.mockClear();
-    publish.mockClear();
     getLabels.mockClear();
     writeSpy.mockClear();
     execSpy.mockClear();
@@ -110,11 +111,7 @@ describe('Release', () => {
   });
 
   test('should use options owner, repo, and token', async () => {
-    const gh = new Release({
-      owner: 'Andrew',
-      repo: 'test',
-      token: 'MY_TOKENss'
-    });
+    const gh = new Release(git);
 
     await gh.getCommits('12345');
 
@@ -122,19 +119,15 @@ describe('Release', () => {
     expect(constructor.mock.calls[0][0].repo).toBe('test');
   });
 
-  test('should throw without options owner, repo, and token', async () => {
-    expect(() => new Release({})).toThrow();
-  });
-
   describe('getCommits', async () => {
     test('should default to HEAD', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       await gh.getCommits('12345');
       expect(getGitLog).toHaveBeenCalled();
     });
 
     test('should use configured HEAD', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       await gh.getCommits('12345', '1234');
       expect(getGitLog).toHaveBeenCalled();
     });
@@ -147,7 +140,7 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      const gh = new Release(options);
+      const gh = new Release(git);
       await gh.getCommits('12345', '1234');
       expect(getUserByUsername).not.toHaveBeenCalled();
     });
@@ -183,14 +176,14 @@ describe('Release', () => {
         name: 'Adam Dierkens'
       });
 
-      const gh = new Release(options);
+      const gh = new Release(git);
       const modifiedCommits = await gh.getCommits('12345', '1234');
       expect(getUserByUsername).toHaveBeenCalled();
       expect(modifiedCommits).toMatchSnapshot();
     });
 
     test('should ignore rebased commits if no last release', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({});
       const commits = await logParse.normalizeCommits([
@@ -203,7 +196,7 @@ describe('Release', () => {
     });
 
     test('should match rebased commits to PRs', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
@@ -229,7 +222,7 @@ describe('Release', () => {
     });
 
     test('should match rebased commits to PRs with first commit', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       getLatestReleaseInfo.mockImplementationOnce(() => {
         throw new Error('no releases yet');
@@ -258,7 +251,7 @@ describe('Release', () => {
 
   describe('addToChangelog', async () => {
     test("creates new changelog if one didn't exist", async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       await gh.addToChangelog(
         '# My new Notes',
         'klajsdlfk4lj51l43k5hj234l',
@@ -269,14 +262,14 @@ describe('Release', () => {
     });
 
     test("creates new changelog if one didn't exist", async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       await gh.addToChangelog('# My new Notes', 'v1.0.0', 'v1.0.0');
 
       expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
     });
 
     test('creates changelog with v in versions', async () => {
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         noVersionPrefix: true,
         skipReleaseLabels: ['skip-release']
       });
@@ -286,7 +279,7 @@ describe('Release', () => {
     });
 
     test('prepends to old changelog', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       existsSync.mockReturnValueOnce(true);
       readResult = '# My old Notes';
@@ -300,7 +293,7 @@ describe('Release', () => {
     });
 
     test('should be able to configure message', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const message = 'pony foo';
 
       existsSync.mockReturnValueOnce(true);
@@ -318,14 +311,14 @@ describe('Release', () => {
 
   describe('postToSlack', () => {
     test('throws without slack url', async () => {
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         skipReleaseLabels: []
       });
       expect(gh.postToSlack('# My Notes', 'v1.0.0')).rejects.toBeTruthy();
     });
 
     test('successful', async () => {
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         slack: 'https://custom-slack-url',
         skipReleaseLabels: []
       });
@@ -336,17 +329,17 @@ describe('Release', () => {
 
   describe('generateReleaseNotes', async () => {
     test('should default to HEAD', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       expect(await gh.generateReleaseNotes('1234')).toBe('');
     });
 
     test('should use configured HEAD', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       expect(await gh.generateReleaseNotes('1234', '123')).toBe('');
     });
 
     test('should include PR-less commits', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       const commits = [
         {
@@ -399,7 +392,7 @@ describe('Release', () => {
     });
 
     test('should allow user to configure section headings', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -418,7 +411,7 @@ describe('Release', () => {
     });
 
     test('should match rebased commits to PRs', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
@@ -457,7 +450,7 @@ describe('Release', () => {
 
   describe('getSemverBump', () => {
     test('default to patch', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const commits = [
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second'),
@@ -470,7 +463,7 @@ describe('Release', () => {
     });
 
     test('should use higher version', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second'),
@@ -484,7 +477,7 @@ describe('Release', () => {
     });
 
     test('should not publish a release', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
@@ -500,7 +493,7 @@ describe('Release', () => {
     });
 
     test('should publish a release', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
@@ -516,7 +509,7 @@ describe('Release', () => {
     });
 
     test('should default to publish a prepatch', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
@@ -532,7 +525,7 @@ describe('Release', () => {
     });
 
     test('should not publish a release in onlyPublishWithReleaseLabel without label', async () => {
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: []
       });
@@ -551,7 +544,7 @@ describe('Release', () => {
     });
 
     test('should publish a release in onlyPublishWithReleaseLabel with label', async () => {
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: []
       });
@@ -576,7 +569,7 @@ describe('Release', () => {
       versionLabels.set(SEMVER.patch, 'Version: Patch');
       versionLabels.set('release', 'Deploy');
 
-      const gh = new Release(options, {
+      const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
         versionLabels
@@ -606,7 +599,7 @@ describe('Release', () => {
 
   describe('addLabelsToProject', () => {
     test('should add labels', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const labels = new Map<VersionLabel, string>();
       labels.set(SEMVER.major, '1');
       labels.set(SEMVER.minor, '2');
@@ -624,7 +617,7 @@ describe('Release', () => {
       mockLogger.log.log = jest.fn();
 
       const gh = new Release(
-        options,
+        git,
         {
           skipReleaseLabels: []
         },
@@ -642,7 +635,7 @@ describe('Release', () => {
     });
 
     test('should not add old labels', async () => {
-      const gh = new Release(options);
+      const gh = new Release(git);
       const labels = new Map<VersionLabel, string>();
       labels.set(SEMVER.major, '1');
       labels.set(SEMVER.minor, '2');
@@ -655,7 +648,7 @@ describe('Release', () => {
     });
 
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
-      let gh = new Release(options, {
+      let gh = new Release(git, {
         skipReleaseLabels: []
       });
       const labels = new Map<VersionLabel, string>();
@@ -664,7 +657,7 @@ describe('Release', () => {
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('release', 'deploy');
 
-      gh = new Release(options, {
+      gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: []
       });
@@ -673,7 +666,7 @@ describe('Release', () => {
     });
 
     test('should add skip-release label not in onlyPublishWithReleaseLabel mode', async () => {
-      let gh = new Release(options, {
+      let gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: []
       });
@@ -683,7 +676,7 @@ describe('Release', () => {
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith('skip-release', 'no!');
 
-      gh = new Release(options, {
+      gh = new Release(git, {
         skipReleaseLabels: []
       });
       await gh.addLabelsToProject(labels);
