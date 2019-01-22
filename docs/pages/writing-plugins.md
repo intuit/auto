@@ -8,7 +8,7 @@ A plugin definition is:
 - a constructor where you can load plugin specific config
 
 ```ts
-import { AutoRelease, IPlugin } from 'auto';
+import { Auto, IPlugin } from 'auto';
 
 export default class TestPlugin implements IPlugin {
   private readonly config: any;
@@ -17,7 +17,7 @@ export default class TestPlugin implements IPlugin {
     this.config = config;
   }
 
-  apply(auto: AutoRelease) {
+  apply(auto: Auto) {
     // hook into auto
   }
 }
@@ -28,7 +28,7 @@ export default class TestPlugin implements IPlugin {
 In the constructor you have access to any plugin specific config provided in the `.autorc`. It might be useful to write a more type-safe interface for your config.
 
 ```ts
-import { AutoRelease, IPlugin } from 'auto';
+import { Auto, IPlugin } from 'auto';
 
 interface ITestPluginConfig {
   foo?: string;
@@ -282,13 +282,13 @@ To create a plugin simply make a class with an `apply` method and tap into the h
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { IAutoHooks, AutoRelease, SEMVER, execPromise } from 'auto';
+import { IAutoHooks, Auto, SEMVER, execPromise } from 'auto';
 import getConfigFromPackageJson from './package-config';
 
 const readFile = promisify(fs.readFile);
 
 export default class NPMPlugin {
-  public apply(auto: AutoRelease) {
+  public apply(auto: Auto) {
     auto.hooks.getAuthor.tapPromise('NPM', async () => {
       const { author } = JSON.parse(await readFile('package.json', 'utf-8'));
 

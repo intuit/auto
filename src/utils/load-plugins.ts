@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { AutoRelease } from '../main';
+import Auto from '../auto';
 import ChromeWebStorePlugin from '../plugins/chrome';
 import NPMPlugin from '../plugins/npm';
 import { ILogger } from './logger';
@@ -9,7 +9,7 @@ export type IPluginConstructor = new (options?: any) => IPlugin;
 
 export interface IPlugin {
   name: string;
-  apply(auto: AutoRelease): void;
+  apply(auto: Auto): void;
 }
 
 type SupportedPlugin = 'npm' | 'chrome';

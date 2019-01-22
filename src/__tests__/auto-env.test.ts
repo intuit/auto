@@ -1,4 +1,4 @@
-import AutoRelease from '../auto';
+import Auto from '../auto';
 
 jest.mock('fs', () => ({
   readFileSync: () => 'FOO="test value"',
@@ -11,7 +11,7 @@ jest.mock('fs', () => ({
 }));
 
 test('should load .env file', async () => {
-  const auto = new AutoRelease({
+  const auto = new Auto({
     command: 'init',
     owner: 'foo',
     repo: 'bar'
