@@ -1,3 +1,15 @@
+# v3.0.1 (Tue Jan 22 2019)
+
+#### 🏠  Internal
+
+- Updates Octokit Usage [#239](https://github.com/intuit/auto/pull/239) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v3.0.0 (Tue Jan 22 2019)
 
 #### 💥  Breaking Change
