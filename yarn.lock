@@ -1060,10 +1060,10 @@
     node-fetch "^2.3.0"
     universal-user-agent "^2.0.1"
 
-"@octokit/rest@^16.13.0":
-  version "16.13.0"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.13.0.tgz#ec7a0574b2a6a38fad8a6840385ffdeb48ae200a"
-  integrity sha512-m9xsyBBXzDFvDSW3PavMLkQLtOBdBI9tIIWXsEVTtG3LWEb0g+eVuRGh4UdjKPp8tMKtefY/7ngOCIWH4s+OdA==
+"@octokit/rest@^16.13.1":
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.13.1.tgz#abc132110aa7584d4ebfff3c9fff9a7d6a0c3ae7"
+  integrity sha512-r7Dg0m27todnsiXdvZcZfQm7TCND7a5vC4/IwuLoIcg1mhwk26cWsUSOMzSXOUjxjjun5H2oKzM0vBVtohKypw==
   dependencies:
     "@octokit/request" "2.3.0"
     before-after-hook "^1.2.0"
@@ -9243,10 +9243,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
-prettier@^1.16.0:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.0.tgz#104dd25f5ee3d0c9d0a6ce4bb40ced8481d51219"
-  integrity sha512-MCBCYeAuZfejUPdEpkleLWvpRBwLii/Sp5jQs0eb8Ul/drGIDjkL6tAU24tk6yCGf0KPV5rhPPPlczfBmN2pWQ==
+prettier@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.1.tgz#534c2c9d7853f8845e5e078384e71973bd74089f"
+  integrity sha512-XXUITwIkGb3CPJ2hforHah/zTINRyie5006Jd2HKy2qz7snEJXl0KLfsJZW/wst9g6R2rFvqba3VpNYdu1hDcA==
 
 pretty-error@^2.0.2:
   version "2.1.1"
@@ -11275,10 +11275,10 @@ typescript-memoize@^1.0.0-alpha.3:
   dependencies:
     core-js "2.4.1"
 
-typescript-tslint-plugin@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.2.1.tgz#6a0361cd311bdc9dcec2e70c8a54cab16829e47f"
-  integrity sha512-j0Tn/2GlAwnaklSNMOZRNpv96j6IWkQF6RuTJ5WowfNlgdYqnJpSaVFwT22INwJiPDDGKNe/aATT0qkU0pWM4w==
+typescript-tslint-plugin@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.3.0.tgz#b58ab0227d12b576371742bc75604b8a7a2784ae"
+  integrity sha512-QlfcS5YebM55cUISn3mgal+ePtsRmyh1RJ0DqHPrF7+NEDO8P+ucDsD1GlLyYaIJQvVAbkekUmczsjzQk5eoKA==
   dependencies:
     minimatch "^3.0.4"
     mock-require "^3.0.2"

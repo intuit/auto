@@ -7,7 +7,6 @@ import { Memoize } from 'typescript-memoize';
 import { defaultLabelsDescriptions } from './release';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
-import settingsUrl from './utils/settings-url';
 
 const gitlog = promisify(gitlogNode);
 
@@ -59,34 +58,9 @@ export default class Git {
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     this.ghub = new GHub({
       baseUrl: this.baseUrl,
-      headers: {
-        accept: 'application/vnd.github.symmetra-preview+json'
-      }
+      auth: `token ${this.options.token}`,
+      previews: ['symmetra-preview']
     });
-  }
-
-  @Memoize()
-  async authenticate(authToken?: string): Promise<void> {
-    if (authToken === undefined && this.options.token === undefined) {
-      throw new Error(
-        `Authentication needs a GitHub token. Try setting up an access token ${settingsUrl(
-          this.baseUrl
-        )}`
-      );
-    }
-
-    const token = authToken || this.options.token;
-
-    this.logger.veryVerbose.info('Authenticating with GitHub.');
-
-    this.ghub.authenticate({
-      type: 'token',
-      token: token!
-    });
-
-    this.logger.veryVerbose.info('Successfully authenticated with GitHub.');
-
-    return Promise.resolve();
   }
 
   @Memoize()
@@ -101,8 +75,6 @@ export default class Git {
 
   @Memoize()
   async getLatestRelease(): Promise<string> {
-    await this.authenticate();
-
     try {
       const latestRelease = await this.getLatestReleaseInfo();
 
@@ -149,8 +121,6 @@ export default class Git {
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
-    await this.authenticate();
-
     const args = {
       owner: this.options.owner,
       repo: this.options.repo,
@@ -177,8 +147,6 @@ export default class Git {
     this.logger.verbose.info(
       `Getting labels for project: ${this.options.repo}`
     );
-
-    await this.authenticate();
 
     const args = {
       owner: this.options.owner,
@@ -218,8 +186,6 @@ export default class Git {
 
   @Memoize()
   async getUserByEmail(email: string) {
-    await this.authenticate();
-
     const search = (await this.ghub.search.users({
       q: `in:email ${email}`
     })).data;
@@ -231,8 +197,6 @@ export default class Git {
 
   @Memoize()
   async getUserByUsername(username: string) {
-    await this.authenticate();
-
     return (await this.ghub.users.getByUsername({
       username
     })).data;
@@ -241,8 +205,6 @@ export default class Git {
   @Memoize()
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
-
-    await this.authenticate();
 
     const args = {
       owner: this.options.owner,
@@ -261,8 +223,6 @@ export default class Git {
   }
 
   async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
-    await this.authenticate();
-
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
 
@@ -277,8 +237,6 @@ export default class Git {
   }
 
   async createStatus(prInfo: IPRInfo) {
-    await this.authenticate();
-
     const args = {
       ...prInfo,
       owner: this.options.owner,
@@ -296,8 +254,6 @@ export default class Git {
   }
 
   async createLabel(label: string, name: string) {
-    await this.authenticate();
-
     this.logger.verbose.info(`Creating "${label}" label :\n${name}`);
 
     const result = await this.ghub.issues.createLabel({
@@ -318,8 +274,6 @@ export default class Git {
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
-    await this.authenticate();
-
     const result = (await this.ghub.repos.get({
       owner: this.options.owner,
       repo: this.options.repo
@@ -333,8 +287,6 @@ export default class Git {
 
   async getPullRequests(options?: Partial<GHub.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
-
-    await this.authenticate();
 
     const result = (await this.ghub.pulls.list({
       owner: this.options.owner.toLowerCase(),
@@ -352,8 +304,6 @@ export default class Git {
   async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
-    await this.authenticate();
-
     const result = (await this.ghub.pulls.listCommits({
       owner: this.options.owner.toLowerCase(),
       repo: this.options.repo.toLowerCase(),
@@ -370,8 +320,6 @@ export default class Git {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Using comment identifier:', commentIdentifier);
-
-    await this.authenticate();
 
     this.logger.verbose.info('Getting previous comments on:', pr);
 
@@ -420,8 +368,6 @@ export default class Git {
 
   async publish(releaseNotes: string, tag: string) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
-
-    await this.authenticate();
 
     const result = await this.ghub.repos.createRelease({
       owner: this.options.owner,
