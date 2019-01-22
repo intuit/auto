@@ -73,7 +73,7 @@ jest.mock('fs', () => ({
   existsSync: (...args) => existsSync(...args),
   // @ts-ignore
   readFile: (a, b, cb) => {
-    cb(null, readResult);
+    cb(undefined, readResult);
   },
   // @ts-ignore
   ReadStream: () => undefined,
@@ -83,7 +83,7 @@ jest.mock('fs', () => ({
   closeSync: () => undefined,
   // @ts-ignore
   writeFile: (file, data, cb) => {
-    cb(null, writeSpy(file, data));
+    cb(undefined, writeSpy(file, data));
   }
 }));
 

@@ -125,7 +125,7 @@ export default class LogParse {
 
   public async normalizeCommit(
     commit: ICommit
-  ): Promise<IExtendedCommit | null> {
+  ): Promise<IExtendedCommit | undefined> {
     const extended = await this.hooks.parseCommit.promise({
       labels: [],
       ...commit,
@@ -134,7 +134,7 @@ export default class LogParse {
     const shouldOmit = await this.hooks.omitCommit.promise(extended);
 
     if (shouldOmit) {
-      return null;
+      return;
     }
 
     return extended;

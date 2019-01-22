@@ -145,7 +145,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       // increment version
       const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
       manifest.version = inc(manifest.version, version as ReleaseType);
-      await writeFile(this.manifest, JSON.stringify(manifest, null, 2));
+      await writeFile(this.manifest, JSON.stringify(manifest, undefined, 2));
 
       // commit new version
       await execPromise('git', ['add', this.manifest]);

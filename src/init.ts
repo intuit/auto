@@ -222,7 +222,7 @@ export default async function init(
     return;
   }
 
-  const jsonString = JSON.stringify(autoRc, null, 2);
+  const jsonString = JSON.stringify(autoRc, undefined, 2);
 
   if (dryRun) {
     logger.log.note(`Initialization options would be:\n${jsonString}`);
