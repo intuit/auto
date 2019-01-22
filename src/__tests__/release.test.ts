@@ -432,7 +432,7 @@ describe('Release', () => {
       getGitLog.mockReturnValueOnce(
         await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
-          makeCommitFromMsg('I was rebased', {
+          makeCommitFromMsg('I was rebased\n\n', {
             hash: '1a2b'
           }),
           {

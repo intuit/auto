@@ -239,7 +239,7 @@ describe('generateReleaseNotes', () => {
         hash: '1',
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master',
+        subject: 'I was a push to master\n\n',
         labels: ['pushToMaster']
       },
       {

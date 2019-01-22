@@ -75,25 +75,32 @@ export default class Changelog {
     if (commits.length === 0) {
       return '';
     }
+
     this.logger.verbose.info('Generating release notes for:\n', commits);
     const split = this.splitCommits(commits);
     this.logger.verbose.info('Split commits into groups');
     this.logger.veryVerbose.info('\n', split);
     const sections: string[] = [];
+
     await this.createLabelSection(split, sections);
     this.logger.verbose.info('Added groups to changelog');
+
     await this.createAuthorSection(split, sections);
     this.logger.verbose.info('Added authors to changelog');
+
     const result = sections.join('\n\n');
     this.logger.verbose.info('Successfully generated release notes.');
+
     return result;
   }
 
   createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
+
     if (author.username === 'invalid-email-address') {
       return;
     }
+
     return author.username
       ? `[@${author.username}](${join(githubUrl, author.username)})`
       : author.email || commit.authorEmail;
@@ -108,9 +115,11 @@ export default class Changelog {
     [key: string]: IExtendedCommit[];
   } {
     let currentCommits = [...commits];
+
     commits
       .filter(commit => commit.labels.length === 0)
       .map(commit => commit.labels.push('patch'));
+
     return Object.assign(
       {},
       ...Object.keys(this.options.changelogTitles).map(label => {
@@ -133,6 +142,7 @@ export default class Changelog {
 
   private async createUserLinkList(commit: IExtendedCommit) {
     const result = new Set<string>();
+
     await Promise.all(
       commit.authors.map(async author => {
         const link = await this.hooks.renderChangelogAuthor.promise(
@@ -145,16 +155,19 @@ export default class Changelog {
         }
       })
     );
+
     return [...result].join(' ');
   }
 
   private async generateCommitNote(commit: IExtendedCommit) {
     let jira = '';
     let pr = '';
+
     if (commit.jira && this.options.jira) {
       const link = join(this.options.jira, ...commit.jira.number);
       jira = `[${commit.jira.number}](${link}): `;
     }
+
     if (commit.pullRequest) {
       const prLink = join(
         this.options.baseUrl,
@@ -163,8 +176,9 @@ export default class Changelog {
       );
       pr = `[#${commit.pullRequest.number}](${prLink})`;
     }
+
     const user = await this.createUserLinkList(commit);
-    return `- ${jira}${commit.subject} ${pr}${user ? ` (${user})` : ''}`;
+    return `- ${jira}${commit.subject.trim()} ${pr}${user ? ` (${user})` : ''}`;
   }
 
   private async createAuthorSection(
@@ -181,12 +195,14 @@ export default class Changelog {
       ) => [...labeledCommits, ...sectionCommits],
       []
     );
+
     await Promise.all(
       commits.map(async commit => {
         commit.authors.map(async author => {
           if (author.username === 'invalid-email-address') {
             return;
           }
+
           const user = await this.hooks.renderChangelogAuthor.promise(
             author,
             commit,
@@ -196,12 +212,14 @@ export default class Changelog {
             author,
             user as string
           );
+
           if (authorEntry && !authors.has(authorEntry)) {
             authors.add(authorEntry);
           }
         });
       })
     );
+
     if (authors.size > 0) {
       let authorSection = `#### Authors: ${authors.size}\n\n`;
       authorSection += [...authors].join('\n');
@@ -221,10 +239,12 @@ export default class Changelog {
           label,
           this.options.changelogTitles
         );
+
         const lines = await this.hooks.renderChangelogLine.promise(
           labelCommits,
           async commit => this.generateCommitNote(commit)
         );
+
         sections.push([title, ...lines].join('\n'));
       })
     );
