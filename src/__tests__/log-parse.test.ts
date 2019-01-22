@@ -1,6 +1,5 @@
-import {
+import LogParse, {
   filterServiceAccounts,
-  normalizeCommits,
   parseJira,
   parsePR,
   parseSquashPR
@@ -51,7 +50,7 @@ describe('parseSquashPR', () => {
 describe('filterServiceAccounts', () => {
   test('should not filter the commit', () => {
     const commit = makeCommitFromMsg('foo');
-    expect(filterServiceAccounts(commit)).toEqual(commit);
+    expect(filterServiceAccounts(commit)).toBeUndefined();
   });
 
   test('should filter the commit', () => {
@@ -61,7 +60,7 @@ describe('filterServiceAccounts', () => {
       authorEmail: ''
     };
 
-    expect(filterServiceAccounts(commit)).toBeUndefined();
+    expect(filterServiceAccounts(commit)).toBe(true);
   });
 });
 
@@ -115,30 +114,33 @@ describe('jira', () => {
 });
 
 describe('normalizeCommits', () => {
-  test('should handle undefined', () => {
+  test('should handle undefined', async () => {
+    const logParse = new LogParse();
     const commits = [makeCommitFromMsg('Filtered', { name: 'pdbf' })];
 
-    expect(normalizeCommits(commits)).toEqual([]);
+    expect(await logParse.normalizeCommits(commits)).toEqual([]);
   });
 
-  test('should do nothing with normal commits', () => {
+  test('should do nothing with normal commits', async () => {
+    const logParse = new LogParse();
     const commits = [
       makeCommitFromMsg('First'),
       makeCommitFromMsg('Second'),
       makeCommitFromMsg('Third')
     ];
 
-    expect(normalizeCommits(commits)).toMatchSnapshot();
+    expect(await logParse.normalizeCommits(commits)).toMatchSnapshot();
   });
 
-  test('should use parsing functions to normalize', () => {
+  test('should use parsing functions to normalize', async () => {
+    const logParse = new LogParse();
     const commits = [
       makeCommitFromMsg('First'),
       makeCommitFromMsg('Second'),
       makeCommitFromMsg('[PLAYA-5052] Add log')
     ];
 
-    expect(normalizeCommits(commits)[2]).toEqual({
+    expect((await logParse.normalizeCommits(commits))[2]).toEqual({
       authorEmail: 'adam@dierkens.com',
       authorName: 'Adam Dierkens',
       authors: [

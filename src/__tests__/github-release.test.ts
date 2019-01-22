@@ -1,5 +1,5 @@
 import GitHubRelease, { VersionLabel } from '../github-release';
-import { normalizeCommits } from '../log-parse';
+import LogParse from '../log-parse';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -94,6 +94,8 @@ jest.mock('../utils/slack.ts', () => () => slackSpy());
 jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
 jest.mock('../utils/github-token', () => async () => ({}));
 
+const logParse = new LogParse();
+
 describe('GitHubRelease', () => {
   beforeEach(() => {
     getGitLog.mockClear();
@@ -149,7 +151,7 @@ describe('GitHubRelease', () => {
     });
 
     test('should resolve authors with PR commits', async () => {
-      const commits = normalizeCommits([
+      const commits = await logParse.normalizeCommits([
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
@@ -189,7 +191,9 @@ describe('GitHubRelease', () => {
       const gh = new GitHubRelease(options);
 
       getLatestReleaseInfo.mockReturnValueOnce({});
-      const commits = normalizeCommits([makeCommitFromMsg('Second (#123)')]);
+      const commits = await logParse.normalizeCommits([
+        makeCommitFromMsg('Second (#123)')
+      ]);
 
       getGitLog.mockReturnValueOnce(commits);
 
@@ -211,7 +215,7 @@ describe('GitHubRelease', () => {
         }
       });
       getGitLog.mockReturnValueOnce(
-        normalizeCommits([
+        await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was rebased', {
             hash: '1a2b'
@@ -238,7 +242,7 @@ describe('GitHubRelease', () => {
         }
       });
       getGitLog.mockReturnValueOnce(
-        normalizeCommits([
+        await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was rebased', {
             hash: '1a2b'
@@ -485,7 +489,7 @@ describe('GitHubRelease', () => {
         }
       });
       getGitLog.mockReturnValueOnce(
-        normalizeCommits([
+        await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was rebased', {
             hash: '1a2b'

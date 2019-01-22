@@ -8,7 +8,7 @@ import { SyncHook } from 'tapable';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
-import { IExtendedCommit, normalizeCommits } from './log-parse';
+import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
@@ -96,6 +96,7 @@ const writeFile = promisify(fs.writeFile);
 
 export interface IGitHubReleaseHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
+  onCreateLogParse: SyncHook<[LogParse]>;
 }
 
 /**
@@ -186,7 +187,7 @@ export default class GitHubRelease {
           return commit;
         }
 
-        commit.labels = ['pushToMaster'];
+        commit.labels = ['pushToMaster', ...commit.labels];
         return commit;
       });
 
@@ -477,15 +478,19 @@ export default class GitHubRelease {
       return [];
     }
 
-    const eCommits = normalizeCommits(commits);
+    const logParse = new LogParse(this.releaseOptions);
+    this.hooks.onCreateLogParse.call(logParse);
+    const eCommits = await logParse.normalizeCommits(commits);
 
     await Promise.all(
       eCommits.map(async commit => {
         if (!commit.pullRequest) {
-          commit.labels = [];
+          commit.labels = commit.labels || [];
         } else {
-          commit.labels =
-            (await this.getLabels(commit.pullRequest.number)) || [];
+          commit.labels = [
+            ...((await this.getLabels(commit.pullRequest.number)) || []),
+            ...commit.labels
+          ];
         }
       })
     );
@@ -531,7 +536,10 @@ export default class GitHubRelease {
         );
 
         if (!commit.pullRequest && matchPr) {
-          commit.labels = matchPr.data.labels.map(label => label.name) || [];
+          commit.labels = [
+            ...(matchPr.data.labels.map(label => label.name) || []),
+            ...commit.labels
+          ];
           commit.pullRequest = {
             number: matchPr.data.number
           };

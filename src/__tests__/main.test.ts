@@ -1,5 +1,5 @@
 import { IPRCommandOptions } from '../cli/args';
-import main, { AutoRelease, run } from '../main';
+import main, { AutoRelease, run, SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';
 
 jest.mock(
@@ -73,6 +73,25 @@ const search = jest.fn();
 jest.mock('cosmiconfig', () => () => ({
   search
 }));
+
+jest.mock('@octokit/rest', () => () => ({
+  authenticate: () => undefined,
+  search: {
+    issuesAndPullRequests: () => ({ data: { items: [] } })
+  }
+}));
+
+// @ts-ignore
+jest.mock('gitlog', () => (a, cb) => {
+  cb(null, [
+    {
+      rawBody: 'foo'
+    },
+    {
+      rawBody: 'foo'
+    }
+  ]);
+});
 
 describe('AutoRelease', () => {
   test('should use args', async () => {
@@ -579,6 +598,58 @@ describe('AutoRelease', () => {
       expect(auto.loadExtendConfig('../fake/path.js')).toEqual({
         slack: 'url'
       });
+    });
+  });
+});
+
+describe('hooks', () => {
+  describe('logParse', () => {
+    test('should be able to tap parseCommit', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+
+      auto.hooks.onCreateLogParse.tap('test', logParse => {
+        logParse.hooks.parseCommit.tap('test parse', commit => {
+          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
+          return commit;
+        });
+      });
+
+      await auto.loadConfig();
+      auto.githubRelease!.getLatestRelease = async () =>
+        Promise.resolve('1.0.0');
+
+      console.log = jest.fn();
+      await auto.version();
+
+      expect(console.log).toHaveBeenCalledWith('major');
+    });
+
+    test('should be able to tap omitCommit', async () => {
+      const auto = new AutoRelease({ command: 'comment', ...defaults });
+
+      auto.hooks.onCreateLogParse.tap('test', logParse => {
+        logParse.hooks.parseCommit.tap('test parse', commit => {
+          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
+          return commit;
+        });
+      });
+
+      auto.hooks.onCreateLogParse.tap('test', logParse => {
+        logParse.hooks.omitCommit.tap('test omit', commit => {
+          if (commit.labels.includes('major')) {
+            return true;
+          }
+        });
+      });
+
+      await auto.loadConfig();
+      auto.githubRelease!.getLatestRelease = async () =>
+        Promise.resolve('1.0.0');
+
+      console.log = jest.fn();
+      await auto.version();
+
+      expect(console.log).toHaveBeenCalledWith('patch');
     });
   });
 });

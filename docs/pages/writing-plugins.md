@@ -48,7 +48,11 @@ export default class TestPlugin implements IPlugin {
 
 Plugins work by hooking into various actions that `auto` has to do in order to facilitate a release or interact with your GitHub repo. The hooks that it exposes are:
 
-### beforeRun
+---
+
+#### Main Hooks
+
+#### beforeRun
 
 Happens before anything is done. This is a great place to check for platform specific secrets such as a NPM token.
 
@@ -60,7 +64,7 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
-### beforeShipIt
+#### beforeShipIt
 
 Happens before `shipit` is run. This is a great throw an error if a token or key is not present.
 
@@ -72,7 +76,7 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
-### getAuthor
+#### getAuthor
 
 Get git author. Typically from a package distribution description file.
 
@@ -86,7 +90,7 @@ auto.hooks.getAuthor.tapPromise('NPM', async () => {
 });
 ```
 
-### getPreviousVersion
+#### getPreviousVersion
 
 Get the previous version. Typically from a package distribution description file.
 
@@ -102,7 +106,7 @@ auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
 });
 ```
 
-### getRepository
+#### getRepository
 
 Get owner and repository. Typically from a package distribution description file.
 
@@ -118,62 +122,7 @@ auto.hooks.getRepository.tapPromise('NPM', async () => {
 });
 ```
 
-### renderChangelogLine
-
-Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
-
-The following plugin would change all the bullet points in the changelog to star emojis.
-
-```ts
-auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
-  changelog.hooks.renderChangelogLine.tapPromise(
-    'Stars',
-    async (commits, renderLine) =>
-      commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
-  );
-);
-```
-
-### renderChangelogTitle
-
-Change how the changelog renders titles. The hook provides the current label for the section and all the configured changelog titles.
-
-```ts
-auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
-  changelog.hooks.renderChangelogTitle.tap(
-    'My Titles',
-    (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
-  );
-);
-```
-
-### renderChangelogAuthor
-
-Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile.
-
-```ts
-auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
-  changelog.hooks.renderChangelogAuthor.tap(
-    'test',
-    (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
-  );
-);
-```
-
-### renderChangelogAuthorLine
-
-Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
-
-```ts
-auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
-  changelog.hooks.renderChangelogAuthorLine.tap(
-    'test',
-    (author, user) => `:shipit: ${author.name} (${user})\n`
-  );
-);
-```
-
-### publish
+#### publish
 
 Publish the package to some package distributor. You must push the tags to github!
 
@@ -194,6 +143,135 @@ auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
     '$branch'
   ]);
 });
+```
+
+#### onCreateGitHubRelease
+
+Tap into the things the GithuRelease class makes.
+
+Available hooks:
+
+- onCreateLogParse (detailed [below]())
+- onCreateChangelog (detailed [below]())
+
+```ts
+this.hooks.onCreateGitHubRelease.tap('MyPlugin', githubRelease => {
+  githubRelease.hooks.onCreateLogParse.tap('Change log parseing', logParse =>
+    // extend logParse
+  );
+
+  githubRelease.hooks.onCreateChangelog.tap(
+    'Change changelog',
+    changelog => {
+      // extend changelog
+    }
+  );
+});
+```
+
+#### onCreateChangelog
+
+This is where you hook into the changelog's hooks. See usage [below](#changelog-hooks). This hook is exposed for convience on during `this.hooks.onCreateGitHubRelease` and at the root `this.hooks`
+
+#### onCreateLogParse
+
+This is where you hook into the LogParse's hooks. See usage [below](#logparse-hooks). This hook is exposed for convience on during `this.hooks.onCreateGitHubRelease` and at the root `this.hooks`
+
+---
+
+### Changelog Hooks
+
+#### renderChangelogLine
+
+Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
+
+The following plugin would change all the bullet points in the changelog to star emojis.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async (commits, renderLine) =>
+      commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
+  );
+);
+```
+
+#### renderChangelogTitle
+
+Change how the changelog renders titles. The hook provides the current label for the section and all the configured changelog titles.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogTitle.tap(
+    'My Titles',
+    (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
+  );
+);
+```
+
+#### renderChangelogAuthor
+
+Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthor.tap(
+    'test',
+    (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
+  );
+);
+```
+
+#### renderChangelogAuthorLine
+
+Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthorLine.tap(
+    'test',
+    (author, user) => `:shipit: ${author.name} (${user})\n`
+  );
+);
+```
+
+---
+
+### LogParse Hooks
+
+#### parseCommit
+
+Parse information about a commit from a commit. Here is where `auto` gets the PR number from the merge commits.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', logParse =>
+  logParse.hooks.parseCommit.tap(
+    'test',
+    (commit) => {
+      const bump = getBump(commit.subject, logParse.options.versionLabels);
+      commit.labels = [bump]
+      return commit;
+    }
+  );
+);
+```
+
+#### omitCommit
+
+Choose to omit certain commits. If you return true the commit will be omitted. Be sure to return nothing if you don't want the commit omitted.
+
+```ts
+auto.hooks.onCreateLogParse.tapPromise('Stars', changelog =>
+  changelog.hooks.omitCommit.tap(
+    'test',
+    (commit) => {
+      if (someTest(commit.subject)) {
+        return true;
+      }
+    }
+  );
+);
 ```
 
 ## Example Plugin - NPM (simple)

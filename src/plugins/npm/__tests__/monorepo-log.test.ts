@@ -2,7 +2,7 @@ import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
 import Changelog from '../../../changelog';
 import { defaultChangelogTitles, defaultLabels } from '../../../github-release';
-import { normalizeCommits } from '../../../log-parse';
+import LogParse from '../../../log-parse';
 import { AutoRelease } from '../../../main';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
@@ -35,7 +35,8 @@ jest.mock('fs', () => ({
   writeFile: jest.fn()
 }));
 
-const commits = normalizeCommits([
+const logParse = new LogParse();
+const commitsPromise = logParse.normalizeCommits([
   makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
     labels: ['major']
   }),
@@ -66,5 +67,6 @@ test('should create sections for packages', async () => {
   hooks.onCreateChangelog.call(changelog);
   changelog.loadDefaultHooks();
 
+  const commits = await commitsPromise;
   expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
 });

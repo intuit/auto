@@ -1,4 +1,7 @@
 import { ICommit } from 'gitlog';
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
+import { defaultLabels, VersionLabel } from './github-release';
+import { makeLogParseHooks } from './utils/make-hooks';
 
 export interface ICommitAuthor {
   name?: string;
@@ -21,20 +24,12 @@ export type IExtendedCommit = ICommit & {
   packages?: string[];
 };
 
-type CommitParseFunction = (
-  commit: IExtendedCommit
-) => IExtendedCommit | undefined;
-
-export function filterServiceAccounts(
-  commit: IExtendedCommit
-): IExtendedCommit | undefined {
+export function filterServiceAccounts(commit: IExtendedCommit): boolean | void {
   const SERVICE_ACCOUNTS = ['pdbf'];
 
   if (commit.authorName && SERVICE_ACCOUNTS.includes(commit.authorName)) {
-    return;
+    return true;
   }
-
-  return commit;
 }
 
 export function parsePR(commit: IExtendedCommit): IExtendedCommit {
@@ -55,9 +50,7 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
   };
 }
 
-export function parseSquashPR(
-  commit: IExtendedCommit
-): IExtendedCommit | undefined {
+export function parseSquashPR(commit: IExtendedCommit): IExtendedCommit {
   const firstLine = commit.subject.split('\n')[0];
   const squashMerge = /\(#(\d+)\)$/;
 
@@ -103,27 +96,53 @@ export function parseJira(commit: IExtendedCommit): IExtendedCommit {
   };
 }
 
-function normalizeCommit(commit: ICommit): IExtendedCommit | undefined {
-  const parsers: CommitParseFunction[] = [
-    filterServiceAccounts,
-    parsePR,
-    parseSquashPR,
-    parseJira
-  ];
-
-  const extended: IExtendedCommit = {
-    labels: [],
-    ...commit,
-    authors: [{ name: commit.authorName, email: commit.authorEmail }]
-  };
-
-  return parsers.reduce(
-    (prev: IExtendedCommit | undefined, parser) =>
-      prev === undefined ? undefined : parser(prev),
-    extended
-  );
+export interface ILogParseHooks {
+  parseCommit: AsyncSeriesWaterfallHook<[IExtendedCommit]>;
+  omitCommit: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
 }
 
-export function normalizeCommits(commits: ICommit[]): IExtendedCommit[] {
-  return commits.map(normalizeCommit).filter(Boolean) as IExtendedCommit[];
+export default class LogParse {
+  public hooks: ILogParseHooks;
+  public options: { versionLabels: Map<VersionLabel, string> };
+
+  constructor(options: { versionLabels?: Map<VersionLabel, string> } = {}) {
+    this.hooks = makeLogParseHooks();
+    this.options = {
+      ...options,
+      versionLabels: options.versionLabels || defaultLabels
+    };
+
+    this.hooks.parseCommit.tap('Merge Commit', parsePR);
+    this.hooks.parseCommit.tap('Squash Merge Commit', parseSquashPR);
+    this.hooks.parseCommit.tap('Jira', parseJira);
+
+    this.hooks.omitCommit.tap('Service Accounts', filterServiceAccounts);
+  }
+
+  public async normalizeCommits(
+    commits: ICommit[]
+  ): Promise<IExtendedCommit[]> {
+    const eCommits = await Promise.all(
+      commits.map(async commit => this.normalizeCommit(commit))
+    );
+
+    return eCommits.filter(Boolean) as IExtendedCommit[];
+  }
+
+  public async normalizeCommit(
+    commit: ICommit
+  ): Promise<IExtendedCommit | null> {
+    const extended = await this.hooks.parseCommit.promise({
+      labels: [],
+      ...commit,
+      authors: [{ name: commit.authorName, email: commit.authorEmail }]
+    });
+    const shouldOmit = await this.hooks.omitCommit.promise(extended);
+
+    if (shouldOmit) {
+      return null;
+    }
+
+    return extended;
+  }
 }
