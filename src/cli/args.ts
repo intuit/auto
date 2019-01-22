@@ -626,7 +626,7 @@ export interface IChangelogOptions extends IAuthorArgs {
   message?: string;
 }
 
-export interface IReleaseOptions extends IAuthorArgs {
+export interface IReleaseCommandOptions extends IAuthorArgs {
   noVersionPrefix?: boolean;
   jira?: string;
   dryRun?: boolean;
@@ -660,7 +660,7 @@ export type ArgsType = GlobalFlags &
     | IPRCheckCommandOptions
     | IPRCommandOptions
     | ICommentCommandOptions
-    | IReleaseOptions
+    | IReleaseCommandOptions
     | IVersionCommandOptions
     | IShipItCommandOptions);
 
@@ -672,6 +672,6 @@ type Flags =
   | keyof IPRCheckCommandOptions
   | keyof IPRCommandOptions
   | keyof ICommentCommandOptions
-  | keyof IReleaseOptions
+  | keyof IReleaseCommandOptions
   | keyof IVersionCommandOptions
   | keyof IShipItCommandOptions;

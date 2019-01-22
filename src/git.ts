@@ -4,7 +4,7 @@ import { promisify } from 'util';
 
 import { Memoize } from 'typescript-memoize';
 
-import { defaultLabelsDescriptions } from './github-release';
+import { defaultLabelsDescriptions } from './release';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import settingsUrl from './utils/settings-url';
@@ -16,7 +16,7 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
 
 export type IPRInfo = Omit<GHub.ReposCreateStatusParams, 'owner' | 'repo'>;
 
-export interface IGitHubOptions {
+export interface IGitOptions {
   owner: string;
   repo: string;
   baseUrl?: string;
@@ -29,7 +29,7 @@ export function getRandomColor() {
     .padStart(6, '0');
 }
 
-class GitHubAPIError extends Error {
+class GitAPIError extends Error {
   constructor(api: string, args: object, origError: Error) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
@@ -44,13 +44,13 @@ const makeCommentIdentifier = (context: string) =>
 
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
-export default class GitHub {
+export default class Git {
   public readonly ghub: GHub;
   public readonly baseUrl: string;
-  public readonly options: IGitHubOptions;
+  public readonly options: IGitOptions;
   private readonly logger: ILogger;
 
-  constructor(options: IGitHubOptions, logger: ILogger = dummyLog()) {
+  constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
     this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
@@ -168,7 +168,7 @@ export default class GitHub {
 
       return labels.data.map(l => l.name);
     } catch (e) {
-      throw new GitHubAPIError('listLabelsOnIssue', args, e);
+      throw new GitAPIError('listLabelsOnIssue', args, e);
     }
   }
 
@@ -194,10 +194,11 @@ export default class GitHub {
 
       return labels.data.map(l => l.name);
     } catch (e) {
-      throw new GitHubAPIError('getProjectLabels', args, e);
+      throw new GitAPIError('getProjectLabels', args, e);
     }
   }
 
+  @Memoize()
   public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),
@@ -364,7 +365,7 @@ export default class GitHub {
     return result;
   }
 
-  public async createComment(message: string, pr: number, context: string) {
+  public async createComment(message: string, pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Using comment identifier:', commentIdentifier);

@@ -4,15 +4,15 @@ import {
   AsyncSeriesWaterfallHook,
   SyncHook
 } from 'tapable';
+import { IAutoHooks } from '../auto-release';
 import { IChangelogHooks } from '../changelog';
-import { IGitHubReleaseHooks } from '../github-release';
 import { ILogParseHooks } from '../log-parse';
-import { IAutoHooks } from '../main';
+import { IReleaseHooks } from '../release';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   beforeShipIt: new SyncHook([]),
-  onCreateGitHubRelease: new SyncHook(['gitHubReleaseConfig']),
+  onCreateRelease: new SyncHook(['options']),
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse']),
   getAuthor: new AsyncSeriesBailHook([]),
@@ -21,7 +21,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncSeriesHook(['version'])
 });
 
-export const makeGitHubReleaseHooks = (): IGitHubReleaseHooks => ({
+export const makeReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse'])
 });

@@ -1,4 +1,4 @@
-import { defaultLabels } from '../github-release';
+import { defaultLabels } from '../release';
 import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
 test('ranks releases right', () => {

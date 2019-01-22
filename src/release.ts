@@ -1,18 +1,18 @@
 import GHub from '@octokit/rest';
 import * as fs from 'fs';
-import { ICommit } from 'gitlog';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import { Memoize } from 'typescript-memoize';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
-import GitHub, { IGitHubOptions, IPRInfo } from './git';
+import Git, { IGitOptions } from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
-import { makeGitHubReleaseHooks } from './utils/make-hooks';
+import { makeReleaseHooks } from './utils/make-hooks';
 import postToSlack from './utils/slack';
 
 export type VersionLabel =
@@ -23,7 +23,7 @@ export type VersionLabel =
   | 'release'
   | 'prerelease';
 
-export interface IGitHubReleaseOptions {
+export interface IReleaseOptions {
   jira?: string;
   slack?: string;
   githubApi?: string;
@@ -94,7 +94,7 @@ defaultLabelsDescriptions.set(
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-export interface IGitHubReleaseHooks {
+export interface IReleaseHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
   onCreateLogParse: SyncHook<[LogParse]>;
 }
@@ -102,32 +102,30 @@ export interface IGitHubReleaseHooks {
 /**
  * A class for interacting with the git remote
  */
-export default class GitHubRelease {
-  public readonly releaseOptions: IGitHubReleaseOptions;
-  public readonly hooks: IGitHubReleaseHooks;
+export default class Release {
+  public readonly options: IReleaseOptions;
+  public readonly hooks: IReleaseHooks;
+  public readonly git: Git;
 
   private readonly logger: ILogger;
-  private readonly github: GitHub;
   private readonly changelogTitles: { [label: string]: string };
-  private readonly githubApi: string;
   private readonly versionLabels: Map<VersionLabel, string>;
 
   constructor(
-    options: Partial<IGitHubOptions>,
-    releaseOptions: IGitHubReleaseOptions = {
+    gitOptions: Partial<IGitOptions>,
+    options: IReleaseOptions = {
       skipReleaseLabels: []
     },
     logger: ILogger = dummyLog()
   ) {
-    this.hooks = makeGitHubReleaseHooks();
-    this.versionLabels = releaseOptions.versionLabels || defaultLabels;
+    this.options = options;
     this.logger = logger;
-    this.releaseOptions = releaseOptions;
-    this.githubApi = releaseOptions.githubApi || 'https://api.github.com';
-    options.baseUrl = this.githubApi;
-    this.changelogTitles = releaseOptions.changelogTitles || {};
+    this.hooks = makeReleaseHooks();
+    this.versionLabels = options.versionLabels || defaultLabels;
+    this.changelogTitles = options.changelogTitles || {};
+    gitOptions.baseUrl = options.githubApi || 'https://api.github.com';
 
-    if (!options.owner || !options.repo || !options.token) {
+    if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
       throw new Error('Must set owner, repo, and GitHub token.');
     }
 
@@ -135,17 +133,17 @@ export default class GitHubRelease {
 
     // So that --verbose can be used on public CIs
     const tokenlessArgs = {
-      ...options,
-      token: `[Token starting with ${options.token.substring(0, 4)}]`
+      ...gitOptions,
+      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
     };
 
     this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
-    this.github = new GitHub(
+    this.git = new Git(
       {
-        owner: options.owner,
-        repo: options.repo,
-        token: options.token,
-        baseUrl: options.baseUrl
+        owner: gitOptions.owner,
+        repo: gitOptions.repo,
+        token: gitOptions.token,
+        baseUrl: gitOptions.baseUrl
       },
       this.logger
     );
@@ -166,7 +164,7 @@ export default class GitHubRelease {
       allCommits
         .filter(commit => commit.pullRequest)
         .map(async commit =>
-          this.github.getCommitsForPR(Number(commit.pullRequest!.number))
+          this.git.getCommitsForPR(Number(commit.pullRequest!.number))
         )
     );
     const allPrCommitHashes = allPrCommits
@@ -191,12 +189,12 @@ export default class GitHubRelease {
         return commit;
       });
 
-    const project = await this.github.getProject();
+    const project = await this.git.getProject();
     const changelog = new Changelog(this.logger, {
-      owner: this.github.options.owner,
-      repo: this.github.options.repo,
+      owner: this.git.options.owner,
+      repo: this.git.options.repo,
       baseUrl: project.html_url,
-      jira: this.releaseOptions.jira,
+      jira: this.options.jira,
       versionLabels: this.versionLabels,
       changelogTitles: {
         ...defaultChangelogTitles,
@@ -239,8 +237,7 @@ export default class GitHubRelease {
 
     const date = new Date().toDateString();
     const prefixed =
-      this.releaseOptions.noVersionPrefix ||
-      (version && version.startsWith('v'))
+      this.options.noVersionPrefix || (version && version.startsWith('v'))
         ? version
         : `v${version}`;
 
@@ -272,12 +269,12 @@ export default class GitHubRelease {
   ): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
-    const gitlog = await this.github.getGitLog(from, to);
+    const gitlog = await this.git.getGitLog(from, to);
 
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
-    const labeledCommits = await this.addLabelsToCommits(gitlog);
-    const commits = await this.getPRForRebasedCommits(labeledCommits);
+    const logParse = await this.createLogParse();
+    const commits = await logParse.normalizeCommits(gitlog);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -286,7 +283,7 @@ export default class GitHubRelease {
         let resolvedAuthors = [];
 
         if (commit.pullRequest) {
-          const prCommits = await this.github.getCommitsForPR(
+          const prCommits = await this.git.getCommitsForPR(
             Number(commit.pullRequest.number)
           );
 
@@ -297,12 +294,12 @@ export default class GitHubRelease {
           resolvedAuthors = await Promise.all(
             prCommits.map(async prCommit => {
               if (prCommit && prCommit.author) {
-                return this.github.getUserByUsername(prCommit.author.login);
+                return this.git.getUserByUsername(prCommit.author.login);
               }
             })
           );
         } else if (commit.authorEmail) {
-          const author = await this.github.getUserByEmail(commit.authorEmail);
+          const author = await this.git.getUserByEmail(commit.authorEmail);
           resolvedAuthors.push(author);
         }
 
@@ -320,43 +317,11 @@ export default class GitHubRelease {
     return commits;
   }
 
-  public async publish(releaseNotes: string, tag: string) {
-    return this.github.publish(releaseNotes, tag);
-  }
-
-  public async getLabels(pr: number) {
-    return this.github.getLabels(pr);
-  }
-
-  public async createStatus(prInfo: IPRInfo) {
-    return this.github.createStatus(prInfo);
-  }
-
-  public async getSha() {
-    return this.github.getSha();
-  }
-
-  public async getLatestRelease(): Promise<string> {
-    return this.github.getLatestRelease();
-  }
-
-  public async getPullRequest(pr: number) {
-    return this.github.getPullRequest(pr);
-  }
-
-  public async createComment(message: string, pr: number, context = 'default') {
-    return this.github.createComment(message, pr, context);
-  }
-
-  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
-    return this.github.getPullRequests(options);
-  }
-
   public async addLabelsToProject(
     labels: Map<string, string>,
     options: ICreateLabelsCommandOptions = {}
   ) {
-    const oldLabels = await this.github.getProjectLabels();
+    const oldLabels = await this.git.getProjectLabels();
     const labelsToCreate = [...labels.entries()].filter(
       ([versionLabel, customLabel]) => {
         if (oldLabels && oldLabels.includes(customLabel)) {
@@ -365,14 +330,14 @@ export default class GitHubRelease {
 
         if (
           versionLabel === 'release' &&
-          !this.releaseOptions.onlyPublishWithReleaseLabel
+          !this.options.onlyPublishWithReleaseLabel
         ) {
           return;
         }
 
         if (
           versionLabel === 'skip-release' &&
-          this.releaseOptions.onlyPublishWithReleaseLabel
+          this.options.onlyPublishWithReleaseLabel
         ) {
           return;
         }
@@ -384,12 +349,12 @@ export default class GitHubRelease {
     if (!options.dryRun) {
       await Promise.all(
         labelsToCreate.map(async ([versionLabel, customLabel]) => {
-          await this.github.createLabel(versionLabel, customLabel);
+          await this.git.createLabel(versionLabel, customLabel);
         })
       );
     }
 
-    const repoMetadata = await this.github.getProject();
+    const repoMetadata = await this.git.getProject();
 
     const justLabelNames = labelsToCreate.map(([name]) => name);
     if (justLabelNames.length > 0) {
@@ -418,10 +383,7 @@ export default class GitHubRelease {
   public async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const {
-      onlyPublishWithReleaseLabel,
-      skipReleaseLabels
-    } = this.releaseOptions;
+    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
@@ -444,20 +406,20 @@ export default class GitHubRelease {
    * @param tag Version to include in the title of the slack message
    */
   public async postToSlack(releaseNotes: string, tag: string) {
-    if (!this.releaseOptions.slack) {
+    if (!this.options.slack) {
       throw new Error('Slack url must be set to post a message to slack.');
     }
 
-    const project = await this.github.getProject();
+    const project = await this.git.getProject();
 
     this.logger.verbose.info('Posting release notes to slack.');
 
     await postToSlack(releaseNotes, {
       tag,
-      owner: this.github.options.owner,
-      repo: this.github.options.repo,
+      owner: this.git.options.owner,
+      repo: this.git.options.repo,
       baseUrl: project.html_url,
-      slackUrl: this.releaseOptions.slack
+      slackUrl: this.options.slack
     });
 
     this.logger.verbose.info('Posted release notes to slack.');
@@ -468,34 +430,74 @@ export default class GitHubRelease {
     return inc(lastTag, bump as ReleaseType);
   }
 
-  /**
-   * Parse the commits messages for PRs and attach their labels
-   *
-   * @param commits Commits to modify
-   */
-  private async addLabelsToCommits(commits: ICommit[]) {
-    if (!commits) {
+  @Memoize()
+  private async createLogParse() {
+    const logParse = new LogParse(this.options);
+
+    logParse.hooks.parseCommit.tapPromise('Labels', async commit =>
+      this.addLabelsToCommit(commit)
+    );
+    logParse.hooks.parseCommit.tapPromise('PR Commits', async commit => {
+      const prsSinceLastRelease = await this.getPRsSinceLastRelease();
+      return this.getPRForRebasedCommits(commit, prsSinceLastRelease);
+    });
+
+    this.hooks.onCreateLogParse.call(logParse);
+
+    return logParse;
+  }
+
+  @Memoize()
+  private async getPRsSinceLastRelease() {
+    let lastRelease: { published_at: string };
+
+    try {
+      lastRelease = await this.git.getLatestReleaseInfo();
+    } catch (error) {
+      const firstCommit = await this.git.getFirstCommit();
+
+      lastRelease = {
+        published_at: await this.git.getCommitDate(firstCommit)
+      };
+    }
+
+    if (!lastRelease) {
       return [];
     }
 
-    const logParse = new LogParse(this.releaseOptions);
-    this.hooks.onCreateLogParse.call(logParse);
-    const eCommits = await logParse.normalizeCommits(commits);
+    const prsSinceLastRelease = await this.git.searchRepo({
+      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
+    });
 
-    await Promise.all(
-      eCommits.map(async commit => {
-        if (!commit.pullRequest) {
-          commit.labels = commit.labels || [];
-        } else {
-          commit.labels = [
-            ...((await this.getLabels(commit.pullRequest.number)) || []),
-            ...commit.labels
-          ];
-        }
-      })
-    );
+    if (!prsSinceLastRelease || !prsSinceLastRelease.items) {
+      return [];
+    }
 
-    return eCommits;
+    const data = await Promise.all(prsSinceLastRelease.items.map(
+      async (pr: { number: number }) =>
+        this.git.getPullRequest(Number(pr.number))
+    ) as GHub.Response<GHub.PullsGetResponse>[]);
+
+    return data.map(item => item.data);
+  }
+
+  /**
+   * Add the PR labels to the commit
+   *
+   * @param commits Commits to modify
+   */
+  private async addLabelsToCommit(commit: IExtendedCommit) {
+    if (!commit.labels) {
+      commit.labels = [];
+    }
+
+    if (commit.pullRequest) {
+      const labels =
+        (await this.git.getLabels(commit.pullRequest.number)) || [];
+      commit.labels = [...labels, ...commit.labels];
+    }
+
+    return commit;
   }
 
   /**
@@ -505,48 +507,22 @@ export default class GitHubRelease {
    *
    * @param commits Commits to modify
    */
-  private async getPRForRebasedCommits(commits: IExtendedCommit[]) {
-    let lastRelease: { published_at: string };
+  private getPRForRebasedCommits(
+    commit: IExtendedCommit,
+    pullRequests: GHub.PullsGetResponse[]
+  ) {
+    const matchPr = pullRequests.find(
+      pr => pr.merge_commit_sha === commit.hash
+    );
 
-    try {
-      lastRelease = await this.github.getLatestReleaseInfo();
-    } catch (error) {
-      const firstCommit = await this.github.getFirstCommit();
-      lastRelease = {
-        published_at: await this.github.getCommitDate(firstCommit)
+    if (!commit.pullRequest && matchPr) {
+      const labels = matchPr.labels.map(label => label.name) || [];
+      commit.labels = [...labels, ...commit.labels];
+      commit.pullRequest = {
+        number: matchPr.number
       };
     }
 
-    if (!lastRelease || !lastRelease.published_at) {
-      return commits;
-    }
-
-    const prsSinceLastRelease = await this.github.searchRepo({
-      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
-    });
-    const pullRequests = await Promise.all(prsSinceLastRelease.items.map(
-      async (pr: { number: number }) =>
-        this.github.getPullRequest(Number(pr.number))
-    ) as GHub.Response<GHub.PullsGetResponse>[]);
-
-    await Promise.all(
-      commits.map(async commit => {
-        const matchPr = pullRequests.find(
-          pr => pr.data.merge_commit_sha === commit.hash
-        );
-
-        if (!commit.pullRequest && matchPr) {
-          commit.labels = [
-            ...(matchPr.data.labels.map(label => label.name) || []),
-            ...commit.labels
-          ];
-          commit.pullRequest = {
-            number: matchPr.data.number
-          };
-        }
-      })
-    );
-
-    return commits;
+    return commit;
   }
 }
