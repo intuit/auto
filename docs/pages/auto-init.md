@@ -1,6 +1,6 @@
 # Initialization
 
-`auto-release` provides some tools to quickly set up your project. If you do not want to use the interactive experience all these options can be configured via the [.autorc](./autorc.md) and most can be configure via CLI options.
+`auto` provides some tools to quickly set up your project. If you do not want to use the interactive experience all these options can be configured via the [.autorc](./autorc.md) and most can be configure via CLI options.
 
 ## `auto init`
 
@@ -38,7 +38,7 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package.json
   --owner string        The owner of the GitHub repo. Defaults to reading from the package.json
   --github-api string   GitHub API to use
-  --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
+  --plugins string[]    Plugins to load auto with. (defaults to just npm)
 
 Examples
 

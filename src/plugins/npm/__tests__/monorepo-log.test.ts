@@ -1,8 +1,8 @@
 import NpmPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
+import Auto from '../../../auto';
 import Changelog from '../../../changelog';
 import LogParse from '../../../log-parse';
-import { AutoRelease } from '../../../main';
 import { defaultChangelogTitles, defaultLabels } from '../../../release';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
@@ -63,7 +63,7 @@ test('should create sections for packages', async () => {
     versionLabels: defaultLabels
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+  plugin.apply({ hooks, logger: dummyLog() } as Auto);
   hooks.onCreateChangelog.call(changelog);
   changelog.loadDefaultHooks();
 

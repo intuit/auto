@@ -64,7 +64,7 @@ export interface IAutoHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
 }
 
-export default class AutoRelease {
+export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
   args: ArgsType;
@@ -141,10 +141,7 @@ export default class AutoRelease {
       rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
     }
 
-    this.logger.verbose.success(
-      'Loaded `auto-release` with config:',
-      rawConfig
-    );
+    this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
 
     this.semVerLabels = defaultLabels;
 
@@ -630,7 +627,7 @@ export default class AutoRelease {
 
   private createErrorMessage() {
     return new Error(
-      `AutoRelease is not initialized! Make sure the have run AutoRelease.loadConfig`
+      `Auto is not initialized! Make sure the have run Auto.loadConfig`
     );
   }
 

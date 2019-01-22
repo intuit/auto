@@ -3,7 +3,7 @@ import NPMPlugin, {
   getMonorepoPackage,
   greaterRelease
 } from '..';
-import { AutoRelease } from '../../../main';
+import { Auto } from '../../../main';
 import SEMVER from '../../../semver';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
@@ -120,7 +120,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -134,7 +134,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -155,7 +155,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -177,7 +177,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -193,7 +193,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -210,7 +210,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -237,7 +237,7 @@ describe('getPreviousVersion', () => {
     // published version of test package
     exec.mockReturnValueOnce('0.1.2');
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.1.2');
   });
@@ -252,7 +252,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -273,7 +273,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
@@ -307,7 +307,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     exec.mockReturnValueOnce('1.0.0');
 
@@ -331,7 +331,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
@@ -365,7 +365,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -381,7 +381,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {
@@ -398,7 +398,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as AutoRelease);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
     readResult = `
       {

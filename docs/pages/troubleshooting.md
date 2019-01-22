@@ -2,11 +2,11 @@
 
 ## Error: Can't find a GitHub token to use
 
-You must set a `GH_TOKEN` for `auto-release` to work. Make sure to add your `NPM_TOKEN` while you're at it.
+You must set a `GH_TOKEN` for `auto` to work. Make sure to add your `NPM_TOKEN` while you're at it.
 
 ## npm ERR! Git working directory not clean
 
-To version and publish you cannot have any changes in the git repo during publish. This means that if you build some files before release that aren't gitignored `auto` will fail to continue. To fix this either add those `dist` files to your `.gitignore` or commit them somehow before the relese.
+To version and publish you cannot have any changes in the git repo during publish. This means that if you build some files before release that aren't git-ignored `auto` will fail to continue. To fix this either add those `dist` files to your `.gitignore` or commit them somehow before the release.
 
 ## npm ERR! need auth auth required for publishing
 
@@ -52,18 +52,18 @@ This means that you do not have a repository set in your package.json. Add somet
 {
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto-release"
+    "url": "https://github.com/intuit/auto"
   },
   // or simply
-  "repository": "intuit/auto-release"
+  "repository": "intuit/auto"
 }
 ```
 
-## How do I auto-release a fork of another repo?
+## How do I auto a fork of another repo?
 
-If auto-release doesn't find a last release it will default to the first commit for version calculation (and a log of other things). If you have forked a repo, you fork all the merge commit messages as well. This confuses `auto-release` since it will look for those pull requests in your fork and not the main one.
+If auto doesn't find a last release it will default to the first commit for version calculation (and a log of other things). If you have forked a repo, you fork all the merge commit messages as well. This confuses `auto` since it will look for those pull requests in your fork and not the main one.
 
-To remedy this first tag your first commit in the fork with your first version. If the tags from the original repo are still in your repo you should just bump that version. This will let `auto-release` ignore all the old merge commits.
+To remedy this first tag your first commit in the fork with your first version. If the tags from the original repo are still in your repo you should just bump that version. This will let `auto` ignore all the old merge commits.
 
 ::: message is-warning
 :warning: You must also match this new tag version in your package.json
@@ -74,4 +74,4 @@ To remedy this first tag your first commit in the fork with your first version. 
 git tag v2.10.1
 ```
 
-Then on GitHub go to your project, click release, then draft a new release. Select the tag you just published and `publish release`. Now auto-release will be able to use the correct version and git log!
+Then on GitHub go to your project, click release, then draft a new release. Select the tag you just published and `publish release`. Now auto will be able to use the correct version and git log!

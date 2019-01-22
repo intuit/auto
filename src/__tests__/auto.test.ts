@@ -1,4 +1,4 @@
-import AutoRelease from '../auto-release';
+import Auto from '../auto';
 import { IPRCommandOptions } from '../cli/args';
 import { SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';
@@ -71,9 +71,9 @@ jest.mock('gitlog', () => (a, cb) => {
   ]);
 });
 
-describe('AutoRelease', () => {
+describe('Auto', () => {
   test('should use args', async () => {
-    const auto = new AutoRelease({ command: 'init', ...defaults });
+    const auto = new Auto({ command: 'init', ...defaults });
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release).toBeDefined();
@@ -81,7 +81,7 @@ describe('AutoRelease', () => {
 
   test('should load config', async () => {
     search.mockReturnValueOnce({ config: defaults });
-    const auto = new AutoRelease({ command: 'init' });
+    const auto = new Auto({ command: 'init' });
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release).toBeDefined();
@@ -89,7 +89,7 @@ describe('AutoRelease', () => {
 
   test('should extend config', async () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
-    const auto = new AutoRelease({ command: 'init' });
+    const auto = new Auto({ command: 'init' });
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
   });
@@ -98,7 +98,7 @@ describe('AutoRelease', () => {
     search.mockReturnValueOnce({
       config: { ...defaults, labels }
     });
-    const auto = new AutoRelease({ command: 'init' });
+    const auto = new Auto({ command: 'init' });
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -121,7 +121,7 @@ describe('AutoRelease', () => {
         }
       }
     });
-    const auto = new AutoRelease({ command: 'init' });
+    const auto = new Auto({ command: 'init' });
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -133,7 +133,7 @@ describe('AutoRelease', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new AutoRelease({ command: 'create-labels' });
+      const auto = new Auto({ command: 'create-labels' });
       auto.logger = dummyLog();
       expect(auto.createLabels()).rejects.toBeTruthy();
     });
@@ -142,7 +142,7 @@ describe('AutoRelease', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new AutoRelease({ command: 'create-labels' });
+      const auto = new Auto({ command: 'create-labels' });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -157,13 +157,13 @@ describe('AutoRelease', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new AutoRelease({ command: 'labels' });
+      const auto = new Auto({ command: 'labels' });
       auto.logger = dummyLog();
       expect(auto.label({ pr: 13 })).rejects.toBeTruthy();
     });
 
     test('should get labels', async () => {
-      const auto = new AutoRelease({ command: 'labels', ...defaults });
+      const auto = new Auto({ command: 'labels', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -177,7 +177,7 @@ describe('AutoRelease', () => {
     });
 
     test('should get labels for last merged PR', async () => {
-      const auto = new AutoRelease({ command: 'labels', ...defaults });
+      const auto = new Auto({ command: 'labels', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -201,7 +201,7 @@ describe('AutoRelease', () => {
     });
 
     test('should do nothing when no last merge found', async () => {
-      const auto = new AutoRelease({ command: 'labels', ...defaults });
+      const auto = new Auto({ command: 'labels', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -231,14 +231,14 @@ describe('AutoRelease', () => {
     };
 
     test('should throw when not initialized', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       expect(auto.pr(required)).rejects.toBeTruthy();
     });
 
     test('should do nothing ', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -248,7 +248,7 @@ describe('AutoRelease', () => {
     });
 
     test('should use provided SHA', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -263,7 +263,7 @@ describe('AutoRelease', () => {
     });
 
     test('should use HEAD SHA', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -282,7 +282,7 @@ describe('AutoRelease', () => {
     });
 
     test('should use lookup SHA for PR', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -314,14 +314,14 @@ describe('AutoRelease', () => {
     };
 
     test('should throw when not initialized', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       expect(auto.prCheck({ pr: 13, ...required })).rejects.toBeTruthy();
     });
 
     test('should do nothing with dryRun', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -330,7 +330,7 @@ describe('AutoRelease', () => {
     });
 
     test('should catch errors', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
@@ -344,7 +344,7 @@ describe('AutoRelease', () => {
     });
 
     test('should error with no label', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -367,7 +367,7 @@ describe('AutoRelease', () => {
     });
 
     test('should pass with semver label', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -390,7 +390,7 @@ describe('AutoRelease', () => {
     });
 
     test('should pass with skip release label', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -413,7 +413,7 @@ describe('AutoRelease', () => {
     });
 
     test('should pass with skip release label', async () => {
-      const auto = new AutoRelease({ command: 'pr', ...defaults });
+      const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -438,14 +438,14 @@ describe('AutoRelease', () => {
 
   describe('comment', () => {
     test('should throw when not initialized', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
 
       expect(auto.comment({ pr: 10, message: 'foo' })).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -459,13 +459,13 @@ describe('AutoRelease', () => {
 
   describe('version', () => {
     test('should throw when not initialized', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
       expect(auto.version()).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -482,14 +482,14 @@ describe('AutoRelease', () => {
 
   describe('changelog', () => {
     test('should throw when not initialized', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
 
       expect(auto.changelog()).rejects.toBeTruthy();
     });
 
     test('should do nothing on a dryRun', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
 
       auto.logger = dummyLog();
       await auto.loadConfig();
@@ -503,7 +503,7 @@ describe('AutoRelease', () => {
     });
 
     test('should add to changelog', async () => {
-      const auto = new AutoRelease({
+      const auto = new Auto({
         command: 'changelog',
         plugins: [],
         ...defaults
@@ -522,7 +522,7 @@ describe('AutoRelease', () => {
 
     test('should skip getRepository hook if passed in via cli', async () => {
       process.env.GH_TOKEN = 'XXXX';
-      const auto = new AutoRelease({
+      const auto = new Auto({
         command: 'pr',
         repo: 'test',
         owner: 'adierkens'
@@ -546,32 +546,32 @@ describe('AutoRelease', () => {
 
   describe('loadExtendConfig', () => {
     test('should work when no config found', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       expect(auto.loadExtendConfig('nothing')).toEqual({});
     });
 
     test('should load file path', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       expect(auto.loadExtendConfig('../fake/path.json')).toEqual({
         jira: 'url'
       });
     });
 
     test('should load @NAME/auto-config', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       expect(auto.loadExtendConfig('@artsy')).toEqual({
         onlyPublishWithReleaseLabel: true
       });
     });
 
     test('should load auto-config-NAME', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       expect(auto.loadExtendConfig('fuego')).toEqual({
         noVersionPrefix: true
       });
     });
     test('should load extend config from function', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
       expect(auto.loadExtendConfig('../fake/path.js')).toEqual({
         slack: 'url'
       });
@@ -582,7 +582,7 @@ describe('AutoRelease', () => {
 describe('hooks', () => {
   describe('logParse', () => {
     test('should be able to tap parseCommit', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
@@ -601,7 +601,7 @@ describe('hooks', () => {
     });
 
     test('should be able to tap omitCommit', async () => {
-      const auto = new AutoRelease({ command: 'comment', ...defaults });
+      const auto = new Auto({ command: 'comment', ...defaults });
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {

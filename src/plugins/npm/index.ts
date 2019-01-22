@@ -7,7 +7,7 @@ import { promisify } from 'util';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
 import { IExtendedCommit } from '../../log-parse';
-import { AutoRelease, IPlugin } from '../../main';
+import { Auto, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
 import { ILogger } from '../../utils/logger';
@@ -143,7 +143,7 @@ async function loadPackageJson(): Promise<IPackageJSON> {
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
-  apply(auto: AutoRelease) {
+  apply(auto: Auto) {
     auto.hooks.beforeRun.tap(this.name, async () => {
       if (!process.env.NPM_TOKEN) {
         auto.logger.log.warn('NPM Token is needed for the NPM plugin!');

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AutoRelease createLabels should create the labels 1`] = `
+exports[`Auto createLabels should create the labels 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
@@ -26,7 +26,7 @@ exports[`AutoRelease createLabels should create the labels 1`] = `
 }
 `;
 
-exports[`AutoRelease should extend config 1`] = `
+exports[`Auto should extend config 1`] = `
 Object {
   "command": "init",
   "extends": "@artsy",

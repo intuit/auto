@@ -1,7 +1,7 @@
 version: 2.1
 
 defaults: &defaults
-  working_directory: ~/auto-release
+  working_directory: ~/auto
   docker:
     - image: circleci/node:8.14-browsers
   environment:
@@ -13,12 +13,12 @@ aliases:
     keys:
       # Find a cache corresponding to this specific package.json checksum
       # when this file is changed, this key will fail
-      - auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
-      - auto-release-{{ checksum "yarn.lock" }}
+      - auto-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+      - auto-{{ checksum "yarn.lock" }}
       # Find the most recent cache used from any branch
-      - auto-release-
+      - auto-
   - &save-cache
-    key: auto-release-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
+    key: auto-{{ checksum "yarn.lock" }}-{{ checksum ".circleci/config.yml" }}
     paths:
       - ~/.cache/yarn
       - node_modules
@@ -51,14 +51,14 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release
+          at: ~/auto
       - run: *lint
 
   test:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release
+          at: ~/auto
       - run: *test
       - run:
           name: Send CodeCov Results
@@ -68,7 +68,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release
+          at: ~/auto
       - run:
           name: Build
           command: yarn build
@@ -84,7 +84,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release
+          at: ~/auto
       - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run:
           name: Release
@@ -94,7 +94,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release
+          at: ~/auto
       - run:
           name: Publish Docs
           command: yarn docs:publish

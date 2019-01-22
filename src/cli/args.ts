@@ -35,7 +35,7 @@ const version = {
   name: 'version',
   alias: 'V',
   type: Boolean,
-  description: "Display auto-release-cli's version"
+  description: "Display auto's version"
 };
 
 const mainDefinitions = [
@@ -91,7 +91,7 @@ const defaultOptions = [
     name: 'plugins',
     type: String,
     multiple: true,
-    description: 'Plugins to load auto-release with. (defaults to just npm)',
+    description: 'Plugins to load auto with. (defaults to just npm)',
     group: 'misc'
   }
 ];
@@ -378,7 +378,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'shipit',
-    summary: 'Run the full auto-release project. Detects if in a lerna project',
+    summary:
+      'Run the full `auto` release pipeline. Detects if in a lerna project',
     examples: ['{green $} auto shipit'],
     options: [...defaultOptions, dryRun]
   }

@@ -1,14 +1,14 @@
 # Getting Started
 
-Before we do anything we must first install `auto-release-cli` as a dev dependency.
+Before we do anything we must first install `auto` as a dev dependency.
 
 ```sh
-yarn add -D auto-release-cli
+yarn add -D auto
 ```
 
 ## Enterprise
 
-If you are using enterprise github `auto-release` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
+If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
 
 ### Project already published
 
@@ -23,11 +23,11 @@ git push --tags
 
 Then on GitHub go to your project's releases and click `Draft a new release`. In the `Tag version` field enter the version number you just tagged and click `Publish release`.
 
-Now your github project is set up to use `auto-release`.
+Now your github project is set up to use `auto`.
 
 ## Configuration
 
-Getting started with `auto-release` is super easy.
+Getting started with `auto` is super easy.
 
 1. `auto init` (optional)
 2. `auto create-labels`
@@ -36,11 +36,11 @@ Getting started with `auto-release` is super easy.
 
 ### 1. Initialize Options
 
-Initialize all options and configure label text. If this is not run then `auto-release` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
+Initialize all options and configure label text. If this is not run then `auto` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
 
 ### 2. Labels
 
-After that, you need to set up the labels on your github project. The types of labels that `auto-release` uses are:
+After that, you need to set up the labels on your github project. The types of labels that `auto` uses are:
 
 - Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](./autorc.md#versioning-labels).
 - Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
@@ -67,7 +67,7 @@ NPM_TOKEN=PUBLISH_TOKEN
 
 ### 4. Script
 
-`auto-release` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.
+`auto` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.
 
 #### Quick Setup
 

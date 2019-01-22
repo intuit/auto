@@ -4,7 +4,7 @@ import {
   AsyncSeriesWaterfallHook,
   SyncHook
 } from 'tapable';
-import { IAutoHooks } from '../auto-release';
+import { IAutoHooks } from '../auto';
 import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
 import { IReleaseHooks } from '../release';

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { promisify } from 'util';
 
 import { inc, ReleaseType } from 'semver';
-import { AutoRelease, IPlugin } from '../../main';
+import { Auto, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
 
@@ -28,11 +28,11 @@ export default class ChromeWebStorePlugin implements IPlugin {
     this.build = config.build || process.env.EXTENSION_BUILD || 'extension.zip';
   }
 
-  reportWarning(auto: AutoRelease, message: string) {
+  reportWarning(auto: Auto, message: string) {
     auto.logger.log.warn(`${this.name}: ${message}`);
   }
 
-  apply(auto: AutoRelease) {
+  apply(auto: Auto) {
     auto.hooks.beforeRun.tap(this.name, () => {
       if (!this.id) {
         this.reportWarning(
