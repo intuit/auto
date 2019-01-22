@@ -2,9 +2,9 @@ import { defaultLabels } from '../release';
 import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
 test('ranks releases right', () => {
-  expect(getHigherSemverTag('major', 'minor')).toBe('major');
-  expect(getHigherSemverTag('foo', 'bar')).toBe('patch');
-  expect(getHigherSemverTag('minor', 'patch')).toBe('minor');
+  expect(getHigherSemverTag(SEMVER.major, 'minor')).toBe('major');
+  expect(getHigherSemverTag(SEMVER.noVersion, 'bar')).toBe('patch');
+  expect(getHigherSemverTag(SEMVER.minor, 'patch')).toBe('minor');
 });
 
 describe('calculateSemVerBump', () => {
