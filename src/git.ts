@@ -45,9 +45,10 @@ const makeCommentIdentifier = (context: string) =>
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
 export default class Git {
-  public readonly ghub: GHub;
-  public readonly baseUrl: string;
   public readonly options: IGitOptions;
+
+  private readonly baseUrl: string;
+  private readonly ghub: GHub;
   private readonly logger: ILogger;
 
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
