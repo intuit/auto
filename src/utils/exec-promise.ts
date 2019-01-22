@@ -16,13 +16,13 @@ export default async function execPromise(cmd: string, args?: string[]) {
     });
 
     let allStdout = '';
-    child.stdout.on('data', async data => {
+    child.stdout.on('data', async (data: Buffer) => {
       const stdout = data.toString();
       allStdout += stdout;
     });
 
     let allStderr = '';
-    child.stderr.on('data', data => {
+    child.stderr.on('data', (data: Buffer) => {
       const stderr = data.toString();
       allStderr += stderr;
     });

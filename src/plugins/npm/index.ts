@@ -141,9 +141,9 @@ async function loadPackageJson(): Promise<IPackageJSON> {
 }
 
 export default class NPMPlugin implements IPlugin {
-  public name = 'NPM';
+  name = 'NPM';
 
-  public apply(auto: AutoRelease) {
+  apply(auto: AutoRelease) {
     auto.hooks.beforeRun.tap(this.name, async () => {
       if (!process.env.NPM_TOKEN) {
         auto.logger.log.warn('NPM Token is needed for the NPM plugin!');

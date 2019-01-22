@@ -4,7 +4,9 @@ import join from 'url-join';
 const sanitizeMarkdown = (markdown: string) =>
   markdown
     .split('\n')
-    .map(line => line.replace(/\[([\s\S]+)\]\([\S\s]+\)/, (_, label) => label))
+    .map(line =>
+      line.replace(/\[([\s\S]+)\]\([\S\s]+\)/, (_, label: string) => label)
+    )
     .join('\n');
 
 interface IPostToSlackOptions {

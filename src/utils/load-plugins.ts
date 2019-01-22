@@ -31,10 +31,12 @@ export default function loadPlugin(
   if (isSupported(pluginPath)) {
     plugin = plugins.get(pluginPath);
   } else {
-    plugin = tryRequire(pluginPath);
+    plugin = tryRequire(pluginPath) as IPluginConstructor;
 
     if (!plugin) {
-      plugin = tryRequire(path.join(process.cwd(), pluginPath));
+      plugin = tryRequire(
+        path.join(process.cwd(), pluginPath)
+      ) as IPluginConstructor;
     }
   }
 

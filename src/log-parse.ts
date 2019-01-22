@@ -102,8 +102,8 @@ export interface ILogParseHooks {
 }
 
 export default class LogParse {
-  public hooks: ILogParseHooks;
-  public options: { versionLabels: Map<VersionLabel, string> };
+  hooks: ILogParseHooks;
+  options: { versionLabels: Map<VersionLabel, string> };
 
   constructor(options: { versionLabels?: Map<VersionLabel, string> } = {}) {
     this.hooks = makeLogParseHooks();
@@ -119,9 +119,7 @@ export default class LogParse {
     this.hooks.omitCommit.tap('Service Accounts', filterServiceAccounts);
   }
 
-  public async normalizeCommits(
-    commits: ICommit[]
-  ): Promise<IExtendedCommit[]> {
+  async normalizeCommits(commits: ICommit[]): Promise<IExtendedCommit[]> {
     const eCommits = await Promise.all(
       commits.map(async commit => this.normalizeCommit(commit))
     );
@@ -129,9 +127,7 @@ export default class LogParse {
     return eCommits.filter(Boolean) as IExtendedCommit[];
   }
 
-  public async normalizeCommit(
-    commit: ICommit
-  ): Promise<IExtendedCommit | undefined> {
+  async normalizeCommit(commit: ICommit): Promise<IExtendedCommit | undefined> {
     const extended = await this.hooks.parseCommit.promise({
       labels: [],
       ...commit,

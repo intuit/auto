@@ -39,7 +39,7 @@ const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));
 
 export default class Changelog {
-  public readonly hooks: IChangelogHooks;
+  readonly hooks: IChangelogHooks;
   private readonly logger: ILogger;
   private readonly options: IGenerateReleaseNotesOptions;
 
@@ -50,7 +50,7 @@ export default class Changelog {
     this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
   }
 
-  public loadDefaultHooks() {
+  loadDefaultHooks() {
     this.hooks.renderChangelogAuthor.tap('Default', (author, commit) =>
       this.createUserLink(author, commit)
     );
@@ -71,9 +71,7 @@ export default class Changelog {
   }
 
   // Every Commit will either be a PR, jira story, or push to master (patch)
-  public async generateReleaseNotes(
-    commits: IExtendedCommit[]
-  ): Promise<string> {
+  async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
     if (commits.length === 0) {
       return '';
     }
@@ -91,7 +89,7 @@ export default class Changelog {
     return result;
   }
 
-  public createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
+  createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
     if (author.username === 'invalid-email-address') {
       return;

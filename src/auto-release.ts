@@ -65,13 +65,13 @@ export interface IAutoHooks {
 }
 
 export default class AutoRelease {
-  public hooks: IAutoHooks;
-  public logger: ILogger;
-  public args: ArgsType;
+  hooks: IAutoHooks;
+  logger: ILogger;
+  args: ArgsType;
 
-  public release?: Release;
-  public git?: Git;
-  public semVerLabels?: Map<VersionLabel, string>;
+  release?: Release;
+  git?: Git;
+  semVerLabels?: Map<VersionLabel, string>;
 
   constructor(args: ArgsType) {
     this.args = args;
@@ -102,7 +102,7 @@ export default class AutoRelease {
    *
    * @param extend Path or name of config to find
    */
-  public loadExtendConfig(extend: string) {
+  loadExtendConfig(extend: string) {
     let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
 
     if (!config) {
@@ -124,7 +124,7 @@ export default class AutoRelease {
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
-  public async loadConfig() {
+  async loadConfig() {
     const explorer = cosmiconfig('auto');
     const result = await explorer.search();
 
@@ -196,7 +196,7 @@ export default class AutoRelease {
   /**
    * Interactive prompt for initializing an .autorc
    */
-  public async init(options: IInitCommandOptions = {}) {
+  async init(options: IInitCommandOptions = {}) {
     await init(options, this.logger);
   }
 
@@ -205,7 +205,7 @@ export default class AutoRelease {
    *
    * @param options Options for the createLabels functionality
    */
-  public async createLabels(options: ICreateLabelsCommandOptions = {}) {
+  async createLabels(options: ICreateLabelsCommandOptions = {}) {
     if (!this.release) {
       throw this.createErrorMessage();
     }
@@ -229,7 +229,7 @@ export default class AutoRelease {
    *
    * @param options Options for the createLabels functionality
    */
-  public async label({ pr }: ILabelCommandOptions = {}) {
+  async label({ pr }: ILabelCommandOptions = {}) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -265,7 +265,7 @@ export default class AutoRelease {
    *
    * @param options Options for the pr status functionality
    */
-  public async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
+  async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -307,12 +307,7 @@ export default class AutoRelease {
    *
    * @param options Options for the pr check functionality
    */
-  public async prCheck({
-    dryRun,
-    pr,
-    url,
-    ...options
-  }: IPRCheckCommandOptions) {
+  async prCheck({ dryRun, pr, url, ...options }: IPRCheckCommandOptions) {
     if (!this.git || !this.release || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
@@ -395,7 +390,7 @@ export default class AutoRelease {
    *
    * @param options Options for the comment functionality
    */
-  public async comment({
+  async comment({
     message,
     pr,
     context = 'default',
@@ -420,7 +415,7 @@ export default class AutoRelease {
   /**
    * Calculate the version bump for the current state of the repository.
    */
-  public async version() {
+  async version() {
     this.logger.verbose.info("Using command: 'version'");
     const bump = await this.getVersion();
     console.log(bump);
@@ -429,7 +424,7 @@ export default class AutoRelease {
   /**
    * Calculate the the changelog and commit it.
    */
-  public async changelog(options?: IChangelogOptions) {
+  async changelog(options?: IChangelogOptions) {
     this.logger.verbose.info("Using command: 'changelog'");
     await this.makeChangelog(options);
   }
@@ -437,7 +432,7 @@ export default class AutoRelease {
   /**
    * Make a release to the git remote with the changes.
    */
-  public async runRelease(options: IReleaseCommandOptions) {
+  async runRelease(options: IReleaseCommandOptions) {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease(options);
   }
@@ -450,7 +445,7 @@ export default class AutoRelease {
    * 3. Publish code
    * 4. Create a release
    */
-  public async shipit(options: IShipItCommandOptions) {
+  async shipit(options: IShipItCommandOptions) {
     if (!this.git) {
       throw this.createErrorMessage();
     }

@@ -45,7 +45,7 @@ const makeCommentIdentifier = (context: string) =>
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
 export default class Git {
-  public readonly options: IGitOptions;
+  readonly options: IGitOptions;
 
   private readonly baseUrl: string;
   private readonly ghub: GHub;
@@ -66,7 +66,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async authenticate(authToken?: string): Promise<void> {
+  async authenticate(authToken?: string): Promise<void> {
     if (authToken === undefined && this.options.token === undefined) {
       throw new Error(
         `Authentication needs a GitHub token. Try setting up an access token ${settingsUrl(
@@ -90,7 +90,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getLatestReleaseInfo() {
+  async getLatestReleaseInfo() {
     const latestRelease = await this.ghub.repos.getLatestRelease({
       owner: this.options.owner,
       repo: this.options.repo
@@ -100,7 +100,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getLatestRelease(): Promise<string> {
+  async getLatestRelease(): Promise<string> {
     await this.authenticate();
 
     try {
@@ -125,19 +125,19 @@ export default class Git {
     }
   }
 
-  public async getCommitDate(sha: string): Promise<string> {
+  async getCommitDate(sha: string): Promise<string> {
     const date = await execPromise('git', ['show', '-s', '--format=%ci', sha]);
     const [day, time, timezone] = date.split(' ');
 
     return `${day}T${time}${timezone}`;
   }
 
-  public async getFirstCommit(): Promise<string> {
+  async getFirstCommit(): Promise<string> {
     const list = await execPromise('git', ['rev-list', 'HEAD']);
     return list.split('\n').pop() as string;
   }
 
-  public async getSha(): Promise<string> {
+  async getSha(): Promise<string> {
     const result = await execPromise('git', ['rev-parse', 'HEAD']);
 
     this.logger.verbose.info(`Got commit SHA from HEAD: ${result}`);
@@ -146,7 +146,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getLabels(prNumber: number) {
+  async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
     await this.authenticate();
@@ -173,7 +173,7 @@ export default class Git {
     }
   }
 
-  public async getProjectLabels() {
+  async getProjectLabels() {
     this.logger.verbose.info(
       `Getting labels for project: ${this.options.repo}`
     );
@@ -200,7 +200,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
+  async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),
       number: Number.MAX_SAFE_INTEGER,
@@ -217,7 +217,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getUserByEmail(email: string) {
+  async getUserByEmail(email: string) {
     await this.authenticate();
 
     const search = (await this.ghub.search.users({
@@ -230,7 +230,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getUserByUsername(username: string) {
+  async getUserByUsername(username: string) {
     await this.authenticate();
 
     return (await this.ghub.users.getByUsername({
@@ -239,7 +239,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getPullRequest(pr: number) {
+  async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
     await this.authenticate();
@@ -260,7 +260,7 @@ export default class Git {
     return result;
   }
 
-  public async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
+  async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
     await this.authenticate();
 
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
@@ -276,7 +276,7 @@ export default class Git {
     return result.data;
   }
 
-  public async createStatus(prInfo: IPRInfo) {
+  async createStatus(prInfo: IPRInfo) {
     await this.authenticate();
 
     const args = {
@@ -295,7 +295,7 @@ export default class Git {
     return result;
   }
 
-  public async createLabel(label: string, name: string) {
+  async createLabel(label: string, name: string) {
     await this.authenticate();
 
     this.logger.verbose.info(`Creating "${label}" label :\n${name}`);
@@ -315,7 +315,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getProject() {
+  async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
     await this.authenticate();
@@ -331,7 +331,7 @@ export default class Git {
     return result;
   }
 
-  public async getPullRequests(options?: Partial<GHub.PullsListParams>) {
+  async getPullRequests(options?: Partial<GHub.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
     await this.authenticate();
@@ -349,7 +349,7 @@ export default class Git {
   }
 
   @Memoize()
-  public async getCommitsForPR(pr: number) {
+  async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
     await this.authenticate();
@@ -366,7 +366,7 @@ export default class Git {
     return result;
   }
 
-  public async createComment(message: string, pr: number, context = 'default') {
+  async createComment(message: string, pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Using comment identifier:', commentIdentifier);
@@ -418,7 +418,7 @@ export default class Git {
     return result;
   }
 
-  public async publish(releaseNotes: string, tag: string) {
+  async publish(releaseNotes: string, tag: string) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
     await this.authenticate();
