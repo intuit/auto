@@ -1,4 +1,4 @@
-import AutoRelease from '../auto-release';
+import AutoRelease from '../auto';
 import { IPRCommandOptions } from '../cli/args';
 import { SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';

@@ -8,7 +8,7 @@
 
 ## Adding automated releases shouldn't be hard or require changing your workflow /.no-link .has-text-purple .has-text-centered\
 
-`auto-release` makes automating releases for your open source project as simple as labels to pull requests. Releasing often means being confident in your releases. /.has-text-centered\
+`auto` makes automating releases for your open source project as simple as labels to pull requests. Releasing often means being confident in your releases. /.has-text-centered\
 
 ||| row has-text-centered wide
 

@@ -6,8 +6,8 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
   owner: 'foobar',
-  repo: 'auto-release',
-  baseUrl: 'https://github.custom.com/foobar/auto-release',
+  repo: 'auto',
+  baseUrl: 'https://github.custom.com/foobar/auto',
   jira: 'https://jira.custom.com/browse',
   versionLabels: defaultLabels,
   changelogTitles: defaultChangelogTitles

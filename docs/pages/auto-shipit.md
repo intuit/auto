@@ -1,6 +1,6 @@
 # `auto shipit`
 
-Run the full auto-release project. Will detect if in a lerna project and publish accordingly.
+Run the full `auto` release pipeline. Will detect if in a lerna project and publish accordingly.
 
 ```sh
 auto shipit
@@ -24,7 +24,7 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
   --owner string        The owner of the GitHub repo. Defaults to reading from the package definition for the platform
   --github-api string   GitHub API to use
-  --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
+  --plugins string[]    Plugins to load auto with. (defaults to just npm)
 
 Examples
 

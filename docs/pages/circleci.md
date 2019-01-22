@@ -6,7 +6,7 @@ The following config declares the `release` job and uses it in the `build_and_re
 version: 2
 
 defaults: &defaults
-  working_directory: ~/auto-release-test
+  working_directory: ~/auto
   docker:
     - image: circleci/node:latest-browsers
 
@@ -17,7 +17,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/auto-release-test
+          at: ~/auto
       - run:
           name: Release
           command: npm run release

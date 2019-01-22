@@ -8,7 +8,7 @@ A plugin definition is:
 - a constructor where you can load plugin specific config
 
 ```ts
-import { AutoRelease, IPlugin } from 'auto-release-cli';
+import { AutoRelease, IPlugin } from 'auto';
 
 export default class TestPlugin implements IPlugin {
   private readonly config: any;
@@ -28,7 +28,7 @@ export default class TestPlugin implements IPlugin {
 In the constructor you have access to any plugin specific config provided in the `.autorc`. It might be useful to write a more type-safe interface for your config.
 
 ```ts
-import { AutoRelease, IPlugin } from 'auto-release-cli';
+import { AutoRelease, IPlugin } from 'auto';
 
 interface ITestPluginConfig {
   foo?: string;

@@ -1,6 +1,6 @@
 # Pull Request Interaction
 
-`auto-release` also includes a variety of PR interaction tools to update PRs from the CI. You can use these tools in various ways to make your PR validation process much more customized.
+`auto` also includes a variety of PR interaction tools to update PRs from the CI. You can use these tools in various ways to make your PR validation process much more customized.
 
 <br />
 

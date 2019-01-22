@@ -124,7 +124,7 @@ To include Jira story information in your changelogs you must include a URL to y
 
 ### githubApi
 
-If you are using enterprise github `auto-release` lets you configure the github API URL that it uses.
+If you are using enterprise github, `auto` lets you configure the github API URL that it uses.
 
 ```json
 {

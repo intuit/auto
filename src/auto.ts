@@ -141,10 +141,7 @@ export default class AutoRelease {
       rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
     }
 
-    this.logger.verbose.success(
-      'Loaded `auto-release` with config:',
-      rawConfig
-    );
+    this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
 
     this.semVerLabels = defaultLabels;
 

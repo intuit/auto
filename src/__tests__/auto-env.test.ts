@@ -1,4 +1,4 @@
-import AutoRelease from '../auto-release';
+import AutoRelease from '../auto';
 
 jest.mock('fs', () => ({
   readFileSync: () => 'FOO="test value"',

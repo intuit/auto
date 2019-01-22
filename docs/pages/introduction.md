@@ -1,6 +1,6 @@
 ![Markdown](../images/auto.gif)/.header-image\
 
-# :rocket: auto-release :rocket:/.has-text-centered\
+# :rocket: auto :rocket:/.has-text-centered\
 
 CI/CD helpers for github releases. Generate releases based on semantic version labels on pull requests.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import AutoRelease from './auto-release';
+import AutoRelease from './auto';
 
 import {
   ArgsType,
@@ -78,6 +78,6 @@ export default async function main(args: ArgsType) {
 
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
-export { default as AutoRelease } from './auto-release';
+export { default as AutoRelease } from './auto';
 export { default as SEMVER } from './semver';
 export { default as execPromise } from './utils/exec-promise';

@@ -17,7 +17,7 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
   --owner string        The owner of the GitHub repo. Defaults to reading from the package definition for the platform
   --github-api string   GitHub API to use
-  --plugins string[]    Plugins to load auto-release with. (defaults to just npm)
+  --plugins string[]    Plugins to load auto with. (defaults to just npm)
 
 Examples
 
@@ -28,4 +28,4 @@ Examples
 
 Running `auto label` without the PR number enables it to run in master after a PR has been merged. You can use these labels to automate more things in your merge build pipeline other than the release.
 
-`auto-release` the project uses this to only deploy the documentation when the last merged PR has a `documentation` label.
+`auto` the project uses this to only deploy the documentation when the last merged PR has a `documentation` label.
