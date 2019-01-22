@@ -225,8 +225,8 @@ export default class NPMPlugin implements IPlugin {
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.onCreateLogParse.tap(this.name, async logParser => {
-      logParser.hooks.renderChangelogLine.tapPromise(
+    auto.hooks.onCreateChangelog.tap(this.name, async changelog => {
+      changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async (commits, renderLine) => {
           if (isMonorepo()) {

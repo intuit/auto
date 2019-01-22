@@ -5,9 +5,10 @@ import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { SyncHook } from 'tapable';
+import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
 import GitHub, { IGitHubOptions, IPRInfo } from './git';
-import LogParse, { IExtendedCommit, normalizeCommits } from './log-parse';
+import { IExtendedCommit, normalizeCommits } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
@@ -94,7 +95,7 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 export interface IGitHubReleaseHooks {
-  onCreateLogParse: SyncHook<[LogParse]>;
+  onCreateChangelog: SyncHook<[Changelog]>;
 }
 
 /**
@@ -190,7 +191,7 @@ export default class GitHubRelease {
       });
 
     const project = await this.github.getProject();
-    const logParser = new LogParse(this.logger, {
+    const changelog = new Changelog(this.logger, {
       owner: this.github.options.owner,
       repo: this.github.options.repo,
       baseUrl: project.html_url,
@@ -201,10 +202,10 @@ export default class GitHubRelease {
         ...this.changelogTitles
       }
     });
-    this.hooks.onCreateLogParse.call(logParser);
-    logParser.loadDefaultHooks();
+    this.hooks.onCreateChangelog.call(changelog);
+    changelog.loadDefaultHooks();
 
-    return logParser.generateReleaseNotes(commits);
+    return changelog.generateReleaseNotes(commits);
   }
 
   /**
