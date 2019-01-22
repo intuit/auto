@@ -69,41 +69,6 @@ describe('github', () => {
     listLabelsForRepo.mockClear();
   });
 
-  describe('authenticate', () => {
-    test('should reject without token', async () => {
-      const gh = new Git({ owner: 'Adam Dierkens', repo: 'test' });
-      expect.assertions(1);
-
-      try {
-        await gh.authenticate();
-      } catch (error) {
-        expect(error.message.trim()).toBe(
-          'Authentication needs a GitHub token. Try setting up an access token https://github.com/settings/tokens/new'
-        );
-      }
-    });
-
-    test('should use token', async () => {
-      const gh = new Git({ owner: 'Adam Dierkens', repo: 'test' });
-
-      await gh.authenticate('MyToken');
-      expect(authenticate).toHaveBeenCalledWith({
-        type: 'token',
-        token: 'MyToken'
-      });
-    });
-
-    test('should use options token', async () => {
-      const gh = new Git(options);
-
-      await gh.authenticate();
-      expect(authenticate).toHaveBeenCalledWith({
-        type: 'token',
-        token: 'MyToken'
-      });
-    });
-  });
-
   describe('getLabels', async () => {
     test('successful', async () => {
       const gh = new Git(options);
