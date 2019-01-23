@@ -4,8 +4,9 @@
 
 Current official plugins:
 
-- npm (DEFAULT)
-- Chrome Web Store
+- npm - publish code to npm (DEFAULT)
+- chrome - publish code to Chrome Web Store
+- conventional-commits - parse conventional commit messages for version bumps
 
 ## Using Plugins
 
