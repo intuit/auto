@@ -1,3 +1,22 @@
+# v3.1.2 (Wed Jan 23 2019)
+
+#### 🐛  Bug Fix
+
+- Pin parse-commit-message to v4.0.0 [#245](https://github.com/intuit/auto/pull/245) ([@zephraph](https://github.com/zephraph))
+
+#### 🏠  Internal
+
+- update contributor count [#243](https://github.com/intuit/auto/pull/243) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix docs publishing [#242](https://github.com/intuit/auto/pull/242) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- test publishing docs [#241](https://github.com/intuit/auto/pull/241) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v3.1.1 (Tue Jan 22 2019)
 
 #### ⚠️  Pushed to master
