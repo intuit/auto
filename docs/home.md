@@ -2,7 +2,7 @@
 
 # auto release
 
-## CLI tools to help facilitate semantic versioning based on GitHub PR labels.
+## CLI tools to help facilitate semantic versioning based on GitHub PR labels
 
 :::
 
