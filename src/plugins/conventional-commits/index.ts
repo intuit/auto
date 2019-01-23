@@ -1,12 +1,12 @@
 import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
-import { AutoRelease, IPlugin } from '../../main';
+import { Auto, IPlugin } from '../../main';
 import { VersionLabel } from '../../release';
 
 export default class ConventionalCommitsPlugin implements IPlugin {
   name = 'Conventional Commits Parser';
 
-  apply(auto: AutoRelease) {
+  apply(auto: Auto) {
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.parseCommit.tap(this.name, commit => {
         try {
