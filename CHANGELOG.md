@@ -1,3 +1,15 @@
+# v3.1.0 (Tue Jan 22 2019)
+
+#### 🚀  Enhancement
+
+- Conventional Commit Plugin [#238](https://github.com/intuit/auto/pull/238) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v3.0.2 (Tue Jan 22 2019)
 
 #### 🐛  Bug Fix
