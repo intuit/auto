@@ -1,4 +1,4 @@
-import { applyPlugins, parse, plugins } from 'parse-commit-message';
+import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
 import { AutoRelease, IPlugin } from '../../main';
 import { VersionLabel } from '../../release';
@@ -11,8 +11,8 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       logParse.hooks.parseCommit.tap(this.name, commit => {
         try {
           const [conventionalCommit] = applyPlugins(
-            [plugins[1]],
-            parse([commit.subject])
+            mappers.increment,
+            parse(commit.subject)
           );
 
           if (conventionalCommit.header && conventionalCommit.increment) {

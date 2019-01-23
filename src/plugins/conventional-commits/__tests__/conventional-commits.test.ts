@@ -42,3 +42,22 @@ test('should add correct semver label to commit', async () => {
     labels: ['patch']
   });
 });
+
+test('should add major semver label to commit', async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    semVerLabels: defaultLabels,
+    logger: dummyLog()
+  } as Auto);
+
+  const logParseHooks = makeLogParseHooks();
+  autoHooks.onCreateLogParse.call({ hooks: logParseHooks } as LogParse);
+
+  const commit = makeCommitFromMsg('BREAKING: normal commit with no bump');
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toEqual({
+    ...commit,
+    labels: ['major']
+  });
+});
