@@ -1,3 +1,15 @@
+# v3.1.1 (Tue Jan 22 2019)
+
+#### ⚠️  Pushed to master
+
+- fix docs publishing  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 1
+
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v3.1.0 (Tue Jan 22 2019)
 
 #### 🚀  Enhancement
