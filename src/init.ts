@@ -1,12 +1,13 @@
 // tslint:disable no-unnecessary-type-annotation
 
+import dedent from 'dedent';
 import { prompt } from 'enquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
 import { IInitCommandOptions } from './cli/args';
-import { defaultChangelogTitles } from './release';
+import { defaultLabelDefinition, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);
@@ -62,103 +63,70 @@ async function getFlags() {
   ]);
 }
 
-async function getLabels() {
-  const useCustomLabels: { value: boolean } = await prompt({
-    type: 'confirm',
-    name: 'value',
-    message: 'Would you like to use custom labels for your pull requests?',
-    initial: 'no'
-  });
+async function getCustomLabels(onlyLabels = false) {
+  const useCustomChangelogTitles: { value: boolean } = onlyLabels
+    ? { value: onlyLabels }
+    : await prompt({
+        type: 'confirm',
+        name: 'value',
+        message: 'Would you like to use custom labels?',
+        initial: 'no'
+      });
 
-  let labels = {};
-
-  if (useCustomLabels.value) {
-    const response = await prompt({
-      type: 'snippet',
-      name: 'value',
-      message: 'Fill out the custom PR labels',
-      // @ts-ignore
-      template: `
-major: #{major}
-minor: #{minor}
-patch: #{patch}
-skip-release: #{skip-release}
-release: #{release}
-prerelease: #{prerelease}
-internal: #{internal}
-      `
-    });
-
-    labels = Object.entries(response.value.values as {
-      [key: string]: string;
-    }).reduce(
-      (all, [key, label]) => {
-        if (!label) {
-          return all;
-        }
-
-        return {
-          ...all,
-          [key]: label
-        };
-      },
-      {} as { [key: string]: string }
-    );
-  }
-
-  return labels;
-}
-
-async function getChangelogTitles() {
-  const useCustomChangelogTitles: { value: boolean } = await prompt({
-    type: 'confirm',
-    name: 'value',
-    message: 'Would you like to use custom changelog titles?',
-    initial: 'no'
-  });
-
-  let changelogTitles = {};
+  let customLabels = {};
 
   if (useCustomChangelogTitles.value) {
-    const response = await prompt({
-      type: 'snippet',
-      name: 'value',
-      message:
-        "Fill out the custom changelog titles (you can add as many as you want when you're done)",
-      initial: defaultChangelogTitles,
-      // @ts-ignore
-      template: `
-major: #{major}
-minor: #{minor}
-patch: #{patch}
-internal: #{internal}
-documentation: #{documentation}
-      `
-    });
+    const labels = Object.entries(defaultLabelDefinition);
+    let i = 0;
 
-    const titles = Object.values(defaultChangelogTitles);
+    while (labels[i]) {
+      const [labelName, labelDef] = labels[i++];
+      const response = await prompt({
+        type: 'snippet',
+        name: 'value',
+        message: `Customize the ${labelName} label:`,
+        initial: labelDef,
+        // @ts-ignore
+        template: dedent`
+          label:  #{name}
+          title:  #{title}
+          desc:   #{description}
+        `
+      });
 
-    changelogTitles = Object.entries(response.value.values as {
-      [key: string]: string;
-    }).reduce(
-      (all, [key, title]) => {
-        if (titles.includes(title)) {
-          return all;
-        }
+      const { name, title, description } = response.value.values;
+      const newLabel: Partial<ILabelDefinition> = {};
 
-        return {
-          ...all,
-          [key]: title
+      if (name !== labelDef.name) {
+        newLabel.name = name;
+      }
+
+      if (title !== labelDef.title) {
+        newLabel.title = title;
+      }
+
+      if (description !== labelDef.description) {
+        newLabel.description = description;
+      }
+
+      if (Object.keys(newLabel).length === 1 && newLabel.name) {
+        customLabels = {
+          ...customLabels,
+          [labelName]: name
         };
-      },
-      {} as { [key: string]: string }
-    );
+      } else if (Object.keys(newLabel).length !== 0) {
+        customLabels = {
+          ...customLabels,
+          [labelName]: newLabel
+        };
+      }
+    }
   }
 
   let getAnotherTitle: { value?: boolean } = await prompt({
     type: 'confirm',
     name: 'value',
-    message: 'Would you like to add additional changelog titles?',
+    message: 'Would you like to add additional labels?',
     initial: 'no'
   });
 
@@ -166,23 +134,35 @@ documentation: #{documentation}
     const response = await prompt({
       type: 'snippet',
       name: 'value',
-      message: 'Add another changelog title:',
-      initial: defaultChangelogTitles,
+      message: 'Add another label:',
       // @ts-ignore
-      template: `
-#{githubLabel}: #{changelogTitle}
-      `
+      template: dedent`
+        label:  #{name}
+        title:  #{title}
+        desc:   #{description}
+      `,
+      validate: (state: any) => {
+        if (!state.values.name) {
+          return 'Label is required for new label';
+        }
+
+        if (!state.values.title) {
+          return 'Title is required for new label';
+        }
+
+        if (!state.values.description) {
+          return 'Description is required for new label';
+        }
+
+        return true;
+      }
     });
 
-    const { githubLabel, changelogTitle } = response.value.values;
+    const { name, title, description } = response.value.values;
 
-    if (githubLabel === undefined || changelogTitle === undefined) {
-      break;
-    }
-
-    changelogTitles = {
-      ...changelogTitles,
-      [githubLabel]: changelogTitle
+    customLabels = {
+      ...customLabels,
+      [name]: { name, title, description }
     };
 
     getAnotherTitle = await prompt({
@@ -193,7 +173,7 @@ documentation: #{documentation}
     });
   }
 
-  return changelogTitles;
+  return customLabels;
 }
 
 export default async function init(
@@ -201,13 +181,10 @@ export default async function init(
   logger: ILogger
 ) {
   const flags = onlyLabels ? {} : await getFlags();
-  const labels = await getLabels();
-  const changelogTitles = await getChangelogTitles();
-
+  const labels = await getCustomLabels(onlyLabels);
   const autoRc = Object.entries({
     ...flags,
-    labels,
-    changelogTitles
+    labels
   } as { [key: string]: any }).reduce(
     (all, [key, value]) => {
       if (

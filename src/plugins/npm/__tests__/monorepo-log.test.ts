@@ -3,7 +3,7 @@ import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
 import Auto from '../../../auto';
 import Changelog from '../../../changelog';
 import LogParse from '../../../log-parse';
-import { defaultChangelogTitles, defaultLabels } from '../../../release';
+import { defaultLabelDefinition } from '../../../release';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks } from '../../../utils/make-hooks';
 
@@ -59,8 +59,7 @@ test('should create sections for packages', async () => {
     repo: 'test',
     jira: 'jira.com',
     baseUrl: 'https://github.custom.com/',
-    changelogTitles: defaultChangelogTitles,
-    versionLabels: defaultLabels
+    labels: defaultLabelDefinition
   });
 
   plugin.apply({ hooks, logger: dummyLog() } as Auto);

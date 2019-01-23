@@ -24,8 +24,10 @@ import init from './init';
 import LogParse from './log-parse';
 import { execPromise } from './main';
 import Release, {
-  defaultChangelogTitles,
-  defaultLabels,
+  defaultLabelDefinition,
+  getVersionMap,
+  ILabelDefinition,
+  ILabelDefinitionMap,
   IReleaseOptions,
   VersionLabel
 } from './release';
@@ -71,6 +73,7 @@ export default class Auto {
 
   release?: Release;
   git?: Git;
+  labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
 
   constructor(args: ArgsType) {
@@ -143,14 +146,29 @@ export default class Auto {
 
     this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
 
-    this.semVerLabels = defaultLabels;
+    this.labels = defaultLabelDefinition;
 
     if (rawConfig.labels) {
-      this.semVerLabels = new Map<VersionLabel, string>([
-        ...defaultLabels,
-        ...(Object.entries(rawConfig.labels) as [VersionLabel, string][])
-      ]);
+      const definitions = Object.entries(rawConfig.labels).map(
+        ([label, labelDef]: [string, Partial<ILabelDefinition> | string]) => {
+          const definition =
+            typeof labelDef === 'string' ? { name: labelDef } : labelDef;
+
+          if (!definition.name) {
+            definition.name = label;
+          }
+
+          return {
+            [label]: definition
+          };
+        }
+      );
+      const labels = Object.assign({}, ...definitions);
+
+      this.labels = merge(this.labels, labels);
     }
+
+    this.semVerLabels = getVersionMap(this.labels);
 
     this.logger.verbose.success(
       'Using SEMVER labels:',
@@ -167,7 +185,7 @@ export default class Auto {
     const config = {
       ...rawConfig,
       ...this.args,
-      versionLabels: this.semVerLabels,
+      labels: this.labels,
       skipReleaseLabels
     };
 
@@ -206,22 +224,11 @@ export default class Auto {
    * @param options Options for the createLabels functionality
    */
   async createLabels(options: ICreateLabelsCommandOptions = {}) {
-    if (!this.release) {
+    if (!this.release || !this.labels) {
       throw this.createErrorMessage();
     }
 
-    await this.release.addLabelsToProject(
-      new Map([
-        ...this.semVerLabels,
-        ...new Map(
-          [
-            ...Object.keys(defaultChangelogTitles),
-            ...Object.keys(this.release.options.changelogTitles || {})
-          ].map((label): [string, string] => [label, label])
-        )
-      ]),
-      options
-    );
+    await this.release.addLabelsToProject(this.labels, options);
   }
 
   /**

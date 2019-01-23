@@ -3,7 +3,7 @@ import { URL } from 'url';
 import join from 'url-join';
 
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
-import { VersionLabel } from './release';
+import { ILabelDefinitionMap } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 
@@ -12,8 +12,7 @@ export interface IGenerateReleaseNotesOptions {
   repo: string;
   baseUrl: string;
   jira?: string;
-  changelogTitles: { [label: string]: string };
-  versionLabels: Map<VersionLabel, string>;
+  labels: ILabelDefinitionMap;
 }
 
 export interface IChangelogHooks {
@@ -47,7 +46,12 @@ export default class Changelog {
     this.logger = logger;
     this.options = options;
     this.hooks = makeChangelogHooks();
-    this.options.changelogTitles.pushToMaster = '⚠️  Pushed to master';
+    this.options.labels.pushToMaster = {
+      name: 'pushToMaster',
+      title: '⚠️  Pushed to master',
+      description: 'N/A',
+      ...(this.options.labels.pushToMaster || {})
+    };
   }
 
   loadDefaultHooks() {
@@ -120,21 +124,25 @@ export default class Changelog {
       .filter(commit => commit.labels.length === 0)
       .map(commit => commit.labels.push('patch'));
 
+    const sections = Object.values(this.options.labels).filter(
+      label => label.title
+    );
+
     return Object.assign(
       {},
-      ...Object.keys(this.options.changelogTitles).map(label => {
-        const matchedCommits = filterLabel(
-          currentCommits,
-          this.options.versionLabels.get(label as VersionLabel) || label
-        );
+      ...sections.map(label => {
+        const matchedCommits = filterLabel(currentCommits, label.name);
+
         if (matchedCommits.length === 0) {
           return {};
         }
+
         currentCommits = currentCommits.filter(
           commit => !matchedCommits.includes(commit)
         );
+
         return {
-          [label]: matchedCommits
+          [label.name]: matchedCommits
         };
       })
     );
@@ -233,11 +241,22 @@ export default class Changelog {
     },
     sections: string[]
   ) {
+    const changelogTitles = Object.entries(this.options.labels).reduce(
+      (titles, [label, labelDef]) => {
+        if (labelDef.title) {
+          titles[label] = labelDef.title;
+        }
+
+        return titles;
+      },
+      {} as { [label: string]: string }
+    );
+
     await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {
         const title = await this.hooks.renderChangelogTitle.promise(
           label,
-          this.options.changelogTitles
+          changelogTitles
         );
 
         const lines = await this.hooks.renderChangelogLine.promise(

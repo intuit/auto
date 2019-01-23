@@ -128,6 +128,69 @@ describe('Auto', () => {
     expect(auto.release!.options.skipReleaseLabels).toEqual(['NOPE']);
   });
 
+  test('should be able to add label as string', async () => {
+    search.mockReturnValueOnce({
+      config: {
+        ...defaults,
+        labels: {
+          minor: 'feature'
+        }
+      }
+    });
+    const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    expect(auto.release!.options.labels.minor).toEqual({
+      description: 'Increment the minor version when merged',
+      name: 'feature',
+      title: '🚀  Enhancement'
+    });
+  });
+
+  test('should be able to omit properties from label definition', async () => {
+    search.mockReturnValueOnce({
+      config: {
+        ...defaults,
+        labels: {
+          minor: {
+            description: 'This is a test'
+          }
+        }
+      }
+    });
+    const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    expect(auto.release!.options.labels.minor).toEqual({
+      description: 'This is a test',
+      name: 'minor',
+      title: '🚀  Enhancement'
+    });
+  });
+
+  test('arbitrary labels should be able to omit name', async () => {
+    search.mockReturnValueOnce({
+      config: {
+        ...defaults,
+        labels: {
+          fooBar: {
+            description: 'This is a test'
+          }
+        }
+      }
+    });
+    const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    expect(auto.release!.options.labels.fooBar).toEqual({
+      description: 'This is a test',
+      name: 'fooBar'
+    });
+  });
+
   describe('createLabels', () => {
     test('should throw when not initialized', async () => {
       search.mockReturnValueOnce({
@@ -586,7 +649,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
+          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });
@@ -605,7 +668,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [logParse.options.versionLabels.get(SEMVER.major)!];
+          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });

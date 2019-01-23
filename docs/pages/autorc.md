@@ -31,9 +31,9 @@ Auto can load `extends` configs in the following ways:
 - from a scoped package `@YOUR_SCOPE/auto-config`
 - from a package `auto-config-YOUR_NAME`
 
-### Versioning Labels
+### Labels
 
-To override the label text used for versioning define new labels in the `.autorc`.
+To override any of the default labels use the `labels` seciton in the `.autorc`.
 
 ```json
 {
@@ -48,7 +48,71 @@ To override the label text used for versioning define new labels in the `.autorc
 }
 ```
 
-### Multiple No Version
+#### Label Customization
+
+You can customize everything about a label
+
+- `name` - The label text used for the label. If omitted defaults to the `key` value
+- `title` - The title to use in the changelog
+- `description` - The description to use when creating the label
+- `color` - The color of the label. Can be specified as a string in any of [these](https://github.com/bgrins/TinyColor#accepted-string-input) ways. If not specified the color is random
+
+```json
+{
+  "labels": {
+    "major": {
+      "name": "Version: Major",
+      "title": "The API has changed:",
+      "description": "Add this label to a PR to create a major release",
+      "color": "blue"
+    },
+    ...
+  }
+}
+```
+
+#### Changelog Titles
+
+By default auto will create sections in the changelog for the following labels.
+
+- major
+- minor
+- patch
+- internal
+- documentation
+
+To customize the title for the section in the changelog you can
+
+```json
+{
+  "labels": {
+    "documentation": {
+      "title": "Docz"
+    },
+    ...
+  }
+}
+```
+
+If you want more sections in your changelog to further detail the change-set you can
+use the `labels` section to add more. Any label in the label section with a title
+will become a special section in your changelog.
+
+The following adds a `typescript` label to the project that we can use to denote changes
+related to a TypeScript re-write.
+
+```json
+{
+  "labels": {
+    "typescript": {
+      "title": "TypeScript Rewrite"
+    },
+    ...
+  }
+}
+```
+
+#### Multiple `skip-release`
 
 You can configure multiple labels to skip releases.
 
@@ -58,30 +122,19 @@ You can configure multiple labels to skip releases.
 }
 ```
 
-### Changelog Titles
+#### Arbitrary Labels
 
-To configure the titles used in the changelog add `changelogTitles` to the `.autorc`.
-
-```json
-{
-  "changelogTitles": {
-    "major": "Breaking",
-    "minor": "Feature",
-    "patch": "Fix",
-    "internal": "Internal",
-    "documentation": "Docz"
-  }
-}
-```
-
-If you want more sections in your changelog to further detail the change set you can use the `changelogTitles` to add more.
+If you want to `auto create-labels` to add other labels to your project (ones that aren't used for
+versioning or the changelog), you can use the `labels` section. Just omit the `title` property.
 
 ```json
 {
-  "changelogTitles": {
-    "typescript": "Typescript Rewrite",
-    "front-end": "Front End Updates",
-    "back-end": "Back End Updates"
+  "labels": {
+    "good first issue": {
+      "description": "This is an issue that first time contributors can tackle easily",
+      "color": "purple"
+    },
+    ...
   }
 }
 ```
