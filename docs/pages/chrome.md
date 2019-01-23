@@ -1,6 +1,6 @@
 # Chrome Web Store
 
-This plugin allows you to automate the publishing of chrome extensions.
+This plugin allows you to automate the publishing of chrome extensions
 
 ::: message is-success
 Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)

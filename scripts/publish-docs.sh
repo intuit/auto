@@ -2,10 +2,11 @@ chmod +x ./dist/bin/auto.js
 
 export PATH=$(npm bin):$PATH
 
-SHOULD_PUBLISH=`git diff --name-only master | grep -F 'docs/'`
+SHOULD_PUBLISH=`git diff \`git tag --sort version:refname | tail -n 1\` HEAD --name-only | grep -F 'docs/'`
 
-echo $SHOULD_PUBLISH
-
-# if [ ! -z "$SHOULD_PUBLISH" ]; then
-ignite --publish
-# fi
+if [ ! -z "$SHOULD_PUBLISH" ]; then
+  echo $SHOULD_PUBLISH
+  ignite --publish
+else
+  echo No documentation files changed since last tagged release.
+fi
