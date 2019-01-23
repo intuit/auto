@@ -6,6 +6,6 @@ SHOULD_PUBLISH=`git diff --name-only master | grep -F 'docs/'`
 
 echo $SHOULD_PUBLISH
 
-if [ ! -z "$SHOULD_PUBLISH" ]; then
-  ignite --publish
-fi
+# if [ ! -z "$SHOULD_PUBLISH" ]; then
+ignite --publish
+# fi
