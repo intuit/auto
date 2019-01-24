@@ -260,7 +260,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.version.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       SEMVER.patch,
@@ -284,7 +284,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.version.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
       'version',
@@ -292,9 +292,18 @@ describe('publish', () => {
       '--force-publish',
       '--yes',
       '-m',
-      "'%v [skip ci]'"
+      "'Bump version to: %v [skip ci]'"
     ]);
+  });
+  test('monorepo - should publish', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
 
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+
+    existsSync.mockReturnValueOnce(true);
+
+    await hooks.publish.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
       'publish',
@@ -318,7 +327,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.version.promise(SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       '1.0.1',
@@ -343,7 +352,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.version.promise(SEMVER.patch);
     expect(exec).toHaveBeenNthCalledWith(2, 'npx', [
       'lerna',
       'version',
@@ -351,13 +360,7 @@ describe('publish', () => {
       '--force-publish',
       '--yes',
       '-m',
-      "'%v [skip ci]'"
-    ]);
-    expect(exec).toHaveBeenNthCalledWith(3, 'npx', [
-      'lerna',
-      'publish',
-      '--yes',
-      'from-git'
+      "'Bump version to: %v [skip ci]'"
     ]);
   });
 

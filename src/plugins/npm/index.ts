@@ -136,6 +136,17 @@ async function partitionPackages(
   return packageCommits;
 }
 
+async function bumpLatest(
+  { version: localVersion, name }: IPackageJSON,
+  version: SEMVER
+) {
+  const latestVersion = localVersion
+    ? await greaterRelease(s => s, name, localVersion)
+    : undefined;
+
+  return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
+}
+
 async function loadPackageJson(): Promise<IPackageJSON> {
   return JSON.parse(await readFile('package.json', 'utf-8'));
 }
@@ -264,15 +275,9 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
+    auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
-        const { name, version: localVersion } = getMonorepoPackage();
-        const latestVersion = localVersion
-          ? await greaterRelease(s => s, name, localVersion)
-          : undefined;
-        const latestBump = latestVersion
-          ? inc(latestVersion, version as ReleaseType)
-          : version;
+        const latestBump = await bumpLatest(getMonorepoPackage(), version);
 
         await execPromise('npx', [
           'lerna',
@@ -281,25 +286,10 @@ export default class NPMPlugin implements IPlugin {
           '--force-publish',
           '--yes',
           '-m',
-          "'%v [skip ci]'"
+          "'Bump version to: %v [skip ci]'"
         ]);
-
-        await setTokenOnCI();
-
-        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
       } else {
-        const {
-          private: isPrivate,
-          name,
-          version: localVersion
-        } = await loadPackageJson();
-        const isScopedPackage = name.match(/@\S+\/\S+/);
-        const latestVersion = localVersion
-          ? await greaterRelease(s => s, name, localVersion)
-          : undefined;
-        const latestBump = latestVersion
-          ? inc(latestVersion, version as ReleaseType)
-          : version;
+        const latestBump = await bumpLatest(await loadPackageJson(), version);
 
         await execPromise('npm', [
           'version',
@@ -307,8 +297,17 @@ export default class NPMPlugin implements IPlugin {
           '-m',
           '"Bump version to: %s [skip ci]"'
         ]);
+      }
+    });
 
-        await setTokenOnCI();
+    auto.hooks.publish.tapPromise(this.name, async () => {
+      await setTokenOnCI();
+
+      if (isMonorepo()) {
+        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
+      } else {
+        const { private: isPrivate, name } = await loadPackageJson();
+        const isScopedPackage = name.match(/@\S+\/\S+/);
 
         await execPromise(
           'npm',

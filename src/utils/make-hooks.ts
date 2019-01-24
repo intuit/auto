@@ -1,6 +1,6 @@
 import {
+  AsyncParallelHook,
   AsyncSeriesBailHook,
-  AsyncSeriesHook,
   AsyncSeriesWaterfallHook,
   SyncHook
 } from 'tapable';
@@ -18,7 +18,8 @@ export const makeHooks = (): IAutoHooks => ({
   getAuthor: new AsyncSeriesBailHook([]),
   getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
   getRepository: new AsyncSeriesBailHook([]),
-  publish: new AsyncSeriesHook(['version'])
+  version: new AsyncParallelHook(['version']),
+  publish: new AsyncParallelHook(['publish'])
 });
 
 export const makeReleaseHooks = (): IReleaseHooks => ({
