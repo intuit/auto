@@ -257,13 +257,14 @@ export default class Git {
   async createLabel(name: string, label: ILabelDefinition) {
     this.logger.verbose.info(`Creating "${name}" label :\n${label.name}`);
 
+    const color = label.color
+      ? tinyColor(label.color).toString('hex6')
+      : tinyColor.random().toString('hex6');
     const result = await this.ghub.issues.createLabel({
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: label.color
-        ? tinyColor(label.color).toString('hex6')
-        : tinyColor.random().toString('hex6'),
+      color: color.replace('#', ''),
       description: label.description
     });
 
