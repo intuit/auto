@@ -153,6 +153,23 @@ export default class Release {
    * @param to sha or tag to end changelog at (defaults to HEAD)
    */
   async generateReleaseNotes(from: string, to = 'HEAD'): Promise<string> {
+    const commits = await this.getCommitsInRelease(from, to);
+    const project = await this.git.getProject();
+    const changelog = new Changelog(this.logger, {
+      owner: this.git.options.owner,
+      repo: this.git.options.repo,
+      baseUrl: project.html_url,
+      jira: this.options.jira,
+      labels: this.options.labels
+    });
+
+    this.hooks.onCreateChangelog.call(changelog);
+    changelog.loadDefaultHooks();
+
+    return changelog.generateReleaseNotes(commits);
+  }
+
+  async getCommitsInRelease(from: string, to = 'HEAD') {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
       allCommits
@@ -168,7 +185,7 @@ export default class Release {
         [] as string[]
       );
 
-    const commits = allCommits
+    return allCommits
       .filter(
         commit =>
           !allPrCommitHashes.includes(commit.hash) &&
@@ -178,23 +195,9 @@ export default class Release {
         if (commit.pullRequest) {
           return commit;
         }
-
         commit.labels = ['pushToMaster', ...commit.labels];
         return commit;
       });
-
-    const project = await this.git.getProject();
-    const changelog = new Changelog(this.logger, {
-      owner: this.git.options.owner,
-      repo: this.git.options.repo,
-      baseUrl: project.html_url,
-      jira: this.options.jira,
-      labels: this.options.labels
-    });
-    this.hooks.onCreateChangelog.call(changelog);
-    changelog.loadDefaultHooks();
-
-    return changelog.generateReleaseNotes(commits);
   }
 
   /**
