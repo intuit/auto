@@ -87,11 +87,17 @@ async function getCustomLabels(onlyLabels = false) {
         message: `Customize the ${labelName} label:`,
         initial: labelDef,
         // @ts-ignore
-        template: dedent`
-          label:  #{name}
-          title:  #{title}
-          desc:   #{description}
-        `
+        template:
+          labelName === 'release' || labelName === 'skip-release'
+            ? dedent`
+                label:  #{name}
+                desc:   #{description}
+              `
+            : dedent`
+                label:  #{name}
+                title:  #{title}
+                desc:   #{description}
+              `
       });
 
       const { name, title, description } = response.value.values;
