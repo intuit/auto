@@ -169,6 +169,10 @@ auto.hooks.version.tapPromise('NPM', async (version: SEMVER) => {
 });
 ```
 
+#### postVersion
+
+Ran after the package has been versioned.
+
 #### publish
 
 Publish the package to some package distributor. You must push the tags to github!
@@ -191,6 +195,10 @@ auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
   ]);
 });
 ```
+
+#### postPublish
+
+Ran after the package has been published.
 
 ---
 
