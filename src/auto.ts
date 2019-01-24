@@ -3,7 +3,7 @@ import merge from 'deepmerge';
 import env from 'dotenv';
 import isCI from 'is-ci';
 import { gt, inc, ReleaseType } from 'semver';
-import { AsyncSeriesBailHook, AsyncSeriesHook, SyncHook } from 'tapable';
+import { AsyncParallelHook, AsyncSeriesBailHook, SyncHook } from 'tapable';
 
 import {
   ArgsType,
@@ -60,10 +60,11 @@ export interface IAutoHooks {
     string
   >;
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
-  publish: AsyncSeriesHook<[SEMVER]>;
   onCreateRelease: SyncHook<[Release]>;
   onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
+  version: AsyncParallelHook<[SEMVER]>;
+  publish: AsyncParallelHook<[SEMVER]>;
 }
 
 export default class Auto {
@@ -469,6 +470,7 @@ export default class Auto {
     await this.makeChangelog(options);
 
     if (!options.dryRun) {
+      await this.hooks.version.promise(version);
       await this.hooks.publish.promise(version);
     }
 

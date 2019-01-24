@@ -50,7 +50,7 @@ Plugins work by hooking into various actions that `auto` has to do in order to f
 
 ---
 
-#### Main Hooks
+### Main Hooks
 
 #### beforeRun
 
@@ -122,29 +122,6 @@ auto.hooks.getRepository.tapPromise('NPM', async () => {
 });
 ```
 
-#### publish
-
-Publish the package to some package distributor. You must push the tags to github!
-
-```ts
-auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
-  await execPromise('npm', [
-    'version',
-    version,
-    '-m',
-    'Bump version to: %s [skip ci]'
-  ]);
-  await execPromise('npm', ['publish']);
-  await execPromise('git', [
-    'push',
-    '--follow-tags',
-    '--set-upstream',
-    'origin',
-    '$branch'
-  ]);
-});
-```
-
 #### onCreateRelease
 
 Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work.
@@ -176,6 +153,44 @@ This is where you hook into the changelog's hooks. See usage [below](#changelog-
 #### onCreateLogParse
 
 This is where you hook into the LogParse's hooks. See usage [below](#logparse-hooks). This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks`
+
+#### version
+
+Version the package. This is a good opportunity to `git tag` the release also. Here `npm` does it for us.
+
+```ts
+auto.hooks.version.tapPromise('NPM', async (version: SEMVER) => {
+  await execPromise('npm', [
+    'version',
+    version,
+    '-m',
+    'Bump version to: %s [skip ci]'
+  ]);
+});
+```
+
+#### publish
+
+Publish the package to some package distributor. You must push the tags to github!
+
+```ts
+auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
+  await execPromise('npm', [
+    'version',
+    version,
+    '-m',
+    'Bump version to: %s [skip ci]'
+  ]);
+  await execPromise('npm', ['publish']);
+  await execPromise('git', [
+    'push',
+    '--follow-tags',
+    '--set-upstream',
+    'origin',
+    '$branch'
+  ]);
+});
+```
 
 ---
 

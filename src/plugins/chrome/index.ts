@@ -15,6 +15,10 @@ interface IChromeWebStoreConfig {
   build: string;
 }
 
+async function getManifest(path: string) {
+  return JSON.parse(await readFile(path, 'utf-8'));
+}
+
 export default class ChromeWebStorePlugin implements IPlugin {
   readonly name = 'Chrome Web Store';
 
@@ -100,7 +104,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         `${this.name}: Getting author information from package.json`
       );
 
-      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
+      const manifest = await getManifest(this.manifest);
 
       if (manifest.author) {
         const { author } = manifest;
@@ -122,7 +126,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
-      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
+      const manifest = await getManifest(this.manifest);
       const version = prefixRelease(manifest.version);
 
       auto.logger.verbose.info(
@@ -141,9 +145,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.publish.tapPromise(this.name, async (version: SEMVER) => {
+    auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
       // increment version
-      const manifest = JSON.parse(await readFile(this.manifest, 'utf-8'));
+      const manifest = await getManifest(this.manifest);
       manifest.version = inc(manifest.version, version as ReleaseType);
       await writeFile(this.manifest, JSON.stringify(manifest, undefined, 2));
 
@@ -156,6 +160,10 @@ export default class ChromeWebStorePlugin implements IPlugin {
         '--no-verify'
       ]);
 
+      await execPromise('git', ['tag', manifest.version]);
+    });
+
+    auto.hooks.publish.tapPromise(this.name, async () => {
       // publish extension
       await execPromise('webstore', [
         'upload',
@@ -167,7 +175,6 @@ export default class ChromeWebStorePlugin implements IPlugin {
       ]);
 
       // push to github
-      await execPromise('git', ['tag', manifest.version]);
       await execPromise('git', [
         'push',
         '--follow-tags',
