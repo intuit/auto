@@ -19,9 +19,9 @@ export const makeHooks = (): IAutoHooks => ({
   getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
   getRepository: new AsyncSeriesBailHook([]),
   version: new AsyncParallelHook(['version']),
-  postVersion: new AsyncParallelHook([]),
+  afterVersion: new AsyncParallelHook([]),
   publish: new AsyncParallelHook(['version']),
-  postPublish: new AsyncParallelHook([])
+  afterPublish: new AsyncParallelHook([])
 });
 
 export const makeReleaseHooks = (): IReleaseHooks => ({

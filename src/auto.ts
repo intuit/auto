@@ -64,9 +64,9 @@ export interface IAutoHooks {
   onCreateLogParse: SyncHook<[LogParse]>;
   onCreateChangelog: SyncHook<[Changelog]>;
   version: AsyncParallelHook<[SEMVER]>;
-  postVersion: AsyncParallelHook<[]>;
+  afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
-  postPublish: AsyncParallelHook<[]>;
+  afterPublish: AsyncParallelHook<[]>;
 }
 
 export default class Auto {
@@ -473,9 +473,9 @@ export default class Auto {
 
     if (!options.dryRun) {
       await this.hooks.version.promise(version);
-      await this.hooks.postVersion.promise();
+      await this.hooks.afterVersion.promise();
       await this.hooks.publish.promise(version);
-      await this.hooks.postPublish.promise();
+      await this.hooks.afterPublish.promise();
     }
 
     await this.makeRelease(options);
