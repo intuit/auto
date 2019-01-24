@@ -1,3 +1,20 @@
+# v4.0.0 (Thu Jan 24 2019)
+
+#### 💥  Breaking Change
+
+- Split up `publish` hook into `version` and `publish` [#247](https://github.com/intuit/auto/pull/247) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Label Refactor: custom colors, descriptions, arbitrary labels, deprecate changelogTitles [#246](https://github.com/intuit/auto/pull/246) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- add afterVersion and afterPublish hooks [#248](https://github.com/intuit/auto/pull/248) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v3.1.2 (Wed Jan 23 2019)
 
 #### 🐛  Bug Fix
