@@ -4,15 +4,45 @@ exports[`Auto createLabels should create the labels 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      Map {
-        "major" => "major",
-        "minor" => "minor",
-        "patch" => "patch",
-        "skip-release" => "skip-release",
-        "release" => "release",
-        "prerelease" => "prerelease",
-        "internal" => "internal",
-        "documentation" => "documentation",
+      Object {
+        "documentation": Object {
+          "description": "Changes only affect the documentation",
+          "name": "documentation",
+          "title": "📝  Documentation",
+        },
+        "internal": Object {
+          "description": "Changes only affect the internal API",
+          "name": "internal",
+          "title": "🏠  Internal",
+        },
+        "major": Object {
+          "description": "Increment the major version when merged",
+          "name": "Version: Major",
+          "title": "💥  Breaking Change",
+        },
+        "minor": Object {
+          "description": "Increment the minor version when merged",
+          "name": "Version: Minor",
+          "title": "🚀  Enhancement",
+        },
+        "patch": Object {
+          "description": "Increment the patch version when merged",
+          "name": "Version: Patch",
+          "title": "🐛  Bug Fix",
+        },
+        "prerelease": Object {
+          "description": "Create a pre-release version when merged",
+          "name": "prerelease",
+          "title": "🚧 Prerelease",
+        },
+        "release": Object {
+          "description": "Create a release when this pr is merged",
+          "name": "release",
+        },
+        "skip-release": Object {
+          "description": "Preserve the current version when merged",
+          "name": "skip-release",
+        },
       },
       Object {},
     ],
@@ -30,6 +60,46 @@ exports[`Auto should extend config 1`] = `
 Object {
   "command": "init",
   "extends": "@artsy",
+  "labels": Object {
+    "documentation": Object {
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "title": "📝  Documentation",
+    },
+    "internal": Object {
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "title": "🏠  Internal",
+    },
+    "major": Object {
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "title": "💥  Breaking Change",
+    },
+    "minor": Object {
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "title": "🚀  Enhancement",
+    },
+    "patch": Object {
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "title": "🐛  Bug Fix",
+    },
+    "prerelease": Object {
+      "description": "Create a pre-release version when merged",
+      "name": "prerelease",
+      "title": "🚧 Prerelease",
+    },
+    "release": Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+    },
+    "skip-release": Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+    },
+  },
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
   "repo": "bar",
@@ -37,13 +107,5 @@ Object {
     "skip-release",
   ],
   "token": "XXXX",
-  "versionLabels": Map {
-    "major" => "major",
-    "minor" => "minor",
-    "patch" => "patch",
-    "skip-release" => "skip-release",
-    "release" => "release",
-    "prerelease" => "prerelease",
-  },
 }
 `;

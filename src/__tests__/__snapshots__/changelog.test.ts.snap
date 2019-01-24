@@ -19,6 +19,20 @@ exports[`Hooks title 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should be able to customize "Push To Master" title 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Custom Title
+
+- I was a push to master  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] = `
 "#### 🐛  Bug Fix
 

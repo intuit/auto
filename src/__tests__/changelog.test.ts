@@ -1,6 +1,6 @@
 import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
-import { defaultChangelogTitles, defaultLabels } from '../release';
+import { defaultLabelDefinition } from '../release';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
@@ -9,8 +9,7 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
   jira: 'https://jira.custom.com/browse',
-  versionLabels: defaultLabels,
-  changelogTitles: defaultChangelogTitles
+  labels: defaultLabelDefinition
 });
 
 const logParse = new LogParse();
@@ -21,8 +20,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      changelogTitles: {},
-      versionLabels: defaultLabels
+      labels: defaultLabelDefinition
     });
     changelog.loadDefaultHooks();
 
@@ -58,8 +56,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      changelogTitles: {},
-      versionLabels: defaultLabels
+      labels: defaultLabelDefinition
     });
     changelog.loadDefaultHooks();
 
@@ -231,6 +228,37 @@ describe('generateReleaseNotes', () => {
   });
 
   test('should include PR-less commits as patches', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '1',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'I was a push to master\n\n',
+        labels: ['pushToMaster']
+      },
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('should be able to customize "Push To Master" title', async () => {
+    const options = testOptions();
+    options.labels.pushToMaster = {
+      name: 'pushToMaster',
+      title: 'Custom Title',
+      description: 'N/A'
+    };
+
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 

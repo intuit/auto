@@ -1,10 +1,11 @@
 import GHub from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
+import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 
 import { Memoize } from 'typescript-memoize';
 
-import { defaultLabelsDescriptions } from './release';
+import { ILabelDefinition } from './release';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 
@@ -253,15 +254,18 @@ export default class Git {
     return result;
   }
 
-  async createLabel(label: string, name: string) {
-    this.logger.verbose.info(`Creating "${label}" label :\n${name}`);
+  async createLabel(name: string, label: ILabelDefinition) {
+    this.logger.verbose.info(`Creating "${name}" label :\n${label.name}`);
 
+    const color = label.color
+      ? tinyColor(label.color).toString('hex6')
+      : tinyColor.random().toString('hex6');
     const result = await this.ghub.issues.createLabel({
-      name,
+      name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: getRandomColor(),
-      description: defaultLabelsDescriptions.get(label)
+      color: color.replace('#', ''),
+      description: label.description
     });
 
     this.logger.veryVerbose.info('Got response from createLabel\n', result);
