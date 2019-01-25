@@ -35,6 +35,20 @@ export default class ReleasedLabelPlugin implements IPlugin {
           return;
         }
 
+        const head = commits[0];
+
+        if (!head) {
+          return;
+        }
+
+        const isSkipped = head.labels.find(label =>
+          auto.release!.options.skipReleaseLabels.includes(label)
+        );
+
+        if (isSkipped) {
+          return;
+        }
+
         await Promise.all(
           commits.map(async commit =>
             this.addReleased(auto, commit, newVersion)

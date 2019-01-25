@@ -55,6 +55,45 @@ describe('release label plugin', () => {
     expect(git.createComment).not.toHaveBeenCalled();
   });
 
+  test('should do nothing without commits', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      logger: dummyLog(),
+      git
+    } as Auto);
+
+    await autoHooks.afterShipIt.promise('1.0.0', []);
+
+    expect(git.createComment).not.toHaveBeenCalled();
+  });
+
+  test('should do nothing with skip release label', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      release: {
+        options: { skipReleaseLabels: ['skip-release'] }
+      },
+      logger: dummyLog(),
+      git
+    } as Auto);
+
+    const commit = makeCommitFromMsg('normal commit with no bump (#123)', {
+      labels: ['skip-release']
+    });
+    await autoHooks.afterShipIt.promise(
+      '1.0.0',
+      await log.normalizeCommits([commit])
+    );
+
+    expect(git.createComment).not.toHaveBeenCalled();
+  });
+
   test('should comment and label PRs', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
