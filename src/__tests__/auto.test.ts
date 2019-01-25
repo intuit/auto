@@ -103,7 +103,7 @@ describe('Auto', () => {
     expect(auto.release!.options).toMatchSnapshot();
   });
 
-  test.only('should extend local config', async () => {
+  test('should extend local config', async () => {
     search.mockReturnValueOnce({
       config: { ...defaults, extends: './fake.json' }
     });
