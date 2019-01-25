@@ -1,3 +1,15 @@
+# v4.1.0 (Thu Jan 24 2019)
+
+#### 🚀  Enhancement
+
+- afterShipit hook [#249](https://github.com/intuit/auto/pull/249) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.0.0 (Thu Jan 24 2019)
 
 #### 💥  Breaking Change
