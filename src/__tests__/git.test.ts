@@ -18,6 +18,7 @@ const issuesAndPullRequests = jest.fn();
 const createLabel = jest.fn();
 const addLabels = jest.fn();
 const list = jest.fn();
+const lock = jest.fn();
 
 jest.mock('@octokit/rest', () => () => ({
   authenticate,
@@ -33,7 +34,8 @@ jest.mock('@octokit/rest', () => () => ({
     deleteComment,
     listLabelsForRepo,
     createLabel,
-    addLabels
+    addLabels,
+    lock
   },
   repos: {
     createStatus,
@@ -120,6 +122,12 @@ describe('github', () => {
     const gh = new Git(options);
     await gh.addLabelToPr(123, 'foo bar');
     expect(addLabels).toHaveBeenCalled();
+  });
+
+  test('lockIssue ', async () => {
+    const gh = new Git(options);
+    await gh.lockIssue(123);
+    expect(lock).toHaveBeenCalled();
   });
 
   test('getCommitDate ', async () => {

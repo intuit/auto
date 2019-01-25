@@ -5,12 +5,14 @@ import { Auto, IPlugin } from '../../main';
 interface IReleasedLabelPluginOptions {
   message: string;
   label: string;
+  lockIssues: boolean;
 }
 
 const TYPE = '%TYPE';
 const VERSION = '%VERSION';
 const defaultOptions = {
   label: 'released',
+  lockIssues: false,
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`
 };
 
@@ -85,6 +87,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
       issues.map(async issue => {
         // comment on issues closed with PR with new version
         await auto.git!.createComment(prComment, issue, 'released');
+
+        if (this.options.lockIssues) {
+          await auto.git!.lockIssue(issue);
+        }
       })
     );
   }

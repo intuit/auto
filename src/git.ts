@@ -290,6 +290,21 @@ export default class Git {
     return result;
   }
 
+  async lockIssue(issue: number) {
+    this.logger.verbose.info(`Locking #${issue} issue...`);
+
+    const result = await this.ghub.issues.lock({
+      number: issue,
+      owner: this.options.owner,
+      repo: this.options.repo
+    });
+
+    this.logger.veryVerbose.info('Got response from lock\n', result);
+    this.logger.verbose.info('Locked issue.');
+
+    return result;
+  }
+
   @Memoize()
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');

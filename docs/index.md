@@ -29,6 +29,7 @@
 - [Plugins](pages/plugins.md)
   - [Writing Plugins](pages/writing-plugins.md)
   - [Chrome Web Store](pages/chrome.md)
+  - [Released](pages/released.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
 ---
