@@ -274,6 +274,22 @@ export default class Git {
     return result;
   }
 
+  async addLabelToPr(pr: number, label: string) {
+    this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
+
+    const result = await this.ghub.issues.addLabels({
+      number: pr,
+      owner: this.options.owner,
+      repo: this.options.repo,
+      labels: [label]
+    });
+
+    this.logger.veryVerbose.info('Got response from addLabels\n', result);
+    this.logger.verbose.info('Added labels on Pull Request.');
+
+    return result;
+  }
+
   @Memoize()
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
