@@ -114,13 +114,18 @@ export default class Auto {
    */
   loadExtendConfig(extend: string) {
     let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
+    this.logger.verbose.note(`${extend} found: ${config}`);
 
     if (!config) {
-      config = tryRequire(`${extend}/auto-config`);
+      const scope = `${extend}/auto-config`;
+      config = tryRequire(scope);
+      this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
     if (!config) {
-      config = tryRequire(`auto-config-${extend}`);
+      const scope = `auto-config-${extend}`;
+      config = tryRequire(scope);
+      this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
     if (typeof config === 'function') {
