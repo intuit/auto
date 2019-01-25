@@ -5,6 +5,7 @@ This plugin
 - comments on the merged PR with the new version
 - comments on closed issues with the new version
 - adds a `released` label to the pull request
+- adds a `released` label to closed issues
 
 ::: message is-warning
 Make sure that you create the `released` label on you project
