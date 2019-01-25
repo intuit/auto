@@ -1,10 +1,12 @@
 import * as path from 'path';
 import Auto from '../auto';
+import { ILogger } from './logger';
+import tryRequire from './try-require';
+
 import ChromeWebStorePlugin from '../plugins/chrome';
 import ConventionalCommitsPlugin from '../plugins/conventional-commits';
 import NPMPlugin from '../plugins/npm';
-import { ILogger } from './logger';
-import tryRequire from './try-require';
+import ReleasedLabelPlugin from '../plugins/released-label';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -13,11 +15,17 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
-type SupportedPlugin = 'npm' | 'chrome' | 'conventional-commits';
+type SupportedPlugin =
+  | 'npm'
+  | 'chrome'
+  | 'conventional-commits'
+  | 'released-label';
+
 const plugins = new Map<SupportedPlugin, IPluginConstructor>([
   ['npm', NPMPlugin],
   ['chrome', ChromeWebStorePlugin],
-  ['conventional-commits', ConventionalCommitsPlugin]
+  ['conventional-commits', ConventionalCommitsPlugin],
+  ['released-label', ReleasedLabelPlugin]
 ]);
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
