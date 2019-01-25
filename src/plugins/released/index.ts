@@ -52,17 +52,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
     const messages = [commit.subject];
 
     if (commit.pullRequest) {
-      // leave a comment with the new version
-      await auto.git!.createComment(
-        this.createReleasedComment(false, newVersion),
-        commit.pullRequest.number,
-        'released'
-      );
-
-      // add a `released` label to a PR
-      await auto.git!.addLabelToPr(
-        commit.pullRequest.number,
-        this.options.label
+      await this.addCommentAndLabel(
+        auto,
+        newVersion,
+        commit.pullRequest.number
       );
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
@@ -74,7 +67,6 @@ export default class ReleasedLabelPlugin implements IPlugin {
       commitsInPr.map(c => messages.push(c.commit.message));
     }
 
-    const prComment = this.createReleasedComment(true, newVersion);
     const issues = messages
       .map(message => message.match(closeIssue))
       .filter((r): r is string[] => !!r)
@@ -85,14 +77,27 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     await Promise.all(
       issues.map(async issue => {
-        // comment on issues closed with PR with new version
-        await auto.git!.createComment(prComment, issue, 'released');
+        await this.addCommentAndLabel(auto, newVersion, issue, true);
 
         if (this.options.lockIssues) {
           await auto.git!.lockIssue(issue);
         }
       })
     );
+  }
+
+  private async addCommentAndLabel(
+    auto: Auto,
+    newVersion: string,
+    prOrIssue: number,
+    isIssue = false
+  ) {
+    // leave a comment with the new version
+    const comment = this.createReleasedComment(isIssue, newVersion);
+    await auto.git!.createComment(comment, prOrIssue, 'released');
+
+    // add a `released` label to a PR
+    await auto.git!.addLabelToPr(prOrIssue, this.options.label);
   }
 
   private createReleasedComment(isIssue: boolean, version: string) {
