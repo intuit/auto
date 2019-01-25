@@ -1,7 +1,7 @@
 {
   "name": "auto",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "main": "dist/main.js",
   "author": {
     "name": "Andrew Lisowski",
