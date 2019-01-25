@@ -53,7 +53,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
       // leave a comment with the new version
       await auto.git!.createComment(
         this.createReleasedComment(false, newVersion),
-        commit.pullRequest.number
+        commit.pullRequest.number,
+        'released'
       );
 
       // add a `released` label to a PR
@@ -83,7 +84,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     await Promise.all(
       issues.map(async issue => {
         // comment on issues closed with PR with new version
-        await auto.git!.createComment(prComment, issue);
+        await auto.git!.createComment(prComment, issue, 'released');
       })
     );
   }

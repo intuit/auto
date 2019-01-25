@@ -73,7 +73,8 @@ describe('release label plugin', () => {
 
     expect(git.createComment).toHaveBeenCalledWith(
       ':rocket: PR was released in 1.0.0 :rocket:',
-      123
+      123,
+      'released'
     );
   });
 
@@ -101,7 +102,8 @@ describe('release label plugin', () => {
 
     expect(git.createComment).toHaveBeenCalledWith(
       ':rocket: Issue was released in 1.0.0 :rocket:',
-      420
+      420,
+      'released'
     );
   });
 });
