@@ -1,3 +1,15 @@
+# v4.2.1 (Thu Jan 24 2019)
+
+#### ⚠️  Pushed to master
+
+- quick rename  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 1
+
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v4.2.0 (Thu Jan 24 2019)
 
 #### 🚀 Enhancement
