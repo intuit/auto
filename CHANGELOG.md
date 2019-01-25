@@ -1,3 +1,15 @@
+# v4.4.0 (Thu Jan 24 2019)
+
+#### 🚀  Enhancement
+
+- Released plugin: add released label to issue too [#253](https://github.com/intuit/auto/pull/253) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.3.0 (Thu Jan 24 2019)
 
 #### 🚀  Enhancement
