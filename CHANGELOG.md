@@ -1,3 +1,15 @@
+# v4.3.0 (Thu Jan 24 2019)
+
+#### 🚀  Enhancement
+
+- Released Plugin: lock merged issues [#252](https://github.com/intuit/auto/pull/252) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.2.2 (Thu Jan 24 2019)
 
 #### 🐛  Bug Fix
