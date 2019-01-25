@@ -1,3 +1,15 @@
+# v4.5.1 (Fri Jan 25 2019)
+
+#### 🐛  Bug Fix
+
+- add addLabel enterprise compat [#265](https://github.com/intuit/auto/pull/265) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.5.0 (Fri Jan 25 2019)
 
 #### 🚀  Enhancement
