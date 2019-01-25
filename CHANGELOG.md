@@ -1,3 +1,15 @@
+# v4.4.3 (Fri Jan 25 2019)
+
+#### 🐛  Bug Fix
+
+- load extends config from path [#260](https://github.com/intuit/auto/pull/260) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.4.2 (Fri Jan 25 2019)
 
 #### 🐛  Bug Fix
