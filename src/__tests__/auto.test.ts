@@ -27,6 +27,15 @@ jest.mock(
   { virtual: true }
 );
 
+process.cwd = () => '/foo/';
+jest.mock(
+  '/foo/fake.json',
+  () => ({
+    slack: 'foo'
+  }),
+  { virtual: true }
+);
+
 jest.mock(
   '../fake/path.js',
   () => () => ({
@@ -89,6 +98,15 @@ describe('Auto', () => {
 
   test('should extend config', async () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
+    const auto = new Auto({ command: 'init' });
+    await auto.loadConfig();
+    expect(auto.release!.options).toMatchSnapshot();
+  });
+
+  test.only('should extend local config', async () => {
+    search.mockReturnValueOnce({
+      config: { ...defaults, extends: './fake.json' }
+    });
     const auto = new Auto({ command: 'init' });
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();

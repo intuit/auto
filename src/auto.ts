@@ -2,6 +2,7 @@ import cosmiconfig from 'cosmiconfig';
 import merge from 'deepmerge';
 import env from 'dotenv';
 import isCI from 'is-ci';
+import * as path from 'path';
 import { gt, inc, ReleaseType } from 'semver';
 import { AsyncParallelHook, AsyncSeriesBailHook, SyncHook } from 'tapable';
 
@@ -126,6 +127,10 @@ export default class Auto {
       const scope = `auto-config-${extend}`;
       config = tryRequire(scope);
       this.logger.verbose.note(`${scope} found: ${config}`);
+    }
+
+    if (!config) {
+      config = tryRequire(path.join(process.cwd(), extend));
     }
 
     if (typeof config === 'function') {

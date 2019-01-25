@@ -109,3 +109,57 @@ Object {
   "token": "XXXX",
 }
 `;
+
+exports[`Auto should extend local config 1`] = `
+Object {
+  "command": "init",
+  "extends": "./fake.json",
+  "labels": Object {
+    "documentation": Object {
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "title": "📝  Documentation",
+    },
+    "internal": Object {
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "title": "🏠  Internal",
+    },
+    "major": Object {
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "title": "💥  Breaking Change",
+    },
+    "minor": Object {
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "title": "🚀  Enhancement",
+    },
+    "patch": Object {
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "title": "🐛  Bug Fix",
+    },
+    "prerelease": Object {
+      "description": "Create a pre-release version when merged",
+      "name": "prerelease",
+      "title": "🚧 Prerelease",
+    },
+    "release": Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+    },
+    "skip-release": Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+    },
+  },
+  "owner": "foo",
+  "repo": "bar",
+  "skipReleaseLabels": Array [
+    "skip-release",
+  ],
+  "slack": "foo",
+  "token": "XXXX",
+}
+`;
