@@ -31,6 +31,24 @@ Auto can load `extends` configs in the following ways:
 - from a scoped package `@YOUR_SCOPE/auto-config`
 - from a package `auto-config-YOUR_NAME`
 
+```json
+{
+  "extends": "@YOUR_SCOPE"
+}
+```
+
+Will use the package `@YOUR_SCOPE/auto-config`
+
+```json
+{
+  "extends": "joe"
+}
+```
+
+Will use the package `auto-config-joe`
+
+::: message is-warning If extending from a config package make sure it's a dependency of your project :::
+
 ### Labels
 
 To override any of the default labels use the `labels` seciton in the `.autorc`.

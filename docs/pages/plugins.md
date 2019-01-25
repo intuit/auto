@@ -11,13 +11,13 @@ Current official plugins:
 
 ## Using Plugins
 
-To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins).
+To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins). Specifying a plugin overrides the defaults.
 
 There are three ways to load a plugin.
 
 ### 1. Official Plugins
 
-To use an official plugin all you have to do is supply the name. Currently the only supported plugin is the `npm` plugin.
+To use an official plugin all you have to do is supply the name.
 
 ```sh
 auto shipit --plugins npm
@@ -25,7 +25,7 @@ auto shipit --plugins npm
 
 ### 2. `npm` package
 
-If you are using a plugin distributed on `npm` simply supply the name.
+If you are using a plugin distributed on `npm` simply supply the name. Ensure that the plugin is added as a dependency of your project. 
 
 ```sh
 auto shipit --plugins NPM_PACKAGE_NAME
