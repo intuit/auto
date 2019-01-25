@@ -16,7 +16,7 @@ To use the plugin include it in your `.autorc`
 
 ```json
 {
-  "plugins": ["released-label"]
+  "plugins": ["released"]
 }
 ```
 
@@ -30,7 +30,7 @@ Customize the label this plugin attaches to merged pull requests.
 {
   "plugins": [
     [
-      "released-label",
+      "released",
       {
         "label": ":shipit:"
       }
@@ -50,7 +50,7 @@ To customize the message this plugin uses on issues and pull requests use the fo
 {
   "plugins": [
     [
-      "released-label",
+      "released",
       {
         "message": "%TYPE went out with version: %VERSION"
       }

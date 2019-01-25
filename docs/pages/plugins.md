@@ -7,7 +7,7 @@ Current official plugins:
 - npm - publish code to npm (DEFAULT)
 - chrome - publish code to Chrome Web Store
 - conventional-commits - parse conventional commit messages for version bumps
-- released-label - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
+- released - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
 
 ## Using Plugins
 

@@ -150,7 +150,7 @@
   "auto": {
     "plugins": [
       "npm",
-      "released-label"
+      "released"
     ]
   }
 }
