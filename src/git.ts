@@ -1,4 +1,5 @@
-import GHub from '@octokit/rest';
+import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
+import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
@@ -14,7 +15,7 @@ const gitlog = promisify(gitlogNode);
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
-export type IPRInfo = Omit<GHub.ReposCreateStatusParams, 'owner' | 'repo'>;
+export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, 'owner' | 'repo'>;
 
 export interface IGitOptions {
   owner: string;
@@ -48,7 +49,7 @@ export default class Git {
   readonly options: IGitOptions;
 
   private readonly baseUrl: string;
-  private readonly ghub: GHub;
+  private readonly ghub: Octokit;
   private readonly logger: ILogger;
 
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
@@ -57,7 +58,8 @@ export default class Git {
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    this.ghub = new GHub({
+    const gitHub = Octokit.plugin(enterpriseCompat);
+    this.ghub = new gitHub({
       baseUrl: this.baseUrl,
       auth: `token ${this.options.token}`,
       previews: ['symmetra-preview']
@@ -223,7 +225,7 @@ export default class Git {
     return result;
   }
 
-  async searchRepo(options: GHub.SearchIssuesAndPullRequestsParams) {
+  async searchRepo(options: Octokit.SearchIssuesAndPullRequestsParams) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
 
@@ -320,7 +322,7 @@ export default class Git {
     return result;
   }
 
-  async getPullRequests(options?: Partial<GHub.PullsListParams>) {
+  async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
     const result = (await this.ghub.pulls.list({

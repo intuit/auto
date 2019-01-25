@@ -23,12 +23,18 @@ jest.mock('cosmiconfig', () => () => ({
   search
 }));
 
-jest.mock('@octokit/rest', () => () => ({
-  authenticate: () => undefined,
-  search: {
-    issuesAndPullRequests: () => ({ data: { items: [] } })
-  }
-}));
+jest.mock('@octokit/rest', () => {
+  const instance = () => ({
+    authenticate: () => undefined,
+    search: {
+      issuesAndPullRequests: () => ({ data: { items: [] } })
+    }
+  });
+
+  instance.plugin = () => instance;
+
+  return instance;
+});
 
 // @ts-ignore
 jest.mock('gitlog', () => (a, cb) => {

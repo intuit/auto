@@ -20,37 +20,43 @@ const addLabels = jest.fn();
 const list = jest.fn();
 const lock = jest.fn();
 
-jest.mock('@octokit/rest', () => () => ({
-  authenticate,
-  pulls: {
-    get: getPr,
-    listCommits,
-    list
-  },
-  issues: {
-    listLabelsOnIssue,
-    createComment,
-    listComments,
-    deleteComment,
-    listLabelsForRepo,
-    createLabel,
-    addLabels,
-    lock
-  },
-  repos: {
-    createStatus,
-    createRelease,
-    getLatestRelease,
-    get: getProject
-  },
-  search: {
-    users: getUser,
-    issuesAndPullRequests
-  },
-  users: {
-    getByUsername
-  }
-}));
+jest.mock('@octokit/rest', () => {
+  const instance = () => ({
+    authenticate,
+    pulls: {
+      get: getPr,
+      listCommits,
+      list
+    },
+    issues: {
+      listLabelsOnIssue,
+      createComment,
+      listComments,
+      deleteComment,
+      listLabelsForRepo,
+      createLabel,
+      addLabels,
+      lock
+    },
+    repos: {
+      createStatus,
+      createRelease,
+      getLatestRelease,
+      get: getProject
+    },
+    search: {
+      users: getUser,
+      issuesAndPullRequests
+    },
+    users: {
+      getByUsername
+    }
+  });
+
+  instance.plugin = () => instance;
+
+  return instance;
+});
 
 const options = {
   owner: 'Adam Dierkens',
