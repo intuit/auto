@@ -1,3 +1,15 @@
+# v4.5.0 (Fri Jan 25 2019)
+
+#### 🚀  Enhancement
+
+- afterRelease hook [#264](https://github.com/intuit/auto/pull/264) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.4.4 (Fri Jan 25 2019)
 
 #### 🏠  Internal
