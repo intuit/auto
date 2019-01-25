@@ -1,3 +1,20 @@
+# v4.4.1 (Thu Jan 24 2019)
+
+#### 🐛  Bug Fix
+
+- Better config debug [#257](https://github.com/intuit/auto/pull/257) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Add clarity to a few of the docs [#255](https://github.com/intuit/auto/pull/255) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v4.4.0 (Thu Jan 24 2019)
 
 #### 🚀  Enhancement
