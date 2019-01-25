@@ -1,3 +1,15 @@
+# v4.4.4 (Fri Jan 25 2019)
+
+#### 🏠  Internal
+
+- remove .only [#261](https://github.com/intuit/auto/pull/261) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.4.3 (Fri Jan 25 2019)
 
 #### 🐛  Bug Fix
