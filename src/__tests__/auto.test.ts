@@ -27,7 +27,6 @@ jest.mock(
   { virtual: true }
 );
 
-process.cwd = () => '/foo/';
 jest.mock(
   '/foo/fake.json',
   () => ({
@@ -103,13 +102,16 @@ describe('Auto', () => {
     expect(auto.release!.options).toMatchSnapshot();
   });
 
-  test.only('should extend local config', async () => {
+  test('should extend local config', async () => {
+    const orig = process.cwd;
+    process.cwd = () => '/foo/';
     search.mockReturnValueOnce({
       config: { ...defaults, extends: './fake.json' }
     });
     const auto = new Auto({ command: 'init' });
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
+    process.cwd = orig;
   });
 
   test('should use labels from config config', async () => {
