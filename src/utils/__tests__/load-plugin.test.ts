@@ -12,8 +12,10 @@ describe('loadPlugins', () => {
     expect(loadPlugin(['npm', {}], logger)).toEqual({ name: 'NPM' });
   });
 
-  test('should require custom plugins', async () => {
-    expect(loadPlugin(['./__tests__/test-plugin.ts', {}], logger)).toEqual({
+  test('should require custom plugins -- fallback to cwd', async () => {
+    expect(
+      loadPlugin(['./src/utils/__tests__/test-plugin.ts', {}], logger)
+    ).toEqual({
       name: 'foo',
       config: {}
     });
@@ -21,19 +23,13 @@ describe('loadPlugins', () => {
 
   test('should load config', async () => {
     expect(
-      loadPlugin(['./__tests__/test-plugin.ts', 'do the thing'], logger)
+      loadPlugin(
+        ['./src/utils/__tests__/test-plugin.ts', 'do the thing'],
+        logger
+      )
     ).toEqual({
       name: 'foo',
       config: 'do the thing'
-    });
-  });
-
-  test('should require custom plugins -- fallback to cwd', async () => {
-    expect(
-      loadPlugin(['./src/utils/__tests__/test-plugin.ts', {}], logger)
-    ).toEqual({
-      name: 'foo',
-      config: {}
     });
   });
 });

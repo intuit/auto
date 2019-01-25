@@ -3,45 +3,8 @@ import { IPRCommandOptions } from '../cli/args';
 import { SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';
 
-jest.mock(
-  '@artsy/auto-config',
-  () => ({
-    onlyPublishWithReleaseLabel: true
-  }),
-  { virtual: true }
-);
-
-jest.mock(
-  'auto-config-fuego',
-  () => ({
-    noVersionPrefix: true
-  }),
-  { virtual: true }
-);
-
-jest.mock(
-  '../fake/path.json',
-  () => ({
-    jira: 'url'
-  }),
-  { virtual: true }
-);
-
-jest.mock(
-  '/foo/fake.json',
-  () => ({
-    slack: 'foo'
-  }),
-  { virtual: true }
-);
-
-jest.mock(
-  '../fake/path.js',
-  () => () => ({
-    slack: 'url'
-  }),
-  { virtual: true }
-);
+const importMock = jest.fn();
+jest.mock('import-cwd', () => (path: string) => importMock(path));
 
 const defaults = {
   owner: 'foo',
@@ -97,7 +60,14 @@ describe('Auto', () => {
 
   test('should extend config', async () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
+    importMock.mockImplementation(path =>
+      path === '@artsy/auto-config'
+        ? { onlyPublishWithReleaseLabel: true }
+        : undefined
+    );
+
     const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
   });
@@ -108,7 +78,12 @@ describe('Auto', () => {
     search.mockReturnValueOnce({
       config: { ...defaults, extends: './fake.json' }
     });
+    importMock.mockImplementation(path =>
+      path === '/foo/fake.json' ? { slack: 'foo' } : undefined
+    );
+
     const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
     process.cwd = orig;
@@ -630,11 +605,16 @@ describe('Auto', () => {
   describe('loadExtendConfig', () => {
     test('should work when no config found', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
       expect(auto.loadExtendConfig('nothing')).toEqual({});
     });
 
     test('should load file path', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      importMock.mockImplementation(path =>
+        path === '../fake/path.json' ? { jira: 'url' } : undefined
+      );
       expect(auto.loadExtendConfig('../fake/path.json')).toEqual({
         jira: 'url'
       });
@@ -642,6 +622,14 @@ describe('Auto', () => {
 
     test('should load @NAME/auto-config', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      importMock.mockImplementation(path =>
+        path === '@artsy/auto-config'
+          ? { onlyPublishWithReleaseLabel: true }
+          : undefined
+      );
+
       expect(auto.loadExtendConfig('@artsy')).toEqual({
         onlyPublishWithReleaseLabel: true
       });
@@ -649,12 +637,24 @@ describe('Auto', () => {
 
     test('should load auto-config-NAME', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      importMock.mockImplementation(path =>
+        path === 'auto-config-fuego' ? { noVersionPrefix: true } : undefined
+      );
+
       expect(auto.loadExtendConfig('fuego')).toEqual({
         noVersionPrefix: true
       });
     });
     test('should load extend config from function', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      importMock.mockImplementation(path =>
+        path === '../fake/path.js' ? () => ({ slack: 'url' }) : undefined
+      );
+
       expect(auto.loadExtendConfig('../fake/path.js')).toEqual({
         slack: 'url'
       });
@@ -666,6 +666,7 @@ describe('hooks', () => {
   describe('logParse', () => {
     test('should be able to tap parseCommit', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
@@ -685,6 +686,7 @@ describe('hooks', () => {
 
     test('should be able to tap omitCommit', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
