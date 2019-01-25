@@ -16,6 +16,7 @@ const getProject = jest.fn();
 const listLabelsForRepo = jest.fn();
 const issuesAndPullRequests = jest.fn();
 const createLabel = jest.fn();
+const addLabels = jest.fn();
 const list = jest.fn();
 
 jest.mock('@octokit/rest', () => () => ({
@@ -31,7 +32,8 @@ jest.mock('@octokit/rest', () => () => ({
     listComments,
     deleteComment,
     listLabelsForRepo,
-    createLabel
+    createLabel,
+    addLabels
   },
   repos: {
     createStatus,
@@ -67,6 +69,7 @@ describe('github', () => {
     listComments.mockClear();
     deleteComment.mockClear();
     listLabelsForRepo.mockClear();
+    addLabels.mockClear();
   });
 
   describe('getLabels', async () => {
@@ -111,6 +114,12 @@ describe('github', () => {
     expect(await gh.getFirstCommit()).toBe(
       '0b2af75d8b55c8869cda93d0e5589ad9f2677e18'
     );
+  });
+
+  test('addLabelToPr ', async () => {
+    const gh = new Git(options);
+    await gh.addLabelToPr(123, 'foo bar');
+    expect(addLabels).toHaveBeenCalled();
   });
 
   test('getCommitDate ', async () => {

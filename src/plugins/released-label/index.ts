@@ -26,11 +26,20 @@ export default class ReleasedLabelPlugin implements IPlugin {
   }
 
   apply(auto: Auto) {
-    auto.hooks.afterShipIt.tap(this.name, async (newVersion, commits) => {
-      await Promise.all(
-        commits.map(async commit => this.addReleased(auto, commit, newVersion))
-      );
-    });
+    auto.hooks.afterShipIt.tapPromise(
+      this.name,
+      async (newVersion, commits) => {
+        if (!newVersion) {
+          return;
+        }
+
+        await Promise.all(
+          commits.map(async commit =>
+            this.addReleased(auto, commit, newVersion)
+          )
+        );
+      }
+    );
   }
 
   private async addReleased(
@@ -42,13 +51,16 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     if (commit.pullRequest) {
       // leave a comment with the new version
-      auto.git!.createComment(
+      await auto.git!.createComment(
         this.createReleasedComment(false, newVersion),
         commit.pullRequest.number
       );
 
       // add a `released` label to a PR
-      auto.git!.addLabelToPr(commit.pullRequest.number, this.options.label);
+      await auto.git!.addLabelToPr(
+        commit.pullRequest.number,
+        this.options.label
+      );
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
       pr.data.body.split('\n').map(line => messages.push(line));
@@ -59,24 +71,21 @@ export default class ReleasedLabelPlugin implements IPlugin {
       commitsInPr.map(c => messages.push(c.commit.message));
     }
 
+    const prComment = this.createReleasedComment(true, newVersion);
     const issues = messages
       .map(message => message.match(closeIssue))
       .filter((r): r is string[] => !!r)
-      .reduce((all, arr) => [...all, ...arr], []);
+      .reduce((all, arr) => [...all, ...arr], [])
+      .map(issue => issue.match(/#(\d+)/i))
+      .filter((r: RegExpMatchArray | null): r is RegExpMatchArray => !!r)
+      .map(match => Number(match[1]));
 
-    issues.map(issue => {
-      const pr = issue.match(/#(\d+)/i);
-
-      if (!pr) {
-        return;
-      }
-
-      // comment on issues closed with PR with new version
-      auto.git!.createComment(
-        this.createReleasedComment(true, newVersion),
-        Number(pr[1])
-      );
-    });
+    await Promise.all(
+      issues.map(async issue => {
+        // comment on issues closed with PR with new version
+        await auto.git!.createComment(prComment, issue);
+      })
+    );
   }
 
   private createReleasedComment(isIssue: boolean, version: string) {
