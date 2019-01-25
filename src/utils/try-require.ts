@@ -1,6 +1,8 @@
+import importCwd from 'import-cwd';
+
 export default function tryRequire(tryPath: string) {
   try {
-    return require(tryPath);
+    return importCwd(tryPath);
   } catch (error) {
     return;
   }

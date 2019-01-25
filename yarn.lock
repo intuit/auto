@@ -5673,7 +5673,7 @@ imagemin@^5.3.1:
     pify "^2.3.0"
     replace-ext "^1.0.0"
 
-import-cwd@^2.0.0:
+import-cwd@^2.0.0, import-cwd@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
   integrity sha1-qmzzbnInYShcs3HsZRn1PiQ1sKk=
