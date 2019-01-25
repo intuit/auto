@@ -1,3 +1,15 @@
+# v4.2.0 (Thu Jan 24 2019)
+
+#### 🚀  Enhancement
+
+- released-label plugin [#250](https://github.com/intuit/auto/pull/250) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.1.0 (Thu Jan 24 2019)
 
 #### 🚀  Enhancement
