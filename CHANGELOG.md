@@ -1,3 +1,15 @@
+# v4.4.2 (Fri Jan 25 2019)
+
+#### 🐛  Bug Fix
+
+- release plugin: do nothing when skip-release present [#259](https://github.com/intuit/auto/pull/259) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.4.1 (Thu Jan 24 2019)
 
 #### 🐛  Bug Fix
