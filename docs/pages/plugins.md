@@ -17,7 +17,7 @@ There are three ways to load a plugin.
 
 ### 1. Official Plugins
 
-To use an official plugin all you have to do is supply the name. Currently the only supported plugin is the `npm` plugin.
+To use an official plugin all you have to do is supply the name.
 
 ```sh
 auto shipit --plugins npm
