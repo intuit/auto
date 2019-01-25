@@ -28,7 +28,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
   }
 
   apply(auto: Auto) {
-    auto.hooks.afterShipIt.tapPromise(
+    auto.hooks.afterRelease.tapPromise(
       this.name,
       async (newVersion, commits) => {
         if (!newVersion) {

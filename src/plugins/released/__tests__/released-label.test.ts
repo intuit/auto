@@ -34,7 +34,7 @@ describe('release label plugin', () => {
     } as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump');
-    await autoHooks.afterShipIt.promise('1.0.0', [commit]);
+    await autoHooks.afterRelease.promise('1.0.0', [commit]);
 
     expect(git.createComment).not.toHaveBeenCalled();
   });
@@ -50,7 +50,7 @@ describe('release label plugin', () => {
     } as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump');
-    await autoHooks.afterShipIt.promise(undefined, [commit]);
+    await autoHooks.afterRelease.promise(undefined, [commit]);
 
     expect(git.createComment).not.toHaveBeenCalled();
   });
@@ -65,7 +65,7 @@ describe('release label plugin', () => {
       git
     } as Auto);
 
-    await autoHooks.afterShipIt.promise('1.0.0', []);
+    await autoHooks.afterRelease.promise('1.0.0', []);
 
     expect(git.createComment).not.toHaveBeenCalled();
   });
@@ -86,7 +86,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump (#123)', {
       labels: ['skip-release']
     });
-    await autoHooks.afterShipIt.promise(
+    await autoHooks.afterRelease.promise(
       '1.0.0',
       await log.normalizeCommits([commit])
     );
@@ -105,7 +105,7 @@ describe('release label plugin', () => {
     } as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump (#123)');
-    await autoHooks.afterShipIt.promise(
+    await autoHooks.afterRelease.promise(
       '1.0.0',
       await log.normalizeCommits([commit])
     );
@@ -134,7 +134,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg(
       'normal commit with no bump closes (#123)'
     );
-    await autoHooks.afterShipIt.promise(
+    await autoHooks.afterRelease.promise(
       '1.0.0',
       await log.normalizeCommits([commit])
     );

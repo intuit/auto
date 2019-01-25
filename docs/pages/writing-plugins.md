@@ -76,6 +76,23 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
+#### afterRelease
+
+Ran after the `release` command has run. This hooks gets the following arguments:
+
+- version - version that was just released
+- commits - the commits in the release
+
+```ts
+auto.hooks.afterRelease.tap('MyPlugin', async (version, commits) => {
+  // do something
+});
+```
+
+#### afterShipIt
+
+Ran after the `shipit` command has run.
+
 #### getAuthor
 
 Get git author. Typically from a package distribution description file.

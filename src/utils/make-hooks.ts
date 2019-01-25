@@ -13,6 +13,7 @@ export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   beforeShipIt: new SyncHook([]),
   afterShipIt: new AsyncParallelHook(['version', 'commits']),
+  afterRelease: new AsyncParallelHook(['version', 'commits']),
   onCreateRelease: new SyncHook(['options']),
   onCreateChangelog: new SyncHook(['changelog']),
   onCreateLogParse: new SyncHook(['logParse']),
