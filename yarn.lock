@@ -1050,6 +1050,11 @@
     universal-user-agent "^2.0.1"
     url-template "^2.0.8"
 
+"@octokit/plugin-enterprise-compatibility@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.0.0.tgz#46399ad8eed7325bdc14ad6e10ed625226388cc7"
+  integrity sha512-/+3kPfEB7WlNFtAZpK0LvVbJPV88PcM8Tnv3TAVdkzoBIsE8qilBWSKCodFJJ4+XacYsIJpSX9ig3Xs6J04Gbg==
+
 "@octokit/request@2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@octokit/request/-/request-2.3.0.tgz#da2672308bcf0b9376ef66f51bddbe5eb87cc00a"
