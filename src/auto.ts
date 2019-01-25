@@ -148,8 +148,6 @@ export default class Auto {
       rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
     }
 
-    this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
-
     this.labels = defaultLabelDefinition;
 
     if (rawConfig.labels) {
@@ -192,6 +190,8 @@ export default class Auto {
       labels: this.labels,
       skipReleaseLabels
     };
+
+    this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
 
     this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
