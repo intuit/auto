@@ -21,7 +21,7 @@ import {
 import Changelog from './changelog';
 import Git, { IGitOptions, IPRInfo } from './git';
 import init from './init';
-import LogParse from './log-parse';
+import LogParse, { IExtendedCommit } from './log-parse';
 import { execPromise } from './main';
 import Release, {
   defaultLabelDefinition,
@@ -54,6 +54,7 @@ interface IRepository {
 export interface IAutoHooks {
   beforeRun: SyncHook<[IReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
+  afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
@@ -456,7 +457,7 @@ export default class Auto {
    * 4. Create a release
    */
   async shipit(options: IShipItCommandOptions) {
-    if (!this.git) {
+    if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
 
@@ -469,6 +470,10 @@ export default class Auto {
       return;
     }
 
+    const lastRelease = await this.git.getLatestRelease();
+    const commitsInRelease = await this.release.getCommitsInRelease(
+      lastRelease
+    );
     await this.makeChangelog(options);
 
     if (!options.dryRun) {
@@ -478,20 +483,21 @@ export default class Auto {
       await this.hooks.afterPublish.promise();
     }
 
-    await this.makeRelease(options);
+    const newVersion = await this.makeRelease(options);
 
     if (options.dryRun) {
       this.logger.log.warn(
         "The version reported in the line above hasn't been incremneted during `dry-run`"
       );
 
-      const lastRelease = await this.git.getLatestRelease();
       const current = await this.getCurrentVersion(lastRelease);
 
       this.logger.log.warn(
         `Published version would be ${inc(current, version as ReleaseType)}`
       );
     }
+
+    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
   }
 
   private startGit(gitOptions: IGitOptions) {
@@ -626,6 +632,8 @@ export default class Auto {
     } else {
       this.logger.verbose.info('Release dry run complete.');
     }
+
+    return prefixed;
   }
 
   private readonly prefixRelease = (release: string) => {
