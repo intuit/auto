@@ -43,7 +43,7 @@ Customize the label this plugin attaches to merged pull requests.
 
 To customize the message this plugin uses on issues and pull requests use the following format.
 
-- `%TYPE` - Either `PR` or `Issu`
+- `%TYPE` - Either `PR` or `Issue`
 - `%VERSION` - The version that was just published
 
 ```json
@@ -56,5 +56,15 @@ To customize the message this plugin uses on issues and pull requests use the fo
       }
     ]
   ]
+}
+```
+
+### Lock Issue
+
+Lock issues that have been merged in PRs.
+
+```json
+{
+  "plugins": [["released", { "lockIssues": true }]]
 }
 ```
