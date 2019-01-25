@@ -56,6 +56,7 @@ export interface IAutoHooks {
   beforeRun: SyncHook<[IReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
+  afterRelease: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
@@ -618,6 +619,9 @@ export default class Auto {
 
     this.logger.log.info('Last used release:', lastRelease);
 
+    const commitsInRelease = await this.release.getCommitsInRelease(
+      lastRelease
+    );
     const releaseNotes = await this.release.generateReleaseNotes(lastRelease);
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
@@ -642,6 +646,8 @@ export default class Auto {
     } else {
       this.logger.verbose.info('Release dry run complete.');
     }
+
+    await this.hooks.afterRelease.promise(prefixed, commitsInRelease);
 
     return prefixed;
   }
