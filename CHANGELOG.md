@@ -1,3 +1,15 @@
+# v4.2.2 (Thu Jan 24 2019)
+
+#### 🐛  Bug Fix
+
+- Released Plugin: add context to comments so they don't override other comments [#251](https://github.com/intuit/auto/pull/251) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.2.1 (Thu Jan 24 2019)
 
 #### ⚠️  Pushed to master
