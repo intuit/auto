@@ -1,7 +1,12 @@
 import env from 'dotenv';
 import isCI from 'is-ci';
 import { gt, inc, ReleaseType } from 'semver';
-import { AsyncParallelHook, AsyncSeriesBailHook, SyncHook } from 'tapable';
+import {
+  AsyncParallelHook,
+  AsyncSeriesBailHook,
+  SyncHook,
+  SyncWaterfallHook
+} from 'tapable';
 
 import {
   ArgsType,
@@ -46,6 +51,7 @@ interface IRepository {
 }
 
 export interface IAutoHooks {
+  modifyConfig: SyncWaterfallHook<[IReleaseOptions]>;
   beforeRun: SyncHook<[IReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
@@ -105,10 +111,13 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = await configLoader.loadConfig(this.args);
+    const config = this.hooks.modifyConfig.call(
+      await configLoader.loadConfig(this.args)
+    );
 
     this.logger.verbose.success('Loaded `auto` with config:', config);
 
+    this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
     this.hooks.beforeRun.call(config);

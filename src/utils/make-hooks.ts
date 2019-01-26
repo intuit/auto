@@ -2,7 +2,8 @@ import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   AsyncSeriesWaterfallHook,
-  SyncHook
+  SyncHook,
+  SyncWaterfallHook
 } from 'tapable';
 import { IAutoHooks } from '../auto';
 import { IChangelogHooks } from '../changelog';
@@ -11,6 +12,7 @@ import { IReleaseHooks } from '../release';
 
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
+  modifyConfig: new SyncWaterfallHook(['config']),
   beforeShipIt: new SyncHook([]),
   afterShipIt: new AsyncParallelHook(['version', 'commits']),
   afterRelease: new AsyncParallelHook(['version', 'commits']),
