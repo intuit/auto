@@ -197,7 +197,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'create-labels',
-    summary: "Create your project's labels on github.",
+    summary:
+      "Create your project's labels on github. If labels exist it will update them.",
     examples: ['{green $} auto create-labels'],
     options: [...defaultOptions, dryRun]
   },

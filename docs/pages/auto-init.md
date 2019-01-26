@@ -21,7 +21,7 @@ Examples
 
 ## `auto create-labels`
 
-Create your project's labels on github.
+Create your project's labels on github. If labels exist it will update them.
 
 ```sh
 $ auto create-labels --help
