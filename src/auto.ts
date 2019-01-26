@@ -1,8 +1,5 @@
-import cosmiconfig from 'cosmiconfig';
-import merge from 'deepmerge';
 import env from 'dotenv';
 import isCI from 'is-ci';
-import * as path from 'path';
 import { gt, inc, ReleaseType } from 'semver';
 import { AsyncParallelHook, AsyncSeriesBailHook, SyncHook } from 'tapable';
 
@@ -20,14 +17,13 @@ import {
 } from './cli/args';
 
 import Changelog from './changelog';
+import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
 import init from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
 import { execPromise } from './main';
 import Release, {
-  defaultLabelDefinition,
   getVersionMap,
-  ILabelDefinition,
   ILabelDefinitionMap,
   IReleaseOptions,
   VersionLabel
@@ -37,9 +33,6 @@ import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
-import tryRequire from './utils/try-require';
-
-type ConfigLoader = () => cosmiconfig.Config;
 
 interface IAuthor {
   name?: string;
@@ -107,103 +100,16 @@ export default class Auto {
   }
 
   /**
-   * Loads a config from a path, package name, or special `auto-config` pattern
-   *
-   * ex: auto-config-MY_CONFIG
-   * ex: @MY_CONFIG/auto-config
-   *
-   * @param extend Path or name of config to find
-   */
-  loadExtendConfig(extend: string) {
-    let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
-    this.logger.verbose.note(`${extend} found: ${config}`);
-
-    if (!config) {
-      const scope = `${extend}/auto-config`;
-      config = tryRequire(scope);
-      this.logger.verbose.note(`${scope} found: ${config}`);
-    }
-
-    if (!config) {
-      const scope = `auto-config-${extend}`;
-      config = tryRequire(scope);
-      this.logger.verbose.note(`${scope} found: ${config}`);
-    }
-
-    if (!config) {
-      config = tryRequire(path.join(process.cwd(), extend));
-    }
-
-    if (typeof config === 'function') {
-      return (config as ConfigLoader)();
-    }
-
-    return config || {};
-  }
-
-  /**
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
   async loadConfig() {
-    const explorer = cosmiconfig('auto');
-    const result = await explorer.search();
+    const configLoader = new Config(this.logger);
+    const config = await configLoader.loadConfig(this.args);
 
-    let rawConfig: cosmiconfig.Config = {};
+    this.logger.verbose.success('Loaded `auto` with config:', config);
 
-    if (result && result.config) {
-      rawConfig = result.config;
-    }
-
-    if (rawConfig.extends) {
-      rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
-    }
-
-    this.labels = defaultLabelDefinition;
-
-    if (rawConfig.labels) {
-      const definitions = Object.entries(rawConfig.labels).map(
-        ([label, labelDef]: [string, Partial<ILabelDefinition> | string]) => {
-          const definition =
-            typeof labelDef === 'string' ? { name: labelDef } : labelDef;
-
-          if (!definition.name) {
-            definition.name = label;
-          }
-
-          return {
-            [label]: definition
-          };
-        }
-      );
-      const labels = Object.assign({}, ...definitions);
-
-      this.labels = merge(this.labels, labels);
-    }
-
-    this.semVerLabels = getVersionMap(this.labels);
-
-    this.logger.verbose.success(
-      'Using SEMVER labels:',
-      '\n',
-      this.semVerLabels
-    );
-
-    const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
-
-    if (!skipReleaseLabels.includes(this.semVerLabels.get('skip-release')!)) {
-      skipReleaseLabels.push(this.semVerLabels.get('skip-release')!);
-    }
-
-    const config = {
-      ...rawConfig,
-      ...this.args,
-      labels: this.labels,
-      skipReleaseLabels
-    };
-
-    this.logger.verbose.success('Loaded `auto` with config:', rawConfig);
-
+    this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
