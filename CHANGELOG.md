@@ -1,3 +1,16 @@
+# v4.7.1 (Sat Jan 26 2019)
+
+#### 🐛  Bug Fix
+
+- Update dependencies to enable Greenkeeper 🌴 [#273](https://github.com/intuit/auto/pull/273) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.0 (Fri Jan 25 2019)
 
 #### 🚀  Enhancement
