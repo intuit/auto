@@ -1,3 +1,15 @@
+# v4.6.0 (Fri Jan 25 2019)
+
+#### 🚀  Enhancement
+
+- modifyConfig hook [#270](https://github.com/intuit/auto/pull/270) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.5.3 (Fri Jan 25 2019)
 
 #### 🐛  Bug Fix
