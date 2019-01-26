@@ -10,15 +10,18 @@
   },
   "jsRules": {},
   "rules": {
-    "no-bitwise": false,
-    "no-unused": [true, "ignore-parameters"],
-    "no-dynamic-delete": false,
+    // Uppercase comments are dumb
     "comment-format": false,
-    "no-require-imports": false,
+    // Sometimes we done need the first few params
+    "no-unused": [true, "ignore-parameters"],
+    // I like spaces around my objects!
     "object-curly-spacing": false,
+    // less characters on screen
     "quotemark": [true, "single", "avoid-escape"],
+    // lots of overhead for little gain
     "object-literal-sort-keys": false,
-    "max-classes-per-file": [true, 5, "exclude-class-expressions"],
+    "max-classes-per-file": [true, 2, "exclude-class-expressions"],
+    // Allow ! character
     "no-non-null-assertion": false,
     "no-floating-promises": false,
     "no-console": false,
