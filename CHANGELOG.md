@@ -1,3 +1,15 @@
+# v4.7.0 (Fri Jan 25 2019)
+
+#### 🚀  Enhancement
+
+- `create-labels` update labels when the exist [#272](https://github.com/intuit/auto/pull/272) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.6.0 (Fri Jan 25 2019)
 
 #### 🚀  Enhancement
