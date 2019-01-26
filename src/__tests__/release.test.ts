@@ -21,6 +21,7 @@ const getUserByEmail = jest.fn();
 const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
+const updateLabel = jest.fn();
 const getPullRequests = jest.fn();
 const getLatestReleaseInfo = jest.fn();
 const searchRepo = jest.fn();
@@ -50,6 +51,7 @@ jest.mock('../git.ts', () => (...args) => {
     getUserByEmail,
     getProjectLabels,
     createLabel,
+    updateLabel,
     getPullRequests,
     getLatestReleaseInfo,
     searchRepo,
@@ -664,7 +666,7 @@ describe('Release', () => {
       getProjectLabels.mockReturnValueOnce(['1']);
       await gh.addLabelsToProject(labels);
 
-      expect(createLabel).not.toHaveBeenCalledWith(SEMVER.major, {
+      expect(updateLabel).toHaveBeenCalledWith(SEMVER.major, {
         name: '1',
         description: 'major'
       });

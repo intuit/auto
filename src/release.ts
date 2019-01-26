@@ -320,10 +320,6 @@ export default class Release {
           return;
         }
 
-        if (oldLabels && oldLabels.includes(labelDef.name)) {
-          return;
-        }
-
         if (
           versionLabel === 'release' &&
           !this.options.onlyPublishWithReleaseLabel
@@ -344,12 +340,16 @@ export default class Release {
 
     if (!options.dryRun) {
       await Promise.all(
-        labelsToCreate.map(async ([versionLabel, labelDef]) => {
+        labelsToCreate.map(async ([label, labelDef]) => {
           if (!labelDef) {
             return;
           }
 
-          await this.git.createLabel(versionLabel, labelDef);
+          if (oldLabels && oldLabels.includes(labelDef.name)) {
+            await this.git.updateLabel(label, labelDef);
+          } else {
+            await this.git.createLabel(label, labelDef);
+          }
         })
       );
     }
