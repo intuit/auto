@@ -355,8 +355,8 @@ export default class Release {
     }
 
     const repoMetadata = await this.git.getProject();
-
     const justLabelNames = labelsToCreate.map(([name]) => name);
+
     if (justLabelNames.length > 0) {
       const state = options.dryRun ? 'Would have created' : 'Created';
       this.logger.log.log(`${state} labels: ${justLabelNames.join(', ')}`);
@@ -367,11 +367,13 @@ export default class Release {
       );
     }
 
-    if (!options.dryRun) {
-      this.logger.log.log(
-        `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
-      );
+    if (options.dryRun) {
+      return;
     }
+
+    this.logger.log.log(
+      `\nYou can see these, and more at ${repoMetadata.html_url}/labels`
+    );
   }
 
   /**

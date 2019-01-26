@@ -11,7 +11,6 @@
   "jsRules": {},
   "rules": {
     "no-bitwise": false,
-    "early-exit": false,
     "no-unused": [true, "ignore-parameters"],
     "no-dynamic-delete": false,
     "comment-format": false,
@@ -26,7 +25,8 @@
     "no-unsafe-any": false,
     "no-object-literal-type-assertion": false,
     "no-unnecessary-callback-wrapper": false,
-    "type-literal-delimiter": { "singleLine": "never" }
+    "type-literal-delimiter": { "singleLine": "never" },
+    "typedef": false
   },
   "rulesDirectory": []
 }

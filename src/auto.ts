@@ -500,18 +500,19 @@ export default class Auto {
 
     this.logger.log.info('New Release Notes\n', releaseNotes);
 
-    if (!dryRun) {
-      const currentVersion = await this.getCurrentVersion(lastRelease);
-
-      await this.release.addToChangelog(
-        releaseNotes,
-        lastRelease,
-        currentVersion,
-        message
-      );
-    } else {
+    if (dryRun) {
       this.logger.verbose.info('`changelog` dry run complete.');
+      return;
     }
+
+    const currentVersion = await this.getCurrentVersion(lastRelease);
+
+    await this.release.addToChangelog(
+      releaseNotes,
+      lastRelease,
+      currentVersion,
+      message
+    );
   }
 
   private async makeRelease({

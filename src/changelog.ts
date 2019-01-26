@@ -228,11 +228,13 @@ export default class Changelog {
       })
     );
 
-    if (authors.size > 0) {
-      let authorSection = `#### Authors: ${authors.size}\n\n`;
-      authorSection += [...authors].join('\n');
-      sections.push(authorSection);
+    if (authors.size === 0) {
+      return;
     }
+
+    let authorSection = `#### Authors: ${authors.size}\n\n`;
+    authorSection += [...authors].join('\n');
+    sections.push(authorSection);
   }
 
   private async createLabelSection(

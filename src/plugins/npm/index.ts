@@ -177,15 +177,17 @@ export default class NPMPlugin implements IPlugin {
       );
       const packageJson = await loadPackageJson();
 
-      if (packageJson.author) {
-        const { author } = packageJson;
-
-        if (typeof author === 'string') {
-          return parseAuthor(author);
-        }
-
-        return author;
+      if (!packageJson.author) {
+        return;
       }
+
+      const { author } = packageJson;
+
+      if (typeof author === 'string') {
+        return parseAuthor(author);
+      }
+
+      return author;
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
@@ -240,64 +242,67 @@ export default class NPMPlugin implements IPlugin {
       changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async (commits, renderLine) => {
-          if (isMonorepo()) {
-            await Promise.all(
-              commits.map(async commit => {
-                commit.packages = await changedPackages(
-                  commit.hash,
-                  auto.logger
-                );
-              })
-            );
-
-            const packageCommits = await partitionPackages(commits, renderLine);
-            const pkgCount = Object.keys(packageCommits).length;
-            const hasRepoCommits =
-              packageCommits.monorepo && packageCommits.monorepo.length > 0;
-
-            if (pkgCount > 0 && (pkgCount !== 1 || !packageCommits.monorepo)) {
-              const section: string[] = [];
-
-              if (hasRepoCommits) {
-                packageCommits.monorepo.forEach(note => section.push(note));
-                delete packageCommits.monorepo;
-              }
-
-              Object.entries(packageCommits).map(([pkg, lines]) => {
-                section.push(`- ${pkg}`);
-                lines.map(note => section.push(`  ${note}`));
-              });
-
-              return section;
-            }
+          if (!isMonorepo()) {
+            console.log('bailed');
+            return;
           }
+
+          await Promise.all(
+            commits.map(async commit => {
+              commit.packages = await changedPackages(commit.hash, auto.logger);
+            })
+          );
+
+          const packageCommits = await partitionPackages(commits, renderLine);
+          const pkgCount = Object.keys(packageCommits).length;
+          const hasRepoCommits =
+            packageCommits.monorepo && packageCommits.monorepo.length > 0;
+
+          if (pkgCount <= 0 || (pkgCount === 1 && packageCommits.monorepo)) {
+            return;
+          }
+
+          const section: string[] = [];
+
+          if (hasRepoCommits) {
+            packageCommits.monorepo.forEach(note => section.push(note));
+            delete packageCommits.monorepo;
+          }
+
+          Object.entries(packageCommits).map(([pkg, lines]) => {
+            section.push(`- ${pkg}`);
+            lines.map(note => section.push(`  ${note}`));
+          });
+
+          return section;
         }
       );
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
-        const latestBump = await bumpLatest(getMonorepoPackage(), version);
+        const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
 
         await execPromise('npx', [
           'lerna',
           'version',
-          latestBump || version,
+          monorepoBump || version,
           '--force-publish',
           '--yes',
           '-m',
           "'Bump version to: %v [skip ci]'"
         ]);
-      } else {
-        const latestBump = await bumpLatest(await loadPackageJson(), version);
-
-        await execPromise('npm', [
-          'version',
-          latestBump || version,
-          '-m',
-          '"Bump version to: %s [skip ci]"'
-        ]);
+        return;
       }
+
+      const latestBump = await bumpLatest(await loadPackageJson(), version);
+
+      await execPromise('npm', [
+        'version',
+        latestBump || version,
+        '-m',
+        '"Bump version to: %s [skip ci]"'
+      ]);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
@@ -305,24 +310,25 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
-      } else {
-        const { private: isPrivate, name } = await loadPackageJson();
-        const isScopedPackage = name.match(/@\S+\/\S+/);
-
-        await execPromise(
-          'npm',
-          !isPrivate && isScopedPackage
-            ? ['publish', '--access', 'public']
-            : ['publish']
-        );
-        await execPromise('git', [
-          'push',
-          '--follow-tags',
-          '--set-upstream',
-          'origin',
-          '$branch'
-        ]);
+        return;
       }
+
+      const { private: isPrivate, name } = await loadPackageJson();
+      const isScopedPackage = name.match(/@\S+\/\S+/);
+
+      await execPromise(
+        'npm',
+        !isPrivate && isScopedPackage
+          ? ['publish', '--access', 'public']
+          : ['publish']
+      );
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        'origin',
+        '$branch'
+      ]);
     });
   }
 }

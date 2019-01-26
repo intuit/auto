@@ -24,12 +24,6 @@ export interface IGitOptions {
   token?: string;
 }
 
-export function getRandomColor() {
-  return Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, '0');
-}
-
 class GitAPIError extends Error {
   constructor(api: string, args: object, origError: Error) {
     super(

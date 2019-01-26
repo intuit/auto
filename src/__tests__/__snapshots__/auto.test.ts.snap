@@ -49,7 +49,7 @@ exports[`Auto createLabels should create the labels 1`] = `
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": undefined,
     },
   ],
