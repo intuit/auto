@@ -1,3 +1,15 @@
+# v4.5.2 (Fri Jan 25 2019)
+
+#### 🐛  Bug Fix
+
+- pushes to master should only include title in changelog [#267](https://github.com/intuit/auto/pull/267) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.5.1 (Fri Jan 25 2019)
 
 #### 🐛  Bug Fix
