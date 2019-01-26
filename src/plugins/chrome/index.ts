@@ -76,27 +76,31 @@ export default class ChromeWebStorePlugin implements IPlugin {
         );
       }
 
-      if (!process.env.REFRESH_TOKEN) {
-        this.reportWarning(
-          auto,
-          'REFRESH_TOKEN environment variable must be set'
-        );
+      if (process.env.REFRESH_TOKEN) {
+        return;
       }
+
+      this.reportWarning(
+        auto,
+        'REFRESH_TOKEN environment variable must be set'
+      );
     });
 
     auto.hooks.beforeShipIt.tap(this.name, () => {
       if (
-        !process.env.CLIENT_ID ||
-        !process.env.CLIENT_SECRET ||
-        !process.env.REFRESH_TOKEN ||
-        !fs.existsSync(this.manifest) ||
-        !this.id ||
-        !fs.existsSync(this.build)
+        process.env.CLIENT_ID &&
+        process.env.CLIENT_SECRET &&
+        process.env.REFRESH_TOKEN &&
+        fs.existsSync(this.manifest) &&
+        this.id &&
+        fs.existsSync(this.build)
       ) {
-        throw new Error(
-          "You don't have all necessary config set up! Check the warnings."
-        );
+        return;
       }
+
+      throw new Error(
+        "You don't have all necessary config set up! Check the warnings."
+      );
     });
 
     auto.hooks.getAuthor.tapPromise(this.name, async () => {
