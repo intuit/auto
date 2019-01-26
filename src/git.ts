@@ -276,6 +276,26 @@ export default class Git {
     return result;
   }
 
+  async updateLabel(name: string, label: ILabelDefinition) {
+    this.logger.verbose.info(`Updating "${name}" label :\n${label.name}`);
+
+    const color = label.color
+      ? tinyColor(label.color).toString('hex6')
+      : tinyColor.random().toString('hex6');
+    const result = await this.ghub.issues.updateLabel({
+      current_name: label.name,
+      owner: this.options.owner,
+      repo: this.options.repo,
+      color: color.replace('#', ''),
+      description: label.description
+    });
+
+    this.logger.veryVerbose.info('Got response from updateLabel\n', result);
+    this.logger.verbose.info('Updated label on GitHub.');
+
+    return result;
+  }
+
   async addLabelToPr(pr: number, label: string) {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 

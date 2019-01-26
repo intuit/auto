@@ -16,6 +16,7 @@ const getProject = jest.fn();
 const listLabelsForRepo = jest.fn();
 const issuesAndPullRequests = jest.fn();
 const createLabel = jest.fn();
+const updateLabel = jest.fn();
 const addLabels = jest.fn();
 const list = jest.fn();
 const lock = jest.fn();
@@ -35,6 +36,7 @@ jest.mock('@octokit/rest', () => {
       deleteComment,
       listLabelsForRepo,
       createLabel,
+      updateLabel,
       addLabels,
       lock
     },
@@ -379,6 +381,21 @@ describe('github', () => {
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
     });
+  });
+
+  test('updateLabel', async () => {
+    const gh = new Git(options);
+
+    await gh.updateLabel('release', { name: 'Foo bar', description: 'test' });
+
+    expect(updateLabel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        owner: 'Adam Dierkens',
+        repo: 'test',
+        current_name: 'Foo bar',
+        description: 'test'
+      })
+    );
   });
 
   describe('createLabel', () => {
