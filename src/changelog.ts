@@ -242,9 +242,9 @@ export default class Changelog {
     sections: string[]
   ) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
-      (titles, [label, labelDef]) => {
+      (titles, [, labelDef]) => {
         if (labelDef.title) {
-          titles[label] = labelDef.title;
+          titles[labelDef.name] = labelDef.title;
         }
 
         return titles;
