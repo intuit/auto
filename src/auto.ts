@@ -498,7 +498,7 @@ export default class Auto {
 
     if (options.dryRun) {
       this.logger.log.warn(
-        "The version reported in the line above hasn't been incremneted during `dry-run`"
+        "The version reported in the line above hasn't been incremented during `dry-run`"
       );
 
       const current = await this.getCurrentVersion(lastRelease);

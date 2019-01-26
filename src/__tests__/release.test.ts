@@ -356,7 +356,7 @@ describe('Release', () => {
               email: 'adam@dierkens.com'
             }
           ],
-          subject: 'I should be included'
+          subject: 'I should be included\nBut this should not.'
         },
         {
           hash: '2',

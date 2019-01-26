@@ -195,7 +195,9 @@ export default class Release {
         if (commit.pullRequest) {
           return commit;
         }
+
         commit.labels = ['pushToMaster', ...commit.labels];
+        commit.subject = commit.subject.split('\n')[0];
         return commit;
       });
   }
