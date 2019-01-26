@@ -610,6 +610,27 @@ describe('Auto', () => {
 });
 
 describe('hooks', () => {
+  test('should be able to modifyConfig', async () => {
+    const auto = new Auto({ command: 'comment', ...defaults });
+    auto.logger = dummyLog();
+
+    auto.hooks.modifyConfig.tap('test', testConfig => {
+      testConfig.labels.released = {
+        name: 'released',
+        description: 'This issue/pull request has been released'
+      };
+
+      return testConfig;
+    });
+
+    await auto.loadConfig();
+
+    expect(auto.labels!.released).toEqual({
+      description: 'This issue/pull request has been released',
+      name: 'released'
+    });
+  });
+
   describe('logParse', () => {
     test('should be able to tap parseCommit', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });

@@ -64,6 +64,21 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
+#### modifyConfig
+
+Modify what is in the config. You must return the config in this hook.
+
+```ts
+auto.hooks.modifyConfig.tap('test', config => {
+  config.labels.released = {
+    name: 'released',
+    description: 'This issue/pull request has been released'
+  };
+
+  return config;
+});
+```
+
 #### beforeShipIt
 
 Happens before `shipit` is run. This is a great throw an error if a token or key is not present.
