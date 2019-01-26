@@ -28,6 +28,15 @@ export default class ReleasedLabelPlugin implements IPlugin {
   }
 
   apply(auto: Auto) {
+    auto.hooks.modifyConfig.tap(this.name, config => {
+      config.labels.released = config.labels.released || {
+        name: 'released',
+        description: 'This issue/pull request has been released.'
+      };
+
+      return config;
+    });
+
     auto.hooks.afterRelease.tapPromise(
       this.name,
       async (newVersion, commits) => {

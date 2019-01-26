@@ -607,68 +607,30 @@ describe('Auto', () => {
       expect(hookFn).not.toBeCalled();
     });
   });
-
-  describe('loadExtendConfig', () => {
-    test('should work when no config found', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-      expect(auto.loadExtendConfig('nothing')).toEqual({});
-    });
-
-    test('should load file path', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-      importMock.mockImplementation(path =>
-        path === '../fake/path.json' ? { jira: 'url' } : undefined
-      );
-      expect(auto.loadExtendConfig('../fake/path.json')).toEqual({
-        jira: 'url'
-      });
-    });
-
-    test('should load @NAME/auto-config', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-
-      importMock.mockImplementation(path =>
-        path === '@artsy/auto-config'
-          ? { onlyPublishWithReleaseLabel: true }
-          : undefined
-      );
-
-      expect(auto.loadExtendConfig('@artsy')).toEqual({
-        onlyPublishWithReleaseLabel: true
-      });
-    });
-
-    test('should load auto-config-NAME', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-
-      importMock.mockImplementation(path =>
-        path === 'auto-config-fuego' ? { noVersionPrefix: true } : undefined
-      );
-
-      expect(auto.loadExtendConfig('fuego')).toEqual({
-        noVersionPrefix: true
-      });
-    });
-    test('should load extend config from function', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-
-      importMock.mockImplementation(path =>
-        path === '../fake/path.js' ? () => ({ slack: 'url' }) : undefined
-      );
-
-      expect(auto.loadExtendConfig('../fake/path.js')).toEqual({
-        slack: 'url'
-      });
-    });
-  });
 });
 
 describe('hooks', () => {
+  test('should be able to modifyConfig', async () => {
+    const auto = new Auto({ command: 'comment', ...defaults });
+    auto.logger = dummyLog();
+
+    auto.hooks.modifyConfig.tap('test', testConfig => {
+      testConfig.labels.released = {
+        name: 'released',
+        description: 'This issue/pull request has been released'
+      };
+
+      return testConfig;
+    });
+
+    await auto.loadConfig();
+
+    expect(auto.labels!.released).toEqual({
+      description: 'This issue/pull request has been released',
+      name: 'released'
+    });
+  });
+
   describe('logParse', () => {
     test('should be able to tap parseCommit', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
