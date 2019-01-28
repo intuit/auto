@@ -155,12 +155,6 @@ export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
   apply(auto: Auto) {
-    auto.hooks.beforeRun.tap(this.name, async () => {
-      if (!process.env.NPM_TOKEN) {
-        auto.logger.log.warn('NPM Token is needed for the NPM plugin!');
-      }
-    });
-
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       if (!isCI) {
         return;
