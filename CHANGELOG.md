@@ -1,3 +1,15 @@
+# v4.7.2 (Mon Jan 28 2019)
+
+#### 🐛  Bug Fix
+
+- can't warn here or else `version` will fail [#274](https://github.com/intuit/auto/pull/274) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.1 (Sat Jan 26 2019)
 
 #### 🐛  Bug Fix
