@@ -310,7 +310,7 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
-        if (auto.args.verbose) {
+        if (auto.args && auto.args.verbose) {
           await execPromise('git', ['status', '--short']);
         }
         await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
