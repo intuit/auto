@@ -1,3 +1,15 @@
+# v4.7.3 (Tue Jan 29 2019)
+
+#### 🐛  Bug Fix
+
+- don't run commmit hooks. match npm version bahvior [#275](https://github.com/intuit/auto/pull/275) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.2 (Mon Jan 28 2019)
 
 #### 🐛  Bug Fix
