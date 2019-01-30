@@ -1,3 +1,15 @@
+# v4.7.4 (Wed Jan 30 2019)
+
+#### 🐛  Bug Fix
+
+- add more logging for lerna debugging [#276](https://github.com/intuit/auto/pull/276) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.3 (Tue Jan 29 2019)
 
 #### 🐛  Bug Fix
