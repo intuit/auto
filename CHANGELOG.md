@@ -1,3 +1,15 @@
+# v4.7.5 (Wed Jan 30 2019)
+
+#### 🐛  Bug Fix
+
+- run git status in verbose mode for lerna [#277](https://github.com/intuit/auto/pull/277) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.4 (Wed Jan 30 2019)
 
 #### 🐛  Bug Fix
