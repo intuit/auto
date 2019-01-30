@@ -282,6 +282,7 @@ export default class NPMPlugin implements IPlugin {
           'version',
           monorepoBump || version,
           '--force-publish',
+          '--no-commit-hooks',
           '--yes',
           '-m',
           "'Bump version to: %v [skip ci]'"

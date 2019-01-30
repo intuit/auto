@@ -290,6 +290,7 @@ describe('publish', () => {
       'version',
       'patch',
       '--force-publish',
+      '--no-commit-hooks',
       '--yes',
       '-m',
       "'Bump version to: %v [skip ci]'"
@@ -358,6 +359,7 @@ describe('publish', () => {
       'version',
       '1.0.1',
       '--force-publish',
+      '--no-commit-hooks',
       '--yes',
       '-m',
       "'Bump version to: %v [skip ci]'"
