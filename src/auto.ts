@@ -403,9 +403,13 @@ export default class Auto {
     await this.makeChangelog(options);
 
     if (!options.dryRun) {
+      this.logger.verbose.info('Calling version hook');
       await this.hooks.version.promise(version);
+      this.logger.verbose.info('Calling after version hook');
       await this.hooks.afterVersion.promise();
+      this.logger.verbose.info('Calling publish hook');
       await this.hooks.publish.promise(version);
+      this.logger.verbose.info('Calling after publish hook');
       await this.hooks.afterPublish.promise();
     }
 

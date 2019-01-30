@@ -275,6 +275,7 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
       if (isMonorepo()) {
+        auto.logger.verbose.info('Detected monorepo, using lerna');
         const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
 
         await execPromise('npx', [
@@ -287,6 +288,7 @@ export default class NPMPlugin implements IPlugin {
           '-m',
           "'Bump version to: %v [skip ci]'"
         ]);
+        auto.logger.verbose.info('Successfully versioned repo');
         return;
       }
 
@@ -298,13 +300,24 @@ export default class NPMPlugin implements IPlugin {
         '-m',
         '"Bump version to: %s [skip ci]"'
       ]);
+      auto.logger.verbose.info('Successfully versioned repo');
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       await setTokenOnCI();
+      auto.logger.verbose.info('Set CI NPM_TOKEN');
 
       if (isMonorepo()) {
-        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
+        auto.logger.verbose.info('Detected monorepo, using lerna');
+
+        try {
+          await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
+        } catch (error) {
+          await execPromise('git', ['status', '--short']);
+          throw error;
+        }
+
+        auto.logger.verbose.info('Successfully published repo');
         return;
       }
 
@@ -324,6 +337,7 @@ export default class NPMPlugin implements IPlugin {
         'origin',
         '$branch'
       ]);
+      auto.logger.verbose.info('Successfully published repo');
     });
   }
 }
