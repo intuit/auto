@@ -243,6 +243,15 @@ describe('getPreviousVersion', () => {
   });
 });
 
+test('should use string semver if no published package', async () => {
+  const plugin = new NPMPlugin({ setRcToken: false });
+
+  expect(plugin).toEqual({
+    name: 'NPM',
+    setRcToken: false
+  });
+});
+
 describe('publish', () => {
   beforeEach(() => {
     exec.mockClear();
