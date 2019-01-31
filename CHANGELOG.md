@@ -1,3 +1,15 @@
+# v4.8.0 (Thu Jan 31 2019)
+
+#### 🚀  Enhancement
+
+- NPM Plugin: Allow user to turn off setting RC token [#278](https://github.com/intuit/auto/pull/278) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.7.5 (Wed Jan 30 2019)
 
 #### 🐛  Bug Fix
