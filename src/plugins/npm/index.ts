@@ -151,8 +151,18 @@ async function loadPackageJson(): Promise<IPackageJSON> {
   return JSON.parse(await readFile('package.json', 'utf-8'));
 }
 
+interface INpmConfig {
+  setRcToken?: boolean;
+}
+
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
+
+  private readonly setRcToken: boolean;
+
+  constructor(config: INpmConfig = {}) {
+    this.setRcToken = config.setRcToken || true;
+  }
 
   apply(auto: Auto) {
     auto.hooks.beforeShipIt.tap(this.name, async () => {
@@ -304,8 +314,10 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      await setTokenOnCI();
-      auto.logger.verbose.info('Set CI NPM_TOKEN');
+      if (this.setRcToken) {
+        await setTokenOnCI();
+        auto.logger.verbose.info('Set CI NPM_TOKEN');
+      }
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
