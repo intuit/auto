@@ -1,3 +1,15 @@
+# v4.8.1 (Thu Jan 31 2019)
+
+#### 🐛  Bug Fix
+
+- ensure that setRcToken is respected [#279](https://github.com/intuit/auto/pull/279) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.8.0 (Thu Jan 31 2019)
 
 #### 🚀  Enhancement
