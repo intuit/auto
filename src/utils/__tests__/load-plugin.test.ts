@@ -9,7 +9,10 @@ describe('loadPlugins', () => {
   });
 
   test('should use supported plugin', async () => {
-    expect(loadPlugin(['npm', {}], logger)).toEqual({ name: 'NPM' });
+    expect(loadPlugin(['npm', {}], logger)).toEqual({
+      name: 'NPM',
+      setRcToken: true
+    });
   });
 
   test('should require custom plugins -- fallback to cwd', async () => {

@@ -152,7 +152,7 @@ async function loadPackageJson(): Promise<IPackageJSON> {
 }
 
 interface INpmConfig {
-  setRcToken: boolean;
+  setRcToken?: boolean;
 }
 
 export default class NPMPlugin implements IPlugin {
@@ -160,7 +160,7 @@ export default class NPMPlugin implements IPlugin {
 
   private readonly setRcToken: boolean;
 
-  constructor(config: INpmConfig) {
+  constructor(config: INpmConfig = {}) {
     this.setRcToken = config.setRcToken || true;
   }
 
