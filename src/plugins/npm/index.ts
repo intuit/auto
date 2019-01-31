@@ -161,7 +161,8 @@ export default class NPMPlugin implements IPlugin {
   private readonly setRcToken: boolean;
 
   constructor(config: INpmConfig = {}) {
-    this.setRcToken = config.setRcToken || true;
+    this.setRcToken =
+      typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
   }
 
   apply(auto: Auto) {
