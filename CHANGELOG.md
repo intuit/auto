@@ -1,3 +1,15 @@
+# v4.8.2 (Wed Feb 06 2019)
+
+#### 🐛  Bug Fix
+
+- Update @types/jest to the latest version 🚀 [#282](https://github.com/intuit/auto/pull/282) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 1
+
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.1 (Thu Jan 31 2019)
 
 #### 🐛  Bug Fix
