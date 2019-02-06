@@ -1,3 +1,15 @@
+# v4.8.3 (Wed Feb 06 2019)
+
+#### 🏠  Internal
+
+- Update all-contributors-cli to the latest version 🚀 [#284](https://github.com/intuit/auto/pull/284) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 1
+
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.2 (Wed Feb 06 2019)
 
 #### 🐛  Bug Fix
