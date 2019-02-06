@@ -71,7 +71,7 @@
     "@types/dedent": "^0.7.0",
     "@types/dotenv": "^6.1.0",
     "@types/is-ci": "^1.1.0",
-    "@types/jest": "~23.3.13",
+    "@types/jest": "~24.0.0",
     "@types/node": "~10.12.18",
     "@types/node-fetch": "2.1.4",
     "@types/parse-github-url": "1.0.0",
