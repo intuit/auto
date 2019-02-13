@@ -80,6 +80,7 @@ export default class Auto {
   git?: Git;
   labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
+  slack?: string;
 
   constructor(args: ArgsType) {
     this.args = args;
@@ -119,6 +120,7 @@ export default class Auto {
 
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
+    this.slack = config.slack;
     this.loadPlugins(config);
     this.hooks.beforeRun.call(config);
 
@@ -559,7 +561,7 @@ export default class Auto {
     if (!dryRun) {
       await this.git.publish(releaseNotes, prefixed);
 
-      if (slack) {
+      if (slack || this.slack) {
         this.logger.log.info('Posting release to slack');
         await this.release.postToSlack(releaseNotes, prefixed);
       }
