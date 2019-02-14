@@ -1,3 +1,15 @@
+# v4.8.6 (Wed Feb 13 2019)
+
+#### 🐛  Bug Fix
+
+- check if released label has already been added [#290](https://github.com/intuit/auto/pull/290) (hipstersmoothie@users.noreply.github.com)
+
+#### Authors: 1
+
+- hipstersmoothie@users.noreply.github.com
+
+---
+
 # v4.8.5 (Wed Feb 13 2019)
 
 #### 🐛  Bug Fix
