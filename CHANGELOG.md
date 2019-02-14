@@ -1,3 +1,24 @@
+# v4.8.4 (Wed Feb 13 2019)
+
+#### 🐛  Bug Fix
+
+- ShipIt - Get Slack URL from config [#288](https://github.com/intuit/auto/pull/288) (hipstersmoothie@users.noreply.github.com)
+
+#### 🏠  Internal
+
+- Update @types/node to the latest version 🚀 [#287](https://github.com/intuit/auto/pull/287) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update @types/node-fetch to the latest version 🚀 [#286](https://github.com/intuit/auto/pull/286) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Add license scan report and status [#283](https://github.com/intuit/auto/pull/283) ([@fossabot](https://github.com/fossabot))
+
+#### Authors: 4
+
+- hipstersmoothie@users.noreply.github.com
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fossabot ([@fossabot](https://github.com/fossabot))
+
+---
+
 # v4.8.3 (Wed Feb 06 2019)
 
 #### 🏠  Internal
