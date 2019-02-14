@@ -1,4 +1,5 @@
 import merge from 'deepmerge';
+import { IReleaseCommandOptions } from '../../cli/args';
 import { IExtendedCommit } from '../../log-parse';
 import { Auto, IPlugin } from '../../main';
 
@@ -41,6 +42,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
       this.name,
       async (newVersion, commits) => {
         if (!newVersion) {
+          return;
+        }
+
+        if ((auto.args as IReleaseCommandOptions).dryRun) {
           return;
         }
 
