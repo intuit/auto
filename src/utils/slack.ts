@@ -1,12 +1,17 @@
+import { githubToSlack } from '@atomist/slack-messages';
 import fetch from 'node-fetch';
 import join from 'url-join';
 
 const sanitizeMarkdown = (markdown: string) =>
-  markdown
+  githubToSlack(markdown)
     .split('\n')
-    .map(line =>
-      line.replace(/\[([\s\S]+)\]\([\S\s]+\)/, (_, label: string) => label)
-    )
+    .map(line => {
+      // Strip out the ### prefix and replace it with *<word>* to make it bold
+      if (line.startsWith('#')) {
+        return `*${line.replace(/^[#]+/, '')}*`;
+      }
+      return line;
+    })
     .join('\n');
 
 interface IPostToSlackOptions {
@@ -21,15 +26,15 @@ export default async function postToSlack(
   releaseNotes: string,
   options: IPostToSlackOptions
 ) {
-  const body = `\`\`\`${sanitizeMarkdown(releaseNotes)}\`\`\``;
+  const body = sanitizeMarkdown(releaseNotes);
   const token = process.env.SLACK_TOKEN;
-  const url = `${join(
+  const url = join(
     options.baseUrl,
     options.owner,
     options.repo,
     'releases/tag',
     options.tag
-  )}\n`;
+  );
 
   if (!token) {
     return Promise.reject(new Error('Slack needs a token to send a message'));
@@ -38,7 +43,9 @@ export default async function postToSlack(
   return fetch(`${options.slackUrl}?token=${token}`, {
     method: 'POST',
     body: JSON.stringify({
-      text: [`@channel: New release *${options.tag}*`, url, body].join('\n'),
+      text: [`@channel: New release *<${url}|${options.tag}>*`, body].join(
+        '\n'
+      ),
       // eslint-disable-next-line camelcase
       link_names: 1
     }),
