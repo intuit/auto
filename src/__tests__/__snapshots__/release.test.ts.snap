@@ -15,11 +15,7 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 
 #### 🏠  Internal
 
-- Third [#1236](https://github.com/web/site/pull/1236) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Third [#1236](https://github.com/web/site/pull/1236) (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
@@ -29,12 +25,7 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 
 #### ⚠️  Pushed to master
 
-- I should be included  (adam@dierkens.com)
-
-#### Authors: 2
-
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
+- I should be included  (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
@@ -45,12 +36,7 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 
 #### ⚠️  Pushed to master
 
-- I am a commit to master  (adam@dierkens.com)
-
-#### Authors: 2
-
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
+- I am a commit to master  (adam@dierkens.com)"
 `;
 
 exports[`Release getCommits should ignore rebased commits if no last release 1`] = `

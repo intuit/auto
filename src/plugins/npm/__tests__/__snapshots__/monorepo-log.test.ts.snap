@@ -11,9 +11,5 @@ exports[`should create sections for packages 1`] = `
 #### 🏠  Internal
 
 - \`@foobar/release\`
-  - Another Feature [#1234](https://github.custom.com/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+  - Another Feature [#1234](https://github.custom.com/pull/1234) (adam@dierkens.com)"
 `;

@@ -3,20 +3,12 @@
 exports[`Hooks author 1`] = `
 "#### 🐛  Bug Fix
 
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (:heart: Adam Dierkens/adam@dierkens.com :heart:)
-
-#### Authors: 1
-
-:shipit: Adam Dierkens (:heart: Adam Dierkens/adam@dierkens.com :heart:)"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (:heart: Adam Dierkens/adam@dierkens.com :heart:)"
 `;
 
 exports[`Hooks title 1`] = `
 ":heart: 🐛  Bug Fix :heart:
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should be able to customize "Push To Master" title 1`] = `
@@ -26,32 +18,20 @@ exports[`generateReleaseNotes should be able to customize "Push To Master" title
 
 #### Custom Title
 
-- I was a push to master  (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- I was a push to master  (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should be able to customize titles 1`] = `
 "#### Woo Woo New Features
 
-- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] = `
 "#### 🐛  Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- Third  (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Third  (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should create note for JIRA commits 1`] = `
@@ -65,41 +45,25 @@ exports[`generateReleaseNotes should create note for JIRA commits 1`] = `
 
 #### 🏠  Internal
 
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should create note for PR commits 1`] = `
 "#### 🚀  Enhancement
 
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should create note for PR commits without labels 1`] = `
 "#### 🐛  Bug Fix
 
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should create note for jira commits without labels 1`] = `
 "#### 🐛  Bug Fix
 
-- [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052): Fix P0  (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052): Fix P0  (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
@@ -109,11 +73,7 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 #### ⚠️  Pushed to master
 
-- I was a push to master  (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
+- I was a push to master  (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
@@ -126,19 +86,11 @@ exports[`generateReleaseNotes should use only email if author name doesn't exist
 "#### 🐛  Bug Fix
 
 - Another Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
-
-#### Authors: 1
-
-- adam@dierkens.com"
+- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)"
 `;
 
 exports[`generateReleaseNotes should use username if present 1`] = `
 "#### 🚀  Enhancement
 
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) ([@adam](https://github.custom.com/adam))
-
-#### Authors: 1
-
-- Adam Dierkens ([@adam](https://github.custom.com/adam))"
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) ([@adam](https://github.custom.com/adam))"
 `;
