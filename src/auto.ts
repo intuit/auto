@@ -75,6 +75,7 @@ export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
   args: ArgsType;
+  config?: IReleaseOptions;
 
   release?: Release;
   git?: Git;
@@ -117,6 +118,7 @@ export default class Auto {
 
     this.logger.verbose.success('Loaded `auto` with config:', config);
 
+    this.config = config;
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
@@ -559,7 +561,7 @@ export default class Auto {
     if (!dryRun) {
       await this.git.publish(releaseNotes, prefixed);
 
-      if (slack) {
+      if (slack || (this.config && this.config.slack)) {
         this.logger.log.info('Posting release to slack');
         await this.release.postToSlack(releaseNotes, prefixed);
       }

@@ -652,6 +652,7 @@ export interface ICommentCommandOptions {
 
 export interface IShipItCommandOptions {
   dryRun?: boolean;
+  slack?: string;
 }
 
 type GlobalFlags = {
