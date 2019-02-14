@@ -1,3 +1,15 @@
+# v4.8.5 (Wed Feb 13 2019)
+
+#### 🐛  Bug Fix
+
+- released plugin respects dry run flag [#289](https://github.com/intuit/auto/pull/289) (hipstersmoothie@users.noreply.github.com)
+
+#### Authors: 1
+
+- hipstersmoothie@users.noreply.github.com
+
+---
+
 # v4.8.4 (Wed Feb 13 2019)
 
 #### 🐛  Bug Fix
