@@ -125,7 +125,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
     await auto.git!.createComment(comment, prOrIssue, 'released');
 
     // add a `released` label to a PR
-    await auto.git!.addLabelToPr(prOrIssue, this.options.label);
+    const labels = await auto.git!.getLabels(prOrIssue);
+
+    if (!labels.includes(this.options.label)) {
+      await auto.git!.addLabelToPr(prOrIssue, this.options.label);
+    }
   }
 
   private createReleasedComment(isIssue: boolean, version: string) {
