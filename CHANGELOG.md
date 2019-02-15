@@ -1,3 +1,15 @@
+# v4.8.7 (Fri Feb 15 2019)
+
+#### 🐛  Bug Fix
+
+- Fix Promise issue when creating changelog [#293](https://github.com/intuit/auto/pull/293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.8.6 (Wed Feb 13 2019)
 
 #### 🐛  Bug Fix
