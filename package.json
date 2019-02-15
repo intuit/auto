@@ -39,6 +39,7 @@
     "@hutson/set-npm-auth-token-for-ci": "^3.0.2",
     "@octokit/plugin-enterprise-compatibility": "^1.0.0",
     "@octokit/rest": "^16.13.1",
+    "arr-flatten": "^1.1.0",
     "chalk": "^2.4.2",
     "chrome-webstore-upload-cli": "^1.2.0",
     "command-line-args": "^5.0.2",
@@ -112,6 +113,7 @@
     ]
   },
   "jest": {
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "js"
