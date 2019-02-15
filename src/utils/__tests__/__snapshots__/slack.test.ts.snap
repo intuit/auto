@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *1.0.0*\\\\nhttps://github.custom.com/Adam Dierkens/test/releases/tag/1.0.0\\\\n\\\\n\`\`\`# My Notes\\\\n- PR some link\`\`\`\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://github.custom.com/Adam Dierkens/test/releases/tag/1.0.0|1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
