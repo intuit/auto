@@ -1,3 +1,4 @@
+import flatten from 'arr-flatten';
 import { AsyncSeriesBailHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
@@ -205,27 +206,29 @@ export default class Changelog {
     );
 
     await Promise.all(
-      commits.map(async commit => {
-        commit.authors.map(async author => {
-          if (author.username === 'invalid-email-address') {
-            return;
-          }
+      flatten(
+        commits.map(commit =>
+          commit.authors.map(async author => {
+            if (author.username === 'invalid-email-address') {
+              return;
+            }
 
-          const user = await this.hooks.renderChangelogAuthor.promise(
-            author,
-            commit,
-            this.options
-          );
-          const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
-            author,
-            user as string
-          );
+            const user = await this.hooks.renderChangelogAuthor.promise(
+              author,
+              commit,
+              this.options
+            );
+            const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
+              author,
+              user as string
+            );
 
-          if (authorEntry && !authors.has(authorEntry)) {
-            authors.add(authorEntry);
-          }
-        });
-      })
+            if (authorEntry && !authors.has(authorEntry)) {
+              authors.add(authorEntry);
+            }
+          })
+        )
+      )
     );
 
     if (authors.size === 0) {
