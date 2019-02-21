@@ -227,11 +227,15 @@ export default class Auto {
     const target_url = url;
 
     if (!dryRun) {
-      await this.git.createStatus({
-        ...options,
-        sha,
-        target_url
-      });
+      try {
+        await this.git.createStatus({
+          ...options,
+          sha,
+          target_url
+        });
+      } catch {
+        this.logger.log.error('Failed to post status to Pull Request.');
+      }
 
       this.logger.log.success('Posted status to Pull Request.');
     } else {
