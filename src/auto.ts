@@ -308,14 +308,18 @@ export default class Auto {
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
     if (!dryRun) {
-      await this.git.createStatus({
-        ...options,
-        ...msg,
-        target_url,
-        sha
-      } as IPRInfo);
+      try {
+        await this.git.createStatus({
+          ...options,
+          ...msg,
+          target_url,
+          sha
+        } as IPRInfo);
 
-      this.logger.log.success('Posted status to Pull Request.');
+        this.logger.log.success('Posted status to Pull Request.');
+      } catch (error) {
+        this.logger.verbose.error('Failed to post status to github');
+      }
     } else {
       this.logger.verbose.info('`pr-check` dry run complete.');
     }
