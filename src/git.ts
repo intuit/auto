@@ -59,7 +59,9 @@ export default class Git {
       previews: ['symmetra-preview']
     });
     this.ghub.hook.error('request', (error, opts) => {
-      delete error.headers.authorization;
+      if (error && error.headers && error.headers.authorization) {
+        delete error.headers.authorization;
+      }
       throw error;
     });
   }
