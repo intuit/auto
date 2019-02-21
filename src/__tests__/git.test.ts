@@ -52,6 +52,9 @@ jest.mock('@octokit/rest', () => {
     },
     users: {
       getByUsername
+    },
+    hook: {
+      error: () => undefined
     }
   });
 

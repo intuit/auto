@@ -28,6 +28,9 @@ jest.mock('@octokit/rest', () => {
     authenticate: () => undefined,
     search: {
       issuesAndPullRequests: () => ({ data: { items: [] } })
+    },
+    hook: {
+      error: () => undefined
     }
   });
 
