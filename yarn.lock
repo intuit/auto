@@ -10986,10 +10986,10 @@ tslint-microsoft-contrib@^6.0.0:
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
-tslint-xo@~0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/tslint-xo/-/tslint-xo-0.13.0.tgz#61f6a69869e3184492aa23c2e520a87ae617e992"
-  integrity sha512-v2r8OQQM1y58zll7Nd3h9HrVwasBMXpiVcilzXeN1AhCxWQF0dQ4rqtVJ/ZhCbmFAC1eOXjQsLoMwL6XY88F9g==
+tslint-xo@~0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/tslint-xo/-/tslint-xo-0.15.0.tgz#27ca62c1dc6cf57259b195deecef189e5dee4aea"
+  integrity sha512-912Tr4S2Fs+5FhB92eKsmAZ9TaxJgqYAetrRbQ6acUyYT9Bn2mxeTuIqmvw8cjMDUOfH3fm2evQ23kXs6uaqvg==
   dependencies:
     tslint-consistent-codestyle "^1.15.0"
     tslint-eslint-rules "^5.4.0"
