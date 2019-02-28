@@ -322,7 +322,7 @@ export default class Auto {
 
         this.logger.log.success('Posted status to Pull Request.');
       } catch (error) {
-        this.logger.verbose.error('Failed to post status to github');
+        this.logger.log.error('Failed to post status to github');
       }
     } else {
       this.logger.verbose.info('`pr-check` dry run complete.');
