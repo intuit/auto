@@ -16,16 +16,21 @@ export default async function execPromise(cmd: string, args?: string[]) {
     });
 
     let allStdout = '';
-    child.stdout.on('data', async (data: Buffer) => {
-      const stdout = data.toString();
-      allStdout += stdout;
-    });
-
     let allStderr = '';
-    child.stderr.on('data', (data: Buffer) => {
-      const stderr = data.toString();
-      allStderr += stderr;
-    });
+
+    if (child.stdout) {
+      child.stdout.on('data', async (data: Buffer) => {
+        const stdout = data.toString();
+        allStdout += stdout;
+      });
+    }
+
+    if (child.stderr) {
+      child.stderr.on('data', (data: Buffer) => {
+        const stderr = data.toString();
+        allStderr += stderr;
+      });
+    }
 
     // This usually occurs during dev-time, when you have the wrong command
     child.on('error', err => {
