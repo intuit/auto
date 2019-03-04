@@ -1,3 +1,19 @@
+# v4.8.9 (Mon Mar 04 2019)
+
+#### 🏠  Internal
+
+- update deps [#300](https://github.com/intuit/auto/pull/300) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update tslint-xo to the latest version 🚀 [#298](https://github.com/intuit/auto/pull/298) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update ts-jest to the latest version 🚀 [#295](https://github.com/intuit/auto/pull/295) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update cosmiconfig to the latest version 🚀 [#294](https://github.com/intuit/auto/pull/294) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.8 (Fri Feb 15 2019)
 
 #### 🐛  Bug Fix
