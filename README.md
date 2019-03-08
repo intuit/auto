@@ -85,7 +85,7 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## :nail_care: `auto` Badge :nail_care:
 
-Do you project use `auto`? Then use our custom badge!
+Does your project use `auto`? Then use our custom badge!
 
 [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 
