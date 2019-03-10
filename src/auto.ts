@@ -233,8 +233,12 @@ export default class Auto {
           sha,
           target_url
         });
-      } catch {
-        this.logger.log.error('Failed to post status to Pull Request.');
+      } catch (error) {
+        throw new Error(
+          `Failed to post status to Pull Request with error code ${
+            error.status
+          }`
+        );
       }
 
       this.logger.log.success('Posted status to Pull Request.');
@@ -322,7 +326,11 @@ export default class Auto {
 
         this.logger.log.success('Posted status to Pull Request.');
       } catch (error) {
-        this.logger.log.error('Failed to post status to github');
+        throw new Error(
+          `Failed to post status to Pull Request with error code ${
+            error.status
+          }`
+        );
       }
     } else {
       this.logger.verbose.info('`pr-check` dry run complete.');
