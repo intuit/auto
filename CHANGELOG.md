@@ -1,3 +1,22 @@
+# v4.8.10 (Wed Mar 13 2019)
+
+#### 🏠  Internal
+
+- update deps [#306](https://github.com/intuit/auto/pull/306) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update @types/node to the latest version 🚀 [#303](https://github.com/intuit/auto/pull/303) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### 📝  Documentation
+
+- fixing a typo [#302](https://github.com/intuit/auto/pull/302) ([@GGonryun](https://github.com/GGonryun))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+- Miguel Campos ([@GGonryun](https://github.com/GGonryun))
+
+---
+
 # v4.8.9 (Mon Mar 04 2019)
 
 #### 🏠  Internal
