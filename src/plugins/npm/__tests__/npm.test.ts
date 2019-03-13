@@ -51,7 +51,7 @@ const monorepoPackagesResult = [
   }
 ];
 
-describe('changedPackages ', async () => {
+describe('changedPackages ', () => {
   test('should return nothing without a package directory', async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 

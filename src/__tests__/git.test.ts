@@ -82,7 +82,7 @@ describe('github', () => {
     addLabels.mockClear();
   });
 
-  describe('getLabels', async () => {
+  describe('getLabels', () => {
     test('successful', async () => {
       const gh = new Git(options);
 
@@ -210,7 +210,7 @@ describe('github', () => {
     expect(await gh.getProject()).toBeTruthy();
   });
 
-  describe('createComment', async () => {
+  describe('createComment', () => {
     test('should post comment if none exists', async () => {
       const gh = new Git(options);
 
@@ -310,7 +310,7 @@ describe('github', () => {
     });
   });
 
-  describe('getUserByEmail', async () => {
+  describe('getUserByEmail', () => {
     test('exists', async () => {
       const gh = new Git(options);
 
@@ -336,7 +336,7 @@ describe('github', () => {
     });
   });
 
-  describe('getLatestRelease ', async () => {
+  describe('getLatestRelease', () => {
     test('has tag ', async () => {
       const gh = new Git(options);
 
