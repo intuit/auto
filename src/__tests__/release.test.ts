@@ -122,7 +122,7 @@ describe('Release', () => {
     expect(constructor.mock.calls[0][0].repo).toBe('test');
   });
 
-  describe('getCommits', async () => {
+  describe('getCommits', () => {
     test('should default to HEAD', async () => {
       const gh = new Release(git);
       await gh.getCommits('12345');
@@ -252,7 +252,7 @@ describe('Release', () => {
     });
   });
 
-  describe('addToChangelog', async () => {
+  describe('addToChangelog', () => {
     test("creates new changelog if one didn't exist", async () => {
       const gh = new Release(git);
       await gh.addToChangelog(
@@ -333,7 +333,7 @@ describe('Release', () => {
     });
   });
 
-  describe('generateReleaseNotes', async () => {
+  describe('generateReleaseNotes', () => {
     test('should default to HEAD', async () => {
       const gh = new Release(git);
       expect(await gh.generateReleaseNotes('1234')).toBe('');
