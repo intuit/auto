@@ -309,11 +309,11 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
-      createStatus.mockRejectedValueOnce(new Error());
+      createStatus.mockRejectedValueOnce({ status: 400 });
 
       await expect(
         auto.pr({ ...required, sha: '1234' })
-      ).resolves.toBeUndefined();
+      ).rejects.toBeInstanceOf(Error);
       expect(createStatus).toHaveBeenCalled();
     });
 
@@ -428,11 +428,11 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
-      createStatus.mockRejectedValueOnce(new Error());
+      createStatus.mockRejectedValueOnce({ status: 123 });
 
       await expect(
         auto.prCheck({ ...required, pr: 13 })
-      ).resolves.toBeUndefined();
+      ).rejects.toBeInstanceOf(Error);
       expect(createStatus).toHaveBeenCalled();
     });
 
