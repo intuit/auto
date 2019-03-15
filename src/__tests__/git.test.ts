@@ -20,6 +20,7 @@ const updateLabel = jest.fn();
 const addLabels = jest.fn();
 const list = jest.fn();
 const lock = jest.fn();
+const errorHook = jest.fn();
 
 jest.mock('@octokit/rest', () => {
   const instance = () => ({
@@ -52,6 +53,9 @@ jest.mock('@octokit/rest', () => {
     },
     users: {
       getByUsername
+    },
+    hook: {
+      error: errorHook
     }
   });
 
@@ -417,6 +421,31 @@ describe('github', () => {
       const gh = new Git(options);
 
       expect(gh.getProjectLabels()).rejects.toBeTruthy();
+    });
+  });
+
+  describe('error hook', () => {
+    test('strip authorization headers from error', () => {
+      type HookError = import('@octokit/rest').HookError;
+      const error = (headers = {}): HookError => ({
+        name: 'Request failed',
+        message: 'The request has failed',
+        status: 404,
+        headers
+      });
+
+      // tslint:disable-next-line:no-unused
+      const gh = new Git(options);
+
+      expect(errorHook).toBeCalled();
+
+      const errorHandler = errorHook.mock.calls[0][1] as (
+        error: HookError
+      ) => void;
+
+      expect(
+        errorHandler.bind(undefined, error({ authorization: 'token abc' }))
+      ).toThrow(error());
     });
   });
 });

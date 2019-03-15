@@ -28,6 +28,9 @@ jest.mock('@octokit/rest', () => {
     authenticate: () => undefined,
     search: {
       issuesAndPullRequests: () => ({ data: { items: [] } })
+    },
+    hook: {
+      error: () => undefined
     }
   });
 
@@ -301,6 +304,19 @@ describe('Auto', () => {
       expect(auto.pr(required)).rejects.toBeTruthy();
     });
 
+    test('should catch exceptions when status fails to post', async () => {
+      const auto = new Auto({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.createStatus = createStatus;
+      createStatus.mockRejectedValueOnce({ status: 400 });
+
+      await expect(
+        auto.pr({ ...required, sha: '1234' })
+      ).rejects.toBeInstanceOf(Error);
+      expect(createStatus).toHaveBeenCalled();
+    });
+
     test('should do nothing ', async () => {
       const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
@@ -405,6 +421,19 @@ describe('Auto', () => {
           state: 'error'
         })
       );
+    });
+
+    test('should catch status errors', async () => {
+      const auto = new Auto({ command: 'pr', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.createStatus = createStatus;
+      createStatus.mockRejectedValueOnce({ status: 123 });
+
+      await expect(
+        auto.prCheck({ ...required, pr: 13 })
+      ).rejects.toBeInstanceOf(Error);
+      expect(createStatus).toHaveBeenCalled();
     });
 
     test('should error with no label', async () => {

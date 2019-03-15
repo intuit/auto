@@ -227,11 +227,19 @@ export default class Auto {
     const target_url = url;
 
     if (!dryRun) {
-      await this.git.createStatus({
-        ...options,
-        sha,
-        target_url
-      });
+      try {
+        await this.git.createStatus({
+          ...options,
+          sha,
+          target_url
+        });
+      } catch (error) {
+        throw new Error(
+          `Failed to post status to Pull Request with error code ${
+            error.status
+          }`
+        );
+      }
 
       this.logger.log.success('Posted status to Pull Request.');
     } else {
@@ -308,14 +316,22 @@ export default class Auto {
     this.logger.verbose.info('Posting comment to GitHub\n', msg);
 
     if (!dryRun) {
-      await this.git.createStatus({
-        ...options,
-        ...msg,
-        target_url,
-        sha
-      } as IPRInfo);
+      try {
+        await this.git.createStatus({
+          ...options,
+          ...msg,
+          target_url,
+          sha
+        } as IPRInfo);
 
-      this.logger.log.success('Posted status to Pull Request.');
+        this.logger.log.success('Posted status to Pull Request.');
+      } catch (error) {
+        throw new Error(
+          `Failed to post status to Pull Request with error code ${
+            error.status
+          }`
+        );
+      }
     } else {
       this.logger.verbose.info('`pr-check` dry run complete.');
     }

@@ -58,6 +58,12 @@ export default class Git {
       auth: `token ${this.options.token}`,
       previews: ['symmetra-preview']
     });
+    this.ghub.hook.error('request', error => {
+      if (error && error.headers && error.headers.authorization) {
+        delete error.headers.authorization;
+      }
+      throw error;
+    });
   }
 
   @Memoize()
