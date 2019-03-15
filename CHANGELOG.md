@@ -1,3 +1,15 @@
+# v4.8.11 (Thu Mar 14 2019)
+
+#### 🐛  Bug Fix
+
+- Remove auth in error responses if it's present [#297](https://github.com/intuit/auto/pull/297) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v4.8.10 (Wed Mar 13 2019)
 
 #### 🏠  Internal
