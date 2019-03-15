@@ -34,6 +34,6 @@
 
 ---
 
-:bathtub: Continuos Integration
+:bathtub: Continuous Integration
 
 - [CircleCI](pages/circleci.md)
