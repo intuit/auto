@@ -37,6 +37,21 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 - adam@dierkens.com"
 `;
 
+exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `
+"#### 🚀  Enhancement
+
+- Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I am a commit with a related PR  (adam@dierkens.com)
+
+#### Authors: 2
+
+- Adam Dierkens (adam@dierkens.com)
+- adam@dierkens.com"
+`;
+
 exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
 "#### 🚀  Enhancement
 
