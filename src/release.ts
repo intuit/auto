@@ -185,21 +185,36 @@ export default class Release {
         [] as string[]
       );
 
-    return allCommits
-      .filter(
-        commit =>
-          !allPrCommitHashes.includes(commit.hash) &&
-          !commit.subject.includes('[skip ci]')
-      )
-      .map(commit => {
+    const labelled = allCommits.filter(
+      commit =>
+        !allPrCommitHashes.includes(commit.hash) &&
+        !commit.subject.includes('[skip ci]')
+    );
+
+    await Promise.all(
+      labelled.map(async commit => {
         if (commit.pullRequest) {
           return commit;
         }
 
-        commit.labels = ['pushToMaster', ...commit.labels];
+        const prs = await this.git.searchRepo({ q: commit.hash });
+
+        if (prs && prs.items && prs.total_count > 0) {
+          const labels: ILabelDefinition[] = prs.items[0].labels || [];
+
+          commit.labels = [
+            ...labels.map(label => label.name),
+            ...commit.labels
+          ];
+        } else {
+          commit.labels = ['pushToMaster', ...commit.labels];
+        }
+
         commit.subject = commit.subject.split('\n')[0];
-        return commit;
-      });
+      })
+    );
+
+    return labelled;
   }
 
   /**

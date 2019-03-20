@@ -452,6 +452,44 @@ describe('Release', () => {
 
       expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
     });
+
+    test('should match commits with related PRs', async () => {
+      const gh = new Release(git);
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      getCommitsForPR.mockReturnValueOnce(undefined);
+      // Rebased PR will have different commit SHAs than the commits in master
+      getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
+
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getLabels.mockReturnValueOnce(['minor']);
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          {
+            hash: '1',
+            authorName: 'Adam Dierkens',
+            authorEmail: 'adam@dierkens.com',
+            subject: 'I am a commit with a related PR'
+          }
+        ])
+      );
+      searchRepo.mockReturnValueOnce({
+        total_count: 1,
+        items: [{ labels: [{ name: 'patch' }] }]
+      });
+
+      expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
+    });
   });
 
   describe('getSemverBump', () => {
