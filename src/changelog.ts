@@ -196,6 +196,7 @@ export default class Changelog {
     },
     sections: string[]
   ) {
+    const seenUsers = new Set<string>();
     const authors = new Set<string>();
     const commits = Object.values(split).reduce(
       (
@@ -218,6 +219,13 @@ export default class Changelog {
               commit,
               this.options
             );
+
+            if (user && seenUsers.has(user)) {
+              return;
+            }
+
+            seenUsers.add(user as string);
+
             const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
               author,
               user as string
