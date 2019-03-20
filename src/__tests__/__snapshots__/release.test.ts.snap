@@ -31,10 +31,9 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 
 - I should be included  (adam@dierkens.com)
 
-#### Authors: 2
+#### Authors: 1
 
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `
@@ -46,10 +45,9 @@ exports[`Release generateReleaseNotes should match commits with related PRs 1`] 
 
 - I am a commit with a related PR  (adam@dierkens.com)
 
-#### Authors: 2
+#### Authors: 1
 
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
@@ -62,10 +60,9 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 
 - I am a commit to master  (adam@dierkens.com)
 
-#### Authors: 2
+#### Authors: 1
 
-- Adam Dierkens (adam@dierkens.com)
-- adam@dierkens.com"
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release getCommits should ignore rebased commits if no last release 1`] = `
