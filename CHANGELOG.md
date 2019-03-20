@@ -1,3 +1,15 @@
+# v4.8.13 (Wed Mar 20 2019)
+
+#### 🐛  Bug Fix
+
+- only add users once to changelog [#311](https://github.com/intuit/auto/pull/311) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.8.12 (Wed Mar 20 2019)
 
 #### 🐛  Bug Fix
