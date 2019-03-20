@@ -1,3 +1,20 @@
+# v4.8.12 (Wed Mar 20 2019)
+
+#### 🐛  Bug Fix
+
+- last ditch search for related PRs [#310](https://github.com/intuit/auto/pull/310) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- fix typo in docs [#307](https://github.com/intuit/auto/pull/307) ([@solon](https://github.com/solon))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Solon ([@solon](https://github.com/solon))
+
+---
+
 # v4.8.11 (Thu Mar 14 2019)
 
 #### 🐛  Bug Fix
