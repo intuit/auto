@@ -59,7 +59,7 @@
     "parse-commit-message": "4.0.0",
     "parse-github-url": "1.0.2",
     "registry-url": "5.0.0",
-    "semver": "^5.6.0",
+    "semver": "^6.0.0",
     "signale": "^1.4.0",
     "tapable": "^2.0.0-beta.2",
     "tinycolor2": "^1.4.1",
