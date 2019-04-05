@@ -1,3 +1,27 @@
+# v4.8.14 (Fri Apr 05 2019)
+
+#### 🏠  Internal
+
+- Update registry-url to the latest version 🚀 [#323](https://github.com/intuit/auto/pull/323) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update @types/semver to the latest version 🚀 [#321](https://github.com/intuit/auto/pull/321) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update @types/node to the latest version 🚀 [#320](https://github.com/intuit/auto/pull/320) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update semver to the latest version 🚀 [#315](https://github.com/intuit/auto/pull/315) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update @types/node to the latest version 🚀 [#314](https://github.com/intuit/auto/pull/314) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update cosmiconfig to the latest version 🚀 [#313](https://github.com/intuit/auto/pull/313) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update @types/node-fetch to the latest version 🚀 [#309](https://github.com/intuit/auto/pull/309) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update tslint-xo to the latest version 🚀 [#312](https://github.com/intuit/auto/pull/312) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### 📝  Documentation
+
+- Fix issue with warning wrapping section [#322](https://github.com/intuit/auto/pull/322) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 2
+
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v4.8.13 (Wed Mar 20 2019)
 
 #### 🐛  Bug Fix
