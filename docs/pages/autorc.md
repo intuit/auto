@@ -47,7 +47,9 @@ Will use the package `@YOUR_SCOPE/auto-config`
 
 Will use the package `auto-config-joe`
 
-::: message is-warning If extending from a config package make sure it's a dependency of your project :::
+::: message is-warning
+If extending from a config package make sure it's a dependency of your project
+:::
 
 ### Labels
 
