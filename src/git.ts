@@ -127,7 +127,7 @@ export default class Git {
     const args = {
       owner: this.options.owner,
       repo: this.options.repo,
-      number: prNumber
+      issue_number: prNumber
     };
 
     this.logger.verbose.info('Getting issue labels using:', args);
@@ -209,10 +209,10 @@ export default class Git {
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
-    const args = {
+    const args: Octokit.PullsGetParams = {
       owner: this.options.owner,
       repo: this.options.repo,
-      number: pr
+      pull_number: pr
     };
 
     this.logger.verbose.info('Getting pull request info using:', args);
@@ -300,7 +300,7 @@ export default class Git {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
     const result = await this.ghub.issues.addLabels({
-      number: pr,
+      issue_number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
       labels: [label]
@@ -316,7 +316,7 @@ export default class Git {
     this.logger.verbose.info(`Locking #${issue} issue...`);
 
     const result = await this.ghub.issues.lock({
-      number: issue,
+      issue_number: issue,
       owner: this.options.owner,
       repo: this.options.repo
     });
@@ -364,7 +364,7 @@ export default class Git {
     const result = (await this.ghub.pulls.listCommits({
       owner: this.options.owner.toLowerCase(),
       repo: this.options.repo.toLowerCase(),
-      number: pr
+      pull_number: pr
     })).data;
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
@@ -383,7 +383,7 @@ export default class Git {
     const comments = await this.ghub.issues.listComments({
       owner: this.options.owner,
       repo: this.options.repo,
-      number: pr
+      issue_number: pr
     });
 
     this.logger.veryVerbose.info('Got PR comments\n', comments);
@@ -410,7 +410,7 @@ export default class Git {
     const result = await this.ghub.issues.createComment({
       owner: this.options.owner,
       repo: this.options.repo,
-      number: pr,
+      issue_number: pr,
       body: `${commentIdentifier}\n${message}`
     });
 
