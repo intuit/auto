@@ -55,7 +55,7 @@ export default class Git {
     const gitHub = Octokit.plugin(enterpriseCompat);
     this.ghub = new gitHub({
       baseUrl: this.baseUrl,
-      auth: `token ${this.options.token}`,
+      auth: this.options.token,
       previews: ['symmetra-preview']
     });
     this.ghub.hook.error('request', error => {
