@@ -1,3 +1,20 @@
+# v4.8.15 (Mon Apr 15 2019)
+
+#### 🐛  Bug Fix
+
+- Octokit [#325](https://github.com/intuit/auto/pull/325) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update @types/node-fetch to the latest version 🚀 [#324](https://github.com/intuit/auto/pull/324) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.14 (Fri Apr 05 2019)
 
 #### 🏠  Internal
