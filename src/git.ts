@@ -124,7 +124,7 @@ export default class Git {
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
-    const args = {
+    const args: Octokit.IssuesListLabelsOnIssueParams = {
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: prNumber
@@ -300,7 +300,9 @@ export default class Git {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
     const result = await this.ghub.issues.addLabels({
-      issue_number: pr,
+      // Type definitions do not seem to match
+      // issue_number: pr,
+      number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
       labels: [label]
