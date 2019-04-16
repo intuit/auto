@@ -1,3 +1,23 @@
+# v4.8.15 (Mon Apr 15 2019)
+
+#### 🐛  Bug Fix
+
+- update command line args [#328](https://github.com/intuit/auto/pull/328) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Octokit [#325](https://github.com/intuit/auto/pull/325) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- update node types [#326](https://github.com/intuit/auto/pull/326) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ts-jest [#327](https://github.com/intuit/auto/pull/327) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update @types/node-fetch to the latest version 🚀 [#324](https://github.com/intuit/auto/pull/324) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.14 (Fri Apr 05 2019)
 
 #### 🏠  Internal
