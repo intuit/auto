@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@hutson/set-npm-auth-token-for-ci": "^3.0.2",
+    "@hutson/set-npm-auth-token-for-ci": "^4.0.0",
     "@octokit/plugin-enterprise-compatibility": "^1.1.0",
     "@octokit/rest": "^16.24.1",
     "arr-flatten": "^1.1.0",
