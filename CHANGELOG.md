@@ -1,3 +1,15 @@
+# v4.8.17 (Mon Apr 15 2019)
+
+#### 🐛  Bug Fix
+
+- use old addLabels praram because of bug in new one [#329](https://github.com/intuit/auto/pull/329) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.8.15 (Mon Apr 15 2019)
 
 #### 🐛  Bug Fix
