@@ -119,7 +119,8 @@
     "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
-      "js"
+      "js",
+      "json"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
