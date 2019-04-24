@@ -1,4 +1,6 @@
 import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
+import retry from '@octokit/plugin-retry';
+import throttling from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
 import tinyColor from 'tinycolor2';
@@ -52,11 +54,32 @@ export default class Git {
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
 
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const gitHub = Octokit.plugin(enterpriseCompat);
+    const gitHub = Octokit.plugin(enterpriseCompat)
+      .plugin(retry)
+      .plugin(throttling);
     this.ghub = new gitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
-      previews: ['symmetra-preview']
+      previews: ['symmetra-preview'],
+      throttle: {
+        onRateLimit: (retryAfter: number, opts: any) => {
+          this.logger.log.warn(
+            `Request quota exhausted for request ${opts.method} ${opts.url}`
+          );
+
+          // retry three times
+          if (opts.request.retryCount < 3) {
+            this.logger.verbose.log(`Retrying after ${retryAfter} seconds!`);
+            return true;
+          }
+        },
+        onAbuseLimit: (retryAfter: number, opts: any) => {
+          // does not retry, only logs an error
+          this.logger.log.error(
+            `Went over abuse rate limit ${opts.method} ${opts.url}`
+          );
+        }
+      }
     });
     this.ghub.hook.error('request', error => {
       if (error && error.headers && error.headers.authorization) {
