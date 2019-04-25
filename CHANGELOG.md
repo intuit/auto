@@ -1,3 +1,21 @@
+# v4.9.0 (Thu Apr 25 2019)
+
+#### 🚀  Enhancement
+
+- Add throttling, retry octokit plugins [#335](https://github.com/intuit/auto/pull/335) ([@zephraph](https://github.com/zephraph))
+
+#### 🏠  Internal
+
+- Update @hutson/set-npm-auth-token-for-ci to the latest version 🚀 [#330](https://github.com/intuit/auto/pull/330) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update husky to the latest version 🚀 [#333](https://github.com/intuit/auto/pull/333) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.8.17 (Mon Apr 15 2019)
 
 #### 🐛  Bug Fix
