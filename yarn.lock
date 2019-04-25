@@ -831,14 +831,14 @@
     reflect-metadata "^0.1.12"
     tslib "^1.8.1"
 
-"@hutson/set-npm-auth-token-for-ci@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@hutson/set-npm-auth-token-for-ci/-/set-npm-auth-token-for-ci-3.0.2.tgz#42001f972f2ad6116126d433d1a3eb7c27cf8598"
-  integrity sha512-OkUweh9K/M8DGGjumY/d3oNPicRP8xzq3bt9e1JiZnYrv0Rr66DROviujuKpajAZ6I4ERtwE3igwFipmukMF4w==
+"@hutson/set-npm-auth-token-for-ci@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@hutson/set-npm-auth-token-for-ci/-/set-npm-auth-token-for-ci-4.0.0.tgz#0ea98d66b011d5fdd5ba912ca81837be7cec1e7c"
+  integrity sha512-1YTAmFEGk7jE6CumLhxRO/lrTtnr7Zm8+MztRcLPmtnnKI5eyHL3/M3khKE88YUQqvgwZGZb5mN4zAg3nUO3cw==
   dependencies:
     debug "^4.0.0"
     local-or-home-npmrc "^1.1.0"
-    registry-url "^4.0.0"
+    registry-url "^5.1.0"
 
 "@jest/console@^24.3.0":
   version "24.3.0"
@@ -9874,7 +9874,7 @@ registry-auth-token@^3.0.1:
     rc "^1.1.6"
     safe-buffer "^5.0.1"
 
-registry-url@5.1.0:
+registry-url@5.1.0, registry-url@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-5.1.0.tgz#e98334b50d5434b81136b44ec638d9c2009c5009"
   integrity sha512-8acYXXTI0AkQv6RAOjE3vOaIXZkT9wo4LOFbBKYQEEnnMNBpKqdUrI6S4NT0KPIo/WVvJ5tE/X5LF/TQUf0ekw==
@@ -9887,13 +9887,6 @@ registry-url@^3.0.3:
   integrity sha1-PU74cPc93h138M+aOBQyRE4XSUI=
   dependencies:
     rc "^1.0.1"
-
-registry-url@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-4.0.0.tgz#7dc344ef0f1496fc95a6ad04ccb9a491df11c025"
-  integrity sha512-WAfGLywivb8s2+Cfblq1UV+kOyzURHzWSJmciDvrmstr4bv/0lnVSB9jfoOfkxx5xNJ1OGlSFmZh9WYBLFJOPg==
-  dependencies:
-    rc "^1.2.7"
 
 regjsgen@^0.2.0:
   version "0.2.0"
