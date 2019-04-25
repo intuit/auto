@@ -1257,6 +1257,20 @@
   resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.1.0.tgz#7d90a9782881df72868cbd274f7cfb7ca7b44c88"
   integrity sha512-MT37VSPK0ERG8m6uaK0uimJnVPvo5ecs673yHqp7r2SRis136pWkMWqanJSWGP/TQbWRHKxAvG1U9+3234zMHA==
 
+"@octokit/plugin-retry@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-2.2.0.tgz#11f3957a46ccdb7b7f33caabf8c17e57b25b80b2"
+  integrity sha512-x5Kd8Lke+a4hTDCe5akZxpGmVwu1eeVt2FJX0jeo3CxHGbfHbXb4zhN5quKfGL9oBLV/EdHQIJ6zwIMjuzxOlw==
+  dependencies:
+    bottleneck "^2.15.3"
+
+"@octokit/plugin-throttling@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-2.4.0.tgz#add1bd6a797aa210ce860e8bbe7f7505ba5e4d99"
+  integrity sha512-0bYfgQdqAtWiqXvS6oKMiousTno+e3pFoaYS57LpAp8p56Far49/vpGvbEvBUuNyoUFgOcTGm5WTpO1IPptHuQ==
+  dependencies:
+    bottleneck "^2.15.3"
+
 "@octokit/request@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@octokit/request/-/request-3.0.0.tgz#304a279036b2dc89e7fba7cb30c9e6a9b1f4d2df"
@@ -2330,6 +2344,11 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
+
+bottleneck@^2.15.3:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/bottleneck/-/bottleneck-2.18.0.tgz#41fa63ae185b65435d789d1700334bc48222dacf"
+  integrity sha512-U1xiBRaokw4yEguzikOl0VrnZp6uekjpmfrh6rKtr1D+/jFjYCL6J83ZXlGtlBDwVdTmJJ+4Lg5FpB3xmLSiyA==
 
 boxen@^1.2.1:
   version "1.3.0"
