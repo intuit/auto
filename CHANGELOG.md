@@ -1,3 +1,15 @@
+# v4.9.1 (Fri Apr 26 2019)
+
+#### 🐛  Bug Fix
+
+- Adjust rate limiting retries from 3 to 5 [#338](https://github.com/intuit/auto/pull/338) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v4.9.0 (Thu Apr 25 2019)
 
 #### 🚀  Enhancement
