@@ -67,8 +67,7 @@ export default class Git {
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
 
-          // retry three times
-          if (opts.request.retryCount < 3) {
+          if (opts.request.retryCount < 5) {
             this.logger.verbose.log(`Retrying after ${retryAfter} seconds!`);
             return true;
           }
