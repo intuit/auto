@@ -522,7 +522,7 @@ describe('Release', () => {
       // PR with no label, should become patch
       graphql.mockReturnValueOnce({
         hash_2: {
-          edges: [{ node: { labels: { edges: [] } } }]
+          edges: [{ node: { labels: undefined } }]
         }
       });
 
