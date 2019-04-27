@@ -55,7 +55,7 @@
     "enquirer": "^2.3.0",
     "get-monorepo-packages": "^1.1.0",
     "gitlog": "^3.1.2",
-    "import-cwd": "^2.1.0",
+    "import-cwd": "^3.0.0",
     "is-ci": "^2.0.0",
     "lodash.chunk": "^4.2.0",
     "node-fetch": "2.4.0",
