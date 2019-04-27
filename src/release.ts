@@ -1,5 +1,6 @@
 import GHub from '@octokit/rest';
 import * as fs from 'fs';
+import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
@@ -50,11 +51,31 @@ export interface IReleaseOptions {
   labels: ILabelDefinitionMap;
 }
 
+interface ISearchEdge {
+  node: {
+    number: number;
+    state: 'MERGED' | 'CLOSED' | 'OPEN';
+    labels: {
+      edges: [
+        {
+          node: {
+            name: string;
+          };
+        }
+      ];
+    };
+  };
+}
+
+interface ISearchResult {
+  edges: ISearchEdge[];
+}
+
 export interface ILabelDefinition {
   name: string;
   title?: string;
   color?: string;
-  description: string;
+  description?: string;
 }
 
 export interface ILabelDefinitionMap {
@@ -169,6 +190,51 @@ export default class Release {
     return changelog.generateReleaseNotes(commits);
   }
 
+  buildSearchQuery(commits: IExtendedCommit[]) {
+    const repo = `${this.git.options.owner}/${this.git.options.repo}`;
+    const query = commits.reduce((q, commit) => {
+      const subQuery = `repo:${repo} ${commit.hash}`;
+
+      return `
+        ${q}
+
+        hash_${
+          commit.hash
+        }: search(query: "${subQuery}", type: ISSUE, first: 1) {
+          edges {
+            node {
+              ... on PullRequest {
+                number
+                state
+                labels(first: 10) {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+    }, '');
+
+    if (!query) {
+      return;
+    }
+
+    return `{
+      ${query}
+      rateLimit {
+        limit
+        cost
+        remaining
+        resetAt
+      }
+    }`;
+  }
+
   async getCommitsInRelease(from: string, to = 'HEAD') {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
@@ -191,17 +257,42 @@ export default class Release {
         !commit.subject.includes('[skip ci]')
     );
 
-    await Promise.all(
-      labelled.map(async commit => {
-        if (commit.pullRequest) {
-          return commit;
+    const commitsWithoutPR = labelled.filter(commit => !commit.pullRequest);
+    const batches = chunk(commitsWithoutPR, 10);
+    type Results = Record<string, ISearchResult>;
+
+    const queries = await Promise.all<Results | undefined>(
+      batches.map(batch => {
+        const batchQuery = this.buildSearchQuery(batch);
+
+        if (!batchQuery) {
+          return;
         }
 
-        const prs = await this.git.searchRepo({ q: commit.hash });
+        return this.git.graphql(batchQuery);
+      })
+    );
+    const data = queries.filter((q): q is Results => Boolean(q));
 
-        if (prs && prs.items && prs.total_count > 0) {
-          const labels: ILabelDefinition[] = prs.items[0].labels || [];
+    if (!data.length) {
+      return labelled;
+    }
 
+    data.map(results => {
+      Object.entries(results).map(([key, result]) => {
+        const hash = key.split('hash_')[1];
+        const commit = commitsWithoutPR.find(
+          commitWithoutPR => commitWithoutPR.hash === hash
+        );
+
+        if (!commit) {
+          return;
+        }
+
+        if (result.edges.length > 0) {
+          const labels: ILabelDefinition[] = result.edges[0].node.labels.edges
+            ? result.edges[0].node.labels.edges.map(edge => edge.node)
+            : [];
           commit.labels = [
             ...labels.map(label => label.name),
             ...commit.labels
@@ -211,8 +302,8 @@ export default class Release {
         }
 
         commit.subject = commit.subject.split('\n')[0];
-      })
-    );
+      });
+    });
 
     return labelled;
   }

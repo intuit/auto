@@ -64,6 +64,10 @@ jest.mock('@octokit/rest', () => {
   return instance;
 });
 
+jest.mock('@octokit/graphql', () => () => ({
+  status: 'success'
+}));
+
 const options = {
   owner: 'Adam Dierkens',
   repo: 'test',
@@ -120,6 +124,13 @@ describe('github', () => {
     await gh.publish('releaseNotes', 'tag');
 
     expect(createRelease).toHaveBeenCalled();
+  });
+
+  test('graphql', async () => {
+    const gh = new Git(options);
+    const result = await gh.graphql('{ someQuery }');
+
+    expect(result.status).toBe('success');
   });
 
   test('getFirstCommit ', async () => {
