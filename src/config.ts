@@ -113,6 +113,10 @@ export default class Config {
       config = tryRequire(path.join(process.cwd(), extend));
     }
 
+    if (!config) {
+      throw new Error(`Unable to load extended config ${extend}`);
+    }
+
     if (typeof config === 'function') {
       return (config as ConfigLoader)();
     }
