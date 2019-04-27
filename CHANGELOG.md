@@ -1,3 +1,15 @@
+# v4.9.4 (Sat Apr 27 2019)
+
+#### 🐛  Bug Fix
+
+- Throw an error if extended config fails to load [#344](https://github.com/intuit/auto/pull/344) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v4.9.3 (Sat Apr 27 2019)
 
 #### 🐛  Bug Fix
