@@ -1,3 +1,4 @@
+import graphql from '@octokit/graphql';
 import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
 import retry from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
@@ -259,6 +260,20 @@ export default class Git {
     this.logger.verbose.info('Searched repo on GitHub.');
 
     return result.data;
+  }
+
+  async graphql(query: string) {
+    this.logger.verbose.info('Querying Github using GraphQL:\n', query);
+
+    const data = await graphql(query, {
+      baseUrl: this.baseUrl,
+      headers: {
+        authorization: `token ${this.options.token}`
+      }
+    });
+
+    this.logger.veryVerbose.info('Got response from query\n', data);
+    return data;
   }
 
   async createStatus(prInfo: IPRInfo) {

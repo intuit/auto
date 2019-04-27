@@ -10,6 +10,8 @@
   },
   "jsRules": {},
   "rules": {
+    // Just let prettier handle it
+    "align": false,
     // Uppercase comments are dumb
     "comment-format": false,
     // Sometimes we done need the first few params

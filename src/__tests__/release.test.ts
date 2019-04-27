@@ -1,4 +1,5 @@
 import merge from 'deepmerge';
+import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
 import Release, { defaultLabelDefinition } from '../release';
@@ -8,6 +9,7 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 const constructor = jest.fn();
 const getGitLog = jest.fn();
+const graphql = jest.fn();
 const getLabels = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
@@ -37,6 +39,7 @@ jest.mock('../git.ts', () => (...args) => {
   constructor(...args);
   return {
     options: { owner: 'test', repo: 'test', version: '1.0.0' },
+    graphql,
     getGitLog,
     getLabels,
     getLatestRelease,
@@ -393,6 +396,9 @@ describe('Release', () => {
       getCommitsForPR.mockReturnValueOnce(undefined);
       getLabels.mockReturnValueOnce(['minor']);
       getCommitsForPR.mockReturnValueOnce([{ sha: '3' }]);
+      graphql.mockReturnValueOnce({
+        hash_1: { edges: [] }
+      });
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
@@ -449,6 +455,9 @@ describe('Release', () => {
           }
         ])
       );
+      graphql.mockReturnValueOnce({
+        hash_1: { edges: [] }
+      });
 
       expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
     });
@@ -489,6 +498,53 @@ describe('Release', () => {
       });
 
       expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should find matching PRs for shas through search', async () => {
+      const gh = new Release(git);
+
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg('Doom Patrol enabled', {
+          hash: '1'
+        }),
+        makeCommitFromMsg('Autobots roll out!', {
+          hash: '2'
+        })
+      ]);
+
+      graphql.mockReturnValueOnce({
+        hash_1: {
+          edges: [
+            { node: { labels: { edges: [{ node: { name: 'major' } }] } } }
+          ]
+        }
+      });
+      // PR with no label, should become patch
+      graphql.mockReturnValueOnce({
+        hash_2: {
+          edges: [{ node: { labels: { edges: [] } } }]
+        }
+      });
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+  });
+
+  describe('buildSearchQuery', () => {
+    test('generates a valid query', () => {
+      const gh = new Release(git);
+      const query = gh.buildSearchQuery([
+        makeCommitFromMsg('first', { hash: 'abc123' }),
+        makeCommitFromMsg('second', { hash: '3def78' })
+      ]);
+      expect(() => parse(query!)).not.toThrow();
+      expect(query).toMatchSnapshot();
+    });
+
+    test("doesn't generate a query without commits", () => {
+      const gh = new Release(git);
+      const query = gh.buildSearchQuery([]);
+      expect(query).toBeUndefined();
     });
   });
 
