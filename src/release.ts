@@ -290,7 +290,7 @@ export default class Release {
         }
 
         if (result.edges.length > 0) {
-          const labels: ILabelDefinition[] = result.edges[0].node.labels.edges
+          const labels: ILabelDefinition[] = result.edges[0].node.labels
             ? result.edges[0].node.labels.edges.map(edge => edge.node)
             : [];
           commit.labels = [
