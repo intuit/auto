@@ -1,3 +1,20 @@
+# v4.9.3 (Sat Apr 27 2019)
+
+#### 🐛  Bug Fix
+
+- fix bug when no labels exist [#343](https://github.com/intuit/auto/pull/343) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update import-cwd to the latest version 🚀 [#342](https://github.com/intuit/auto/pull/342) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.9.2 (Sat Apr 27 2019)
 
 #### 🐛  Bug Fix
