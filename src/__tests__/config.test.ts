@@ -7,9 +7,9 @@ const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 
 describe('loadExtendConfig', () => {
-  test('should work when no config found', async () => {
+  test('should throw when no config found', async () => {
     const config = new Config(log);
-    expect(config.loadExtendConfig('nothing')).toEqual({});
+    expect(() => config.loadExtendConfig('nothing')).toThrow();
   });
 
   test('should load file path', async () => {
