@@ -1,3 +1,21 @@
+# v4.9.2 (Sat Apr 27 2019)
+
+#### 🐛  Bug Fix
+
+- use graphql to get around search rate limits [#340](https://github.com/intuit/auto/pull/340) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update node-fetch to the latest version 🚀 [#339](https://github.com/intuit/auto/pull/339) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update @types/node-fetch to the latest version 🚀 [#336](https://github.com/intuit/auto/pull/336) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.9.1 (Fri Apr 26 2019)
 
 #### 🐛  Bug Fix
