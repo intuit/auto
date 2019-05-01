@@ -1,3 +1,15 @@
+# v4.12.0 (Wed May 01 2019)
+
+#### 🚀  Enhancement
+
+- canary command [#349](https://github.com/intuit/auto/pull/349) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.11.0 (Wed May 01 2019)
 
 #### 🚀  Enhancement
