@@ -1,3 +1,15 @@
+# v4.10.0 (Wed May 01 2019)
+
+#### 🚀  Enhancement
+
+- comment, pr, and pr-check detect PR number in CI [#348](https://github.com/intuit/auto/pull/348) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.9.4 (Sat Apr 27 2019)
 
 #### 🐛  Bug Fix
