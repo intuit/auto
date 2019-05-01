@@ -460,7 +460,7 @@ export default class Auto {
       this.logger.verbose.info('Calling canary hook');
       await this.hooks.canary.promise(canaryVersion);
       this.comment({
-        message: `Published PR with canary version: ${canaryVersion}`
+        message: `Published PR with canary version: \`${canaryVersion}\``
       });
       await this.hooks.afterShipIt.promise(canaryVersion, commitsInRelease);
     } else {
