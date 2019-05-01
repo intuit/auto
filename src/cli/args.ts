@@ -389,7 +389,12 @@ const commands: ICommand[] = [
   {
     name: 'canary',
     summary: 'Make a canary release of the project. Useful on PRs',
-    examples: ['{green $} auto canary'],
+    examples: [
+      '{green $} auto canary',
+      '{green $} auto canary --pr 123 --build 5',
+      '{green $} auto canary --message "Install PR version: `yarn add -D my-project@%v`"',
+      '{green $} auto canary --message false'
+    ],
     options: [
       ...defaultOptions,
       dryRun,
@@ -404,6 +409,11 @@ const commands: ICommand[] = [
         group: 'main',
         description:
           'Build number to use to create the canary version. Detected in CI env'
+      },
+      {
+        ...message,
+        description:
+          "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
       }
     ]
   }
@@ -683,6 +693,7 @@ export interface ICanaryCommandOptions {
   dryRun?: boolean;
   pr?: number;
   build?: number;
+  message?: string | 'false';
 }
 
 type GlobalFlags = {

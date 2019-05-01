@@ -462,17 +462,17 @@ export default class Auto {
       this.logger.verbose.info('Calling canary hook');
       await this.hooks.canary.promise(canaryVersion);
 
-      this.comment({
-        message: `Published PR with canary version: \`${canaryVersion}\``,
-        context: 'canary-version'
-      });
+      const message =
+        options.message || 'Published PR with canary version: `%v`';
+
+      if (message !== 'false') {
+        this.comment({
+          message: message.replace('%v', canaryVersion),
+          context: 'canary-version'
+        });
+      }
     }
 
-    // Ideally we would want the first commit from a branch
-    // This heavily depends on how you use git. So finding that
-    // first commit might not be possible. For now afterShipIt
-    // will now include the commits for a canary release
-    await this.hooks.afterShipIt.promise(canaryVersion, []);
     return canaryVersion;
   }
 
