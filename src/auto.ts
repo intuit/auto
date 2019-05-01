@@ -10,6 +10,7 @@ import {
 
 import {
   ArgsType,
+  ICanaryCommandOptions,
   IChangelogOptions,
   ICommentCommandOptions,
   ICreateLabelsCommandOptions,
@@ -407,6 +408,60 @@ export default class Auto {
     await this.makeRelease(options);
   }
 
+  async canary(options: ICanaryCommandOptions) {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
+
+    const lastRelease = await this.git.getLatestRelease();
+    // SailEnv falls back to commit SHA
+    let pr: string | undefined;
+    let build: string | undefined;
+
+    if ('pr' in env && 'build' in env) {
+      ({ pr } = env);
+      ({ build } = env);
+    } else if ('pr' in env && 'commit' in env) {
+      ({ pr } = env);
+      build = env.commit;
+    }
+
+    if (!pr || !build) {
+      throw new Error(
+        'No PR number found to make canary release with. Make sure you only run canary from a PR.'
+      );
+    }
+
+    const current = await this.getCurrentVersion(lastRelease);
+    const head = await this.release.getCommitsInRelease('HEAD^');
+    const labels = head.map(commit => commit.labels);
+    const version = calculateSemVerBump(
+      labels,
+      this.semVerLabels!,
+      this.config
+    );
+    const nextVersion = inc(current, version as ReleaseType);
+    const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
+
+    if (options.dryRun) {
+      this.logger.log.warn(`Published version would be ${canaryVersion}`);
+    } else {
+      this.logger.verbose.info('Calling canary hook');
+      await this.hooks.canary.promise(canaryVersion);
+
+      this.comment({
+        message: `Published PR with canary version: \`${canaryVersion}\``,
+        context: 'canary-version'
+      });
+    }
+
+    // Ideally we would want the first commit from a branch
+    // This heavily depends on how you use git. So finding that
+    // first commit might not be possible. For now afterShipIt
+    // will now include the commits for a canary release
+    await this.hooks.afterShipIt.promise(canaryVersion, []);
+  }
+
   /**
    * Run the full workflow.
    *
@@ -423,95 +478,45 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
+    const version = await this.getVersion();
+
+    if (version === '') {
+      return;
+    }
+
     const lastRelease = await this.git.getLatestRelease();
+    const commitsInRelease = await this.release.getCommitsInRelease(
+      lastRelease
+    );
 
-    if (options.canary) {
-      // SailEnv falls back to commit SHA
-      let pr: string | undefined;
-      let build: string | undefined;
+    await this.makeChangelog(options);
 
-      if ('pr' in env && 'build' in env) {
-        ({ pr } = env);
-        ({ build } = env);
-      } else if ('pr' in env && 'commit' in env) {
-        ({ pr } = env);
-        build = env.commit;
-      }
+    if (!options.dryRun) {
+      this.logger.verbose.info('Calling version hook');
+      await this.hooks.version.promise(version);
+      this.logger.verbose.info('Calling after version hook');
+      await this.hooks.afterVersion.promise();
+      this.logger.verbose.info('Calling publish hook');
+      await this.hooks.publish.promise(version);
+      this.logger.verbose.info('Calling after publish hook');
+      await this.hooks.afterPublish.promise();
+    }
 
-      if (!pr || !build) {
-        throw new Error(
-          'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
-        );
-      }
+    const newVersion = await this.makeRelease(options);
+
+    if (options.dryRun) {
+      this.logger.log.warn(
+        "The version reported in the line above hasn't been incremented during `dry-run`"
+      );
 
       const current = await this.getCurrentVersion(lastRelease);
-      const head = await this.release.getCommitsInRelease('HEAD^');
-      const labels = head.map(commit => commit.labels);
-      const version = calculateSemVerBump(
-        labels,
-        this.semVerLabels!,
-        this.config
+
+      this.logger.log.warn(
+        `Published version would be ${inc(current, version as ReleaseType)}`
       );
-      const nextVersion = inc(current, version as ReleaseType);
-      const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
-
-      if (options.dryRun) {
-        this.logger.log.warn(`Published version would be ${canaryVersion}`);
-      } else {
-        this.logger.verbose.info('Calling canary hook');
-        await this.hooks.canary.promise(canaryVersion);
-
-        this.comment({
-          message: `Published PR with canary version: \`${canaryVersion}\``,
-          context: 'canary-version'
-        });
-      }
-
-      // Ideally we would want the first commit from a branch
-      // This heavily depends on how you use git. So finding that
-      // first commit might not be possible. For now afterShipIt
-      // will now include the commits for a canary release
-      await this.hooks.afterShipIt.promise(canaryVersion, []);
-    } else {
-      const version = await this.getVersion();
-
-      if (version === '') {
-        return;
-      }
-
-      const commitsInRelease = await this.release.getCommitsInRelease(
-        lastRelease
-      );
-
-      await this.makeChangelog(options);
-
-      if (!options.dryRun) {
-        this.logger.verbose.info('Calling version hook');
-        await this.hooks.version.promise(version);
-        this.logger.verbose.info('Calling after version hook');
-        await this.hooks.afterVersion.promise();
-        this.logger.verbose.info('Calling publish hook');
-        await this.hooks.publish.promise(version);
-        this.logger.verbose.info('Calling after publish hook');
-        await this.hooks.afterPublish.promise();
-      }
-
-      const newVersion = await this.makeRelease(options);
-
-      if (options.dryRun) {
-        this.logger.log.warn(
-          "The version reported in the line above hasn't been incremented during `dry-run`"
-        );
-
-        const current = await this.getCurrentVersion(lastRelease);
-
-        this.logger.log.warn(
-          `Published version would be ${inc(current, version as ReleaseType)}`
-        );
-      }
-
-      await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
     }
+
+    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
   }
 
   private getPrNumber(command: string, pr?: number) {

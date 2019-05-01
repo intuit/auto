@@ -172,13 +172,6 @@ const skipReleaseLabels: commandLineUsage.OptionDefinition = {
     "Labels that will not create a release. Defaults to just 'skip-release'"
 };
 
-const canary: commandLineUsage.OptionDefinition = {
-  name: 'canary',
-  type: Boolean,
-  group: 'main',
-  description: 'Make a canary release of the project. Useful for PR builds'
-};
-
 interface ICommand {
   name: string;
   summary: string;
@@ -391,7 +384,7 @@ const commands: ICommand[] = [
     summary:
       'Run the full `auto` release pipeline. Detects if in a lerna project',
     examples: ['{green $} auto shipit'],
-    options: [...defaultOptions, dryRun, canary]
+    options: [...defaultOptions, dryRun]
   }
 ];
 
@@ -662,7 +655,10 @@ export interface ICommentCommandOptions {
 export interface IShipItCommandOptions {
   dryRun?: boolean;
   slack?: string;
-  canary?: boolean;
+}
+
+export interface ICanaryCommandOptions {
+  dryRun?: boolean;
 }
 
 type GlobalFlags = {

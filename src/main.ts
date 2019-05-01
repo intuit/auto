@@ -58,6 +58,10 @@ export async function run(args: ArgsType) {
       await auto.loadConfig();
       await auto.shipit(args as IShipItCommandOptions);
       break;
+    case 'canary':
+      await auto.loadConfig();
+      await auto.canary(args as IShipItCommandOptions);
+      break;
     default:
       throw new Error(`idk what i'm doing.`);
   }
