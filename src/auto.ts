@@ -418,7 +418,6 @@ export default class Auto {
     let pr: string | undefined;
     let build: string | undefined;
 
-    console.log({ env });
     if ('pr' in env && 'build' in env) {
       ({ pr } = env);
       ({ build } = env);
@@ -427,12 +426,9 @@ export default class Auto {
       build = env.commit;
     }
 
-    console.log('debug', { pr, build });
+    pr = pr || (options.pr ? String(options.pr) : '');
+    build = build || (options.build ? String(options.build) : '');
 
-    pr = pr || options.pr ? String(options.pr) : '';
-    build = build || options.build ? String(options.build) : '';
-
-    console.log('debug2', { pr, build });
     if (!pr) {
       const errorMessage =
         'No PR number found to make canary release with. Make sure you only run canary from a PR or provide the --pr flag.';
