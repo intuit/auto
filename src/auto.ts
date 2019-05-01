@@ -426,6 +426,8 @@ export default class Auto {
       build = env.commit;
     }
 
+    console.log(pr, build);
+
     pr = pr || options.pr ? String(options.pr) : '';
     build = build || options.build ? String(options.build) : '';
 
