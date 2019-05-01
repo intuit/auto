@@ -350,7 +350,11 @@ export default class NPMPlugin implements IPlugin {
       const { private: isPrivate, name } = await loadPackageJson();
       const isScopedPackage = name.match(/@\S+\/\S+/);
 
-      await execPromise('npm', ['version', '--no-git-tag-version']);
+      await execPromise('npm', [
+        'version',
+        canaryVersion,
+        '--no-git-tag-version'
+      ]);
       const publishArgs = ['--tag', 'canary'];
       await execPromise(
         'npm',
