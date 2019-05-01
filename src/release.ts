@@ -491,8 +491,6 @@ export default class Release {
    */
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
-    console.log(from, to);
-    console.log(JSON.stringify(commits, null, 2));
     const labels = commits.map(commit => commit.labels);
     const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };

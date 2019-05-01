@@ -249,7 +249,6 @@ export default class NPMPlugin implements IPlugin {
         'NPM - Monorepo',
         async (commits, renderLine) => {
           if (!isMonorepo()) {
-            console.log('bailed');
             return;
           }
 
