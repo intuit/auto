@@ -1,5 +1,5 @@
-import env from 'dotenv';
-import isCI from 'is-ci';
+import dotenv from 'dotenv';
+import envCi from 'env-ci';
 import { gt, inc, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
@@ -38,6 +38,8 @@ import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
+
+const env = envCi();
 
 interface IAuthor {
   name?: string;
@@ -103,7 +105,7 @@ export default class Auto {
       });
     });
 
-    env.config();
+    dotenv.config();
   }
 
   /**
@@ -362,7 +364,16 @@ export default class Auto {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      await this.git.createComment(message, pr, context);
+      const envPr = 'pr' in env && Number(env.pr);
+      const prNumber = pr || envPr;
+
+      if (!prNumber) {
+        throw new Error(
+          'Could not detect PR number. Comment must be run from either a PR or have the PR number supllied via the --pr flag.'
+        );
+      }
+
+      await this.git.createComment(message, prNumber, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
   }
@@ -615,7 +626,7 @@ export default class Auto {
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
-      if (!isCI) {
+      if (!env.isCi) {
         this.logger.log.note(
           `Detected local environment, will not set git user. This happens automatically in a CI environment.
 

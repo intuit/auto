@@ -365,7 +365,7 @@ const commands: ICommand[] = [
   {
     name: 'comment',
     summary: 'Comment on a pull request with a markdown message',
-    require: ['pr', 'message'],
+    require: ['message'],
     options: [
       pr,
       context,
@@ -644,8 +644,8 @@ export interface IReleaseCommandOptions extends IAuthorArgs {
 }
 
 export interface ICommentCommandOptions {
-  pr: number;
   message: string;
+  pr?: number;
   context?: string;
   dryRun?: boolean;
 }
