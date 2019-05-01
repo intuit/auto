@@ -33,7 +33,7 @@ import Release, {
   IReleaseOptions,
   VersionLabel
 } from './release';
-import SEMVER from './semver';
+import SEMVER, { calculateSemVerBump } from './semver';
 import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
@@ -427,27 +427,31 @@ export default class Auto {
 
     if (options.canary) {
       // SailEnv falls back to commit SHA
-      const pr: string | undefined = '406';
-      const build: string | undefined = '10';
+      let pr: string | undefined;
+      let build: string | undefined;
 
-      // if ('pr' in env && 'build' in env) {
-      //   ({ pr } = env);
-      //   ({ build } = env);
-      // } else if ('pr' in env && 'commit' in env) {
-      //   ({ pr } = env);
-      //   build = env.commit;
-      // }
+      if ('pr' in env && 'build' in env) {
+        ({ pr } = env);
+        ({ build } = env);
+      } else if ('pr' in env && 'commit' in env) {
+        ({ pr } = env);
+        build = env.commit;
+      }
 
-      // if (!pr || !build) {
-      //   throw new Error(
-      //     'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
-      //   );
-      // }
+      if (!pr || !build) {
+        throw new Error(
+          'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
+        );
+      }
 
       const current = await this.getCurrentVersion(lastRelease);
-      const version = await this.release.getSemverBump('HEAD^');
-      const commitInBranch = await this.release.getCommitsInRelease('HEAD^');
-      console.log(JSON.stringify(commitInBranch, null, 2));
+      const head = await this.release.getCommitsInRelease('HEAD^');
+      const labels = head.map(commit => commit.labels);
+      const version = calculateSemVerBump(
+        labels,
+        this.semVerLabels!,
+        this.config
+      );
       const nextVersion = inc(current, version as ReleaseType);
       const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
 
