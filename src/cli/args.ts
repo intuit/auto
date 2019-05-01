@@ -385,6 +385,27 @@ const commands: ICommand[] = [
       'Run the full `auto` release pipeline. Detects if in a lerna project',
     examples: ['{green $} auto shipit'],
     options: [...defaultOptions, dryRun]
+  },
+  {
+    name: 'canary',
+    summary: 'Make a canary release of the project. Useful on PRs',
+    examples: ['{green $} auto canary'],
+    options: [
+      ...defaultOptions,
+      dryRun,
+      {
+        ...pr,
+        description:
+          'PR number to use to create the canary version. Detected in CI env'
+      },
+      {
+        name: 'build',
+        type: String,
+        group: 'main',
+        description:
+          'Build number to use to create the canary version. Detected in CI env'
+      }
+    ]
   }
 ];
 
@@ -430,6 +451,7 @@ function printRootHelp() {
         'release',
         'version',
         'changelog',
+        'canary',
         'shipit'
       ])
     },
@@ -659,6 +681,8 @@ export interface IShipItCommandOptions {
 
 export interface ICanaryCommandOptions {
   dryRun?: boolean;
+  pr?: number;
+  build?: number;
 }
 
 type GlobalFlags = {

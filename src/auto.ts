@@ -426,10 +426,23 @@ export default class Auto {
       build = env.commit;
     }
 
-    if (!pr || !build) {
-      throw new Error(
-        'No PR number found to make canary release with. Make sure you only run canary from a PR.'
-      );
+    pr = pr || options.pr ? String(options.pr) : '';
+    build = build || options.build ? String(options.build) : '';
+
+    if (!pr) {
+      const errorMessage =
+        'No PR number found to make canary release with. Make sure you only run canary from a PR or provide the --pr flag.';
+      this.logger.log.error(errorMessage);
+      this.logger.verbose.error(new Error());
+      return;
+    }
+
+    if (!build) {
+      const errorMessage =
+        'No build number found to make canary release with. Make sure you only run canary from a PR or provide the --build flag.';
+      this.logger.log.error(errorMessage);
+      this.logger.verbose.error(new Error());
+      return;
     }
 
     const current = await this.getCurrentVersion(lastRelease);
@@ -460,6 +473,7 @@ export default class Auto {
     // first commit might not be possible. For now afterShipIt
     // will now include the commits for a canary release
     await this.hooks.afterShipIt.promise(canaryVersion, []);
+    return canaryVersion;
   }
 
   /**
