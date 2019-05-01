@@ -432,6 +432,7 @@ export default class Auto {
     pr = pr || options.pr ? String(options.pr) : '';
     build = build || options.build ? String(options.build) : '';
 
+    console.log('debug2', { pr, build });
     if (!pr) {
       const errorMessage =
         'No PR number found to make canary release with. Make sure you only run canary from a PR or provide the --pr flag.';
