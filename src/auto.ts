@@ -136,7 +136,9 @@ export default class Auto {
       repo: config.repo,
       ...repository,
       token,
-      baseUrl: config.githubApi || 'https://api.github.com'
+      baseUrl: config.githubApi || 'https://api.github.com',
+      graphqlBaseUrl:
+        config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
@@ -492,7 +494,8 @@ export default class Auto {
         owner: gitOptions.owner,
         repo: gitOptions.repo,
         token: gitOptions.token,
-        baseUrl: gitOptions.baseUrl
+        baseUrl: gitOptions.baseUrl,
+        graphqlBaseUrl: gitOptions.graphqlBaseUrl
       },
       this.logger
     );

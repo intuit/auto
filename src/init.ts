@@ -43,6 +43,12 @@ async function getFlags() {
       message: 'GitHub API to use (press enter to use public)'
     },
     {
+      type: 'input',
+      name: 'githubGraphqlApi',
+      message:
+        'GitHub Graphql API base path to use (press enter to use githubApi)'
+    },
+    {
       type: 'confirm',
       name: 'onlyPublishWithReleaseLabel',
       message: 'Only bump version if `release` label is on pull request',
