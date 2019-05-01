@@ -10,6 +10,7 @@ import {
 
 import {
   ArgsType,
+  ICanaryCommandOptions,
   IChangelogOptions,
   ICommentCommandOptions,
   ICreateLabelsCommandOptions,
@@ -33,7 +34,7 @@ import Release, {
   IReleaseOptions,
   VersionLabel
 } from './release';
-import SEMVER from './semver';
+import SEMVER, { calculateSemVerBump } from './semver';
 import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
@@ -70,6 +71,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
+  canary: AsyncParallelHook<[string]>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -369,13 +371,13 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-
     if (dryRun) {
       this.logger.log.info(
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
       const prNumber = this.getPrNumber('comment', pr);
+
       await this.git.createComment(message, prNumber, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
@@ -406,6 +408,74 @@ export default class Auto {
     await this.makeRelease(options);
   }
 
+  async canary(options: ICanaryCommandOptions = {}) {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
+
+    const lastRelease = await this.git.getLatestRelease();
+    // SailEnv falls back to commit SHA
+    let pr: string | undefined;
+    let build: string | undefined;
+
+    if ('pr' in env && 'build' in env) {
+      ({ pr } = env);
+      ({ build } = env);
+    } else if ('pr' in env && 'commit' in env) {
+      ({ pr } = env);
+      build = env.commit;
+    }
+
+    pr = options.pr ? String(options.pr) : pr;
+    build = options.build ? String(options.build) : build;
+
+    if (!pr) {
+      const errorMessage =
+        'No PR number found to make canary release with. Make sure you only run canary from a PR or provide the --pr flag.';
+      this.logger.log.error(errorMessage);
+      this.logger.verbose.error(new Error());
+      return;
+    }
+
+    if (!build) {
+      const errorMessage =
+        'No build number found to make canary release with. Make sure you only run canary from a PR or provide the --build flag.';
+      this.logger.log.error(errorMessage);
+      this.logger.verbose.error(new Error());
+      return;
+    }
+
+    const current = await this.getCurrentVersion(lastRelease);
+    const head = await this.release.getCommitsInRelease('HEAD^');
+    const labels = head.map(commit => commit.labels);
+    const version = calculateSemVerBump(
+      labels,
+      this.semVerLabels!,
+      this.config
+    );
+    const nextVersion = inc(current, version as ReleaseType);
+    const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
+
+    if (options.dryRun) {
+      this.logger.log.warn(`Published version would be ${canaryVersion}`);
+    } else {
+      this.logger.verbose.info('Calling canary hook');
+      await this.hooks.canary.promise(canaryVersion);
+
+      const message =
+        options.message || 'Published PR with canary version: `%v`';
+
+      if (message !== 'false' && env.isCi) {
+        this.comment({
+          message: message.replace('%v', canaryVersion),
+          context: 'canary-version'
+        });
+      }
+    }
+
+    return canaryVersion;
+  }
+
   /**
    * Run the full workflow.
    *
@@ -432,6 +502,7 @@ export default class Auto {
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
     );
+
     await this.makeChangelog(options);
 
     if (!options.dryRun) {

@@ -25,7 +25,8 @@ export const makeHooks = (): IAutoHooks => ({
   version: new AsyncParallelHook(['version']),
   afterVersion: new AsyncParallelHook([]),
   publish: new AsyncParallelHook(['version']),
-  afterPublish: new AsyncParallelHook([])
+  afterPublish: new AsyncParallelHook([]),
+  canary: new AsyncParallelHook(['canaryVersion'])
 });
 
 export const makeReleaseHooks = (): IReleaseHooks => ({

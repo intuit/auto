@@ -1,6 +1,6 @@
 import setToken from '@hutson/set-npm-auth-token-for-ci';
+import envCi from 'env-ci';
 import * as fs from 'fs';
-import isCI from 'is-ci';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
@@ -13,6 +13,7 @@ import execPromise from '../../utils/exec-promise';
 import { ILogger } from '../../utils/logger';
 import getConfigFromPackageJson from './package-config';
 
+const { isCi } = envCi();
 const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
@@ -20,7 +21,7 @@ function isMonorepo() {
 }
 
 async function setTokenOnCI() {
-  if (isCI) {
+  if (isCi) {
     setToken();
   }
 }
@@ -167,7 +168,7 @@ export default class NPMPlugin implements IPlugin {
 
   apply(auto: Auto) {
     auto.hooks.beforeShipIt.tap(this.name, async () => {
-      if (!isCI) {
+      if (!isCi) {
         return;
       }
 
@@ -248,7 +249,6 @@ export default class NPMPlugin implements IPlugin {
         'NPM - Monorepo',
         async (commits, renderLine) => {
           if (!isMonorepo()) {
-            console.log('bailed');
             return;
           }
 
@@ -312,6 +312,51 @@ export default class NPMPlugin implements IPlugin {
         '"Bump version to: %s [skip ci]"'
       ]);
       auto.logger.verbose.info('Successfully versioned repo');
+    });
+
+    auto.hooks.canary.tapPromise(this.name, async canaryVersion => {
+      if (this.setRcToken) {
+        await setTokenOnCI();
+        auto.logger.verbose.info('Set CI NPM_TOKEN');
+      }
+
+      if (isMonorepo()) {
+        auto.logger.verbose.info('Detected monorepo, using lerna');
+
+        await execPromise('npx', [
+          'lerna',
+          'publish',
+          canaryVersion,
+          '--dist-tag',
+          'canary',
+          '--no-git-tag-version', // do not create a tag or commit for the canary version
+          '--no-push', // do not push anything
+          '--no-git-reset', // allow uncommitted changes when publishing,
+          '--yes' // skip prompts
+        ]);
+
+        auto.logger.verbose.info('Successfully published canary version');
+        return;
+      }
+
+      auto.logger.verbose.info('Detected single npm package');
+      const { private: isPrivate, name } = await loadPackageJson();
+      const isScopedPackage = name.match(/@\S+\/\S+/);
+
+      await execPromise('npm', [
+        'version',
+        canaryVersion,
+        '--no-git-tag-version'
+      ]);
+      const publishArgs = ['--tag', 'canary'];
+      await execPromise(
+        'npm',
+        !isPrivate && isScopedPackage
+          ? ['publish', '--access', 'public', ...publishArgs]
+          : ['publish', ...publishArgs]
+      );
+
+      auto.logger.verbose.info('Successfully published canary version');
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
