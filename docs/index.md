@@ -15,6 +15,7 @@
   - [auto changelog](pages/auto-changelog.md)
   - [auto release](pages/auto-release.md)
   - [auto shipit](pages/auto-shipit.md)
+  - [auto canary](pages/auto-canary.md)
 - [PR Interaction](pages/pr-interaction.md)
   - [auto label](pages/auto-label.md)
   - [auto pr](pages/auto-pr.md)
