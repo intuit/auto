@@ -130,6 +130,7 @@ workflows:
           requires:
             - build
             - test
+            - lint
           filters:
             branches:
               ignore:
@@ -139,6 +140,7 @@ workflows:
           requires:
             - build
             - test
+            - lint
           filters:
             branches:
               only:
