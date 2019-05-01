@@ -5,6 +5,7 @@ import { dummyLog } from '../utils/logger';
 
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
+jest.mock('env-ci', () => () => ({ isCi: false }));
 
 const defaults = {
   owner: 'foo',
