@@ -2,6 +2,7 @@ import Auto from '../auto';
 import { IPRCommandOptions } from '../cli/args';
 import { SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';
+import makeCommitFromMsg from './make-commit-from-msg';
 
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
@@ -635,6 +636,61 @@ describe('Auto', () => {
       });
 
       expect(hookFn).not.toBeCalled();
+    });
+  });
+
+  describe('canary', () => {
+    test('should throw when not initialized', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      expect(auto.canary()).rejects.toBeTruthy();
+    });
+
+    test('does nothing without PR number', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = jest.fn();
+
+      expect(await auto.canary()).toBeUndefined();
+    });
+
+    test('does nothing without build number', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = jest.fn();
+
+      expect(await auto.canary({ pr: 123 })).toBeUndefined();
+    });
+
+    test('does not call canary hook in dry-run', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+
+      await auto.canary({ pr: 123, build: 1, dryRun: true });
+      expect(canary).not.toHaveBeenCalled();
+    });
+
+    test('calls the canary hook with the canary version', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+
+      await auto.canary({ pr: 123, build: 1 });
+      expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
     });
   });
 });

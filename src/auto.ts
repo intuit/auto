@@ -371,13 +371,13 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-
     if (dryRun) {
       this.logger.log.info(
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
       const prNumber = this.getPrNumber('comment', pr);
+
       await this.git.createComment(message, prNumber, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
@@ -408,7 +408,7 @@ export default class Auto {
     await this.makeRelease(options);
   }
 
-  async canary(options: ICanaryCommandOptions) {
+  async canary(options: ICanaryCommandOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -426,8 +426,8 @@ export default class Auto {
       build = env.commit;
     }
 
-    pr = pr || (options.pr ? String(options.pr) : '');
-    build = build || (options.build ? String(options.build) : '');
+    pr = options.pr ? String(options.pr) : pr;
+    build = options.build ? String(options.build) : build;
 
     if (!pr) {
       const errorMessage =
@@ -465,7 +465,7 @@ export default class Auto {
       const message =
         options.message || 'Published PR with canary version: `%v`';
 
-      if (message !== 'false') {
+      if (message !== 'false' && env.isCi) {
         this.comment({
           message: message.replace('%v', canaryVersion),
           context: 'canary-version'
