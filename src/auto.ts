@@ -212,7 +212,14 @@ export default class Auto {
     }
 
     let { sha } = options;
-    const prNumber = this.getPrNumber('pr', pr);
+    let prNumber: number | undefined;
+
+    try {
+      prNumber = this.getPrNumber('pr', pr);
+    } catch (error) {
+      // default to sha if no PR found
+    }
+
     this.logger.verbose.info("Using command: 'pr'");
 
     if (!sha && prNumber) {
