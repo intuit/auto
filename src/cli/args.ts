@@ -214,7 +214,7 @@ const commands: ICommand[] = [
   {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
-    require: ['pr', 'url'],
+    require: ['url'],
     options: [
       pr,
       url,
@@ -226,9 +226,7 @@ const commands: ICommand[] = [
       skipReleaseLabels,
       ...defaultOptions
     ],
-    examples: [
-      '{green $} auto pr-check --pr 32 --url http://your-ci.com/build/123'
-    ]
+    examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
   {
     name: 'pr',
@@ -604,7 +602,7 @@ export interface ILabelCommandOptions {
 }
 
 export interface IPRCheckCommandOptions {
-  pr: number;
+  pr?: number;
   url?: string;
   skipReleaseLabels?: string[];
   context?: string;

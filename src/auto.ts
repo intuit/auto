@@ -265,14 +265,15 @@ export default class Auto {
 
     // tslint:disable-next-line variable-name
     const target_url = url;
+    const prNumber = this.getPrNumber('prCheck', pr);
     let msg;
     let sha;
 
     try {
-      const res = await this.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(prNumber);
       sha = res.data.head.sha;
 
-      const labels = await this.git.getLabels(pr);
+      const labels = await this.git.getLabels(prNumber);
       const labelTexts = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
@@ -315,7 +316,7 @@ export default class Auto {
       };
     }
 
-    this.logger.verbose.info('Posting comment to GitHub\n', msg);
+    this.logger.verbose.info('Posting status to GitHub\n', msg);
 
     if (!dryRun) {
       try {
