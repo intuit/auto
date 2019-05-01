@@ -201,7 +201,19 @@ If you are using enterprise github, `auto` lets you configure the github API URL
 
 ```json
 {
-  "jira": "https://url-to-jira.com"
+  "githubApi": "https://github.mine.com/api/v3"
+}
+```
+
+### githubGraphqlApi
+
+This is used for doing some searches in `auto`.
+
+If you are using enterprise github and your company hosts the graphql at some other URL than the `githubApi`, you can use `githubGraphqlApi` to set the base path for `auto`. The `githubGraphqlApi` get merged with `/graphql` to build the final URL.
+
+```json
+{
+  "githubGraphqlApi": "https://github.mine.com/api/"
 }
 ```
 
