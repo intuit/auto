@@ -99,7 +99,8 @@ const defaultOptions = [
 const pr: commandLineUsage.OptionDefinition = {
   name: 'pr',
   type: Number,
-  description: 'The pull request number you want the labels of',
+  description:
+    'The pull request the command should use. Detects PR number in CI',
   group: 'main'
 };
 
@@ -240,7 +241,10 @@ const commands: ICommand[] = [
         description:
           'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
       },
-      { ...pr, description: 'PR to set the status on' },
+      {
+        ...pr,
+        description: 'PR to set the status on. Detects PR number in CI'
+      },
       url,
       {
         name: 'state',
