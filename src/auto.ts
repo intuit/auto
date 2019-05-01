@@ -364,15 +364,7 @@ export default class Auto {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      const envPr = 'pr' in env && Number(env.pr);
-      const prNumber = pr || envPr;
-
-      if (!prNumber) {
-        throw new Error(
-          'Could not detect PR number. Comment must be run from either a PR or have the PR number supllied via the --pr flag.'
-        );
-      }
-
+      const prNumber = this.getPrNumber('comment', pr);
       await this.git.createComment(message, prNumber, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
@@ -457,6 +449,19 @@ export default class Auto {
     }
 
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  private getPrNumber(command: string, pr?: number) {
+    const envPr = 'pr' in env && Number(env.pr);
+    const prNumber = pr || envPr;
+
+    if (!prNumber) {
+      throw new Error(
+        `Could not detect PR number. ${command} must be run from either a PR or have the PR number supllied via the --pr flag.`
+      );
+    }
+
+    return prNumber;
   }
 
   private startGit(gitOptions: IGitOptions) {
