@@ -1,3 +1,20 @@
+# v4.11.0 (Wed May 01 2019)
+
+#### 🚀  Enhancement
+
+- Graphql url config [#350](https://github.com/intuit/auto/pull/350) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Update node-fetch to the latest version 🚀 [#347](https://github.com/intuit/auto/pull/347) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.10.0 (Wed May 01 2019)
 
 #### 🚀  Enhancement
