@@ -425,3 +425,61 @@ describe('publish', () => {
     expect(exec).toHaveBeenCalledWith('npm', ['publish']);
   });
 });
+
+describe('canary', () => {
+  beforeEach(() => {
+    exec.mockClear();
+  });
+
+  test('use npm for normal package', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    const canaryVersion = '1.2.3-canary.123.1';
+    await hooks.canary.promise(canaryVersion);
+    expect(exec.mock.calls[0][0]).toBe('npm');
+  });
+
+  test('publishes to public for scoped packages', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+
+    readResult = `
+      {
+        "name": "@scope/test"
+      }
+    `;
+
+    const canaryVersion = '1.2.3-canary.123.1';
+    await hooks.canary.promise(canaryVersion);
+    expect(exec.mock.calls[1][1]).toContain('public');
+  });
+
+  test('use lerna for monorepo package', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    existsSync.mockReturnValueOnce(true);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    const canaryVersion = '1.2.3-canary.123.1';
+    await hooks.canary.promise(canaryVersion);
+    expect(exec.mock.calls[0][1]).toContain('lerna');
+  });
+});
