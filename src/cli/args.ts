@@ -660,6 +660,7 @@ export interface IShipItCommandOptions {
 type GlobalFlags = {
   command: string;
   githubApi?: string;
+  githubGraphqlApi?: string;
   plugins?: string[];
 } & IRepoArgs &
   ILogArgs;

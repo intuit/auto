@@ -40,6 +40,7 @@ export interface IReleaseOptions {
   jira?: string;
   slack?: string;
   githubApi?: string;
+  githubGraphqlApi?: string;
   name?: string;
   email?: string;
   owner?: string;

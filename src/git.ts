@@ -24,6 +24,7 @@ export interface IGitOptions {
   owner: string;
   repo: string;
   baseUrl?: string;
+  graphqlBaseUrl?: string;
   token?: string;
 }
 
@@ -46,6 +47,7 @@ export default class Git {
   readonly options: IGitOptions;
 
   private readonly baseUrl: string;
+  private readonly graphqlBaseUrl: string;
   private readonly ghub: Octokit;
   private readonly logger: ILogger;
 
@@ -53,6 +55,7 @@ export default class Git {
     this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
+    this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
 
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     const gitHub = Octokit.plugin(enterpriseCompat)
@@ -266,7 +269,7 @@ export default class Git {
     this.logger.verbose.info('Querying Github using GraphQL:\n', query);
 
     const data = await graphql(query, {
-      baseUrl: this.baseUrl,
+      baseUrl: this.graphqlBaseUrl,
       headers: {
         authorization: `token ${this.options.token}`
       }
