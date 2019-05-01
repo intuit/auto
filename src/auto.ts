@@ -212,11 +212,12 @@ export default class Auto {
     }
 
     let { sha } = options;
+    const prNumber = this.getPrNumber('pr', pr);
     this.logger.verbose.info("Using command: 'pr'");
 
-    if (!sha && pr) {
+    if (!sha && prNumber) {
       this.logger.verbose.info('Getting commit SHA from PR.');
-      const res = await this.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(prNumber);
       sha = res.data.head.sha;
     } else if (!sha) {
       this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
