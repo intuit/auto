@@ -418,6 +418,7 @@ export default class Auto {
     let pr: string | undefined;
     let build: string | undefined;
 
+    console.log({ env });
     if ('pr' in env && 'build' in env) {
       ({ pr } = env);
       ({ build } = env);
@@ -426,7 +427,7 @@ export default class Auto {
       build = env.commit;
     }
 
-    console.log(pr, build);
+    console.log('debug', { pr, build });
 
     pr = pr || options.pr ? String(options.pr) : '';
     build = build || options.build ? String(options.build) : '';
