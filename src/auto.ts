@@ -70,6 +70,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
+  canary: AsyncParallelHook<[string]>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -432,34 +433,63 @@ export default class Auto {
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
     );
-    await this.makeChangelog(options);
 
-    if (!options.dryRun) {
-      this.logger.verbose.info('Calling version hook');
-      await this.hooks.version.promise(version);
-      this.logger.verbose.info('Calling after version hook');
-      await this.hooks.afterVersion.promise();
-      this.logger.verbose.info('Calling publish hook');
-      await this.hooks.publish.promise(version);
-      this.logger.verbose.info('Calling after publish hook');
-      await this.hooks.afterPublish.promise();
-    }
+    if (options.canary) {
+      // SailEnv falls back to commit SHA
+      let pr: string | undefined;
+      let build: string | undefined;
 
-    const newVersion = await this.makeRelease(options);
+      if ('pr' in env && 'build' in env) {
+        ({ pr } = env);
+        ({ build } = env);
+      } else if ('pr' in env && 'commit' in env) {
+        ({ pr } = env);
+        build = env.commit;
+      }
 
-    if (options.dryRun) {
-      this.logger.log.warn(
-        "The version reported in the line above hasn't been incremented during `dry-run`"
-      );
+      if (!pr || !build) {
+        throw new Error(
+          'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
+        );
+      }
 
       const current = await this.getCurrentVersion(lastRelease);
+      const nextVersion = inc(current, version as ReleaseType);
+      const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
 
-      this.logger.log.warn(
-        `Published version would be ${inc(current, version as ReleaseType)}`
-      );
+      this.logger.verbose.info('Calling canary hook');
+      await this.hooks.canary.promise(canaryVersion);
+      await this.hooks.afterShipIt.promise(canaryVersion, commitsInRelease);
+    } else {
+      await this.makeChangelog(options);
+
+      if (!options.dryRun) {
+        this.logger.verbose.info('Calling version hook');
+        await this.hooks.version.promise(version);
+        this.logger.verbose.info('Calling after version hook');
+        await this.hooks.afterVersion.promise();
+        this.logger.verbose.info('Calling publish hook');
+        await this.hooks.publish.promise(version);
+        this.logger.verbose.info('Calling after publish hook');
+        await this.hooks.afterPublish.promise();
+      }
+
+      const newVersion = await this.makeRelease(options);
+
+      if (options.dryRun) {
+        this.logger.log.warn(
+          "The version reported in the line above hasn't been incremented during `dry-run`"
+        );
+
+        const current = await this.getCurrentVersion(lastRelease);
+
+        this.logger.log.warn(
+          `Published version would be ${inc(current, version as ReleaseType)}`
+        );
+      }
+
+      await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
     }
-
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
   }
 
   private getPrNumber(command: string, pr?: number) {
