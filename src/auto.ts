@@ -457,7 +457,8 @@ export default class Auto {
       this.logger.verbose.info('Calling canary hook');
       await this.hooks.canary.promise(canaryVersion);
       this.comment({
-        message: `Published PR with canary version: \`${canaryVersion}\``
+        message: `Published PR with canary version: \`${canaryVersion}\``,
+        context: 'canary-version'
       });
 
       // Ideally we would want the first commit from a branch
