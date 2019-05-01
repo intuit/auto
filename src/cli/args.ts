@@ -99,7 +99,8 @@ const defaultOptions = [
 const pr: commandLineUsage.OptionDefinition = {
   name: 'pr',
   type: Number,
-  description: 'The pull request number you want the labels of',
+  description:
+    'The pull request the command should use. Detects PR number in CI',
   group: 'main'
 };
 
@@ -214,7 +215,7 @@ const commands: ICommand[] = [
   {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
-    require: ['pr', 'url'],
+    require: ['url'],
     options: [
       pr,
       url,
@@ -226,9 +227,7 @@ const commands: ICommand[] = [
       skipReleaseLabels,
       ...defaultOptions
     ],
-    examples: [
-      '{green $} auto pr-check --pr 32 --url http://your-ci.com/build/123'
-    ]
+    examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
   {
     name: 'pr',
@@ -242,7 +241,10 @@ const commands: ICommand[] = [
         description:
           'Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository'
       },
-      { ...pr, description: 'PR to set the status on' },
+      {
+        ...pr,
+        description: 'PR to set the status on. Detects PR number in CI'
+      },
       url,
       {
         name: 'state',
@@ -267,7 +269,7 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
-      `{green $} auto pr \\\\ \n   --pr 32 \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
+      `{green $} auto pr \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
     ]
   },
   {
@@ -365,7 +367,7 @@ const commands: ICommand[] = [
   {
     name: 'comment',
     summary: 'Comment on a pull request with a markdown message',
-    require: ['pr', 'message'],
+    require: ['message'],
     options: [
       pr,
       context,
@@ -604,7 +606,7 @@ export interface ILabelCommandOptions {
 }
 
 export interface IPRCheckCommandOptions {
-  pr: number;
+  pr?: number;
   url?: string;
   skipReleaseLabels?: string[];
   context?: string;
@@ -644,8 +646,8 @@ export interface IReleaseCommandOptions extends IAuthorArgs {
 }
 
 export interface ICommentCommandOptions {
-  pr: number;
   message: string;
+  pr?: number;
   context?: string;
   dryRun?: boolean;
 }

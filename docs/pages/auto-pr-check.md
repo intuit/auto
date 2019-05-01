@@ -13,7 +13,7 @@ auto pr-check --pr 24 --url http://your-ci.com
 
 Options
 
-  --pr number [required]               The pull request number you want the labels of
+  --pr number [required]               The pull request the command should use. Detects PR number in CI
   --url string                         URL to associate with this status
   --only-publish-with-release-label    Only bump version if 'release' label is on pull request
   --context string                     A string label to differentiate this status from others

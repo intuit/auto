@@ -10,7 +10,7 @@ Set the status on a PR commit
 Options
 
   --sha string                      Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository
-  --pr number [required]            The pull request number you want the labels of
+  --pr number [required]            The pull request the command should use. Detects PR number in CI
   --url string                      URL to associate with this status
   --state string [required]         State of the PR. ['pending', 'success', 'error', 'failure']
   --description string [required]   A description of the status

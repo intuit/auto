@@ -1,5 +1,5 @@
-import env from 'dotenv';
-import isCI from 'is-ci';
+import dotenv from 'dotenv';
+import envCi from 'env-ci';
 import { gt, inc, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
@@ -38,6 +38,8 @@ import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
+
+const env = envCi();
 
 interface IAuthor {
   name?: string;
@@ -103,7 +105,7 @@ export default class Auto {
       });
     });
 
-    env.config();
+    dotenv.config();
   }
 
   /**
@@ -210,11 +212,19 @@ export default class Auto {
     }
 
     let { sha } = options;
+    let prNumber: number | undefined;
+
+    try {
+      prNumber = this.getPrNumber('pr', pr);
+    } catch (error) {
+      // default to sha if no PR found
+    }
+
     this.logger.verbose.info("Using command: 'pr'");
 
-    if (!sha && pr) {
+    if (!sha && prNumber) {
       this.logger.verbose.info('Getting commit SHA from PR.');
-      const res = await this.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(prNumber);
       sha = res.data.head.sha;
     } else if (!sha) {
       this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
@@ -263,14 +273,15 @@ export default class Auto {
 
     // tslint:disable-next-line variable-name
     const target_url = url;
+    const prNumber = this.getPrNumber('prCheck', pr);
     let msg;
     let sha;
 
     try {
-      const res = await this.git.getPullRequest(pr);
+      const res = await this.git.getPullRequest(prNumber);
       sha = res.data.head.sha;
 
-      const labels = await this.git.getLabels(pr);
+      const labels = await this.git.getLabels(prNumber);
       const labelTexts = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
@@ -313,7 +324,7 @@ export default class Auto {
       };
     }
 
-    this.logger.verbose.info('Posting comment to GitHub\n', msg);
+    this.logger.verbose.info('Posting status to GitHub\n', msg);
 
     if (!dryRun) {
       try {
@@ -362,7 +373,8 @@ export default class Auto {
         `Would have commented on ${pr} under "${context}" context:\n\n${message}`
       );
     } else {
-      await this.git.createComment(message, pr, context);
+      const prNumber = this.getPrNumber('comment', pr);
+      await this.git.createComment(message, prNumber, context);
       this.logger.log.success(`Commented on PR #${pr}`);
     }
   }
@@ -446,6 +458,19 @@ export default class Auto {
     }
 
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  private getPrNumber(command: string, pr?: number) {
+    const envPr = 'pr' in env && Number(env.pr);
+    const prNumber = pr || envPr;
+
+    if (!prNumber) {
+      throw new Error(
+        `Could not detect PR number. ${command} must be run from either a PR or have the PR number supllied via the --pr flag.`
+      );
+    }
+
+    return prNumber;
   }
 
   private startGit(gitOptions: IGitOptions) {
@@ -615,7 +640,7 @@ export default class Auto {
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
-      if (!isCI) {
+      if (!env.isCi) {
         this.logger.log.note(
           `Detected local environment, will not set git user. This happens automatically in a CI environment.
 

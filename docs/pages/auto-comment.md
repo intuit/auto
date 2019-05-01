@@ -13,7 +13,7 @@ auto comment --pr 24 --message "You broke the build!" --context build
 
 Options
 
-  --pr number [required]            The pull request number you want the labels of
+  --pr number                       The pull request the command should use. Detects PR number in CI
   --context string                  A string label to differentiate this status from others
   -m, --message string [required]   Message to post to comment
   -d, --dry-run                     Report what command will do but do not actually do anything
