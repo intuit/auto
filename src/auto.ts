@@ -423,43 +423,45 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
-    const version = await this.getVersion();
-
-    if (version === '') {
-      return;
-    }
-
     const lastRelease = await this.git.getLatestRelease();
 
     if (options.canary) {
       // SailEnv falls back to commit SHA
-      let pr: string | undefined;
-      let build: string | undefined;
+      const pr: string | undefined = '406';
+      const build: string | undefined = '10';
 
-      if ('pr' in env && 'build' in env) {
-        ({ pr } = env);
-        ({ build } = env);
-      } else if ('pr' in env && 'commit' in env) {
-        ({ pr } = env);
-        build = env.commit;
-      }
+      // if ('pr' in env && 'build' in env) {
+      //   ({ pr } = env);
+      //   ({ build } = env);
+      // } else if ('pr' in env && 'commit' in env) {
+      //   ({ pr } = env);
+      //   build = env.commit;
+      // }
 
-      if (!pr || !build) {
-        throw new Error(
-          'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
-        );
-      }
+      // if (!pr || !build) {
+      //   throw new Error(
+      //     'No PR number found to make canary release with. Make sure you only run the --canary flag from a PR.'
+      //   );
+      // }
 
       const current = await this.getCurrentVersion(lastRelease);
+      const version = await this.release.getSemverBump('HEAD^');
+      const commitInBranch = await this.release.getCommitsInRelease('HEAD^');
+      console.log(JSON.stringify(commitInBranch, null, 2));
       const nextVersion = inc(current, version as ReleaseType);
       const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
 
-      this.logger.verbose.info('Calling canary hook');
-      await this.hooks.canary.promise(canaryVersion);
-      this.comment({
-        message: `Published PR with canary version: \`${canaryVersion}\``,
-        context: 'canary-version'
-      });
+      if (options.dryRun) {
+        this.logger.log.warn(`Published version would be ${canaryVersion}`);
+      } else {
+        this.logger.verbose.info('Calling canary hook');
+        await this.hooks.canary.promise(canaryVersion);
+
+        this.comment({
+          message: `Published PR with canary version: \`${canaryVersion}\``,
+          context: 'canary-version'
+        });
+      }
 
       // Ideally we would want the first commit from a branch
       // This heavily depends on how you use git. So finding that
@@ -467,6 +469,12 @@ export default class Auto {
       // will now include the commits for a canary release
       await this.hooks.afterShipIt.promise(canaryVersion, []);
     } else {
+      const version = await this.getVersion();
+
+      if (version === '') {
+        return;
+      }
+
       const commitsInRelease = await this.release.getCommitsInRelease(
         lastRelease
       );
