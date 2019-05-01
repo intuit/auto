@@ -430,9 +430,6 @@ export default class Auto {
     }
 
     const lastRelease = await this.git.getLatestRelease();
-    const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
-    );
 
     if (options.canary) {
       // SailEnv falls back to commit SHA
@@ -462,8 +459,17 @@ export default class Auto {
       this.comment({
         message: `Published PR with canary version: \`${canaryVersion}\``
       });
-      await this.hooks.afterShipIt.promise(canaryVersion, commitsInRelease);
+
+      // Ideally we would want the first commit from a branch
+      // This heavily depends on how you use git. So finding that
+      // first commit might not be possible. For now afterShipIt
+      // will now include the commits for a canary release
+      await this.hooks.afterShipIt.promise(canaryVersion, []);
     } else {
+      const commitsInRelease = await this.release.getCommitsInRelease(
+        lastRelease
+      );
+
       await this.makeChangelog(options);
 
       if (!options.dryRun) {
