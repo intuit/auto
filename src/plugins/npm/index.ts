@@ -325,22 +325,14 @@ export default class NPMPlugin implements IPlugin {
 
         await execPromise('npx', [
           'lerna',
-          'version',
-          canaryVersion,
-          '--exact', // easier to read version output
-          '--yes', // skip prompts
-          '--no-git-tag-version', // do not create a tag or commit for the canary version
-          '--no-push' // do not push anything
-        ]);
-        await execPromise('npx', [
-          'lerna',
           'publish',
-          'from-package', // above command sets the version in packages
+          canaryVersion,
           '--dist-tag',
           'canary',
           '--no-git-tag-version', // do not create a tag or commit for the canary version
           '--no-push', // do not push anything
-          '--no-git-reset' // allow uncommitted changes when publishing
+          '--no-git-reset', // allow uncommitted changes when publishing,
+          '--yes' // skip prompts
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
