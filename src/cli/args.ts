@@ -4,6 +4,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
+import dedent = require('dedent');
 import signale from 'signale';
 
 const p = chalk.hex('#870048');
@@ -381,8 +382,12 @@ const commands: ICommand[] = [
   },
   {
     name: 'shipit',
-    summary:
-      'Run the full `auto` release pipeline. Detects if in a lerna project',
+    summary: dedent`
+      Run the full \`auto\` release pipeline. Detects if in a lerna project.
+
+      1. call from master -> latest version released
+      2. call from PR in CI -> canary version released #351
+    `,
     examples: ['{green $} auto shipit'],
     options: [...defaultOptions, dryRun]
   },

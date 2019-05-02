@@ -28,11 +28,16 @@ const getLabels = jest.fn();
 git.getLabels = getLabels;
 getLabels.mockReturnValue([]);
 
+const lockIssue = jest.fn();
+git.lockIssue = lockIssue;
+lockIssue.mockReturnValue([]);
+
 describe('release label plugin', () => {
   beforeEach(() => {
     createComment.mockClear();
     addLabelToPr.mockClear();
     commits.mockClear();
+    lockIssue.mockClear();
   });
 
   test('should so nothing without PRs', async () => {
@@ -180,6 +185,28 @@ describe('release label plugin', () => {
     expect(addLabelToPr).not.toHaveBeenCalled();
   });
 
+  test('should not add released label for canary releases', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+
+    releasedLabel.apply({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      logger: dummyLog(),
+      args: {},
+      git
+    } as Auto);
+
+    await autoHooks.afterRelease.promise(
+      '1.0.0-canary',
+      await log.normalizeCommits([
+        makeCommitFromMsg('normal commit with no bump (#123)')
+      ])
+    );
+
+    expect(addLabelToPr).not.toHaveBeenCalled();
+  });
+
   test('should comment and lined Issues', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
@@ -208,5 +235,49 @@ describe('release label plugin', () => {
       420,
       'released'
     );
+  });
+
+  test('should lock Issues', async () => {
+    const releasedLabel = new ReleasedLabelPlugin({ lockIssues: true });
+    const autoHooks = makeHooks();
+    releasedLabel.apply({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      logger: dummyLog(),
+      args: {},
+      git
+    } as Auto);
+
+    const commit = makeCommitFromMsg(
+      'normal commit with no bump (#123) closes #100'
+    );
+    await autoHooks.afterRelease.promise(
+      '1.0.0',
+      await log.normalizeCommits([commit])
+    );
+
+    expect(lockIssue).toHaveBeenCalled();
+  });
+
+  test('should not lock Issues for canaries', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      logger: dummyLog(),
+      args: {},
+      git
+    } as Auto);
+
+    const commit = makeCommitFromMsg(
+      'normal commit with no bump (#123) closes #100'
+    );
+    await autoHooks.afterRelease.promise(
+      '1.0.0-canary',
+      await log.normalizeCommits([commit])
+    );
+
+    expect(lockIssue).not.toHaveBeenCalled();
   });
 });
