@@ -247,6 +247,7 @@ test('should use string semver if no published package', async () => {
   const plugin = new NPMPlugin({ setRcToken: false });
 
   expect(plugin).toEqual({
+    forcePublish: true,
     name: 'NPM',
     setRcToken: false
   });
@@ -305,6 +306,34 @@ describe('publish', () => {
       "'Bump version to: %v [skip ci]'"
     ]);
   });
+
+  test('monorepo - should be able to not force publish all packages', async () => {
+    const plugin = new NPMPlugin({ forcePublish: false });
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+
+    existsSync.mockReturnValueOnce(true);
+    monorepoPackages.mockReturnValueOnce([]);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.version.promise(SEMVER.patch);
+    expect(exec).toHaveBeenCalledWith('npx', [
+      'lerna',
+      'version',
+      'patch',
+      '--no-commit-hooks',
+      '--yes',
+      '-m',
+      "'Bump version to: %v [skip ci]'"
+    ]);
+  });
+
   test('monorepo - should publish', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
