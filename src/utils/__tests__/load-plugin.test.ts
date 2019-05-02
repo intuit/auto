@@ -10,6 +10,7 @@ describe('loadPlugins', () => {
 
   test('should use supported plugin', async () => {
     expect(loadPlugin(['npm', {}], logger)).toEqual({
+      forcePublish: true,
       name: 'NPM',
       setRcToken: true
     });

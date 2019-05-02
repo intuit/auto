@@ -154,16 +154,20 @@ async function loadPackageJson(): Promise<IPackageJSON> {
 
 interface INpmConfig {
   setRcToken?: boolean;
+  forcePublish?: boolean;
 }
 
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
   private readonly setRcToken: boolean;
+  private readonly forcePublish: boolean;
 
   constructor(config: INpmConfig = {}) {
     this.setRcToken =
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
+    this.forcePublish =
+      typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
   }
 
   apply(auto: Auto) {
@@ -288,17 +292,18 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
-
-        await execPromise('npx', [
+        const command = [
           'lerna',
           'version',
           monorepoBump || version,
-          '--force-publish',
+          this.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
           '-m',
           "'Bump version to: %v [skip ci]'"
-        ]);
+        ].filter((item): item is string => Boolean(item));
+
+        await execPromise('npx', command);
         auto.logger.verbose.info('Successfully versioned repo');
         return;
       }
