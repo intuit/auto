@@ -480,4 +480,8 @@ export default class Git {
 
     return result;
   }
+
+  async getLatestTagInBranch() {
+    return execPromise('git', ['describe', '--tags', '--abbrev=0']);
+  }
 }
