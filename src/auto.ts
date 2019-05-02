@@ -496,7 +496,9 @@ export default class Auto {
     this.hooks.beforeShipIt.call();
 
     const isPR = 'isPr' in env && env.isPr;
-    const isMaster = 'branch' in env && env.branch === 'master';
+    // env-ci sets branch to target branch (ex: master) in some CI services.
+    // so we should make sure we aren't in a PR just to be safe
+    const isMaster = !isPR && 'branch' in env && env.branch === 'master';
     const publishInfo = isPR
       ? await this.canary(options)
       : isMaster
