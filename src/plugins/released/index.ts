@@ -18,6 +18,7 @@ const defaultOptions = {
 };
 
 const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
+const isCanary = (version: string) => version.match('canary');
 
 export default class ReleasedLabelPlugin implements IPlugin {
   name = 'Released Label';
@@ -107,7 +108,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
       issues.map(async issue => {
         await this.addCommentAndLabel(auto, newVersion, issue, true);
 
-        if (this.options.lockIssues) {
+        if (this.options.lockIssues && !isCanary(newVersion)) {
           await auto.git!.lockIssue(issue);
         }
       })
@@ -123,6 +124,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
     // leave a comment with the new version
     const comment = this.createReleasedComment(isIssue, newVersion);
     await auto.git!.createComment(comment, prOrIssue, 'released');
+
+    // Do not add released to issue/label for canary versions
+    if (isCanary(newVersion)) {
+      return;
+    }
 
     // add a `released` label to a PR
     const labels = await auto.git!.getLabels(prOrIssue);
