@@ -505,6 +505,12 @@ export default class Auto {
       ? await this.publishLatest(options)
       : undefined;
 
+    if (!isPR && !isMaster) {
+      this.logger.log.info(
+        'No version published. Could not detect if in PR or on master branch.'
+      );
+    }
+
     if (!publishInfo) {
       return;
     }
@@ -521,6 +527,7 @@ export default class Auto {
     const version = await this.getVersion();
 
     if (version === '') {
+      this.logger.log.info('No version published.');
       return;
     }
 
