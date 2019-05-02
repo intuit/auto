@@ -473,7 +473,7 @@ export default class Auto {
       }
     }
 
-    return canaryVersion;
+    return { newVersion: canaryVersion, commitsInRelease: [] };
   }
 
   /**
@@ -491,6 +491,24 @@ export default class Auto {
 
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
+
+    const publishInfo =
+      'isPr' in env && env.isPr
+        ? await this.canary()
+        : await this.publishLatest(options);
+
+    if (!publishInfo) {
+      return;
+    }
+
+    const { newVersion, commitsInRelease } = publishInfo;
+    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  private async publishLatest(options: IShipItCommandOptions) {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
 
     const version = await this.getVersion();
 
@@ -530,7 +548,7 @@ export default class Auto {
       );
     }
 
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+    return { newVersion, commitsInRelease };
   }
 
   private getPrNumber(command: string, pr?: number) {
