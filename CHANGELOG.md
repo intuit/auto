@@ -1,3 +1,15 @@
+# v4.13.0 (Thu May 02 2019)
+
+#### 🚀  Enhancement
+
+- add forcePublish config option to npm plugin [#352](https://github.com/intuit/auto/pull/352) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.12.0 (Wed May 01 2019)
 
 #### 🚀  Enhancement
