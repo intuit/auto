@@ -4,7 +4,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
-import dedent = require('dedent');
+import dedent from 'dedent';
 import signale from 'signale';
 
 const p = chalk.hex('#870048');
