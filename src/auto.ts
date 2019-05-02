@@ -495,10 +495,13 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
-    const publishInfo =
-      'isPr' in env && env.isPr
-        ? await this.canary(options)
-        : await this.publishLatest(options);
+    const isPR = 'isPr' in env && env.isPr;
+    const isMaster = 'branch' in env && env.branch === 'master';
+    const publishInfo = isPR
+      ? await this.canary(options)
+      : isMaster
+      ? await this.publishLatest(options)
+      : undefined;
 
     if (!publishInfo) {
       return;
