@@ -479,7 +479,10 @@ export default class Auto {
       }
     }
 
-    return { newVersion: canaryVersion, commitsInRelease: [] };
+    const latestTag = await this.git.getLatestTagInBranch();
+    const commitsInRelease = await this.release.getCommits(latestTag);
+
+    return { newVersion: canaryVersion, commitsInRelease };
   }
 
   /**
@@ -500,7 +503,7 @@ export default class Auto {
 
     const publishInfo =
       'isPr' in env && env.isPr
-        ? await this.canary()
+        ? await this.canary(options)
         : await this.publishLatest(options);
 
     if (!publishInfo) {
