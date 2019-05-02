@@ -90,15 +90,6 @@ jobs:
           name: Release
           command: yarn run release
 
-  canary:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/auto
-      - run:
-          name: Canary
-          command: yarn run release:canary
-
   publishDocs:
     <<: *defaults
     steps:
@@ -126,25 +117,11 @@ workflows:
           requires:
             - install
 
-      - canary:
-          requires:
-            - build
-            - test
-            - lint
-          filters:
-            branches:
-              ignore:
-                - master
-
       - release:
           requires:
             - build
             - test
             - lint
-          filters:
-            branches:
-              only:
-                - master
 
       - publishDocs:
           requires:
