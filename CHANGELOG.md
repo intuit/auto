@@ -1,3 +1,15 @@
+# v4.15.3 (Fri May 03 2019)
+
+#### 🐛  Bug Fix
+
+- Override any env var set in the .env [#362](https://github.com/intuit/auto/pull/362) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.15.2 (Fri May 03 2019)
 
 #### 🐛  Bug Fix
