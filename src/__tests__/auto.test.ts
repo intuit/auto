@@ -6,7 +6,7 @@ import makeCommitFromMsg from './make-commit-from-msg';
 
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
-jest.mock('env-ci', () => () => ({ isCi: false }));
+jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
 
 const defaults = {
   owner: 'foo',
@@ -691,6 +691,63 @@ describe('Auto', () => {
 
       await auto.canary();
       expect(canary).toHaveBeenCalledWith('1.2.4-canary.abcd');
+    });
+  });
+
+  describe('shipit', () => {
+    test('should throw when not initialized', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      expect(auto.shipit()).rejects.toBeTruthy();
+    });
+
+    test('should not publish when no latest version found', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getLatestRelease = () => Promise.resolve('');
+      auto.release!.getSemverBump = () => Promise.resolve(SEMVER.noVersion);
+      const afterShipIt = jest.fn();
+      auto.hooks.afterShipIt.tap('test', afterShipIt);
+
+      await auto.shipit();
+      expect(afterShipIt).not.toHaveBeenCalled();
+    });
+
+    test('should publish to latest on base branch', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.publish = jest.fn();
+      auto.release!.getCommitsInRelease = jest.fn();
+      auto.release!.generateReleaseNotes = jest.fn();
+      auto.release!.addToChangelog = jest.fn();
+      const afterShipIt = jest.fn();
+      auto.hooks.afterShipIt.tap('test', afterShipIt);
+
+      await auto.shipit();
+      expect(afterShipIt).toHaveBeenCalled();
+    });
+
+    test('should skip publish in dry run', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.publish = jest.fn();
+      auto.release!.getCommitsInRelease = jest.fn();
+      auto.release!.generateReleaseNotes = jest.fn();
+      auto.release!.addToChangelog = jest.fn();
+      const version = jest.fn();
+      auto.hooks.version.tap('test', version);
+
+      await auto.shipit({ dryRun: true });
+      expect(version).not.toHaveBeenCalled();
     });
   });
 });

@@ -19,7 +19,7 @@ exports[`Hooks title 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`generateReleaseNotes should be able to customize "Push To Master" title 1`] = `
+exports[`generateReleaseNotes should be able to customize pushToBaseBranch title 1`] = `
 "#### 🚀  Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)

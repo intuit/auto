@@ -34,7 +34,7 @@ Useful in conjunction with `npm version` to auto-version releases.
 
 To create a prerelease add the `prerelease` label to your pull request.
 
-## No Release
+## Skip Release
 
 To not create a release for a pull request add the `skip-release` label. Any pull request with this tag will make `auto version` return `''`.
 

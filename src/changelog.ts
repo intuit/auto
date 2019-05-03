@@ -14,6 +14,7 @@ export interface IGenerateReleaseNotesOptions {
   baseUrl: string;
   jira?: string;
   labels: ILabelDefinitionMap;
+  baseBranch: string;
 }
 
 export interface IChangelogHooks {
@@ -47,11 +48,11 @@ export default class Changelog {
     this.logger = logger;
     this.options = options;
     this.hooks = makeChangelogHooks();
-    this.options.labels.pushToMaster = {
-      name: 'pushToMaster',
-      title: '⚠️  Pushed to master',
+    this.options.labels.pushToBaseBranch = {
+      name: 'pushToBaseBranch',
+      title: `⚠️  Pushed to ${options.baseBranch}`,
       description: 'N/A',
-      ...(this.options.labels.pushToMaster || {})
+      ...(this.options.labels.pushToBaseBranch || {})
     };
   }
 
@@ -75,7 +76,7 @@ export default class Changelog {
     );
   }
 
-  // Every Commit will either be a PR, jira story, or push to master (patch)
+  // Every Commit will either be a PR, jira story, or push to base branch (patch)
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
     if (commits.length === 0) {
       return '';

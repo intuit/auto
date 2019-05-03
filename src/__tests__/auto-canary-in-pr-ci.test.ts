@@ -2,7 +2,13 @@ import Auto from '../auto';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
-jest.mock('env-ci', () => () => ({ pr: 123, build: 1, isCi: true }));
+jest.mock('env-ci', () => () => ({
+  pr: 123,
+  build: 1,
+  isCi: true,
+  isPr: true,
+  branch: 'ci-test'
+}));
 
 const defaults = {
   owner: 'foo',
@@ -72,5 +78,23 @@ describe('canary in ci', () => {
 
     const version = await auto.canary({ pr: 456, build: 5 });
     expect(version!.newVersion).toBe('1.2.4-canary.456.5');
+  });
+});
+
+describe('shipit in ci', () => {
+  test('should publish canary in PR', async () => {
+    const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+    auto.git!.createComment = jest.fn();
+    auto.release!.getCommitsInRelease = () => Promise.resolve([]);
+    auto.release!.getCommits = () => Promise.resolve([]);
+    const canary = jest.fn();
+    auto.hooks.canary.tap('test', canary);
+
+    await auto.shipit();
+    expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
   });
 });

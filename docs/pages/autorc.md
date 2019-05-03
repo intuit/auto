@@ -175,6 +175,16 @@ You can set any CLI option in the `.autorc` these options will get overridden by
 
 The following are options that might be more useful to set in the `.autorc` rather than with a flag.
 
+### Base Branch
+
+Configure what your repo considers the "master" branch.
+
+```json
+{
+  "baseBranch": "trunk"
+}
+```
+
 ### Plugins
 
 It is useful to specify your plugins in the rc file rather than in all the commands.

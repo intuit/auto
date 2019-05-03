@@ -58,6 +58,7 @@ exports[`Auto createLabels should create the labels 1`] = `
 
 exports[`Auto should extend config 1`] = `
 Object {
+  "baseBranch": "master",
   "command": "init",
   "extends": "@artsy",
   "labels": Object {
@@ -112,6 +113,7 @@ Object {
 
 exports[`Auto should extend local config 1`] = `
 Object {
+  "baseBranch": "master",
   "command": "init",
   "extends": "./fake.json",
   "labels": Object {

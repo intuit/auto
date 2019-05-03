@@ -95,7 +95,7 @@ export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
   args: ArgsType;
-  config?: IReleaseOptions;
+  baseBranch: string;
 
   release?: Release;
   git?: Git;
@@ -104,6 +104,7 @@ export default class Auto {
 
   constructor(args: ArgsType) {
     this.args = args;
+    this.baseBranch = args.baseBranch || 'master';
     this.logger = createLog(
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
@@ -132,9 +133,10 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = this.hooks.modifyConfig.call(
-      await configLoader.loadConfig(this.args)
-    );
+    const config = this.hooks.modifyConfig.call({
+      ...(await configLoader.loadConfig(this.args)),
+      baseBranch: this.baseBranch
+    });
 
     this.logger.verbose.success('Loaded `auto` with config:', config);
 
@@ -493,7 +495,7 @@ export default class Auto {
    * 3. Publish code
    * 4. Create a release
    */
-  async shipit(options: IShipItCommandOptions) {
+  async shipit(options: IShipItCommandOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -504,16 +506,19 @@ export default class Auto {
     const isPR = 'isPr' in env && env.isPr;
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
-    const isMaster = !isPR && 'branch' in env && env.branch === 'master';
+    const isBaseBranch =
+      !isPR && 'branch' in env && env.branch === this.baseBranch;
     const publishInfo = isPR
       ? await this.canary(options)
-      : isMaster
+      : isBaseBranch
       ? await this.publishLatest(options)
       : undefined;
 
-    if (!isPR && !isMaster) {
+    if (!isPR && !isBaseBranch) {
       this.logger.log.info(
-        'No version published. Could not detect if in PR or on master branch.'
+        `No version published. Could not detect if in PR or on ${
+          this.baseBranch
+        }.`
       );
     }
 

@@ -26,6 +26,7 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package definition for the platform
   --owner string        The owner of the GitHub repo. Defaults to reading from the package definition for the platform
   --github-api string   GitHub API to use
+  --base-branch string  Branch to treat as the "master" branch
   --plugins string[]    Plugins to load auto with. (defaults to just npm)
 
 Examples
@@ -38,7 +39,7 @@ Examples
 
 ## Jira
 
-To include Jira story information you must include a URL to your hosted JIRA instance as a CLI flag or [.autorc`](./autorc.md) config option.
+To include Jira story information you must include a URL to your hosted JIRA instance as a CLI flag or [.autorc](./autorc.md) config option.
 
 ## Changelog Titles
 
