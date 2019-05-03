@@ -96,6 +96,7 @@ export default class Auto {
   logger: ILogger;
   args: ArgsType;
   baseBranch: string;
+  config?: IReleaseOptions;
 
   release?: Release;
   git?: Git;
