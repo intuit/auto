@@ -1,3 +1,15 @@
+# v4.14.0 (Thu May 02 2019)
+
+#### 🚀  Enhancement
+
+- enable loglevel silly for npm/lerna when in verbose or veryVerbose mode [#356](https://github.com/intuit/auto/pull/356) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.13.2 (Thu May 02 2019)
 
 #### 🐛  Bug Fix
