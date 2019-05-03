@@ -2,13 +2,15 @@
 
 # :rocket: auto :rocket:/.has-text-centered\
 
-CI/CD helpers for github releases. Generate releases based on semantic version labels on pull requests.
+Automated releases powered by pull request labels. Streamline you release workflow and publish constantly!
 
 Release Features:
 
-- Release every merge to master based on a PR labels
+- Calculate semantic version bumps from PRs
 - Skip a release with the `skip-release` label
-- Generate a changelog with fancy headers, authors, and monorepo package association
+- Publish canary releases from PRs
+- Generate changelogs with fancy headers, authors, and monorepo package association
+- Use labels to create new changelog section
 - Generate a GitHub release
 
 Pull Request Interaction Features:
