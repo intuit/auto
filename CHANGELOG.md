@@ -1,3 +1,15 @@
+# v4.15.0 (Fri May 03 2019)
+
+#### 🚀  Enhancement
+
+- when canary is run locally it uses the commits SHA instead of PR + Build [#360](https://github.com/intuit/auto/pull/360) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.14.1 (Fri May 03 2019)
 
 #### 🐛  Bug Fix
