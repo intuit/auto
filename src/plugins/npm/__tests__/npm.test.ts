@@ -261,12 +261,10 @@ describe('publish', () => {
   test('should use silly logging in verbose mode', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
+    const logger = dummyLog();
+    logger.logLevel = 'veryVerbose';
 
-    plugin.apply({
-      hooks,
-      logger: dummyLog(),
-      logLevel: 'veryVerbose'
-    } as Auto);
+    plugin.apply({ hooks, logger } as Auto);
 
     readResult = `
       {
