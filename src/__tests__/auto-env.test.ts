@@ -3,7 +3,7 @@ import Auto from '../auto';
 jest.mock('fs', () => ({
   readFileSync: () => 'FOO="test value"',
   closeSync: () => undefined,
-  existsSync: () => undefined,
+  existsSync: () => true,
   readFile: () => undefined,
   ReadStream: () => undefined,
   WriteStream: () => undefined,
