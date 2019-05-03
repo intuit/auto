@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
+import fs from 'fs';
+import path from 'path';
 import { gt, inc, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
@@ -75,6 +77,20 @@ export interface IAutoHooks {
   afterPublish: AsyncParallelHook<[]>;
 }
 
+const loadEnv = () => {
+  const envFile = path.resolve(process.cwd(), '.env');
+
+  if (!fs.existsSync(envFile)) {
+    return;
+  }
+
+  const envConfig = dotenv.parse(fs.readFileSync(envFile));
+
+  Object.entries(envConfig).forEach(([key, value]) => {
+    process.env[key] = value;
+  });
+};
+
 export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
@@ -107,7 +123,7 @@ export default class Auto {
       });
     });
 
-    dotenv.config();
+    loadEnv();
   }
 
   /**
