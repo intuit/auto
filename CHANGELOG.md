@@ -1,3 +1,17 @@
+# v4.15.4 (Fri May 03 2019)
+
+#### 🏠  Internal
+
+- remove accidental log [#365](https://github.com/intuit/auto/pull/365) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update @types/node to the latest version 🚀 [#364](https://github.com/intuit/auto/pull/364) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v4.15.3 (Fri May 03 2019)
 
 #### 🐛  Bug Fix
