@@ -174,7 +174,8 @@ export default class NPMPlugin implements IPlugin {
 
   apply(auto: Auto) {
     const isVerbose =
-      auto.logLevel === 'verbose' || auto.logLevel === 'veryVerbose';
+      auto.logger.logLevel === 'verbose' ||
+      auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
@@ -334,6 +335,8 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
+
+        console.log(verboseArgs);
 
         await execPromise('npx', [
           'lerna',

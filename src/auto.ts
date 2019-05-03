@@ -37,7 +37,7 @@ import Release, {
 import SEMVER, { calculateSemVerBump } from './semver';
 import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
-import createLog, { ILogger, LogLevel } from './utils/logger';
+import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
 const env = envCi();
@@ -79,7 +79,6 @@ export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
   args: ArgsType;
-  logLevel: LogLevel;
   config?: IReleaseOptions;
 
   release?: Release;
