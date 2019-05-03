@@ -73,6 +73,11 @@ NPM_TOKEN=PUBLISH_TOKEN
 
 To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
 
+It will:
+
+1. Publish canary releases when run from a PR
+2. Generate a changelog and publish a "latest" release to a package manager when run from the base branch
+
 ```json
 {
   "scripts": {
@@ -138,7 +143,7 @@ VERSION=`auto version`
 
 if [ ! -z "$VERSION" ]; then
   auto changelog
-  lerna publish --yes --force-publish=* $VERSION -m '%v [skip ci]'
+  lerna publish --yes $VERSION -m '%v [skip ci]'
   auto release
 fi
 ```
