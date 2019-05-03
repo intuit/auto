@@ -1,3 +1,15 @@
+# v4.15.5 (Fri May 03 2019)
+
+#### 🐛  Bug Fix
+
+- fix bug when tying to publish canary for PR with skip-release label [#367](https://github.com/intuit/auto/pull/367) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.15.4 (Fri May 03 2019)
 
 #### 🏠  Internal
