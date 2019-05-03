@@ -1,3 +1,15 @@
+# v4.13.2 (Thu May 02 2019)
+
+#### 🐛  Bug Fix
+
+- increase buffer for situations when user has a LOT of unpublished work [#354](https://github.com/intuit/auto/pull/354) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.13.1 (Thu May 02 2019)
 
 
