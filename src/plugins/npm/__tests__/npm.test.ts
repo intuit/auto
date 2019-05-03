@@ -258,6 +258,33 @@ describe('publish', () => {
     exec.mockClear();
   });
 
+  test('should use silly logging in verbose mode', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      logger: dummyLog(),
+      logLevel: 'veryVerbose'
+    } as Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.version.promise(SEMVER.patch);
+    expect(exec).toHaveBeenCalledWith('npm', [
+      'version',
+      SEMVER.patch,
+      '-m',
+      '"Bump version to: %s [skip ci]"',
+      '--loglevel',
+      'silly'
+    ]);
+  });
+
   test('should use string semver if no published package', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
