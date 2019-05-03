@@ -4,6 +4,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
+import dedent from 'dedent';
 import signale from 'signale';
 
 const p = chalk.hex('#870048');
@@ -388,7 +389,12 @@ const commands: ICommand[] = [
   },
   {
     name: 'canary',
-    summary: 'Make a canary release of the project. Useful on PRs',
+    summary: dedent`
+      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD.
+
+      1. In PR: 1.2.3-canary.123.0
+      2. Locally: 1.2.3-canary.1810cfd
+    `,
     examples: [
       '{green $} auto canary',
       '{green $} auto canary --pr 123 --build 5',

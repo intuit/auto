@@ -1,6 +1,9 @@
 # `auto canary`
 
-Make a canary release of the project. Useful on PRs
+Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary version for your current git HEAD.
+
+1. In PR: 1.2.3-canary.123.0
+2. Locally: 1.2.3-canary.1810cfd
 
 ```bash
 > auto canary -h
