@@ -291,7 +291,6 @@ const commands: ICommand[] = [
         group: 'main'
       },
       skipReleaseLabels,
-      baseBranch,
       ...defaultOptions
     ],
     examples: [
@@ -411,7 +410,6 @@ const commands: ICommand[] = [
       '{green $} auto canary --message false'
     ],
     options: [
-      baseBranch,
       ...defaultOptions,
       dryRun,
       {
