@@ -416,35 +416,21 @@ export default class Auto {
 
     const lastRelease = await this.git.getLatestRelease();
     // SailEnv falls back to commit SHA
-    let pr: string | undefined;
+    let preId: string | undefined;
     let build: string | undefined;
 
     if ('pr' in env && 'build' in env) {
-      ({ pr } = env);
+      preId = env.pr;
       ({ build } = env);
     } else if ('pr' in env && 'commit' in env) {
-      ({ pr } = env);
+      preId = env.pr;
       build = env.commit;
+    } else {
+      preId = await this.git.getSha(true);
     }
 
-    pr = options.pr ? String(options.pr) : pr;
+    preId = options.pr ? String(options.pr) : preId;
     build = options.build ? String(options.build) : build;
-
-    if (!pr) {
-      const errorMessage =
-        'No PR number found to make canary release with. Make sure you only run canary from a PR or provide the --pr flag.';
-      this.logger.log.error(errorMessage);
-      this.logger.verbose.error(new Error());
-      return;
-    }
-
-    if (!build) {
-      const errorMessage =
-        'No build number found to make canary release with. Make sure you only run canary from a PR or provide the --build flag.';
-      this.logger.log.error(errorMessage);
-      this.logger.verbose.error(new Error());
-      return;
-    }
 
     const current = await this.getCurrentVersion(lastRelease);
     const head = await this.release.getCommitsInRelease('HEAD^');
@@ -455,7 +441,11 @@ export default class Auto {
       this.config
     );
     const nextVersion = inc(current, version as ReleaseType);
-    const canaryVersion = `${nextVersion}-canary.${pr}.${build}`;
+    let canaryVersion = `${nextVersion}-canary.${preId}`;
+
+    if (build) {
+      canaryVersion = `${canaryVersion}.${build}`;
+    }
 
     if (options.dryRun) {
       this.logger.log.warn(`Published version would be ${canaryVersion}`);

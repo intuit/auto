@@ -354,6 +354,7 @@ describe('publish', () => {
       'lerna',
       'version',
       'patch',
+      false,
       '--no-commit-hooks',
       '--yes',
       '-m',

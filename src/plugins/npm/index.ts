@@ -298,7 +298,8 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
-        const command = [
+
+        await execPromise('npx', [
           'lerna',
           'version',
           monorepoBump || version,
@@ -308,9 +309,7 @@ export default class NPMPlugin implements IPlugin {
           '-m',
           "'Bump version to: %v [skip ci]'",
           ...verboseArgs
-        ].filter((item): item is string => Boolean(item));
-
-        await execPromise('npx', command);
+        ]);
         auto.logger.verbose.info('Successfully versioned repo');
         return;
       }

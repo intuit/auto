@@ -4,6 +4,10 @@ test('resolves stdout', async () => {
   expect(await exec('echo', ['foo'])).toBe('foo');
 });
 
+test('filters out anything but strings', async () => {
+  expect(await exec('echo', ['foo', false, undefined, 'baz'])).toBe('foo baz');
+});
+
 test('fails correctly', async () => {
   expect.assertions(1);
   return expect(exec('false')).rejects.toMatchInlineSnapshot(

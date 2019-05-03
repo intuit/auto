@@ -647,24 +647,6 @@ describe('Auto', () => {
       expect(auto.canary()).rejects.toBeTruthy();
     });
 
-    test('does nothing without PR number', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = jest.fn();
-
-      expect(await auto.canary()).toBeUndefined();
-    });
-
-    test('does nothing without build number', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = jest.fn();
-
-      expect(await auto.canary({ pr: 123 })).toBeUndefined();
-    });
-
     test('does not call canary hook in dry-run', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
@@ -691,6 +673,22 @@ describe('Auto', () => {
 
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
+    });
+
+    test('defaults to sha when run locally', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getSha = () => Promise.resolve('abcd');
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+
+      await auto.canary();
+      expect(canary).toHaveBeenCalledWith('1.2.4-canary.abcd');
     });
   });
 });
