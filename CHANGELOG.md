@@ -1,3 +1,15 @@
+# v4.15.1 (Fri May 03 2019)
+
+#### 📝  Documentation
+
+- update docs [#361](https://github.com/intuit/auto/pull/361) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.15.0 (Fri May 03 2019)
 
 #### 🚀  Enhancement
