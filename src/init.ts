@@ -49,6 +49,12 @@ async function getFlags() {
         'GitHub Graphql API base path to use (press enter to use githubApi)'
     },
     {
+      type: 'input',
+      name: 'baseBranch',
+      message:
+        'Branch to treat as the "master" branch (press enter to use "master")'
+    },
+    {
       type: 'confirm',
       name: 'onlyPublishWithReleaseLabel',
       message: 'Only bump version if `release` label is on pull request',

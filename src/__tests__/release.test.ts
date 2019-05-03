@@ -278,7 +278,8 @@ describe('Release', () => {
       const gh = new Release(git, {
         noVersionPrefix: true,
         skipReleaseLabels: ['skip-release'],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       await gh.addToChangelog('# My new Notes', '1.0.0', '1.0.0');
 
@@ -320,7 +321,8 @@ describe('Release', () => {
     test('throws without slack url', async () => {
       const gh = new Release(git, {
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       expect(gh.postToSlack('# My Notes', 'v1.0.0')).rejects.toBeTruthy();
     });
@@ -329,7 +331,8 @@ describe('Release', () => {
       const gh = new Release(git, {
         slack: 'https://custom-slack-url',
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       await gh.postToSlack('# My Notes', 'v1.0.0');
       expect(slackSpy).toHaveBeenCalled();
@@ -429,7 +432,7 @@ describe('Release', () => {
         published_at: '2019-01-16'
       });
       getCommitsForPR.mockReturnValueOnce(undefined);
-      // Rebased PR will have different commit SHAs than the commits in master
+      // Rebased PR will have different commit SHAs than the commits in base branch
       getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
@@ -469,7 +472,7 @@ describe('Release', () => {
         published_at: '2019-01-16'
       });
       getCommitsForPR.mockReturnValueOnce(undefined);
-      // Rebased PR will have different commit SHAs than the commits in master
+      // Rebased PR will have different commit SHAs than the commits in base branch
       getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
@@ -628,7 +631,8 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -648,7 +652,8 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -675,7 +680,8 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels: customLabels
+        labels: customLabels,
+        baseBranch: 'master'
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
@@ -733,7 +739,8 @@ describe('Release', () => {
         git,
         {
           skipReleaseLabels: [],
-          labels: defaultLabelDefinition
+          labels: defaultLabelDefinition,
+          baseBranch: 'master'
         },
         mockLogger
       );
@@ -773,7 +780,8 @@ describe('Release', () => {
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       const labels = {
         release: { name: 'deploy', description: 'release the code' }
@@ -788,7 +796,8 @@ describe('Release', () => {
       gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('release', {
@@ -801,7 +810,8 @@ describe('Release', () => {
       let gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       const labels = {
         'skip-release': { name: 'no!', description: 'Do not create a release' }
@@ -815,7 +825,8 @@ describe('Release', () => {
 
       gh = new Release(git, {
         skipReleaseLabels: [],
-        labels: defaultLabelDefinition
+        labels: defaultLabelDefinition,
+        baseBranch: 'master'
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith('skip-release', {
