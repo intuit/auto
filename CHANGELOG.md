@@ -1,3 +1,15 @@
+# v4.14.1 (Fri May 03 2019)
+
+#### 🐛  Bug Fix
+
+- changelog includes any commit that has a PR parsed from the commit message [#359](https://github.com/intuit/auto/pull/359) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.14.0 (Thu May 02 2019)
 
 #### 🚀  Enhancement
