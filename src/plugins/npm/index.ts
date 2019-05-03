@@ -336,8 +336,6 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
-        console.log(verboseArgs);
-
         await execPromise('npx', [
           'lerna',
           'publish',
