@@ -254,7 +254,7 @@ export default class Release {
 
     const labelled = allCommits.filter(
       commit =>
-        !allPrCommitHashes.includes(commit.hash) &&
+        (commit.pullRequest || !allPrCommitHashes.includes(commit.hash)) &&
         !commit.subject.includes('[skip ci]')
     );
 

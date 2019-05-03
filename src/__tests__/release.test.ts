@@ -528,6 +528,28 @@ describe('Release', () => {
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
+
+    test('should include PRs merged to other PRs', async () => {
+      const gh = new Release(git);
+
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg('Doom (#12343)', {
+          hash: '1'
+        }),
+        makeCommitFromMsg('Dino (#1235)', {
+          hash: '2'
+        }),
+        makeCommitFromMsg('Foo Bar', {
+          hash: '3'
+        })
+      ]);
+      getCommitsForPR.mockReturnValue([{ sha: '2' }]);
+      getCommitsForPR.mockReturnValue([{ sha: '2' }]);
+      getCommitsForPR.mockReturnValue([{ sha: '3' }]);
+      getCommitsForPR.mockReturnValue([{ sha: '3' }]);
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
   });
 
   describe('buildSearchQuery', () => {
