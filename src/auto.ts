@@ -455,7 +455,7 @@ export default class Auto {
       this.semVerLabels!,
       this.config
     );
-    const nextVersion = inc(current, version as ReleaseType);
+    const nextVersion = inc(current, (version || 'patch') as ReleaseType);
     let canaryVersion = `${nextVersion}-canary.${preId}`;
 
     if (build) {
