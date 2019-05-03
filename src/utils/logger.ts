@@ -14,9 +14,9 @@ export function dummyLog(): ILogger {
   };
 }
 
-export default function createLog(
-  mode: 'verbose' | 'veryVerbose' | undefined
-): ILogger {
+export type LogLevel = 'verbose' | 'veryVerbose' | undefined;
+
+export default function createLog(mode: LogLevel): ILogger {
   return {
     log: new Signale(),
     verbose: new Signale({

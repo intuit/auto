@@ -152,6 +152,8 @@ async function loadPackageJson(): Promise<IPackageJSON> {
   return JSON.parse(await readFile('package.json', 'utf-8'));
 }
 
+const verbose = ['--loglevel', 'silly'];
+
 interface INpmConfig {
   setRcToken?: boolean;
   forcePublish?: boolean;
@@ -171,6 +173,10 @@ export default class NPMPlugin implements IPlugin {
   }
 
   apply(auto: Auto) {
+    const isVerbose =
+      auto.logLevel === 'verbose' || auto.logLevel === 'veryVerbose';
+    const verboseArgs = isVerbose ? verbose : [];
+
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       if (!isCi) {
         return;
@@ -300,7 +306,8 @@ export default class NPMPlugin implements IPlugin {
           '--no-commit-hooks',
           '--yes',
           '-m',
-          "'Bump version to: %v [skip ci]'"
+          "'Bump version to: %v [skip ci]'",
+          ...verboseArgs
         ].filter((item): item is string => Boolean(item));
 
         await execPromise('npx', command);
@@ -314,7 +321,8 @@ export default class NPMPlugin implements IPlugin {
         'version',
         latestBump || version,
         '-m',
-        '"Bump version to: %s [skip ci]"'
+        '"Bump version to: %s [skip ci]"',
+        ...verboseArgs
       ]);
       auto.logger.verbose.info('Successfully versioned repo');
     });
@@ -337,7 +345,8 @@ export default class NPMPlugin implements IPlugin {
           '--no-git-tag-version', // do not create a tag or commit for the canary version
           '--no-push', // do not push anything
           '--no-git-reset', // allow uncommitted changes when publishing,
-          '--yes' // skip prompts
+          '--yes', // skip prompts
+          ...verboseArgs
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
@@ -351,14 +360,15 @@ export default class NPMPlugin implements IPlugin {
       await execPromise('npm', [
         'version',
         canaryVersion,
-        '--no-git-tag-version'
+        '--no-git-tag-version',
+        ...verboseArgs
       ]);
       const publishArgs = ['--tag', 'canary'];
       await execPromise(
         'npm',
         !isPrivate && isScopedPackage
-          ? ['publish', '--access', 'public', ...publishArgs]
-          : ['publish', ...publishArgs]
+          ? ['publish', '--access', 'public', ...publishArgs, ...verboseArgs]
+          : ['publish', ...publishArgs, ...verboseArgs]
       );
 
       auto.logger.verbose.info('Successfully published canary version');
@@ -376,7 +386,14 @@ export default class NPMPlugin implements IPlugin {
         if (auto.args && auto.args.verbose) {
           await execPromise('git', ['status', '--short']);
         }
-        await execPromise('npx', ['lerna', 'publish', '--yes', 'from-git']);
+
+        await execPromise('npx', [
+          'lerna',
+          'publish',
+          '--yes',
+          'from-git',
+          ...verboseArgs
+        ]);
 
         auto.logger.verbose.info('Successfully published repo');
         return;
@@ -388,8 +405,8 @@ export default class NPMPlugin implements IPlugin {
       await execPromise(
         'npm',
         !isPrivate && isScopedPackage
-          ? ['publish', '--access', 'public']
-          : ['publish']
+          ? ['publish', '--access', 'public', ...verboseArgs]
+          : ['publish', ...verboseArgs]
       );
       await execPromise('git', [
         'push',
