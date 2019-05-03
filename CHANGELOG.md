@@ -1,3 +1,15 @@
+# v4.15.2 (Fri May 03 2019)
+
+#### 🐛  Bug Fix
+
+- make logLevel available on the logger [#363](https://github.com/intuit/auto/pull/363) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.15.1 (Fri May 03 2019)
 
 #### 📝  Documentation
