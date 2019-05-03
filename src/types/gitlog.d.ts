@@ -13,6 +13,9 @@ declare module 'gitlog' {
     fields: string[];
     branch: string;
     number: number;
+    execOptions: {
+      maxBuffer: number;
+    };
   }
 
   export default function gitlog(
