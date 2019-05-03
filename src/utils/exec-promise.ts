@@ -7,9 +7,16 @@ import { spawn } from 'child_process';
  *
  * @param cmd the command as a string to pass in
  */
-export default async function execPromise(cmd: string, args?: string[]) {
+export default async function execPromise(
+  cmd: string,
+  args: (string | undefined | false)[] = []
+) {
+  const filteredArgs = args.filter(
+    (arg): arg is string => typeof arg === 'string'
+  );
+
   return new Promise<string>((completed, reject) => {
-    const child = spawn(cmd, args || [], {
+    const child = spawn(cmd, filteredArgs, {
       cwd: process.cwd(),
       env: process.env,
       shell: true

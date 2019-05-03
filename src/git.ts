@@ -138,8 +138,15 @@ export default class Git {
     return list.split('\n').pop() as string;
   }
 
-  async getSha(): Promise<string> {
-    const result = await execPromise('git', ['rev-parse', 'HEAD']);
+  /**
+   * Get the SHA of the latest commit
+   */
+  async getSha(short?: boolean): Promise<string> {
+    const result = await execPromise('git', [
+      'rev-parse',
+      short && '--short',
+      'HEAD'
+    ]);
 
     this.logger.verbose.info(`Got commit SHA from HEAD: ${result}`);
 
