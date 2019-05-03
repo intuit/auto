@@ -691,7 +691,7 @@ describe('Auto', () => {
       expect(canary).toHaveBeenCalledWith('1.2.4-canary.abcd');
     });
 
-    test.only('works when PR has "skip-release" label', async () => {
+    test('works when PR has "skip-release" label', async () => {
       const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
