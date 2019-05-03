@@ -202,7 +202,8 @@ export default class Git {
       repo: process.cwd(),
       number: Number.MAX_SAFE_INTEGER,
       fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
-      branch: `${start.trim()}..${end.trim()}`
+      branch: `${start.trim()}..${end.trim()}`,
+      execOptions: { maxBuffer: 1000 * 1024 }
     });
 
     return log.map(commit => ({
