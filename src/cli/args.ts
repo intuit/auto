@@ -382,8 +382,12 @@ const commands: ICommand[] = [
   },
   {
     name: 'shipit',
-    summary:
-      'Run the full `auto` release pipeline. Detects if in a lerna project',
+    summary: dedent`
+      Run the full \`auto\` release pipeline. Detects if in a lerna project.
+
+      1. call from master -> latest version released
+      2. call from PR in CI -> canary version released #351
+    `,
     examples: ['{green $} auto shipit'],
     options: [...defaultOptions, dryRun]
   },

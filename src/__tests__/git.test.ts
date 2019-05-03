@@ -167,6 +167,12 @@ describe('github', () => {
     expect(await gh.getSha()).toBeDefined();
   });
 
+  test('getLatestTagInBranch', async () => {
+    const gh = new Git(options);
+
+    expect(await gh.getLatestTagInBranch()).toBeDefined();
+  });
+
   test('getGitLog ', async () => {
     const gh = new Git(options);
 

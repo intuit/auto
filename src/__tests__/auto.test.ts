@@ -656,6 +656,7 @@ describe('Auto', () => {
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
 
       await auto.canary({ pr: 123, build: 1, dryRun: true });
       expect(canary).not.toHaveBeenCalled();
@@ -670,6 +671,7 @@ describe('Auto', () => {
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
 
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
