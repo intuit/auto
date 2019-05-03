@@ -102,6 +102,17 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`] = `
+"#### 🐛  Bug Fix
+
+- Doom [#12343](https://github.com/web/site/pull/12343) (adam@dierkens.com)
+- Dino [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- adam@dierkens.com"
+`;
+
 exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `
 "#### 🚀  Enhancement
 
