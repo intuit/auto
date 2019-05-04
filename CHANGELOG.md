@@ -1,3 +1,24 @@
+# v5.0.0 (Sat May 04 2019)
+
+#### 💥  Breaking Change
+
+- Calling `shipit` in PR in CI creates canary release [#351](https://github.com/intuit/auto/pull/351) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Configure base-branch + pushToMaster => pushToBaseBranch [#357](https://github.com/intuit/auto/pull/357) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- skip releases for greenkeeper + make special changelog section [#366](https://github.com/intuit/auto/pull/366) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- add blog [#368](https://github.com/intuit/auto/pull/368) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v4.15.5 (Fri May 03 2019)
 
 #### 🐛  Bug Fix
