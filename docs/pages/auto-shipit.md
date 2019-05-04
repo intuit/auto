@@ -1,6 +1,6 @@
 # `auto shipit`
 
-Run the full `auto` release pipeline. Will detect if in a lerna project and publish accordingly. If ran from a PR build, `shipit` publish a canary release using [`auto canary`](./auto-canary.md).
+Run the full `auto` release pipeline. Will detect if in a lerna project and publish accordingly. If ran from a PR build or locally from any branch other than the `baseBranch`, `shipit` will publish a canary release using [`auto canary`](./auto-canary.md).
 
 ```sh
 auto shipit

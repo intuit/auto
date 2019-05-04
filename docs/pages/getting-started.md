@@ -75,8 +75,8 @@ To version, changelog, publish and release your code all at the same time, we've
 
 It will:
 
-1. Publish canary releases when run from a PR
-2. Generate a changelog and publish a "latest" release to a package manager when run from the base branch
+1. Publish canary releases when run from a PR or locally on any branch other than the `baseBranch`
+2. Generate a changelog and publish a "latest" release to a package manager when run from the `baseBranch`
 
 ```json
 {

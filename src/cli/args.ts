@@ -395,7 +395,8 @@ const commands: ICommand[] = [
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
 
       1. call from base branch -> latest version released
-      2. call from PR in CI -> canary version released #351
+      2. call from PR in CI -> canary version released
+      3. call locally when not on base branch -> canary version released
     `,
     examples: ['{green $} auto shipit'],
     options: [...defaultOptions, baseBranch, dryRun]
