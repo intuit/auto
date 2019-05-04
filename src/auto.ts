@@ -506,7 +506,9 @@ export default class Auto {
 
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
-    const isBaseBranch = 'branch' in env && env.branch === this.baseBranch;
+    const isPR = 'isPr' in env && env.isPr;
+    const isBaseBranch =
+      !isPR && 'branch' in env && env.branch === this.baseBranch;
     const publishInfo = isBaseBranch
       ? await this.publishLatest(options)
       : await this.canary(options);
