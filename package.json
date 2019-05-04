@@ -168,7 +168,11 @@
     "labels": {
       "greenkeeper": {
         "name": "greenkeeper",
-        "title": "Dependency Updates"
+        "title": "🔩 Dependency Updates"
+      },
+      "blog-post": {
+        "name": "blog-post",
+        "title": "📚 Blog Post"
       }
     },
     "skipReleaseLabels": [
