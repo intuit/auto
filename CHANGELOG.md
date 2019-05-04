@@ -1,3 +1,15 @@
+# v5.0.1 (Sat May 04 2019)
+
+#### 🐛  Bug Fix
+
+- shipit will publish a canary locally when not on master [#371](https://github.com/intuit/auto/pull/371) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v5.0.0 (Sat May 04 2019)
 
 #### 💥  Breaking Change
