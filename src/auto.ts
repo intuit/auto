@@ -504,24 +504,12 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
-    const isPR = 'isPr' in env && env.isPr;
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
-    const isBaseBranch =
-      !isPR && 'branch' in env && env.branch === this.baseBranch;
-    const publishInfo = isPR
-      ? await this.canary(options)
-      : isBaseBranch
+    const isBaseBranch = 'branch' in env && env.branch === this.baseBranch;
+    const publishInfo = isBaseBranch
       ? await this.publishLatest(options)
-      : undefined;
-
-    if (!isPR && !isBaseBranch) {
-      this.logger.log.info(
-        `No version published. Could not detect if in PR or on ${
-          this.baseBranch
-        }.`
-      );
-    }
+      : await this.canary(options);
 
     if (!publishInfo) {
       return;
