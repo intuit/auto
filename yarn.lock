@@ -5620,10 +5620,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.6.11:
-  version "1.6.11"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.6.11.tgz#5d71288d1d8c72f9b6dcfdd0b224f458930bf25e"
-  integrity sha512-fx4Ga51MifctAaWxkVnSX/hQNH39faK7HTb4zApzPN6ZmoBTC7WwEjgC+vgDUAp9Ozva0++v9yCbhVzKsNxdpg==
+ignite@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.8.1.tgz#26ee5814e514bd445b5a00aa7c5c7381f44579fc"
+  integrity sha512-4eHf4aZaHvQFtpkvUoTVt7Daz938OwrCzHQI0b8asEiPfusjzw2jdPNLESKJoaStOwgdC62wzkdZvI8ABb9+BQ==
   dependencies:
     "@babel/cli" "7.2.0"
     "@babel/core" "7.2.0"
@@ -7589,11 +7589,6 @@ markdown-it-highlight-lines@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/markdown-it-highlight-lines/-/markdown-it-highlight-lines-1.0.2.tgz#33ecf51cd9d9e741cd86f583cb95b67de81fc9c7"
   integrity sha512-9Pyt/B+Ca3QBSXDS/znmojy/k6HDe8FJlJwIj/BKgvxE3MQWK9GHQCJJT5Lb1er23svZT99kJ/YRhLpDK+5GUQ==
-
-markdown-it-imsize@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/markdown-it-imsize/-/markdown-it-imsize-2.0.1.tgz#cca0427905d05338a247cb9ca9d968c5cddd5170"
-  integrity sha1-zKBCeQXQUziiR8ucqdloxc3dUXA=
 
 markdown-it-ins@^2.0.0:
   version "2.0.0"
