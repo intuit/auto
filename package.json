@@ -176,7 +176,8 @@
       }
     },
     "skipReleaseLabels": [
-      "greenkeeper"
+      "greenkeeper",
+      "blog-post"
     ]
   }
 }
