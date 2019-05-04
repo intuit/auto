@@ -3,7 +3,7 @@ image: https://cdn-images-1.medium.com/max/800/1*TVSbt7qsyleNiQ84la_log.jpeg
 title: Death to Monotony
 author:
   name: Adam Dierkens
-  link: https://github.intuit.com/adierkens
+  url: https://github.intuit.com/adierkens
 ---
 
 # How auto can “handle the rest for you”
