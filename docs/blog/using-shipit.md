@@ -3,7 +3,8 @@ image: https://images.unsplash.com/photo-1556473062-062e556b0920?ixlib=rb-1.2.1&
 title: Stress-free Continuous Delivery with auto
 author:
   name: Andrew Lisowski
-  link: https://twitter.com/HipsterSmoothie
+  url: https://twitter.com/HipsterSmoothie
+  email: lisowski54@gmail.com
 ---
 
 `auto` makes releasing your code a breeze. Instead of manually calculating a version and doing your whole release process manually, `auto` takes care of it for you.
