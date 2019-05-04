@@ -95,6 +95,7 @@ export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
   args: ArgsType;
+  baseBranch: string;
   config?: IReleaseOptions;
 
   release?: Release;
@@ -104,6 +105,7 @@ export default class Auto {
 
   constructor(args: ArgsType) {
     this.args = args;
+    this.baseBranch = args.baseBranch || 'master';
     this.logger = createLog(
       args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
     );
@@ -132,9 +134,10 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = this.hooks.modifyConfig.call(
-      await configLoader.loadConfig(this.args)
-    );
+    const config = this.hooks.modifyConfig.call({
+      ...(await configLoader.loadConfig(this.args)),
+      baseBranch: this.baseBranch
+    });
 
     this.logger.verbose.success('Loaded `auto` with config:', config);
 
@@ -479,7 +482,10 @@ export default class Auto {
       }
     }
 
-    return canaryVersion;
+    const latestTag = await this.git.getLatestTagInBranch();
+    const commitsInRelease = await this.release.getCommits(latestTag);
+
+    return { newVersion: canaryVersion, commitsInRelease };
   }
 
   /**
@@ -490,7 +496,7 @@ export default class Auto {
    * 3. Publish code
    * 4. Create a release
    */
-  async shipit(options: IShipItCommandOptions) {
+  async shipit(options: IShipItCommandOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -498,9 +504,42 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
+    const isPR = 'isPr' in env && env.isPr;
+    // env-ci sets branch to target branch (ex: master) in some CI services.
+    // so we should make sure we aren't in a PR just to be safe
+    const isBaseBranch =
+      !isPR && 'branch' in env && env.branch === this.baseBranch;
+    const publishInfo = isPR
+      ? await this.canary(options)
+      : isBaseBranch
+      ? await this.publishLatest(options)
+      : undefined;
+
+    if (!isPR && !isBaseBranch) {
+      this.logger.log.info(
+        `No version published. Could not detect if in PR or on ${
+          this.baseBranch
+        }.`
+      );
+    }
+
+    if (!publishInfo) {
+      return;
+    }
+
+    const { newVersion, commitsInRelease } = publishInfo;
+    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  private async publishLatest(options: IShipItCommandOptions) {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
+
     const version = await this.getVersion();
 
     if (version === '') {
+      this.logger.log.info('No version published.');
       return;
     }
 
@@ -536,7 +575,7 @@ export default class Auto {
       );
     }
 
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+    return { newVersion, commitsInRelease };
   }
 
   private getPrNumber(command: string, pr?: number) {

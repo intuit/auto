@@ -40,6 +40,7 @@ export interface IReleaseOptions {
   jira?: string;
   slack?: string;
   githubApi?: string;
+  baseBranch: string;
   githubGraphqlApi?: string;
   name?: string;
   email?: string;
@@ -156,6 +157,7 @@ export default class Release {
   constructor(
     git: Git,
     options: IReleaseOptions = {
+      baseBranch: 'master',
       skipReleaseLabels: [],
       labels: defaultLabelDefinition
     },
@@ -182,7 +184,8 @@ export default class Release {
       repo: this.git.options.repo,
       baseUrl: project.html_url,
       jira: this.options.jira,
-      labels: this.options.labels
+      labels: this.options.labels,
+      baseBranch: this.options.baseBranch
     });
 
     this.hooks.onCreateChangelog.call(changelog);
@@ -299,7 +302,7 @@ export default class Release {
             ...commit.labels
           ];
         } else {
-          commit.labels = ['pushToMaster', ...commit.labels];
+          commit.labels = ['pushToBaseBranch', ...commit.labels];
         }
 
         commit.subject = commit.subject.split('\n')[0];

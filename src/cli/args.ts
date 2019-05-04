@@ -97,6 +97,13 @@ const defaultOptions = [
   }
 ];
 
+const baseBranch: commandLineUsage.OptionDefinition = {
+  name: 'base-branch',
+  type: String,
+  description: 'Branch to treat as the "master" branch',
+  group: 'misc'
+};
+
 const pr: commandLineUsage.OptionDefinition = {
   name: 'pr',
   type: Number,
@@ -324,6 +331,7 @@ const commands: ICommand[] = [
         description:
           "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
       },
+      baseBranch,
       ...defaultOptions
     ],
     examples: [
@@ -361,6 +369,7 @@ const commands: ICommand[] = [
         description:
           'Url to post a slack message to about the release. Make sure the SLACK_TOKEN environment variable is set.'
       },
+      baseBranch,
       ...defaultOptions
     ],
     examples: ['{green $} auto release']
@@ -382,10 +391,14 @@ const commands: ICommand[] = [
   },
   {
     name: 'shipit',
-    summary:
-      'Run the full `auto` release pipeline. Detects if in a lerna project',
+    summary: dedent`
+      Run the full \`auto\` release pipeline. Detects if in a lerna project.
+
+      1. call from base branch -> latest version released
+      2. call from PR in CI -> canary version released #351
+    `,
     examples: ['{green $} auto shipit'],
-    options: [...defaultOptions, dryRun]
+    options: [...defaultOptions, baseBranch, dryRun]
   },
   {
     name: 'canary',
@@ -705,6 +718,7 @@ export interface ICanaryCommandOptions {
 type GlobalFlags = {
   command: string;
   githubApi?: string;
+  baseBranch?: string;
   githubGraphqlApi?: string;
   plugins?: string[];
 } & IRepoArgs &

@@ -59,7 +59,8 @@ test('should create sections for packages', async () => {
     repo: 'test',
     jira: 'jira.com',
     baseUrl: 'https://github.custom.com/',
-    labels: defaultLabelDefinition
+    labels: defaultLabelDefinition,
+    baseBranch: 'master'
   });
 
   plugin.apply({ hooks, logger: dummyLog() } as Auto);

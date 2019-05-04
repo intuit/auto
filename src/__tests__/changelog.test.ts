@@ -9,7 +9,8 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
   jira: 'https://jira.custom.com/browse',
-  labels: defaultLabelDefinition
+  labels: defaultLabelDefinition,
+  baseBranch: 'master'
 });
 
 const logParse = new LogParse();
@@ -20,7 +21,8 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabelDefinition
+      labels: defaultLabelDefinition,
+      baseBranch: 'master'
     });
     changelog.loadDefaultHooks();
 
@@ -56,7 +58,8 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabelDefinition
+      labels: defaultLabelDefinition,
+      baseBranch: 'master'
     });
     changelog.loadDefaultHooks();
 
@@ -237,7 +240,7 @@ describe('generateReleaseNotes', () => {
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'I was a push to master\n\n',
-        labels: ['pushToMaster']
+        labels: ['pushToBaseBranch']
       },
       {
         hash: '2',
@@ -251,10 +254,10 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should be able to customize "Push To Master" title', async () => {
+  test('should be able to customize pushToBaseBranch title', async () => {
     const options = testOptions();
-    options.labels.pushToMaster = {
-      name: 'pushToMaster',
+    options.labels.pushToBaseBranch = {
+      name: 'pushToBaseBranch',
       title: 'Custom Title',
       description: 'N/A'
     };
@@ -268,7 +271,7 @@ describe('generateReleaseNotes', () => {
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'I was a push to master\n\n',
-        labels: ['pushToMaster']
+        labels: ['pushToBaseBranch']
       },
       {
         hash: '2',
