@@ -248,7 +248,12 @@ export default class NPMPlugin implements IPlugin {
         ).version;
 
         if (monorepoVersion === 'independent') {
-          previousVersion = '';
+          previousVersion =
+            'dryRun' in auto.args && auto.args.dryRun
+              ? await getLernaPackages().then(packages =>
+                  packages.map(p => `\n - ${p.name}@${p.version}`).join('')
+                )
+              : '';
         } else {
           const releasedPackage = getMonorepoPackage();
 
@@ -286,6 +291,13 @@ export default class NPMPlugin implements IPlugin {
         'NPM: getting repo information from package.json'
       );
       return getConfigFromPackageJson();
+    });
+
+    auto.hooks.onCreateRelease.tap(this.name, release => {
+      release.hooks.createChangelogTitle.tap(
+        `${this.name} - lerna independent`,
+        () => ''
+      );
     });
 
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
@@ -381,13 +393,14 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npx', [
           'lerna',
           'publish',
+          version,
           '--canary',
           '--dist-tag',
           'canary',
           // Locally we use sha for canary version's postFix, but the --canary flag
           // already attaches the SHA so we only attach postFix in PRs for context
-          isPr && '--preid',
-          isPr && postFix,
+          '--preid',
+          isPr ? postFix : 'canary',
           '--yes', // skip prompts
           ...verboseArgs
         ]);
@@ -396,9 +409,7 @@ export default class NPMPlugin implements IPlugin {
         const lernaJson = getLernaJson();
 
         if (lernaJson.version === 'independent') {
-          return getLernaPackages().then(packages =>
-            packages.map(p => `\n - ${p.name}@${p.version}`).join('')
-          );
+          return '';
         }
 
         return lernaJson.version;

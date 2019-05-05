@@ -484,7 +484,9 @@ export default class Auto {
         });
       }
 
-      this.logger.log.success(`Published canary version: ${canaryVersion}`);
+      this.logger.log.success(
+        `Published canary version${canaryVersion ? `: ${canaryVersion}` : ''}`
+      );
     }
 
     const latestTag = await this.git.getLatestTagInBranch();
@@ -588,11 +590,11 @@ export default class Auto {
 
       const current = await this.getCurrentVersion(lastRelease);
 
-      this.logger.log.warn(
-        `Published version would be ${
-          parse(current) ? inc(current, version as ReleaseType) : current
-        }`
-      );
+      if (parse(current)) {
+        this.logger.log.warn(
+          `Published version would be: ${inc(current, version as ReleaseType)}`
+        );
+      }
     }
 
     return { newVersion, commitsInRelease };
@@ -696,7 +698,7 @@ export default class Auto {
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
 
-    if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+    if (lastRelease.match(/^\d+\.\d+\.\d+/)) {
       lastRelease = this.prefixRelease(lastRelease);
     }
 
@@ -732,7 +734,7 @@ export default class Auto {
         await this.release.postToSlack(releaseNotes, version);
       }
     } else {
-      this.logger.log.info(`Would have released ${version} to Github.`);
+      this.logger.log.info(`Would have released: ${version}`);
     }
 
     await this.hooks.afterRelease.promise(version, commitsInRelease);
