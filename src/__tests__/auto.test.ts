@@ -72,8 +72,8 @@ describe('Auto', () => {
   test('should extend config', async () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
     importMock.mockImplementation(path =>
-      path === '@artsy/auto-config'
-        ? { onlyPublishWithReleaseLabel: true }
+      path === '@artsy/auto-config/package.json'
+        ? { auto: { onlyPublishWithReleaseLabel: true } }
         : undefined
     );
 

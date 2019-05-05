@@ -13,8 +13,6 @@ import {
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
 
-type ConfigLoader = () => cosmiconfig.Config;
-
 function normalizeLabels(config: cosmiconfig.Config) {
   let labels = defaultLabelDefinition;
 
@@ -72,7 +70,10 @@ export default class Config {
     }
 
     if (rawConfig.extends) {
-      rawConfig = merge(rawConfig, this.loadExtendConfig(rawConfig.extends));
+      rawConfig = merge(
+        rawConfig,
+        await this.loadExtendConfig(rawConfig.extends)
+      );
     }
 
     const labels = normalizeLabels(rawConfig);
@@ -103,31 +104,42 @@ export default class Config {
    * @param extend Path or name of config to find
    */
   async loadExtendConfig(extend: string) {
-    let config: cosmiconfig.Config | ConfigLoader;
+    let config: cosmiconfig.Config | { auto: cosmiconfig.Config };
+
+    if (extend.endsWith('.js') || extend.endsWith('.mjs')) {
+      throw new Error('Extended config cannot be a JavaScript file');
+    }
 
     if (extend.startsWith('http')) {
       try {
-        return (await fetch(extend)).json();
+        config = (await fetch(extend)).json();
+        this.logger.verbose.note(`${extend} found: ${config}`);
       } catch (error) {
         error.message = `Failed to get extended config from ${extend} -- ${
           error.message
         }`;
         throw error;
       }
+    } else if (extend.startsWith('.')) {
+      config = tryRequire(extend);
+      this.logger.verbose.note(`${extend} found: ${config}`);
+    } else {
+      config = tryRequire(`${extend}/package.json`);
+      config = config && config.auto;
+      this.logger.verbose.note(`${extend} found: ${config}`);
     }
-
-    config = tryRequire(`${extend}/package.json`);
-    this.logger.verbose.note(`${extend} found: ${config}`);
 
     if (!config) {
       const scope = `${extend}/auto-config/package.json`;
       config = tryRequire(scope);
+      config = config && config.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
     if (!config) {
       const scope = `auto-config-${extend}/package.json`;
       config = tryRequire(scope);
+      config = config && config.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
@@ -139,10 +151,6 @@ export default class Config {
       throw new Error(`Unable to load extended config ${extend}`);
     }
 
-    if (typeof config === 'function') {
-      return (config as ConfigLoader)();
-    }
-
-    return config || {};
+    return config;
   }
 }
