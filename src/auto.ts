@@ -661,7 +661,6 @@ export default class Auto {
     await this.setGitUser();
 
     const lastRelease = from || (await this.git.getLatestRelease());
-    console.log({ lastRelease });
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to || undefined

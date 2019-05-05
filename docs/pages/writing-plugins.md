@@ -234,6 +234,26 @@ Ran after the package has been published.
 
 ---
 
+#### canary
+
+Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID.
+
+```ts
+auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
+  const lastRelease = await auto.git!.getLatestRelease();
+  const current = await auto.getCurrentVersion(lastRelease);
+  const nextVersion = inc(current, version as ReleaseType);
+  const isScopedPackage = name.match(/@\S+\/\S+/);
+  const canaryVersion = `${nextVersion}-canary${postFix}`;
+
+  await execPromise('npm', ['version', canaryVersion, '--no-git-tag-version']);
+  await execPromise('npm', ['publish', '--tag', 'canary']);
+
+  auto.logger.verbose.info('Successfully published canary version');
+  return canaryVersion;
+});
+```
+
 ### Changelog Hooks
 
 #### renderChangelogLine
@@ -289,6 +309,20 @@ auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
     (author, user) => `:shipit: ${author.name} (${user})\n`
   );
 );
+```
+
+#### createChangelogTitle
+
+Control the titles in the `CHANGELOG.md`
+
+```ts
+// Render only the date in the title
+auto.hooks.onCreateRelease.tap(this.name, release => {
+  release.hooks.createChangelogTitle.tap(
+    `${this.name} - lerna independent`,
+    () => ''
+  );
+});
 ```
 
 ---
