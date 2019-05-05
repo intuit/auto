@@ -214,20 +214,24 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.veryVerbose.info(
           'Using monorepo to calculate previous release'
         );
-        const monorepoVersion = prefixRelease(
-          JSON.parse(await readFile('lerna.json', 'utf-8')).version
-        );
+        const monorepoVersion = JSON.parse(
+          await readFile('lerna.json', 'utf-8')
+        ).version;
 
-        const releasedPackage = getMonorepoPackage();
-
-        if (!releasedPackage.name && !releasedPackage.version) {
-          previousVersion = monorepoVersion;
+        if (monorepoVersion === 'independent') {
+          previousVersion = 'independent';
         } else {
-          previousVersion = await greaterRelease(
-            prefixRelease,
-            releasedPackage.name,
-            monorepoVersion
-          );
+          const releasedPackage = getMonorepoPackage();
+
+          if (!releasedPackage.name && !releasedPackage.version) {
+            previousVersion = prefixRelease(monorepoVersion);
+          } else {
+            previousVersion = await greaterRelease(
+              prefixRelease,
+              releasedPackage.name,
+              prefixRelease(monorepoVersion)
+            );
+          }
         }
       } else if (fs.existsSync('package.json')) {
         auto.logger.veryVerbose.info(
@@ -327,7 +331,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info('Successfully versioned repo');
     });
 
-    auto.hooks.canary.tapPromise(this.name, async canaryVersion => {
+    auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
       if (this.setRcToken) {
         await setTokenOnCI();
         auto.logger.verbose.info('Set CI NPM_TOKEN');
@@ -339,12 +343,11 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npx', [
           'lerna',
           'publish',
-          canaryVersion,
+          '--canary',
           '--dist-tag',
           'canary',
-          '--no-git-tag-version', // do not create a tag or commit for the canary version
-          '--no-push', // do not push anything
-          '--no-git-reset', // allow uncommitted changes when publishing,
+          postFix && '--preid',
+          postFix,
           '--yes', // skip prompts
           ...verboseArgs
         ]);
@@ -355,8 +358,14 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info('Detected single npm package');
       const { private: isPrivate, name } = await loadPackageJson();
+      const lastRelease = await auto.git!.getLatestRelease();
+      const current = await auto.getCurrentVersion(lastRelease);
+      const nextVersion = inc(current, version as ReleaseType);
       const isScopedPackage = name.match(/@\S+\/\S+/);
+      const canaryVersion = `${nextVersion}-canary.${postFix ||
+        (await auto.git!.getSha(true))}`;
 
+      console.log(canaryVersion);
       await execPromise('npm', [
         'version',
         canaryVersion,

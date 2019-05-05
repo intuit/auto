@@ -73,7 +73,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
-  canary: AsyncParallelHook<[string]>;
+  canary: AsyncParallelHook<[SEMVER, string]>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -432,7 +432,6 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = await this.git.getLatestRelease();
     // SailEnv falls back to commit SHA
     let preId: string | undefined;
     let build: string | undefined;
@@ -443,23 +442,21 @@ export default class Auto {
     } else if ('pr' in env && 'commit' in env) {
       preId = env.pr;
       build = env.commit;
-    } else {
-      preId = await this.git.getSha(true);
     }
 
     preId = options.pr ? String(options.pr) : preId;
     build = options.build ? String(options.build) : build;
 
-    const current = await this.getCurrentVersion(lastRelease);
     const head = await this.release.getCommitsInRelease('HEAD^');
     const labels = head.map(commit => commit.labels);
-    const version = calculateSemVerBump(
-      labels,
-      this.semVerLabels!,
-      this.config
-    );
-    const nextVersion = inc(current, (version || 'patch') as ReleaseType);
-    let canaryVersion = `${nextVersion}-canary.${preId}`;
+    const version =
+      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
+      SEMVER.patch;
+    let canaryVersion = '';
+
+    if (preId) {
+      canaryVersion = `${canaryVersion}.${preId}`;
+    }
 
     if (build) {
       canaryVersion = `${canaryVersion}.${build}`;
@@ -469,7 +466,7 @@ export default class Auto {
       this.logger.log.warn(`Published version would be ${canaryVersion}`);
     } else {
       this.logger.verbose.info('Calling canary hook');
-      await this.hooks.canary.promise(canaryVersion);
+      await this.hooks.canary.promise(version, canaryVersion);
 
       const message =
         options.message || 'Published PR with canary version: `%v`';
@@ -484,7 +481,7 @@ export default class Auto {
 
     const latestTag = await this.git.getLatestTagInBranch();
     const commitsInRelease = await this.release.getCommits(latestTag);
-
+    this.logger.log.success('Published canary version!');
     return { newVersion: canaryVersion, commitsInRelease };
   }
 
@@ -519,6 +516,27 @@ export default class Auto {
 
     const { newVersion, commitsInRelease } = publishInfo;
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  async getCurrentVersion(lastRelease: string) {
+    this.hooks.getPreviousVersion.tap('None', () => {
+      this.logger.veryVerbose.info(
+        'No previous release found, using 0.0.0 as previous version.'
+      );
+      return this.prefixRelease('0.0.0');
+    });
+
+    const lastVersion = await this.hooks.getPreviousVersion.promise(
+      this.prefixRelease
+    );
+
+    console.log(lastVersion, lastRelease);
+    if (lastRelease.match(/\d+\.\d+\.\d+/) && gt(lastRelease, lastVersion)) {
+      this.logger.veryVerbose.info('Using latest release as previous version');
+      return lastRelease;
+    }
+
+    return lastVersion;
   }
 
   private async publishLatest(options: IShipItCommandOptions) {
@@ -616,26 +634,6 @@ export default class Auto {
     return this.release.getSemverBump(lastRelease);
   }
 
-  private async getCurrentVersion(lastRelease: string) {
-    this.hooks.getPreviousVersion.tap('None', () => {
-      this.logger.veryVerbose.info(
-        'No previous release found, using 0.0.0 as previous version.'
-      );
-      return this.prefixRelease('0.0.0');
-    });
-
-    const lastVersion = await this.hooks.getPreviousVersion.promise(
-      this.prefixRelease
-    );
-
-    if (lastRelease.match(/\d+\.\d+\.\d+/) && gt(lastRelease, lastVersion)) {
-      this.logger.veryVerbose.info('Using latest release as previous version');
-      return lastRelease;
-    }
-
-    return lastVersion;
-  }
-
   private async makeChangelog({
     dryRun,
     from,
@@ -649,6 +647,7 @@ export default class Auto {
     await this.setGitUser();
 
     const lastRelease = from || (await this.git.getLatestRelease());
+    console.log({ lastRelease });
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to || undefined
@@ -682,6 +681,7 @@ export default class Auto {
 
     let lastRelease = await this.git.getLatestRelease();
 
+    console.log({ lastRelease });
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
 
