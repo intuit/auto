@@ -400,7 +400,7 @@ export default class NPMPlugin implements IPlugin {
           // Locally we use sha for canary version's postFix, but the --canary flag
           // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
-          isPr ? postFix : 'canary',
+          isPr ? `canary${postFix}` : 'canary',
           '--yes', // skip prompts
           ...verboseArgs
         ]);
