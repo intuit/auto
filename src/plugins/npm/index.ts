@@ -13,7 +13,7 @@ import execPromise from '../../utils/exec-promise';
 import { ILogger } from '../../utils/logger';
 import getConfigFromPackageJson from './package-config';
 
-const { isCi } = envCi();
+const { isCi, ...env } = envCi();
 const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
@@ -178,6 +178,16 @@ interface INpmConfig {
   forcePublish?: boolean;
 }
 
+const getLernaPackages = async () =>
+  execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
+    res.split('\n').map(packageInfo => {
+      const [path, name, version] = packageInfo.split(':');
+      return { path, name, version };
+    })
+  );
+
+const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
@@ -286,23 +296,14 @@ export default class NPMPlugin implements IPlugin {
             return;
           }
 
-          const packages = await execPromise('npx', [
-            'lerna',
-            'ls',
-            '-pl'
-          ]).then(res =>
-            res.split('\n').map(packageInfo => {
-              const [path, name, version] = packageInfo.split(':');
-              return { path, name, version };
-            })
-          );
-          const lernaJson = JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+          const lernaPackages = await getLernaPackages();
+          const lernaJson = getLernaJson();
 
           await Promise.all(
             commits.map(async commit => {
               commit.packages = await changedPackages(
                 commit.hash,
-                packages,
+                lernaPackages,
                 lernaJson,
                 auto.logger
               );
@@ -375,6 +376,7 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
+        const isPr = 'isPr' in env && env.isPr;
 
         await execPromise('npx', [
           'lerna',
@@ -382,14 +384,24 @@ export default class NPMPlugin implements IPlugin {
           '--canary',
           '--dist-tag',
           'canary',
-          postFix && '--preid',
-          postFix,
+          // Locally we use sha for canary version's postFix, but the --canary flag
+          // already attaches the SHA so we only attach postFix in PRs for context
+          isPr && '--preid',
+          isPr && postFix,
           '--yes', // skip prompts
           ...verboseArgs
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        return;
+        const lernaJson = getLernaJson();
+
+        if (lernaJson.version === 'independent') {
+          return getLernaPackages().then(packages =>
+            packages.map(p => p.version)
+          );
+        }
+
+        return lernaJson.version;
       }
 
       auto.logger.verbose.info('Detected single npm package');
@@ -398,10 +410,8 @@ export default class NPMPlugin implements IPlugin {
       const current = await auto.getCurrentVersion(lastRelease);
       const nextVersion = inc(current, version as ReleaseType);
       const isScopedPackage = name.match(/@\S+\/\S+/);
-      const canaryVersion = `${nextVersion}-canary.${postFix ||
-        (await auto.git!.getSha(true))}`;
+      const canaryVersion = `${nextVersion}-canary${postFix}`;
 
-      console.log(canaryVersion);
       await execPromise('npm', [
         'version',
         canaryVersion,
@@ -417,6 +427,7 @@ export default class NPMPlugin implements IPlugin {
       );
 
       auto.logger.verbose.info('Successfully published canary version');
+      return canaryVersion;
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {

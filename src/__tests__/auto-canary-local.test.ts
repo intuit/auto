@@ -1,4 +1,5 @@
 import Auto from '../auto';
+import { SEMVER } from '../main';
 import { dummyLog } from '../utils/logger';
 
 jest.mock('env-ci', () => () => ({
@@ -25,5 +26,5 @@ test('shipit should publish canary in locally when not on master', async () => {
   auto.hooks.canary.tap('test', canary);
 
   await auto.shipit();
-  expect(canary).toHaveBeenCalledWith('1.2.4-canary.abc');
+  expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abc');
 });

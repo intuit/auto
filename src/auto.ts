@@ -73,7 +73,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
-  canary: AsyncParallelHook<[SEMVER, string]>;
+  canary: AsyncSeriesBailHook<[SEMVER, string], string>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -462,11 +462,17 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${build}`;
     }
 
+    if (!canaryVersion) {
+      canaryVersion = `.${await this.git.getSha(true)}`;
+    }
+
     if (options.dryRun) {
-      this.logger.log.warn(`Published version would be ${canaryVersion}`);
+      this.logger.log.warn(
+        `Published canary identifier would be ${canaryVersion}`
+      );
     } else {
       this.logger.verbose.info('Calling canary hook');
-      await this.hooks.canary.promise(version, canaryVersion);
+      canaryVersion = await this.hooks.canary.promise(version, canaryVersion);
 
       const message =
         options.message || 'Published PR with canary version: `%v`';
@@ -477,11 +483,12 @@ export default class Auto {
           context: 'canary-version'
         });
       }
+
+      this.logger.log.success(`Published canary version: ${canaryVersion}`);
     }
 
     const latestTag = await this.git.getLatestTagInBranch();
     const commitsInRelease = await this.release.getCommits(latestTag);
-    this.logger.log.success('Published canary version!');
     return { newVersion: canaryVersion, commitsInRelease };
   }
 
