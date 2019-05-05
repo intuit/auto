@@ -397,7 +397,7 @@ export default class NPMPlugin implements IPlugin {
 
         if (lernaJson.version === 'independent') {
           return getLernaPackages().then(packages =>
-            packages.map(p => p.version)
+            packages.map(p => `\n - ${p.name}@${p.version}`).join('')
           );
         }
 

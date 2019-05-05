@@ -468,7 +468,7 @@ export default class Auto {
 
     if (options.dryRun) {
       this.logger.log.warn(
-        `Published canary identifier would be ${canaryVersion}`
+        `Published canary identifier would be: "-canary${canaryVersion}"`
       );
     } else {
       this.logger.verbose.info('Calling canary hook');
