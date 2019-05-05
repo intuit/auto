@@ -31,6 +31,7 @@ export const makeHooks = (): IAutoHooks => ({
 
 export const makeReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
+  createChangelogTitle: new AsyncSeriesBailHook([]),
   onCreateLogParse: new SyncHook(['logParse'])
 });
 
