@@ -238,7 +238,7 @@ export default class NPMPlugin implements IPlugin {
         ).version;
 
         if (monorepoVersion === 'independent') {
-          previousVersion = 'independent';
+          previousVersion = '';
         } else {
           const releasedPackage = getMonorepoPackage();
 
