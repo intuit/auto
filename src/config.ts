@@ -1,6 +1,7 @@
 import cosmiconfig from 'cosmiconfig';
 import merge from 'deepmerge';
 import env from 'dotenv';
+import fetch from 'node-fetch';
 import * as path from 'path';
 
 import { ArgsType } from './cli/args';
@@ -53,7 +54,15 @@ export default class Config {
    * load the extends property, load the plugins and start the git remote interface.
    */
   async loadConfig(args: ArgsType) {
-    const explorer = cosmiconfig('auto');
+    const explorer = cosmiconfig('auto', {
+      searchPlaces: [
+        `.autorc`,
+        `.autorc.json`,
+        `.autorc.yaml`,
+        `.autorc.yml`,
+        'package.json'
+      ]
+    });
     const result = await explorer.search();
 
     let rawConfig: cosmiconfig.Config = {};
@@ -93,18 +102,31 @@ export default class Config {
    *
    * @param extend Path or name of config to find
    */
-  loadExtendConfig(extend: string) {
-    let config: cosmiconfig.Config | ConfigLoader = tryRequire(extend);
+  async loadExtendConfig(extend: string) {
+    let config: cosmiconfig.Config | ConfigLoader;
+
+    if (extend.startsWith('http')) {
+      try {
+        return (await fetch(extend)).json();
+      } catch (error) {
+        error.message = `Failed to get extended config from ${extend} -- ${
+          error.message
+        }`;
+        throw error;
+      }
+    }
+
+    config = tryRequire(`${extend}/package.json`);
     this.logger.verbose.note(`${extend} found: ${config}`);
 
     if (!config) {
-      const scope = `${extend}/auto-config`;
+      const scope = `${extend}/auto-config/package.json`;
       config = tryRequire(scope);
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
     if (!config) {
-      const scope = `auto-config-${extend}`;
+      const scope = `auto-config-${extend}/package.json`;
       config = tryRequire(scope);
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
