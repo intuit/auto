@@ -18,7 +18,7 @@ jest.mock('import-cwd', () => (path: string) => importMock(path));
 describe('loadExtendConfig', () => {
   test('should reject when no config found', async () => {
     const config = new Config(log);
-    return expect(config.loadExtendConfig('nothing')).rejects.toBeInstanceOf(
+    await expect(config.loadExtendConfig('nothing')).rejects.toBeInstanceOf(
       Error
     );
   });
@@ -50,7 +50,7 @@ describe('loadExtendConfig', () => {
     importMock.mockImplementation(path =>
       path === '../fake/path.js' ? { jira: 'url' } : undefined
     );
-    return expect(
+    await expect(
       config.loadExtendConfig('../fake/path.js')
     ).rejects.toBeInstanceOf(Error);
   });
@@ -74,7 +74,7 @@ describe('loadExtendConfig', () => {
     const config = new Config(log);
 
     fetchSpy.mockRejectedValueOnce(new Error());
-    return expect(
+    await expect(
       // tslint:disable-next-line:no-http-string
       config.loadExtendConfig('http://www.test.com/config.json')
     ).rejects.toBeInstanceOf(Error);
