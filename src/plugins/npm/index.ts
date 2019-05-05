@@ -52,8 +52,19 @@ export async function greaterRelease(
     : publishedPrefixed;
 }
 
-export async function changedPackages(sha: string, logger: ILogger) {
-  const packages = new Set<string>();
+interface IMonorepoPackage {
+  path: string;
+  name: string;
+  version: string;
+}
+
+export async function changedPackages(
+  sha: string,
+  packages: IMonorepoPackage[],
+  lernaJson: { version?: string },
+  logger: ILogger
+) {
+  const changed = new Set<string>();
   const changedFiles = await execPromise('git', [
     'show',
     '--first-parent',
@@ -69,18 +80,26 @@ export async function changedPackages(sha: string, logger: ILogger) {
       return;
     }
 
-    packages.add(
+    const packageName =
       parts.length > 3 && parts[1][0] === '@'
         ? `${parts[1]}/${parts[2]}`
-        : parts[1]
+        : parts[1];
+    const version = packages.find(monorepoPackage =>
+      monorepoPackage.path.includes(parts.slice(0, -1).join('/'))
+    );
+
+    changed.add(
+      version && lernaJson.version === 'independent'
+        ? `${packageName}@${version.version}`
+        : packageName
     );
   });
 
-  if (packages.size > 0) {
-    logger.veryVerbose.info(`Got changed packages for ${sha}:\n`, packages);
+  if (changed.size > 0) {
+    logger.veryVerbose.info(`Got changed packages for ${sha}:\n`, changed);
   }
 
-  return [...packages];
+  return [...changed];
 }
 
 export function getMonorepoPackage() {
@@ -259,7 +278,7 @@ export default class NPMPlugin implements IPlugin {
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, async changelog => {
+    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
       changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async (commits, renderLine) => {
@@ -267,9 +286,26 @@ export default class NPMPlugin implements IPlugin {
             return;
           }
 
+          const packages = await execPromise('npx', [
+            'lerna',
+            'ls',
+            '-pl'
+          ]).then(res =>
+            res.split('\n').map(packageInfo => {
+              const [path, name, version] = packageInfo.split(':');
+              return { path, name, version };
+            })
+          );
+          const lernaJson = JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+
           await Promise.all(
             commits.map(async commit => {
-              commit.packages = await changedPackages(commit.hash, auto.logger);
+              commit.packages = await changedPackages(
+                commit.hash,
+                packages,
+                lernaJson,
+                auto.logger
+              );
             })
           );
 
