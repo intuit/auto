@@ -34,6 +34,17 @@ describe('loadExtendConfig', () => {
     });
   });
 
+  test('should load package.json file from path', async () => {
+    const config = new Config(log);
+
+    importMock.mockImplementation(path =>
+      path === './package.json' ? { auto: { jira: 'url' } } : undefined
+    );
+    expect(await config.loadExtendConfig('./package.json')).toEqual({
+      jira: 'url'
+    });
+  });
+
   test('should fail if file path points to js file', async () => {
     const config = new Config(log);
     importMock.mockImplementation(path =>
