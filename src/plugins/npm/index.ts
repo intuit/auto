@@ -213,7 +213,7 @@ export default class NPMPlugin implements IPlugin {
       }
 
       if (!process.env.NPM_TOKEN) {
-        throw new Error('NPM Token is needed for the NPM plugin!');
+        auto.logger.log.warn('NPM Token is needed for the NPM plugin!');
       }
     });
 
