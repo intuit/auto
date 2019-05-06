@@ -319,15 +319,25 @@ describe('github', () => {
     expect(listCommits).toHaveBeenCalled();
   });
 
-  test('getUserByUsername', async () => {
-    const gh = new Git(options);
+  describe('getUserByUsername', () => {
+    test('exists', async () => {
+      const gh = new Git(options);
 
-    getByUsername.mockReturnValueOnce({
-      data: { name: 'Andrew Lisowski' }
+      getByUsername.mockReturnValueOnce({
+        data: { name: 'Andrew Lisowski' }
+      });
+
+      expect(await gh.getUserByUsername('andrew')).toEqual({
+        name: 'Andrew Lisowski'
+      });
     });
 
-    expect(await gh.getUserByUsername('andrew')).toEqual({
-      name: 'Andrew Lisowski'
+    test('not found', async () => {
+      const gh = new Git(options);
+
+      getByUsername.mockRejectedValueOnce(Error);
+
+      expect(await gh.getUserByUsername('andrew')).toBeUndefined();
     });
   });
 
@@ -354,6 +364,14 @@ describe('github', () => {
       expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({
         login: 'lisowski54@gmail.com'
       });
+    });
+
+    test('errors', async () => {
+      const gh = new Git(options);
+
+      getByUsername.mockRejectedValueOnce(Error);
+
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toBeUndefined();
     });
   });
 

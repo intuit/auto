@@ -223,20 +223,30 @@ export default class Git {
 
   @Memoize()
   async getUserByEmail(email: string) {
-    const search = (await this.ghub.search.users({
-      q: `in:email ${email}`
-    })).data;
+    try {
+      const search = (await this.ghub.search.users({
+        q: `in:email ${email}`
+      })).data;
 
-    return search && search.items.length > 0
-      ? search.items[0]
-      : { login: email };
+      return search && search.items.length > 0
+        ? search.items[0]
+        : { login: email };
+    } catch (error) {
+      this.logger.verbose.warn(`Could not find user by email: ${email}`);
+    }
   }
 
   @Memoize()
   async getUserByUsername(username: string) {
-    return (await this.ghub.users.getByUsername({
-      username
-    })).data;
+    try {
+      const user = await this.ghub.users.getByUsername({
+        username
+      });
+
+      return user.data;
+    } catch (error) {
+      this.logger.verbose.warn(`Could not find user by username: ${username}`);
+    }
   }
 
   @Memoize()
