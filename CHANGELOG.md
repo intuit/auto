@@ -1,3 +1,24 @@
+# v6.0.0 (Mon May 06 2019)
+
+#### 💥  Breaking Change
+
+- Restrict config type [#374](https://github.com/intuit/auto/pull/374) ([@zephraph](https://github.com/zephraph))
+
+#### 🚀  Enhancement
+
+- Support Lerna Independent mode [#373](https://github.com/intuit/auto/pull/373) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📚 Blog Post
+
+- New Post: Merging PRs to other PRs [#372](https://github.com/intuit/auto/pull/372) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v5.0.1 (Sat May 04 2019)
 
 #### 🐛  Bug Fix
