@@ -410,13 +410,7 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        const lernaJson = getLernaJson();
-
-        if (lernaJson.version === 'independent') {
-          return '';
-        }
-
-        return lernaJson.version;
+        return '';
       }
 
       auto.logger.verbose.info('Detected single npm package');
