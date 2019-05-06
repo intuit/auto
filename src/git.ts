@@ -238,9 +238,15 @@ export default class Git {
 
   @Memoize()
   async getUserByUsername(username: string) {
-    return (await this.ghub.users.getByUsername({
-      username
-    })).data;
+    try {
+      const user = await this.ghub.users.getByUsername({
+        username
+      });
+
+      return user.data;
+    } catch (error) {
+      this.logger.verbose.warn(`Could not find user by username: ${username}`);
+    }
   }
 
   @Memoize()
