@@ -296,7 +296,11 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.onCreateRelease.tap(this.name, release => {
       release.hooks.createChangelogTitle.tap(
         `${this.name} - lerna independent`,
-        () => ''
+        () => {
+          if (isMonorepo() && getLernaJson().version === 'independent') {
+            return '';
+          }
+        }
       );
     });
 

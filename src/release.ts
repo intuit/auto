@@ -140,7 +140,7 @@ const writeFile = promisify(fs.writeFile);
 
 export interface IReleaseHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
-  createChangelogTitle: AsyncSeriesBailHook<[], string>;
+  createChangelogTitle: AsyncSeriesBailHook<[], string | void>;
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
