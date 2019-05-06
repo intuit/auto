@@ -692,6 +692,26 @@ describe('Auto', () => {
       await auto.canary();
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
     });
+
+    test('works when PR has "skip-release" label', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getSha = () => Promise.resolve('abcd');
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg('Test Commit', {
+            labels: ['skip-release']
+          })
+        ]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+
+      await auto.canary();
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
+    });
   });
 
   describe('shipit', () => {
