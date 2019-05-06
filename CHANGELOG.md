@@ -1,3 +1,15 @@
+# v6.0.1 (Mon May 06 2019)
+
+#### 🐛  Bug Fix
+
+- Better get by username/email error handling [#377](https://github.com/intuit/auto/pull/377) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.0.0 (Mon May 06 2019)
 
 #### 💥  Breaking Change
