@@ -1,4 +1,5 @@
 import Auto from '../auto';
+import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 
@@ -21,7 +22,6 @@ describe('canary in ci', () => {
     const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
     auto.logger = dummyLog();
     await auto.loadConfig();
-    auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const canary = jest.fn();
@@ -31,7 +31,7 @@ describe('canary in ci', () => {
     auto.release!.getCommits = jest.fn();
 
     await auto.canary();
-    expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
+    expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
   });
 
   test('comments on PR in CI', async () => {
@@ -44,6 +44,7 @@ describe('canary in ci', () => {
     const createComment = jest.fn();
     auto.git!.createComment = createComment;
     auto.release!.getCommits = jest.fn();
+    auto.hooks.canary.tap('test', () => '1.2.4-canary.123.1');
 
     const version = await auto.canary({ pr: 123, build: 1 });
     expect(createComment).toHaveBeenCalled();
@@ -69,12 +70,12 @@ describe('canary in ci', () => {
     const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
     auto.logger = dummyLog();
     await auto.loadConfig();
-    auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const createComment = jest.fn();
     auto.git!.createComment = createComment;
     auto.release!.getCommits = jest.fn();
+    auto.hooks.canary.tap('test', (bump, post) => `1.2.4-canary${post}`);
 
     const version = await auto.canary({ pr: 456, build: 5 });
     expect(version.newVersion).toBe('1.2.4-canary.456.5');
@@ -95,6 +96,6 @@ describe('shipit in ci', () => {
     auto.hooks.canary.tap('test', canary);
 
     await auto.shipit();
-    expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
+    expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
   });
 });

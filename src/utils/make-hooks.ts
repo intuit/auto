@@ -26,11 +26,12 @@ export const makeHooks = (): IAutoHooks => ({
   afterVersion: new AsyncParallelHook([]),
   publish: new AsyncParallelHook(['version']),
   afterPublish: new AsyncParallelHook([]),
-  canary: new AsyncParallelHook(['canaryVersion'])
+  canary: new AsyncSeriesBailHook(['canaryVersion', 'postFix'])
 });
 
 export const makeReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog']),
+  createChangelogTitle: new AsyncSeriesBailHook([]),
   onCreateLogParse: new SyncHook(['logParse'])
 });
 

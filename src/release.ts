@@ -4,7 +4,7 @@ import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
-import { SyncHook } from 'tapable';
+import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import { Memoize } from 'typescript-memoize';
 import Changelog from './changelog';
 import { ICreateLabelsCommandOptions } from './cli/args';
@@ -140,6 +140,7 @@ const writeFile = promisify(fs.writeFile);
 
 export interface IReleaseHooks {
   onCreateChangelog: SyncHook<[Changelog]>;
+  createChangelogTitle: AsyncSeriesBailHook<[], string | void>;
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
@@ -326,27 +327,38 @@ export default class Release {
     currentVersion: string,
     message = 'Update CHANGELOG.md [skip ci]'
   ) {
-    this.logger.verbose.info('Adding new changes to changelog.');
+    this.hooks.createChangelogTitle.tapPromise('Default', async () => {
+      let version;
 
-    let version;
+      if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+        version = await this.calcNextVersion(lastRelease);
+      } else {
+        // lastRelease is a git sha. no releases have been made
+        const bump = await this.getSemverBump(lastRelease);
+        version = inc(currentVersion, bump as ReleaseType);
+      }
 
-    if (lastRelease.match(/\d+\.\d+\.\d+/)) {
-      version = await this.calcNextVersion(lastRelease);
-    } else {
-      // lastRelease is a git sha. no releases have been made
-      const bump = await this.getSemverBump(lastRelease);
-      version = inc(currentVersion, bump as ReleaseType);
-    }
+      this.logger.verbose.info('Calculated next version to be:', version);
 
-    this.logger.verbose.info('Calculated next version to be:', version);
+      if (!version) {
+        return '';
+      }
 
-    const date = new Date().toDateString();
-    const prefixed =
-      this.options.noVersionPrefix || (version && version.startsWith('v'))
+      return this.options.noVersionPrefix || version.startsWith('v')
         ? version
         : `v${version}`;
+    });
 
-    let newChangelog = `# ${prefixed} (${date})\n\n${releaseNotes}`;
+    this.logger.verbose.info('Adding new changes to changelog.');
+    const title = await this.hooks.createChangelogTitle.promise();
+    const date = new Date().toDateString();
+    let newChangelog = '#';
+
+    if (title) {
+      newChangelog += ` ${title}`;
+    }
+
+    newChangelog += ` (${date})\n\n${releaseNotes}`;
 
     if (fs.existsSync('CHANGELOG.md')) {
       this.logger.verbose.info('Old changelog exists, prepending changes.');

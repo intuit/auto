@@ -26,6 +26,7 @@ jest.mock('fs', () => ({
   readFile: (a, b, cb) => {
     cb(undefined, readResult);
   },
+  readFileSync: () => '{}',
   // @ts-ignore
   ReadStream: () => undefined,
   // @ts-ignore
@@ -55,7 +56,7 @@ describe('changedPackages ', () => {
   test('should return nothing without a package directory', async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
-    expect(await changedPackages('sha', dummyLog())).toEqual([]);
+    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([]);
   });
 
   test('should match files in package directory', async () => {
@@ -63,7 +64,10 @@ describe('changedPackages ', () => {
       `packages/foo/README.md\npackages/bar/package.json`
     );
 
-    expect(await changedPackages('sha', dummyLog())).toEqual(['foo', 'bar']);
+    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([
+      'foo',
+      'bar'
+    ]);
   });
 
   test('should match files in package directory with @scope/ names', async () => {
@@ -71,7 +75,7 @@ describe('changedPackages ', () => {
       `packages/@scope/foo/README.md\npackages/@scope/bar/package.json`
     );
 
-    expect(await changedPackages('sha', dummyLog())).toEqual([
+    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([
       '@scope/foo',
       '@scope/bar'
     ]);
@@ -490,7 +494,12 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto);
 
     readResult = `
       {
@@ -498,16 +507,21 @@ describe('canary', () => {
       }
     `;
 
-    const canaryVersion = '1.2.3-canary.123.1';
-    await hooks.canary.promise(canaryVersion);
-    expect(exec.mock.calls[0][0]).toBe('npm');
+    await hooks.canary.promise(SEMVER.patch, '.123.1');
+    expect(exec.mock.calls[0]).toContain('npm');
+    expect(exec.mock.calls[0][1]).toContain('1.2.4-canary.123.1');
   });
 
   test('publishes to public for scoped packages', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto);
 
     readResult = `
       {
@@ -515,8 +529,7 @@ describe('canary', () => {
       }
     `;
 
-    const canaryVersion = '1.2.3-canary.123.1';
-    await hooks.canary.promise(canaryVersion);
+    await hooks.canary.promise(SEMVER.patch, '');
     expect(exec.mock.calls[1][1]).toContain('public');
   });
 
@@ -533,8 +546,7 @@ describe('canary', () => {
       }
     `;
 
-    const canaryVersion = '1.2.3-canary.123.1';
-    await hooks.canary.promise(canaryVersion);
+    await hooks.canary.promise(SEMVER.patch, '');
     expect(exec.mock.calls[0][1]).toContain('lerna');
   });
 });

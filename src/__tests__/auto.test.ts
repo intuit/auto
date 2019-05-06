@@ -662,7 +662,7 @@ describe('Auto', () => {
       expect(canary).not.toHaveBeenCalled();
     });
 
-    test('calls the canary hook with the canary version', async () => {
+    test('calls the canary hook with the pr info', async () => {
       const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
@@ -674,7 +674,7 @@ describe('Auto', () => {
       auto.release!.getCommits = jest.fn();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith('1.2.4-canary.123.1');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
     });
 
     test('defaults to sha when run locally', async () => {
@@ -690,7 +690,7 @@ describe('Auto', () => {
       auto.hooks.canary.tap('test', canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith('1.2.4-canary.abcd');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
     });
 
     test('works when PR has "skip-release" label', async () => {
@@ -710,7 +710,7 @@ describe('Auto', () => {
       auto.hooks.canary.tap('test', canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith('1.2.4-canary.abcd');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
     });
   });
 

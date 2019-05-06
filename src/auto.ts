@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { gt, inc, ReleaseType } from 'semver';
+import { gt, inc, parse, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -73,7 +73,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
-  canary: AsyncParallelHook<[string]>;
+  canary: AsyncSeriesBailHook<[SEMVER, string], string>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -432,7 +432,6 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = await this.git.getLatestRelease();
     // SailEnv falls back to commit SHA
     let preId: string | undefined;
     let build: string | undefined;
@@ -443,33 +442,37 @@ export default class Auto {
     } else if ('pr' in env && 'commit' in env) {
       preId = env.pr;
       build = env.commit;
-    } else {
-      preId = await this.git.getSha(true);
     }
 
     preId = options.pr ? String(options.pr) : preId;
     build = options.build ? String(options.build) : build;
 
-    const current = await this.getCurrentVersion(lastRelease);
     const head = await this.release.getCommitsInRelease('HEAD^');
     const labels = head.map(commit => commit.labels);
-    const version = calculateSemVerBump(
-      labels,
-      this.semVerLabels!,
-      this.config
-    );
-    const nextVersion = inc(current, (version || 'patch') as ReleaseType);
-    let canaryVersion = `${nextVersion}-canary.${preId}`;
+    const version =
+      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
+      SEMVER.patch;
+    let canaryVersion = '';
+
+    if (preId) {
+      canaryVersion = `${canaryVersion}.${preId}`;
+    }
 
     if (build) {
       canaryVersion = `${canaryVersion}.${build}`;
     }
 
+    if (!canaryVersion) {
+      canaryVersion = `.${await this.git.getSha(true)}`;
+    }
+
     if (options.dryRun) {
-      this.logger.log.warn(`Published version would be ${canaryVersion}`);
+      this.logger.log.warn(
+        `Published canary identifier would be: "-canary${canaryVersion}"`
+      );
     } else {
       this.logger.verbose.info('Calling canary hook');
-      await this.hooks.canary.promise(canaryVersion);
+      canaryVersion = await this.hooks.canary.promise(version, canaryVersion);
 
       const message =
         options.message || 'Published PR with canary version: `%v`';
@@ -480,11 +483,14 @@ export default class Auto {
           context: 'canary-version'
         });
       }
+
+      this.logger.log.success(
+        `Published canary version${canaryVersion ? `: ${canaryVersion}` : ''}`
+      );
     }
 
     const latestTag = await this.git.getLatestTagInBranch();
     const commitsInRelease = await this.release.getCommits(latestTag);
-
     return { newVersion: canaryVersion, commitsInRelease };
   }
 
@@ -519,6 +525,30 @@ export default class Auto {
 
     const { newVersion, commitsInRelease } = publishInfo;
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+  }
+
+  async getCurrentVersion(lastRelease: string) {
+    this.hooks.getPreviousVersion.tap('None', () => {
+      this.logger.veryVerbose.info(
+        'No previous release found, using 0.0.0 as previous version.'
+      );
+      return this.prefixRelease('0.0.0');
+    });
+
+    const lastVersion = await this.hooks.getPreviousVersion.promise(
+      this.prefixRelease
+    );
+
+    if (
+      parse(lastRelease) &&
+      parse(lastVersion) &&
+      gt(lastRelease, lastVersion)
+    ) {
+      this.logger.veryVerbose.info('Using latest release as previous version');
+      return lastRelease;
+    }
+
+    return lastVersion;
   }
 
   private async publishLatest(options: IShipItCommandOptions) {
@@ -560,9 +590,11 @@ export default class Auto {
 
       const current = await this.getCurrentVersion(lastRelease);
 
-      this.logger.log.warn(
-        `Published version would be ${inc(current, version as ReleaseType)}`
-      );
+      if (parse(current)) {
+        this.logger.log.warn(
+          `Published version would be: ${inc(current, version as ReleaseType)}`
+        );
+      }
     }
 
     return { newVersion, commitsInRelease };
@@ -616,26 +648,6 @@ export default class Auto {
     return this.release.getSemverBump(lastRelease);
   }
 
-  private async getCurrentVersion(lastRelease: string) {
-    this.hooks.getPreviousVersion.tap('None', () => {
-      this.logger.veryVerbose.info(
-        'No previous release found, using 0.0.0 as previous version.'
-      );
-      return this.prefixRelease('0.0.0');
-    });
-
-    const lastVersion = await this.hooks.getPreviousVersion.promise(
-      this.prefixRelease
-    );
-
-    if (lastRelease.match(/\d+\.\d+\.\d+/) && gt(lastRelease, lastVersion)) {
-      this.logger.veryVerbose.info('Using latest release as previous version');
-      return lastRelease;
-    }
-
-    return lastVersion;
-  }
-
   private async makeChangelog({
     dryRun,
     from,
@@ -685,7 +697,7 @@ export default class Auto {
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
 
-    if (lastRelease.match(/\d+\.\d+\.\d+/)) {
+    if (lastRelease.match(/^\d+\.\d+\.\d+/)) {
       lastRelease = this.prefixRelease(lastRelease);
     }
 
@@ -698,30 +710,35 @@ export default class Auto {
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
-    const version = useVersion || (await this.getCurrentVersion(lastRelease));
+    const rawVersion =
+      useVersion ||
+      (await this.getCurrentVersion(lastRelease)) ||
+      (await this.git.getLatestTagInBranch());
 
-    if (!version) {
+    if (!rawVersion) {
       this.logger.log.error('Could not calculate next version from last tag.');
       return;
     }
 
-    const prefixed = this.prefixRelease(version);
-    this.logger.log.info(`Publishing ${prefixed} to GitHub.`);
+    const version = parse(rawVersion)
+      ? this.prefixRelease(rawVersion)
+      : rawVersion;
 
     if (!dryRun) {
-      await this.git.publish(releaseNotes, prefixed);
+      this.logger.log.info(`Releasing ${version} to GitHub.`);
+      await this.git.publish(releaseNotes, version);
 
       if (slack || (this.config && this.config.slack)) {
         this.logger.log.info('Posting release to slack');
-        await this.release.postToSlack(releaseNotes, prefixed);
+        await this.release.postToSlack(releaseNotes, version);
       }
     } else {
-      this.logger.verbose.info('Release dry run complete.');
+      this.logger.log.info(`Would have released: ${version}`);
     }
 
-    await this.hooks.afterRelease.promise(prefixed, commitsInRelease);
+    await this.hooks.afterRelease.promise(version, commitsInRelease);
 
-    return prefixed;
+    return version;
   }
 
   private readonly prefixRelease = (release: string) => {
