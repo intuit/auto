@@ -355,6 +355,14 @@ describe('github', () => {
         login: 'lisowski54@gmail.com'
       });
     });
+
+    test('errors', async () => {
+      const gh = new Git(options);
+
+      getByUsername.mockRejectedValueOnce(Error);
+
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toBeUndefined();
+    });
   });
 
   describe('getLatestRelease', () => {
