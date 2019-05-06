@@ -2,12 +2,13 @@
 
 All options for the CLI tools can also be configured via the `.autorc`. As CLI options you supply them in snake-case (`--foo-bar`), but as `.autorc` options you supply them in camelCase (`fooBar`),
 
-We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config, so that means you can define this file a variety of ways. By default, Cosmiconfig will start at the root of your project and start to search up the directory tree for the following:
+We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config, so that means you can define this file a variety of ways. Our Cosmiconfig setup is a little custom and will start at the root of your project and start to search up the directory tree for the following:
 
-- a package.json property
 - a JSON or YAML, extension-less "rc file"
-- an "rc file" with the extensions .json, .yaml, .yml, or .js.
-- a .config.js CommonJS module
+- an "rc file" with the extensions .json, .yaml, or .yml
+- a package.json property
+
+We do not support writing configuration files in JavaScript.
 
 ## Initialization
 
@@ -23,13 +24,14 @@ These options can be set exclusively in the `.autorc` and do not exist as CLI fl
 
 ### Extending
 
-If you want to share your auto configuration between projects you can use the `extends` property. This property will load an autorc object or a function that returns an autorc object and merge it with your project's `.autorc`.
+If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
 
 Auto can load `extends` configs in the following ways:
 
-- from a path `path/to/config`
-- from a scoped package `@YOUR_SCOPE/auto-config`
+- from a path `./path/to/config` (this file must be in JSON format)
+- from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
 - from a package `auto-config-YOUR_NAME`
+- from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
 
 ```json
 {
@@ -50,6 +52,20 @@ Will use the package `auto-config-joe`
 ::: message is-warning
 If extending from a config package make sure it's a dependency of your project
 :::
+
+If you're extending from a local file it can be any file in JSON format or a `package.json` file.
+
+```json
+{
+  "extends": "./path/to/config.json"
+}
+```
+
+```json
+{
+  "extends": "./path/to/other/package.json"
+}
+```
 
 ### Labels
 
