@@ -11,6 +11,7 @@ export interface ICommitAuthor {
 export interface IPullRequest {
   number: number;
   base?: string;
+  body?: string;
 }
 
 export type IExtendedCommit = ICommit & {

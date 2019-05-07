@@ -3,6 +3,7 @@ import { AsyncSeriesBailHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
+import dedent from 'dedent';
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinitionMap } from './release';
 import { ILogger } from './utils/logger';
@@ -15,6 +16,10 @@ export interface IGenerateReleaseNotesOptions {
   jira?: string;
   labels: ILabelDefinitionMap;
   baseBranch: string;
+}
+
+interface ICommitSplit {
+  [key: string]: IExtendedCommit[];
 }
 
 export interface IChangelogHooks {
@@ -88,6 +93,9 @@ export default class Changelog {
     this.logger.veryVerbose.info('\n', split);
     const sections: string[] = [];
 
+    this.createReleaseNotesSection(commits, sections);
+    this.logger.verbose.info('Added relase notes to changelog');
+
     await this.createLabelSection(split, sections);
     this.logger.verbose.info('Added groups to changelog');
 
@@ -100,7 +108,7 @@ export default class Changelog {
     return result;
   }
 
-  createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
+  private createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
 
     if (author.username === 'invalid-email-address') {
@@ -115,11 +123,7 @@ export default class Changelog {
   /**
    * Split commits into changelogTitle sections.
    */
-  private splitCommits(
-    commits: IExtendedCommit[]
-  ): {
-    [key: string]: IExtendedCommit[];
-  } {
+  private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
 
     commits
@@ -178,7 +182,7 @@ export default class Changelog {
       jira = `[${commit.jira.number}](${link}): `;
     }
 
-    if (commit.pullRequest) {
+    if (commit.pullRequest && commit.pullRequest.number) {
       const prLink = join(
         this.options.baseUrl,
         'pull',
@@ -191,12 +195,7 @@ export default class Changelog {
     return `- ${jira}${commit.subject.trim()} ${pr}${user ? ` (${user})` : ''}`;
   }
 
-  private async createAuthorSection(
-    split: {
-      [key: string]: IExtendedCommit[];
-    },
-    sections: string[]
-  ) {
+  private async createAuthorSection(split: ICommitSplit, sections: string[]) {
     const seenUsers = new Set<string>();
     const authors = new Set<string>();
     const commits = Object.values(split).reduce(
@@ -249,12 +248,7 @@ export default class Changelog {
     sections.push(authorSection);
   }
 
-  private async createLabelSection(
-    split: {
-      [key: string]: IExtendedCommit[];
-    },
-    sections: string[]
-  ) {
+  private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
       (titles, [, labelDef]) => {
         if (labelDef.title) {
@@ -281,5 +275,70 @@ export default class Changelog {
         sections.push([title, ...lines].join('\n'));
       })
     );
+  }
+
+  private createReleaseNotesSection(
+    commits: IExtendedCommit[],
+    sections: string[]
+  ) {
+    if (!commits.length) {
+      return;
+    }
+
+    const visited = new Set<number>();
+    let section = '';
+
+    commits.map(commit => {
+      const pr = commit.pullRequest;
+
+      if (!pr || !pr.body) {
+        return;
+      }
+
+      const title = /^> [#]{0,5} Release Notes$/;
+      const lines = pr.body.split('\n').map(line => line.replace(/\r$/, ''));
+      const notesStart = lines.findIndex(line => Boolean(line.match(title)));
+
+      if (notesStart === -1 || visited.has(pr.number)) {
+        return;
+      }
+
+      visited.add(pr.number);
+      let notes = '';
+
+      for (let index = notesStart; index < lines.length; index++) {
+        const line = lines[index];
+
+        if (!line.startsWith('>')) {
+          break;
+        }
+
+        if (!line.match(title)) {
+          notes += line.slice(2);
+        }
+      }
+
+      if (!section) {
+        return;
+      }
+
+      section += dedent`
+        _From #${pr.number}_
+
+        ${notes}\n\n
+      `;
+    });
+
+    if (!section) {
+      return;
+    }
+
+    sections.push(dedent`
+      ### Release Notes
+
+      ${section}
+
+      ---
+    `);
   }
 }
