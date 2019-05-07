@@ -536,7 +536,9 @@ describe('Auto', () => {
       const auto = new Auto({ command: 'comment', ...defaults });
       auto.logger = dummyLog();
 
-      expect(auto.comment({ pr: 10, message: 'foo' })).rejects.toBeTruthy();
+      await expect(
+        auto.comment({ pr: 10, message: 'foo' })
+      ).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
@@ -549,6 +551,29 @@ describe('Auto', () => {
 
       await auto.comment({ pr: 10, message: 'foo' });
       expect(createComment).toHaveBeenCalled();
+    });
+  });
+
+  describe('prBody', () => {
+    test('should throw when not initialized', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+
+      await expect(
+        auto.prBody({ pr: 10, message: 'foo' })
+      ).rejects.toBeTruthy();
+    });
+
+    test('should make a pr body update', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToPrBody = jest.fn();
+      auto.git!.addToPrBody = addToPrBody;
+
+      await auto.prBody({ pr: 10, message: 'foo' });
+      expect(addToPrBody).toHaveBeenCalled();
     });
   });
 

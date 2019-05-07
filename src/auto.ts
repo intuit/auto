@@ -403,6 +403,36 @@ export default class Auto {
   }
 
   /**
+   * Update the body of a PR with a message. Only one message will be present in the PR,
+   * Older messages are removed. You can use the "context" option to multiple message
+   * in a PR body.
+   *
+   * @param options Options
+   */
+  async prBody({
+    message,
+    pr,
+    context = 'default',
+    dryRun
+  }: ICommentCommandOptions) {
+    if (!this.git) {
+      throw this.createErrorMessage();
+    }
+
+    this.logger.verbose.info("Using command: 'pr-body'");
+
+    if (dryRun) {
+      this.logger.log.info(
+        `Would have appended to PR body on ${pr} under "${context}" context:\n\n${message}`
+      );
+    } else {
+      const prNumber = this.getPrNumber('pr-body', pr);
+      await this.git.addToPrBody(message, prNumber, context);
+      this.logger.log.success(`Updated body on PR #${pr}`);
+    }
+  }
+
+  /**
    * Calculate the version bump for the current state of the repository.
    */
   async version() {

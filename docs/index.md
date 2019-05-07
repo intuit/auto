@@ -20,6 +20,7 @@
   - [auto label](pages/auto-label.md)
   - [auto pr](pages/auto-pr.md)
   - [auto pr-check](pages/auto-pr-check.md)
+  - [auto pr-body](pages/auto-pr-body.md)
   - [auto comment](pages/auto-comment.md)
 
 ---
