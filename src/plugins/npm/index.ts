@@ -414,11 +414,12 @@ export default class NPMPlugin implements IPlugin {
 
         auto.logger.verbose.info('Successfully published canary version');
         const packages = await getLernaPackages();
+        const independentPackages = await getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
         if (getLernaJson().version === 'independent') {
-          return getIndependentPackageList();
+          return independentPackages;
         }
 
         const one = packages.find(p => Boolean(p.version));
