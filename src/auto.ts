@@ -496,6 +496,8 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
+    let newVersion = '';
+
     if (options.dryRun) {
       this.logger.log.warn(
         `Published canary identifier would be: "-canary${canaryVersion}"`
@@ -509,24 +511,25 @@ export default class Auto {
         return;
       }
 
+      newVersion = result;
       const message =
         options.message || 'Published PR with canary version: `%v`';
 
       if (message !== 'false' && env.isCi) {
         this.prBody({
-          message: message.replace('%v', result),
+          message: message.replace('%v', newVersion),
           context: 'canary-version'
         });
       }
 
       this.logger.log.success(
-        `Published canary version${result ? `: ${result}` : ''}`
+        `Published canary version${newVersion ? `: ${newVersion}` : ''}`
       );
     }
 
     const latestTag = await this.git.getLatestTagInBranch();
     const commitsInRelease = await this.release.getCommits(latestTag);
-    return { newVersion: canaryVersion, commitsInRelease };
+    return { newVersion, commitsInRelease };
   }
 
   /**

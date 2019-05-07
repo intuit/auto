@@ -692,6 +692,7 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.getSha = () => Promise.resolve('abc');
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
@@ -699,7 +700,7 @@ describe('Auto', () => {
       auto.release!.getCommits = jest.fn();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1.abc');
     });
 
     test('defaults to sha when run locally', async () => {

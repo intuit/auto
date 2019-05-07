@@ -48,7 +48,7 @@ describe('canary in ci', () => {
 
     const version = await auto.canary({ pr: 123, build: 1 });
     expect(addToPrBody).toHaveBeenCalled();
-    expect(version.newVersion).toBe('1.2.4-canary.123.1');
+    expect(version!.newVersion).toBe('1.2.4-canary.123.1');
   });
 
   test('should not comment when passed "false"', async () => {
@@ -78,7 +78,7 @@ describe('canary in ci', () => {
     auto.hooks.canary.tap('test', (bump, post) => `1.2.4-canary${post}`);
 
     const version = await auto.canary({ pr: 456, build: 5 });
-    expect(version.newVersion).toBe('1.2.4-canary.456.5');
+    expect(version!.newVersion).toBe('1.2.4-canary.456.5');
   });
 });
 
