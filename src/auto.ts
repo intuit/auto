@@ -492,8 +492,8 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${build}`;
     }
 
-    if (!canaryVersion) {
-      canaryVersion = `.${await this.git.getSha(true)}`;
+    if (!('isPr' in env)) {
+      canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
     if (options.dryRun) {
