@@ -301,7 +301,7 @@ describe('github', () => {
     });
   });
 
-  describe.only('addToPrBody', () => {
+  describe('addToPrBody', () => {
     test('should add to PR body if none exists', async () => {
       const gh = new Git(options);
 
