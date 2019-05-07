@@ -318,10 +318,6 @@ export default class Changelog {
         }
       }
 
-      if (!section) {
-        return;
-      }
-
       section += dedent`
         _From #${pr.number}_
 
@@ -336,9 +332,7 @@ export default class Changelog {
     sections.push(dedent`
       ### Release Notes
 
-      ${section}
-
-      ---
+      ${section}---
     `);
   }
 }
