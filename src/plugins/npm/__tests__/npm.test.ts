@@ -11,9 +11,11 @@ import { makeHooks } from '../../../utils/make-hooks';
 const exec = jest.fn();
 const monorepoPackages = jest.fn();
 const existsSync = jest.fn();
+const readFileSync = jest.fn();
 const writeSpy = jest.fn();
 
 let readResult = '{}';
+readFileSync.mockReturnValue('{}');
 
 // @ts-ignore
 jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
@@ -26,7 +28,8 @@ jest.mock('fs', () => ({
   readFile: (a, b, cb) => {
     cb(undefined, readResult);
   },
-  readFileSync: () => '{}',
+  // @ts-ignore
+  readFileSync: (...args) => readFileSync(...args),
   // @ts-ignore
   ReadStream: () => undefined,
   // @ts-ignore
@@ -545,8 +548,40 @@ describe('canary', () => {
         "name": "test"
       }
     `;
+    exec.mockReturnValue(
+      Promise.resolve(`
+        path/to/package:@foo/app:1.2.3-canary.0
+        path/to/package:@foo/lib:1.2.3-canary.0
+      `)
+    );
 
-    await hooks.canary.promise(SEMVER.patch, '');
+    const value = await hooks.canary.promise(SEMVER.patch, '');
     expect(exec.mock.calls[0][1]).toContain('lerna');
+    expect(value).toBe('1.2.3-canary.0');
+  });
+
+  test('use lerna for independent monorepo', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+    exec.mockReturnValue(
+      Promise.resolve(
+        'path/to/package:@foo/app:1.2.4-canary.0\npath/to/package:@foo/lib:1.1.0-canary.0'
+      )
+    );
+
+    const value = await hooks.canary.promise(SEMVER.patch, '');
+    expect(value).toBe(
+      '\n - @foo/app@1.2.4-canary.0\n - @foo/lib@1.1.0-canary.0'
+    );
   });
 });

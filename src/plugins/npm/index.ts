@@ -187,6 +187,10 @@ const getLernaPackages = async () =>
   );
 
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+const getIndependentPackageList = async () =>
+  getLernaPackages().then(packages =>
+    packages.map(p => `\n - ${p.name}@${p.version}`).join('')
+  );
 
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
@@ -250,9 +254,7 @@ export default class NPMPlugin implements IPlugin {
         if (monorepoVersion === 'independent') {
           previousVersion =
             'dryRun' in auto.args && auto.args.dryRun
-              ? await getLernaPackages().then(packages =>
-                  packages.map(p => `\n - ${p.name}@${p.version}`).join('')
-                )
+              ? await getIndependentPackageList()
               : '';
         } else {
           const releasedPackage = getMonorepoPackage();
@@ -405,12 +407,27 @@ export default class NPMPlugin implements IPlugin {
           // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
           isPr ? `canary${postFix}` : 'canary',
-          '--yes', // skip prompts
+          '--yes', // skip prompts,
+          '--no-git-reset', // so we can get the version that just published
           ...verboseArgs
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        return '';
+        const packages = await getLernaPackages();
+        // Reset after we read the packages from the system
+        await execPromise('git', ['reset', '--hard', 'HEAD']);
+
+        if (getLernaJson().version === 'independent') {
+          return getIndependentPackageList();
+        }
+
+        const one = packages.find(p => Boolean(p.version));
+
+        if (!one) {
+          return '';
+        }
+
+        return one.version;
       }
 
       auto.logger.verbose.info('Detected single npm package');
