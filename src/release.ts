@@ -57,6 +57,7 @@ interface ISearchEdge {
   node: {
     number: number;
     state: 'MERGED' | 'CLOSED' | 'OPEN';
+    body: string;
     labels: {
       edges: [
         {
@@ -211,6 +212,7 @@ export default class Release {
               ... on PullRequest {
                 number
                 state
+                body
                 labels(first: 10) {
                   edges {
                     node {
