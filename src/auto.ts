@@ -73,7 +73,7 @@ export interface IAutoHooks {
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
-  canary: AsyncSeriesBailHook<[SEMVER, string], string>;
+  canary: AsyncSeriesBailHook<[SEMVER, string], string | { error: string }>;
   afterPublish: AsyncParallelHook<[]>;
 }
 
@@ -502,20 +502,25 @@ export default class Auto {
       );
     } else {
       this.logger.verbose.info('Calling canary hook');
-      canaryVersion = await this.hooks.canary.promise(version, canaryVersion);
+      const result = await this.hooks.canary.promise(version, canaryVersion);
+
+      if (typeof result === 'object') {
+        this.logger.log.error(result.error);
+        return;
+      }
 
       const message =
         options.message || 'Published PR with canary version: `%v`';
 
       if (message !== 'false' && env.isCi) {
         this.prBody({
-          message: message.replace('%v', canaryVersion),
+          message: message.replace('%v', result),
           context: 'canary-version'
         });
       }
 
       this.logger.log.success(
-        `Published canary version${canaryVersion ? `: ${canaryVersion}` : ''}`
+        `Published canary version${result ? `: ${result}` : ''}`
       );
     }
 

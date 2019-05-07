@@ -419,13 +419,21 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
         if (getLernaJson().version === 'independent') {
+          if (!independentPackages.includes('canary')) {
+            return { error: 'No packages were changed. No canary published.' };
+          }
+
           return independentPackages;
         }
 
         const one = packages.find(p => Boolean(p.version));
 
         if (!one) {
-          return '';
+          return { error: 'Could not find monorepo packages' };
+        }
+
+        if (!one.version.includes('canary')) {
+          return { error: 'No packages were changed. No canary published.' };
         }
 
         return one.version;
