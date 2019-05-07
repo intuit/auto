@@ -703,6 +703,25 @@ describe('Auto', () => {
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1.abc');
     });
 
+    test("doesn't comment if there is an error", async () => {
+      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.prBody = jest.fn();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.getSha = () => Promise.resolve('abc');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      const canary = jest.fn();
+      canary.mockReturnValue({ error: 'ooops' });
+      auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
+
+      await auto.canary({ pr: 123, build: 1 });
+      expect(auto.prBody).not.toHaveBeenCalled();
+    });
+
     test('defaults to sha when run locally', async () => {
       const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
       auto.logger = dummyLog();

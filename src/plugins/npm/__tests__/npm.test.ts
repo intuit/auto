@@ -559,6 +559,30 @@ describe('canary', () => {
     expect(value).toBe('1.2.3-canary.0');
   });
 
+  test('error when no canary release found', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    existsSync.mockReturnValueOnce(true);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+    exec.mockReturnValue(
+      Promise.resolve(
+        `path/to/package:@foo/app:1.2.3\npath/to/package:@foo/lib:1.2.3`
+      )
+    );
+
+    const value = await hooks.canary.promise(SEMVER.patch, '');
+    expect(value).toEqual({
+      error: 'No packages were changed. No canary published.'
+    });
+  });
+
   test('use lerna for independent monorepo', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -582,5 +606,30 @@ describe('canary', () => {
     expect(value).toBe(
       '\n - @foo/app@1.2.4-canary.0\n - @foo/lib@1.1.0-canary.0'
     );
+  });
+
+  test('error when no canary release found - independent', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+    exec.mockReturnValue(
+      Promise.resolve(
+        'path/to/package:@foo/app:1.2.4\npath/to/package:@foo/lib:1.1.0'
+      )
+    );
+
+    const value = await hooks.canary.promise(SEMVER.patch, '');
+    expect(value).toEqual({
+      error: 'No packages were changed. No canary published.'
+    });
   });
 });
