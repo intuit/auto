@@ -424,17 +424,13 @@ export default class NPMPlugin implements IPlugin {
           return independentPackages;
         }
 
-        const one = packages.find(p => Boolean(p.version));
+        const versioned = packages.find(p => p.version.includes('canary'));
 
-        if (!one) {
-          return { error: 'Could not find monorepo packages' };
-        }
-
-        if (!one.version.includes('canary')) {
+        if (!versioned) {
           return { error: 'No packages were changed. No canary published.' };
         }
 
-        return one.version;
+        return versioned.version;
       }
 
       auto.logger.verbose.info('Detected single npm package');
