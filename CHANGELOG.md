@@ -1,3 +1,15 @@
+# v6.0.2 (Mon May 06 2019)
+
+#### 🐛  Bug Fix
+
+- report back correct versions when running canary [#378](https://github.com/intuit/auto/pull/378) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.0.1 (Mon May 06 2019)
 
 #### 🐛  Bug Fix
