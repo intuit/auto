@@ -1,3 +1,15 @@
+# v6.1.1 (Tue May 07 2019)
+
+#### 🐛  Bug Fix
+
+- Correct reported lerna independent version [#383](https://github.com/intuit/auto/pull/383) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.1.0 (Tue May 07 2019)
 
 #### 🚀  Enhancement
