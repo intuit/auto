@@ -1,3 +1,15 @@
+# v6.1.0 (Tue May 07 2019)
+
+#### 🚀  Enhancement
+
+- add `auto pr-body` to add info to pr bodies + canary posts to body instead of comment [#379](https://github.com/intuit/auto/pull/379) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.0.2 (Mon May 06 2019)
 
 #### 🐛  Bug Fix
