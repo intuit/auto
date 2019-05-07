@@ -21,6 +21,8 @@ const addLabels = jest.fn();
 const list = jest.fn();
 const lock = jest.fn();
 const errorHook = jest.fn();
+const get = jest.fn();
+const update = jest.fn();
 
 jest.mock('@octokit/rest', () => {
   const instance = () => ({
@@ -39,7 +41,9 @@ jest.mock('@octokit/rest', () => {
       createLabel,
       updateLabel,
       addLabels,
-      lock
+      lock,
+      get,
+      update
     },
     repos: {
       createStatus,
@@ -294,6 +298,59 @@ describe('github', () => {
 
       expect(deleteComment).toHaveBeenCalled();
       expect(deleteComment.mock.calls[0][0].comment_id).toBe(1000);
+    });
+  });
+
+  describe('addToPrBody', () => {
+    test('should add to PR body if none exists', async () => {
+      const gh = new Git(options);
+
+      get.mockReturnValueOnce({ data: { body: '# My Content' } });
+      await gh.addToPrBody('Some long thing', 22);
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+        })
+      );
+    });
+
+    test('should overwrite old context', async () => {
+      const gh = new Git(options);
+
+      get.mockReturnValueOnce({
+        data: {
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+        }
+      });
+
+      await gh.addToPrBody('Something else', 22);
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+        })
+      );
+    });
+
+    test('should be able to add to body in different contexts', async () => {
+      const gh = new Git(options);
+
+      get.mockReturnValueOnce({
+        data: {
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+        }
+      });
+
+      await gh.addToPrBody('Some long thing', 22, 'PERF');
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n<!-- GITHUB_RELEASE PR BODY: PERF -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: PERF -->\n'
+        })
+      );
     });
   });
 

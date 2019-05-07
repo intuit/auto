@@ -390,6 +390,22 @@ const commands: ICommand[] = [
     ]
   },
   {
+    name: 'pr-body',
+    summary:
+      'Update the body of a PR with a message. Appends to PR and will not overwrite user content',
+    require: ['message'],
+    options: [
+      pr,
+      context,
+      { ...message, description: 'Message to post to PR body' },
+      dryRun,
+      ...defaultOptions
+    ],
+    examples: [
+      '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"'
+    ]
+  },
+  {
     name: 'shipit',
     summary: dedent`
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
@@ -487,7 +503,13 @@ function printRootHelp() {
     },
     {
       header: 'Pull Request Interaction Commands',
-      content: filterCommands(commands, ['label', 'pr-check', 'pr', 'comment'])
+      content: filterCommands(commands, [
+        'label',
+        'pr-check',
+        'pr',
+        'pr-body',
+        'comment'
+      ])
     },
     {
       header: 'Global Options',

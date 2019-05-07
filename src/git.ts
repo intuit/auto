@@ -38,8 +38,14 @@ class GitAPIError extends Error {
   }
 }
 
+const makeIdentifier = (type: string, context: string) =>
+  `<!-- GITHUB_RELEASE ${type}: ${context} -->`;
+
 const makeCommentIdentifier = (context: string) =>
-  `<!-- GITHUB_RELEASE COMMENT: ${context} -->`;
+  makeIdentifier('COMMENT', context);
+
+const makePrBodyIdentifier = (context: string) =>
+  makeIdentifier('PR BODY', context);
 
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
@@ -479,6 +485,46 @@ export default class Git {
       result
     );
     this.logger.verbose.info('Successfully posted comment to PR');
+
+    return result;
+  }
+
+  async addToPrBody(message: string, pr: number, context = 'default') {
+    const id = makePrBodyIdentifier(context);
+
+    this.logger.verbose.info('Using PR body identifier:', id);
+    this.logger.verbose.info('Getting previous pr body on:', pr);
+
+    const issue = await this.ghub.issues.get({
+      owner: this.options.owner,
+      repo: this.options.repo,
+      issue_number: pr
+    });
+
+    this.logger.veryVerbose.info('Got PR description\n', issue.data.body);
+    const regex = new RegExp(`(${id})\\s(.+)\\s(${id})`);
+    let body = issue.data.body;
+
+    if (body.match(regex)) {
+      this.logger.verbose.info('Found previous message from same scope.');
+      this.logger.verbose.info('Replacing pr body comment');
+
+      body = body.replace(regex, `$1\n${message}\n$3`);
+    } else {
+      body += `\n${id}\n${message}\n${id}\n`;
+    }
+
+    this.logger.verbose.info('Creating new pr body');
+
+    const result = await this.ghub.issues.update({
+      owner: this.options.owner,
+      repo: this.options.repo,
+      issue_number: pr,
+      body
+    });
+
+    this.logger.veryVerbose.info('Got response from updating body\n', result);
+    this.logger.verbose.info(`Successfully updated body of PR #${pr}`);
 
     return result;
   }

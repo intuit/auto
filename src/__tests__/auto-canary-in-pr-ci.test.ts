@@ -26,8 +26,8 @@ describe('canary in ci', () => {
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const canary = jest.fn();
     auto.hooks.canary.tap('test', canary);
-    const createComment = jest.fn();
-    auto.git!.createComment = createComment;
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
     auto.release!.getCommits = jest.fn();
 
     await auto.canary();
@@ -41,13 +41,13 @@ describe('canary in ci', () => {
     auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
-    const createComment = jest.fn();
-    auto.git!.createComment = createComment;
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
     auto.release!.getCommits = jest.fn();
     auto.hooks.canary.tap('test', () => '1.2.4-canary.123.1');
 
     const version = await auto.canary({ pr: 123, build: 1 });
-    expect(createComment).toHaveBeenCalled();
+    expect(addToPrBody).toHaveBeenCalled();
     expect(version.newVersion).toBe('1.2.4-canary.123.1');
   });
 
@@ -58,12 +58,12 @@ describe('canary in ci', () => {
     auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
-    const createComment = jest.fn();
-    auto.git!.createComment = createComment;
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
     auto.release!.getCommits = jest.fn();
 
     await auto.canary({ pr: 123, build: 1, message: 'false' });
-    expect(createComment).not.toHaveBeenCalled();
+    expect(addToPrBody).not.toHaveBeenCalled();
   });
 
   test('can override pr and build', async () => {
@@ -72,8 +72,8 @@ describe('canary in ci', () => {
     await auto.loadConfig();
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
-    const createComment = jest.fn();
-    auto.git!.createComment = createComment;
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
     auto.release!.getCommits = jest.fn();
     auto.hooks.canary.tap('test', (bump, post) => `1.2.4-canary${post}`);
 
@@ -89,7 +89,7 @@ describe('shipit in ci', () => {
     await auto.loadConfig();
 
     auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-    auto.git!.createComment = jest.fn();
+    auto.git!.addToPrBody = jest.fn();
     auto.release!.getCommitsInRelease = () => Promise.resolve([]);
     auto.release!.getCommits = () => Promise.resolve([]);
     const canary = jest.fn();

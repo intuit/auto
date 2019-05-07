@@ -42,6 +42,10 @@ export async function run(args: ArgsType) {
       await auto.loadConfig();
       await auto.comment(args as ICommentCommandOptions);
       break;
+    case 'pr-body':
+      await auto.loadConfig();
+      await auto.prBody(args as ICommentCommandOptions);
+      break;
     case 'version':
       await auto.loadConfig();
       await auto.version();
