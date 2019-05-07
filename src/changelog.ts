@@ -108,7 +108,7 @@ export default class Changelog {
     return result;
   }
 
-  private createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
+  createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
 
     if (author.username === 'invalid-email-address') {
