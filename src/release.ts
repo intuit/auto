@@ -300,6 +300,10 @@ export default class Release {
           const labels: ILabelDefinition[] = result.edges[0].node.labels
             ? result.edges[0].node.labels.edges.map(edge => edge.node)
             : [];
+          commit.pullRequest = {
+            number: result.edges[0].node.number,
+            body: result.edges[0].node.body
+          };
           commit.labels = [
             ...labels.map(label => label.name),
             ...commit.labels
