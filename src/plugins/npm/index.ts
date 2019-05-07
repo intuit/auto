@@ -13,7 +13,7 @@ import execPromise from '../../utils/exec-promise';
 import { ILogger } from '../../utils/logger';
 import getConfigFromPackageJson from './package-config';
 
-const { isCi, ...env } = envCi();
+const { isCi } = envCi();
 const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
@@ -189,9 +189,8 @@ const getLernaPackages = async () =>
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
 const getIndependentPackageList = async () =>
   getLernaPackages().then(packages =>
-    packages.map(p => `\n - ${p.name}@${p.version}`).join('')
+    packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
   );
-
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
@@ -394,7 +393,6 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
-        const isPr = 'isPr' in env && env.isPr;
 
         await execPromise('npx', [
           'lerna',
@@ -406,7 +404,7 @@ export default class NPMPlugin implements IPlugin {
           // Locally we use sha for canary version's postFix, but the --canary flag
           // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
-          isPr ? `canary${postFix}` : 'canary',
+          `canary${postFix}`,
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
           ...verboseArgs
@@ -414,20 +412,25 @@ export default class NPMPlugin implements IPlugin {
 
         auto.logger.verbose.info('Successfully published canary version');
         const packages = await getLernaPackages();
+        const independentPackages = await getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
         if (getLernaJson().version === 'independent') {
-          return getIndependentPackageList();
+          if (!independentPackages.includes('canary')) {
+            return { error: 'No packages were changed. No canary published.' };
+          }
+
+          return independentPackages;
         }
 
-        const one = packages.find(p => Boolean(p.version));
+        const versioned = packages.find(p => p.version.includes('canary'));
 
-        if (!one) {
-          return '';
+        if (!versioned) {
+          return { error: 'No packages were changed. No canary published.' };
         }
 
-        return one.version;
+        return versioned.version;
       }
 
       auto.logger.verbose.info('Detected single npm package');
