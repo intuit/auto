@@ -185,6 +185,27 @@ export default class Git {
     }
   }
 
+  @Memoize()
+  async getPr(prNumber: number) {
+    this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
+
+    const args: Octokit.IssuesListLabelsOnIssueParams = {
+      owner: this.options.owner,
+      repo: this.options.repo,
+      issue_number: prNumber
+    };
+
+    this.logger.verbose.info('Getting issue info using:', args);
+
+    try {
+      const info = await this.ghub.issues.get(args);
+      this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
+      return info;
+    } catch (e) {
+      throw new GitAPIError('listLabelsOnIssue', args, e);
+    }
+  }
+
   async getProjectLabels() {
     this.logger.verbose.info(
       `Getting labels for project: ${this.options.repo}`

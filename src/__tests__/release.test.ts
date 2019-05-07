@@ -10,7 +10,7 @@ import makeCommitFromMsg from './make-commit-from-msg';
 const constructor = jest.fn();
 const getGitLog = jest.fn();
 const graphql = jest.fn();
-const getLabels = jest.fn();
+const getPr = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
 const getSha = jest.fn();
@@ -34,6 +34,10 @@ getProject.mockResolvedValue({
   html_url: 'https://github.com/web/site'
 });
 
+const mockLabels = (labels: string[]) => ({
+  data: { labels: labels.map(label => ({ name: label })) }
+});
+
 // @ts-ignore
 jest.mock('../git.ts', () => (...args) => {
   constructor(...args);
@@ -41,7 +45,7 @@ jest.mock('../git.ts', () => (...args) => {
     options: { owner: 'test', repo: 'test', version: '1.0.0' },
     graphql,
     getGitLog,
-    getLabels,
+    getPr,
     getLatestRelease,
     getPullRequest,
     getSha,
@@ -108,7 +112,7 @@ const git = new Git({
 describe('Release', () => {
   beforeEach(() => {
     getGitLog.mockClear();
-    getLabels.mockClear();
+    getPr.mockClear();
     writeSpy.mockClear();
     execSpy.mockClear();
     execSpy.mockClear();
@@ -396,7 +400,7 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce(commits);
       getCommitsForPR.mockReturnValueOnce(undefined);
-      getLabels.mockReturnValueOnce(['minor']);
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
       getCommitsForPR.mockReturnValueOnce([{ sha: '3' }]);
       graphql.mockReturnValueOnce({
         hash_1: { edges: [] }
@@ -416,10 +420,10 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['major']);
-      getLabels.mockReturnValueOnce(['minor']);
-      getLabels.mockReturnValueOnce(['documentation', 'internal']);
-      getLabels.mockReturnValueOnce(['patch']);
+      getPr.mockReturnValueOnce(mockLabels(['major']));
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
+      getPr.mockReturnValueOnce(mockLabels(['documentation', 'internal']));
+      getPr.mockReturnValueOnce(mockLabels(['patch']));
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
@@ -435,7 +439,7 @@ describe('Release', () => {
       getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
-      getLabels.mockReturnValueOnce(['minor']);
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
       getPullRequest.mockReturnValueOnce({
         data: {
           number: 123,
@@ -475,7 +479,7 @@ describe('Release', () => {
       getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
-      getLabels.mockReturnValueOnce(['minor']);
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
       getPullRequest.mockReturnValueOnce({
         data: {
           number: 123,
@@ -595,7 +599,7 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['minor']);
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.minor);
     });
@@ -609,9 +613,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
-      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
-      getLabels.mockReturnValueOnce(['skip-release', 'minor']);
+      getPr.mockReturnValueOnce(mockLabels(['skip-release', 'patch']));
+      getPr.mockReturnValueOnce(mockLabels(['skip-release', 'patch']));
+      getPr.mockReturnValueOnce(mockLabels(['skip-release', 'minor']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe('');
     });
@@ -625,9 +629,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['patch']);
-      getLabels.mockReturnValueOnce(['skip-release', 'patch']);
-      getLabels.mockReturnValueOnce(['skip-release', 'minor']);
+      getPr.mockReturnValueOnce(mockLabels(['patch']));
+      getPr.mockReturnValueOnce(mockLabels(['skip-release', 'patch']));
+      getPr.mockReturnValueOnce(mockLabels(['skip-release', 'minor']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.minor);
     });
@@ -641,9 +645,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['skip-release']);
-      getLabels.mockReturnValueOnce([]);
-      getLabels.mockReturnValueOnce([]);
+      getPr.mockReturnValueOnce(mockLabels(['skip-release']));
+      getPr.mockReturnValueOnce(mockLabels([]));
+      getPr.mockReturnValueOnce(mockLabels([]));
 
       expect(await gh.getSemverBump('1234', '123')).toBe('');
     });
@@ -662,9 +666,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['patch']);
-      getLabels.mockReturnValueOnce(['major']);
-      getLabels.mockReturnValueOnce(['patch']);
+      getPr.mockReturnValueOnce(mockLabels(['patch']));
+      getPr.mockReturnValueOnce(mockLabels(['major']));
+      getPr.mockReturnValueOnce(mockLabels(['patch']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe('');
     });
@@ -683,9 +687,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['release', 'patch']);
-      getLabels.mockReturnValueOnce(['patch']);
-      getLabels.mockReturnValueOnce(['minor']);
+      getPr.mockReturnValueOnce(mockLabels(['release', 'patch']));
+      getPr.mockReturnValueOnce(mockLabels(['patch']));
+      getPr.mockReturnValueOnce(mockLabels(['minor']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.minor);
     });
@@ -712,16 +716,16 @@ describe('Release', () => {
 
       // Test default labels do nothing
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['Version: Major']);
-      getLabels.mockReturnValueOnce(['Version: Patch']);
-      getLabels.mockReturnValueOnce(['Version: Minor', 'release']);
+      getPr.mockReturnValueOnce(mockLabels(['Version: Major']));
+      getPr.mockReturnValueOnce(mockLabels(['Version: Patch']));
+      getPr.mockReturnValueOnce(mockLabels(['Version: Minor', 'release']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe('');
 
       getGitLog.mockReturnValueOnce(commits);
-      getLabels.mockReturnValueOnce(['Version: Minor', 'Deploy']);
-      getLabels.mockReturnValueOnce(['Version: Major']);
-      getLabels.mockReturnValueOnce(['Version: Patch']);
+      getPr.mockReturnValueOnce(mockLabels(['Version: Minor', 'Deploy']));
+      getPr.mockReturnValueOnce(mockLabels(['Version: Major']));
+      getPr.mockReturnValueOnce(mockLabels(['Version: Patch']));
 
       expect(await gh.getSemverBump('1234', '123')).toBe(SEMVER.major);
     });
