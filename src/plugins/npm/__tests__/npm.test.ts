@@ -265,6 +265,30 @@ describe('publish', () => {
     exec.mockClear();
   });
 
+  test('throws when working dir not clean', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    exec.mockReturnValueOnce('m Somefile.txt');
+
+    await expect(hooks.version.promise(SEMVER.patch)).rejects.toBeInstanceOf(
+      Error
+    );
+  });
+
   test('should use silly logging in verbose mode', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -390,6 +414,7 @@ describe('publish', () => {
 
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
 
+    exec.mockReturnValueOnce('');
     exec.mockReturnValueOnce('1.0.0');
 
     readResult = `
@@ -416,6 +441,7 @@ describe('publish', () => {
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
+    exec.mockReturnValueOnce('');
     exec.mockReturnValueOnce('1.0.0');
 
     readResult = `
@@ -425,7 +451,7 @@ describe('publish', () => {
     `;
 
     await hooks.version.promise(SEMVER.patch);
-    expect(exec).toHaveBeenNthCalledWith(2, 'npx', [
+    expect(exec).toHaveBeenNthCalledWith(3, 'npx', [
       'lerna',
       'version',
       '1.0.1',
@@ -493,6 +519,30 @@ describe('canary', () => {
     exec.mockClear();
   });
 
+  test('throws when working dir not clean', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    exec.mockReturnValueOnce('m Somefile.txt');
+
+    await expect(
+      hooks.canary.promise(SEMVER.patch, '.123.1')
+    ).rejects.toBeInstanceOf(Error);
+  });
+
   test('use npm for normal package', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -511,8 +561,8 @@ describe('canary', () => {
     `;
 
     await hooks.canary.promise(SEMVER.patch, '.123.1');
-    expect(exec.mock.calls[0]).toContain('npm');
-    expect(exec.mock.calls[0][1]).toContain('1.2.4-canary.123.1');
+    expect(exec.mock.calls[1]).toContain('npm');
+    expect(exec.mock.calls[1][1]).toContain('1.2.4-canary.123.1');
   });
 
   test('publishes to public for scoped packages', async () => {
@@ -533,7 +583,7 @@ describe('canary', () => {
     `;
 
     await hooks.canary.promise(SEMVER.patch, '');
-    expect(exec.mock.calls[1][1]).toContain('public');
+    expect(exec.mock.calls[2][1]).toContain('public');
   });
 
   test('use lerna for monorepo package', async () => {
@@ -548,6 +598,7 @@ describe('canary', () => {
         "name": "test"
       }
     `;
+    exec.mockReturnValueOnce('');
     exec.mockReturnValue(
       Promise.resolve(
         `path/to/package:@foo/app:1.2.3-canary.0\npath/to/package:@foo/lib:1.2.3-canary.0`
@@ -555,7 +606,7 @@ describe('canary', () => {
     );
 
     const value = await hooks.canary.promise(SEMVER.patch, '');
-    expect(exec.mock.calls[0][1]).toContain('lerna');
+    expect(exec.mock.calls[1][1]).toContain('lerna');
     expect(value).toBe('1.2.3-canary.0');
   });
 
@@ -571,6 +622,7 @@ describe('canary', () => {
         "name": "test"
       }
     `;
+    exec.mockReturnValueOnce('');
     exec.mockReturnValue(
       Promise.resolve(
         `path/to/package:@foo/app:1.2.3\npath/to/package:@foo/lib:1.2.3`
@@ -596,6 +648,7 @@ describe('canary', () => {
         "name": "test"
       }
     `;
+    exec.mockReturnValueOnce('');
     exec.mockReturnValue(
       Promise.resolve(
         'path/to/package:@foo/app:1.2.4-canary.0\npath/to/package:@foo/lib:1.1.0-canary.0'
@@ -621,6 +674,7 @@ describe('canary', () => {
         "name": "test"
       }
     `;
+    exec.mockReturnValueOnce('');
     exec.mockReturnValue(
       Promise.resolve(
         'path/to/package:@foo/app:1.2.4\npath/to/package:@foo/lib:1.1.0'
