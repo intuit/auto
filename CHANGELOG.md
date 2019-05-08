@@ -1,3 +1,15 @@
+# v6.2.4 (Wed May 08 2019)
+
+#### 🐛  Bug Fix
+
+- remove getGitHubToken function [#386](https://github.com/intuit/auto/pull/386) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.2.3 (Wed May 08 2019)
 
 #### 🐛  Bug Fix
