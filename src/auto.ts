@@ -37,7 +37,6 @@ import Release, {
   VersionLabel
 } from './release';
 import SEMVER, { calculateSemVerBump } from './semver';
-import getGitHubToken from './utils/github-token';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
@@ -149,9 +148,7 @@ export default class Auto {
 
     const repository = await this.getRepo(config);
     const token =
-      repository && repository.token
-        ? repository.token
-        : await getGitHubToken(config.githubApi);
+      repository && repository.token ? repository.token : process.env.GH_TOKEN;
     const githubOptions = {
       owner: config.owner,
       repo: config.repo,
