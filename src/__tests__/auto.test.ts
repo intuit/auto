@@ -69,6 +69,13 @@ describe('Auto', () => {
     expect(auto.release).toBeDefined();
   });
 
+  test('should throw if now GH_TOKEN set', async () => {
+    const auto = new Auto({ command: 'init' });
+    auto.logger = dummyLog();
+    process.env.GH_TOKEN = undefined;
+    await expect(auto.loadConfig()).rejects.toBeInstanceOf(Error);
+  });
+
   test('should extend config', async () => {
     search.mockReturnValueOnce({ config: { ...defaults, extends: '@artsy' } });
     importMock.mockImplementation(path =>

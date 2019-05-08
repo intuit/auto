@@ -1,6 +1,5 @@
 import cosmiconfig from 'cosmiconfig';
 import merge from 'deepmerge';
-import env from 'dotenv';
 import fetch from 'node-fetch';
 import * as path from 'path';
 
@@ -43,8 +42,6 @@ export default class Config {
 
   constructor(logger: ILogger) {
     this.logger = logger;
-
-    env.config();
   }
 
   /**

@@ -150,7 +150,7 @@ export default class Auto {
     const token =
       repository && repository.token ? repository.token : process.env.GH_TOKEN;
 
-    if (!token) {
+    if (!token || token === 'undefined') {
       this.logger.log.error(
         'No GitHub was found. Make sure it is available on process.env.GH_TOKEN.'
       );
@@ -512,7 +512,7 @@ export default class Auto {
       const result = await this.hooks.canary.promise(version, canaryVersion);
 
       if (typeof result === 'object') {
-        this.logger.log.error(result.error);
+        this.logger.log.warn(result.error);
         return;
       }
 
