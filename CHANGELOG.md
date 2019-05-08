@@ -1,3 +1,15 @@
+# v6.2.5 (Wed May 08 2019)
+
+#### 📝  Documentation
+
+- Fix typo in introduction documentation [#391](https://github.com/intuit/auto/pull/391) ([@djpowers](https://github.com/djpowers))
+
+#### Authors: 1
+
+- Dave Powers ([@djpowers](https://github.com/djpowers))
+
+---
+
 # v6.2.4 (Wed May 08 2019)
 
 #### 🐛  Bug Fix
