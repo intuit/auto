@@ -191,6 +191,21 @@ const getIndependentPackageList = async () =>
   getLernaPackages().then(packages =>
     packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
   );
+
+const checkClean = async (auto: Auto) => {
+  const status = await execPromise('git', ['status', '--porcelain']);
+
+  if (!status) {
+    return;
+  }
+
+  auto.logger.log.error('Changed Files:\n', status);
+
+  throw new Error(
+    'Working direction is not clean, make sure all files are commited'
+  );
+};
+
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
@@ -354,6 +369,8 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
+      await checkClean(auto);
+
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
@@ -386,6 +403,8 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
+      await checkClean(auto);
+
       if (this.setRcToken) {
         await setTokenOnCI();
         auto.logger.verbose.info('Set CI NPM_TOKEN');
