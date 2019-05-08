@@ -516,7 +516,7 @@ export default class Auto {
         options.message || 'Published PR with canary version: `%v`';
 
       if (message !== 'false' && env.isCi) {
-        this.prBody({
+        await this.prBody({
           message: message.replace('%v', newVersion),
           context: 'canary-version'
         });
