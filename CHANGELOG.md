@@ -1,3 +1,15 @@
+# v6.2.3 (Wed May 08 2019)
+
+#### 🐛  Bug Fix
+
+- use correct variable in pr-body success message [#389](https://github.com/intuit/auto/pull/389) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.2.2 (Tue May 07 2019)
 
 #### 🐛  Bug Fix
