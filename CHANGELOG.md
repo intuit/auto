@@ -1,3 +1,15 @@
+# v6.2.2 (Tue May 07 2019)
+
+#### 🐛  Bug Fix
+
+- must await posting to the PR body [#388](https://github.com/intuit/auto/pull/388) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.2.1 (Tue May 07 2019)
 
 #### 🐛  Bug Fix
