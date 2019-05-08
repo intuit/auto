@@ -149,6 +149,14 @@ export default class Auto {
     const repository = await this.getRepo(config);
     const token =
       repository && repository.token ? repository.token : process.env.GH_TOKEN;
+
+    if (!token) {
+      this.logger.log.error(
+        'No GitHub was found. Make sure it is available on process.env.GH_TOKEN.'
+      );
+      throw new Error('GitHub token not found!');
+    }
+
     const githubOptions = {
       owner: config.owner,
       repo: config.repo,
