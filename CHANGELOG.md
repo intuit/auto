@@ -1,3 +1,15 @@
+# v6.2.0 (Tue May 07 2019)
+
+#### 🚀  Enhancement
+
+- Error on uncommited files when before running canary + version [#384](https://github.com/intuit/auto/pull/384) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.1.1 (Tue May 07 2019)
 
 #### 🐛  Bug Fix
