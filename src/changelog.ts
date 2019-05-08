@@ -41,6 +41,9 @@ export interface IChangelogHooks {
   >;
 }
 
+const getHeaderDepth = (line: string) =>
+  line.split('').reduce((count, char) => (char === '#' ? count + 1 : count), 0);
+
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));
 
@@ -295,7 +298,7 @@ export default class Changelog {
         return;
       }
 
-      const title = /^> [#]{0,5} Release Notes$/;
+      const title = /^[#]{0,5}[ ]*[R|r]elease [N|n]otes$/;
       const lines = pr.body.split('\n').map(line => line.replace(/\r$/, ''));
       const notesStart = lines.findIndex(line => Boolean(line.match(title)));
 
@@ -303,25 +306,27 @@ export default class Changelog {
         return;
       }
 
+      const depth = getHeaderDepth(lines[notesStart]);
       visited.add(pr.number);
       let notes = '';
 
       for (let index = notesStart; index < lines.length; index++) {
         const line = lines[index];
+        const isTitle = line.match(title);
 
-        if (!line.startsWith('>')) {
+        if (line.startsWith('#') && getHeaderDepth(line) <= depth && !isTitle) {
           break;
         }
 
-        if (!line.match(title)) {
-          notes += line.slice(2);
+        if (!isTitle) {
+          notes += `${line}\n`;
         }
       }
 
       section += dedent`
         _From #${pr.number}_
 
-        ${notes}\n\n
+        ${notes.trim()}\n\n
       `;
     });
 

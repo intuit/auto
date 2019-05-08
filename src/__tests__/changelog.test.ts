@@ -1,3 +1,4 @@
+import dedent from 'dedent';
 import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
 import { defaultLabelDefinition } from '../release';
@@ -305,6 +306,70 @@ describe('generateReleaseNotes', () => {
         labels: ['Version: Minor']
       }
     ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('should add additional release notes', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+    commits[0].pullRequest!.body = dedent`
+      # Why
+
+      Some words
+
+      ## Release Notes
+
+      Here is how you upgrade
+
+      ## Todo
+
+      - [ ] add tests
+    `;
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('additional release notes should be able to contain sub-headers', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+    commits[0].pullRequest!.body = dedent`
+      # Why
+
+      Some words
+
+      ## Release Notes
+
+      Here is how you upgrade
+
+      ### Things you should really know
+
+      Bam!?
+
+      ## Todo
+
+      - [ ] add tests
+    `;
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });

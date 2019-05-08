@@ -19,6 +19,30 @@ exports[`Hooks title 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes additional release notes should be able to contain sub-headers 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+### Things you should really know
+
+Bam!?
+
+---"
+`;
+
+exports[`generateReleaseNotes should add additional release notes 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+---"
+`;
+
 exports[`generateReleaseNotes should be able to customize pushToBaseBranch title 1`] = `
 "#### 🚀  Enhancement
 
