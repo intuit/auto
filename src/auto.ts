@@ -428,7 +428,7 @@ export default class Auto {
     } else {
       const prNumber = this.getPrNumber('pr-body', pr);
       await this.git.addToPrBody(message, prNumber, context);
-      this.logger.log.success(`Updated body on PR #${pr}`);
+      this.logger.log.success(`Updated body on PR #${prNumber}`);
     }
   }
 
