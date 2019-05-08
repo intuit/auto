@@ -601,7 +601,7 @@ describe('canary', () => {
     exec.mockReturnValueOnce('');
     exec.mockReturnValue(
       Promise.resolve(
-        `path/to/package:@foo/app:1.2.3-canary.0\npath/to/package:@foo/lib:1.2.3-canary.0`
+        `path/to/package:@foo/app:1.2.3-canary.0+abcd\npath/to/package:@foo/lib:1.2.3-canary.0+abcd`
       )
     );
 

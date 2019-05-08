@@ -200,7 +200,6 @@ const checkClean = async (auto: Auto) => {
   }
 
   auto.logger.log.error('Changed Files:\n', status);
-
   throw new Error(
     'Working direction is not clean, make sure all files are commited'
   );
@@ -449,7 +448,7 @@ export default class NPMPlugin implements IPlugin {
           return { error: 'No packages were changed. No canary published.' };
         }
 
-        return versioned.version;
+        return versioned.version.split('+')[0];
       }
 
       auto.logger.verbose.info('Detected single npm package');
