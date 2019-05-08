@@ -97,7 +97,6 @@ const slackSpy = jest.fn();
 
 jest.mock('../utils/slack.ts', () => () => slackSpy());
 jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
-jest.mock('../utils/github-token', () => async () => ({}));
 
 const logParse = new LogParse();
 const git = new Git({
