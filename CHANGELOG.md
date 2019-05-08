@@ -1,3 +1,19 @@
+# v6.2.1 (Tue May 07 2019)
+
+#### 🐛  Bug Fix
+
+- split off useless hash from version [#387](https://github.com/intuit/auto/pull/387) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- update deps for things greenkeeper failed on [#385](https://github.com/intuit/auto/pull/385) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.2.0 (Tue May 07 2019)
 
 #### 🚀  Enhancement
