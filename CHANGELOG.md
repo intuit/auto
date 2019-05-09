@@ -1,3 +1,19 @@
+# v6.3.4 (Thu May 09 2019)
+
+#### 🐛  Bug Fix
+
+- conventional-commit plugin: should omit PR merge commits when a commit in the PR has CC commit message [#395](https://github.com/intuit/auto/pull/395) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📚 Blog Post
+
+- conventional-commits plugin blog post [#394](https://github.com/intuit/auto/pull/394) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.3.3 (Thu May 09 2019)
 
 #### 📝  Documentation
