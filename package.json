@@ -90,7 +90,7 @@
     "all-contributors-cli": "^6.4.0",
     "graphql": "^14.2.1",
     "husky": "^2.0.0",
-    "ignite": "^1.8.1",
+    "ignite": "^1.8.2",
     "jest": "~24.5.0",
     "lint-staged": "^8.1.6",
     "prettier": "^1.16.4",
