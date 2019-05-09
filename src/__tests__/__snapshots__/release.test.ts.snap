@@ -12,6 +12,7 @@ exports[`Release buildSearchQuery generates a valid query 1`] = `
               ... on PullRequest {
                 number
                 state
+                body
                 labels(first: 10) {
                   edges {
                     node {
@@ -31,6 +32,7 @@ exports[`Release buildSearchQuery generates a valid query 1`] = `
               ... on PullRequest {
                 number
                 state
+                body
                 labels(first: 10) {
                   edges {
                     node {

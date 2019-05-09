@@ -57,6 +57,7 @@ interface ISearchEdge {
   node: {
     number: number;
     state: 'MERGED' | 'CLOSED' | 'OPEN';
+    body: string;
     labels: {
       edges: [
         {
@@ -211,6 +212,7 @@ export default class Release {
               ... on PullRequest {
                 number
                 state
+                body
                 labels(first: 10) {
                   edges {
                     node {
@@ -298,6 +300,10 @@ export default class Release {
           const labels: ILabelDefinition[] = result.edges[0].node.labels
             ? result.edges[0].node.labels.edges.map(edge => edge.node)
             : [];
+          commit.pullRequest = {
+            number: result.edges[0].node.number,
+            body: result.edges[0].node.body
+          };
           commit.labels = [
             ...labels.map(label => label.name),
             ...commit.labels
@@ -502,7 +508,7 @@ export default class Release {
    * Calculate the SEMVER bump over a range of commits using the PR labels
    *
    * @param from Tag or SHA to start at
-   * @param to Tage or SHA to end at (defaults to HEAD)
+   * @param to Tag or SHA to end at (defaults to HEAD)
    */
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
@@ -558,8 +564,8 @@ export default class Release {
   private async createLogParse() {
     const logParse = new LogParse();
 
-    logParse.hooks.parseCommit.tapPromise('Labels', async commit =>
-      this.addLabelsToCommit(commit)
+    logParse.hooks.parseCommit.tapPromise('PR Information', commit =>
+      this.addPrInfoToCommit(commit)
     );
     logParse.hooks.parseCommit.tapPromise('PR Commits', async commit => {
       const prsSinceLastRelease = await this.getPRsSinceLastRelease();
@@ -606,19 +612,25 @@ export default class Release {
   }
 
   /**
-   * Add the PR labels to the commit
+   * Add the PR info (labels and body) to the commit
    *
    * @param commits Commits to modify
    */
-  private async addLabelsToCommit(commit: IExtendedCommit) {
+  private async addPrInfoToCommit(commit: IExtendedCommit) {
     if (!commit.labels) {
       commit.labels = [];
     }
 
     if (commit.pullRequest) {
-      const labels =
-        (await this.git.getLabels(commit.pullRequest.number)) || [];
+      const info = await this.git.getPr(commit.pullRequest.number);
+
+      if (!info || !info.data) {
+        return commit;
+      }
+
+      const labels = info ? info.data.labels.map(l => l.name) : [];
       commit.labels = [...labels, ...commit.labels];
+      commit.pullRequest.body = info.data.body;
     }
 
     return commit;
