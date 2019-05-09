@@ -1,3 +1,15 @@
+# v6.3.0 (Wed May 08 2019)
+
+#### 🚀  Enhancement
+
+- Release notes [#380](https://github.com/intuit/auto/pull/380) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.2.6 (Wed May 08 2019)
 
 #### ⚠️  Pushed to master
