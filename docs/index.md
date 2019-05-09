@@ -32,6 +32,7 @@
   - [Writing Plugins](pages/writing-plugins.md)
   - [NPM](pages/npm.md)
   - [Chrome Web Store](pages/chrome.md)
+  - [Conventional Commits](pages/conventional-commits.md)
   - [Released](pages/released.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
