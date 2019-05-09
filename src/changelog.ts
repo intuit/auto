@@ -128,31 +128,30 @@ export default class Changelog {
    */
   private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
+    const order = ['major', 'minor', 'patch'];
+    const sections = Object.values(this.options.labels)
+      .filter(label => label.title)
+      .sort((a, b) => {
+        const bIndex = order.indexOf(b.name) + 1 || order.length + 1;
+        const aIndex = order.indexOf(a.name) + 1 || order.length + 1;
+        return aIndex - bIndex;
+      });
 
     commits
-      .filter(commit => commit.labels.length === 0)
-      .map(commit => commit.labels.push('patch'));
-
-    const sections = Object.values(this.options.labels).filter(
-      label => label.title
-    );
+      .filter(({ labels }) => labels.length === 0)
+      .map(({ labels }) => labels.push('patch'));
 
     return Object.assign(
       {},
       ...sections.map(label => {
         const matchedCommits = filterLabel(currentCommits, label.name);
-
-        if (matchedCommits.length === 0) {
-          return {};
-        }
-
         currentCommits = currentCommits.filter(
           commit => !matchedCommits.includes(commit)
         );
 
-        return {
-          [label.name]: matchedCommits
-        };
+        return matchedCommits.length === 0
+          ? {}
+          : { [label.name]: matchedCommits };
       })
     );
   }

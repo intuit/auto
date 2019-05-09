@@ -479,6 +479,20 @@ describe('github', () => {
     });
   });
 
+  describe('getPr ', () => {
+    test('return pr', async () => {
+      const gh = new Git(options);
+      get.mockReturnValueOnce({ success: true });
+      expect(await gh.getPr(123)).toEqual({ success: true });
+    });
+
+    test('throw for errors', async () => {
+      const gh = new Git(options);
+      get.mockRejectedValueOnce(Error);
+      await expect(gh.getPr(120)).rejects.toBeTruthy();
+    });
+  });
+
   test('updateLabel', async () => {
     const gh = new Git(options);
 

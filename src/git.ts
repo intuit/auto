@@ -202,7 +202,7 @@ export default class Git {
       this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
       return info;
     } catch (e) {
-      throw new GitAPIError('listLabelsOnIssue', args, e);
+      throw new GitAPIError('getPr', args, e);
     }
   }
 
