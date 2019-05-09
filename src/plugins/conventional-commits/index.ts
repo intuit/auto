@@ -31,6 +31,34 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
         return commit;
       });
+
+      // should omit PR commit if there exists a commit with a CC commit message
+      logParse.hooks.omitCommit.tapPromise(this.name, async commit => {
+        // tslint:disable-next-line early-exit
+        if (
+          auto.git &&
+          auto.release &&
+          commit.pullRequest &&
+          commit.labels.length === 0
+        ) {
+          const lastRelease = await auto.git.getLatestRelease();
+          const allCommits = await auto.release.getCommits(lastRelease);
+          const prCommits = await auto.git.getCommitsForPR(
+            commit.pullRequest.number
+          );
+          const allPrCommitHashes = prCommits.reduce(
+            (all, pr) => [...all, pr.sha],
+            [] as string[]
+          );
+          const extendedCommitsInPr = allCommits.filter(c =>
+            allPrCommitHashes.includes(c.hash)
+          );
+
+          return Boolean(
+            extendedCommitsInPr.find(c => Boolean(parse(c.subject)[0].header))
+          );
+        }
+      });
     });
   }
 }

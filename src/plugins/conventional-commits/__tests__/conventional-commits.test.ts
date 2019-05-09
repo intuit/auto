@@ -1,8 +1,12 @@
 import ConventionalCommitsPlugin from '..';
 import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
 import Auto from '../../../auto';
+import Git from '../../../git';
 import LogParse from '../../../log-parse';
-import { defaultLabelDefinition, getVersionMap } from '../../../release';
+import Release, {
+  defaultLabelDefinition,
+  getVersionMap
+} from '../../../release';
 import { dummyLog } from '../../../utils/logger';
 import { makeHooks, makeLogParseHooks } from '../../../utils/make-hooks';
 
@@ -71,4 +75,76 @@ test('should add major semver label to commit', async () => {
     ...commit,
     labels: ['major']
   });
+});
+
+test('should not include label-less head commit if any other commit in PR has conventional commit message', async () => {
+  const commit = makeCommitFromMsg('Merge pull request #123 from some-pr\n\n');
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const logParse = new LogParse();
+  const autoHooks = makeHooks();
+  const mockGit = ({
+    getUserByEmail: jest.fn(),
+    searchRepo: jest.fn(),
+    getCommitDate: jest.fn(),
+    getFirstCommit: jest.fn(),
+    getPr: jest.fn(),
+    getLatestRelease: () => Promise.resolve('1.2.3'),
+    getGitLog: () =>
+      Promise.resolve([
+        commit,
+        makeCommitFromMsg('fix: child commit', { hash: '1' }),
+        makeCommitFromMsg('unrelated', { hash: '2' })
+      ]),
+    getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
+  } as unknown) as Git;
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabelDefinition,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: mockGit,
+    release: new Release(mockGit)
+  } as Auto);
+
+  autoHooks.onCreateLogParse.call(logParse);
+
+  const result = await logParse.normalizeCommit(commit);
+  expect(result).toBeUndefined();
+});
+
+test('should not include labeled head commit', async () => {
+  const commit = makeCommitFromMsg('Merge pull request #123 from some-pr\n\n', {
+    labels: ['major']
+  });
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const logParse = new LogParse();
+  const autoHooks = makeHooks();
+  const mockGit = ({
+    getUserByEmail: jest.fn(),
+    searchRepo: jest.fn(),
+    getCommitDate: jest.fn(),
+    getFirstCommit: jest.fn(),
+    getPr: jest.fn(),
+    getLatestRelease: () => Promise.resolve('1.2.3'),
+    getGitLog: () =>
+      Promise.resolve([
+        commit,
+        makeCommitFromMsg('fix: child commit', { hash: '1' }),
+        makeCommitFromMsg('unrelated', { hash: '2' })
+      ]),
+    getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
+  } as unknown) as Git;
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabelDefinition,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: mockGit,
+    release: new Release(mockGit)
+  } as Auto);
+
+  autoHooks.onCreateLogParse.call(logParse);
+
+  const result = await logParse.normalizeCommit(commit);
+  expect(result).toBeDefined();
 });
