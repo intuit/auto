@@ -1,3 +1,15 @@
+# v6.3.1 (Wed May 08 2019)
+
+#### 🐛  Bug Fix
+
+- ensure major minor and patch get to changelog in that order [#392](https://github.com/intuit/auto/pull/392) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.3.0 (Wed May 08 2019)
 
 #### 🚀  Enhancement
