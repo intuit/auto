@@ -257,13 +257,16 @@ describe('generateReleaseNotes', () => {
 
   test('should be able to customize pushToBaseBranch title', async () => {
     const options = testOptions();
-    options.labels.pushToBaseBranch = {
-      name: 'pushToBaseBranch',
-      title: 'Custom Title',
-      description: 'N/A'
+    options.labels = {
+      ...options.labels,
+      pushToBaseBranch: {
+        name: 'pushToBaseBranch',
+        title: 'Custom Title',
+        description: 'N/A'
+      }
     };
 
-    const changelog = new Changelog(dummyLog(), testOptions());
+    const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
@@ -288,13 +291,16 @@ describe('generateReleaseNotes', () => {
 
   test('should be able to customize titles', async () => {
     const options = testOptions();
-    options.labels.minor = {
-      name: 'Version: Minor',
-      title: 'Woo Woo New Features',
-      description: 'N/A'
+    options.labels = {
+      ...options.labels,
+      minor: {
+        name: 'Version: Minor',
+        title: 'Woo Woo New Features',
+        description: 'N/A'
+      }
     };
 
-    const changelog = new Changelog(dummyLog(), testOptions());
+    const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
@@ -372,5 +378,29 @@ describe('generateReleaseNotes', () => {
     `;
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test("doesn't add additional release notes when there are none", async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+    commits[0].pullRequest!.body = dedent`
+      # Why
+
+      Some words
+    `;
+
+    const res = await changelog.generateReleaseNotes(commits);
+    console.log(res);
+    // expect(res).toMatchSnapshot();
   });
 });

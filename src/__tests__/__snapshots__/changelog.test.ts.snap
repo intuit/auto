@@ -30,7 +30,15 @@ Here is how you upgrade
 
 Bam!?
 
----"
+---
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should add additional release notes 1`] = `
@@ -40,7 +48,15 @@ _From #1235_
 
 Here is how you upgrade
 
----"
+---
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`generateReleaseNotes should be able to customize pushToBaseBranch title 1`] = `
