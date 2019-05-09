@@ -258,16 +258,32 @@ describe('generateReleaseNotes', () => {
   test('should order the section major, minor, patch, then the rest', async () => {
     const options = testOptions();
     options.labels = {
+      documentation: options.labels.documentation,
+      internal: options.labels.internal,
       patch: options.labels.patch,
       minor: options.labels.minor,
-      major: options.labels.major,
-      internal: options.labels.internal
+      major: options.labels.major
     };
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
+      {
+        hash: '0a',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'something\n\n',
+        labels: ['internal']
+      },
+      {
+        hash: '0',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'docs\n\n',
+        labels: ['documentation']
+      },
+
       {
         hash: '1',
         authorName: 'Adam Dierkens',

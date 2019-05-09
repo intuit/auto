@@ -175,6 +175,14 @@ exports[`generateReleaseNotes should order the section major, minor, patch, then
 
 - I was a push to master  (adam@dierkens.com)
 
+#### 📝  Documentation
+
+- docs  (adam@dierkens.com)
+
+#### 🏠  Internal
+
+- something  (adam@dierkens.com)
+
 #### Authors: 1
 
 - Adam Dierkens (adam@dierkens.com)"
