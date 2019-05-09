@@ -1,3 +1,15 @@
+# v6.2.6 (Wed May 08 2019)
+
+#### ⚠️  Pushed to master
+
+- add better logs when setting git user  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+
+#### Authors: 1
+
+- [@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com)
+
+---
+
 # v6.2.5 (Wed May 08 2019)
 
 #### 📝  Documentation
