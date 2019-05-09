@@ -1,3 +1,15 @@
+# v6.3.3 (Thu May 09 2019)
+
+#### 📝  Documentation
+
+- Fix grammar in getting started documentation [#396](https://github.com/intuit/auto/pull/396) ([@djpowers](https://github.com/djpowers))
+
+#### Authors: 1
+
+- Dave Powers ([@djpowers](https://github.com/djpowers))
+
+---
+
 # v6.3.1 (Wed May 08 2019)
 
 #### 🐛  Bug Fix
