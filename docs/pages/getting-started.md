@@ -12,7 +12,7 @@ If you are using enterprise github `auto` lets you configure the github API URL 
 
 ### Project already published
 
-If you're project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
+If your project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
 
 To tag your last release find that last commit where you bumped the version and run the following commands with your version number.
 
