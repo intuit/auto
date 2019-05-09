@@ -13,7 +13,7 @@ The main alternative to auto works in a slightly different way, [semantic-releas
 
 ![Why not both](https://i.giphy.com/media/cjYH0IhoWiQk8/giphy.webp) /.mediumImage\
 
-That's exactly why we made the [conventional-commits plugin](). It allows you to keep you conventional commit work flow but still get the benefits of PR labels based automation.
+That's exactly why we made the [conventional-commits plugin](). It allows you to keep your conventional commit work flow but still get the benefits of PR labels based automation.
 
 To start using conventional commit style commit messages simply add the following to your auto config.
 
