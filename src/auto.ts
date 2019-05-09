@@ -809,6 +809,10 @@ export default class Auto {
       await execPromise('git', ['config', 'user.email']);
       await execPromise('git', ['config', 'user.name']);
     } catch (error) {
+      this.logger.verbose.warn(
+        'Could not find git user or email configured in environment'
+      );
+
       if (!env.isCi) {
         this.logger.log.note(
           `Detected local environment, will not set git user. This happens automatically in a CI environment.
@@ -826,17 +830,25 @@ If a command fails manually run:
       }
 
       let { email, name } = this.release.options;
+      this.logger.verbose.warn(
+        `Got author from options: email: ${email}, name ${name}`
+      );
       const packageAuthor = await this.hooks.getAuthor.promise();
+      this.logger.verbose.warn(
+        `Got author: ${JSON.stringify(packageAuthor, undefined, 2)}`
+      );
 
       email = packageAuthor ? packageAuthor.email : email;
       name = packageAuthor ? packageAuthor.name : name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);
+        this.logger.verbose.warn(`Set git email to ${email}`);
       }
 
       if (name) {
         await execPromise('git', ['config', 'user.name', `"${name}"`]);
+        this.logger.verbose.warn(`Set git name to ${name}`);
       }
     }
   }
