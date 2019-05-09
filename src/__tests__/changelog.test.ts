@@ -255,6 +255,45 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
+  test('should order the section major, minor, patch, then the rest', async () => {
+    const options = testOptions();
+    options.labels = {
+      patch: options.labels.patch,
+      minor: options.labels.minor,
+      major: options.labels.major,
+      internal: options.labels.internal
+    };
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '1',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'I was a push to master\n\n',
+        labels: ['patch']
+      },
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      },
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['major']
+      }
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
   test('should be able to customize pushToBaseBranch title', async () => {
     const options = testOptions();
     options.labels = {

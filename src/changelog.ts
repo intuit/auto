@@ -133,9 +133,17 @@ export default class Changelog {
       .filter(commit => commit.labels.length === 0)
       .map(commit => commit.labels.push('patch'));
 
-    const sections = Object.values(this.options.labels).filter(
-      label => label.title
+    const ordered: ILabelDefinitionMap = Object.assign(
+      {
+        major: this.options.labels.major,
+        minor: this.options.labels.minor,
+        patch: this.options.labels.patch
+      },
+      ...Object.entries(this.options.labels)
+        .filter(([key]) => !['major', 'minor', 'patch'].includes(key))
+        .map(([key, value]) => ({ [key]: value }))
     );
+    const sections = Object.values(ordered).filter(label => label.title);
 
     return Object.assign(
       {},

@@ -162,6 +162,24 @@ exports[`generateReleaseNotes should omit authors with invalid email addresses 1
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234)"
 `;
 
+exports[`generateReleaseNotes should order the section major, minor, patch, then the rest 1`] = `
+"#### 💥  Breaking Change
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I was a push to master  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
 "#### 🐛  Bug Fix
 
