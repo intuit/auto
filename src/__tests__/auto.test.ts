@@ -559,6 +559,33 @@ describe('Auto', () => {
       await auto.comment({ pr: 10, message: 'foo' });
       expect(createComment).toHaveBeenCalled();
     });
+
+    test('should delete a comment', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const deleteComment = jest.fn();
+      auto.git!.deleteComment = deleteComment;
+
+      await auto.comment({ pr: 10, delete: true });
+      expect(deleteComment).toHaveBeenCalled();
+    });
+
+    test('should not delete a comment in dry run mode', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const deleteComment = jest.fn();
+      auto.git!.deleteComment = deleteComment;
+
+      await auto.comment({ pr: 10, message: 'foo bar', dryRun: true });
+      expect(deleteComment).not.toHaveBeenCalled();
+
+      await auto.comment({ pr: 10, delete: true, dryRun: true });
+      expect(deleteComment).not.toHaveBeenCalled();
+    });
   });
 
   describe('prBody', () => {
@@ -581,6 +608,33 @@ describe('Auto', () => {
 
       await auto.prBody({ pr: 10, message: 'foo' });
       expect(addToPrBody).toHaveBeenCalled();
+    });
+
+    test('should delete old pr body update', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToPrBody = jest.fn();
+      auto.git!.addToPrBody = addToPrBody;
+
+      await auto.prBody({ pr: 10, delete: true });
+      expect(addToPrBody).toHaveBeenCalledWith('', 10, 'default');
+    });
+
+    test('should not update pr body a dry run mode', async () => {
+      const auto = new Auto({ command: 'comment', ...defaults });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToPrBody = jest.fn();
+      auto.git!.addToPrBody = addToPrBody;
+
+      await auto.prBody({ pr: 10, message: 'foo bar', dryRun: true });
+      expect(addToPrBody).not.toHaveBeenCalled();
+
+      await auto.prBody({ pr: 10, delete: true, dryRun: true });
+      expect(addToPrBody).not.toHaveBeenCalled();
     });
   });
 

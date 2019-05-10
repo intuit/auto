@@ -60,4 +60,17 @@ describe('root parser', () => {
       dryRun: true
     });
   });
+
+  test('error when on in array of options to is not present', () => {
+    process.exit = jest.fn() as any;
+    parseArgs(['comment']);
+    expect(process.exit).toHaveBeenCalled();
+  });
+
+  test('allow array of options to or', () => {
+    expect(parseArgs(['comment', '--message', 'foo'])).toEqual({
+      command: 'comment',
+      message: 'foo'
+    });
+  });
 });

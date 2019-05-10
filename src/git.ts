@@ -460,10 +460,8 @@ export default class Git {
     return result;
   }
 
-  async createComment(message: string, pr: number, context = 'default') {
+  async deleteComment(pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
-
-    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
 
     this.logger.verbose.info('Getting previous comments on:', pr);
 
@@ -479,21 +477,30 @@ export default class Git {
       comment.body.includes(commentIdentifier)
     );
 
-    if (oldMessage) {
-      this.logger.verbose.info('Found previous message from same scope.');
-      this.logger.verbose.info('Deleting previous comment');
-
-      await this.ghub.issues.deleteComment({
-        owner: this.options.owner,
-        repo: this.options.repo,
-        comment_id: oldMessage.id
-      });
-
-      this.logger.verbose.info('Successfully deleted previous comment');
+    if (!oldMessage) {
+      return;
     }
 
-    this.logger.verbose.info('Creating new comment');
+    this.logger.verbose.info('Found previous message from same scope.');
+    const commentId = oldMessage.id;
 
+    this.logger.verbose.info(`Deleting comment: ${commentId}`);
+
+    await this.ghub.issues.deleteComment({
+      owner: this.options.owner,
+      repo: this.options.repo,
+      comment_id: commentId
+    });
+
+    this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
+  }
+
+  async createComment(message: string, pr: number, context = 'default') {
+    const commentIdentifier = makeCommentIdentifier(context);
+
+    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
+    await this.deleteComment(pr, context);
+    this.logger.verbose.info('Creating new comment');
     const result = await this.ghub.issues.createComment({
       owner: this.options.owner,
       repo: this.options.repo,
@@ -529,10 +536,9 @@ export default class Git {
     if (body.match(regex)) {
       this.logger.verbose.info('Found previous message from same scope.');
       this.logger.verbose.info('Replacing pr body comment');
-
-      body = body.replace(regex, `$1\n${message}\n$3`);
+      body = body.replace(regex, message ? `$1\n${message}\n$3` : '');
     } else {
-      body += `\n${id}\n${message}\n${id}\n`;
+      body += message ? `\n${id}\n${message}\n${id}\n` : '';
     }
 
     this.logger.verbose.info('Creating new pr body');
