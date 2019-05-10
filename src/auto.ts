@@ -457,7 +457,7 @@ export default class Auto {
   /**
    * Make a release to the git remote with the changes.
    */
-  async runRelease(options: IReleaseCommandOptions) {
+  async runRelease(options: IReleaseCommandOptions = {}) {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease(options);
   }

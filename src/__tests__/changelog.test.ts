@@ -455,7 +455,6 @@ describe('generateReleaseNotes', () => {
     `;
 
     const res = await changelog.generateReleaseNotes(commits);
-    console.log(res);
-    // expect(res).toMatchSnapshot();
+    expect(res).toMatchSnapshot();
   });
 });
