@@ -382,7 +382,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'comment',
-    summary: 'Comment on a pull request with a markdown message',
+    summary:
+      'Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.',
     require: [['message', 'delete']],
     options: [
       pr,
@@ -393,13 +394,14 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
+      '{green $} auto comment --delete',
       '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
     ]
   },
   {
     name: 'pr-body',
     summary:
-      'Update the body of a PR with a message. Appends to PR and will not overwrite user content',
+      'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
     require: [['message', 'delete']],
     options: [
       pr,
@@ -410,6 +412,7 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: [
+      '{green $} auto pr-body --delete',
       '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"'
     ]
   },
