@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { gt, inc, parse, ReleaseType } from 'semver';
+import { eq, gt, inc, parse, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -763,25 +763,32 @@ export default class Auto {
       return;
     }
 
-    const version = parse(rawVersion)
+    const newVersion = parse(rawVersion)
       ? this.prefixRelease(rawVersion)
       : rawVersion;
 
+    if (!dryRun && eq(newVersion, lastRelease)) {
+      this.logger.log.error(
+        `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
+      );
+      return;
+    }
+
     if (!dryRun) {
-      this.logger.log.info(`Releasing ${version} to GitHub.`);
-      await this.git.publish(releaseNotes, version);
+      this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
+      await this.git.publish(releaseNotes, newVersion);
 
       if (slack || (this.config && this.config.slack)) {
         this.logger.log.info('Posting release to slack');
-        await this.release.postToSlack(releaseNotes, version);
+        await this.release.postToSlack(releaseNotes, newVersion);
       }
     } else {
-      this.logger.log.info(`Would have released: ${version}`);
+      this.logger.log.info(`Would have released: ${newVersion}`);
     }
 
-    await this.hooks.afterRelease.promise(version, commitsInRelease);
+    await this.hooks.afterRelease.promise(newVersion, commitsInRelease);
 
-    return version;
+    return newVersion;
   }
 
   private readonly prefixRelease = (release: string) => {
