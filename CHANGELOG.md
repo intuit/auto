@@ -1,3 +1,15 @@
+# v6.3.5 (Thu May 09 2019)
+
+#### 🐛  Bug Fix
+
+- lerna no-force-publish release conflict [#399](https://github.com/intuit/auto/pull/399) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.3.4 (Thu May 09 2019)
 
 #### 🐛  Bug Fix
