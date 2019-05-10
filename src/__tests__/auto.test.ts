@@ -720,6 +720,7 @@ describe('Auto', () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       auto.git!.getSha = () => Promise.resolve('abc');
+      auto.git!.addToPrBody = jest.fn();
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
@@ -728,6 +729,7 @@ describe('Auto', () => {
 
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1.abc');
+      expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
     test("doesn't comment if there is an error", async () => {
