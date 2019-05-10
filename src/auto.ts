@@ -768,7 +768,7 @@ export default class Auto {
       : rawVersion;
 
     if (!dryRun && eq(newVersion, lastRelease)) {
-      this.logger.log.error(
+      this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
       );
       return;
