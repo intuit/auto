@@ -41,6 +41,16 @@ Bam!?
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes doesn't add additional release notes when there are none 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should add additional release notes 1`] = `
 "### Release Notes
 

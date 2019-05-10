@@ -671,6 +671,26 @@ describe('Auto', () => {
     });
   });
 
+  describe('release', () => {
+    test("doesn't try to overwrite releases", async () => {
+      const auto = new Auto({ command: 'release', ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.generateReleaseNotes = jest.fn();
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      auto.hooks.getPreviousVersion.tap('test', () => '1.2.3');
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap('test', afterRelease);
+      auto.release!.getCommits = jest.fn();
+
+      await auto.runRelease();
+      expect(afterRelease).not.toHaveBeenCalled();
+    });
+  });
+
   describe('canary', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto({ command: 'comment', ...defaults });
