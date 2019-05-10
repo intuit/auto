@@ -468,18 +468,18 @@ export default class Auto {
     }
 
     // SailEnv falls back to commit SHA
-    let preId: string | undefined;
+    let pr: string | undefined;
     let build: string | undefined;
 
     if ('pr' in env && 'build' in env) {
-      preId = env.pr;
+      ({ pr } = env);
       ({ build } = env);
     } else if ('pr' in env && 'commit' in env) {
-      preId = env.pr;
+      ({ pr } = env);
       build = env.commit;
     }
 
-    preId = options.pr ? String(options.pr) : preId;
+    pr = options.pr ? String(options.pr) : pr;
     build = options.build ? String(options.build) : build;
 
     const head = await this.release.getCommitsInRelease('HEAD^');
@@ -489,8 +489,8 @@ export default class Auto {
       SEMVER.patch;
     let canaryVersion = '';
 
-    if (preId) {
-      canaryVersion = `${canaryVersion}.${preId}`;
+    if (pr) {
+      canaryVersion = `${canaryVersion}.${pr}`;
     }
 
     if (build) {
@@ -520,8 +520,9 @@ export default class Auto {
       const message =
         options.message || 'Published PR with canary version: `%v`';
 
-      if (message !== 'false' && env.isCi) {
+      if (message !== 'false' && pr) {
         await this.prBody({
+          pr: Number(pr),
           message: message.replace('%v', newVersion),
           context: 'canary-version'
         });
