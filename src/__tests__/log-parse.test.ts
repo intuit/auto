@@ -90,6 +90,17 @@ describe('jira', () => {
     );
   });
 
+  test('story found, pr no title', () => {
+    const commit = {
+      ...makeCommitFromMsg(''),
+      jira: {
+        number: ['PLAYA-5052']
+      }
+    };
+
+    expect(parseJira(makeCommitFromMsg('[PLAYA-5052]'))).toEqual(commit);
+  });
+
   test('story found', () => {
     const commit = {
       ...makeCommitFromMsg('Add log'),

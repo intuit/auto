@@ -176,12 +176,13 @@ export default class Changelog {
   }
 
   private async generateCommitNote(commit: IExtendedCommit) {
+    const subject = commit.subject ? commit.subject.trim() : '';
     let jira = '';
     let pr = '';
 
     if (commit.jira && this.options.jira) {
       const link = join(this.options.jira, ...commit.jira.number);
-      jira = `[${commit.jira.number}](${link}): `;
+      jira = `[${commit.jira.number}](${link})${subject ? ': ' : ''}`;
     }
 
     if (commit.pullRequest && commit.pullRequest.number) {
@@ -194,7 +195,7 @@ export default class Changelog {
     }
 
     const user = await this.createUserLinkList(commit);
-    return `- ${jira}${commit.subject.trim()} ${pr}${user ? ` (${user})` : ''}`;
+    return `- ${jira}${subject} ${pr}${user ? ` (${user})` : ''}`;
   }
 
   private async createAuthorSection(split: ICommitSplit, sections: string[]) {

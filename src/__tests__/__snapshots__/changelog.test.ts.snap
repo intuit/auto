@@ -142,6 +142,16 @@ exports[`generateReleaseNotes should create note for PR commits without labels 1
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should create note for jira commits without PR title 1`] = `
+"#### 🐛  Bug Fix
+
+- [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052)  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should create note for jira commits without labels 1`] = `
 "#### 🐛  Bug Fix
 

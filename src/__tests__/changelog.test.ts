@@ -170,6 +170,16 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
+  test('should create note for jira commits without PR title', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('[PLAYA-5052]')
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
   test('should use username if present', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();

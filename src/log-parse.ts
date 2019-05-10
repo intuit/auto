@@ -80,19 +80,27 @@ export function parseJira(commit: IExtendedCommit): IExtendedCommit {
 
   while (currentMatch) {
     matches.push(currentMatch);
-    currentMatch = currentMatch[2].match(jira);
+    const rest = currentMatch[2];
+
+    if (!rest) {
+      break;
+    }
+
+    currentMatch = rest.match(jira);
   }
 
   if (!matches.length) {
     return commit;
   }
 
+  const newSubject = matches[matches.length - 1][2];
+
   return {
     ...commit,
     jira: {
       number: matches.map(match => match[1])
     },
-    subject: matches[matches.length - 1][2].trim()
+    subject: newSubject ? newSubject.trim() : ''
   };
 }
 
