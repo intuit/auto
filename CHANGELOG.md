@@ -1,3 +1,19 @@
+# v6.4.1 (Fri May 10 2019)
+
+#### 🐛  Bug Fix
+
+- fix jira PR titles without additional subject [#404](https://github.com/intuit/auto/pull/404) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- update docs for canary [#402](https://github.com/intuit/auto/pull/402) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.4.0 (Thu May 09 2019)
 
 #### 🚀  Enhancement
