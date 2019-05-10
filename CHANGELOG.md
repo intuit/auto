@@ -1,3 +1,20 @@
+# v6.4.0 (Thu May 09 2019)
+
+#### 🚀  Enhancement
+
+- update canary to update pr body when there is a pr [#401](https://github.com/intuit/auto/pull/401) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Greenkeeper/@octokit/plugin throttling 2.5.0 [#400](https://github.com/intuit/auto/pull/400) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v6.3.5 (Thu May 09 2019)
 
 #### 🐛  Bug Fix
