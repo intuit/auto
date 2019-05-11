@@ -384,26 +384,40 @@ export default class Auto {
    *
    * @param options Options for the comment functionality
    */
-  async comment({
-    message,
-    pr,
-    context = 'default',
-    dryRun
-  }: ICommentCommandOptions) {
+  async comment(options: ICommentCommandOptions) {
+    const {
+      message,
+      pr,
+      context = 'default',
+      dryRun,
+      delete: deleteFlag
+    } = options;
     if (!this.git) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-    if (dryRun) {
-      this.logger.log.info(
-        `Would have commented on ${pr} under "${context}" context:\n\n${message}`
-      );
-    } else {
-      const prNumber = this.getPrNumber('comment', pr);
+    const prNumber = this.getPrNumber('comment', pr);
 
-      await this.git.createComment(message, prNumber, context);
-      this.logger.log.success(`Commented on PR #${pr}`);
+    if (dryRun) {
+      if (deleteFlag) {
+        this.logger.log.info(
+          `Would have deleted comment on ${prNumber} under "${context}" context`
+        );
+      } else {
+        this.logger.log.info(
+          `Would have commented on ${prNumber} under "${context}" context:\n\n${message}`
+        );
+      }
+    } else {
+      if (deleteFlag) {
+        await this.git.deleteComment(prNumber, context);
+      }
+
+      if (message) {
+        await this.git.createComment(message, prNumber, context);
+        this.logger.log.success(`Commented on PR #${pr}`);
+      }
     }
   }
 
@@ -414,25 +428,41 @@ export default class Auto {
    *
    * @param options Options
    */
-  async prBody({
-    message,
-    pr,
-    context = 'default',
-    dryRun
-  }: ICommentCommandOptions) {
+  async prBody(options: ICommentCommandOptions) {
+    const {
+      message,
+      pr,
+      context = 'default',
+      dryRun,
+      delete: deleteFlag
+    } = options;
+
     if (!this.git) {
       throw this.createErrorMessage();
     }
 
     this.logger.verbose.info("Using command: 'pr-body'");
+    const prNumber = this.getPrNumber('pr-body', pr);
 
     if (dryRun) {
-      this.logger.log.info(
-        `Would have appended to PR body on ${pr} under "${context}" context:\n\n${message}`
-      );
+      if (deleteFlag) {
+        this.logger.log.info(
+          `Would have deleted PR body on ${prNumber} under "${context}" context`
+        );
+      } else {
+        this.logger.log.info(
+          `Would have appended to PR body on ${prNumber} under "${context}" context:\n\n${message}`
+        );
+      }
     } else {
-      const prNumber = this.getPrNumber('pr-body', pr);
-      await this.git.addToPrBody(message, prNumber, context);
+      if (deleteFlag) {
+        await this.git.addToPrBody('', prNumber, context);
+      }
+
+      if (message) {
+        await this.git.addToPrBody(message, prNumber, context);
+      }
+
       this.logger.log.success(`Updated body on PR #${prNumber}`);
     }
   }

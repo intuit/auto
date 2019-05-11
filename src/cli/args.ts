@@ -180,11 +180,17 @@ const skipReleaseLabels: commandLineUsage.OptionDefinition = {
     "Labels that will not create a release. Defaults to just 'skip-release'"
 };
 
+const deleteFlag: commandLineUsage.OptionDefinition = {
+  name: 'delete',
+  type: Boolean,
+  group: 'main'
+};
+
 interface ICommand {
   name: string;
   summary: string;
   options?: commandLineUsage.OptionDefinition[];
-  require?: Flags[];
+  require?: (Flags | Flags[])[];
   examples: any[];
 }
 
@@ -376,32 +382,37 @@ const commands: ICommand[] = [
   },
   {
     name: 'comment',
-    summary: 'Comment on a pull request with a markdown message',
-    require: ['message'],
+    summary:
+      'Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.',
+    require: [['message', 'delete']],
     options: [
       pr,
       context,
+      { ...deleteFlag, description: 'Delete old comment' },
       { ...message, description: 'Message to post to comment' },
       dryRun,
       ...defaultOptions
     ],
     examples: [
+      '{green $} auto comment --delete',
       '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
     ]
   },
   {
     name: 'pr-body',
     summary:
-      'Update the body of a PR with a message. Appends to PR and will not overwrite user content',
-    require: ['message'],
+      'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
+    require: [['message', 'delete']],
     options: [
       pr,
       context,
+      { ...deleteFlag, description: 'Delete old PR body update' },
       { ...message, description: 'Message to post to PR body' },
       dryRun,
       ...defaultOptions
     ],
     examples: [
+      '{green $} auto pr-body --delete',
       '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"'
     ]
   },
@@ -633,11 +644,16 @@ export default function parseArgs(testArgs?: string[]) {
     const missing = command.require
       .filter(
         option =>
-          !autoOptions.hasOwnProperty(option) ||
+          (typeof option === 'string' && !(option in autoOptions)) ||
+          (typeof option === 'object' && !option.find(o => o in autoOptions)) ||
           // tslint:disable-next-line strict-type-predicates
           autoOptions[option as keyof ArgsType] === null
       )
-      .map(option => `--${option}`);
+      .map(option =>
+        typeof option === 'string'
+          ? `--${option}`
+          : `(--${option.join(' || --')})`
+      );
     const multiple = missing.length > 1;
 
     if (missing.length > 0) {
@@ -720,10 +736,11 @@ export interface IReleaseCommandOptions extends IAuthorArgs {
 }
 
 export interface ICommentCommandOptions {
-  message: string;
+  message?: string;
   pr?: number;
   context?: string;
   dryRun?: boolean;
+  delete?: boolean;
 }
 
 export interface IShipItCommandOptions {

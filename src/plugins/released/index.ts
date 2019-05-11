@@ -122,8 +122,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
     isIssue = false
   ) {
     // leave a comment with the new version
-    const comment = this.createReleasedComment(isIssue, newVersion);
-    await auto.git!.createComment(comment, prOrIssue, 'released');
+    const message = this.createReleasedComment(isIssue, newVersion);
+    await auto.comment({ message, pr: prOrIssue, context: 'released' });
 
     // Do not add released to issue/label for canary versions
     if (isCanary(newVersion)) {

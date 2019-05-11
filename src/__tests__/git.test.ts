@@ -315,6 +315,18 @@ describe('github', () => {
       );
     });
 
+    test('should add to PR body if none exists', async () => {
+      const gh = new Git(options);
+
+      get.mockReturnValueOnce({ data: { body: '# My Content' } });
+      await gh.addToPrBody('', 22);
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: '# My Content'
+        })
+      );
+    });
+
     test('should overwrite old context', async () => {
       const gh = new Git(options);
 
@@ -349,6 +361,26 @@ describe('github', () => {
         expect.objectContaining({
           body:
             '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n<!-- GITHUB_RELEASE PR BODY: PERF -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: PERF -->\n'
+        })
+      );
+    });
+
+    test('should clear pr body section if message blank', async () => {
+      const gh = new Git(options);
+
+      get.mockReturnValueOnce({ data: { body: '# My Content' } });
+      get.mockReturnValueOnce({
+        data: {
+          body:
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->'
+        }
+      });
+      await gh.addToPrBody('Some long thing', 22);
+      update.mockClear();
+      await gh.addToPrBody('', 22);
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: '# My Content\n'
         })
       );
     });
