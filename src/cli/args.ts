@@ -367,14 +367,6 @@ const commands: ICommand[] = [
         description:
           'Version number to publish as. Defaults to reading from the package definition for the platform.'
       },
-      {
-        name: 'slack',
-        alias: 's',
-        type: String,
-        group: 'main',
-        description:
-          'Url to post a slack message to about the release. Make sure the SLACK_TOKEN environment variable is set.'
-      },
       baseBranch,
       ...defaultOptions
     ],
@@ -732,7 +724,6 @@ export interface IReleaseCommandOptions extends IAuthorArgs {
   jira?: string;
   dryRun?: boolean;
   useVersion?: string;
-  slack?: string;
 }
 
 export interface ICommentCommandOptions {
@@ -745,7 +736,6 @@ export interface ICommentCommandOptions {
 
 export interface IShipItCommandOptions {
   dryRun?: boolean;
-  slack?: string;
 }
 
 export interface ICanaryCommandOptions {

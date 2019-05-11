@@ -161,7 +161,7 @@ Object {
   "skipReleaseLabels": Array [
     "skip-release",
   ],
-  "slack": "foo",
+  "bar": "foo",
   "token": "XXXX",
 }
 `;

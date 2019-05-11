@@ -175,16 +175,6 @@ versioning or the changelog), you can use the `labels` section. Just omit the `t
 }
 ```
 
-### Slack URL
-
-You can set where `auto` posts for slack messages.
-
-```json
-{
-  "slack": "https://url-to-slack.com"
-}
-```
-
 ## CLI args
 
 You can set any CLI option in the `.autorc` these options will get overridden by the CLI flags.
