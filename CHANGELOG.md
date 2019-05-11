@@ -1,3 +1,15 @@
+# v6.5.0 (Fri May 10 2019)
+
+#### 🚀  Enhancement
+
+- Add --delete to `comment` and `pr-body` [#403](https://github.com/intuit/auto/pull/403) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v6.4.1 (Fri May 10 2019)
 
 #### 🐛  Bug Fix
