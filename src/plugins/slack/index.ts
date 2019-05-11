@@ -74,7 +74,7 @@ export default class SlackPlugin implements IPlugin {
     const project = await auto.git.getProject();
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const url = join(
+    const releaseUrl = join(
       project.html_url,
       auto.git.options.owner,
       auto.git.options.repo,
@@ -83,15 +83,16 @@ export default class SlackPlugin implements IPlugin {
     );
 
     if (!token) {
-      return Promise.reject(new Error('Slack needs a token to send a message'));
+      auto.logger.verbose.warn('Slack may need a token to send a message');
     }
 
-    await fetch(`${this.options.url}?token=${token}`, {
+    await fetch(`${this.options.url}${token ? `?token=${token}` : ''}`, {
       method: 'POST',
       body: JSON.stringify({
-        text: [`@channel: New release *<${url}|${newVersion}>*`, body].join(
-          '\n'
-        ),
+        text: [
+          `@channel: New release *<${releaseUrl}|${newVersion}>*`,
+          body
+        ].join('\n'),
         // eslint-disable-next-line camelcase
         link_names: 1
       }),
