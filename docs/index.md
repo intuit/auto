@@ -29,11 +29,14 @@
 
 - [.autorc](pages/autorc.md)
 - [Plugins](pages/plugins.md)
-  - [Writing Plugins](pages/writing-plugins.md)
-  - [NPM](pages/npm.md)
   - [Chrome Web Store](pages/chrome.md)
   - [Conventional Commits](pages/conventional-commits.md)
+  - [Filter Accounts](pages/filter-accounts.md)
+  - [Jira](pages/jira.md)
+  - [NPM](pages/npm.md)
   - [Released](pages/released.md)
+  - [Slack](pages/slack.md)
+  - [Writing Plugins](pages/writing-plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
 ---
