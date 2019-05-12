@@ -26,14 +26,6 @@ const mockAuto = ({
 } as unknown) as Auto;
 
 describe('postToSlack', () => {
-  test('should throw without a token', async () => {
-    const plugin = new SlackPlugin({ url: 'https://custom-slack-url' });
-
-    await expect(
-      plugin.postToSlack(mockAuto, 'v1.2.3', '# My Notes')
-    ).rejects.toEqual(new Error('Slack needs a token to send a message'));
-  });
-
   test('should call slack api', async () => {
     const plugin = new SlackPlugin({ url: 'https://custom-slack-url' });
     process.env.SLACK_TOKEN = 'MY_TOKEN';
