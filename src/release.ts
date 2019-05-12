@@ -36,7 +36,6 @@ export const isVersionLabel = (label: string): label is VersionLabel =>
   defaultLabels.includes(label as VersionLabel);
 
 export interface IReleaseOptions {
-  jira?: string;
   githubApi?: string;
   baseBranch: string;
   githubGraphqlApi?: string;
@@ -183,7 +182,6 @@ export default class Release {
       owner: this.git.options.owner,
       repo: this.git.options.repo,
       baseUrl: project.html_url,
-      jira: this.options.jira,
       labels: this.options.labels,
       baseBranch: this.options.baseBranch
     });

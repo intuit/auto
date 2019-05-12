@@ -2,11 +2,6 @@
   "title": "auto-rc",
   "type": "object",
   "properties": {
-    "jira": {
-      "type": "string",
-      "description": "Jira base URL"
-    },
-
     "labels": {
       "description": "Text used for versioning labels.",
       "type": "object",

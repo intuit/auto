@@ -6,7 +6,6 @@ import { promisify } from 'util';
 
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
-import { IExtendedCommit } from '../../log-parse';
 import { Auto, IPlugin } from '../../main';
 import SEMVER from '../../semver';
 import execPromise from '../../utils/exec-promise';
@@ -121,39 +120,6 @@ export function getMonorepoPackage() {
     },
     {} as IPackageJSON
   );
-}
-
-interface INotePartition {
-  [key: string]: string[];
-}
-
-/**
- * Attempt to create a map of monorepo packages
- */
-async function partitionPackages(
-  labelCommits: IExtendedCommit[],
-  lineRender: (commit: IExtendedCommit) => Promise<string>
-) {
-  const packageCommits: INotePartition = {};
-
-  await Promise.all(
-    labelCommits.map(async commit => {
-      const line = await lineRender(commit);
-
-      const packages =
-        commit.packages && commit.packages.length
-          ? commit.packages.map(p => `\`${p}\``).join(', ')
-          : 'monorepo';
-
-      if (!packageCommits[packages]) {
-        packageCommits[packages] = [];
-      }
-
-      packageCommits[packages].push(line);
-    })
-  );
-
-  return packageCommits;
 }
 
 async function bumpLatest(
@@ -322,47 +288,31 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
       changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
-        async (commits, renderLine) => {
+        async ([commit, line]) => {
           if (!isMonorepo()) {
-            return;
+            return [commit, line];
           }
 
           const lernaPackages = await getLernaPackages();
           const lernaJson = getLernaJson();
 
-          await Promise.all(
-            commits.map(async commit => {
-              commit.packages = await changedPackages(
-                commit.hash,
-                lernaPackages,
-                lernaJson,
-                auto.logger
-              );
-            })
+          commit.packages = await changedPackages(
+            commit.hash,
+            lernaPackages,
+            lernaJson,
+            auto.logger
           );
 
-          const packageCommits = await partitionPackages(commits, renderLine);
-          const pkgCount = Object.keys(packageCommits).length;
-          const hasRepoCommits =
-            packageCommits.monorepo && packageCommits.monorepo.length > 0;
+          const section =
+            commit.packages && commit.packages.length
+              ? commit.packages.map(p => `\`${p}\``).join(', ')
+              : 'monorepo';
 
-          if (pkgCount <= 0 || (pkgCount === 1 && packageCommits.monorepo)) {
-            return;
+          if (section === 'monorepo') {
+            return [commit, line];
           }
 
-          const section: string[] = [];
-
-          if (hasRepoCommits) {
-            packageCommits.monorepo.forEach(note => section.push(note));
-            delete packageCommits.monorepo;
-          }
-
-          Object.entries(packageCommits).map(([pkg, lines]) => {
-            section.push(`- ${pkg}`);
-            lines.map(note => section.push(`  ${note}`));
-          });
-
-          return section;
+          return [commit, [`- ${section}`, `  ${line}`].join('\n')];
         }
       );
     });

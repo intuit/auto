@@ -1,6 +1,5 @@
 import LogParse, {
   filterServiceAccounts,
-  parseJira,
   parsePR,
   parseSquashPR
 } from '../log-parse';
@@ -64,66 +63,6 @@ describe('filterServiceAccounts', () => {
   });
 });
 
-describe('jira', () => {
-  test('no story', () => {
-    const commit = {
-      ...makeCommitFromMsg('Add log')
-    };
-
-    expect(parseJira(commit)).toEqual(commit);
-  });
-
-  test('story found', () => {
-    const commit = {
-      ...makeCommitFromMsg('Add log'),
-      jira: {
-        number: ['PLAYA-5052']
-      }
-    };
-
-    expect(parseJira(makeCommitFromMsg('PLAYA-5052: Add log'))).toEqual(commit);
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052] - Add log'))).toEqual(
-      commit
-    );
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052] Add log'))).toEqual(
-      commit
-    );
-  });
-
-  test('story found, pr no title', () => {
-    const commit = {
-      ...makeCommitFromMsg(''),
-      jira: {
-        number: ['PLAYA-5052']
-      }
-    };
-
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052]'))).toEqual(commit);
-  });
-
-  test('story found', () => {
-    const commit = {
-      ...makeCommitFromMsg('Add log'),
-      jira: {
-        number: ['PLAYA-5052', 'PLAYA-6000']
-      }
-    };
-
-    expect(
-      parseJira(makeCommitFromMsg('PLAYA-5052 PLAYA-6000: Add log'))
-    ).toEqual(commit);
-    expect(
-      parseJira(makeCommitFromMsg('[PLAYA-5052][PLAYA-6000] - Add log'))
-    ).toEqual(commit);
-    expect(
-      parseJira(makeCommitFromMsg('[PLAYA-5052] PLAYA-6000: Add log'))
-    ).toEqual(commit);
-    expect(
-      parseJira(makeCommitFromMsg('PLAYA-5052 [PLAYA-6000] - Add log'))
-    ).toEqual(commit);
-  });
-});
-
 describe('normalizeCommits', () => {
   test('should handle undefined', async () => {
     const logParse = new LogParse();
@@ -141,31 +80,5 @@ describe('normalizeCommits', () => {
     ];
 
     expect(await logParse.normalizeCommits(commits)).toMatchSnapshot();
-  });
-
-  test('should use parsing functions to normalize', async () => {
-    const logParse = new LogParse();
-    const commits = [
-      makeCommitFromMsg('First'),
-      makeCommitFromMsg('Second'),
-      makeCommitFromMsg('[PLAYA-5052] Add log')
-    ];
-
-    expect((await logParse.normalizeCommits(commits))[2]).toEqual({
-      authorEmail: 'adam@dierkens.com',
-      authorName: 'Adam Dierkens',
-      authors: [
-        {
-          email: 'adam@dierkens.com',
-          name: 'Adam Dierkens'
-        }
-      ],
-      labels: [],
-      subject: 'Add log',
-      hash: 'foo',
-      jira: {
-        number: ['PLAYA-5052']
-      }
-    });
   });
 });
