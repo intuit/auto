@@ -8,6 +8,10 @@ Simply supply the names of the account to filter
 
 ```json
 {
-  "plugins": [["filter-accounts", { "accounts": ["pdbf", "ghost"] }]]
+  "plugins": [
+    ["filter-accounts", { "accounts": ["pdbf", "ghost"] }],
+    // or
+    ["filter-accounts", ["pdbf", "ghost"]]
+  ]
 }
 ```

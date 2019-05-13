@@ -9,8 +9,8 @@ export default class FilterAccountsPlugin implements IPlugin {
 
   readonly options: IFilterAccountsPluginOptions;
 
-  constructor(options: IFilterAccountsPluginOptions) {
-    this.options = options;
+  constructor(options: IFilterAccountsPluginOptions | string[]) {
+    this.options = Array.isArray(options) ? { accounts: options } : options;
   }
 
   apply(auto: Auto) {
