@@ -14,7 +14,6 @@ import SEMVER, { calculateSemVerBump } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { makeReleaseHooks } from './utils/make-hooks';
-import postToSlack from './utils/slack';
 
 export type VersionLabel =
   | SEMVER.major
@@ -38,7 +37,6 @@ export const isVersionLabel = (label: string): label is VersionLabel =>
 
 export interface IReleaseOptions {
   jira?: string;
-  slack?: string;
   githubApi?: string;
   baseBranch: string;
   githubGraphqlApi?: string;
@@ -527,32 +525,6 @@ export default class Release {
     this.logger.verbose.success('Calculated SEMVER bump:', result);
 
     return result;
-  }
-
-  /**
-   * Post the release notes to slack.
-   *
-   * @param releaseNotes Release notes to post to slack
-   * @param tag Version to include in the title of the slack message
-   */
-  async postToSlack(releaseNotes: string, tag: string) {
-    if (!this.options.slack) {
-      throw new Error('Slack url must be set to post a message to slack.');
-    }
-
-    const project = await this.git.getProject();
-
-    this.logger.verbose.info('Posting release notes to slack.');
-
-    await postToSlack(releaseNotes, {
-      tag,
-      owner: this.git.options.owner,
-      repo: this.git.options.repo,
-      baseUrl: project.html_url,
-      slackUrl: this.options.slack
-    });
-
-    this.logger.verbose.info('Posted release notes to slack.');
   }
 
   async calcNextVersion(lastTag: string) {

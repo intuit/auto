@@ -59,7 +59,9 @@ export interface IAutoHooks {
   beforeRun: SyncHook<[IReleaseOptions]>;
   beforeShipIt: SyncHook<[]>;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
-  afterRelease: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
+  afterRelease: AsyncParallelHook<
+    [string | undefined, IExtendedCommit[], string]
+  >;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
@@ -759,8 +761,7 @@ export default class Auto {
 
   private async makeRelease({
     dryRun,
-    useVersion,
-    slack
+    useVersion
   }: IReleaseCommandOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
@@ -808,16 +809,15 @@ export default class Auto {
     if (!dryRun) {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
       await this.git.publish(releaseNotes, newVersion);
-
-      if (slack || (this.config && this.config.slack)) {
-        this.logger.log.info('Posting release to slack');
-        await this.release.postToSlack(releaseNotes, newVersion);
-      }
     } else {
       this.logger.log.info(`Would have released: ${newVersion}`);
     }
 
-    await this.hooks.afterRelease.promise(newVersion, commitsInRelease);
+    await this.hooks.afterRelease.promise(
+      newVersion,
+      commitsInRelease,
+      releaseNotes
+    );
 
     return newVersion;
   }

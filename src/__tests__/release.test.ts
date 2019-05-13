@@ -97,9 +97,6 @@ jest.mock('fs', () => ({
   }
 }));
 
-const slackSpy = jest.fn();
-
-jest.mock('../utils/slack.ts', () => () => slackSpy());
 jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
 
 const logParse = new LogParse();
@@ -317,28 +314,6 @@ describe('Release', () => {
         message
       );
       expect(execSpy.mock.calls[1][1].includes(`"${message}"`)).toBe(true);
-    });
-  });
-
-  describe('postToSlack', () => {
-    test('throws without slack url', async () => {
-      const gh = new Release(git, {
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
-        baseBranch: 'master'
-      });
-      expect(gh.postToSlack('# My Notes', 'v1.0.0')).rejects.toBeTruthy();
-    });
-
-    test('successful', async () => {
-      const gh = new Release(git, {
-        slack: 'https://custom-slack-url',
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
-        baseBranch: 'master'
-      });
-      await gh.postToSlack('# My Notes', 'v1.0.0');
-      expect(slackSpy).toHaveBeenCalled();
     });
   });
 

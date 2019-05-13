@@ -97,7 +97,7 @@ describe('Auto', () => {
       config: { ...defaults, extends: './fake.json' }
     });
     importMock.mockImplementation(path =>
-      path === '/foo/fake.json' ? { slack: 'foo' } : undefined
+      path === '/foo/fake.json' ? { bar: 'foo' } : undefined
     );
 
     const auto = new Auto({ command: 'init' });
