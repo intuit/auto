@@ -34,11 +34,6 @@ async function getFlags() {
     },
     {
       type: 'input',
-      name: 'jira',
-      message: 'Jira base URL (press enter to skip)'
-    },
-    {
-      type: 'input',
       name: 'githubApi',
       message: 'GitHub API to use (press enter to use public)'
     },

@@ -1,5 +1,5 @@
 import flatten from 'arr-flatten';
-import { AsyncSeriesBailHook } from 'tapable';
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
@@ -13,7 +13,6 @@ export interface IGenerateReleaseNotesOptions {
   owner: string;
   repo: string;
   baseUrl: string;
-  jira?: string;
   labels: ILabelDefinitionMap;
   baseBranch: string;
 }
@@ -23,10 +22,7 @@ interface ICommitSplit {
 }
 
 export interface IChangelogHooks {
-  renderChangelogLine: AsyncSeriesBailHook<
-    [IExtendedCommit[], (commit: IExtendedCommit) => Promise<string>],
-    string[] | void
-  >;
+  renderChangelogLine: AsyncSeriesWaterfallHook<[[IExtendedCommit, string]]>;
   renderChangelogTitle: AsyncSeriesBailHook<
     [string, { [label: string]: string }],
     string | void
@@ -73,18 +69,16 @@ export default class Changelog {
         author.name && user ? `${author.name} (${user})` : user;
       return authorString ? `- ${authorString}` : undefined;
     });
-    this.hooks.renderChangelogLine.tapPromise(
-      'Default',
-      async (currCommits, renderLine) =>
-        Promise.all(currCommits.map(async commit => renderLine(commit)))
-    );
+    this.hooks.renderChangelogLine.tap('Default', ([commit, line]) => [
+      commit,
+      line
+    ]);
     this.hooks.renderChangelogTitle.tap(
       'Default',
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
   }
 
-  // Every Commit will either be a PR, jira story, or push to base branch (patch)
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
     if (commits.length === 0) {
       return '';
@@ -177,13 +171,7 @@ export default class Changelog {
 
   private async generateCommitNote(commit: IExtendedCommit) {
     const subject = commit.subject ? commit.subject.trim() : '';
-    let jira = '';
     let pr = '';
-
-    if (commit.jira && this.options.jira) {
-      const link = join(this.options.jira, ...commit.jira.number);
-      jira = `[${commit.jira.number}](${link})${subject ? ': ' : ''}`;
-    }
 
     if (commit.pullRequest && commit.pullRequest.number) {
       const prLink = join(
@@ -195,7 +183,7 @@ export default class Changelog {
     }
 
     const user = await this.createUserLinkList(commit);
-    return `- ${jira}${subject} ${pr}${user ? ` (${user})` : ''}`;
+    return `- ${subject} ${pr}${user ? ` (${user})` : ''}`;
   }
 
   private async createAuthorSection(split: ICommitSplit, sections: string[]) {
@@ -270,12 +258,23 @@ export default class Changelog {
           changelogTitles
         );
 
-        const lines = await this.hooks.renderChangelogLine.promise(
-          labelCommits,
-          async commit => this.generateCommitNote(commit)
+        const lines = await Promise.all(
+          labelCommits.map(async commit => {
+            const [, line] = await this.hooks.renderChangelogLine.promise([
+              commit,
+              await this.generateCommitNote(commit)
+            ]);
+
+            return line;
+          })
         );
 
-        sections.push([title, ...lines].join('\n'));
+        sections.push(
+          [
+            title,
+            ...lines.sort((a, b) => a.split('\n').length - b.split('\n').length)
+          ].join('\n')
+        );
       })
     );
   }

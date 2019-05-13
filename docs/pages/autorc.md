@@ -201,16 +201,6 @@ It is useful to specify your plugins in the rc file rather than in all the comma
 }
 ```
 
-### Jira
-
-To include Jira story information in your changelogs you must include a URL to your hosted JIRA instance.
-
-```json
-{
-  "jira": "https://url-to-jira.com"
-}
-```
-
 ### githubApi
 
 If you are using enterprise github, `auto` lets you configure the github API URL that it uses.

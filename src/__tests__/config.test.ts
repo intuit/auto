@@ -27,10 +27,10 @@ describe('loadExtendConfig', () => {
     const config = new Config(log);
 
     importMock.mockImplementation(path =>
-      path === '../fake/path.json' ? { jira: 'url' } : undefined
+      path === '../fake/path.json' ? { someOption: 'url' } : undefined
     );
     expect(await config.loadExtendConfig('../fake/path.json')).toEqual({
-      jira: 'url'
+      someOption: 'url'
     });
   });
 
@@ -38,17 +38,17 @@ describe('loadExtendConfig', () => {
     const config = new Config(log);
 
     importMock.mockImplementation(path =>
-      path === './package.json' ? { auto: { jira: 'url' } } : undefined
+      path === './package.json' ? { auto: { someOption: 'url' } } : undefined
     );
     expect(await config.loadExtendConfig('./package.json')).toEqual({
-      jira: 'url'
+      someOption: 'url'
     });
   });
 
   test('should fail if file path points to js file', async () => {
     const config = new Config(log);
     importMock.mockImplementation(path =>
-      path === '../fake/path.js' ? { jira: 'url' } : undefined
+      path === '../fake/path.js' ? { someOption: 'url' } : undefined
     );
     await expect(
       config.loadExtendConfig('../fake/path.js')

@@ -30,7 +30,6 @@ Options
 
   -d, --dry-run          Report what command will do but do not actually do anything
   --no-version-prefix    Use the version as the tag without the 'v' prefix
-  --jira string          Jira base URL
   --use-version string   Version number to publish as. Defaults to reading from the package definition for the platform.
 
 Global Options

@@ -3,13 +3,16 @@ import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
 import { defaultLabelDefinition } from '../release';
 import { dummyLog } from '../utils/logger';
+
+import Auto from '../auto';
+import JiraPlugin from '../plugins/jira';
+import { makeHooks } from '../utils/make-hooks';
 import makeCommitFromMsg from './make-commit-from-msg';
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
   owner: 'foobar',
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
-  jira: 'https://jira.custom.com/browse',
   labels: defaultLabelDefinition,
   baseBranch: 'master'
 });
@@ -162,7 +165,13 @@ describe('generateReleaseNotes', () => {
 
   test('should create note for jira commits without labels', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
+    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+    const autoHooks = makeHooks();
+
+    plugin.apply({ hooks: autoHooks } as Auto);
+    autoHooks.onCreateChangelog.promise(changelog);
     changelog.loadDefaultHooks();
+
     const normalized = await logParse.normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Fix P0')
     ]);
@@ -172,7 +181,13 @@ describe('generateReleaseNotes', () => {
 
   test('should create note for jira commits without PR title', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
+    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+    const autoHooks = makeHooks();
+
+    plugin.apply({ hooks: autoHooks } as Auto);
+    autoHooks.onCreateChangelog.promise(changelog);
     changelog.loadDefaultHooks();
+
     const normalized = await logParse.normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052]')
     ]);
@@ -197,7 +212,13 @@ describe('generateReleaseNotes', () => {
 
   test('should create note for JIRA commits', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
+    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+    const autoHooks = makeHooks();
+
+    plugin.apply({ hooks: autoHooks } as Auto);
+    autoHooks.onCreateChangelog.promise(changelog);
     changelog.loadDefaultHooks();
+
     const normalized = await logParse.normalizeCommits([
       makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
         labels: ['major'],
