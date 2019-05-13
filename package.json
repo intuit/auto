@@ -23,7 +23,7 @@
   "scripts": {
     "semver:check": "./scripts/post-install.sh",
     "build": "lerna run build --stream",
-    "build:watch": "npm run build -- -w",
+    "build:watch": "npm run build -- -- -w",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
     "test": "jest --maxWorkers=2",

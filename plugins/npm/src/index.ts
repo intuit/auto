@@ -72,6 +72,7 @@ export async function changedPackages(
   changedFiles.split('\n').forEach(filePath => {
     const parts = filePath.split('/');
 
+    // TODO: fix monorpo pacakge parsing to support more that just packages repo
     if (parts[0] !== 'packages' || parts.length < 3) {
       return;
     }

@@ -1,11 +1,11 @@
+import Auto from '@autorelease/core';
+import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
+import Git from '@autorelease/core/dist/git';
+import LogParse from '@autorelease/core/dist/log-parse';
+import { defaultLabelDefinition } from '@autorelease/core/dist/release';
+import { dummyLog } from '@autorelease/core/dist/utils/logger';
+import { makeHooks } from '@autorelease/core/dist/utils/make-hooks';
 import ReleasedLabelPlugin from '..';
-import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import Auto from '../../../auto';
-import Git from '../../../git';
-import LogParse from '../../../log-parse';
-import { defaultLabelDefinition } from '../../../release';
-import { dummyLog } from '../../../utils/logger';
-import { makeHooks } from '../../../utils/make-hooks';
 
 const git = new Git({ owner: '1', repo: '2' });
 const log = new LogParse();

@@ -1,7 +1,7 @@
 import { githubToSlack } from '@atomist/slack-messages';
+import { Auto, IPlugin } from '@autorelease/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
-import { Auto, IPlugin } from '../../auto';
 
 const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)

@@ -1,8 +1,8 @@
-import SlackPlugin from '..';
-import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import Auto from '../../../auto';
-import { dummyLog } from '../../../utils/logger';
-import { makeHooks } from '../../../utils/make-hooks';
+import Auto from '@autorelease/core';
+import makeCommitFromMsg from '@autorelease/core/src/__tests__/make-commit-from-msg';
+import { dummyLog } from '@autorelease/core/src/utils/logger';
+import { makeHooks } from '@autorelease/core/src/utils/make-hooks';
+import SlackPlugin from '../src';
 
 const fetchSpy = jest.fn();
 // @ts-ignore
