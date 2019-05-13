@@ -8,6 +8,10 @@ To use the plugin include it in your `.autorc`
 
 ```json
 {
-  "plugins": [["jira", { "url": "https://url-to-your-jira.com" }]]
+  "plugins": [
+    ["jira", { "url": "https://url-to-your-jira.com" }],
+    // or
+    ["jira", "https://url-to-your-jira.com"]
+  ]
 }
 ```
