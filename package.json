@@ -28,7 +28,7 @@
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
     "test": "jest --maxWorkers=2",
-    "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
+    "release": "git status --porcelain && chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
