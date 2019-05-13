@@ -1,3 +1,15 @@
+# v6.5.1 (Mon May 13 2019)
+
+#### 📝  Documentation
+
+- typo [#405](https://github.com/intuit/auto/pull/405) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v6.5.0 (Fri May 10 2019)
 
 #### 🚀  Enhancement
