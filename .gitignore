@@ -3,6 +3,7 @@ coverage
 .DS_store
 package-lock.json
 _ignite
+.vscode/
 
 
 # Created by https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
@@ -199,7 +200,6 @@ GitHub.sublime-settings
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
