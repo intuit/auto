@@ -1,0 +1,32 @@
+{
+  "name": "@autorelease/jira",
+  "version": "6.5.0",
+  "main": "dist/index.js",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@autorelease/core": "6.5.0",
+    "url-join": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/url-join": "^4.0.0"
+  }
+}

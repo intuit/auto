@@ -1,9 +1,12 @@
-import JiraPlugin, { parseJira } from '..';
-import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import Auto from '../../../auto';
-import Changelog from '../../../changelog';
-import { dummyLog } from '../../../utils/logger';
-import { makeChangelogHooks, makeHooks } from '../../../utils/make-hooks';
+import Auto from '@autorelease/core';
+import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
+import Changelog from '@autorelease/core/dist/changelog';
+import { dummyLog } from '@autorelease/core/dist/utils/logger';
+import {
+  makeChangelogHooks,
+  makeHooks
+} from '@autorelease/core/dist/utils/make-hooks';
+import JiraPlugin, { parseJira } from '../src';
 
 describe('parse jira', () => {
   test('no story', () => {

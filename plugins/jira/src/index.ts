@@ -1,7 +1,7 @@
 import join from 'url-join';
 
-import { Auto, IPlugin } from '../../auto';
-import { IExtendedCommit } from '../../log-parse';
+import { Auto, IPlugin } from '@autorelease/core';
+import { IExtendedCommit } from '@autorelease/core/dist/log-parse';
 
 interface IJiraPluginOptions {
   url: string;
