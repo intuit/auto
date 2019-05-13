@@ -1,8 +1,4 @@
-import LogParse, {
-  filterServiceAccounts,
-  parsePR,
-  parseSquashPR
-} from '../log-parse';
+import LogParse, { parsePR, parseSquashPR } from '../log-parse';
 
 import makeCommitFromMsg from './make-commit-from-msg';
 
@@ -46,31 +42,7 @@ describe('parseSquashPR', () => {
   });
 });
 
-describe('filterServiceAccounts', () => {
-  test('should not filter the commit', () => {
-    const commit = makeCommitFromMsg('foo');
-    expect(filterServiceAccounts(commit)).toBeUndefined();
-  });
-
-  test('should filter the commit', () => {
-    const commit = {
-      ...makeCommitFromMsg('foo'),
-      authorName: 'pdbf',
-      authorEmail: ''
-    };
-
-    expect(filterServiceAccounts(commit)).toBe(true);
-  });
-});
-
 describe('normalizeCommits', () => {
-  test('should handle undefined', async () => {
-    const logParse = new LogParse();
-    const commits = [makeCommitFromMsg('Filtered', { name: 'pdbf' })];
-
-    expect(await logParse.normalizeCommits(commits)).toEqual([]);
-  });
-
   test('should do nothing with normal commits', async () => {
     const logParse = new LogParse();
     const commits = [
