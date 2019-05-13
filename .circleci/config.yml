@@ -40,19 +40,24 @@ aliases:
     command: yarn semver:check
 
 jobs:
+  semver:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: *semver
+
   install:
     <<: *defaults
     steps:
       - checkout
       - restore_cache: *restore-cache
-      - run: date
       - run: *yarn
-      - run: *semver
       - save_cache: *save-cache
       - persist_to_workspace:
           root: .
           paths:
             - .
+
   build:
     <<: *defaults
     steps:
@@ -80,8 +85,6 @@ jobs:
       - run:
           name: Send CodeCov Results
           command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
-
-
 
   release:
     <<: *defaults
@@ -112,6 +115,10 @@ workflows:
           requires:
             - install
 
+      - semver: 
+          requires:
+            - build
+
       - lint:
           requires:
             - build
@@ -122,7 +129,6 @@ workflows:
 
       - release:
           requires:
-            - build
             - test
             - lint
 
