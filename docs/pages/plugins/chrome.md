@@ -6,7 +6,17 @@ This plugin allows you to automate the publishing of chrome extensions
 Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
 :::
 
-## Package Configuration
+## Installation
+
+This plugin is not included with the `auto` CLI. To install:
+
+```sh
+npm i --save-dev @intuit-auto/chrome
+# or
+yarn add -D @intuit-auto/chrome
+```
+
+## Usage
 
 You must first pack/zip your plugin before running `auto`.
 

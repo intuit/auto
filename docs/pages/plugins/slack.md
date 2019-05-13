@@ -2,6 +2,16 @@
 
 Post your release notes to a slack channel
 
+## Installation
+
+This plugin is not included with the `auto` CLI. To install:
+
+```sh
+npm i --save-dev @intuit-auto/slack
+# or
+yarn add -D @intuit-auto/slack
+```
+
 ## Usage
 
 To use the plugin include it in your `.autorc`

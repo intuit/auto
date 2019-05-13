@@ -1,4 +1,4 @@
-# Released Label Plugin
+# Released Plugin
 
 This plugin
 
@@ -10,6 +10,16 @@ This plugin
 ::: message is-warning
 Make sure that you create the `released` label on you project
 :::
+
+## Installation
+
+This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
+
+```sh
+npm i --save-dev @intuit-auto/released
+# or
+yarn add -D @intuit-auto/released
+```
 
 ## Usage
 
