@@ -1,12 +1,11 @@
+import * as Auto from '@autorelease/core';
+import { dummyLog } from '@autorelease/core/dist/utils/logger';
+import { makeHooks } from '@autorelease/core/dist/utils/make-hooks';
 import NPMPlugin, {
   changedPackages,
   getMonorepoPackage,
   greaterRelease
-} from '..';
-import { Auto } from '../../../auto';
-import SEMVER from '../../../semver';
-import { dummyLog } from '../../../utils/logger';
-import { makeHooks } from '../../../utils/make-hooks';
+} from '../src';
 
 const exec = jest.fn();
 const monorepoPackages = jest.fn();
@@ -18,7 +17,7 @@ let readResult = '{}';
 readFileSync.mockReturnValue('{}');
 
 // @ts-ignore
-jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
+jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
 jest.mock('env-ci', () => () => ({ isCi: false }));
 jest.mock('get-monorepo-packages', () => () => monorepoPackages());
 jest.mock('fs', () => ({
@@ -127,7 +126,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -141,7 +140,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -162,7 +161,7 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -184,7 +183,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -200,7 +199,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -217,7 +216,7 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -244,7 +243,7 @@ describe('getPreviousVersion', () => {
     // published version of test package
     exec.mockReturnValueOnce('0.1.2');
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.1.2');
   });
@@ -274,7 +273,7 @@ describe('publish', () => {
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: { getLatestRelease: () => '1.2.3' }
-    } as unknown) as Auto);
+    } as unknown) as Auto.Auto);
 
     readResult = `
       {
@@ -284,9 +283,9 @@ describe('publish', () => {
 
     exec.mockReturnValueOnce('m Somefile.txt');
 
-    await expect(hooks.version.promise(SEMVER.patch)).rejects.toBeInstanceOf(
-      Error
-    );
+    await expect(
+      hooks.version.promise(Auto.SEMVER.patch)
+    ).rejects.toBeInstanceOf(Error);
   });
 
   test('should use silly logging in verbose mode', async () => {
@@ -295,7 +294,7 @@ describe('publish', () => {
     const logger = dummyLog();
     logger.logLevel = 'veryVerbose';
 
-    plugin.apply({ hooks, logger } as Auto);
+    plugin.apply({ hooks, logger } as Auto.Auto);
 
     readResult = `
       {
@@ -303,10 +302,10 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
-      SEMVER.patch,
+      Auto.SEMVER.patch,
       '-m',
       '"Bump version to: %s [skip ci]"',
       '--loglevel',
@@ -318,7 +317,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -326,10 +325,10 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
-      SEMVER.patch,
+      Auto.SEMVER.patch,
       '-m',
       '"Bump version to: %s [skip ci]"'
     ]);
@@ -339,7 +338,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
@@ -350,7 +349,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
       'version',
@@ -367,7 +366,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin({ forcePublish: false });
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
@@ -378,7 +377,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
       'version',
@@ -395,11 +394,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.publish.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npx', [
       'lerna',
       'publish',
@@ -412,7 +411,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     exec.mockReturnValueOnce('');
     exec.mockReturnValueOnce('1.0.0');
@@ -424,7 +423,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       '1.0.1',
@@ -437,7 +436,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
@@ -450,7 +449,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenNthCalledWith(3, 'npx', [
       'lerna',
       'version',
@@ -467,7 +466,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -475,7 +474,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.publish.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', ['publish', '--access', 'public']);
   });
 
@@ -483,7 +482,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -492,7 +491,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.publish.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', ['publish']);
   });
 
@@ -500,7 +499,7 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
     readResult = `
       {
@@ -509,7 +508,7 @@ describe('publish', () => {
       }
     `;
 
-    await hooks.publish.promise(SEMVER.patch);
+    await hooks.publish.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', ['publish']);
   });
 });
@@ -528,7 +527,7 @@ describe('canary', () => {
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: { getLatestRelease: () => '1.2.3' }
-    } as unknown) as Auto);
+    } as unknown) as Auto.Auto);
 
     readResult = `
       {
@@ -539,7 +538,7 @@ describe('canary', () => {
     exec.mockReturnValueOnce('m Somefile.txt');
 
     await expect(
-      hooks.canary.promise(SEMVER.patch, '.123.1')
+      hooks.canary.promise(Auto.SEMVER.patch, '.123.1')
     ).rejects.toBeInstanceOf(Error);
   });
 
@@ -552,7 +551,7 @@ describe('canary', () => {
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: { getLatestRelease: () => '1.2.3' }
-    } as unknown) as Auto);
+    } as unknown) as Auto.Auto);
 
     readResult = `
       {
@@ -560,7 +559,7 @@ describe('canary', () => {
       }
     `;
 
-    await hooks.canary.promise(SEMVER.patch, '.123.1');
+    await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
     expect(exec.mock.calls[1]).toContain('npm');
     expect(exec.mock.calls[1][1]).toContain('1.2.4-canary.123.1');
   });
@@ -574,7 +573,7 @@ describe('canary', () => {
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: { getLatestRelease: () => '1.2.3' }
-    } as unknown) as Auto);
+    } as unknown) as Auto.Auto);
 
     readResult = `
       {
@@ -582,7 +581,7 @@ describe('canary', () => {
       }
     `;
 
-    await hooks.canary.promise(SEMVER.patch, '');
+    await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(exec.mock.calls[2][1]).toContain('public');
   });
 
@@ -590,7 +589,7 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -605,7 +604,7 @@ describe('canary', () => {
       )
     );
 
-    const value = await hooks.canary.promise(SEMVER.patch, '');
+    const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(exec.mock.calls[1][1]).toContain('lerna');
     expect(value).toBe('1.2.3-canary.0');
   });
@@ -614,7 +613,7 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -629,7 +628,7 @@ describe('canary', () => {
       )
     );
 
-    const value = await hooks.canary.promise(SEMVER.patch, '');
+    const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(value).toEqual({
       error: 'No packages were changed. No canary published.'
     });
@@ -639,7 +638,7 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
 
@@ -655,7 +654,7 @@ describe('canary', () => {
       )
     );
 
-    const value = await hooks.canary.promise(SEMVER.patch, '');
+    const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(value).toBe(
       '\n - @foo/app@1.2.4-canary.0\n - @foo/lib@1.1.0-canary.0'
     );
@@ -665,7 +664,7 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
 
@@ -681,7 +680,7 @@ describe('canary', () => {
       )
     );
 
-    const value = await hooks.canary.promise(SEMVER.patch, '');
+    const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(value).toEqual({
       error: 'No packages were changed. No canary published.'
     });

@@ -4,9 +4,6 @@ import LogParse from '../log-parse';
 import { defaultLabelDefinition } from '../release';
 import { dummyLog } from '../utils/logger';
 
-import Auto from '../auto';
-import JiraPlugin from '../plugins/jira';
-import { makeHooks } from '../utils/make-hooks';
 import makeCommitFromMsg from './make-commit-from-msg';
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
@@ -163,38 +160,6 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should create note for jira commits without labels', async () => {
-    const changelog = new Changelog(dummyLog(), testOptions());
-    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
-    const autoHooks = makeHooks();
-
-    plugin.apply({ hooks: autoHooks } as Auto);
-    autoHooks.onCreateChangelog.promise(changelog);
-    changelog.loadDefaultHooks();
-
-    const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('[PLAYA-5052] - Fix P0')
-    ]);
-
-    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
-  });
-
-  test('should create note for jira commits without PR title', async () => {
-    const changelog = new Changelog(dummyLog(), testOptions());
-    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
-    const autoHooks = makeHooks();
-
-    plugin.apply({ hooks: autoHooks } as Auto);
-    autoHooks.onCreateChangelog.promise(changelog);
-    changelog.loadDefaultHooks();
-
-    const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('[PLAYA-5052]')
-    ]);
-
-    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
-  });
-
   test('should use username if present', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
@@ -206,27 +171,6 @@ describe('generateReleaseNotes', () => {
     ]);
 
     normalized[0].authors[0].username = 'adam';
-
-    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
-  });
-
-  test('should create note for JIRA commits', async () => {
-    const changelog = new Changelog(dummyLog(), testOptions());
-    const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
-    const autoHooks = makeHooks();
-
-    plugin.apply({ hooks: autoHooks } as Auto);
-    autoHooks.onCreateChangelog.promise(changelog);
-    changelog.loadDefaultHooks();
-
-    const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
-        labels: ['major'],
-        packages: []
-      }),
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['internal'] }),
-      makeCommitFromMsg('Third', { labels: ['patch'] })
-    ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });

@@ -1,4 +1,4 @@
-import packageConfig from '../package-config';
+import packageConfig from '../src/package-config';
 
 let readResult = '{}';
 

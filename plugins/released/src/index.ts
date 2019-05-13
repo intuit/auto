@@ -1,6 +1,6 @@
+import { Auto, IPlugin } from '@autorelease/core';
+import { IExtendedCommit } from '@autorelease/core/dist/log-parse';
 import merge from 'deepmerge';
-import { Auto, IPlugin } from '../../auto';
-import { IExtendedCommit } from '../../log-parse';
 
 interface IReleasedLabelPluginOptions {
   message: string;

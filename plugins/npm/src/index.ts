@@ -4,12 +4,9 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
+import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@autorelease/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
-import { Auto, IPlugin } from '../../auto';
-import SEMVER from '../../semver';
-import execPromise from '../../utils/exec-promise';
-import { ILogger } from '../../utils/logger';
 import getConfigFromPackageJson from './package-config';
 
 const { isCi } = envCi();

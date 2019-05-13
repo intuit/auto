@@ -14,7 +14,9 @@ export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger
 ): IPlugin | undefined {
-  let plugin = tryRequire(pluginPath) as IPluginConstructor;
+  let plugin = tryRequire(pluginPath) as (
+    | IPluginConstructor
+    | { default: IPluginConstructor });
 
   if (!plugin) {
     plugin = tryRequire(
@@ -33,5 +35,13 @@ export default function loadPlugin(
     return;
   }
 
-  return new plugin(options);
+  if (!plugin) {
+    return;
+  }
+
+  if ('default' in plugin && plugin.default) {
+    return new plugin.default(options);
+  }
+
+  return new (plugin as IPluginConstructor)(options);
 }

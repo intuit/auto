@@ -1,6 +1,10 @@
 import Auto from '@autorelease/core';
 import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
-import Changelog from '@autorelease/core/dist/changelog';
+import Changelog, {
+  IGenerateReleaseNotesOptions
+} from '@autorelease/core/dist/changelog';
+import LogParse from '@autorelease/core/dist/log-parse';
+import { defaultLabelDefinition } from '@autorelease/core/dist/release';
 import { dummyLog } from '@autorelease/core/dist/utils/logger';
 import {
   makeChangelogHooks,
@@ -93,4 +97,50 @@ describe('render jira', () => {
       '[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)'
     );
   });
+});
+
+const testOptions = (): IGenerateReleaseNotesOptions => ({
+  owner: 'foobar',
+  repo: 'auto',
+  baseUrl: 'https://github.custom.com/foobar/auto',
+  labels: defaultLabelDefinition,
+  baseBranch: 'master'
+});
+const logParse = new LogParse();
+
+test('should create note for jira commits without PR title', async () => {
+  const changelog = new Changelog(dummyLog(), testOptions());
+  const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+  const autoHooks = makeHooks();
+
+  plugin.apply({ hooks: autoHooks } as Auto);
+  autoHooks.onCreateChangelog.promise(changelog);
+  changelog.loadDefaultHooks();
+
+  const normalized = await logParse.normalizeCommits([
+    makeCommitFromMsg('[PLAYA-5052]')
+  ]);
+
+  expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+});
+
+test('should create note for JIRA commits', async () => {
+  const changelog = new Changelog(dummyLog(), testOptions());
+  const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+  const autoHooks = makeHooks();
+
+  plugin.apply({ hooks: autoHooks } as Auto);
+  autoHooks.onCreateChangelog.promise(changelog);
+  changelog.loadDefaultHooks();
+
+  const normalized = await logParse.normalizeCommits([
+    makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
+      labels: ['major'],
+      packages: []
+    }),
+    makeCommitFromMsg('Some Feature (#1234)', { labels: ['internal'] }),
+    makeCommitFromMsg('Third', { labels: ['patch'] })
+  ]);
+
+  expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
 });

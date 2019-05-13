@@ -1,17 +1,16 @@
-import NpmPlugin from '..';
-import makeCommitFromMsg from '../../../__tests__/make-commit-from-msg';
-import Auto from '../../../auto';
-import Changelog from '../../../changelog';
-import LogParse from '../../../log-parse';
-import { defaultLabelDefinition } from '../../../release';
-import { dummyLog } from '../../../utils/logger';
-import { makeHooks } from '../../../utils/make-hooks';
+import * as Auto from '@autorelease/core';
+import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
+import Changelog from '@autorelease/core/dist/changelog';
+import LogParse from '@autorelease/core/dist/log-parse';
+import { defaultLabelDefinition } from '@autorelease/core/dist/release';
+import { dummyLog } from '@autorelease/core/dist/utils/logger';
+import { makeHooks } from '@autorelease/core/dist/utils/make-hooks';
+import NpmPlugin from '../src';
 
 const exec = jest.fn();
 const readFileSync = jest.fn();
 
-// @ts-ignore
-jest.mock('../../../utils/exec-promise.ts', () => (...args) => exec(...args));
+jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
 jest.mock('fs', () => ({
   // @ts-ignore
   existsSync: jest.fn().mockReturnValue(true),
@@ -82,7 +81,7 @@ test('should create sections for packages', async () => {
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto);
+  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog);
   changelog.loadDefaultHooks();
 
@@ -126,7 +125,7 @@ test('should add versions for independent packages', async () => {
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto);
+  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog);
   changelog.loadDefaultHooks();
 

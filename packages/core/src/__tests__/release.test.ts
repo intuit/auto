@@ -97,8 +97,6 @@ jest.mock('fs', () => ({
   }
 }));
 
-jest.mock('../plugins/npm/package-config.ts', () => async () => ({}));
-
 const logParse = new LogParse();
 const git = new Git({
   owner: 'Andrew',
