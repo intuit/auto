@@ -60,7 +60,7 @@ describe('parse jira', () => {
 
 describe('render jira', () => {
   test('no jira number', async () => {
-    const plugin = new JiraPlugin({ url: 'jira.com' });
+    const plugin = new JiraPlugin('jira.com');
     const hooks = makeHooks();
     const changelogHooks = makeChangelogHooks();
     const commit = makeCommitFromMsg('Add log');

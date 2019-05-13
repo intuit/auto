@@ -49,8 +49,8 @@ export default class JiraPlugin implements IPlugin {
 
   readonly options: IJiraPluginOptions;
 
-  constructor(options: IJiraPluginOptions) {
-    this.options = options;
+  constructor(options: IJiraPluginOptions | string) {
+    this.options = typeof options === 'string' ? { url: options } : options;
   }
 
   apply(auto: Auto) {
