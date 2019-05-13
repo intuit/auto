@@ -5,7 +5,8 @@ import LogParse from '@intuit-auto/core/dist/log-parse';
 import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
 import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
 import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
-import ReleasedLabelPlugin from '..';
+import { IReleaseOptions } from '@intuit-auto/core/src/release';
+import ReleasedLabelPlugin from '../src';
 
 const git = new Git({ owner: '1', repo: '2' });
 const log = new LogParse();
@@ -36,6 +37,23 @@ describe('release label plugin', () => {
     addLabelToPr.mockClear();
     commits.mockClear();
     lockIssue.mockClear();
+  });
+
+  test('should so nothing without PRs', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply({ hooks: autoHooks } as Auto);
+
+    expect(
+      await autoHooks.modifyConfig.promise({ labels: {} } as IReleaseOptions)
+    ).toEqual({
+      labels: {
+        released: {
+          description: 'This issue/pull request has been released.',
+          name: 'released'
+        }
+      }
+    });
   });
 
   test('should so nothing without PRs', async () => {

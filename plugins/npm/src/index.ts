@@ -361,7 +361,7 @@ export default class NPMPlugin implements IPlugin {
           // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
           `canary${postFix}`,
-          '--force-publish',
+          '--force-publish', // you always want a canary version to publish
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
           ...verboseArgs

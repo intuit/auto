@@ -5,11 +5,11 @@ import {
   makeHooks,
   makeLogParseHooks
 } from '@intuit-auto/core/dist/utils/make-hooks';
-import FilterAccountsPlugin from '..';
+import FilterAccountsPlugin from '../src';
 
 describe('filterServiceAccounts', () => {
   test('should not filter the commit', async () => {
-    const plugin = new FilterAccountsPlugin({ accounts: ['pdbf'] });
+    const plugin = new FilterAccountsPlugin(['pdbf']);
     const hooks = makeHooks();
     const logParseHooks = makeLogParseHooks();
 

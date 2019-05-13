@@ -11,7 +11,7 @@ import {
   makeHooks,
   makeLogParseHooks
 } from '@intuit-auto/core/dist/utils/make-hooks';
-import ConventionalCommitsPlugin from '..';
+import ConventionalCommitsPlugin from '../src';
 
 const versionLabels = getVersionMap(defaultLabelDefinition);
 

@@ -94,13 +94,15 @@
     "collectCoverageFrom": [
       "packages/**/*.ts",
       "plugins/**/*.ts",
+      "!**/dist/**/*",
       "!src/**/*.test.ts",
       "!src/**/__tests__/**/*"
     ],
     "coverageReporters": [
       "cobertura",
       "html",
-      "lcov"
+      "lcov",
+      "text"
     ]
   },
   "ignite": {
