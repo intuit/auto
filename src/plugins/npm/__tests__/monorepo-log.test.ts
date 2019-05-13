@@ -46,33 +46,37 @@ const commitsPromise = logParse.normalizeCommits([
 ]);
 
 test('should create sections for packages', async () => {
-  exec.mockReturnValueOnce(
-    Promise.resolve(
-      'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
-    )
-  );
-  exec.mockReturnValueOnce(
-    Promise.resolve(
-      'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
-    )
-  );
-  exec.mockReturnValueOnce(
-    'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
-  );
-  exec.mockReturnValueOnce(
-    'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
-  );
-  exec.mockReturnValueOnce('');
-  exec.mockReturnValueOnce('packages/@foobar/release/README.md');
-  readFileSync.mockReturnValueOnce('{}');
-  readFileSync.mockReturnValueOnce('{}');
+  let changed = 0;
+
+  exec.mockImplementation(async command => {
+    if (command === 'npx') {
+      return Promise.resolve(
+        'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
+      );
+    }
+
+    changed++;
+
+    if (changed === 3) {
+      return Promise.resolve('');
+    }
+
+    if (changed === 4) {
+      return Promise.resolve('packages/@foobar/release/README.md');
+    }
+
+    return Promise.resolve(
+      'packages/@foobar/release/README.md\npackages/@foobar/party/package.jso'
+    );
+  });
+
+  readFileSync.mockReturnValue('{}');
 
   const plugin = new NpmPlugin();
   const hooks = makeHooks();
   const changelog = new Changelog(dummyLog(), {
     owner: 'andrew',
     repo: 'test',
-    jira: 'jira.com',
     baseUrl: 'https://github.custom.com/',
     labels: defaultLabelDefinition,
     baseBranch: 'master'
@@ -87,25 +91,29 @@ test('should create sections for packages', async () => {
 });
 
 test('should add versions for independent packages', async () => {
-  exec.mockReturnValueOnce(
-    Promise.resolve(
-      'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.2'
-    )
-  );
-  exec.mockReturnValueOnce(
-    Promise.resolve(
-      'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
-    )
-  );
-  exec.mockReturnValueOnce(
-    'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
-  );
-  exec.mockReturnValueOnce(
-    'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
-  );
-  exec.mockReturnValueOnce('');
-  exec.mockReturnValueOnce('packages/@foobar/release/README.md');
-  readFileSync.mockReturnValue('{ "version": "independent" }');
+  let changed = 0;
+  exec.mockImplementation(async command => {
+    if (command === 'npx') {
+      return Promise.resolve(
+        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.2'
+      );
+    }
+
+    changed++;
+
+    if (changed === 3) {
+      return Promise.resolve('');
+    }
+
+    if (changed === 4) {
+      return Promise.resolve('packages/@foobar/release/README.md');
+    }
+
+    return Promise.resolve(
+      'packages/@foobar/release/README.md\npackages/@foobar/party/package.jso'
+    );
+  });
+
   readFileSync.mockReturnValue('{ "version": "independent" }');
 
   const plugin = new NpmPlugin();
@@ -113,7 +121,6 @@ test('should add versions for independent packages', async () => {
   const changelog = new Changelog(dummyLog(), {
     owner: 'andrew',
     repo: 'test',
-    jira: 'jira.com',
     baseUrl: 'https://github.custom.com/',
     labels: defaultLabelDefinition,
     baseBranch: 'master'

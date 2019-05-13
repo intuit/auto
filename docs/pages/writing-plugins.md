@@ -258,7 +258,7 @@ auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
 
 #### renderChangelogLine
 
-Change how the changelog renders lines. This hook provides the default line renderer so you don't have to change much.
+Change how the changelog renders lines. This hook provides the commit and the current state of the line render. You must return the commit and the line string state as a tuple ([commit, line]).
 
 The following plugin would change all the bullet points in the changelog to star emojis.
 
@@ -266,8 +266,8 @@ The following plugin would change all the bullet points in the changelog to star
 auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
   changelog.hooks.renderChangelogLine.tapPromise(
     'Stars',
-    async (commits, renderLine) =>
-      commits.map(commit => `${renderLine(commit).replace('-', ':star:')}\n`)
+    async (commit, line) =>
+      [commit, `${line.replace('-', ':star:')}\n`]
   );
 );
 ```

@@ -17,9 +17,6 @@ export interface IPullRequest {
 export type IExtendedCommit = ICommit & {
   authors: ICommitAuthor[];
   pullRequest?: IPullRequest;
-  jira?: {
-    number: string[];
-  };
   labels: string[];
   packages?: string[];
 };
@@ -71,39 +68,6 @@ export function parseSquashPR(commit: IExtendedCommit): IExtendedCommit {
   };
 }
 
-export function parseJira(commit: IExtendedCommit): IExtendedCommit {
-  // Support 'JIRA-XXX:' and '[JIRA-XXX]' and '[JIRA-XXX] - '
-  const jira = /^\[?([\w]{3,}-\d+)\]?:?\s?[-\s]*([\S ]+)?/;
-  const matches = [];
-
-  let currentMatch = commit.subject.match(jira);
-
-  while (currentMatch) {
-    matches.push(currentMatch);
-    const rest = currentMatch[2];
-
-    if (!rest) {
-      break;
-    }
-
-    currentMatch = rest.match(jira);
-  }
-
-  if (!matches.length) {
-    return commit;
-  }
-
-  const newSubject = matches[matches.length - 1][2];
-
-  return {
-    ...commit,
-    jira: {
-      number: matches.map(match => match[1])
-    },
-    subject: newSubject ? newSubject.trim() : ''
-  };
-}
-
 export interface ILogParseHooks {
   parseCommit: AsyncSeriesWaterfallHook<[IExtendedCommit]>;
   omitCommit: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
@@ -117,8 +81,6 @@ export default class LogParse {
 
     this.hooks.parseCommit.tap('Merge Commit', parsePR);
     this.hooks.parseCommit.tap('Squash Merge Commit', parseSquashPR);
-    this.hooks.parseCommit.tap('Jira', parseJira);
-
     this.hooks.omitCommit.tap('Service Accounts', filterServiceAccounts);
   }
 

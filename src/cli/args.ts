@@ -134,13 +134,6 @@ const noVersionPrefix: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const jira: commandLineUsage.OptionDefinition = {
-  name: 'jira',
-  type: String,
-  description: 'Jira base URL',
-  group: 'main'
-};
-
 const name: commandLineUsage.OptionDefinition = {
   name: 'name',
   type: String,
@@ -318,7 +311,6 @@ const commands: ICommand[] = [
       noVersionPrefix,
       name,
       email,
-      jira,
       {
         name: 'from',
         type: String,
@@ -359,7 +351,6 @@ const commands: ICommand[] = [
       noVersionPrefix,
       name,
       email,
-      jira,
       {
         name: 'use-version',
         type: String,
@@ -712,7 +703,6 @@ export interface IVersionCommandOptions {
 
 export interface IChangelogOptions extends IAuthorArgs {
   noVersionPrefix?: boolean;
-  jira?: string;
   dryRun?: boolean;
   from?: string;
   to?: string;
@@ -721,7 +711,6 @@ export interface IChangelogOptions extends IAuthorArgs {
 
 export interface IReleaseCommandOptions extends IAuthorArgs {
   noVersionPrefix?: boolean;
-  jira?: string;
   dryRun?: boolean;
   useVersion?: string;
 }

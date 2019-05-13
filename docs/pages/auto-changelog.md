@@ -13,7 +13,6 @@ Options
 
   -d, --dry-run          Report what command will do but do not actually do anything
   --no-version-prefix    Use the version as the tag without the 'v' prefix
-  --jira string          Jira base URL
   --from string          Tag to start changelog generation on. Defaults to latest tag.
   --to string            Tag to end changelog generation on. Defaults to HEAD.
   -m, --message string   Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'
@@ -36,10 +35,6 @@ Examples
   Generate a changelog across specific           $ auto changelog --from v0.20.1 --to v0.21.0
   versions
 ```
-
-## Jira
-
-To include Jira story information you must include a URL to your hosted JIRA instance as a CLI flag or [.autorc](./autorc.md) config option.
 
 ## Changelog Titles
 
