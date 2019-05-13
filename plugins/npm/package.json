@@ -24,18 +24,20 @@
   },
   "dependencies": {
     "@intuit-auto/core": "6.5.0",
-    "@hutson/set-npm-auth-token-for-ci": "^4.0.0",
     "env-ci": "^3.2.0",
+    "get-monorepo-packages": "^1.1.0",
     "parse-author": "^2.0.0",
     "parse-github-url": "1.0.2",
-    "get-monorepo-packages": "^1.1.0",
+    "registry-url": "^5.1.0",
     "semver": "^6.0.0",
-    "url-join": "^4.0.0"
+    "url-join": "^4.0.0",
+    "user-home": "^2.0.0"
   },
   "devDependencies": {
-    "@types/url-join": "^4.0.0",
     "@types/env-ci": "^3.1.0",
     "@types/parse-github-url": "1.0.0",
-    "@types/semver": "^6.0.0"
+    "@types/semver": "^6.0.0",
+    "@types/url-join": "^4.0.0",
+    "@types/user-home": "^2.0.0"
   }
 }

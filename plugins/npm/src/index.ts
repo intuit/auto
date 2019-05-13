@@ -1,25 +1,19 @@
-import setToken from '@hutson/set-npm-auth-token-for-ci';
 import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
-import { promisify } from 'util';
 
 import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@intuit-auto/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
+
 import getConfigFromPackageJson from './package-config';
+import setTokenOnCI from './set-npm-token';
+import { loadPackageJson, readFile } from './utils';
 
 const { isCi } = envCi();
-const readFile = promisify(fs.readFile);
 
 function isMonorepo() {
   return fs.existsSync('lerna.json');
-}
-
-async function setTokenOnCI() {
-  if (isCi) {
-    setToken();
-  }
 }
 
 async function getPublishedVersion(name: string) {
@@ -129,10 +123,6 @@ async function bumpLatest(
     : undefined;
 
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
-}
-
-async function loadPackageJson(): Promise<IPackageJSON> {
-  return JSON.parse(await readFile('package.json', 'utf-8'));
 }
 
 const verbose = ['--loglevel', 'silly'];
@@ -353,7 +343,7 @@ export default class NPMPlugin implements IPlugin {
       await checkClean(auto);
 
       if (this.setRcToken) {
-        await setTokenOnCI();
+        await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
 
@@ -426,16 +416,14 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      if (isVerbose) {
-        const status = await execPromise('git', ['status', '--porcelain']);
+      const status = await execPromise('git', ['status', '--porcelain']);
 
-        if (status) {
-          auto.logger.log.error('Changed Files:\n', status);
-        }
+      if (isVerbose && status) {
+        auto.logger.log.error('Changed Files:\n', status);
       }
 
       if (this.setRcToken) {
-        await setTokenOnCI();
+        await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
 
