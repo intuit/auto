@@ -21,14 +21,6 @@ export type IExtendedCommit = ICommit & {
   packages?: string[];
 };
 
-export function filterServiceAccounts(commit: IExtendedCommit): boolean | void {
-  const SERVICE_ACCOUNTS = ['pdbf'];
-
-  if (commit.authorName && SERVICE_ACCOUNTS.includes(commit.authorName)) {
-    return true;
-  }
-}
-
 export function parsePR(commit: IExtendedCommit): IExtendedCommit {
   const merge = /Merge pull request #(\d+) from (.+)\n([\S\s]+)/;
   const prMatch = commit.subject.match(merge);
@@ -81,7 +73,6 @@ export default class LogParse {
 
     this.hooks.parseCommit.tap('Merge Commit', parsePR);
     this.hooks.parseCommit.tap('Squash Merge Commit', parseSquashPR);
-    this.hooks.omitCommit.tap('Service Accounts', filterServiceAccounts);
   }
 
   async normalizeCommits(commits: ICommit[]): Promise<IExtendedCommit[]> {

@@ -5,8 +5,11 @@ import tryRequire from './try-require';
 
 import ChromeWebStorePlugin from '../plugins/chrome';
 import ConventionalCommitsPlugin from '../plugins/conventional-commits';
+import FilterAccountsPlugin from '../plugins/filter-accounts';
+import JiraPlugin from '../plugins/jira';
 import NPMPlugin from '../plugins/npm';
 import ReleasedLabelPlugin from '../plugins/released';
+import SlackPlugin from '../plugins/slack';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -15,13 +18,23 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
-type SupportedPlugin = 'npm' | 'chrome' | 'conventional-commits' | 'released';
+type SupportedPlugin =
+  | 'chrome'
+  | 'conventional-commits'
+  | 'filter-accounts'
+  | 'jira'
+  | 'npm'
+  | 'released'
+  | 'slack';
 
 const plugins = new Map<SupportedPlugin, IPluginConstructor>([
-  ['npm', NPMPlugin],
   ['chrome', ChromeWebStorePlugin],
   ['conventional-commits', ConventionalCommitsPlugin],
-  ['released', ReleasedLabelPlugin]
+  ['filter-accounts', FilterAccountsPlugin],
+  ['jira', JiraPlugin],
+  ['npm', NPMPlugin],
+  ['released', ReleasedLabelPlugin],
+  ['slack', SlackPlugin]
 ]);
 
 function isSupported(key: SupportedPlugin | string): key is SupportedPlugin {
