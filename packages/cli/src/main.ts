@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+
+import Auto, {
+  ArgsType,
+  IChangelogOptions,
+  ICommentCommandOptions,
+  ICreateLabelsCommandOptions,
+  IInitCommandOptions,
+  ILabelCommandOptions,
+  IPRCheckCommandOptions,
+  IPRCommandOptions,
+  IReleaseCommandOptions,
+  IShipItCommandOptions
+} from '@autorelease/core';
+
+export async function run(args: ArgsType) {
+  const auto = new Auto(args);
+
+  switch (args.command) {
+    case 'init':
+      await auto.init(args as IInitCommandOptions);
+      break;
+    case 'create-labels':
+      await auto.loadConfig();
+      await auto.createLabels(args as ICreateLabelsCommandOptions);
+      break;
+    case 'label':
+      await auto.loadConfig();
+      await auto.label(args as ILabelCommandOptions);
+      break;
+    case 'pr-check':
+      await auto.loadConfig();
+      await auto.prCheck(args as IPRCheckCommandOptions);
+      break;
+    case 'pr':
+      await auto.loadConfig();
+      await auto.pr(args as IPRCommandOptions);
+      break;
+    case 'comment':
+      await auto.loadConfig();
+      await auto.comment(args as ICommentCommandOptions);
+      break;
+    case 'pr-body':
+      await auto.loadConfig();
+      await auto.prBody(args as ICommentCommandOptions);
+      break;
+    case 'version':
+      await auto.loadConfig();
+      await auto.version();
+      break;
+    case 'changelog':
+      await auto.loadConfig();
+      await auto.changelog(args as IChangelogOptions);
+      break;
+    case 'release':
+      await auto.loadConfig();
+      await auto.runRelease(args as IReleaseCommandOptions);
+      break;
+    case 'shipit':
+      await auto.loadConfig();
+      await auto.shipit(args as IShipItCommandOptions);
+      break;
+    case 'canary':
+      await auto.loadConfig();
+      await auto.canary(args as IShipItCommandOptions);
+      break;
+    default:
+      throw new Error(`idk what i'm doing.`);
+  }
+}
+
+export default async function main(args: ArgsType) {
+  try {
+    await run(args);
+  } catch (error) {
+    if (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
+}

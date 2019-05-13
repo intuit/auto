@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
     "target": "es5",
     "module": "commonjs",
     "strict": true,
@@ -14,7 +13,8 @@
     "experimentalDecorators": true,
     "plugins": [
       { "name": "typescript-tslint-plugin", "configFile": "./tslint.json" }
-    ]
+    ],
+    "typeRoots": ["./node_modules/@types/"]
   },
-  "include": ["./src/**/*"]
+  "include": ["./packages/**/*", "./plugins/**/*", "./typings"]
 }

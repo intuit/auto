@@ -1,16 +1,11 @@
 {
-  "name": "auto",
-  "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "6.5.0",
-  "main": "dist/main.js",
+  "name": "auto-monorepo",
+  "private": true,
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
   "license": "MIT",
-  "bin": {
-    "auto": "dist/bin/auto.js"
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -21,9 +16,13 @@
   "files": [
     "dist"
   ],
+  "workspaces": [
+    "packages/*",
+    "plugins/*"
+  ],
   "scripts": {
     "semver:check": "./scripts/post-install.sh",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "lerna run build --stream",
     "build:watch": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
@@ -35,63 +34,13 @@
     "docs:watch": "ignite --watch",
     "docs:publish": "./scripts/publish-docs.sh"
   },
-  "dependencies": {
-    "@atomist/slack-messages": "~1.1.0",
-    "@hutson/set-npm-auth-token-for-ci": "^4.0.0",
-    "@octokit/graphql": "^2.1.1",
-    "@octokit/plugin-enterprise-compatibility": "^1.1.0",
-    "@octokit/plugin-retry": "^2.2.0",
-    "@octokit/plugin-throttling": "^2.5.0",
-    "@octokit/rest": "^16.24.1",
-    "arr-flatten": "^1.1.0",
-    "chalk": "^2.4.2",
-    "chrome-webstore-upload-cli": "^1.2.0",
-    "command-line-args": "^5.1.1",
-    "command-line-usage": "^5.0.5",
-    "cosmiconfig": "5.2.0",
-    "dedent": "^0.7.0",
-    "deepmerge": "^3.2.0",
-    "dotenv": "^8.0.0",
-    "enquirer": "^2.3.0",
-    "env-ci": "^3.2.0",
-    "get-monorepo-packages": "^1.1.0",
-    "gitlog": "^3.1.2",
-    "import-cwd": "^3.0.0",
-    "lodash.chunk": "^4.2.0",
-    "node-fetch": "2.5.0",
-    "parse-author": "^2.0.0",
-    "parse-commit-message": "4.0.0",
-    "parse-github-url": "1.0.2",
-    "registry-url": "5.1.0",
-    "semver": "^6.0.0",
-    "signale": "^1.4.0",
-    "tapable": "^2.0.0-beta.2",
-    "tinycolor2": "^1.4.1",
-    "typescript-memoize": "^1.0.0-alpha.3",
-    "url-join": "^4.0.0"
-  },
   "devDependencies": {
-    "@types/command-line-args": "^5.0.0",
-    "@types/command-line-usage": "^5.0.1",
-    "@types/cosmiconfig": "5.0.3",
-    "@types/dedent": "^0.7.0",
-    "@types/dotenv": "^6.1.0",
-    "@types/env-ci": "^3.1.0",
-    "@types/graphql": "^14.2.0",
-    "@types/jest": "~24.0.9",
-    "@types/lodash.chunk": "^4.2.6",
-    "@types/node": "^12.0.0",
-    "@types/node-fetch": "2.3.3",
-    "@types/parse-github-url": "1.0.0",
-    "@types/semver": "^6.0.0",
-    "@types/signale": "^1.2.1",
-    "@types/tinycolor2": "^1.4.1",
-    "@types/url-join": "^4.0.0",
     "all-contributors-cli": "^6.4.0",
     "graphql": "^14.2.1",
     "husky": "^2.0.0",
     "ignite": "^1.8.2",
     "jest": "~24.5.0",
+    "lerna": "^3.13.4",
     "lint-staged": "^8.1.6",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.2",
@@ -136,7 +85,8 @@
       }
     },
     "testMatch": [
-      "**/src/**/__tests__/*.test.+(ts|tsx|js)"
+      "**/__tests__/*.test.+(ts|tsx|js)",
+      "!**/dist/**/*"
     ],
     "collectCoverage": true,
     "coverageDirectory": "./coverage",

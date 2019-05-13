@@ -1,0 +1,44 @@
+{
+  "name": "auto",
+  "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
+  "version": "6.5.0",
+  "main": "dist/main.js",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "bin": {
+    "auto": "dist/bin/auto.js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2"
+  },
+  "dependencies": {
+    "@autorelease/core": "6.5.0",
+    "@autorelease/filter-accounts": "6.5.0",
+    "chalk": "^2.4.2",
+    "command-line-args": "^5.1.1",
+    "command-line-usage": "^5.0.5",
+    "dedent": "^0.7.0",
+    "signale": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
+    "@types/command-line-usage": "^5.0.1",
+    "@types/dedent": "^0.7.0",
+    "@types/signale": "^1.2.1"
+  }
+}
