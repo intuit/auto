@@ -1,15 +1,15 @@
-import Auto from '@autorelease/core';
-import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
+import Auto from '@intuit-auto/core';
+import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
 import Changelog, {
   IGenerateReleaseNotesOptions
-} from '@autorelease/core/dist/changelog';
-import LogParse from '@autorelease/core/dist/log-parse';
-import { defaultLabelDefinition } from '@autorelease/core/dist/release';
-import { dummyLog } from '@autorelease/core/dist/utils/logger';
+} from '@intuit-auto/core/dist/changelog';
+import LogParse from '@intuit-auto/core/dist/log-parse';
+import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
+import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
 import {
   makeChangelogHooks,
   makeHooks
-} from '@autorelease/core/dist/utils/make-hooks';
+} from '@intuit-auto/core/dist/utils/make-hooks';
 import JiraPlugin, { parseJira } from '../src';
 
 describe('parse jira', () => {

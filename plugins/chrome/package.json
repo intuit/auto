@@ -1,5 +1,5 @@
 {
-  "name": "@autorelease/chrome",
+  "name": "@intuit-auto/chrome",
   "version": "6.5.0",
   "main": "dist/index.js",
   "author": {
@@ -23,7 +23,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@autorelease/core": "6.5.0",
+    "@intuit-auto/core": "6.5.0",
     "chrome-webstore-upload-cli": "^1.2.0",
     "semver": "^6.0.0"
   },

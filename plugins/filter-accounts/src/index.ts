@@ -1,4 +1,4 @@
-import { Auto, IPlugin } from '@autorelease/core';
+import { Auto, IPlugin } from '@intuit-auto/core';
 
 interface IFilterAccountsPluginOptions {
   accounts: string[];

@@ -1,10 +1,10 @@
-import Auto from '@autorelease/core';
-import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
-import LogParse from '@autorelease/core/dist/log-parse';
+import Auto from '@intuit-auto/core';
+import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
+import LogParse from '@intuit-auto/core/dist/log-parse';
 import {
   makeHooks,
   makeLogParseHooks
-} from '@autorelease/core/dist/utils/make-hooks';
+} from '@intuit-auto/core/dist/utils/make-hooks';
 import FilterAccountsPlugin from '..';
 
 describe('filterServiceAccounts', () => {

@@ -1,7 +1,7 @@
-import Auto from '@autorelease/core';
-import makeCommitFromMsg from '@autorelease/core/src/__tests__/make-commit-from-msg';
-import { dummyLog } from '@autorelease/core/src/utils/logger';
-import { makeHooks } from '@autorelease/core/src/utils/make-hooks';
+import Auto from '@intuit-auto/core';
+import makeCommitFromMsg from '@intuit-auto/core/src/__tests__/make-commit-from-msg';
+import { dummyLog } from '@intuit-auto/core/src/utils/logger';
+import { makeHooks } from '@intuit-auto/core/src/utils/make-hooks';
 import SlackPlugin from '../src';
 
 const fetchSpy = jest.fn();

@@ -1,10 +1,10 @@
-import * as Auto from '@autorelease/core';
-import makeCommitFromMsg from '@autorelease/core/dist/__tests__/make-commit-from-msg';
-import Changelog from '@autorelease/core/dist/changelog';
-import LogParse from '@autorelease/core/dist/log-parse';
-import { defaultLabelDefinition } from '@autorelease/core/dist/release';
-import { dummyLog } from '@autorelease/core/dist/utils/logger';
-import { makeHooks } from '@autorelease/core/dist/utils/make-hooks';
+import * as Auto from '@intuit-auto/core';
+import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
+import Changelog from '@intuit-auto/core/dist/changelog';
+import LogParse from '@intuit-auto/core/dist/log-parse';
+import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
+import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
+import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
 import NpmPlugin from '../src';
 
 const exec = jest.fn();

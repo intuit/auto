@@ -26,7 +26,7 @@ export default function loadPlugin(
 
   if (!plugin) {
     plugin = tryRequire(
-      path.join('@autorelease', pluginPath)
+      path.join('@intuit-auto', pluginPath)
     ) as IPluginConstructor;
   }
 

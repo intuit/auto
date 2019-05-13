@@ -1,5 +1,5 @@
 {
-  "name": "@autorelease/released",
+  "name": "@intuit-auto/released",
   "version": "6.5.0",
   "main": "dist/index.js",
   "author": {
@@ -23,7 +23,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@autorelease/core": "6.5.0",
+    "@intuit-auto/core": "6.5.0",
     "deepmerge": "^3.2.0"
   }
 }

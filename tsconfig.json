@@ -15,6 +15,5 @@
       { "name": "typescript-tslint-plugin", "configFile": "./tslint.json" }
     ],
     "typeRoots": ["./node_modules/@types/"]
-  },
-  "include": ["./packages/**/*", "./plugins/**/*", "./typings"]
+  }
 }

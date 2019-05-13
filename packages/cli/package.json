@@ -27,12 +27,12 @@
     "test": "jest --maxWorkers=2"
   },
   "dependencies": {
-    "@autorelease/core": "6.5.0",
-    "@autorelease/filter-accounts": "6.5.0",
-    "@autorelease/jira": "6.5.0",
-    "@autorelease/npm": "6.5.0",
-    "@autorelease/released": "6.5.0",
-    "@autorelease/slack": "6.5.0",
+    "@intuit-auto/core": "6.5.0",
+    "@intuit-auto/filter-accounts": "6.5.0",
+    "@intuit-auto/jira": "6.5.0",
+    "@intuit-auto/npm": "6.5.0",
+    "@intuit-auto/released": "6.5.0",
+    "@intuit-auto/slack": "6.5.0",
     "chalk": "^2.4.2",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",

@@ -1,5 +1,5 @@
 import { githubToSlack } from '@atomist/slack-messages';
-import { Auto, IPlugin } from '@autorelease/core';
+import { Auto, IPlugin } from '@intuit-auto/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
 

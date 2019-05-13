@@ -1,5 +1,5 @@
 {
-  "name": "@autorelease/slack",
+  "name": "@intuit-auto/slack",
   "version": "6.5.0",
   "main": "dist/index.js",
   "author": {
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@autorelease/core": "6.5.0",
+    "@intuit-auto/core": "6.5.0",
     "node-fetch": "2.5.0",
     "url-join": "^4.0.0"
   },

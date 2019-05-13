@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import { promisify } from 'util';
 
-import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@autorelease/core';
+import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@intuit-auto/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
 import getConfigFromPackageJson from './package-config';

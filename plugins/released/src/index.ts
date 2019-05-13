@@ -1,5 +1,5 @@
-import { Auto, IPlugin } from '@autorelease/core';
-import { IExtendedCommit } from '@autorelease/core/dist/log-parse';
+import { Auto, IPlugin } from '@intuit-auto/core';
+import { IExtendedCommit } from '@intuit-auto/core/dist/log-parse';
 import merge from 'deepmerge';
 
 interface IReleasedLabelPluginOptions {

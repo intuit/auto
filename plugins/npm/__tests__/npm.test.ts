@@ -1,6 +1,6 @@
-import * as Auto from '@autorelease/core';
-import { dummyLog } from '@autorelease/core/dist/utils/logger';
-import { makeHooks } from '@autorelease/core/dist/utils/make-hooks';
+import * as Auto from '@intuit-auto/core';
+import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
+import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
 import NPMPlugin, {
   changedPackages,
   getMonorepoPackage,

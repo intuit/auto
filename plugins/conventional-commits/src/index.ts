@@ -1,6 +1,6 @@
 import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
-import { Auto, IPlugin, VersionLabel } from '@autorelease/core';
+import { Auto, IPlugin, VersionLabel } from '@intuit-auto/core';
 
 export default class ConventionalCommitsPlugin implements IPlugin {
   name = 'Conventional Commits Parser';
@@ -8,19 +8,21 @@ export default class ConventionalCommitsPlugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.parseCommit.tap(this.name, commit => {
+        if (!auto.semVerLabels) {
+          return commit;
+        }
+
         try {
           const [conventionalCommit] = applyPlugins(
             mappers.increment,
             parse(commit.subject)
           );
+          const incrementLabel = auto.semVerLabels.get(
+            conventionalCommit.increment as VersionLabel
+          );
 
-          if (conventionalCommit.header && conventionalCommit.increment) {
-            commit.labels = [
-              ...commit.labels,
-              auto.semVerLabels!.get(
-                conventionalCommit.increment as VersionLabel
-              )!
-            ];
+          if (conventionalCommit.header && incrementLabel) {
+            commit.labels = [...commit.labels, incrementLabel];
           }
         } catch (error) {
           auto.logger.verbose.info(

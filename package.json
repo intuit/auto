@@ -21,6 +21,7 @@
     "plugins/*"
   ],
   "scripts": {
+    "clean": "lerna clean --yes && rm -rf node_modules && rm -rf packages/*/dist && rm -rf plugins/*/dist",
     "semver:check": "./scripts/post-install.sh",
     "build": "lerna run build --stream",
     "build:watch": "npm run build -- -- -w",

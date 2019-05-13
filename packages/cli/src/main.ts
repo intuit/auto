@@ -11,7 +11,7 @@ import Auto, {
   IPRCommandOptions,
   IReleaseCommandOptions,
   IShipItCommandOptions
-} from '@autorelease/core';
+} from '@intuit-auto/core';
 
 export async function run(args: ArgsType) {
   const auto = new Auto(args);

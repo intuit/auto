@@ -7,7 +7,7 @@ import commandLineUsage from 'command-line-usage';
 import dedent from 'dedent';
 import signale from 'signale';
 
-import { ArgsType, Flags } from '@autorelease/core';
+import { ArgsType, Flags } from '@intuit-auto/core';
 
 const p = chalk.hex('#870048');
 const y = chalk.hex('#F1A60E');

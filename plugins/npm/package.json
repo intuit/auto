@@ -1,5 +1,5 @@
 {
-  "name": "@autorelease/npm",
+  "name": "@intuit-auto/npm",
   "version": "6.5.0",
   "main": "dist/index.js",
   "author": {
@@ -23,7 +23,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@autorelease/core": "6.5.0",
+    "@intuit-auto/core": "6.5.0",
     "@hutson/set-npm-auth-token-for-ci": "^4.0.0",
     "env-ci": "^3.2.0",
     "parse-author": "^2.0.0",
