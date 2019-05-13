@@ -426,6 +426,14 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
+      if (isVerbose) {
+        const status = await execPromise('git', ['status', '--porcelain']);
+
+        if (status) {
+          auto.logger.log.error('Changed Files:\n', status);
+        }
+      }
+
       if (this.setRcToken) {
         await setTokenOnCI();
         auto.logger.verbose.info('Set CI NPM_TOKEN');
