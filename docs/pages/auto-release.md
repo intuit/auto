@@ -32,9 +32,6 @@ Options
   --no-version-prefix    Use the version as the tag without the 'v' prefix
   --jira string          Jira base URL
   --use-version string   Version number to publish as. Defaults to reading from the package definition for the platform.
-  -s, --slack string     Url to post a slack message to about the release. If slack url
-                         supplied via autorc this flag can act as a boolean.  Make sure the
-                         SLACK_TOKEN environment variable is set.
 
 Global Options
 
@@ -51,7 +48,3 @@ Examples
 
   $ auto release
 ```
-
-## Slack URL
-
-When posting to slack you must provide your slack services hook url at the CLI or in your `.autorc` config. To see configuration [go here](./autorc.md#slack-url).
