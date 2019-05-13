@@ -8,7 +8,11 @@ To use the plugin include it in your `.autorc`
 
 ```json
 {
-  "plugins": [["slack", { "url": "https://url-to-your-slack-hook.com" }]]
+  "plugins": [
+    ["slack", { "url": "https://url-to-your-slack-hook.com" }],
+    // or
+    ["slack", "https://url-to-your-slack-hook.com"]
+  ]
 }
 ```
 

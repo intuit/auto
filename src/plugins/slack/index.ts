@@ -25,8 +25,8 @@ export default class SlackPlugin implements IPlugin {
 
   readonly options: ISlackPluginOptions;
 
-  constructor(options: ISlackPluginOptions) {
-    this.options = options;
+  constructor(options: ISlackPluginOptions | string) {
+    this.options = typeof options === 'string' ? { url: options } : options;
   }
 
   apply(auto: Auto) {
