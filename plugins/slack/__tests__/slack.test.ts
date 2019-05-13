@@ -34,6 +34,7 @@ describe('postToSlack', () => {
     const hooks = makeHooks();
 
     plugin.postToSlack = jest.fn();
+    // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
     await hooks.afterRelease.promise(undefined, [], '# My Notes');
@@ -46,6 +47,7 @@ describe('postToSlack', () => {
     const hooks = makeHooks();
 
     plugin.postToSlack = jest.fn();
+    // @ts-ignore
     plugin.apply({ hooks, args: { dryRun: true } } as Auto);
 
     await hooks.afterRelease.promise('1.0.0', [], '# My Notes');
@@ -58,6 +60,7 @@ describe('postToSlack', () => {
     const hooks = makeHooks();
 
     plugin.postToSlack = jest.fn();
+    // @ts-ignore
     plugin.apply({ hooks, args: {} } as Auto);
 
     await hooks.afterRelease.promise('1.0.0', [], '# My Notes');
@@ -70,6 +73,7 @@ describe('postToSlack', () => {
     const hooks = makeHooks();
 
     plugin.postToSlack = jest.fn();
+    // @ts-ignore
     plugin.apply({
       hooks,
       args: {},
@@ -91,6 +95,7 @@ describe('postToSlack', () => {
     const hooks = makeHooks();
 
     plugin.postToSlack = jest.fn();
+    // @ts-ignore
     plugin.apply({ hooks, args: {} } as Auto);
 
     await expect(
