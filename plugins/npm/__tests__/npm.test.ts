@@ -66,10 +66,25 @@ describe('changedPackages ', () => {
       `packages/foo/README.md\npackages/bar/package.json`
     );
 
-    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([
-      'foo',
-      'bar'
-    ]);
+    expect(
+      await changedPackages(
+        'sha',
+        [
+          {
+            name: 'foo',
+            path: 'packages/foo',
+            version: '1.0.0'
+          },
+          {
+            name: 'bar',
+            path: 'packages/bar',
+            version: '1.0.0'
+          }
+        ],
+        {},
+        dummyLog()
+      )
+    ).toEqual(['foo', 'bar']);
   });
 
   test('should match files in package directory with @scope/ names', async () => {
@@ -77,10 +92,25 @@ describe('changedPackages ', () => {
       `packages/@scope/foo/README.md\npackages/@scope/bar/package.json`
     );
 
-    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([
-      '@scope/foo',
-      '@scope/bar'
-    ]);
+    expect(
+      await changedPackages(
+        'sha',
+        [
+          {
+            name: '@scope/foo',
+            path: 'packages/@scope/foo',
+            version: '1.0.0'
+          },
+          {
+            name: '@scope/bar',
+            path: 'packages/@scope/bar',
+            version: '1.0.0'
+          }
+        ],
+        {},
+        dummyLog()
+      )
+    ).toEqual(['@scope/foo', '@scope/bar']);
   });
 });
 
