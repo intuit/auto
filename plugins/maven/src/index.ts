@@ -13,7 +13,7 @@ const getPom = async () =>
 
 async function getPreviousVersion(auto: Auto): Promise<string> {
   const pom = await getPom();
-  const previousVersion = pom.pomObject.project.version;
+  const previousVersion = pom.pomObject && pom.pomObject.project.version;
 
   if (!previousVersion) {
     throw new Error('Cannot read version from the pom.xml.');
@@ -38,9 +38,7 @@ export default class MavenPlugin implements IPlugin {
     auto.hooks.getRepository.tapPromise(this.name, async () => {
       auto.logger.verbose.info('Maven: getting repo information from pom.xml');
       const pom = await getPom();
-      const scm = arrayify(pom.pomObject.project.scm).find(remote =>
-        Boolean(remote.url.includes('github'))
-      );
+      const { scm } = pom.pomObject.project;
 
       if (!scm) {
         throw new Error(
@@ -48,7 +46,17 @@ export default class MavenPlugin implements IPlugin {
         );
       }
 
-      const repoInfo = parseGitHubUrl(scm.url);
+      const github = arrayify(pom.pomObject.project.scm).find(remote =>
+        Boolean(remote.url.includes('github'))
+      );
+
+      if (!github) {
+        throw new Error(
+          'Could not find GitHub scm settings in pom.xml. Make sure you set one up that points to your project on GitHub or set owner+repo in your .autorc'
+        );
+      }
+
+      const repoInfo = parseGitHubUrl(github.url);
 
       if (!repoInfo || !repoInfo.owner || !repoInfo.name) {
         throw new Error(
