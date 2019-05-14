@@ -799,7 +799,7 @@ export default class Auto {
       ? this.prefixRelease(rawVersion)
       : rawVersion;
 
-    if (!dryRun && eq(newVersion, lastRelease)) {
+    if (!dryRun && parse(lastRelease) && eq(newVersion, lastRelease)) {
       this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
       );
