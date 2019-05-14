@@ -222,6 +222,24 @@ const commands: ICommand[] = [
     examples: ['{green $} auto label --pr 123']
   },
   {
+    name: 'comment',
+    summary:
+      'Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.',
+    require: [['message', 'delete']],
+    options: [
+      pr,
+      context,
+      { ...deleteFlag, description: 'Delete old comment' },
+      { ...message, description: 'Message to post to comment' },
+      dryRun,
+      ...defaultOptions
+    ],
+    examples: [
+      '{green $} auto comment --delete',
+      '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
+    ]
+  },
+  {
     name: 'pr-check',
     summary: 'Check that a pull request has a SemVer label',
     require: ['url'],
@@ -239,7 +257,7 @@ const commands: ICommand[] = [
     examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
   {
-    name: 'pr',
+    name: 'pr-status',
     summary: 'Set the status on a PR commit',
     require: ['state', 'url', 'description', 'context'],
     options: [
@@ -279,6 +297,24 @@ const commands: ICommand[] = [
     ],
     examples: [
       `{green $} auto pr \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
+    ]
+  },
+  {
+    name: 'pr-body',
+    summary:
+      'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
+    require: [['message', 'delete']],
+    options: [
+      pr,
+      context,
+      { ...deleteFlag, description: 'Delete old PR body update' },
+      { ...message, description: 'Message to post to PR body' },
+      dryRun,
+      ...defaultOptions
+    ],
+    examples: [
+      '{green $} auto pr-body --delete',
+      '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"'
     ]
   },
   {
@@ -364,42 +400,6 @@ const commands: ICommand[] = [
       ...defaultOptions
     ],
     examples: ['{green $} auto release']
-  },
-  {
-    name: 'comment',
-    summary:
-      'Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.',
-    require: [['message', 'delete']],
-    options: [
-      pr,
-      context,
-      { ...deleteFlag, description: 'Delete old comment' },
-      { ...message, description: 'Message to post to comment' },
-      dryRun,
-      ...defaultOptions
-    ],
-    examples: [
-      '{green $} auto comment --delete',
-      '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
-    ]
-  },
-  {
-    name: 'pr-body',
-    summary:
-      'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
-    require: [['message', 'delete']],
-    options: [
-      pr,
-      context,
-      { ...deleteFlag, description: 'Delete old PR body update' },
-      { ...message, description: 'Message to post to PR body' },
-      dryRun,
-      ...defaultOptions
-    ],
-    examples: [
-      '{green $} auto pr-body --delete',
-      '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"'
-    ]
   },
   {
     name: 'shipit',
@@ -502,7 +502,7 @@ function printRootHelp() {
       content: filterCommands(commands, [
         'label',
         'pr-check',
-        'pr',
+        'pr-status',
         'pr-body',
         'comment'
       ])

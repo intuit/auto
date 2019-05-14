@@ -8,7 +8,7 @@ import Auto, {
   IInitCommandOptions,
   ILabelCommandOptions,
   IPRCheckCommandOptions,
-  IPRCommandOptions,
+  IPRStatusCommandOptions,
   IReleaseCommandOptions,
   IShipItCommandOptions
 } from '@intuit-auto/core';
@@ -32,9 +32,9 @@ export async function run(args: ArgsType) {
       await auto.loadConfig();
       await auto.prCheck(args as IPRCheckCommandOptions);
       break;
-    case 'pr':
+    case 'pr-status':
       await auto.loadConfig();
-      await auto.pr(args as IPRCommandOptions);
+      await auto.prStatus(args as IPRStatusCommandOptions);
       break;
     case 'comment':
       await auto.loadConfig();

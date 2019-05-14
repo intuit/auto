@@ -1,4 +1,4 @@
-# `auto pr`
+# `auto pr-status`
 
 Set the status on a PR commit
 

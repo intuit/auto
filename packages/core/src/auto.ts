@@ -19,7 +19,7 @@ import {
   IInitCommandOptions,
   ILabelCommandOptions,
   IPRCheckCommandOptions,
-  IPRCommandOptions,
+  IPRStatusCommandOptions,
   IReleaseCommandOptions,
   IShipItCommandOptions
 } from './cli-args';
@@ -236,7 +236,7 @@ export default class Auto {
    *
    * @param options Options for the pr status functionality
    */
-  async pr({ dryRun, pr, url, ...options }: IPRCommandOptions) {
+  async prStatus({ dryRun, pr, url, ...options }: IPRStatusCommandOptions) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -250,7 +250,7 @@ export default class Auto {
       // default to sha if no PR found
     }
 
-    this.logger.verbose.info("Using command: 'pr'");
+    this.logger.verbose.info("Using command: 'pr-status'");
 
     if (!sha && prNumber) {
       this.logger.verbose.info('Getting commit SHA from PR.');
