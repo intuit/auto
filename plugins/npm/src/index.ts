@@ -49,8 +49,8 @@ interface IMonorepoPackage {
   version: string;
 }
 
-const inFolder = (parent: string, dir: string) => {
-  const relative = path.relative(parent, dir);
+const inFolder = (parent: string, child: string) => {
+  const relative = path.relative(parent, child);
 
   return Boolean(
     relative && !relative.startsWith('..') && !path.isAbsolute(relative)
@@ -82,7 +82,7 @@ export async function changedPackages(
     }
 
     changed.add(
-      monorepoPackage && lernaJson.version === 'independent'
+      lernaJson.version === 'independent'
         ? `${monorepoPackage.name}@${monorepoPackage.version}`
         : monorepoPackage.name
     );
