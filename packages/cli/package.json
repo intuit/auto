@@ -20,6 +20,17 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "cli"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:watch": "npm run build -- -w",

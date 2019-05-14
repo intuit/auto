@@ -2,6 +2,7 @@
   "name": "@intuit-auto/released",
   "version": "6.5.0",
   "main": "dist/index.js",
+  "description": "Released plugin for auto. Comments with version + extra",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -15,6 +16,18 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "released",
+    "comment"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

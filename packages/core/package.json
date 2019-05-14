@@ -1,6 +1,7 @@
 {
   "name": "@intuit-auto/core",
   "version": "6.5.0",
+  "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "author": {
     "name": "Andrew Lisowski",
@@ -18,6 +19,17 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "node"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -2,6 +2,7 @@
   "name": "@intuit-auto/npm",
   "version": "6.5.0",
   "main": "dist/index.js",
+  "description": "NPM publishing plugin for auto",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -15,6 +16,18 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "npm",
+    "lerna"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
