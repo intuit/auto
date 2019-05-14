@@ -34,7 +34,7 @@ export interface IPRCheckCommandOptions {
   dryRun?: boolean;
 }
 
-export interface IPRCommandOptions {
+export interface IPRStatusCommandOptions {
   sha?: string;
   pr?: number;
   url: string;
@@ -97,7 +97,7 @@ export type ArgsType = GlobalFlags &
     | ICreateLabelsCommandOptions
     | ILabelCommandOptions
     | IPRCheckCommandOptions
-    | IPRCommandOptions
+    | IPRStatusCommandOptions
     | ICommentCommandOptions
     | IReleaseCommandOptions
     | IVersionCommandOptions
@@ -109,7 +109,7 @@ export type Flags =
   | keyof ICreateLabelsCommandOptions
   | keyof ILabelCommandOptions
   | keyof IPRCheckCommandOptions
-  | keyof IPRCommandOptions
+  | keyof IPRStatusCommandOptions
   | keyof ICommentCommandOptions
   | keyof IReleaseCommandOptions
   | keyof IVersionCommandOptions

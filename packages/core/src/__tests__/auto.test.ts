@@ -1,5 +1,5 @@
 import Auto from '../auto';
-import { IPRCommandOptions } from '../cli-args';
+import { IPRStatusCommandOptions } from '../cli-args';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -299,7 +299,7 @@ describe('Auto', () => {
       createStatus = jest.fn();
     });
 
-    const required: IPRCommandOptions = {
+    const required: IPRStatusCommandOptions = {
       url: 'https://google.com',
       state: 'pending',
       description: 'foo',
@@ -310,7 +310,7 @@ describe('Auto', () => {
       const auto = new Auto({ command: 'pr', ...defaults });
       auto.logger = dummyLog();
 
-      expect(auto.pr(required)).rejects.toBeTruthy();
+      expect(auto.prStatus(required)).rejects.toBeTruthy();
     });
 
     test('should catch exceptions when status fails to post', async () => {
@@ -321,7 +321,7 @@ describe('Auto', () => {
       createStatus.mockRejectedValueOnce({ status: 400 });
 
       await expect(
-        auto.pr({ ...required, sha: '1234' })
+        auto.prStatus({ ...required, sha: '1234' })
       ).rejects.toBeInstanceOf(Error);
       expect(createStatus).toHaveBeenCalled();
     });
@@ -332,7 +332,7 @@ describe('Auto', () => {
 
       await auto.loadConfig();
 
-      await auto.pr({ ...required, sha: '1234', dryRun: true });
+      await auto.prStatus({ ...required, sha: '1234', dryRun: true });
       expect(createStatus).not.toHaveBeenCalled();
     });
 
@@ -343,7 +343,7 @@ describe('Auto', () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      await auto.pr({ ...required, sha: '1234' });
+      await auto.prStatus({ ...required, sha: '1234' });
       expect(createStatus).toHaveBeenCalledWith(
         expect.objectContaining({
           sha: '1234'
@@ -362,7 +362,7 @@ describe('Auto', () => {
       auto.git!.getSha = getSha;
       getSha.mockReturnValueOnce('abc');
 
-      await auto.pr({ ...required });
+      await auto.prStatus({ ...required });
       expect(createStatus).toHaveBeenCalledWith(
         expect.objectContaining({
           sha: 'abc'
@@ -381,7 +381,7 @@ describe('Auto', () => {
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: 'deep' } } });
 
-      await auto.pr({ ...required, pr: 14 });
+      await auto.prStatus({ ...required, pr: 14 });
       expect(createStatus).toHaveBeenCalledWith(
         expect.objectContaining({
           sha: 'deep'
@@ -713,7 +713,7 @@ describe('Auto', () => {
       const hookFn = jest.fn();
       auto.hooks.getRepository.tap('test', hookFn);
       await auto.loadConfig();
-      await auto.pr({
+      await auto.prStatus({
         url: 'foo.bar',
         state: 'pending',
         description: 'Waiting for stuffs',
