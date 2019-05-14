@@ -50,7 +50,7 @@ test('should create sections for packages', async () => {
   exec.mockImplementation(async command => {
     if (command === 'npx') {
       return Promise.resolve(
-        'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
+        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
       );
     }
 

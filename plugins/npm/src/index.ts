@@ -1,6 +1,7 @@
 import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
+import path from 'path';
 
 import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@intuit-auto/core';
 import getPackages from 'get-monorepo-packages';
@@ -48,6 +49,14 @@ interface IMonorepoPackage {
   version: string;
 }
 
+const inFolder = (parent: string, child: string) => {
+  const relative = path.relative(parent, child);
+
+  return Boolean(
+    relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+  );
+};
+
 export async function changedPackages(
   sha: string,
   packages: IMonorepoPackage[],
@@ -64,25 +73,18 @@ export async function changedPackages(
   ]);
 
   changedFiles.split('\n').forEach(filePath => {
-    const parts = filePath.split('/');
+    const monorepoPackage = packages.find(subPackage =>
+      inFolder(subPackage.path, filePath)
+    );
 
-    // TODO: fix monorpo pacakge parsing to support more that just packages repo
-    if (parts[0] !== 'packages' || parts.length < 3) {
+    if (!monorepoPackage) {
       return;
     }
 
-    const packageName =
-      parts.length > 3 && parts[1][0] === '@'
-        ? `${parts[1]}/${parts[2]}`
-        : parts[1];
-    const version = packages.find(monorepoPackage =>
-      monorepoPackage.path.includes(parts.slice(0, -1).join('/'))
-    );
-
     changed.add(
-      version && lernaJson.version === 'independent'
-        ? `${packageName}@${version.version}`
-        : packageName
+      lernaJson.version === 'independent'
+        ? `${monorepoPackage.name}@${monorepoPackage.version}`
+        : monorepoPackage.name
     );
   });
 
@@ -135,8 +137,8 @@ interface INpmConfig {
 const getLernaPackages = async () =>
   execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
     res.split('\n').map(packageInfo => {
-      const [path, name, version] = packageInfo.split(':');
-      return { path, name, version };
+      const [packagePath, name, version] = packageInfo.split(':');
+      return { path: packagePath, name, version };
     })
   );
 
