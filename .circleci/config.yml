@@ -32,16 +32,38 @@ aliases:
   - &test
     name: Test
     command: yarn test
+  - &build
+    name: Build
+    command: yarn build
+  - &semver
+    name: Check PR for semVer label
+    command: yarn semver:check
 
 jobs:
+  semver:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: *semver
+
   install:
     <<: *defaults
     steps:
       - checkout
       - restore_cache: *restore-cache
-      - run: date
       - run: *yarn
       - save_cache: *save-cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/auto
+      - run: *build
       - persist_to_workspace:
           root: .
           paths:
@@ -63,22 +85,6 @@ jobs:
       - run:
           name: Send CodeCov Results
           command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
-
-  build:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/auto
-      - run:
-          name: Build
-          command: yarn build
-      - run:
-          name: Check PR for semVer label
-          command: yarn semver:check
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   release:
     <<: *defaults
@@ -105,21 +111,24 @@ workflows:
     jobs:
       - install
 
-      - lint:
-          requires:
-            - install
-
-      - test:
-          requires:
-            - install
-
       - build:
           requires:
             - install
 
-      - release:
+      - semver: 
           requires:
             - build
+
+      - lint:
+          requires:
+            - build
+
+      - test:
+          requires:
+            - build
+
+      - release:
+          requires:
             - test
             - lint
 
