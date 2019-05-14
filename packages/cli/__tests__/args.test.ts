@@ -35,7 +35,7 @@ describe('root parser', () => {
 
   test('should exit when required arg is not included', () => {
     process.exit = jest.fn() as any;
-    parseArgs(['pr']);
+    parseArgs(['pr-status']);
     expect(process.exit).toHaveBeenCalled();
   });
 
