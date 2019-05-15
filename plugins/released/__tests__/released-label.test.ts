@@ -71,6 +71,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump');
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [commit],
       releaseNotes: ''
     });
@@ -92,6 +93,7 @@ describe('release label plugin', () => {
 
     const commit = makeCommitFromMsg('normal commit with no bump');
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       commits: [commit],
       releaseNotes: ''
     });
@@ -113,6 +115,7 @@ describe('release label plugin', () => {
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: ''
     });
@@ -140,6 +143,7 @@ describe('release label plugin', () => {
     });
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -162,6 +166,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump (#123)');
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -188,6 +193,7 @@ describe('release label plugin', () => {
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
@@ -214,6 +220,7 @@ describe('release label plugin', () => {
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
@@ -237,6 +244,7 @@ describe('release label plugin', () => {
     } as unknown) as Auto);
 
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       newVersion: '1.0.0-canary',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
@@ -268,6 +276,7 @@ describe('release label plugin', () => {
     );
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -299,6 +308,7 @@ describe('release label plugin', () => {
     );
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -322,6 +332,7 @@ describe('release label plugin', () => {
       'normal commit with no bump (#123) closes #100'
     );
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       newVersion: '1.0.0-canary',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''

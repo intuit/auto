@@ -63,6 +63,7 @@ export interface IAutoHooks {
   afterRelease: AsyncParallelHook<
     [
       {
+        lastRelease: string;
         newVersion?: string;
         commits: IExtendedCommit[];
         releaseNotes: string;
@@ -821,6 +822,7 @@ export default class Auto {
     }
 
     await this.hooks.afterRelease.promise({
+      lastRelease,
       newVersion,
       commits: commitsInRelease,
       releaseNotes,
