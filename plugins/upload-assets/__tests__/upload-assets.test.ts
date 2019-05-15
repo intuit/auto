@@ -3,6 +3,7 @@ import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
 import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import path from 'path';
 
+import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
 import UploadAssets from '../src';
 
 describe('Upload Assets Plugin', () => {
@@ -15,6 +16,7 @@ describe('Upload Assets Plugin', () => {
 
     plugin.apply(({
       hooks,
+      logger: dummyLog(),
       git: { ghub: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
@@ -36,6 +38,7 @@ describe('Upload Assets Plugin', () => {
 
     plugin.apply(({
       hooks,
+      logger: dummyLog(),
       git: { ghub: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
@@ -72,6 +75,7 @@ describe('Upload Assets Plugin', () => {
 
     plugin.apply(({
       hooks,
+      logger: dummyLog(),
       git: { ghub: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
