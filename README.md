@@ -18,7 +18,7 @@ Release Features:
 - Skip a release with the `skip-release` label
 - Publish canary releases from PRs or locally
 - Generate changelogs with fancy headers, authors, and monorepo package association
-- Use labels to create new changelog section
+- Use labels to create new changelog sections
 - Generate a GitHub release
 
 Pull Request Interaction Features:
@@ -27,8 +27,22 @@ Pull Request Interaction Features:
 - Set the status of a PR
 - Check that a pull request has a SemVer label
 - Comment on a PR with markdown
+- Update the PR body with contextual build metadata
 
 Visit [the docs](https://intuit.github.io/auto/) for more information.
+
+## Plugins
+
+Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
+
+- [chrome](./plugins/chrome) - publish code to Chrome Web Store
+- [conventional-commits]](./plugins/conventional-commits) - parse conventional commit messages for version bumps
+- [filter-commits](./plugins/filter-commits) - Ignore commits made by certain accounts
+- [jira](./plugins/jira) - Include jira story links in the changelog
+- [npm](./plugins/npm) - publish code to npm (DEFAULT)
+- [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
+- [slack](./plugins/slack) - post release notes to slack
+- [upload-assets](./plugins/upload-assets) - add extra assets to the release
 
 ## Start Developing
 
