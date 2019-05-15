@@ -4,7 +4,7 @@ Filter certain git accounts out of the changelog and version calculation.
 
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @intuit-auto/filter-accounts

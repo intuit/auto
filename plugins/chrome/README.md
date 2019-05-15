@@ -8,7 +8,7 @@ Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
 
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @intuit-auto/chrome
