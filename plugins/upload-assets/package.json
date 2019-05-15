@@ -37,9 +37,11 @@
   },
   "dependencies": {
     "@intuit-auto/core": "6.5.0",
+    "dedent": "^0.7.0",
     "file-type": "^11.0.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.25.5"
+    "@octokit/rest": "^16.25.5",
+    "@types/dedent": "^0.7.0"
   }
 }

@@ -1,4 +1,5 @@
 import { Auto, IPlugin } from '@intuit-auto/core';
+import dedent from 'dedent';
 import fileType from 'file-type';
 import fs from 'fs';
 import path from 'path';
@@ -22,6 +23,13 @@ export default class UploadAssetsPlugin implements IPlugin {
 
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
+      auto.logger.log.info(dedent`
+        Uploading:
+
+        ${this.options.assets.map(asset => `\t- ${asset}`).join('\n')}
+
+      `);
+
       await Promise.all(
         this.options.assets.map(async asset => {
           if (!auto.git || !response) {
@@ -41,6 +49,7 @@ export default class UploadAssetsPlugin implements IPlugin {
               'content-type': type ? type.mime : 'application/octet-stream'
             }
           });
+          auto.logger.log.success(`Uploaded asset: ${asset}`);
         })
       );
     });
