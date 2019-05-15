@@ -38,6 +38,9 @@ aliases:
   - &semver
     name: Check PR for semVer label
     command: yarn semver:check
+  - &bundle
+    name: Check PR for semVer label
+    command: yarn semver:check
 
 jobs:
   semver:
@@ -64,6 +67,7 @@ jobs:
       - attach_workspace:
           at: ~/auto
       - run: *build
+      - run: *bundle
       - persist_to_workspace:
           root: .
           paths:
