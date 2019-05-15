@@ -51,7 +51,7 @@ const makeTweet = (
 
   let truncatedNotes = releaseNotes
     .split('#### Authors')[0]
-    .replace(/####/gm, '')
+    .replace(/#### /gm, '')
     .replace(/\(?\[\S+\]\(\S+\)/gm, '')
     .trim();
   let tweet = build(truncatedNotes);
