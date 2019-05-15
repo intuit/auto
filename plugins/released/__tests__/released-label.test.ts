@@ -69,7 +69,11 @@ describe('release label plugin', () => {
     } as unknown) as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump');
-    await autoHooks.afterRelease.promise('1.0.0', [commit], '');
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [commit],
+      releaseNotes: ''
+    });
 
     expect(comment).not.toHaveBeenCalled();
   });
@@ -87,7 +91,10 @@ describe('release label plugin', () => {
     } as unknown) as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump');
-    await autoHooks.afterRelease.promise(undefined, [commit], '');
+    await autoHooks.afterRelease.promise({
+      commits: [commit],
+      releaseNotes: ''
+    });
 
     expect(comment).not.toHaveBeenCalled();
   });
@@ -104,7 +111,11 @@ describe('release label plugin', () => {
       git
     } as unknown) as Auto);
 
-    await autoHooks.afterRelease.promise('1.0.0', [], '');
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [],
+      releaseNotes: ''
+    });
 
     expect(comment).not.toHaveBeenCalled();
   });
@@ -127,11 +138,11 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump (#123)', {
       labels: ['skip-release']
     });
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([commit]),
-      ''
-    );
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: ''
+    });
 
     expect(comment).not.toHaveBeenCalled();
   });
@@ -149,11 +160,11 @@ describe('release label plugin', () => {
     } as unknown) as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump (#123)');
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([commit]),
-      ''
-    );
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: ''
+    });
 
     expect(comment).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -175,13 +186,13 @@ describe('release label plugin', () => {
       git
     } as unknown) as Auto);
 
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
-      ''
-    );
+      releaseNotes: ''
+    });
 
     expect(comment).not.toHaveBeenCalled();
   });
@@ -201,13 +212,13 @@ describe('release label plugin', () => {
 
     getLabels.mockReturnValueOnce(['released']);
 
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
-      ''
-    );
+      releaseNotes: ''
+    });
 
     expect(addLabelToPr).not.toHaveBeenCalled();
   });
@@ -225,13 +236,13 @@ describe('release label plugin', () => {
       git
     } as unknown) as Auto);
 
-    await autoHooks.afterRelease.promise(
-      '1.0.0-canary',
-      await log.normalizeCommits([
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0-canary',
+      commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
-      ''
-    );
+      releaseNotes: ''
+    });
 
     expect(addLabelToPr).not.toHaveBeenCalled();
   });
@@ -255,11 +266,11 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg(
       'normal commit with no bump closes (#123)'
     );
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([commit]),
-      ''
-    );
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: ''
+    });
 
     expect(comment).toHaveBeenNthCalledWith(
       2,
@@ -286,11 +297,11 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg(
       'normal commit with no bump (#123) closes #100'
     );
-    await autoHooks.afterRelease.promise(
-      '1.0.0',
-      await log.normalizeCommits([commit]),
-      ''
-    );
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: ''
+    });
 
     expect(lockIssue).toHaveBeenCalled();
   });
@@ -310,11 +321,11 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg(
       'normal commit with no bump (#123) closes #100'
     );
-    await autoHooks.afterRelease.promise(
-      '1.0.0-canary',
-      await log.normalizeCommits([commit]),
-      ''
-    );
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0-canary',
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: ''
+    });
 
     expect(lockIssue).not.toHaveBeenCalled();
   });

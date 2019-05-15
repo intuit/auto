@@ -50,11 +50,11 @@ const makePrBodyIdentifier = (context: string) =>
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
 export default class Git {
+  readonly ghub: Octokit;
   readonly options: IGitOptions;
 
   private readonly baseUrl: string;
   private readonly graphqlBaseUrl: string;
-  private readonly ghub: Octokit;
   private readonly logger: ILogger;
 
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
