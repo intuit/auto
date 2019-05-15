@@ -36,6 +36,7 @@
   - [NPM](../plugins/npm/README.md)
   - [Released](../plugins/released/README.md)
   - [Slack](../plugins/slack/README.md)
+  - [Upload Assets](../plugins/upload-assets/README.md)
   - [Writing Plugins](pages/writing-plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
