@@ -14,7 +14,7 @@ yarn add -D @intuit-auto/upload-assets
 
 ## Usage
 
-Simply supply the names of the account to filter
+Simply supply the paths to the assets to add to the release.
 
 ```json
 {
