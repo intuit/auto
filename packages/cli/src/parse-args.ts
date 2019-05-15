@@ -631,12 +631,12 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (!command && mainOptions.version) {
     printVersion();
-    return;
+    return [];
   }
 
   if (!command) {
     printRootHelp();
-    return;
+    return [];
   }
 
   const options = command.options || [];
@@ -647,7 +647,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (mainOptions.help) {
     printCommandHelp(command);
-    return;
+    return [];
   }
 
   const autoOptions: ApiArgs = commandLineArgs(options, {
