@@ -385,9 +385,7 @@ export default class Git {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
     const result = await this.ghub.issues.addLabels({
-      // Type definitions do not seem to match
-      // issue_number: pr,
-      number: pr,
+      issue_number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
       labels: [label]
