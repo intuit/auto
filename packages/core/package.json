@@ -75,7 +75,7 @@
     "@types/semver": "^6.0.0",
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
-    "graphql": "^14.2.1",
-    "@types/url-join": "^4.0.0"
+    "@types/url-join": "^4.0.0",
+    "graphql": "^14.2.1"
   }
 }

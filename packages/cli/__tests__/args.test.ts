@@ -1,4 +1,4 @@
-import parseArgs from '../src/args';
+import parseArgs from '../src/parse-args';
 
 describe('root parser', () => {
   test('should print version', () => {
@@ -47,18 +47,22 @@ describe('root parser', () => {
   });
 
   test('should parse just provided args', () => {
-    expect(parseArgs('label --pr 2 --owner adam'.split(' '))).toEqual({
-      pr: 2,
-      owner: 'adam',
-      command: 'label'
-    });
+    expect(parseArgs('label --pr 2 --owner adam'.split(' '))).toEqual([
+      'label',
+      {
+        pr: 2,
+        owner: 'adam'
+      }
+    ]);
   });
 
   test('should parse args as camelCase', () => {
-    expect(parseArgs('changelog -d'.split(' '))).toEqual({
-      command: 'changelog',
-      dryRun: true
-    });
+    expect(parseArgs('changelog -d'.split(' '))).toEqual([
+      'changelog',
+      {
+        dryRun: true
+      }
+    ]);
   });
 
   test('error when on in array of options to is not present', () => {
@@ -68,9 +72,11 @@ describe('root parser', () => {
   });
 
   test('allow array of options to or', () => {
-    expect(parseArgs(['comment', '--message', 'foo'])).toEqual({
-      command: 'comment',
-      message: 'foo'
-    });
+    expect(parseArgs(['comment', '--message', 'foo'])).toEqual([
+      'comment',
+      {
+        message: 'foo'
+      }
+    ]);
   });
 });

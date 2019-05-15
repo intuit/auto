@@ -1,5 +1,5 @@
 import Auto from '../auto';
-import { IPRStatusCommandOptions } from '../cli-args';
+import { IPRStatusOptions } from '../auto-args';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -55,7 +55,7 @@ jest.mock('gitlog', () => (a, cb) => {
 
 describe('Auto', () => {
   test('should use args', async () => {
-    const auto = new Auto({ command: 'init', ...defaults });
+    const auto = new Auto(defaults);
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release).toBeDefined();
@@ -63,14 +63,14 @@ describe('Auto', () => {
 
   test('should load config', async () => {
     search.mockReturnValueOnce({ config: defaults });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release).toBeDefined();
   });
 
   test('should throw if now GH_TOKEN set', async () => {
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     process.env.GH_TOKEN = undefined;
     await expect(auto.loadConfig()).rejects.toBeInstanceOf(Error);
@@ -84,7 +84,7 @@ describe('Auto', () => {
         : undefined
     );
 
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
@@ -100,7 +100,7 @@ describe('Auto', () => {
       path === '/foo/fake.json' ? { bar: 'foo' } : undefined
     );
 
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release!.options).toMatchSnapshot();
@@ -111,7 +111,7 @@ describe('Auto', () => {
     search.mockReturnValueOnce({
       config: { ...defaults, labels }
     });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -134,7 +134,7 @@ describe('Auto', () => {
         }
       }
     });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -150,7 +150,7 @@ describe('Auto', () => {
         }
       }
     });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -172,7 +172,7 @@ describe('Auto', () => {
         }
       }
     });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -194,7 +194,7 @@ describe('Auto', () => {
         }
       }
     });
-    const auto = new Auto({ command: 'init' });
+    const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
@@ -209,7 +209,7 @@ describe('Auto', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new Auto({ command: 'create-labels' });
+      const auto = new Auto();
       auto.logger = dummyLog();
       expect(auto.createLabels()).rejects.toBeTruthy();
     });
@@ -218,7 +218,7 @@ describe('Auto', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new Auto({ command: 'create-labels' });
+      const auto = new Auto();
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -233,13 +233,13 @@ describe('Auto', () => {
       search.mockReturnValueOnce({
         config: { ...defaults, labels }
       });
-      const auto = new Auto({ command: 'labels' });
+      const auto = new Auto();
       auto.logger = dummyLog();
       expect(auto.label({ pr: 13 })).rejects.toBeTruthy();
     });
 
     test('should get labels', async () => {
-      const auto = new Auto({ command: 'labels', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -253,7 +253,7 @@ describe('Auto', () => {
     });
 
     test('should get labels for last merged PR', async () => {
-      const auto = new Auto({ command: 'labels', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -277,7 +277,7 @@ describe('Auto', () => {
     });
 
     test('should do nothing when no last merge found', async () => {
-      const auto = new Auto({ command: 'labels', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -299,7 +299,7 @@ describe('Auto', () => {
       createStatus = jest.fn();
     });
 
-    const required: IPRStatusCommandOptions = {
+    const required: IPRStatusOptions = {
       url: 'https://google.com',
       state: 'pending',
       description: 'foo',
@@ -307,14 +307,14 @@ describe('Auto', () => {
     };
 
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       expect(auto.prStatus(required)).rejects.toBeTruthy();
     });
 
     test('should catch exceptions when status fails to post', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
@@ -327,7 +327,7 @@ describe('Auto', () => {
     });
 
     test('should do nothing ', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -337,7 +337,7 @@ describe('Auto', () => {
     });
 
     test('should use provided SHA', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -352,7 +352,7 @@ describe('Auto', () => {
     });
 
     test('should use HEAD SHA', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -371,7 +371,7 @@ describe('Auto', () => {
     });
 
     test('should use lookup SHA for PR', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -403,14 +403,14 @@ describe('Auto', () => {
     };
 
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       expect(auto.prCheck({ pr: 13, ...required })).rejects.toBeTruthy();
     });
 
     test('should do nothing with dryRun', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -419,7 +419,7 @@ describe('Auto', () => {
     });
 
     test('should catch errors', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
@@ -433,7 +433,7 @@ describe('Auto', () => {
     });
 
     test('should catch status errors', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
@@ -446,7 +446,7 @@ describe('Auto', () => {
     });
 
     test('should error with no label', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -469,7 +469,7 @@ describe('Auto', () => {
     });
 
     test('should pass with semver label', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -492,7 +492,7 @@ describe('Auto', () => {
     });
 
     test('should pass with skip release label', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -515,7 +515,7 @@ describe('Auto', () => {
     });
 
     test('should pass with skip release label', async () => {
-      const auto = new Auto({ command: 'pr', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await auto.loadConfig();
@@ -540,7 +540,7 @@ describe('Auto', () => {
 
   describe('comment', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await expect(
@@ -549,7 +549,7 @@ describe('Auto', () => {
     });
 
     test('should make a comment', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -561,7 +561,7 @@ describe('Auto', () => {
     });
 
     test('should delete a comment', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -573,7 +573,7 @@ describe('Auto', () => {
     });
 
     test('should not delete a comment in dry run mode', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -590,7 +590,7 @@ describe('Auto', () => {
 
   describe('prBody', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       await expect(
@@ -599,7 +599,7 @@ describe('Auto', () => {
     });
 
     test('should make a pr body update', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -611,7 +611,7 @@ describe('Auto', () => {
     });
 
     test('should delete old pr body update', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -623,7 +623,7 @@ describe('Auto', () => {
     });
 
     test('should not update pr body a dry run mode', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -640,13 +640,13 @@ describe('Auto', () => {
 
   describe('version', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       expect(auto.version()).rejects.toBeTruthy();
     });
 
     test('should make a comment', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -663,14 +663,14 @@ describe('Auto', () => {
 
   describe('changelog', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       expect(auto.changelog()).rejects.toBeTruthy();
     });
 
     test('should do nothing on a dryRun', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
 
       auto.logger = dummyLog();
       await auto.loadConfig();
@@ -685,7 +685,6 @@ describe('Auto', () => {
 
     test('should add to changelog', async () => {
       const auto = new Auto({
-        command: 'changelog',
         plugins: [],
         ...defaults
       });
@@ -704,7 +703,6 @@ describe('Auto', () => {
     test('should skip getRepository hook if passed in via cli', async () => {
       process.env.GH_TOKEN = 'XXXX';
       const auto = new Auto({
-        command: 'pr',
         repo: 'test',
         owner: 'adierkens'
       });
@@ -727,7 +725,7 @@ describe('Auto', () => {
 
   describe('release', () => {
     test("doesn't try to overwrite releases", async () => {
-      const auto = new Auto({ command: 'release', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -747,14 +745,14 @@ describe('Auto', () => {
 
   describe('canary', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       expect(auto.canary()).rejects.toBeTruthy();
     });
 
     test('does not call canary hook in dry-run', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -769,7 +767,7 @@ describe('Auto', () => {
     });
 
     test('calls the canary hook with the pr info', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -787,7 +785,7 @@ describe('Auto', () => {
     });
 
     test("doesn't comment if there is an error", async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.prBody = jest.fn();
@@ -806,7 +804,7 @@ describe('Auto', () => {
     });
 
     test('defaults to sha when run locally', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -822,7 +820,7 @@ describe('Auto', () => {
     });
 
     test('works when PR has "skip-release" label', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -844,14 +842,14 @@ describe('Auto', () => {
 
   describe('shipit', () => {
     test('should throw when not initialized', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       expect(auto.shipit()).rejects.toBeTruthy();
     });
 
     test('should not publish when no latest version found', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -865,7 +863,7 @@ describe('Auto', () => {
     });
 
     test('should publish to latest on base branch', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -882,7 +880,7 @@ describe('Auto', () => {
     });
 
     test('should skip publish in dry run', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+      const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -902,7 +900,7 @@ describe('Auto', () => {
 
 describe('hooks', () => {
   test('should be able to modifyConfig', async () => {
-    const auto = new Auto({ command: 'comment', ...defaults });
+    const auto = new Auto(defaults);
     auto.logger = dummyLog();
 
     auto.hooks.modifyConfig.tap('test', testConfig => {
@@ -924,7 +922,7 @@ describe('hooks', () => {
 
   describe('logParse', () => {
     test('should be able to tap parseCommit', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
@@ -944,7 +942,7 @@ describe('hooks', () => {
     });
 
     test('should be able to tap omitCommit', async () => {
-      const auto = new Auto({ command: 'comment', ...defaults });
+      const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {

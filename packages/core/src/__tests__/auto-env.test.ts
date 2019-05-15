@@ -14,7 +14,6 @@ test('should load .env file and override and env vars that are already set', asy
   process.env.FOO = 'old value';
 
   const auto = new Auto({
-    command: 'init',
     owner: 'foo',
     repo: 'bar'
   });
