@@ -4,7 +4,7 @@ Upload assets to the release. Good for executables and extra downloadable files.
 
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @intuit-auto/upload-assets
