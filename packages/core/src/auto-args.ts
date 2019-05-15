@@ -13,20 +13,20 @@ export interface ILogArgs {
   veryVerbose?: boolean;
 }
 
-export interface IInitCommandOptions {
+export interface IInitOptions {
   onlyLabels?: boolean;
   dryRun?: boolean;
 }
 
-export interface ICreateLabelsCommandOptions {
+export interface ICreateLabelsOptions {
   dryRun?: boolean;
 }
 
-export interface ILabelCommandOptions {
+export interface ILabelOptions {
   pr?: number;
 }
 
-export interface IPRCheckCommandOptions {
+export interface IPRCheckOptions {
   pr?: number;
   url?: string;
   skipReleaseLabels?: string[];
@@ -34,7 +34,7 @@ export interface IPRCheckCommandOptions {
   dryRun?: boolean;
 }
 
-export interface IPRStatusCommandOptions {
+export interface IPRStatusOptions {
   sha?: string;
   pr?: number;
   url: string;
@@ -44,7 +44,7 @@ export interface IPRStatusCommandOptions {
   dryRun?: boolean;
 }
 
-export interface IVersionCommandOptions {
+export interface IVersionOptions {
   skipReleaseLabels?: string[];
   onlyPublishWithReleaseLabel?: boolean;
 }
@@ -57,13 +57,13 @@ export interface IChangelogOptions extends IAuthorArgs {
   message?: string;
 }
 
-export interface IReleaseCommandOptions extends IAuthorArgs {
+export interface IReleaseOptions extends IAuthorArgs {
   noVersionPrefix?: boolean;
   dryRun?: boolean;
   useVersion?: string;
 }
 
-export interface ICommentCommandOptions {
+export interface ICommentOptions {
   message?: string;
   pr?: number;
   context?: string;
@@ -71,19 +71,20 @@ export interface ICommentCommandOptions {
   delete?: boolean;
 }
 
-export interface IShipItCommandOptions {
+export type IPRBodyOptions = ICommentOptions;
+
+export interface IShipItOptions {
   dryRun?: boolean;
 }
 
-export interface ICanaryCommandOptions {
+export interface ICanaryOptions {
   dryRun?: boolean;
   pr?: number;
   build?: number;
   message?: string | 'false';
 }
 
-type GlobalFlags = {
-  command: string;
+export type GlobalArgs = {
   githubApi?: string;
   baseBranch?: string;
   githubGraphqlApi?: string;
@@ -91,26 +92,17 @@ type GlobalFlags = {
 } & IRepoArgs &
   ILogArgs;
 
-export type ArgsType = GlobalFlags &
+export type ApiArgs = GlobalArgs &
   (
-    | IInitCommandOptions
-    | ICreateLabelsCommandOptions
-    | ILabelCommandOptions
-    | IPRCheckCommandOptions
-    | IPRStatusCommandOptions
-    | ICommentCommandOptions
-    | IReleaseCommandOptions
-    | IVersionCommandOptions
-    | IShipItCommandOptions);
-
-export type Flags =
-  | keyof GlobalFlags
-  | keyof IInitCommandOptions
-  | keyof ICreateLabelsCommandOptions
-  | keyof ILabelCommandOptions
-  | keyof IPRCheckCommandOptions
-  | keyof IPRStatusCommandOptions
-  | keyof ICommentCommandOptions
-  | keyof IReleaseCommandOptions
-  | keyof IVersionCommandOptions
-  | keyof IShipItCommandOptions;
+    | IInitOptions
+    | ICreateLabelsOptions
+    | ILabelOptions
+    | IPRCheckOptions
+    | IPRStatusOptions
+    | ICommentOptions
+    | IChangelogOptions
+    | IPRBodyOptions
+    | IReleaseOptions
+    | IVersionOptions
+    | ICanaryOptions
+    | IShipItOptions);

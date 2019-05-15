@@ -11,18 +11,18 @@ import {
 } from 'tapable';
 
 import {
-  ArgsType,
-  ICanaryCommandOptions,
+  ApiArgs,
+  ICanaryOptions,
   IChangelogOptions,
-  ICommentCommandOptions,
-  ICreateLabelsCommandOptions,
-  IInitCommandOptions,
-  ILabelCommandOptions,
-  IPRCheckCommandOptions,
-  IPRStatusCommandOptions,
-  IReleaseCommandOptions,
-  IShipItCommandOptions
-} from './cli-args';
+  ICommentOptions,
+  ICreateLabelsOptions,
+  IInitOptions,
+  ILabelOptions,
+  IPRCheckOptions,
+  IPRStatusOptions,
+  IReleaseOptions,
+  IShipItOptions
+} from './auto-args';
 
 import Changelog from './changelog';
 import Config from './config';
@@ -31,8 +31,8 @@ import init from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
 import Release, {
   getVersionMap,
+  IAutoConfig,
   ILabelDefinitionMap,
-  IReleaseOptions,
   VersionLabel
 } from './release';
 import SEMVER, { calculateSemVerBump } from './semver';
@@ -55,8 +55,8 @@ interface IRepository {
 }
 
 export interface IAutoHooks {
-  modifyConfig: SyncWaterfallHook<[IReleaseOptions]>;
-  beforeRun: SyncHook<[IReleaseOptions]>;
+  modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
+  beforeRun: SyncHook<[IAutoConfig]>;
   beforeShipIt: SyncHook<[]>;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
   afterRelease: AsyncParallelHook<
@@ -95,16 +95,16 @@ const loadEnv = () => {
 export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
-  args: ArgsType;
+  args: ApiArgs;
   baseBranch: string;
-  config?: IReleaseOptions;
+  config?: IAutoConfig;
 
   release?: Release;
   git?: Git;
   labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
 
-  constructor(args: ArgsType) {
+  constructor(args: ApiArgs = {}) {
     this.args = args;
     this.baseBranch = args.baseBranch || 'master';
     this.logger = createLog(
@@ -178,7 +178,7 @@ export default class Auto {
   /**
    * Interactive prompt for initializing an .autorc
    */
-  async init(options: IInitCommandOptions = {}) {
+  async init(options: IInitOptions = {}) {
     await init(options, this.logger);
   }
 
@@ -187,7 +187,7 @@ export default class Auto {
    *
    * @param options Options for the createLabels functionality
    */
-  async createLabels(options: ICreateLabelsCommandOptions = {}) {
+  async createLabels(options: ICreateLabelsOptions = {}) {
     if (!this.release || !this.labels) {
       throw this.createErrorMessage();
     }
@@ -200,7 +200,7 @@ export default class Auto {
    *
    * @param options Options for the createLabels functionality
    */
-  async label({ pr }: ILabelCommandOptions = {}) {
+  async label({ pr }: ILabelOptions = {}) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -236,7 +236,7 @@ export default class Auto {
    *
    * @param options Options for the pr status functionality
    */
-  async prStatus({ dryRun, pr, url, ...options }: IPRStatusCommandOptions) {
+  async prStatus({ dryRun, pr, url, ...options }: IPRStatusOptions) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -294,7 +294,7 @@ export default class Auto {
    *
    * @param options Options for the pr check functionality
    */
-  async prCheck({ dryRun, pr, url, ...options }: IPRCheckCommandOptions) {
+  async prCheck({ dryRun, pr, url, ...options }: IPRCheckOptions) {
     if (!this.git || !this.release || !this.semVerLabels) {
       throw this.createErrorMessage();
     }
@@ -386,7 +386,7 @@ export default class Auto {
    *
    * @param options Options for the comment functionality
    */
-  async comment(options: ICommentCommandOptions) {
+  async comment(options: ICommentOptions) {
     const {
       message,
       pr,
@@ -430,7 +430,7 @@ export default class Auto {
    *
    * @param options Options
    */
-  async prBody(options: ICommentCommandOptions) {
+  async prBody(options: ICommentOptions) {
     const {
       message,
       pr,
@@ -489,12 +489,12 @@ export default class Auto {
   /**
    * Make a release to the git remote with the changes.
    */
-  async runRelease(options: IReleaseCommandOptions = {}) {
+  async runRelease(options: IReleaseOptions = {}) {
     this.logger.verbose.info("Using command: 'release'");
     await this.makeRelease(options);
   }
 
-  async canary(options: ICanaryCommandOptions = {}) {
+  async canary(options: ICanaryOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -578,7 +578,7 @@ export default class Auto {
    * 3. Publish code
    * 4. Create a release
    */
-  async shipit(options: IShipItCommandOptions = {}) {
+  async shipit(options: IShipItOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -627,7 +627,7 @@ export default class Auto {
     return lastVersion;
   }
 
-  private async publishLatest(options: IShipItCommandOptions) {
+  private async publishLatest(options: IShipItOptions) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -759,10 +759,7 @@ export default class Auto {
     );
   }
 
-  private async makeRelease({
-    dryRun,
-    useVersion
-  }: IReleaseCommandOptions = {}) {
+  private async makeRelease({ dryRun, useVersion }: IReleaseOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -891,7 +888,7 @@ If a command fails manually run:
     }
   }
 
-  private async getRepo(config: IReleaseOptions) {
+  private async getRepo(config: IAutoConfig) {
     if (config.owner && config.repo) {
       return config as IRepository;
     }
@@ -902,7 +899,7 @@ If a command fails manually run:
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IReleaseOptions) {
+  private loadPlugins(config: IAutoConfig) {
     const pluginsPaths = config.plugins || ['npm'];
 
     pluginsPaths
@@ -920,7 +917,7 @@ If a command fails manually run:
 
 // Plugin Utils
 
-export * from './cli-args';
+export * from './auto-args';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';

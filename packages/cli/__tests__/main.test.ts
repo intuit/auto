@@ -5,6 +5,7 @@ test('throws error for unknown args', async () => {
 
   try {
     await run({
+      // @ts-ignore
       command: 'foo'
     });
   } catch (error) {
@@ -17,6 +18,7 @@ test('throws exits for caught error', async () => {
   process.exit = jest.fn() as any;
 
   await main({
+    // @ts-ignore
     command: 'foo'
   });
 

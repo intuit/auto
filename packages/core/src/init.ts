@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
-import { IInitCommandOptions } from './cli-args';
+import { IInitOptions } from './auto-args';
 import { defaultLabelDefinition, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 
@@ -190,7 +190,7 @@ async function getCustomLabels(onlyLabels = false) {
 }
 
 export default async function init(
-  { onlyLabels, dryRun }: IInitCommandOptions,
+  { onlyLabels, dryRun }: IInitOptions,
   logger: ILogger
 ) {
   const flags = onlyLabels ? {} : await getFlags();

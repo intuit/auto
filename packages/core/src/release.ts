@@ -6,8 +6,8 @@ import { promisify } from 'util';
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import { Memoize } from 'typescript-memoize';
+import { ICreateLabelsOptions } from './auto-args';
 import Changelog from './changelog';
-import { ICreateLabelsCommandOptions } from './cli-args';
 import Git from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump } from './semver';
@@ -35,7 +35,7 @@ export const defaultLabels: VersionLabel[] = [
 export const isVersionLabel = (label: string): label is VersionLabel =>
   defaultLabels.includes(label as VersionLabel);
 
-export interface IReleaseOptions {
+export interface IAutoConfig {
   githubApi?: string;
   baseBranch: string;
   githubGraphqlApi?: string;
@@ -146,7 +146,7 @@ export interface IReleaseHooks {
  * A class for interacting with the git remote
  */
 export default class Release {
-  readonly options: IReleaseOptions;
+  readonly options: IAutoConfig;
   readonly hooks: IReleaseHooks;
 
   private readonly git: Git;
@@ -155,7 +155,7 @@ export default class Release {
 
   constructor(
     git: Git,
-    options: IReleaseOptions = {
+    options: IAutoConfig = {
       baseBranch: 'master',
       skipReleaseLabels: [],
       labels: defaultLabelDefinition
@@ -435,7 +435,7 @@ export default class Release {
 
   async addLabelsToProject(
     labels: Partial<ILabelDefinitionMap>,
-    options: ICreateLabelsCommandOptions = {}
+    options: ICreateLabelsOptions = {}
   ) {
     const oldLabels = await this.git.getProjectLabels();
     const labelsToCreate = Object.entries(labels).filter(

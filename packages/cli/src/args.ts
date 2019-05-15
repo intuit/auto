@@ -7,7 +7,7 @@ import commandLineUsage from 'command-line-usage';
 import dedent from 'dedent';
 import signale from 'signale';
 
-import { ArgsType, Flags } from '@intuit-auto/core';
+import { CliArgs, Flags } from './commands';
 
 const p = chalk.hex('#870048');
 const y = chalk.hex('#F1A60E');
@@ -571,7 +571,7 @@ function styleTypes(
   option: commandLineUsage.OptionDefinition
 ) {
   const isRequired =
-    command.require && command.require.includes(option.name as keyof ArgsType);
+    command.require && command.require.includes(option.name as Flags);
 
   if (isRequired && option.type === Number) {
     option.typeLabel =
@@ -620,7 +620,7 @@ export default function parseArgs(testArgs?: string[]) {
     return;
   }
 
-  const autoOptions: ArgsType = {
+  const autoOptions: CliArgs = {
     command: mainOptions.command,
     ...commandLineArgs(options, { argv, camelCase: true })._all
   };
@@ -632,7 +632,7 @@ export default function parseArgs(testArgs?: string[]) {
           (typeof option === 'string' && !(option in autoOptions)) ||
           (typeof option === 'object' && !option.find(o => o in autoOptions)) ||
           // tslint:disable-next-line strict-type-predicates
-          autoOptions[option as keyof ArgsType] === null
+          autoOptions[option as keyof CliArgs] === null
       )
       .map(option =>
         typeof option === 'string'
