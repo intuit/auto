@@ -104,7 +104,6 @@ export default class MavenPlugin implements IPlugin {
       await execPromise('mvn', [
         'release:prepare',
         `-DreleaseVersion=${newVersion}`,
-        `-Dtag=${newVersion}`,
         `-DdevelopmentVersion=${inc(newVersion, 'patch')}-SNAPSHOT`,
         '-DpushChanges=false'
       ]);
