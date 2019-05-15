@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import parseArgs from '../args';
-import main from '../main';
+import parseArgs from '../parse-args';
+import run from '../run';
 
-const args = parseArgs();
+const [command, args] = parseArgs();
 
-if (args) {
-  main(args).catch((e: Error) => {
+if (command && args) {
+  run(command, args).catch((e: Error) => {
     console.error(chalk.redBright('Error: '), e.message);
     process.exit(1);
   });

@@ -7,7 +7,37 @@ import commandLineUsage from 'command-line-usage';
 import dedent from 'dedent';
 import signale from 'signale';
 
-import { CliArgs, Flags } from './commands';
+import {
+  ApiArgs,
+  GlobalArgs,
+  ICanaryOptions,
+  IChangelogOptions,
+  ICommentOptions,
+  ICreateLabelsOptions,
+  IInitOptions,
+  ILabelOptions,
+  IPRBodyOptions,
+  IPRCheckOptions,
+  IPRStatusOptions,
+  IReleaseOptions,
+  IShipItOptions,
+  IVersionOptions
+} from '@intuit-auto/core';
+
+export type Flags =
+  | keyof GlobalArgs
+  | keyof IInitOptions
+  | keyof ICreateLabelsOptions
+  | keyof ILabelOptions
+  | keyof IPRCheckOptions
+  | keyof IPRStatusOptions
+  | keyof ICommentOptions
+  | keyof IPRBodyOptions
+  | keyof IReleaseOptions
+  | keyof IVersionOptions
+  | keyof IShipItOptions
+  | keyof IChangelogOptions
+  | keyof ICanaryOptions;
 
 const p = chalk.hex('#870048');
 const y = chalk.hex('#F1A60E');
@@ -620,10 +650,10 @@ export default function parseArgs(testArgs?: string[]) {
     return;
   }
 
-  const autoOptions: CliArgs = {
-    command: mainOptions.command,
-    ...commandLineArgs(options, { argv, camelCase: true })._all
-  };
+  const autoOptions: ApiArgs = commandLineArgs(options, {
+    argv,
+    camelCase: true
+  })._all;
 
   if (command.require) {
     const missing = command.require
@@ -632,7 +662,7 @@ export default function parseArgs(testArgs?: string[]) {
           (typeof option === 'string' && !(option in autoOptions)) ||
           (typeof option === 'object' && !option.find(o => o in autoOptions)) ||
           // tslint:disable-next-line strict-type-predicates
-          autoOptions[option as keyof CliArgs] === null
+          autoOptions[option as keyof ApiArgs] === null
       )
       .map(option =>
         typeof option === 'string'
@@ -650,5 +680,5 @@ export default function parseArgs(testArgs?: string[]) {
     }
   }
 
-  return autoOptions;
+  return [mainOptions.command, autoOptions];
 }
