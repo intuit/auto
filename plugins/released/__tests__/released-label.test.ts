@@ -5,7 +5,7 @@ import LogParse from '@intuit-auto/core/dist/log-parse';
 import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
 import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
 import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
-import { IReleaseOptions } from '@intuit-auto/core/src/release';
+import { IAutoConfig } from '@intuit-auto/core/src/release';
 import ReleasedLabelPlugin from '../src';
 
 const git = new Git({ owner: '1', repo: '2' });
@@ -45,7 +45,7 @@ describe('release label plugin', () => {
     releasedLabel.apply({ hooks: autoHooks } as Auto);
 
     expect(
-      await autoHooks.modifyConfig.promise({ labels: {} } as IReleaseOptions)
+      await autoHooks.modifyConfig.promise({ labels: {} } as IAutoConfig)
     ).toEqual({
       labels: {
         released: {

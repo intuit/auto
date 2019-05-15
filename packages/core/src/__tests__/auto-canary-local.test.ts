@@ -13,7 +13,7 @@ const defaults = {
 };
 
 test('shipit should publish canary in locally when not on master', async () => {
-  const auto = new Auto({ command: 'comment', ...defaults, plugins: [] });
+  const auto = new Auto({ ...defaults, plugins: [] });
   auto.logger = dummyLog();
   await auto.loadConfig();
 

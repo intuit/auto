@@ -11,7 +11,7 @@ const defaults = {
 
 describe('comment', () => {
   test('should find PR number from CI', async () => {
-    const auto = new Auto({ command: 'comment', ...defaults });
+    const auto = new Auto(defaults);
     auto.logger = dummyLog();
     await auto.loadConfig();
 

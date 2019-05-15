@@ -1,48 +1,50 @@
 #!/usr/bin/env node
 
 import Auto, {
-  ArgsType,
+  ApiArgs,
+  ICanaryOptions,
   IChangelogOptions,
-  ICommentCommandOptions,
-  ICreateLabelsCommandOptions,
-  IInitCommandOptions,
-  ILabelCommandOptions,
-  IPRCheckCommandOptions,
-  IPRStatusCommandOptions,
-  IReleaseCommandOptions,
-  IShipItCommandOptions
+  ICommentOptions,
+  ICreateLabelsOptions,
+  IInitOptions,
+  ILabelOptions,
+  IPRBodyOptions,
+  IPRCheckOptions,
+  IPRStatusOptions,
+  IReleaseOptions,
+  IShipItOptions
 } from '@intuit-auto/core';
 
-export async function run(args: ArgsType) {
+export async function run(command: string, args: ApiArgs) {
   const auto = new Auto(args);
 
-  switch (args.command) {
+  switch (command) {
     case 'init':
-      await auto.init(args as IInitCommandOptions);
+      await auto.init(args as IInitOptions);
       break;
     case 'create-labels':
       await auto.loadConfig();
-      await auto.createLabels(args as ICreateLabelsCommandOptions);
+      await auto.createLabels(args as ICreateLabelsOptions);
       break;
     case 'label':
       await auto.loadConfig();
-      await auto.label(args as ILabelCommandOptions);
+      await auto.label(args as ILabelOptions);
       break;
     case 'pr-check':
       await auto.loadConfig();
-      await auto.prCheck(args as IPRCheckCommandOptions);
+      await auto.prCheck(args as IPRCheckOptions);
       break;
     case 'pr-status':
       await auto.loadConfig();
-      await auto.prStatus(args as IPRStatusCommandOptions);
+      await auto.prStatus(args as IPRStatusOptions);
       break;
     case 'comment':
       await auto.loadConfig();
-      await auto.comment(args as ICommentCommandOptions);
+      await auto.comment(args as ICommentOptions);
       break;
     case 'pr-body':
       await auto.loadConfig();
-      await auto.prBody(args as ICommentCommandOptions);
+      await auto.prBody(args as IPRBodyOptions);
       break;
     case 'version':
       await auto.loadConfig();
@@ -54,24 +56,24 @@ export async function run(args: ArgsType) {
       break;
     case 'release':
       await auto.loadConfig();
-      await auto.runRelease(args as IReleaseCommandOptions);
+      await auto.runRelease(args as IReleaseOptions);
       break;
     case 'shipit':
       await auto.loadConfig();
-      await auto.shipit(args as IShipItCommandOptions);
+      await auto.shipit(args as IShipItOptions);
       break;
     case 'canary':
       await auto.loadConfig();
-      await auto.canary(args as IShipItCommandOptions);
+      await auto.canary(args as ICanaryOptions);
       break;
     default:
       throw new Error(`idk what i'm doing.`);
   }
 }
 
-export default async function main(args: ArgsType) {
+export default async function main(command: string, args: ApiArgs) {
   try {
-    await run(args);
+    await run(command, args);
   } catch (error) {
     if (error) {
       console.log(error);
