@@ -1,3 +1,4 @@
+import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
@@ -60,7 +61,14 @@ export interface IAutoHooks {
   beforeShipIt: SyncHook<[]>;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
   afterRelease: AsyncParallelHook<
-    [string | undefined, IExtendedCommit[], string]
+    [
+      {
+        newVersion?: string;
+        commits: IExtendedCommit[];
+        releaseNotes: string;
+        response?: Response<ReposCreateReleaseResponse>;
+      }
+    ]
   >;
   getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
   getPreviousVersion: AsyncSeriesBailHook<
@@ -803,18 +811,21 @@ export default class Auto {
       return;
     }
 
+    let release: Response<ReposCreateReleaseResponse> | undefined;
+
     if (!dryRun) {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-      await this.git.publish(releaseNotes, newVersion);
+      release = await this.git.publish(releaseNotes, newVersion);
     } else {
       this.logger.log.info(`Would have released: ${newVersion}`);
     }
 
-    await this.hooks.afterRelease.promise(
+    await this.hooks.afterRelease.promise({
       newVersion,
-      commitsInRelease,
-      releaseNotes
-    );
+      commits: commitsInRelease,
+      releaseNotes,
+      response: release
+    });
 
     return newVersion;
   }

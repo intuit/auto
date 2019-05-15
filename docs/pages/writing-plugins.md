@@ -97,11 +97,16 @@ Ran after the `release` command has run. This hooks gets the following arguments
 
 - version - version that was just released
 - commits - the commits in the release
+- releaseNotes - generated release notes for the release
+- response - the response returned from making the release
 
 ```ts
-auto.hooks.afterRelease.tap('MyPlugin', async (version, commits) => {
-  // do something
-});
+auto.hooks.afterRelease.tap(
+  'MyPlugin',
+  async ({ version, commits, releaseNotes, response }) => {
+    // do something
+  }
+);
 ```
 
 #### afterShipIt

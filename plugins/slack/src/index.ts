@@ -32,7 +32,7 @@ export default class SlackPlugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(
       this.name,
-      async (newVersion, commits, releaseNotes) => {
+      async ({ newVersion, commits, releaseNotes }) => {
         if (!newVersion) {
           return;
         }

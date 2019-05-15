@@ -37,7 +37,10 @@ describe('postToSlack', () => {
     // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
-    await hooks.afterRelease.promise(undefined, [], '# My Notes');
+    await hooks.afterRelease.promise({
+      commits: [],
+      releaseNotes: '# My Notes'
+    });
 
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
@@ -50,7 +53,11 @@ describe('postToSlack', () => {
     // @ts-ignore
     plugin.apply({ hooks, args: { dryRun: true } } as Auto);
 
-    await hooks.afterRelease.promise('1.0.0', [], '# My Notes');
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [],
+      releaseNotes: '# My Notes'
+    });
 
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
@@ -63,7 +70,11 @@ describe('postToSlack', () => {
     // @ts-ignore
     plugin.apply({ hooks, args: {} } as Auto);
 
-    await hooks.afterRelease.promise('1.0.0', [], '# My Notes');
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [],
+      releaseNotes: '# My Notes'
+    });
 
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
@@ -80,11 +91,11 @@ describe('postToSlack', () => {
       release: { options: { skipReleaseLabels: ['skip-release'] } }
     } as Auto);
 
-    await hooks.afterRelease.promise(
-      '1.0.0',
-      [makeCommitFromMsg('skipped', { labels: ['skip-release'] })],
-      '# My Notes'
-    );
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [makeCommitFromMsg('skipped', { labels: ['skip-release'] })],
+      releaseNotes: '# My Notes'
+    });
 
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
@@ -99,11 +110,11 @@ describe('postToSlack', () => {
     plugin.apply({ hooks, args: {} } as Auto);
 
     await expect(
-      hooks.afterRelease.promise(
-        '1.0.0',
-        [makeCommitFromMsg('a patch')],
-        '# My Notes'
-      )
+      hooks.afterRelease.promise({
+        newVersion: '1.0.0',
+        commits: [makeCommitFromMsg('a patch')],
+        releaseNotes: '# My Notes'
+      })
     ).rejects.toBeInstanceOf(Error);
   });
 
@@ -145,11 +156,11 @@ describe('postToSlack', () => {
     process.env.SLACK_TOKEN = 'MY_TOKEN';
     plugin.apply({ hooks, args: {}, ...mockAuto } as Auto);
 
-    await hooks.afterRelease.promise(
-      '1.0.0',
-      [makeCommitFromMsg('a patch')],
-      '# My Notes\n- PR [some link](google.com)'
-    );
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes\n- PR [some link](google.com)'
+    });
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
