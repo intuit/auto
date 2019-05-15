@@ -33,7 +33,8 @@
     "contributors:generate": "all-contributors generate",
     "docs": "ignite",
     "docs:watch": "ignite --watch",
-    "docs:publish": "./scripts/publish-docs.sh"
+    "docs:publish": "./scripts/publish-docs.sh",
+    "bundle": "pkg packages/cli/package.json --out-path dist"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.4.0",
@@ -43,6 +44,7 @@
     "jest": "~24.5.0",
     "lerna": "^3.13.4",
     "lint-staged": "^8.1.6",
+    "pkg": "^4.4.0",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.2",
     "tslint": "~5.14.0",
@@ -50,6 +52,9 @@
     "tslint-xo": "~0.16.0",
     "typescript": "~3.3.3333",
     "typescript-tslint-plugin": "^0.3.1"
+  },
+  "pkg": {
+    "scripts": "plugins/**/dist/**/*.js"
   },
   "prettier": {
     "singleQuote": true
