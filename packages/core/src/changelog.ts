@@ -79,11 +79,14 @@ export default class Changelog {
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
     this.hooks.omitReleaseNotes.tap('Renovate', commit => {
-      const usernames = ['renovate-pro[bot]', 'renovate-bot'];
+      const names = ['renovate-pro[bot]', 'renovate-bot'];
 
       if (
         commit.authors.find(author =>
-          Boolean(author.username && usernames.includes(author.username))
+          Boolean(
+            (author.name && names.includes(author.name)) ||
+              (author.username && names.includes(author.username))
+          )
         )
       ) {
         return true;
