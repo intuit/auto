@@ -1,8 +1,8 @@
 {
-  "name": "@intuit-auto/upload-assets",
+  "name": "@intuit-auto/twitter",
   "version": "6.5.0",
   "main": "dist/index.js",
-  "description": "Upload assets plugin for auto",
+  "description": "Twitter plugin for auto",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -26,8 +26,8 @@
     "automated",
     "continuos integration",
     "changelog",
-    "upload",
-    "assets"
+    "tweet",
+    "twitter"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -37,11 +37,14 @@
   },
   "dependencies": {
     "@intuit-auto/core": "6.5.0",
+    "@types/twitter-text": "^2.0.0",
     "dedent": "^0.7.0",
-    "file-type": "^11.0.0"
+    "semver": "^6.0.0",
+    "tweet-tweet": "^1.0.4",
+    "twitter-text": "^3.0.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.25.5",
-    "@types/dedent": "^0.7.0"
+    "@types/dedent": "^0.7.0",
+    "@types/semver": "^6.0.0"
   }
 }

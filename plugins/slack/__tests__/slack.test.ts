@@ -38,6 +38,7 @@ describe('postToSlack', () => {
     plugin.apply({ hooks } as Auto);
 
     await hooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -55,6 +56,7 @@ describe('postToSlack', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -72,6 +74,7 @@ describe('postToSlack', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -93,6 +96,7 @@ describe('postToSlack', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [makeCommitFromMsg('skipped', { labels: ['skip-release'] })],
       releaseNotes: '# My Notes'
     });
@@ -112,6 +116,7 @@ describe('postToSlack', () => {
     await expect(
       hooks.afterRelease.promise({
         newVersion: '1.0.0',
+        lastRelease: '0.1.0',
         commits: [makeCommitFromMsg('a patch')],
         releaseNotes: '# My Notes'
       })
@@ -158,6 +163,7 @@ describe('postToSlack', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [makeCommitFromMsg('a patch')],
       releaseNotes: '# My Notes\n- PR [some link](google.com)'
     });
