@@ -4,7 +4,7 @@
 
 Current official plugins:
 
-- Chrome - publish code to Chrome Web Store
+- chrome - publish code to Chrome Web Store
 - conventional-commits - parse conventional commit messages for version bumps
 - filter-commits - Ignore commits made by certain accounts
 - jira - Include jira story links in the changelog
