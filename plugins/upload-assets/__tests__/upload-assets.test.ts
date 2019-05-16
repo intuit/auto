@@ -22,6 +22,7 @@ describe('Upload Assets Plugin', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: ''
     });
@@ -44,6 +45,7 @@ describe('Upload Assets Plugin', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '',
       response: {
@@ -81,6 +83,7 @@ describe('Upload Assets Plugin', () => {
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '',
       response: {

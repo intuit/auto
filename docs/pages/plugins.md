@@ -11,6 +11,7 @@ Current official plugins:
 - npm - publish code to npm (DEFAULT)
 - released - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
 - slack - post release notes to slack
+- twitter - post release notes to twitter
 - upload-assets - add extra assets to the release
 
 ## Using Plugins

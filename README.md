@@ -42,6 +42,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [npm](./plugins/npm) - publish code to npm (DEFAULT)
 - [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
 - [slack](./plugins/slack) - post release notes to slack
+- [twitter](./plugins/twitter) - post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - add extra assets to the release
 
 ## Start Developing
