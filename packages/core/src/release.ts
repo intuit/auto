@@ -1,4 +1,5 @@
 import GHub from '@octokit/rest';
+import dedent from 'dedent';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
@@ -142,6 +143,86 @@ export interface IReleaseHooks {
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
+export function buildSearchQuery(
+  owner: string,
+  project: string,
+  commits: IExtendedCommit[]
+) {
+  const repo = `${owner}/${project}`;
+  const query = commits.reduce((q, commit) => {
+    const subQuery = `repo:${repo} ${commit.hash}`;
+
+    return dedent`
+      ${q}
+
+      hash_${commit.hash}: search(query: "${subQuery}", type: ISSUE, first: 1) {
+        edges {
+          node {
+            ... on PullRequest {
+              number
+              state
+              body
+              labels(first: 10) {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+  }, '');
+
+  if (!query) {
+    return;
+  }
+
+  return `{
+    ${query}
+    rateLimit {
+      limit
+      cost
+      remaining
+      resetAt
+    }
+  }`;
+}
+
+function processQueryResult(
+  key: string,
+  result: ISearchResult,
+  commitsWithoutPR: IExtendedCommit[]
+) {
+  const hash = key.split('hash_')[1];
+  const commit = commitsWithoutPR.find(
+    commitWithoutPR => commitWithoutPR.hash === hash
+  );
+
+  if (!commit) {
+    return;
+  }
+
+  if (result.edges.length > 0) {
+    const labels: ILabelDefinition[] = result.edges[0].node.labels
+      ? result.edges[0].node.labels.edges.map(edge => edge.node)
+      : [];
+    commit.pullRequest = {
+      number: result.edges[0].node.number,
+      body: result.edges[0].node.body
+    };
+    commit.labels = [...labels.map(label => label.name), ...commit.labels];
+  } else {
+    commit.labels = ['pushToBaseBranch', ...commit.labels];
+  }
+
+  commit.subject = commit.subject.split('\n')[0];
+
+  return commit;
+}
+
 /**
  * A class for interacting with the git remote
  */
@@ -192,52 +273,6 @@ export default class Release {
     return changelog.generateReleaseNotes(commits);
   }
 
-  buildSearchQuery(commits: IExtendedCommit[]) {
-    const repo = `${this.git.options.owner}/${this.git.options.repo}`;
-    const query = commits.reduce((q, commit) => {
-      const subQuery = `repo:${repo} ${commit.hash}`;
-
-      return `
-        ${q}
-
-        hash_${
-          commit.hash
-        }: search(query: "${subQuery}", type: ISSUE, first: 1) {
-          edges {
-            node {
-              ... on PullRequest {
-                number
-                state
-                body
-                labels(first: 10) {
-                  edges {
-                    node {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `;
-    }, '');
-
-    if (!query) {
-      return;
-    }
-
-    return `{
-      ${query}
-      rateLimit {
-        limit
-        cost
-        remaining
-        resetAt
-      }
-    }`;
-  }
-
   async getCommitsInRelease(from: string, to = 'HEAD') {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
@@ -254,19 +289,25 @@ export default class Release {
         [] as string[]
       );
 
-    const labelled = allCommits.filter(
+    const uniqueCommits = allCommits.filter(
       commit =>
         (commit.pullRequest || !allPrCommitHashes.includes(commit.hash)) &&
         !commit.subject.includes('[skip ci]')
     );
 
-    const commitsWithoutPR = labelled.filter(commit => !commit.pullRequest);
+    const commitsWithoutPR = uniqueCommits.filter(
+      commit => !commit.pullRequest
+    );
     const batches = chunk(commitsWithoutPR, 10);
     type Results = Record<string, ISearchResult>;
 
     const queries = await Promise.all<Results | undefined>(
       batches.map(batch => {
-        const batchQuery = this.buildSearchQuery(batch);
+        const batchQuery = buildSearchQuery(
+          this.git.options.owner,
+          this.git.options.repo,
+          batch
+        );
 
         if (!batchQuery) {
           return;
@@ -278,41 +319,34 @@ export default class Release {
     const data = queries.filter((q): q is Results => Boolean(q));
 
     if (!data.length) {
-      return labelled;
+      return uniqueCommits;
     }
 
-    data.map(results => {
-      Object.entries(results).map(([key, result]) => {
-        const hash = key.split('hash_')[1];
-        const commit = commitsWithoutPR.find(
-          commitWithoutPR => commitWithoutPR.hash === hash
-        );
+    const commitsInRelease: (IExtendedCommit | undefined)[] = [
+      ...uniqueCommits
+    ];
+    const logParse = await this.createLogParse();
 
-        if (!commit) {
-          return;
-        }
+    Promise.all(
+      data.map(results =>
+        Object.entries(results)
+          .map(([key, result]) =>
+            processQueryResult(key, result, commitsWithoutPR)
+          )
+          .filter((commit): commit is IExtendedCommit => Boolean(commit))
+          .map(async commit => {
+            const index = commitsWithoutPR.findIndex(
+              commitWithoutPR => commitWithoutPR.hash === commit.hash
+            );
 
-        if (result.edges.length > 0) {
-          const labels: ILabelDefinition[] = result.edges[0].node.labels
-            ? result.edges[0].node.labels.edges.map(edge => edge.node)
-            : [];
-          commit.pullRequest = {
-            number: result.edges[0].node.number,
-            body: result.edges[0].node.body
-          };
-          commit.labels = [
-            ...labels.map(label => label.name),
-            ...commit.labels
-          ];
-        } else {
-          commit.labels = ['pushToBaseBranch', ...commit.labels];
-        }
+            commitsInRelease[index] = await logParse.normalizeCommit(commit);
+          })
+      )
+    );
 
-        commit.subject = commit.subject.split('\n')[0];
-      });
-    });
-
-    return labelled;
+    return commitsInRelease.filter(
+      (commit): commit is IExtendedCommit => Boolean(commit)
+    );
   }
 
   /**
@@ -380,7 +414,7 @@ export default class Release {
    * Get a range of commits. The commits will have PR numbers and labels attached
    *
    * @param from Tag or SHA to start at
-   * @param to Tage or SHA to end at (defaults to HEAD)
+   * @param to Tag or SHA to end at (defaults to HEAD)
    */
   async getCommits(from: string, to = 'HEAD'): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
@@ -393,42 +427,6 @@ export default class Release {
     const commits = await logParse.normalizeCommits(gitlog);
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
-
-    await Promise.all(
-      commits.map(async commit => {
-        let resolvedAuthors = [];
-
-        if (commit.pullRequest) {
-          const prCommits = await this.git.getCommitsForPR(
-            Number(commit.pullRequest.number)
-          );
-
-          if (!prCommits) {
-            return;
-          }
-
-          resolvedAuthors = await Promise.all(
-            prCommits.map(async prCommit => {
-              if (prCommit && prCommit.author) {
-                return this.git.getUserByUsername(prCommit.author.login);
-              }
-            })
-          );
-        } else if (commit.authorEmail) {
-          const author = await this.git.getUserByEmail(commit.authorEmail);
-          resolvedAuthors.push(author);
-        }
-
-        commit.authors = resolvedAuthors.map(author => ({
-          ...author,
-          username: author ? author.login : undefined
-        }));
-
-        commit.authors.map(author => {
-          this.logger.veryVerbose.info(`Found author: ${author.username}`);
-        });
-      })
-    );
 
     return commits;
   }
@@ -534,7 +532,10 @@ export default class Release {
   private async createLogParse() {
     const logParse = new LogParse();
 
-    logParse.hooks.parseCommit.tapPromise('PR Information', commit =>
+    logParse.hooks.parseCommit.tapPromise('Author Info', async commit =>
+      this.attachAuthor(commit)
+    );
+    logParse.hooks.parseCommit.tapPromise('PR Information', async commit =>
       this.addPrInfoToCommit(commit)
     );
     logParse.hooks.parseCommit.tapPromise('PR Commits', async commit => {
@@ -599,7 +600,7 @@ export default class Release {
       }
 
       const labels = info ? info.data.labels.map(l => l.name) : [];
-      commit.labels = [...labels, ...commit.labels];
+      commit.labels = [...new Set([...labels, ...commit.labels])];
       commit.pullRequest.body = info.data.body;
     }
 
@@ -623,11 +624,57 @@ export default class Release {
 
     if (!commit.pullRequest && matchPr) {
       const labels = matchPr.labels.map(label => label.name) || [];
-      commit.labels = [...labels, ...commit.labels];
+      commit.labels = [...new Set([...labels, ...commit.labels])];
       commit.pullRequest = {
         number: matchPr.number
       };
     }
+
+    return commit;
+  }
+
+  private async attachAuthor(commit: IExtendedCommit) {
+    let resolvedAuthors = [];
+
+    if (commit.pullRequest) {
+      const prCommits = await this.git.getCommitsForPR(
+        Number(commit.pullRequest.number)
+      );
+
+      if (!prCommits) {
+        return commit;
+      }
+
+      resolvedAuthors = await Promise.all(
+        prCommits.map(async prCommit => {
+          if (!prCommit || !prCommit.author) {
+            return;
+          }
+
+          return {
+            ...prCommit.author,
+            ...(await this.git.getUserByUsername(prCommit.author.login))
+          };
+        })
+      );
+    } else if (commit.authorEmail) {
+      const author = await this.git.getUserByEmail(commit.authorEmail);
+
+      resolvedAuthors.push({
+        email: commit.authorEmail,
+        name: commit.authorName,
+        ...author
+      });
+    }
+
+    commit.authors = resolvedAuthors.map(author => ({
+      ...author,
+      ...(author && author.login ? { username: author.login } : {})
+    }));
+
+    commit.authors.map(author => {
+      this.logger.veryVerbose.info(`Found author: ${author.username}`);
+    });
 
     return commit;
   }
