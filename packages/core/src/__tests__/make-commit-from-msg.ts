@@ -18,7 +18,8 @@ const makeCommitFromMsg = (
   authors: [
     {
       name: options.name || 'Adam Dierkens',
-      email: options.email || 'adam@dierkens.com'
+      email: options.email || 'adam@dierkens.com',
+      ...(options.username ? { username: options.username } : {})
     }
   ],
   subject,

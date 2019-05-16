@@ -1,8 +1,8 @@
 {
-  "name": "@intuit-auto/filter-accounts",
+  "name": "@intuit-auto/omit-commits",
   "version": "6.5.0",
   "main": "dist/index.js",
-  "description": "Filter accounts plugin for auto",
+  "description": "Omit commits plugin for auto",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"

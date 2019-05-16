@@ -6,7 +6,7 @@ Current official plugins:
 
 - chrome - publish code to Chrome Web Store
 - conventional-commits - parse conventional commit messages for version bumps
-- filter-commits - Ignore commits made by certain accounts
+- omit-commits - Ignore commits made by certain accounts
 - jira - Include jira story links in the changelog
 - npm - publish code to npm (DEFAULT)
 - released - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
