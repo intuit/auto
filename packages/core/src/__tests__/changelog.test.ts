@@ -432,4 +432,79 @@ describe('generateReleaseNotes', () => {
     const res = await changelog.generateReleaseNotes(commits);
     expect(res).toMatchSnapshot();
   });
+
+  test('additional release notes should omit renovate prs', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+    commits[0].authors[0].username = 'renovate-bot';
+    commits[0].pullRequest!.body = dedent`
+      # Why
+
+      Some words
+
+      ## Release Notes
+
+      Here is how you upgrade
+
+      ### Things you should really know
+
+      Bam!?
+
+      ## Todo
+
+      - [ ] add tests
+    `;
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('additional release notes should have tappable omit', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    changelog.hooks.omitReleaseNotes.tap('test', commit => {
+      if (commit.labels.includes('no-notes')) {
+        return true;
+      }
+    });
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor', 'no-notes']
+      }
+    ]);
+    commits[0].pullRequest!.body = dedent`
+      # Why
+
+      Some words
+
+      ## Release Notes
+
+      Here is how you upgrade
+
+      ### Things you should really know
+
+      Bam!?
+
+      ## Todo
+
+      - [ ] add tests
+    `;
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
 });
