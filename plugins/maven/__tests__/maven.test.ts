@@ -33,7 +33,7 @@ describe('maven', () => {
               <email>test@email.com</email>
             </developer>
           </developers>
-        </project>🚫
+        </project>
       `);
 
       expect(await hooks.getAuthor.promise()).toEqual(
@@ -60,7 +60,7 @@ describe('maven', () => {
               <email>adam@dierkens.com</email>
             </developer>
           </developers>
-        </project>🚫
+        </project>
       `);
 
       expect(await hooks.getAuthor.promise()).toEqual(
@@ -77,7 +77,7 @@ describe('maven', () => {
           xmlns="http://maven.apache.org/POM/4.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-        </project>🚫
+        </project>
       `);
 
       await expect(hooks.getAuthor.promise()).rejects.toBeInstanceOf(Error);
@@ -96,7 +96,7 @@ describe('maven', () => {
             <url>https://github.com/Fuego-Tools/java-test-project</url>
             <tag>HEAD</tag>
           </scm>
-        </project>🚫
+        </project>
       `);
 
       expect(await hooks.getRepository.promise()).toEqual(
@@ -113,7 +113,7 @@ describe('maven', () => {
           xmlns="http://maven.apache.org/POM/4.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-        </project>🚫
+        </project>
       `);
 
       await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
@@ -130,7 +130,7 @@ describe('maven', () => {
             <url>https://foo.com</url>
             <tag>HEAD</tag>
           </scm>
-        </project>🚫
+        </project>
       `);
 
       await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
@@ -147,7 +147,7 @@ describe('maven', () => {
             <url>https://github.com</url>
             <tag>HEAD</tag>
           </scm>
-        </project>🚫
+        </project>
       `);
 
       await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
@@ -162,7 +162,7 @@ describe('maven', () => {
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
           <version>1.0.0-SNAPSHOT</version>
-        </project>🚫
+        </project>
       `);
 
       expect(await hooks.getPreviousVersion.promise(r => r)).toBe('1.0.0');
@@ -177,23 +177,22 @@ describe('maven', () => {
   });
 
   describe('version', () => {
-    test('should version release', async () => {
+    test('should version release - not versioned because of prepatched snapshot', async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
           <version>1.0.0-SNAPSHOT</version>
-        </project>🚫
+        </project>
       `);
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
-      const call = spy.mock.calls[0][1];
-      expect(call).toContain('-DreleaseVersion=1.0.1');
-      expect(call).toContain('-Dtag=1.0.1');
-      expect(call).toContain('-DdevelopmentVersion=1.0.2-SNAPSHOT');
+      const call = spy.mock.calls[1][1];
+      expect(call).toContain('-DreleaseVersion=1.0.0');
+      expect(call).toContain('-Dtag=v1.0.0');
     });
 
     test('should error when failing to increment previous version', async () => {
@@ -203,11 +202,11 @@ describe('maven', () => {
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
           <version>1.0.a-SNAPSHOT</version>
-        </project>🚫
+        </project>
       `);
 
       await expect(
-        hooks.version.promise(Auto.SEMVER.patch)
+        hooks.version.promise(Auto.SEMVER.minor)
       ).rejects.toBeInstanceOf(Error);
     });
   });
@@ -220,13 +219,13 @@ describe('maven', () => {
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
           <version>1.0.0-SNAPSHOT</version>
-        </project>🚫
+        </project>
       `);
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
       await hooks.publish.promise(Auto.SEMVER.patch);
-      expect(spy.mock.calls[0][1]).toContain('release:perform');
+      expect(spy.mock.calls[1][1]).toContain('release:perform');
     });
   });
 });
