@@ -1,3 +1,5 @@
+// tslint:disable early-exit
+
 import { Auto, execPromise, IPlugin, SEMVER } from '@intuit-auto/core';
 import parseGitHubUrl from 'parse-github-url';
 import path from 'path';
@@ -31,12 +33,33 @@ export default class MavenPlugin implements IPlugin {
   name = 'maven';
 
   apply(auto: Auto) {
+    auto.hooks.onCreateLogParse.tap(this.name, logParse => {
+      logParse.hooks.omitCommit.tap(this.name, commit => {
+        if (commit.subject.includes('[maven-release-plugin]')) {
+          return true;
+        }
+      });
+    });
+
     auto.hooks.beforeShipIt.tap(this.name, async () => {
-      // check for release env vars in the CI
+      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS } = process.env;
+
+      if (!MAVEN_PASSWORD && !MAVEN_SETTINGS) {
+        auto.logger.log.warn(
+          'No password detected in the environment. You may need this to publish.'
+        );
+      }
+
+      if (!MAVEN_USERNAME && !MAVEN_SETTINGS) {
+        auto.logger.log.warn(
+          'No username detected in the environment. You may need this to publish.'
+        );
+      }
     });
 
     auto.hooks.getRepository.tapPromise(this.name, async () => {
       auto.logger.verbose.info('Maven: getting repo information from pom.xml');
+
       const pom = await getPom();
       const { scm } = pom.pomObject.project;
 
@@ -72,6 +95,7 @@ export default class MavenPlugin implements IPlugin {
 
     auto.hooks.getAuthor.tapPromise(this.name, async () => {
       auto.logger.verbose.info('Maven: Getting repo information from pom.xml');
+
       const pom = await getPom();
       const developers =
         pom.pomObject.project.developers &&
@@ -93,7 +117,13 @@ export default class MavenPlugin implements IPlugin {
 
     auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
       const previousVersion = await getPreviousVersion(auto);
-      const newVersion = inc(previousVersion, version as ReleaseType);
+      const newVersion =
+        // After release we bump the version by a patch and add -SNAPSHOT
+        // Given that we do not need to increment when versioning, since
+        // it has already been done
+        version === 'patch'
+          ? previousVersion
+          : inc(previousVersion, version as ReleaseType);
 
       if (!newVersion) {
         throw new Error(
@@ -101,18 +131,47 @@ export default class MavenPlugin implements IPlugin {
         );
       }
 
+      await execPromise('mvn', ['clean']);
       await execPromise('mvn', [
+        '-B',
         'release:prepare',
+        `-Dtag=v${newVersion}`,
         `-DreleaseVersion=${newVersion}`,
-        `-DdevelopmentVersion=${inc(newVersion, 'patch')}-SNAPSHOT`,
         '-DpushChanges=false'
       ]);
+      await execPromise('git', ['checkout', '-b', 'dev-snapshot']);
+      await execPromise('git', ['checkout', 'master']);
+      await execPromise('git', ['reset', '--hard', 'HEAD~1']);
     });
 
-    // auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {});
-
     auto.hooks.publish.tapPromise(this.name, async () => {
-      await execPromise('mvn', ['release:perform']);
+      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS } = process.env;
+
+      auto.logger.log.await('Performing maven release...');
+
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        'origin',
+        '$branch'
+      ]);
+
+      await execPromise('mvn', [
+        MAVEN_PASSWORD && `-Dpassword=${MAVEN_PASSWORD}`,
+        MAVEN_USERNAME && `-Dusername=${MAVEN_USERNAME}`,
+        MAVEN_SETTINGS && `-s=${MAVEN_SETTINGS}`,
+        'release:perform'
+      ]);
+
+      auto.logger.log.success('Published code to maven!');
+    });
+
+    auto.hooks.afterShipIt.tapPromise(this.name, async () => {
+      // prepare for next development iteration
+      await execPromise('git', ['reset', '--hard', 'dev-snapshot']);
+      await execPromise('git', ['branch', '-d', 'dev-snapshot']);
+      await execPromise('git', ['push', 'origin', '$branch']);
     });
   }
 }
