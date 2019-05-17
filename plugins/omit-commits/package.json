@@ -37,6 +37,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "6.5.0"
+    "@auto-it/core": "6.5.1"
   }
 }
