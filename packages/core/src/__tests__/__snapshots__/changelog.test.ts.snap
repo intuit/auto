@@ -1,0 +1,192 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hooks author 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (:heart: Adam Dierkens/adam@dierkens.com :heart:)
+
+#### Authors: 1
+
+:shipit: Adam Dierkens (:heart: Adam Dierkens/adam@dierkens.com :heart:)"
+`;
+
+exports[`Hooks title 1`] = `
+":heart: 🐛  Bug Fix :heart:
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes additional release notes should be able to contain sub-headers 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+### Things you should really know
+
+Bam!?
+
+---
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes doesn't add additional release notes when there are none 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should add additional release notes 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+---
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should be able to customize pushToBaseBranch title 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Custom Title
+
+- I was a push to master  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should be able to customize titles 1`] = `
+"#### Woo Woo New Features
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+- Third  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should create note for PR commits 1`] = `
+"#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should create note for PR commits without labels 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### ⚠️  Pushed to master
+
+- I was a push to master  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
+"#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234)"
+`;
+
+exports[`generateReleaseNotes should order the section major, minor, patch, then the rest 1`] = `
+"#### 💥  Breaking Change
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### 🐛  Bug Fix
+
+- I was a push to master  (adam@dierkens.com)
+
+#### 📝  Documentation
+
+- docs  (adam@dierkens.com)
+
+#### 🏠  Internal
+
+- something  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
+"#### 🐛  Bug Fix
+
+- Another Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
+
+#### Authors: 1
+
+- adam@dierkens.com"
+`;
+
+exports[`generateReleaseNotes should use username if present 1`] = `
+"#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) ([@adam](https://github.custom.com/adam))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adam](https://github.custom.com/adam))"
+`;
