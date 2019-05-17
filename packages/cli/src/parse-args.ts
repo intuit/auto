@@ -22,7 +22,7 @@ import {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions
-} from '@intuit-auto/core';
+} from '@auto-it/core';
 
 export type Flags =
   | keyof GlobalArgs

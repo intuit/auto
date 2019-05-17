@@ -1,6 +1,6 @@
 {
-  "name": "@intuit-auto/twitter",
-  "version": "6.5.0",
+  "name": "@auto-it/twitter",
+  "version": "6.5.1",
   "main": "dist/index.js",
   "description": "Twitter plugin for auto",
   "author": {
@@ -8,7 +8,8 @@
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0",
+    "@auto-it/core": "6.5.1",
     "@types/twitter-text": "^2.0.0",
     "dedent": "^0.7.0",
     "semver": "^6.0.0",

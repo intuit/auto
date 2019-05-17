@@ -19,7 +19,8 @@ Make sure that npm is trying to publish to the correct registry. Force npm/lerna
 ```json
 {
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }
 ```

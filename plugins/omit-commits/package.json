@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/omit-commits",
+  "name": "@auto-it/omit-commits",
   "version": "6.5.1",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
@@ -8,7 +8,8 @@
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.1"
+    "@auto-it/core": "6.5.0"
   }
 }

@@ -1,11 +1,11 @@
-import Auto from '@intuit-auto/core';
-import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
-import Git from '@intuit-auto/core/dist/git';
-import LogParse from '@intuit-auto/core/dist/log-parse';
-import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
-import { IAutoConfig } from '@intuit-auto/core/src/release';
+import Auto from '@auto-it/core';
+import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
+import Git from '@auto-it/core/dist/git';
+import LogParse from '@auto-it/core/dist/log-parse';
+import { defaultLabelDefinition } from '@auto-it/core/dist/release';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import { IAutoConfig } from '@auto-it/core/src/release';
 import ReleasedLabelPlugin from '../src';
 
 const git = new Git({ owner: '1', repo: '2' });

@@ -7,9 +7,9 @@ Filter PRs with release notes that shouldn't make it into a release. By default 
 This plugin is not included with the `auto` CLI. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/omit-release-notes
+npm i --save-dev @auto-it/omit-release-notes
 # or
-yarn add -D @intuit-auto/omit-release-notes
+yarn add -D @auto-it/omit-release-notes
 ```
 
 ## Usage

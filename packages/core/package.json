@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/core",
+  "name": "@auto-it/core",
   "version": "6.5.1",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
@@ -11,7 +11,8 @@
     "auto": "dist/bin/auto.js"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",

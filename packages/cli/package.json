@@ -11,7 +11,8 @@
     "auto": "dist/bin/auto.js"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -38,9 +39,9 @@
     "test": "jest --maxWorkers=2"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.1",
-    "@intuit-auto/npm": "6.5.1",
-    "@intuit-auto/released": "6.5.1",
+    "@auto-it/core": "6.5.1",
+    "@auto-it/npm": "6.5.1",
+    "@auto-it/released": "6.5.1",
     "chalk": "^2.4.2",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",
