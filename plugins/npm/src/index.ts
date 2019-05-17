@@ -222,7 +222,7 @@ export default class NPMPlugin implements IPlugin {
 
         if (monorepoVersion === 'independent') {
           previousVersion =
-            'dryRun' in auto.args && auto.args.dryRun
+            'dryRun' in auto.options && auto.options.dryRun
               ? await getIndependentPackageList()
               : '';
         } else {
@@ -433,7 +433,7 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
-        if (auto.args && auto.args.verbose) {
+        if (auto.options && auto.options.verbose) {
           await execPromise('git', ['status', '--short']);
         }
 

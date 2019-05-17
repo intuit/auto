@@ -1,14 +1,14 @@
-interface IAuthorArgs {
+interface IAuthorOptions {
   name?: string;
   email?: string;
 }
 
-export interface IRepoArgs {
+export interface IRepoOptions {
   owner?: string;
   repo?: string;
 }
 
-export interface ILogArgs {
+export interface ILogOptions {
   verbose?: boolean;
   veryVerbose?: boolean;
 }
@@ -49,7 +49,7 @@ export interface IVersionOptions {
   onlyPublishWithReleaseLabel?: boolean;
 }
 
-export interface IChangelogOptions extends IAuthorArgs {
+export interface IChangelogOptions extends IAuthorOptions {
   noVersionPrefix?: boolean;
   dryRun?: boolean;
   from?: string;
@@ -57,7 +57,7 @@ export interface IChangelogOptions extends IAuthorArgs {
   message?: string;
 }
 
-export interface IReleaseOptions extends IAuthorArgs {
+export interface IReleaseOptions extends IAuthorOptions {
   noVersionPrefix?: boolean;
   dryRun?: boolean;
   useVersion?: string;
@@ -84,15 +84,15 @@ export interface ICanaryOptions {
   message?: string | 'false';
 }
 
-export type GlobalArgs = {
+export type GlobalOptions = {
   githubApi?: string;
   baseBranch?: string;
   githubGraphqlApi?: string;
   plugins?: string[];
-} & IRepoArgs &
-  ILogArgs;
+} & IRepoOptions &
+  ILogOptions;
 
-export type ApiArgs = GlobalArgs &
+export type ApiOptions = GlobalOptions &
   (
     | IInitOptions
     | ICreateLabelsOptions

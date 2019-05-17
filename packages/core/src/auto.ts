@@ -12,7 +12,7 @@ import {
 } from 'tapable';
 
 import {
-  ApiArgs,
+  ApiOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -104,7 +104,7 @@ const loadEnv = () => {
 export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
-  args: ApiArgs;
+  options: ApiOptions;
   baseBranch: string;
   config?: IAutoConfig;
 
@@ -113,11 +113,15 @@ export default class Auto {
   labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
 
-  constructor(args: ApiArgs = {}) {
-    this.args = args;
-    this.baseBranch = args.baseBranch || 'master';
+  constructor(options: ApiOptions = {}) {
+    this.options = options;
+    this.baseBranch = options.baseBranch || 'master';
     this.logger = createLog(
-      args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
+      options.veryVerbose
+        ? 'veryVerbose'
+        : options.verbose
+        ? 'verbose'
+        : undefined
     );
     this.hooks = makeHooks();
 
@@ -145,7 +149,7 @@ export default class Auto {
   async loadConfig() {
     const configLoader = new Config(this.logger);
     const config = this.hooks.modifyConfig.call({
-      ...(await configLoader.loadConfig(this.args)),
+      ...(await configLoader.loadConfig(this.options)),
       baseBranch: this.baseBranch
     });
 

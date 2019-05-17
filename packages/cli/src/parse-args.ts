@@ -8,8 +8,8 @@ import dedent from 'dedent';
 import signale from 'signale';
 
 import {
-  ApiArgs,
-  GlobalArgs,
+  ApiOptions,
+  GlobalOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -25,7 +25,7 @@ import {
 } from '@auto-it/core';
 
 export type Flags =
-  | keyof GlobalArgs
+  | keyof GlobalOptions
   | keyof IInitOptions
   | keyof ICreateLabelsOptions
   | keyof ILabelOptions
@@ -650,7 +650,7 @@ export default function parseArgs(testArgs?: string[]) {
     return [];
   }
 
-  const autoOptions: ApiArgs = commandLineArgs(options, {
+  const autoOptions: ApiOptions = commandLineArgs(options, {
     argv,
     camelCase: true
   })._all;
@@ -662,7 +662,7 @@ export default function parseArgs(testArgs?: string[]) {
           (typeof option === 'string' && !(option in autoOptions)) ||
           (typeof option === 'object' && !option.find(o => o in autoOptions)) ||
           // tslint:disable-next-line strict-type-predicates
-          autoOptions[option as keyof ApiArgs] === null
+          autoOptions[option as keyof ApiOptions] === null
       )
       .map(option =>
         typeof option === 'string'

@@ -3,7 +3,7 @@ import merge from 'deepmerge';
 import fetch from 'node-fetch';
 import * as path from 'path';
 
-import { ApiArgs } from './auto-args';
+import { ApiOptions } from './auto-args';
 import {
   defaultLabelDefinition,
   getVersionMap,
@@ -48,7 +48,7 @@ export default class Config {
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
-  async loadConfig(args: ApiArgs) {
+  async loadConfig(args: ApiOptions) {
     const explorer = cosmiconfig('auto', {
       searchPlaces: [
         `.autorc`,
