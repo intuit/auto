@@ -55,6 +55,12 @@ brew install automake
 yarn
 ```
 
+### Cleaning
+
+```sh
+yarn clean
+```
+
 ### Linting
 
 ```sh
@@ -73,12 +79,37 @@ yarn test
 yarn build
 ```
 
+In watch mode:
+
+```sh
+yarn build:watch
+```
+
 ### Run the docs
 
 To deploy the docs you will need to add the `documentation` label to your pull request.
 
 ```sh
 yarn docs:watch
+```
+
+### Adding a contributor
+
+```sh
+yarn contributors:add
+```
+
+### Create a new plugin
+
+Get stated developing a new plugin in the monorepo in seconds.
+
+The two arguments are
+
+1. A spaced name
+2. a description
+
+```sh
+yarn create:plugin "My Plugin" "Do something really cool"
 ```
 
 ## Contributing
