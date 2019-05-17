@@ -7,9 +7,9 @@ Post tweets after a release is made.
 This plugin is not included with the `auto` CLI. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/twitter
+npm i --save-dev @auto-it/twitter
 # or
-yarn add -D @intuit-auto/twitter
+yarn add -D @auto-it/twitter
 ```
 
 ## Usage

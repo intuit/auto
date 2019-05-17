@@ -1,4 +1,4 @@
-import { Auto, IPlugin } from '@intuit-auto/core';
+import { Auto, IPlugin } from '@auto-it/core';
 import dedent from 'dedent';
 import fileType from 'file-type';
 import fs from 'fs';

@@ -1,5 +1,5 @@
-import Auto, { SEMVER } from '@intuit-auto/core';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
+import Auto, { SEMVER } from '@auto-it/core';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import dedent from 'dedent';
 import TwitterPlugin from '../src';
 

@@ -16,9 +16,9 @@ Make sure that you create the `released` label on you project
 This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
 ```sh
-npm i --save-dev @intuit-auto/released
+npm i --save-dev @auto-it/released
 # or
-yarn add -D @intuit-auto/released
+yarn add -D @auto-it/released
 ```
 
 ## Usage

@@ -1,4 +1,4 @@
-import { Auto, execPromise, IPlugin, SEMVER } from '@intuit-auto/core';
+import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
 import * as fs from 'fs';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';

@@ -1,16 +1,16 @@
-import Auto from '@intuit-auto/core';
-import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
-import Git from '@intuit-auto/core/dist/git';
-import LogParse from '@intuit-auto/core/dist/log-parse';
+import Auto from '@auto-it/core';
+import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
+import Git from '@auto-it/core/dist/git';
+import LogParse from '@auto-it/core/dist/log-parse';
 import Release, {
   defaultLabelDefinition,
   getVersionMap
-} from '@intuit-auto/core/dist/release';
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
+} from '@auto-it/core/dist/release';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import {
   makeHooks,
   makeLogParseHooks
-} from '@intuit-auto/core/dist/utils/make-hooks';
+} from '@auto-it/core/dist/utils/make-hooks';
 import ConventionalCommitsPlugin from '../src';
 
 const versionLabels = getVersionMap(defaultLabelDefinition);
