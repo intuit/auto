@@ -35,6 +35,7 @@ export interface IChangelogHooks {
     [ICommitAuthor, string],
     string | void
   >;
+  omitReleaseNotes: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
 }
 
 const getHeaderDepth = (line: string) =>
@@ -77,6 +78,20 @@ export default class Changelog {
       'Default',
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
+    this.hooks.omitReleaseNotes.tap('Renovate', commit => {
+      const names = ['renovate-pro[bot]', 'renovate-bot'];
+
+      if (
+        commit.authors.find(author =>
+          Boolean(
+            (author.name && names.includes(author.name)) ||
+              (author.username && names.includes(author.username))
+          )
+        )
+      ) {
+        return true;
+      }
+    });
   }
 
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
@@ -90,8 +105,8 @@ export default class Changelog {
     this.logger.veryVerbose.info('\n', split);
     const sections: string[] = [];
 
-    this.createReleaseNotesSection(commits, sections);
-    this.logger.verbose.info('Added relase notes to changelog');
+    await this.createReleaseNotesSection(commits, sections);
+    this.logger.verbose.info('Added release notes to changelog');
 
     await this.createLabelSection(split, sections);
     this.logger.verbose.info('Added groups to changelog');
@@ -279,7 +294,7 @@ export default class Changelog {
     );
   }
 
-  private createReleaseNotesSection(
+  private async createReleaseNotesSection(
     commits: IExtendedCommit[],
     sections: string[]
   ) {
@@ -287,10 +302,23 @@ export default class Changelog {
       return;
     }
 
-    const visited = new Set<number>();
     let section = '';
+    const visited = new Set<number>();
+    const included = await Promise.all(
+      commits.map(async commit => {
+        const omit = await this.hooks.omitReleaseNotes.promise(commit);
 
-    commits.map(commit => {
+        if (!omit) {
+          return commit;
+        }
+      })
+    );
+
+    included.map(commit => {
+      if (!commit) {
+        return;
+      }
+
       const pr = commit.pullRequest;
 
       if (!pr || !pr.body) {

@@ -48,5 +48,6 @@ export const makeChangelogHooks = (): IChangelogHooks => ({
     'commit',
     'options'
   ]),
-  renderChangelogAuthorLine: new AsyncSeriesBailHook(['author', 'user'])
+  renderChangelogAuthorLine: new AsyncSeriesBailHook(['author', 'user']),
+  omitReleaseNotes: new AsyncSeriesBailHook(['commit'])
 });
