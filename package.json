@@ -36,10 +36,13 @@
     "docs:watch": "ignite --watch",
     "docs:publish": "./scripts/publish-docs.sh",
     "bundle": "pkg packages/cli/package.json --out-path dist && yarn gzip",
-    "gzip": "ls dist/auto* | xargs gzip"
+    "gzip": "ls dist/auto* | xargs gzip",
+    "create:plugin": "./scripts/create-plugin.js"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.4.0",
+    "change-case": "^3.1.0",
+    "copy-template-dir": "^1.4.0",
     "graphql": "^14.2.1",
     "husky": "^2.0.0",
     "ignite": "^1.9.0",
@@ -68,11 +71,11 @@
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
-      "prettier --write",
+      "prettier --write ",
       "git add"
     ],
     "*.{ts,tsx}": [
-      "prettier --parser typescript --write",
+      "prettier --parser typescript --write  ",
       "yarn lint --fix",
       "git add"
     ]
@@ -94,7 +97,8 @@
     },
     "testMatch": [
       "**/__tests__/*.test.+(ts|tsx|js)",
-      "!**/dist/**/*"
+      "!**/dist/**/*",
+      "!**/scripts/template-plugin/**/*"
     ],
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
