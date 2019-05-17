@@ -97,7 +97,8 @@
     },
     "testMatch": [
       "**/__tests__/*.test.+(ts|tsx|js)",
-      "!**/dist/**/*"
+      "!**/dist/**/*",
+      "!**/scripts/template-plugin/**/*"
     ],
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
