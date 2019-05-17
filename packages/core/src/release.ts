@@ -206,6 +206,10 @@ function processQueryResult(
   }
 
   if (result.edges.length > 0) {
+    if (result.edges[0].node.state === 'CLOSED') {
+      return;
+    }
+
     const labels: ILabelDefinition[] = result.edges[0].node.labels
       ? result.edges[0].node.labels.edges.map(edge => edge.node)
       : [];
