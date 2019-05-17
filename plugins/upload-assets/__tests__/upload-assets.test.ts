@@ -17,7 +17,7 @@ describe('Upload Assets Plugin', () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { ghub: { repos: { uploadReleaseAsset } } }
+      git: { github: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -40,7 +40,7 @@ describe('Upload Assets Plugin', () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { ghub: { repos: { uploadReleaseAsset } } }
+      git: { github: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -78,7 +78,7 @@ describe('Upload Assets Plugin', () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { ghub: { repos: { uploadReleaseAsset } } }
+      git: { github: { repos: { uploadReleaseAsset } } }
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({

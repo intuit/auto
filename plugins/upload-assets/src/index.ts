@@ -40,7 +40,7 @@ export default class UploadAssetsPlugin implements IPlugin {
           const stats = await stat(asset);
           const type = fileType(file);
 
-          await auto.git.ghub.repos.uploadReleaseAsset({
+          await auto.git.github.repos.uploadReleaseAsset({
             url: response.data.upload_url,
             file,
             name: path.basename(asset),
