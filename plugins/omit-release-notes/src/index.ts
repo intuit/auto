@@ -1,14 +1,13 @@
 import { Auto, IPlugin } from '@auto-it/core';
 
-interface IReleaseNotesPluginOptions {
+export interface IReleaseNotesPluginOptions {
   username?: string | string[];
   email?: string | string[];
   name?: string | string[];
   labels?: string | string[];
 }
 
-const arrayify = <T>(arr: T | T[]): T[] =>
-  Array.isArray(arr) || arr === undefined ? arr : [arr];
+const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 
 export default class ReleaseNotesPlugin implements IPlugin {
   name = 'Omit Release Notes';

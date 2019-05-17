@@ -1,6 +1,6 @@
 import { Auto, IPlugin } from '@auto-it/core';
 
-interface IOmitCommitsPluginOptions {
+export interface IOmitCommitsPluginOptions {
   username?: string | string[];
   email?: string | string[];
   name?: string | string[];
@@ -8,8 +8,7 @@ interface IOmitCommitsPluginOptions {
   labels?: string | string[];
 }
 
-const arrayify = <T>(arr: T | T[]): T[] =>
-  Array.isArray(arr) || arr === undefined ? arr : [arr];
+const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 
 export default class OmitCommitsPlugin implements IPlugin {
   name = 'Omit Commits';
