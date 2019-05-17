@@ -35,10 +35,6 @@ export default function loadPlugin(
     return;
   }
 
-  if (!plugin) {
-    return;
-  }
-
   if ('default' in plugin && plugin.default) {
     return new plugin.default(options);
   }

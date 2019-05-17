@@ -6,6 +6,8 @@ Before we do anything we must first install `auto` as a dev dependency.
 yarn add -D auto
 ```
 
+If you are using `auto` in a non-javascript project, you can install `auto` and all it's official plugins via the [releases](https://github.com/intuit/auto/releases) page. Here you will find a build of `auto` for all major OSes. This build has `node` bundled so you don't need it installed!
+
 ## Enterprise
 
 If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
