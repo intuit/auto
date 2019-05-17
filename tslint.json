@@ -6,7 +6,7 @@
     "tslint-xo/space"
   ],
   "linterOptions": {
-    "exclude": ["**/*.json"]
+    "exclude": ["**/*.json", "scripts/template-plugin/**/*"]
   },
   "jsRules": {},
   "rules": {
