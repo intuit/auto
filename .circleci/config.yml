@@ -40,7 +40,7 @@ aliases:
     command: yarn semver:check
   - &bundle
     name: Bundle the code into binaries for multiple platforms
-    command: yarn bundle
+    command: yarn lerna run bundle --scope=auto
 
 jobs:
   semver:

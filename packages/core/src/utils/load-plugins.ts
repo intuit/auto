@@ -30,6 +30,18 @@ export default function loadPlugin(
     ) as IPluginConstructor;
   }
 
+  // For pkg bundle
+  if (!plugin) {
+    plugin = tryRequire(
+      path.join(
+        __dirname,
+        '../../../../../plugins/',
+        pluginPath,
+        'dist/index.js'
+      )
+    ) as IPluginConstructor;
+  }
+
   if (!plugin) {
     logger.log.warn(`Could not find plugin: ${pluginPath}`);
     return;
