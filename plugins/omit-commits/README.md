@@ -24,6 +24,8 @@ Yarn can omit by most any field available on a commit. Each options accepts eith
       {
         // By usernames
         "username": ["pdbf", "ghost"],
+        // By name
+        "name": "Adam",
         // By emails
         "email": ["foo@gmail.com", "doesnt-exits@yahoo.com"],
         // By presence of string in subject
