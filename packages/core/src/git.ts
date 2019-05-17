@@ -528,7 +528,7 @@ export default class Git {
     });
 
     this.logger.veryVerbose.info('Got PR description\n', issue.data.body);
-    const regex = new RegExp(`(${id})\\s(.+)\\s(${id})`);
+    const regex = new RegExp(`(${id})\\s*(.*)\\s*(${id})`);
     let body = issue.data.body;
 
     if (body.match(regex)) {
