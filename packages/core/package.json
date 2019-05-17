@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/core",
+  "name": "@auto-it/core",
   "version": "6.5.0",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",

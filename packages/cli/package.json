@@ -38,9 +38,9 @@
     "test": "jest --maxWorkers=2"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0",
-    "@intuit-auto/npm": "6.5.0",
-    "@intuit-auto/released": "6.5.0",
+    "@auto-it/core": "6.5.0",
+    "@auto-it/npm": "6.5.0",
+    "@auto-it/released": "6.5.0",
     "chalk": "^2.4.2",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",

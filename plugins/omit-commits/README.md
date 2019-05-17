@@ -7,9 +7,9 @@ Filter certain commits out of the changelog and version calculation.
 This plugin is not included with the `auto` CLI. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/omit-commits
+npm i --save-dev @auto-it/omit-commits
 # or
-yarn add -D @intuit-auto/omit-commits
+yarn add -D @auto-it/omit-commits
 ```
 
 ## Usage

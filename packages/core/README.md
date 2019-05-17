@@ -1,3 +1,3 @@
-# @intuit-auto/core
+# @auto-it/core
 
 The node API for using auto.

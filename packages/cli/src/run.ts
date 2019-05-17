@@ -13,7 +13,7 @@ import Auto, {
   IPRStatusOptions,
   IReleaseOptions,
   IShipItOptions
-} from '@intuit-auto/core';
+} from '@auto-it/core';
 
 export async function run(command: string, args: ApiArgs) {
   const auto = new Auto(args);

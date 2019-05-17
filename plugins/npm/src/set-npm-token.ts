@@ -1,4 +1,4 @@
-import { ILogger } from '@intuit-auto/core';
+import { ILogger } from '@auto-it/core';
 import envCi from 'env-ci';
 import path from 'path';
 import registryUrl from 'registry-url';

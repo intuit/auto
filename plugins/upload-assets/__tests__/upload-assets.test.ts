@@ -1,9 +1,9 @@
-import Auto from '@intuit-auto/core';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
+import Auto from '@auto-it/core';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import path from 'path';
 
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import UploadAssets from '../src';
 
 describe('Upload Assets Plugin', () => {

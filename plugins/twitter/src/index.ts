@@ -1,4 +1,4 @@
-import { Auto, IPlugin, SEMVER } from '@intuit-auto/core';
+import { Auto, IPlugin, SEMVER } from '@auto-it/core';
 import dedent from 'dedent';
 import { diff, ReleaseType } from 'semver';
 import twitter from 'tweet-tweet';

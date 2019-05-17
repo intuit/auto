@@ -1,4 +1,4 @@
-import { Auto, IPlugin } from '@intuit-auto/core';
+import { Auto, IPlugin } from '@auto-it/core';
 
 interface IOmitCommitsPluginOptions {
   username?: string | string[];

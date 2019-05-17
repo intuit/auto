@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
 
-import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@intuit-auto/core';
+import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
 

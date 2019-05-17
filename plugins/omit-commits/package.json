@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/omit-commits",
+  "name": "@auto-it/omit-commits",
   "version": "6.5.0",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
@@ -36,6 +36,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0"
+    "@auto-it/core": "6.5.0"
   }
 }

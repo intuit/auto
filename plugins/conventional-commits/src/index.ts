@@ -1,6 +1,6 @@
 import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
-import { Auto, IPlugin, VersionLabel } from '@intuit-auto/core';
+import { Auto, IPlugin, VersionLabel } from '@auto-it/core';
 
 export default class ConventionalCommitsPlugin implements IPlugin {
   name = 'Conventional Commits Parser';

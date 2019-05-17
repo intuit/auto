@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/jira",
+  "name": "@auto-it/jira",
   "version": "6.5.0",
   "main": "dist/index.js",
   "description": "Jira plugin for auto",
@@ -35,7 +35,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0",
+    "@auto-it/core": "6.5.0",
     "url-join": "^4.0.0"
   },
   "devDependencies": {
