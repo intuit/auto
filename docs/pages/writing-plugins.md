@@ -332,6 +332,20 @@ auto.hooks.onCreateRelease.tap(this.name, release => {
 
 ---
 
+#### omitReleaseNotes
+
+Control what commits effect the additional release notes section.
+
+```ts
+auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+  changelog.hooks.omitReleaseNotes.tap(this.name, commit =>
+    commit.subject.includes('WIP')
+  );
+});
+```
+
+---
+
 ### LogParse Hooks
 
 #### parseCommit
