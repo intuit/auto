@@ -3,7 +3,6 @@ import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
-import dedent from 'dedent';
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinitionMap } from './release';
 import { ILogger } from './utils/logger';
@@ -354,21 +353,13 @@ export default class Changelog {
         }
       }
 
-      section += dedent`
-        _From #${pr.number}_
-
-        ${notes.trim()}\n\n
-      `;
+      section += `_From #${pr.number}_\n\n${notes.trim()}\n\n`;
     });
 
     if (!section) {
       return;
     }
 
-    sections.push(dedent`
-      ### Release Notes
-
-      ${section}---
-    `);
+    sections.push(`### Release Notes\n\n${section}---`);
   }
 }
