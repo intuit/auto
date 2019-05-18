@@ -360,6 +360,6 @@ export default class Changelog {
       return;
     }
 
-    sections.push(`### Release Notes\n\n${section}---\n`);
+    sections.push(`### Release Notes\n\n${section}---`);
   }
 }
