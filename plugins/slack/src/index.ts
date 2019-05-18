@@ -37,7 +37,7 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
-        if ('dryRun' in auto.args && auto.args.dryRun) {
+        if ('dryRun' in auto.options && auto.options.dryRun) {
           return;
         }
 

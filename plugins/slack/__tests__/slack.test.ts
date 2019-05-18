@@ -52,7 +52,7 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: { dryRun: true } } as Auto);
+    plugin.apply({ hooks, options: { dryRun: true } } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
@@ -70,7 +70,7 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: {} } as Auto);
+    plugin.apply({ hooks, options: {} } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
@@ -90,7 +90,7 @@ describe('postToSlack', () => {
     // @ts-ignore
     plugin.apply({
       hooks,
-      args: {},
+      options: {},
       release: { options: { skipReleaseLabels: ['skip-release'] } }
     } as Auto);
 
@@ -111,7 +111,7 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: {} } as Auto);
+    plugin.apply({ hooks, options: {} } as Auto);
 
     await expect(
       hooks.afterRelease.promise({
@@ -159,7 +159,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin({ url: 'https://custom-slack-url' });
     const hooks = makeHooks();
     process.env.SLACK_TOKEN = 'MY_TOKEN';
-    plugin.apply({ hooks, args: {}, ...mockAuto } as Auto);
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',

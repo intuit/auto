@@ -63,7 +63,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -86,7 +86,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -108,7 +108,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -133,7 +133,7 @@ describe('release label plugin', () => {
         options: { skipReleaseLabels: ['skip-release'] }
       },
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -158,7 +158,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -186,7 +186,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: { dryRun: true },
+      options: { dryRun: true },
       comment,
       git
     } as unknown) as Auto);
@@ -211,7 +211,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -238,7 +238,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -262,7 +262,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -298,7 +298,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -323,7 +323,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
