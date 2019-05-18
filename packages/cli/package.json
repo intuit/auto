@@ -38,7 +38,7 @@
     "lint": "tslint -p . --format stylish",
     "test": "jest --maxWorkers=2",
     "bundle": "rimraf binary && pkg . --out-path binary && yarn gzip",
-    "gzip": "ls dist/auto* | xargs gzip"
+    "gzip": "ls binary/auto* | xargs gzip"
   },
   "dependencies": {
     "@auto-it/core": "^7.0.0",
