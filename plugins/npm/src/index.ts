@@ -2,6 +2,7 @@ import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
+import { Memoize } from 'typescript-memoize';
 
 import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
@@ -134,19 +135,7 @@ interface INpmConfig {
   forcePublish?: boolean;
 }
 
-const getLernaPackages = async () =>
-  execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
-    res.split('\n').map(packageInfo => {
-      const [packagePath, name, version] = packageInfo.split(':');
-      return { path: packagePath, name, version };
-    })
-  );
-
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
-const getIndependentPackageList = async () =>
-  getLernaPackages().then(packages =>
-    packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
-  );
 
 const checkClean = async (auto: Auto) => {
   const status = await execPromise('git', ['status', '--porcelain']);
@@ -172,6 +161,23 @@ export default class NPMPlugin implements IPlugin {
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
+  }
+
+  @Memoize()
+  async getLernaPackages() {
+    return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
+      res.split('\n').map(packageInfo => {
+        const [packagePath, name, version] = packageInfo.split(':');
+        return { path: packagePath, name, version };
+      })
+    );
+  }
+
+  @Memoize()
+  async getIndependentPackageList() {
+    return this.getLernaPackages().then(packages =>
+      packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
+    );
   }
 
   apply(auto: Auto) {
@@ -223,7 +229,7 @@ export default class NPMPlugin implements IPlugin {
         if (monorepoVersion === 'independent') {
           previousVersion =
             'dryRun' in auto.options && auto.options.dryRun
-              ? await getIndependentPackageList()
+              ? await this.getIndependentPackageList()
               : '';
         } else {
           const releasedPackage = getMonorepoPackage();
@@ -283,7 +289,7 @@ export default class NPMPlugin implements IPlugin {
             return [commit, line];
           }
 
-          const lernaPackages = await getLernaPackages();
+          const lernaPackages = await this.getLernaPackages();
           const lernaJson = getLernaJson();
 
           commit.packages = await changedPackages(
@@ -370,8 +376,8 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        const packages = await getLernaPackages();
-        const independentPackages = await getIndependentPackageList();
+        const packages = await this.getLernaPackages();
+        const independentPackages = await this.getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 

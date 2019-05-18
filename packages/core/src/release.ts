@@ -206,6 +206,10 @@ function processQueryResult(
   }
 
   if (result.edges.length > 0) {
+    if (result.edges[0].node.state === 'CLOSED') {
+      return;
+    }
+
     const labels: ILabelDefinition[] = result.edges[0].node.labels
       ? result.edges[0].node.labels.edges.map(edge => edge.node)
       : [];
@@ -636,6 +640,8 @@ export default class Release {
   private async attachAuthor(commit: IExtendedCommit) {
     let resolvedAuthors = [];
 
+    // If there is a pull request we will attempt to get the authors
+    // from any commit in the PR
     if (commit.pullRequest) {
       const prCommits = await this.git.getCommitsForPR(
         Number(commit.pullRequest.number)
@@ -658,7 +664,11 @@ export default class Release {
         })
       );
     } else if (commit.authorEmail) {
-      const author = await this.git.getUserByEmail(commit.authorEmail);
+      const author = commit.authorEmail.includes('@users.noreply.github.com')
+        ? await this.git.getUserByUsername(
+            commit.authorEmail.split('@users')[0]
+          )
+        : await this.git.getUserByEmail(commit.authorEmail);
 
       resolvedAuthors.push({
         email: commit.authorEmail,
@@ -673,7 +683,9 @@ export default class Release {
     }));
 
     commit.authors.map(author => {
-      this.logger.veryVerbose.info(`Found author: ${author.username}`);
+      this.logger.veryVerbose.info(
+        `Found author: ${author.username} ${author.email} ${author.name}`
+      );
     });
 
     return commit;

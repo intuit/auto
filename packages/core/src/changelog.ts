@@ -266,32 +266,36 @@ export default class Changelog {
       {} as { [label: string]: string }
     );
 
-    await Promise.all(
+    const labelSections = await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {
         const title = await this.hooks.renderChangelogTitle.promise(
           label,
           changelogTitles
         );
 
-        const lines = await Promise.all(
+        const lines = new Set<string>();
+
+        await Promise.all(
           labelCommits.map(async commit => {
             const [, line] = await this.hooks.renderChangelogLine.promise([
               commit,
               await this.generateCommitNote(commit)
             ]);
 
-            return line;
+            lines.add(line);
           })
         );
 
-        sections.push(
-          [
-            title,
-            ...lines.sort((a, b) => a.split('\n').length - b.split('\n').length)
-          ].join('\n')
-        );
+        return [
+          title,
+          ...[...lines].sort(
+            (a, b) => a.split('\n').length - b.split('\n').length
+          )
+        ].join('\n');
       })
     );
+
+    labelSections.map(section => sections.push(section));
   }
 
   private async createReleaseNotesSection(

@@ -450,9 +450,7 @@ describe('github', () => {
         data: undefined
       });
 
-      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({
-        login: 'lisowski54@gmail.com'
-      });
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({});
     });
 
     test('errors', async () => {
