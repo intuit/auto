@@ -70,6 +70,17 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`Release generateReleaseNotes should find ignore closed prs 1`] = `
+"#### 🐛  Bug Fix
+
+- Doom Patrol enabled  (adam@dierkens.com)
+- Autobots roll out!  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`Release generateReleaseNotes should find matching PRs for shas through search 1`] = `
 "#### 💥  Breaking Change
 
@@ -286,13 +297,30 @@ Array [
     "subject": "First",
   },
   Object {
-    "authorEmail": "lisowski54@gmail.com",
+    "authorEmail": "andrew@users.noreply.github.com",
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
+      },
+    ],
+    "hash": "foo",
+    "labels": Array [],
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "Second",
+  },
+  Object {
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
+    "authors": Array [
+      Object {
+        "email": "lisowski54@gmail.com",
+        "name": "Andrew Lisowski",
       },
     ],
     "hash": "foo",

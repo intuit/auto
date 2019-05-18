@@ -154,6 +154,10 @@ describe('Release', () => {
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
+          email: 'andrew@users.noreply.github.com'
+        }),
+        makeCommitFromMsg('Second (#123)', {
+          name: 'Andrew Lisowski',
           email: 'lisowski54@gmail.com'
         }),
         makeCommitFromMsg('Third')
@@ -167,6 +171,10 @@ describe('Release', () => {
           }
         }
       ]);
+      getUserByUsername.mockReturnValueOnce({
+        login: 'andrew',
+        name: 'Andrew Lisowski'
+      });
       getUserByUsername.mockReturnValueOnce({
         login: 'andrew',
         name: 'Andrew Lisowski'
@@ -534,6 +542,41 @@ describe('Release', () => {
         hash_1: {
           edges: [
             { node: { labels: { edges: [{ node: { name: 'major' } }] } } }
+          ]
+        }
+      });
+      // PR with no label, should become patch
+      graphql.mockReturnValueOnce({
+        hash_2: {
+          edges: [{ node: { labels: undefined } }]
+        }
+      });
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
+    test('should find ignore closed prs', async () => {
+      const gh = new Release(git);
+
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg('Doom Patrol enabled', {
+          hash: '1'
+        }),
+        makeCommitFromMsg('Autobots roll out!', {
+          hash: '2'
+        })
+      ]);
+
+      graphql.mockReturnValueOnce({
+        hash_1: {
+          edges: [
+            {
+              node: {
+                labels: {
+                  edges: [{ node: { name: 'major', state: 'CLOSED' } }]
+                }
+              }
+            }
           ]
         }
       });
