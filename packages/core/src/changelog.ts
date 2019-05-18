@@ -273,20 +273,24 @@ export default class Changelog {
           changelogTitles
         );
 
-        const lines = await Promise.all(
+        const lines = new Set<string>();
+
+        await Promise.all(
           labelCommits.map(async commit => {
             const [, line] = await this.hooks.renderChangelogLine.promise([
               commit,
               await this.generateCommitNote(commit)
             ]);
 
-            return line;
+            lines.add(line);
           })
         );
 
         return [
           title,
-          ...lines.sort((a, b) => a.split('\n').length - b.split('\n').length)
+          ...[...lines].sort(
+            (a, b) => a.split('\n').length - b.split('\n').length
+          )
         ].join('\n');
       })
     );
