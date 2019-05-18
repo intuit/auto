@@ -1,3 +1,21 @@
+# v7.0.1 (Sat May 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix changelog indentation [#438](https://github.com/intuit/auto/pull/438) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- `auto`
+  - fix bundle step, must gzip correct folder [#437](https://github.com/intuit/auto/pull/437) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.0 (Fri May 17 2019)
 
 ### Release Notes
