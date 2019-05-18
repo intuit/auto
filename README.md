@@ -18,7 +18,7 @@ Release Features:
 - Skip a release with the `skip-release` label
 - Publish canary releases from PRs or locally
 - Generate changelogs with fancy headers, authors, and monorepo package association
-- Use labels to create new changelog section
+- Use labels to create new changelog sections
 - Generate a GitHub release
 
 Pull Request Interaction Features:
@@ -27,8 +27,24 @@ Pull Request Interaction Features:
 - Set the status of a PR
 - Check that a pull request has a SemVer label
 - Comment on a PR with markdown
+- Update the PR body with contextual build metadata
 
 Visit [the docs](https://intuit.github.io/auto/) for more information.
+
+## Plugins
+
+Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
+
+- [chrome](./plugins/chrome) - publish code to Chrome Web Store
+- [conventional-commits]](./plugins/conventional-commits) - parse conventional commit messages for version bumps
+- [jira](./plugins/jira) - Include jira story links in the changelog
+- [npm](./plugins/npm) - publish code to npm (DEFAULT)
+- [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
+- [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
+- [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
+- [slack](./plugins/slack) - post release notes to slack
+- [twitter](./plugins/twitter) - post release notes to twitter
+- [upload-assets](./plugins/upload-assets) - add extra assets to the release
 
 ## Start Developing
 
@@ -37,6 +53,12 @@ To get set up, fork and clone the project and run the following command:
 ```sh
 brew install automake
 yarn
+```
+
+### Cleaning
+
+```sh
+yarn clean
 ```
 
 ### Linting
@@ -57,12 +79,37 @@ yarn test
 yarn build
 ```
 
+In watch mode:
+
+```sh
+yarn build:watch
+```
+
 ### Run the docs
 
 To deploy the docs you will need to add the `documentation` label to your pull request.
 
 ```sh
 yarn docs:watch
+```
+
+### Adding a contributor
+
+```sh
+yarn contributors:add
+```
+
+### Create a new plugin
+
+Get stated developing a new plugin in the monorepo in seconds.
+
+The two arguments are
+
+1. A spaced name
+2. a description
+
+```sh
+yarn create:plugin "My Plugin" "Do something really cool"
 ```
 
 ## Contributing

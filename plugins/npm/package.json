@@ -1,0 +1,58 @@
+{
+  "name": "@auto-it/npm",
+  "version": "6.5.1",
+  "main": "dist/index.js",
+  "description": "NPM publishing plugin for auto",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "npm",
+    "lerna"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@auto-it/core": "6.5.1",
+    "env-ci": "^3.2.0",
+    "get-monorepo-packages": "^1.1.0",
+    "parse-author": "^2.0.0",
+    "parse-github-url": "1.0.2",
+    "registry-url": "^5.1.0",
+    "semver": "^6.0.0",
+    "url-join": "^4.0.0",
+    "typescript-memoize": "^1.0.0-alpha.3",
+    "user-home": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/env-ci": "^3.1.0",
+    "@types/parse-github-url": "1.0.0",
+    "@types/semver": "^6.0.0",
+    "@types/url-join": "^4.0.0",
+    "@types/user-home": "^2.0.0"
+  }
+}

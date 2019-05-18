@@ -175,16 +175,6 @@ versioning or the changelog), you can use the `labels` section. Just omit the `t
 }
 ```
 
-### Slack URL
-
-You can set where `auto` posts for slack messages.
-
-```json
-{
-  "slack": "https://url-to-slack.com"
-}
-```
-
 ## CLI args
 
 You can set any CLI option in the `.autorc` these options will get overridden by the CLI flags.
@@ -208,16 +198,6 @@ It is useful to specify your plugins in the rc file rather than in all the comma
 ```json
 {
   "plugins": ["npm", "../path/to/plugin.js", "NPM_PACKAGE_NAME"]
-}
-```
-
-### Jira
-
-To include Jira story information in your changelogs you must include a URL to your hosted JIRA instance.
-
-```json
-{
-  "jira": "https://url-to-jira.com"
 }
 ```
 

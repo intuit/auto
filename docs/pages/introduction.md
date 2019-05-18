@@ -10,7 +10,7 @@ Release Features:
 - Skip a release with the `skip-release` label
 - Publish canary releases from PRs or locally
 - Generate changelogs with fancy headers, authors, and monorepo package association
-- Use labels to create new changelog section
+- Use labels to create new changelog sections
 - Generate a GitHub release
 
 Pull Request Interaction Features:
@@ -19,3 +19,4 @@ Pull Request Interaction Features:
 - Set the status of a PR
 - Check that a pull request has a SemVer label
 - Comment on a PR with markdown
+- Update the PR body with contextual build metadata

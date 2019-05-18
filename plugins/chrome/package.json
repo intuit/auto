@@ -1,0 +1,47 @@
+{
+  "name": "@auto-it/chrome",
+  "version": "6.5.1",
+  "main": "dist/index.js",
+  "description": "Chrome publishing plugin for auto",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "chrome",
+    "web store"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@auto-it/core": "6.5.1",
+    "chrome-webstore-upload-cli": "^1.2.0",
+    "semver": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/semver": "^6.0.0"
+  }
+}

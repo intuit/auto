@@ -29,11 +29,15 @@
 
 - [.autorc](pages/autorc.md)
 - [Plugins](pages/plugins.md)
+  - [Chrome Web Store](../plugins/chrome/README.md)
+  - [Conventional Commits](../plugins/conventional-commits/README.md)
+  - [Omit Commits](../plugins/omit-commits/README.md)
+  - [Jira](../plugins/jira/README.md)
+  - [NPM](../plugins/npm/README.md)
+  - [Released](../plugins/released/README.md)
+  - [Slack](../plugins/slack/README.md)
+  - [Upload Assets](../plugins/upload-assets/README.md)
   - [Writing Plugins](pages/writing-plugins.md)
-  - [NPM](pages/npm.md)
-  - [Chrome Web Store](pages/chrome.md)
-  - [Conventional Commits](pages/conventional-commits.md)
-  - [Released](pages/released.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
 ---

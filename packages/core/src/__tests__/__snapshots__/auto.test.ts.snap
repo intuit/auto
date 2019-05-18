@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Auto createLabels should create the labels 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "documentation": Object {
+          "description": "Changes only affect the documentation",
+          "name": "documentation",
+          "title": "📝  Documentation",
+        },
+        "internal": Object {
+          "description": "Changes only affect the internal API",
+          "name": "internal",
+          "title": "🏠  Internal",
+        },
+        "major": Object {
+          "description": "Increment the major version when merged",
+          "name": "Version: Major",
+          "title": "💥  Breaking Change",
+        },
+        "minor": Object {
+          "description": "Increment the minor version when merged",
+          "name": "Version: Minor",
+          "title": "🚀  Enhancement",
+        },
+        "patch": Object {
+          "description": "Increment the patch version when merged",
+          "name": "Version: Patch",
+          "title": "🐛  Bug Fix",
+        },
+        "prerelease": Object {
+          "description": "Create a pre-release version when merged",
+          "name": "prerelease",
+          "title": "🚧 Prerelease",
+        },
+        "release": Object {
+          "description": "Create a release when this pr is merged",
+          "name": "release",
+        },
+        "skip-release": Object {
+          "description": "Preserve the current version when merged",
+          "name": "skip-release",
+        },
+      },
+      Object {},
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`Auto should extend config 1`] = `
+Object {
+  "baseBranch": "master",
+  "extends": "@artsy",
+  "labels": Object {
+    "documentation": Object {
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "title": "📝  Documentation",
+    },
+    "internal": Object {
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "title": "🏠  Internal",
+    },
+    "major": Object {
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "title": "💥  Breaking Change",
+    },
+    "minor": Object {
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "title": "🚀  Enhancement",
+    },
+    "patch": Object {
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "title": "🐛  Bug Fix",
+    },
+    "prerelease": Object {
+      "description": "Create a pre-release version when merged",
+      "name": "prerelease",
+      "title": "🚧 Prerelease",
+    },
+    "release": Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+    },
+    "skip-release": Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+    },
+  },
+  "onlyPublishWithReleaseLabel": true,
+  "owner": "foo",
+  "repo": "bar",
+  "skipReleaseLabels": Array [
+    "skip-release",
+  ],
+  "token": "XXXX",
+}
+`;
+
+exports[`Auto should extend local config 1`] = `
+Object {
+  "bar": "foo",
+  "baseBranch": "master",
+  "extends": "./fake.json",
+  "labels": Object {
+    "documentation": Object {
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "title": "📝  Documentation",
+    },
+    "internal": Object {
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "title": "🏠  Internal",
+    },
+    "major": Object {
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "title": "💥  Breaking Change",
+    },
+    "minor": Object {
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "title": "🚀  Enhancement",
+    },
+    "patch": Object {
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "title": "🐛  Bug Fix",
+    },
+    "prerelease": Object {
+      "description": "Create a pre-release version when merged",
+      "name": "prerelease",
+      "title": "🚧 Prerelease",
+    },
+    "release": Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+    },
+    "skip-release": Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+    },
+  },
+  "owner": "foo",
+  "repo": "bar",
+  "skipReleaseLabels": Array [
+    "skip-release",
+  ],
+  "token": "XXXX",
+}
+`;

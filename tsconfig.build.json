@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "types": []
-  },
-  "extends": "./tsconfig.json",
-  "exclude": ["./src/**/__tests__/**/*", "node_modules"]
-}
