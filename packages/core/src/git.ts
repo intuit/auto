@@ -255,9 +255,7 @@ export default class Git {
         q: `in:email ${email}`
       })).data;
 
-      return search && search.items.length > 0
-        ? search.items[0]
-        : { login: email };
+      return search && search.items.length > 0 ? search.items[0] : {};
     } catch (error) {
       this.logger.verbose.warn(`Could not find user by email: ${email}`);
     }
