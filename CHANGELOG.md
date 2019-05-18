@@ -1,3 +1,172 @@
+# v7.0.0 (Fri May 17 2019)
+
+### Release Notes
+
+    _From #420_
+
+    old `afterRelease`
+
+```js
+auto.hooks.afterRelease.tap('MyPlugin', async (version, commits, releaseNotes) => {
+// do something
+});
+```
+
+new  `afterRelease`
+
+```js
+auto.hooks.afterRelease.tap( 'MyPlugin', async ({ version, commits, releaseNotes, response }) => {
+// do something
+);
+```
+
+_From #408_
+
+    Previously a user would have the following configuration in their `.autorc`:
+
+```json
+{
+"jira": "https://url-to-jira"
+}
+```
+
+this should be changed to:
+
+```json
+{
+"plugins": [
+["jira", { "url": "https://url-to-jira" }],
+// or
+["jira", "https://url-to-jira"]
+]
+}
+```
+
+## Plugin Authors
+
+If you are a plugin author that uses the `renderChangelogLine` hook you must change your usage.
+
+Before it was a bail hook. meaning on 1 plugin could effect the changelog message. The first to return would be the message.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+changelog.hooks.renderChangelogLine.tapPromise(
+'Stars',
+async (commits, renderLine) =>
+  commits.map(commit => `${renderLine(commit).replace('-', ':star:')}
+`)
+);
+);
+```
+
+Now it is a waterfall hook. Each plugin has the chance to change the commit message in some way, but it must return the args for the next plugin in the waterfall.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+changelog.hooks.renderChangelogLine.tapPromise(
+'Stars',
+async (commit, line) =>
+  [commit, `${line.replace('-', ':star:')}
+`]
+);
+);
+```
+
+_From #407_
+
+    Previously a user would have the following configuration in their `.autorc`:
+
+```json
+{
+"slack": "https://url-to-slack"
+}
+```
+
+this should be changed to:
+
+```json
+{
+"plugins": [
+["slack", { "url": "https://url-to-your-slack-hook.com" }],
+// or
+["slack", "https://url-to-your-slack-hook.com"]
+]
+}
+```
+
+---
+
+#### 💥  Breaking Change
+
+- Factor out filter accounts plugin [#409](https://github.com/intuit/auto/pull/409) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Move jira functionality to plugin [#408](https://github.com/intuit/auto/pull/408) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Move slack functionality to a plugin [#407](https://github.com/intuit/auto/pull/407) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - V7 Release [#406](https://github.com/intuit/auto/pull/406) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`
+  - switch auto.args to auto.options on core [#432](https://github.com/intuit/auto/pull/432) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Use @auto-it scope [#428](https://github.com/intuit/auto/pull/428) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/omit-commits`
+  - Change filter-accounts plugin to omit-commits plugin [#425](https://github.com/intuit/auto/pull/425) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`, `@auto-it/slack`
+  - afterRelease returns an object so future updates will be easier [#420](https://github.com/intuit/auto/pull/420) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - Rename `auto pr` to `auto pr-status` [#413](https://github.com/intuit/auto/pull/413) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
+  - Restructure to Monorepo [#410](https://github.com/intuit/auto/pull/410) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`
+  - new hook: omit prs from release notes + add omit-release-notes plugin [#427](https://github.com/intuit/auto/pull/427) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Add Twitter Plugin [#422](https://github.com/intuit/auto/pull/422) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - add upload assets plugin [#421](https://github.com/intuit/auto/pull/421) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - Bundle `auto` for all major platforms [#418](https://github.com/intuit/auto/pull/418) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- add docs about omitReleaseNotes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- run the correct command  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- start  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - fix bundling plugin issue [#435](https://github.com/intuit/auto/pull/435) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/npm`
+  - Various Bug Fixes [#434](https://github.com/intuit/auto/pull/434) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - rename ghub to github  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/omit-commits`
+  - fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - fix problem where pr-body would only match after two were rendered [#431](https://github.com/intuit/auto/pull/431) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/npm`
+  - Parse monorepo packages outside of `packages` directory [#411](https://github.com/intuit/auto/pull/411) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update docs/pages/plugins.md
+
+Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Add monorepo plugin create command [#430](https://github.com/intuit/auto/pull/430) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/released`
+  - Split args type between core and cli [#416](https://github.com/intuit/auto/pull/416) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Update @types/node-fetch to the latest version 🚀 [#426](https://github.com/intuit/auto/pull/426) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update node-fetch to the latest version 🚀 [#423](https://github.com/intuit/auto/pull/423) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update cosmiconfig to the latest version 🚀 [#417](https://github.com/intuit/auto/pull/417) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v6.5.1 (Mon May 13 2019)
 
 #### 📝  Documentation
