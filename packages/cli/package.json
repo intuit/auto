@@ -1,14 +1,14 @@
 {
   "name": "auto",
+  "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
   "version": "6.5.1",
-  "main": "dist/main.js",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
-  "bin": {
-    "auto": "dist/bin/auto.js"
+  "pkg": {
+    "scripts": "../../plugins/**/dist/**/*.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -36,7 +36,9 @@
     "build": "tsc -p tsconfig.json",
     "build:watch": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
-    "test": "jest --maxWorkers=2"
+    "test": "jest --maxWorkers=2",
+    "bundle": "rimraf binary && pkg . --out-path binary && yarn gzip",
+    "gzip": "ls dist/auto* | xargs gzip"
   },
   "dependencies": {
     "@auto-it/core": "6.5.1",
@@ -52,6 +54,8 @@
     "@types/command-line-args": "^5.0.0",
     "@types/command-line-usage": "^5.0.1",
     "@types/dedent": "^0.7.0",
-    "@types/signale": "^1.2.1"
+    "@types/signale": "^1.2.1",
+    "pkg": "^4.4.0",
+    "rimraf": "^2.6.3"
   }
 }
