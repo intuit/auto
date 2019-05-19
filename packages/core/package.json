@@ -7,9 +7,6 @@
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
-  "bin": {
-    "auto": "dist/bin/auto.js"
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
