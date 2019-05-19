@@ -1,3 +1,20 @@
+# v7.0.2 (Sun May 19 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Remove bin entry from core [#441](https://github.com/intuit/auto/pull/441) ([@zephraph](https://github.com/zephraph))
+
+#### 📝  Documentation
+
+- Fix conventional commits link [#439](https://github.com/intuit/auto/pull/439) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.0.1 (Sat May 18 2019)
 
 #### 🐛  Bug Fix
