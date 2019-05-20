@@ -1,3 +1,20 @@
+# v7.0.4 (Mon May 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - stop using --canary flag in npm package [#446](https://github.com/intuit/auto/pull/446) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Update README.md [#445](https://github.com/intuit/auto/pull/445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.3 (Mon May 20 2019)
 
 #### 🐛  Bug Fix
