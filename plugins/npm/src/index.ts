@@ -361,17 +361,15 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npx', [
           'lerna',
           'publish',
-          version,
-          '--canary',
+          `pre${version}`,
           '--dist-tag',
           'canary',
-          // Locally we use sha for canary version's postFix, but the --canary flag
-          // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
           `canary${postFix}`,
           '--force-publish', // you always want a canary version to publish
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
+          '--no-git-tag-version', // no need to tag and commit
           ...verboseArgs
         ]);
 
