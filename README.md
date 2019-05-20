@@ -51,7 +51,6 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 To get set up, fork and clone the project and run the following command:
 
 ```sh
-brew install automake
 yarn
 ```
 
