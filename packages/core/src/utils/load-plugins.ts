@@ -18,12 +18,14 @@ export default function loadPlugin(
     | IPluginConstructor
     | { default: IPluginConstructor });
 
+  // Try importing plugin as a path in CWD
   if (!plugin) {
     plugin = tryRequire(
       path.join(process.cwd(), pluginPath)
     ) as IPluginConstructor;
   }
 
+  // Try importing official plugin
   if (!plugin) {
     plugin = tryRequire(
       path.join('@auto-it', pluginPath)
