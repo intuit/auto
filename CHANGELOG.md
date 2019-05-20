@@ -1,3 +1,16 @@
+# v7.0.3 (Mon May 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fall back to normal require for npx and global usage [#444](https://github.com/intuit/auto/pull/444) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.2 (Sun May 19 2019)
 
 #### 🐛  Bug Fix
