@@ -47,6 +47,6 @@ If you are having problems make sure you have done the following:
 - `GH_TOKEN` is set
 - `NPM_TOKEN` is set (with the NPM plugin)
 
-### Problems pushing tags to github?
+### Problems pushing tags to github
 
 Go to Settings -> Checkout SSH Keys -> `Create and add YOUR_USERNAME user key`. This will create a key with the ability to push to github.
