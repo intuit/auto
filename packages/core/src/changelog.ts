@@ -219,17 +219,18 @@ export default class Changelog {
               return;
             }
 
+            const username = (author.username || author.name) as string;
             const user = await this.hooks.renderChangelogAuthor.promise(
               author,
               commit,
               this.options
             );
 
-            if (user && seenUsers.has(user)) {
+            if (user && seenUsers.has(username)) {
               return;
             }
 
-            seenUsers.add(user as string);
+            seenUsers.add(username);
 
             const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
               author,
