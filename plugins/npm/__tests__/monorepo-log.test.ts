@@ -82,7 +82,7 @@ test('should create sections for packages', async () => {
   });
 
   plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog);
+  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
@@ -126,7 +126,7 @@ test('should add versions for independent packages', async () => {
   });
 
   plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog);
+  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
