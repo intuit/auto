@@ -318,13 +318,16 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
-        const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
+        const isIndependent = getLernaJson().version !== 'independent';
+        const monorepoBump = isIndependent
+          ? await bumpLatest(getMonorepoPackage(), version)
+          : undefined;
 
         await execPromise('npx', [
           'lerna',
           'version',
           monorepoBump || version,
-          this.forcePublish && '--force-publish',
+          !isIndependent && this.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
           '-m',
