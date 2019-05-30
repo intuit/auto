@@ -564,13 +564,15 @@ export default class Auto {
       }
 
       newVersion = result;
-      const message =
-        options.message || 'Published PR with canary version: `%v`';
+      const message = options.message || 'Published PR with canary version: %v';
 
       if (message !== 'false' && pr) {
         await this.prBody({
           pr: Number(pr),
-          message: message.replace('%v', newVersion),
+          message: message.replace(
+            '%v',
+            newVersion.includes('\n') ? newVersion : `\`${newVersion}\``
+          ),
           context: 'canary-version'
         });
       }
