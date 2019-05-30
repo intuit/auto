@@ -1,3 +1,25 @@
+# v7.0.5 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Respect author in config [#450](https://github.com/intuit/auto/pull/450) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Get docs publishing [#448](https://github.com/intuit/auto/pull/448) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Update typescript-tslint-plugin to the latest version 🚀 [#447](https://github.com/intuit/auto/pull/447) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
 # v7.0.4 (Mon May 20 2019)
 
 #### 🐛  Bug Fix
