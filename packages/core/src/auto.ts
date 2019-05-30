@@ -571,7 +571,9 @@ export default class Auto {
           pr: Number(pr),
           message: message.replace(
             '%v',
-            newVersion.includes('\n') ? newVersion : `\`${newVersion}\``
+            !newVersion || newVersion.includes('\n')
+              ? newVersion
+              : `\`${newVersion}\``
           ),
           context: 'canary-version'
         });
