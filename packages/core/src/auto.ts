@@ -890,8 +890,8 @@ If a command fails manually run:
         `Got author: ${JSON.stringify(packageAuthor, undefined, 2)}`
       );
 
-      email = packageAuthor ? packageAuthor.email : email;
-      name = packageAuthor ? packageAuthor.name : name;
+      email = !email && packageAuthor ? packageAuthor.email : email;
+      name = !name && packageAuthor ? packageAuthor.name : name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);
