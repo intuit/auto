@@ -1,4 +1,4 @@
-import Auto from '@auto-it/core';
+import Auto, { SEMVER } from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
 import Changelog from '@auto-it/core/dist/changelog';
 import {
@@ -13,7 +13,10 @@ const setup = (options: IReleaseNotesPluginOptions) => {
   const changelogHooks = makeChangelogHooks();
 
   plugin.apply({ hooks } as Auto);
-  hooks.onCreateChangelog.call({ hooks: changelogHooks } as Changelog);
+  hooks.onCreateChangelog.call(
+    { hooks: changelogHooks } as Changelog,
+    SEMVER.patch
+  );
 
   return changelogHooks;
 };

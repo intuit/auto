@@ -79,7 +79,7 @@ export interface IAutoHooks {
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   onCreateRelease: SyncHook<[Release]>;
   onCreateLogParse: SyncHook<[LogParse]>;
-  onCreateChangelog: SyncHook<[Changelog]>;
+  onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
@@ -113,6 +113,8 @@ export default class Auto {
   labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
 
+  private versionBump?: SEMVER;
+
   constructor(options: ApiOptions = {}) {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
@@ -128,8 +130,8 @@ export default class Auto {
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
       release.hooks.onCreateChangelog.tap(
         'Link onCreateChangelog',
-        changelog => {
-          this.hooks.onCreateChangelog.call(changelog);
+        (changelog, version) => {
+          this.hooks.onCreateChangelog.call(changelog, version);
         }
       );
     });
@@ -562,13 +564,17 @@ export default class Auto {
       }
 
       newVersion = result;
-      const message =
-        options.message || 'Published PR with canary version: `%v`';
+      const message = options.message || 'Published PR with canary version: %v';
 
       if (message !== 'false' && pr) {
         await this.prBody({
           pr: Number(pr),
-          message: message.replace('%v', newVersion),
+          message: message.replace(
+            '%v',
+            !newVersion || newVersion.includes('\n')
+              ? newVersion
+              : `\`${newVersion}\``
+          ),
           context: 'canary-version'
         });
       }
@@ -734,7 +740,10 @@ export default class Auto {
     }
 
     const lastRelease = await this.git.getLatestRelease();
-    return this.release.getSemverBump(lastRelease);
+    const bump = await this.release.getSemverBump(lastRelease);
+    this.versionBump = bump;
+
+    return bump;
   }
 
   private async makeChangelog({
@@ -752,7 +761,8 @@ export default class Auto {
     const lastRelease = from || (await this.git.getLatestRelease());
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      to || undefined
+      to || undefined,
+      this.versionBump
     );
 
     this.logger.log.info('New Release Notes\n', releaseNotes);
@@ -791,7 +801,11 @@ export default class Auto {
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
     );
-    const releaseNotes = await this.release.generateReleaseNotes(lastRelease);
+    const releaseNotes = await this.release.generateReleaseNotes(
+      lastRelease,
+      undefined,
+      this.versionBump
+    );
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
@@ -809,7 +823,12 @@ export default class Auto {
       ? this.prefixRelease(rawVersion)
       : rawVersion;
 
-    if (!dryRun && eq(newVersion, lastRelease)) {
+    if (
+      !dryRun &&
+      parse(newVersion) &&
+      parse(lastRelease) &&
+      eq(newVersion, lastRelease)
+    ) {
       this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
       );

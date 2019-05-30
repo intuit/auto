@@ -62,7 +62,8 @@ export async function changedPackages(
   sha: string,
   packages: IMonorepoPackage[],
   lernaJson: { version?: string },
-  logger: ILogger
+  logger: ILogger,
+  version?: SEMVER
 ) {
   const changed = new Set<string>();
   const changedFiles = await execPromise('git', [
@@ -84,7 +85,10 @@ export async function changedPackages(
 
     changed.add(
       lernaJson.version === 'independent'
-        ? `${monorepoPackage.name}@${monorepoPackage.version}`
+        ? `${monorepoPackage.name}@${inc(
+            monorepoPackage.version,
+            version as ReleaseType
+          )}`
         : monorepoPackage.name
     );
   });
@@ -281,7 +285,7 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+    auto.hooks.onCreateChangelog.tap(this.name, (changelog, version) => {
       changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async ([commit, line]) => {
@@ -296,7 +300,8 @@ export default class NPMPlugin implements IPlugin {
             commit.hash,
             lernaPackages,
             lernaJson,
-            auto.logger
+            auto.logger,
+            version
           );
 
           const section =
@@ -318,13 +323,16 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
-        const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
+        const isIndependent = getLernaJson().version === 'independent';
+        const monorepoBump = !isIndependent
+          ? await bumpLatest(getMonorepoPackage(), version)
+          : undefined;
 
         await execPromise('npx', [
           'lerna',
           'version',
           monorepoBump || version,
-          this.forcePublish && '--force-publish',
+          !isIndependent && this.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
           '-m',

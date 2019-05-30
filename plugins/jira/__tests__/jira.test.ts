@@ -1,4 +1,4 @@
-import Auto from '@auto-it/core';
+import Auto, { SEMVER } from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
 import Changelog, {
   IGenerateReleaseNotesOptions
@@ -73,7 +73,10 @@ describe('render jira', () => {
     const commit = makeCommitFromMsg('Add log');
 
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
-    hooks.onCreateChangelog.promise({ hooks: changelogHooks } as Changelog);
+    hooks.onCreateChangelog.promise(
+      { hooks: changelogHooks } as Changelog,
+      SEMVER.patch
+    );
 
     expect(
       (await changelogHooks.renderChangelogLine.promise([commit, 'Add log']))[1]
@@ -86,7 +89,10 @@ describe('render jira', () => {
     const changelogHooks = makeChangelogHooks();
 
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
-    hooks.onCreateChangelog.promise({ hooks: changelogHooks } as Changelog);
+    hooks.onCreateChangelog.promise(
+      { hooks: changelogHooks } as Changelog,
+      SEMVER.patch
+    );
 
     const [, line] = await changelogHooks.renderChangelogLine.promise([
       makeCommitFromMsg('[PLAYA-5052] Add log'),
@@ -114,7 +120,7 @@ test('should create note for jira commits without PR title', async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  autoHooks.onCreateChangelog.promise(changelog);
+  autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([
@@ -130,7 +136,7 @@ test('should create note for JIRA commits', async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  autoHooks.onCreateChangelog.promise(changelog);
+  autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([

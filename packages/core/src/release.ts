@@ -138,7 +138,7 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 export interface IReleaseHooks {
-  onCreateChangelog: SyncHook<[Changelog]>;
+  onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
   createChangelogTitle: AsyncSeriesBailHook<[], string | void>;
   onCreateLogParse: SyncHook<[LogParse]>;
 }
@@ -260,7 +260,11 @@ export default class Release {
    * @param from sha or tag to start changelog from
    * @param to sha or tag to end changelog at (defaults to HEAD)
    */
-  async generateReleaseNotes(from: string, to = 'HEAD'): Promise<string> {
+  async generateReleaseNotes(
+    from: string,
+    to = 'HEAD',
+    version?: SEMVER
+  ): Promise<string> {
     const commits = await this.getCommitsInRelease(from, to);
     const project = await this.git.getProject();
     const changelog = new Changelog(this.logger, {
@@ -271,7 +275,7 @@ export default class Release {
       baseBranch: this.options.baseBranch
     });
 
-    this.hooks.onCreateChangelog.call(changelog);
+    this.hooks.onCreateChangelog.call(changelog, version);
     changelog.loadDefaultHooks();
 
     return changelog.generateReleaseNotes(commits);
