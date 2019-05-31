@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/jira",
-  "version": "7.0.5",
+  "version": "7.0.6",
   "main": "dist/index.js",
   "description": "Jira plugin for auto",
   "author": {
@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.0.5",
+    "@auto-it/core": "^7.0.6",
     "url-join": "^4.0.0"
   },
   "devDependencies": {
