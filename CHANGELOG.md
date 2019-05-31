@@ -1,3 +1,16 @@
+# v7.0.6 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-release-notes`
+  - Lerna independent mode bugs [#451](https://github.com/intuit/auto/pull/451) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.5 (Thu May 30 2019)
 
 #### 🐛  Bug Fix
