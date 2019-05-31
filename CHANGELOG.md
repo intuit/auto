@@ -1,3 +1,16 @@
+# v7.0.7 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Changelog bugs [#452](https://github.com/intuit/auto/pull/452) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.6 (Thu May 30 2019)
 
 #### 🐛  Bug Fix
