@@ -23,13 +23,15 @@ const lock = jest.fn();
 const errorHook = jest.fn();
 const get = jest.fn();
 const update = jest.fn();
+const paginate = jest.fn();
 
 jest.mock('@octokit/rest', () => {
   const instance = () => ({
     authenticate,
+    paginate,
     pulls: {
       get: getPr,
-      listCommits,
+      listCommits: { endpoint: listCommits },
       list
     },
     issues: {
