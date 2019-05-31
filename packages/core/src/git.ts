@@ -444,11 +444,13 @@ export default class Git {
   async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
-    const result = (await this.github.pulls.listCommits({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase(),
-      pull_number: pr
-    })).data;
+    const result = await this.github.paginate(
+      this.github.pulls.listCommits.endpoint({
+        owner: this.options.owner.toLowerCase(),
+        repo: this.options.repo.toLowerCase(),
+        pull_number: pr
+      })
+    );
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
     this.logger.verbose.info(`Got commits for PR #${pr}.`);
