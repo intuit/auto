@@ -180,7 +180,9 @@ export default class NPMPlugin implements IPlugin {
   @Memoize()
   async getIndependentPackageList() {
     return this.getLernaPackages().then(packages =>
-      packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
+      packages
+        .map(p => `\n - \`${p.name}@${p.version.split('+')[0]}\``)
+        .join('')
     );
   }
 
@@ -392,7 +394,7 @@ export default class NPMPlugin implements IPlugin {
             return { error: 'No packages were changed. No canary published.' };
           }
 
-          return independentPackages;
+          return `<details><summary>Canary Versions</summary>${independentPackages}</details>`;
         }
 
         const versioned = packages.find(p => p.version.includes('canary'));
