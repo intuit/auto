@@ -1,3 +1,16 @@
+# v7.0.10 (Thu Jun 06 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - NPM Plugin: fix canary versions [#456](https://github.com/intuit/auto/pull/456) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.9 (Thu Jun 06 2019)
 
 #### 🏠  Internal
