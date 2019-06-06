@@ -1,3 +1,15 @@
+# v7.0.11 (Thu Jun 06 2019)
+
+#### 🏠  Internal
+
+- Bump handlebars from 4.1.0 to 4.1.2 [#453](https://github.com/intuit/auto/pull/453) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 1
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+---
+
 # v7.0.10 (Thu Jun 06 2019)
 
 #### 🐛  Bug Fix
