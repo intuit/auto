@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/twitter",
-  "version": "7.0.10",
+  "version": "7.0.11",
   "main": "dist/index.js",
   "description": "Twitter plugin for auto",
   "author": {
@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.0.10",
+    "@auto-it/core": "^7.0.11",
     "@types/twitter-text": "^2.0.0",
     "dedent": "^0.7.0",
     "semver": "^6.0.0",
