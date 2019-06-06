@@ -379,7 +379,8 @@ export default class NPMPlugin implements IPlugin {
           '--force-publish', // you always want a canary version to publish
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
-          '--no-git-tag-version', // no need to tag and commit
+          '--no-git-tag-version', // no need to tag and commit,
+          '--exact', // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
           ...verboseArgs
         ]);
 
