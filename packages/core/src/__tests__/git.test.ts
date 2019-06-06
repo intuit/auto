@@ -335,7 +335,7 @@ describe('github', () => {
       get.mockReturnValueOnce({
         data: {
           body:
-            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n\nSome long thing\nand more\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
         }
       });
 
