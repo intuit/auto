@@ -1,3 +1,15 @@
+# v7.0.9 (Thu Jun 06 2019)
+
+#### 🏠  Internal
+
+- Bump js-yaml from 3.12.0 to 3.13.1 [#454](https://github.com/intuit/auto/pull/454) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 1
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+---
+
 # v7.0.8 (Thu Jun 06 2019)
 
 #### 🐛  Bug Fix
