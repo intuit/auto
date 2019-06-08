@@ -1,3 +1,15 @@
+# v7.0.12 (Sat Jun 08 2019)
+
+#### 📝  Documentation
+
+- Update AutoChangeLog with Typo Fixes [#457](https://github.com/intuit/auto/pull/457) ([@jdfalko](https://github.com/jdfalko))
+
+#### Authors: 1
+
+- [@jdfalko](https://github.com/jdfalko)
+
+---
+
 # v7.0.11 (Thu Jun 06 2019)
 
 #### 🏠  Internal
