@@ -42,7 +42,7 @@ You can customize the changelog titles and even add custom ones. To see configur
 
 ## Additional Release notes
 
-Sometimes a PR title is just not enough to capture what a user should know about that PR. That's why we have include the ability to put extra release notes right in your PRs. All you have to do is add a `Release Notes` secion in you PR.
+Sometimes a PR title is just not enough to capture what a user should know about that PR. That's why we've included the ability to put extra release notes right in your PRs. All you have to do is add a `Release Notes` section in your PR.
 
 Take the following PR body:
 
