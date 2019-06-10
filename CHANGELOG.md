@@ -1,3 +1,16 @@
+# v7.0.13 (Mon Jun 10 2019)
+
+#### 🏠  Internal
+
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - update octokit [#459](https://github.com/intuit/auto/pull/459) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.12 (Sat Jun 08 2019)
 
 #### 📝  Documentation
