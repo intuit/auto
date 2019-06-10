@@ -42,7 +42,7 @@
     "file-type": "^11.0.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.25.5",
+    "@octokit/rest": "^16.28.1",
     "@types/dedent": "^0.7.0"
   }
 }
