@@ -38,6 +38,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [chrome](./plugins/chrome) - publish code to Chrome Web Store
 - [conventional-commits](./plugins/conventional-commits) - parse conventional commit messages for version bumps
 - [jira](./plugins/jira) - Include jira story links in the changelog
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [npm](./plugins/npm) - publish code to npm (DEFAULT)
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
