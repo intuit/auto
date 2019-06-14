@@ -841,7 +841,9 @@ export default class Auto {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
       release = await this.git.publish(releaseNotes, newVersion);
     } else {
-      this.logger.log.info(`Would have released: ${newVersion}`);
+      this.logger.log.info(
+        `Would have released (unless ran with "shipit"): ${newVersion}`
+      );
     }
 
     await this.hooks.afterRelease.promise({

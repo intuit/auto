@@ -37,6 +37,7 @@
   - [Released](../plugins/released/README.md)
   - [Slack](../plugins/slack/README.md)
   - [Upload Assets](../plugins/upload-assets/README.md)
+  - [Git Tag](../plugins/git-tag/README.md)
   - [Writing Plugins](pages/writing-plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
