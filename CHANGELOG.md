@@ -1,3 +1,16 @@
+# v7.1.0 (Fri Jun 14 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/git-tag`
+  - Git tag Plugin [#460](https://github.com/intuit/auto/pull/460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.0.13 (Mon Jun 10 2019)
 
 #### 🏠  Internal
