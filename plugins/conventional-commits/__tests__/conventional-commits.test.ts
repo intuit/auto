@@ -91,14 +91,8 @@ test('should not include label-less head commit if any other commit in PR has co
     getCommitDate: jest.fn(),
     getFirstCommit: jest.fn(),
     getPr: jest.fn(),
-    getLatestRelease: () => Promise.resolve('1.2.3'),
-    getGitLog: () =>
-      Promise.resolve([
-        commit,
-        makeCommitFromMsg('fix: child commit', { hash: '1' }),
-        makeCommitFromMsg('unrelated', { hash: '2' })
-      ]),
-    getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
+    getCommitsForPR: () =>
+      Promise.resolve([{ sha: '1', commit: { message: 'fix: child commit' } }])
   } as unknown) as Git;
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
