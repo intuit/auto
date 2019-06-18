@@ -1,3 +1,16 @@
+# v7.1.1 (Mon Jun 17 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/conventional-commits`
+  - Conventional Commits Plugin: fix looping issue [#461](https://github.com/intuit/auto/pull/461) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.1.0 (Fri Jun 14 2019)
 
 #### 🚀  Enhancement
