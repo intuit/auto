@@ -48,7 +48,13 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
           // Omit the commit if one of the commits in the PR contains a CC message since it will already be counted
           return Boolean(
-            prCommits.find(c => Boolean(parse(c.subject)[0].header))
+            prCommits.find(c => {
+              try {
+                return Boolean(parse(c.commit.message)[0].header);
+              } catch (error) {
+                return false;
+              }
+            })
           );
         }
       });
