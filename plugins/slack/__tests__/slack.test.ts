@@ -16,11 +16,11 @@ beforeEach(() => {
 
 const mockGit = {
   options: {
-    owner: 'Adam Dierkens',
+    owner: 'adierkens',
     repo: 'test'
   },
   getProject: () => ({
-    html_url: 'https://github.custom.com'
+    html_url: 'https://github.custom.com/adierkens/test'
   })
 };
 const mockAuto = ({

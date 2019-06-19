@@ -74,13 +74,7 @@ export default class SlackPlugin implements IPlugin {
     const project = await auto.git.getProject();
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const releaseUrl = join(
-      project.html_url,
-      auto.git.options.owner,
-      auto.git.options.repo,
-      'releases/tag',
-      newVersion
-    );
+    const releaseUrl = join(project.html_url, 'releases/tag', newVersion);
 
     if (!token) {
       auto.logger.verbose.warn('Slack may need a token to send a message');
