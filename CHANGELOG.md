@@ -1,3 +1,16 @@
+# v7.1.2 (Tue Jun 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/slack`
+  - Slack Plugin: fix tag link [#464](https://github.com/intuit/auto/pull/464) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.1.1 (Mon Jun 17 2019)
 
 #### 🐛  Bug Fix
