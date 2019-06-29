@@ -6,7 +6,7 @@ If you're using this plugin you aren't releasing your code to any platform (npm,
 
 This plugin only:
 
-1. get lasts git
+1. gets last git tag
 2. bump it to new version
 3. create new tags
 4. push to github
