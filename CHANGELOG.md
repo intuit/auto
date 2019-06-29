@@ -1,3 +1,16 @@
+# v7.1.3 (Sat Jun 29 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/git-tag`
+  - Fix wording on Git tag plugin [#469](https://github.com/intuit/auto/pull/469) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.1.2 (Tue Jun 18 2019)
 
 #### 🐛  Bug Fix
