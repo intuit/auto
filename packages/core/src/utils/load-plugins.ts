@@ -49,9 +49,16 @@ export default function loadPlugin(
     return;
   }
 
-  if ('default' in plugin && plugin.default) {
-    return new plugin.default(options);
-  }
+  try {
+    if ('default' in plugin && plugin.default) {
+      return new plugin.default(options);
+    }
 
-  return new (plugin as IPluginConstructor)(options);
+    return new (plugin as IPluginConstructor)(options);
+  } catch (error) {
+    logger.log.error(
+      `Plugin at the following path encountered an error: ${pluginPath}`
+    );
+    throw error;
+  }
 }
