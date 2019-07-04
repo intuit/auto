@@ -18,6 +18,7 @@ const sanitizeMarkdown = (markdown: string) =>
 
 interface ISlackPluginOptions {
   url: string;
+  atTarget?: string;
 }
 
 export default class SlackPlugin implements IPlugin {
@@ -26,7 +27,14 @@ export default class SlackPlugin implements IPlugin {
   readonly options: ISlackPluginOptions;
 
   constructor(options: ISlackPluginOptions | string) {
-    this.options = typeof options === 'string' ? { url: options } : options;
+    if (typeof options === 'string') {
+      this.options = { url: options, atTarget: 'channel' };
+    } else {
+      this.options = {
+        url: options.url ? options.url : '',
+        atTarget: options.atTarget ? options.atTarget : 'channel'
+      };
+    }
   }
 
   apply(auto: Auto) {
@@ -75,6 +83,7 @@ export default class SlackPlugin implements IPlugin {
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
     const releaseUrl = join(project.html_url, 'releases/tag', newVersion);
+    const atTarget = this.options.atTarget;
 
     if (!token) {
       auto.logger.verbose.warn('Slack may need a token to send a message');
@@ -84,7 +93,7 @@ export default class SlackPlugin implements IPlugin {
       method: 'POST',
       body: JSON.stringify({
         text: [
-          `@channel: New release *<${releaseUrl}|${newVersion}>*`,
+          `@${atTarget}: New release *<${releaseUrl}|${newVersion}>*`,
           body
         ].join('\n'),
         // eslint-disable-next-line camelcase

@@ -2,4 +2,6 @@
 
 exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://github.custom.com/adierkens/test/releases/tag/1.0.0|1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
+exports[`postToSlack should call slack api with custom atTarget 1`] = `"{\\"text\\":\\"@here: New release *<https://github.custom.com/adierkens/test/releases/tag/1.0.0|1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+
 exports[`postToSlack should call slack api with minimal config 1`] = `"{\\"text\\":\\"@channel: New release *<https://github.custom.com/adierkens/test/releases/tag/1.0.0|1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;

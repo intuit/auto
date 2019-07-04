@@ -21,7 +21,12 @@ To use the plugin include it in your `.autorc`
   "plugins": [
     ["slack", { "url": "https://url-to-your-slack-hook.com" }],
     // or
-    ["slack", "https://url-to-your-slack-hook.com"]
+    ["slack", "https://url-to-your-slack-hook.com"],
+    // or
+    [
+      "slack",
+      { "url": "https://url-to-your-slack-hook.com", "atTarget": "here" }
+    ]
   ]
 }
 ```
