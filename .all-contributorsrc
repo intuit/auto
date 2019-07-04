@@ -79,6 +79,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "hello-woof",
+      "name": "Zachary Sherwin",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/48960849?v=4",
+      "profile": "https://github.com/hello-woof",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
     }
-  ]
+  ],
+  "commitConvention": "none"
 }
