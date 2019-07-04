@@ -174,4 +174,28 @@ describe('postToSlack', () => {
     );
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
+
+  test('should call slack api with custom atTarget', async () => {
+    const plugin = new SlackPlugin({
+      url: 'https://custom-slack-url',
+      atTarget: 'here'
+    });
+    const hooks = makeHooks();
+    process.env.SLACK_TOKEN = 'MY_TOKEN';
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes\n- PR [some link](google.com)'
+    });
+
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      'https://custom-slack-url?token=MY_TOKEN'
+    );
+    expect(fetchSpy.mock.calls[0][1].body.includes('@here'));
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
 });
