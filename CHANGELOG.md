@@ -1,3 +1,16 @@
+# v7.2.0 (Thu Jul 04 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/slack`
+  - feat(slack): add custom slack at targets [#475](https://github.com/intuit/auto/pull/475) ([@hello-woof](https://github.com/hello-woof))
+
+#### Authors: 1
+
+- Zachary Sherwin ([@hello-woof](https://github.com/hello-woof))
+
+---
+
 # v7.1.4 (Wed Jul 03 2019)
 
 #### 🐛  Bug Fix
