@@ -1,3 +1,16 @@
+# v7.1.4 (Wed Jul 03 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Add a little extra error handling around plugin loading [#474](https://github.com/intuit/auto/pull/474) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.1.3 (Sat Jun 29 2019)
 
 #### 🐛  Bug Fix
