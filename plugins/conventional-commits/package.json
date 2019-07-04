@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/conventional-commits",
-  "version": "7.1.4",
+  "version": "7.2.0",
   "main": "dist/index.js",
   "description": "Conventional commit plugin for auto",
   "author": {
@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.1.4",
+    "@auto-it/core": "^7.2.0",
     "parse-commit-message": "4.0.0"
   }
 }
