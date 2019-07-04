@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/released",
-  "version": "7.1.3",
+  "version": "7.1.4",
   "main": "dist/index.js",
   "description": "Released plugin for auto. Comments with version + extra",
   "author": {
@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.1.3",
+    "@auto-it/core": "^7.1.4",
     "deepmerge": "^3.2.0"
   }
 }

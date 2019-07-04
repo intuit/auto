@@ -2,7 +2,7 @@
   "name": "auto",
   "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "7.1.3",
+  "version": "7.1.4",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -41,9 +41,9 @@
     "gzip": "ls binary/auto* | xargs gzip"
   },
   "dependencies": {
-    "@auto-it/core": "^7.1.3",
-    "@auto-it/npm": "^7.1.3",
-    "@auto-it/released": "^7.1.3",
+    "@auto-it/core": "^7.1.4",
+    "@auto-it/npm": "^7.1.4",
+    "@auto-it/released": "^7.1.4",
     "chalk": "^2.4.2",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",
