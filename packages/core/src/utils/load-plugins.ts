@@ -28,6 +28,8 @@ export default function loadPlugin(
   // Try requiring a path from cwd
   if (!plugin && pluginPath.startsWith('.')) {
     plugin = tryRequire(path.join(process.cwd(), pluginPath));
+    logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
+    return;
   }
 
   // For pkg bundle
