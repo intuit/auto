@@ -21,12 +21,12 @@ export default function loadPlugin(
     | undefined = undefined;
 
   // Try requiring a path
-  if (pluginPath.startsWith('.')) {
+  if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
     plugin = tryRequire(pluginPath);
   }
 
   // Try requiring a path from cwd
-  if (!plugin && pluginPath.startsWith('.')) {
+  if (!plugin && (pluginPath.startsWith('.') || pluginPath.startsWith('/'))) {
     plugin = tryRequire(path.join(process.cwd(), pluginPath));
     logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
     return;
