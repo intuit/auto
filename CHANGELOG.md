@@ -1,3 +1,18 @@
+# v7.2.1 (Tue Jul 09 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Rework plugin importing logic [#480](https://github.com/intuit/auto/pull/480) ([@zephraph](https://github.com/zephraph))
+- `@auto-it/core`
+  - Fix type error with changelog hook [#478](https://github.com/intuit/auto/pull/478) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.2.0 (Thu Jul 04 2019)
 
 #### 🚀  Enhancement
