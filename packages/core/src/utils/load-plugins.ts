@@ -14,22 +14,22 @@ export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger
 ): IPlugin | undefined {
-  let plugin = tryRequire(pluginPath) as (
+  // tslint:disable-next-line:no-unnecessary-initializer
+  let plugin:
     | IPluginConstructor
-    | { default: IPluginConstructor });
+    | { default: IPluginConstructor }
+    | undefined = undefined;
 
-  // Try importing plugin as a path in CWD
-  if (!plugin) {
-    plugin = tryRequire(
-      path.join(process.cwd(), pluginPath)
-    ) as IPluginConstructor;
+  // Try requiring a path
+  if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
+    plugin = tryRequire(pluginPath);
   }
 
-  // Try importing official plugin
-  if (!plugin) {
-    plugin = tryRequire(
-      path.join('@auto-it', pluginPath)
-    ) as IPluginConstructor;
+  // Try requiring a path from cwd
+  if (!plugin && (pluginPath.startsWith('.') || pluginPath.startsWith('/'))) {
+    plugin = tryRequire(path.join(process.cwd(), pluginPath));
+    logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
+    return;
   }
 
   // For pkg bundle
@@ -42,6 +42,18 @@ export default function loadPlugin(
         'dist/index.js'
       )
     ) as IPluginConstructor;
+  }
+
+  // For a user created plugin
+  if (!plugin) {
+    plugin = tryRequire(`auto-plugin-${pluginPath}`) as IPluginConstructor;
+  }
+
+  // Try importing official plugin
+  if (!plugin) {
+    plugin = tryRequire(path.join('@auto-it', pluginPath)) as
+      | IPluginConstructor
+      | { default: IPluginConstructor };
   }
 
   if (!plugin) {

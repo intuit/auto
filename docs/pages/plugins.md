@@ -32,10 +32,12 @@ auto shipit --plugins npm
 
 ### 2. `npm` package
 
-If you are using a plugin distributed on `npm` simply supply the name. Ensure that the plugin is added as a dependency of your project.
+Unofficial plugins pulled from NPM should be named in the format `auto-plugin-PLUGIN_NAME` where `PLUGIN_NAME` is the name of the plugin.
+
+That name is provided to auto to use that particular plugin.
 
 ```sh
-auto shipit --plugins NPM_PACKAGE_NAME
+auto shipit --plugins PLUGIN_NAME
 ```
 
 ### 3. Path
