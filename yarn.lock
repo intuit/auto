@@ -7,6 +7,35 @@
   resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.1.0.tgz#82f6b0dc91498726d0df2541ba01dab4a6c5775f"
   integrity sha512-sai3gxAyFXVBa7A7AADdVcO8Nw0gV+bXHY9T4Ki447gqbMpAyyVj3V2qxY6wmdI9j5EcwPl0fOaBpFN3xEJTkw==
 
+"@auto-it/core@7.0.12":
+  version "7.0.12"
+  resolved "https://registry.yarnpkg.com/@auto-it/core/-/core-7.0.12.tgz#ca0b0959be841ff8b26cdeb511390c9d96a44919"
+  integrity sha512-ofiGIOBUY+tTRZFxyPdCb5NqIlUd0nI4mX79K7CAh7GNBoaJKlcilLFQYqB/I1wxvTXSZhtlP27oZpxfAvTgRA==
+  dependencies:
+    "@atomist/slack-messages" "~1.1.0"
+    "@octokit/graphql" "^2.1.1"
+    "@octokit/plugin-enterprise-compatibility" "^1.1.0"
+    "@octokit/plugin-retry" "^2.2.0"
+    "@octokit/plugin-throttling" "^2.5.0"
+    "@octokit/rest" "^16.24.1"
+    arr-flatten "^1.1.0"
+    cosmiconfig "5.2.0"
+    dedent "^0.7.0"
+    deepmerge "^3.2.0"
+    dotenv "^8.0.0"
+    enquirer "^2.3.0"
+    env-ci "^3.2.0"
+    gitlog "^3.1.2"
+    import-cwd "^3.0.0"
+    lodash.chunk "^4.2.0"
+    node-fetch "2.5.0"
+    semver "^6.0.0"
+    signale "^1.4.0"
+    tapable "^2.0.0-beta.2"
+    tinycolor2 "^1.4.1"
+    typescript-memoize "^1.0.0-alpha.3"
+    url-join "^4.0.0"
+
 "@babel/cli@7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.2.0.tgz#505ed8d351daee6a88918da02c046c18c8c5a24f"
@@ -1876,6 +1905,14 @@
     universal-user-agent "^2.0.1"
     url-template "^2.0.8"
 
+"@octokit/graphql@^2.1.1":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-2.1.3.tgz#60c058a0ed5fa242eca6f938908d95fd1a2f4b92"
+  integrity sha512-XoXJqL2ondwdnMIW3wtqJWEwcBfKk37jO/rYkoxNPEVeLBDGsGO1TCWggrAlq3keGt/O+C/7VepXnukUxwt5vA==
+  dependencies:
+    "@octokit/request" "^5.0.0"
+    universal-user-agent "^2.0.3"
+
 "@octokit/graphql@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-2.1.2.tgz#220bc814fbebd35b3796db4788b353b491dd6575"
@@ -1884,7 +1921,7 @@
     "@octokit/request" "^4.1.0"
     universal-user-agent "^2.0.3"
 
-"@octokit/plugin-enterprise-compatibility@^1.1.1":
+"@octokit/plugin-enterprise-compatibility@^1.1.0", "@octokit/plugin-enterprise-compatibility@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.1.1.tgz#1d4189d588eccb1bbc23cd72278129491cfba5d2"
   integrity sha512-/o09y5I1JJMGGTU2y//QXBKjILX0BaDgBK27NRBJPRxD4BsDVzIsRFQm7ejPWW3l2xOao8tvN7Yh73D5cXBBbg==
@@ -1901,7 +1938,7 @@
   dependencies:
     bottleneck "^2.15.3"
 
-"@octokit/plugin-throttling@^2.6.0":
+"@octokit/plugin-throttling@^2.5.0", "@octokit/plugin-throttling@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-2.6.0.tgz#0b3107c2267e3a8cf6f63925847ec3ebe9e0aa8d"
   integrity sha512-E0xQrcD36sVEeBhut6j9nWX38vm/1LKMRSUqjvJ/mqGLXfHr4jYMsrR3I/nT2QC0eJL1/SKMt7zxOt7pZiFhDA==
@@ -1941,6 +1978,19 @@
     once "^1.4.0"
     universal-user-agent "^2.1.0"
 
+"@octokit/request@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/request/-/request-5.0.0.tgz#d044d6e049aaa0580f78249c688a78a3cfab758b"
+  integrity sha512-eAknm2Aq+/uQDLHUn7KHHpXB7A/NFfWgaVN+ZhC6mQlCNRzCv242eLYgt6cC4h2DZL7mM+QidS/UtZVwYvQXBw==
+  dependencies:
+    "@octokit/endpoint" "^5.1.0"
+    "@octokit/request-error" "^1.0.1"
+    deprecation "^2.0.0"
+    is-plain-object "^3.0.0"
+    node-fetch "^2.3.0"
+    once "^1.4.0"
+    universal-user-agent "^2.1.0"
+
 "@octokit/rest@16.28.1", "@octokit/rest@^16.28.1":
   version "16.28.1"
   resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.28.1.tgz#a10c3d4fe61e994878d66a4c12b9923b18548236"
@@ -1970,6 +2020,25 @@
     before-after-hook "^1.4.0"
     btoa-lite "^1.0.0"
     deprecation "^1.0.1"
+    lodash.get "^4.4.2"
+    lodash.set "^4.3.2"
+    lodash.uniq "^4.5.0"
+    octokit-pagination-methods "^1.1.0"
+    once "^1.4.0"
+    universal-user-agent "^2.0.0"
+    url-template "^2.0.8"
+
+"@octokit/rest@^16.24.1":
+  version "16.28.3"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.28.3.tgz#bf0fe6b3c50b0cc7838cfd4bf19701f763efbf9f"
+  integrity sha512-hzM2VvVn9o0+sS08y2pp33UF5tKy0XdR2z+/AFD583TjhHlX/9Lmdv3SmRiz0UC6rNqNXe1X7BiZ/QNUwVm27Q==
+  dependencies:
+    "@octokit/request" "^5.0.0"
+    "@octokit/request-error" "^1.0.2"
+    atob-lite "^2.0.0"
+    before-after-hook "^2.0.0"
+    btoa-lite "^1.0.0"
+    deprecation "^2.0.0"
     lodash.get "^4.4.2"
     lodash.set "^4.3.2"
     lodash.uniq "^4.5.0"
@@ -2999,6 +3068,11 @@ before-after-hook@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-1.4.0.tgz#2b6bf23dca4f32e628fd2747c10a37c74a4b484d"
   integrity sha512-l5r9ir56nda3qu14nAXIlyq1MmUSs0meCIaFAh8HwkFwP1F8eToOuS3ah2VAHHcY04jaYD7FpJC5JTXHYRbkzg==
+
+before-after-hook@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.0.1.tgz#a21dc15582fee3f035c39dcbb77f6892a99ada36"
+  integrity sha512-dpgMHA51KZyCu7uuxF6FCkN+scfGd/6aLxEr/14vKUo/1nPxcd2fhFv4BgYCbWxKt7JfgpbjJq9nc30Ip/p2uw==
 
 bfj@^6.1.1:
   version "6.1.1"
@@ -8696,9 +8770,9 @@ lodash.uniq@^4.5.0:
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
 lodash@^4.0.1, lodash@^4.11.2, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
+  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
 log-symbols@^1.0.2:
   version "1.0.2"
