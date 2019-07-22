@@ -10,7 +10,7 @@
 
 <br />
 
-Automated releases powered by pull request labels. Streamline you release workflow and publish constantly! `auto` is meant to be run in a continuos integration (CI) environment, but all the commands work locally as well.
+Automated releases powered by pull request labels. Streamline you release workflow and publish constantly! `auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
 
 Release Features:
 
