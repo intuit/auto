@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "7.2.1",
+  "version": "7.2.2",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "author": {
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@auto-it/core": "^7.2.1",
+    "@auto-it/core": "^7.2.2",
     "node-fetch": "2.5.0",
     "url-join": "^4.0.0"
   },

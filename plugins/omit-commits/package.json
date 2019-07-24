@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/omit-commits",
-  "version": "7.2.1",
+  "version": "7.2.2",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
   "author": {
@@ -37,6 +37,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.2.1"
+    "@auto-it/core": "^7.2.2"
   }
 }
