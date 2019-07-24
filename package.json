@@ -133,8 +133,8 @@
       ]
     ],
     "labels": {
-      "greenkeeper": {
-        "name": "greenkeeper",
+      "dependencies": {
+        "name": "dependencies",
         "title": "🔩 Dependency Updates"
       },
       "blog-post": {
@@ -143,7 +143,7 @@
       }
     },
     "skipReleaseLabels": [
-      "greenkeeper",
+      "dependencies",
       "blog-post"
     ]
   }
