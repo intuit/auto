@@ -5,7 +5,7 @@ Set the status on a PR commit
 ## Options
 
 ```bash
->  auto pr -h
+>  auto pr-status -h
 
 Options
 
@@ -29,7 +29,7 @@ Global Options
 
 Examples
 
-$ auto pr \
+$ auto pr-status \
    --pr 32 \
    --state pending \
    --description "Build still running..." \
