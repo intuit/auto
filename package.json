@@ -43,7 +43,7 @@
     "copy-template-dir": "^1.4.0",
     "graphql": "^14.2.1",
     "husky": "^2.0.0",
-    "ignite": "^1.9.0",
+    "ignite": "^1.10.1",
     "jest": "~24.5.0",
     "lerna": "^3.13.4",
     "lint-staged": "^8.1.6",
