@@ -1,3 +1,22 @@
+# v7.2.2 (Wed Jul 24 2019)
+
+#### 🏠  Internal
+
+- Remove pr semver check [#479](https://github.com/intuit/auto/pull/479) ([@zephraph](https://github.com/zephraph))
+
+#### 📝  Documentation
+
+- Fix links in docs [#486](https://github.com/intuit/auto/pull/486) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update README.md [#485](https://github.com/intuit/auto/pull/485) ([@RichieRunner](https://github.com/RichieRunner))
+
+#### Authors: 3
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Richie ([@RichieRunner](https://github.com/RichieRunner))
+
+---
+
 # v7.2.1 (Tue Jul 09 2019)
 
 #### 🐛  Bug Fix
