@@ -7289,10 +7289,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.1.tgz#9f6668e2901320554922f0dcd78b51f68b2797ed"
-  integrity sha512-R0VmtqnzQhEBspKk9weJkwEK9VmmzaUtxbg8O1OBXN4m748uiJ15W7EtJKjNMftPjtVwMmG7+HulabZj8wQT9Q==
+ignite@^1.10.2:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.2.tgz#877120185a63f6df6fff9b0d90e63a8f5cd69f71"
+  integrity sha512-e9bOERHrTyRLup5M7w4zFpBk4kfQftG67PIqrImrEPd+iMiiRynD4fUY/WfTWcM805rScLZ4kx3+BacXN3Dcwg==
   dependencies:
     "@babel/cli" "7.2.0"
     "@babel/core" "7.2.0"
