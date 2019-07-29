@@ -39,7 +39,7 @@
   "dependencies": {
     "@auto-it/core": "^7.2.3",
     "dedent": "^0.7.0",
-    "file-type": "^11.0.0"
+    "file-type": "^12.1.0"
   },
   "devDependencies": {
     "@octokit/rest": "^16.28.1",
