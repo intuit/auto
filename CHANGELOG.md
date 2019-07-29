@@ -1,3 +1,33 @@
+# v7.2.3 (Mon Jul 29 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix logging error in pr-check [#497](https://github.com/intuit/auto/pull/497) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- change to dependabot [#495](https://github.com/intuit/auto/pull/495) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- fix docs [#496](https://github.com/intuit/auto/pull/496) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump all-contributors-cli from 6.4.0 to 6.8.1 [#493](https://github.com/intuit/auto/pull/493) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @atomist/slack-messages from 1.1.0 to 1.1.1 [#491](https://github.com/intuit/auto/pull/491) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/graphql from 14.2.0 to 14.2.3 [#494](https://github.com/intuit/auto/pull/494) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.13 to 24.0.15 [#492](https://github.com/intuit/auto/pull/492) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump lodash.template from 4.4.0 to 4.5.0 [#489](https://github.com/intuit/auto/pull/489) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.2.2 (Wed Jul 24 2019)
 
 #### 🏠  Internal
