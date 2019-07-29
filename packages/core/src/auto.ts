@@ -346,7 +346,9 @@ export default class Auto {
         throw new Error('No semver label!');
       }
 
-      this.logger.log.success(`PR is using label: ${semverTag}`);
+      this.logger.log.success(
+        `PR is using label: ${semverTag || skipReleaseTag}`
+      );
 
       let description;
 
