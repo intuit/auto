@@ -45,7 +45,7 @@
     "arr-flatten": "^1.1.0",
     "cosmiconfig": "5.2.0",
     "dedent": "^0.7.0",
-    "deepmerge": "^3.2.0",
+    "deepmerge": "^4.0.0",
     "dotenv": "^8.0.0",
     "enquirer": "^2.3.0",
     "env-ci": "^3.2.0",
