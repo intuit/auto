@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import Auto, {
-  ApiArgs,
+  ApiOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -13,9 +13,9 @@ import Auto, {
   IPRStatusOptions,
   IReleaseOptions,
   IShipItOptions
-} from '@intuit-auto/core';
+} from '@auto-it/core';
 
-export async function run(command: string, args: ApiArgs) {
+export async function run(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
   switch (command) {
@@ -71,7 +71,7 @@ export async function run(command: string, args: ApiArgs) {
   }
 }
 
-export default async function main(command: string, args: ApiArgs) {
+export default async function main(command: string, args: ApiOptions) {
   try {
     await run(command, args);
   } catch (error) {

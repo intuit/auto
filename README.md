@@ -10,7 +10,7 @@
 
 <br />
 
-Automated releases powered by pull request labels. Streamline you release workflow and publish constantly! `auto` is meant to be run in a continuos integration (CI) environment, but all the commands work locally as well.
+Automated releases powered by pull request labels. Streamline you release workflow and publish constantly! `auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
 
 Release Features:
 
@@ -36,12 +36,15 @@ Visit [the docs](https://intuit.github.io/auto/) for more information.
 Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
 
 - [chrome](./plugins/chrome) - publish code to Chrome Web Store
-- [conventional-commits]](./plugins/conventional-commits) - parse conventional commit messages for version bumps
-- [filter-commits](./plugins/filter-commits) - Ignore commits made by certain accounts
+- [conventional-commits](./plugins/conventional-commits) - parse conventional commit messages for version bumps
 - [jira](./plugins/jira) - Include jira story links in the changelog
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [npm](./plugins/npm) - publish code to npm (DEFAULT)
+- [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
+- [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
 - [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
 - [slack](./plugins/slack) - post release notes to slack
+- [twitter](./plugins/twitter) - post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - add extra assets to the release
 
 ## Start Developing
@@ -49,8 +52,13 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 To get set up, fork and clone the project and run the following command:
 
 ```sh
-brew install automake
 yarn
+```
+
+### Cleaning
+
+```sh
+yarn clean
 ```
 
 ### Linting
@@ -71,12 +79,37 @@ yarn test
 yarn build
 ```
 
+In watch mode:
+
+```sh
+yarn build:watch
+```
+
 ### Run the docs
 
 To deploy the docs you will need to add the `documentation` label to your pull request.
 
 ```sh
 yarn docs:watch
+```
+
+### Adding a contributor
+
+```sh
+yarn contributors:add
+```
+
+### Create a new plugin
+
+Get stated developing a new plugin in the monorepo in seconds.
+
+The two arguments are
+
+1. A spaced name
+2. a description
+
+```sh
+yarn create:plugin "My Plugin" "Do something really cool"
 ```
 
 ## Contributing
@@ -124,7 +157,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-<table cellspacing="0" cellpadding="1"><tr><td><a href="https://adamdierkens.com"><img src="https://avatars1.githubusercontent.com/u/13004162?v=4" width="100px;" height="100px;" alt="Adam Dierkens"/><br /><sub><b>Adam Dierkens</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=adierkens" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Documentation">📖</a> <a href="#ideas-adierkens" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Tests">⚠️</a></td><td><a href="http://hipstersmoothie.com"><img src="https://avatars3.githubusercontent.com/u/1192452?v=4" width="100px;" height="100px;" alt="Andrew Lisowski"/><br /><sub><b>Andrew Lisowski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Documentation">📖</a> <a href="#ideas-hipstersmoothie" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-hipstersmoothie" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Tests">⚠️</a></td><td><a href="https://github.com/Aghassi"><img src="https://avatars2.githubusercontent.com/u/3680126?v=4" width="100px;" height="100px;" alt="David"/><br /><sub><b>David</b></sub></a><br /><a href="#infra-Aghassi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td><a href="http://orta.io"><img src="https://avatars2.githubusercontent.com/u/49038?v=4" width="100px;" height="100px;" alt="Orta"/><br /><sub><b>Orta</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=orta" title="Code">💻</a></td><td><a href="https://github.com/zephraph"><img src="https://avatars1.githubusercontent.com/u/3087225?v=4" width="100px;" height="100px;" alt="Justin Bennett"/><br /><sub><b>Justin Bennett</b></sub></a><br /><a href="https://github.com/intuit/auto/issues?q=author%3Azephraph" title="Bug reports">🐛</a> <a href="https://github.com/intuit/auto/commits?author=zephraph" title="Code">💻</a></td><td><a href="https://twitter.com/alecdotbiz"><img src="https://avatars2.githubusercontent.com/u/1925840?v=4" width="100px;" height="100px;" alt="Alec Larson"/><br /><sub><b>Alec Larson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=aleclarson" title="Code">💻</a></td><td><a href="http://tylerkrupicka.com"><img src="https://avatars1.githubusercontent.com/u/5761061?v=4" width="100px;" height="100px;" alt="Tyler Krupicka"/><br /><sub><b>Tyler Krupicka</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=tylerkrupicka" title="Code">💻</a></td></tr></table>
+<table><tr><td align="center"><a href="https://adamdierkens.com"><img src="https://avatars1.githubusercontent.com/u/13004162?v=4" width="100px;" alt="Adam Dierkens"/><br /><sub><b>Adam Dierkens</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=adierkens" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Documentation">📖</a> <a href="#ideas-adierkens" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Tests">⚠️</a></td><td align="center"><a href="http://hipstersmoothie.com"><img src="https://avatars3.githubusercontent.com/u/1192452?v=4" width="100px;" alt="Andrew Lisowski"/><br /><sub><b>Andrew Lisowski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Documentation">📖</a> <a href="#ideas-hipstersmoothie" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-hipstersmoothie" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Tests">⚠️</a></td><td align="center"><a href="https://github.com/Aghassi"><img src="https://avatars2.githubusercontent.com/u/3680126?v=4" width="100px;" alt="David"/><br /><sub><b>David</b></sub></a><br /><a href="#infra-Aghassi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td align="center"><a href="http://orta.io"><img src="https://avatars2.githubusercontent.com/u/49038?v=4" width="100px;" alt="Orta"/><br /><sub><b>Orta</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=orta" title="Code">💻</a></td><td align="center"><a href="https://github.com/zephraph"><img src="https://avatars1.githubusercontent.com/u/3087225?v=4" width="100px;" alt="Justin Bennett"/><br /><sub><b>Justin Bennett</b></sub></a><br /><a href="https://github.com/intuit/auto/issues?q=author%3Azephraph" title="Bug reports">🐛</a> <a href="https://github.com/intuit/auto/commits?author=zephraph" title="Code">💻</a></td><td align="center"><a href="https://twitter.com/alecdotbiz"><img src="https://avatars2.githubusercontent.com/u/1925840?v=4" width="100px;" alt="Alec Larson"/><br /><sub><b>Alec Larson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=aleclarson" title="Code">💻</a></td><td align="center"><a href="http://tylerkrupicka.com"><img src="https://avatars1.githubusercontent.com/u/5761061?v=4" width="100px;" alt="Tyler Krupicka"/><br /><sub><b>Tyler Krupicka</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=tylerkrupicka" title="Code">💻</a></td></tr><tr><td align="center"><a href="https://github.com/hello-woof"><img src="https://avatars2.githubusercontent.com/u/48960849?v=4" width="100px;" alt="Zachary Sherwin"/><br /><sub><b>Zachary Sherwin</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Tests">⚠️</a></td></tr></table>
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

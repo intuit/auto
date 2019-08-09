@@ -7,9 +7,9 @@ Parse [conventional commit messages](https://www.conventionalcommits.org/en/v1.0
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/conventional-commits
+npm i --save-dev @auto-it/conventional-commits
 # or
-yarn add -D @intuit-auto/conventional-commits
+yarn add -D @auto-it/conventional-commits
 ```
 
 ## Usage

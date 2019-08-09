@@ -1,7 +1,7 @@
-import Auto from '@intuit-auto/core';
-import makeCommitFromMsg from '@intuit-auto/core/src/__tests__/make-commit-from-msg';
-import { dummyLog } from '@intuit-auto/core/src/utils/logger';
-import { makeHooks } from '@intuit-auto/core/src/utils/make-hooks';
+import Auto from '@auto-it/core';
+import makeCommitFromMsg from '@auto-it/core/src/__tests__/make-commit-from-msg';
+import { dummyLog } from '@auto-it/core/src/utils/logger';
+import { makeHooks } from '@auto-it/core/src/utils/make-hooks';
 import SlackPlugin from '../src';
 
 const fetchSpy = jest.fn();
@@ -16,11 +16,11 @@ beforeEach(() => {
 
 const mockGit = {
   options: {
-    owner: 'Adam Dierkens',
+    owner: 'adierkens',
     repo: 'test'
   },
   getProject: () => ({
-    html_url: 'https://github.custom.com'
+    html_url: 'https://github.custom.com/adierkens/test'
   })
 };
 const mockAuto = ({
@@ -38,6 +38,7 @@ describe('postToSlack', () => {
     plugin.apply({ hooks } as Auto);
 
     await hooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -51,10 +52,11 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: { dryRun: true } } as Auto);
+    plugin.apply({ hooks, options: { dryRun: true } } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -68,10 +70,11 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: {} } as Auto);
+    plugin.apply({ hooks, options: {} } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: '# My Notes'
     });
@@ -87,12 +90,13 @@ describe('postToSlack', () => {
     // @ts-ignore
     plugin.apply({
       hooks,
-      args: {},
+      options: {},
       release: { options: { skipReleaseLabels: ['skip-release'] } }
     } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [makeCommitFromMsg('skipped', { labels: ['skip-release'] })],
       releaseNotes: '# My Notes'
     });
@@ -107,11 +111,12 @@ describe('postToSlack', () => {
 
     plugin.postToSlack = jest.fn();
     // @ts-ignore
-    plugin.apply({ hooks, args: {} } as Auto);
+    plugin.apply({ hooks, options: {} } as Auto);
 
     await expect(
       hooks.afterRelease.promise({
         newVersion: '1.0.0',
+        lastRelease: '0.1.0',
         commits: [makeCommitFromMsg('a patch')],
         releaseNotes: '# My Notes'
       })
@@ -154,10 +159,11 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin({ url: 'https://custom-slack-url' });
     const hooks = makeHooks();
     process.env.SLACK_TOKEN = 'MY_TOKEN';
-    plugin.apply({ hooks, args: {}, ...mockAuto } as Auto);
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [makeCommitFromMsg('a patch')],
       releaseNotes: '# My Notes\n- PR [some link](google.com)'
     });
@@ -166,6 +172,30 @@ describe('postToSlack', () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       'https://custom-slack-url?token=MY_TOKEN'
     );
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+
+  test('should call slack api with custom atTarget', async () => {
+    const plugin = new SlackPlugin({
+      url: 'https://custom-slack-url',
+      atTarget: 'here'
+    });
+    const hooks = makeHooks();
+    process.env.SLACK_TOKEN = 'MY_TOKEN';
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes\n- PR [some link](google.com)'
+    });
+
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      'https://custom-slack-url?token=MY_TOKEN'
+    );
+    expect(fetchSpy.mock.calls[0][1].body.includes('@here'));
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 });

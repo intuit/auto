@@ -1,6 +1,6 @@
 {
-  "name": "@intuit-auto/released",
-  "version": "6.5.0",
+  "name": "@auto-it/released",
+  "version": "7.2.3",
   "main": "dist/index.js",
   "description": "Released plugin for auto. Comments with version + extra",
   "author": {
@@ -8,7 +8,8 @@
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0",
+    "@auto-it/core": "link:../../packages/core",
     "deepmerge": "^3.2.0"
   }
 }

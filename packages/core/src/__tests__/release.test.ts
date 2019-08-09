@@ -2,7 +2,7 @@ import merge from 'deepmerge';
 import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
-import Release, { defaultLabelDefinition } from '../release';
+import Release, { buildSearchQuery, defaultLabelDefinition } from '../release';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -154,6 +154,51 @@ describe('Release', () => {
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
+          email: 'andrew@users.noreply.github.com'
+        }),
+        makeCommitFromMsg('Second (#123)', {
+          name: 'Andrew Lisowski',
+          email: 'lisowski54@gmail.com'
+        }),
+        makeCommitFromMsg('Third')
+      ]);
+
+      getGitLog.mockReturnValueOnce(commits);
+      getCommitsForPR.mockReturnValueOnce([
+        {
+          author: {
+            login: 'andrew'
+          }
+        }
+      ]);
+      getUserByUsername.mockReturnValueOnce({
+        login: 'andrew',
+        name: 'Andrew Lisowski'
+      });
+      getUserByUsername.mockReturnValueOnce({
+        login: 'andrew',
+        name: 'Andrew Lisowski'
+      });
+      getUserByEmail.mockReturnValueOnce({
+        login: 'adam',
+        name: 'Adam Dierkens'
+      });
+      getUserByEmail.mockReturnValueOnce({
+        login: 'adam',
+        name: 'Adam Dierkens'
+      });
+
+      const gh = new Release(git);
+      const modifiedCommits = await gh.getCommits('12345', '1234');
+      expect(getUserByUsername).toHaveBeenCalled();
+      expect(modifiedCommits).toMatchSnapshot();
+    });
+
+    test('should be able to omit bye username', async () => {
+      const commits = await logParse.normalizeCommits([
+        makeCommitFromMsg('First'),
+        makeCommitFromMsg('Second (#123)', {
+          name: 'Andrew Lisowski',
           email: 'lisowski54@gmail.com'
         }),
         makeCommitFromMsg('Third')
@@ -181,8 +226,12 @@ describe('Release', () => {
       });
 
       const gh = new Release(git);
+      gh.hooks.onCreateLogParse.tap('test', parser => {
+        parser.hooks.omitCommit.tap('test', commit =>
+          Boolean(commit.authors.find(author => author.username === 'adam'))
+        );
+      });
       const modifiedCommits = await gh.getCommits('12345', '1234');
-      expect(getUserByUsername).toHaveBeenCalled();
       expect(modifiedCommits).toMatchSnapshot();
     });
 
@@ -420,20 +469,18 @@ describe('Release', () => {
           labels: [{ name: 'skip-release' }, { name: 'minor' }]
         }
       });
-      getGitLog.mockReturnValueOnce(
-        await logParse.normalizeCommits([
-          makeCommitFromMsg('Feature (#124)'),
-          makeCommitFromMsg('I was rebased\n\n', {
-            hash: '1a2b'
-          }),
-          {
-            hash: '1',
-            authorName: 'Adam Dierkens',
-            authorEmail: 'adam@dierkens.com',
-            subject: 'I am a commit to master'
-          }
-        ])
-      );
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg('Feature (#124)'),
+        makeCommitFromMsg('I was rebased\n\n', {
+          hash: '1a2b'
+        }),
+        {
+          hash: '1',
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          subject: 'I am a commit to master'
+        }
+      ]);
       graphql.mockReturnValueOnce({
         hash_1: { edges: [] }
       });
@@ -508,6 +555,41 @@ describe('Release', () => {
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
 
+    test('should find ignore closed prs', async () => {
+      const gh = new Release(git);
+
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg('Doom Patrol enabled', {
+          hash: '1'
+        }),
+        makeCommitFromMsg('Autobots roll out!', {
+          hash: '2'
+        })
+      ]);
+
+      graphql.mockReturnValueOnce({
+        hash_1: {
+          edges: [
+            {
+              node: {
+                labels: {
+                  edges: [{ node: { name: 'major', state: 'CLOSED' } }]
+                }
+              }
+            }
+          ]
+        }
+      });
+      // PR with no label, should become patch
+      graphql.mockReturnValueOnce({
+        hash_2: {
+          edges: [{ node: { labels: undefined } }]
+        }
+      });
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
     test('should include PRs merged to other PRs', async () => {
       const gh = new Release(git);
 
@@ -533,8 +615,7 @@ describe('Release', () => {
 
   describe('buildSearchQuery', () => {
     test('generates a valid query', () => {
-      const gh = new Release(git);
-      const query = gh.buildSearchQuery([
+      const query = buildSearchQuery('Andrew', 'test', [
         makeCommitFromMsg('first', { hash: 'abc123' }),
         makeCommitFromMsg('second', { hash: '3def78' })
       ]);
@@ -543,8 +624,7 @@ describe('Release', () => {
     });
 
     test("doesn't generate a query without commits", () => {
-      const gh = new Release(git);
-      const query = gh.buildSearchQuery([]);
+      const query = buildSearchQuery('Andrew', 'test', []);
       expect(query).toBeUndefined();
     });
   });

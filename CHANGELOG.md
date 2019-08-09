@@ -1,3 +1,514 @@
+# v7.2.3 (Mon Jul 29 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix logging error in pr-check [#497](https://github.com/intuit/auto/pull/497) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- change to dependabot [#495](https://github.com/intuit/auto/pull/495) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- fix docs [#496](https://github.com/intuit/auto/pull/496) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump all-contributors-cli from 6.4.0 to 6.8.1 [#493](https://github.com/intuit/auto/pull/493) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @atomist/slack-messages from 1.1.0 to 1.1.1 [#491](https://github.com/intuit/auto/pull/491) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/graphql from 14.2.0 to 14.2.3 [#494](https://github.com/intuit/auto/pull/494) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.13 to 24.0.15 [#492](https://github.com/intuit/auto/pull/492) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump lodash.template from 4.4.0 to 4.5.0 [#489](https://github.com/intuit/auto/pull/489) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
+# v7.2.2 (Wed Jul 24 2019)
+
+#### 🏠  Internal
+
+- Remove pr semver check [#479](https://github.com/intuit/auto/pull/479) ([@zephraph](https://github.com/zephraph))
+
+#### 📝  Documentation
+
+- Fix links in docs [#486](https://github.com/intuit/auto/pull/486) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update README.md [#485](https://github.com/intuit/auto/pull/485) ([@RichieRunner](https://github.com/RichieRunner))
+
+#### Authors: 3
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Richie ([@RichieRunner](https://github.com/RichieRunner))
+
+---
+
+# v7.2.1 (Tue Jul 09 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Rework plugin importing logic [#480](https://github.com/intuit/auto/pull/480) ([@zephraph](https://github.com/zephraph))
+- `@auto-it/core`
+  - Fix type error with changelog hook [#478](https://github.com/intuit/auto/pull/478) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v7.2.0 (Thu Jul 04 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/slack`
+  - feat(slack): add custom slack at targets [#475](https://github.com/intuit/auto/pull/475) ([@hello-woof](https://github.com/hello-woof))
+
+#### Authors: 1
+
+- Zachary Sherwin ([@hello-woof](https://github.com/hello-woof))
+
+---
+
+# v7.1.4 (Wed Jul 03 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Add a little extra error handling around plugin loading [#474](https://github.com/intuit/auto/pull/474) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v7.1.3 (Sat Jun 29 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/git-tag`
+  - Fix wording on Git tag plugin [#469](https://github.com/intuit/auto/pull/469) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v7.1.2 (Tue Jun 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/slack`
+  - Slack Plugin: fix tag link [#464](https://github.com/intuit/auto/pull/464) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.1.1 (Mon Jun 17 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/conventional-commits`
+  - Conventional Commits Plugin: fix looping issue [#461](https://github.com/intuit/auto/pull/461) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.1.0 (Fri Jun 14 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/git-tag`
+  - Git tag Plugin [#460](https://github.com/intuit/auto/pull/460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.13 (Mon Jun 10 2019)
+
+#### 🏠  Internal
+
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - update octokit [#459](https://github.com/intuit/auto/pull/459) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.12 (Sat Jun 08 2019)
+
+#### 📝  Documentation
+
+- Update AutoChangeLog with Typo Fixes [#457](https://github.com/intuit/auto/pull/457) ([@jdfalko](https://github.com/jdfalko))
+
+#### Authors: 1
+
+- [@jdfalko](https://github.com/jdfalko)
+
+---
+
+# v7.0.11 (Thu Jun 06 2019)
+
+#### 🏠  Internal
+
+- Bump handlebars from 4.1.0 to 4.1.2 [#453](https://github.com/intuit/auto/pull/453) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 1
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+---
+
+# v7.0.10 (Thu Jun 06 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - NPM Plugin: fix canary versions [#456](https://github.com/intuit/auto/pull/456) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.9 (Thu Jun 06 2019)
+
+#### 🏠  Internal
+
+- Bump js-yaml from 3.12.0 to 3.13.1 [#454](https://github.com/intuit/auto/pull/454) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 1
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+
+---
+
+# v7.0.8 (Thu Jun 06 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Independant Canary version reporting + Whitespace in pr-body [#455](https://github.com/intuit/auto/pull/455) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.7 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Changelog bugs [#452](https://github.com/intuit/auto/pull/452) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.6 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-release-notes`
+  - Lerna independent mode bugs [#451](https://github.com/intuit/auto/pull/451) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.5 (Thu May 30 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Respect author in config [#450](https://github.com/intuit/auto/pull/450) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Get docs publishing [#448](https://github.com/intuit/auto/pull/448) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Update typescript-tslint-plugin to the latest version 🚀 [#447](https://github.com/intuit/auto/pull/447) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
+# v7.0.4 (Mon May 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - stop using --canary flag in npm package [#446](https://github.com/intuit/auto/pull/446) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Update README.md [#445](https://github.com/intuit/auto/pull/445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.3 (Mon May 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fall back to normal require for npx and global usage [#444](https://github.com/intuit/auto/pull/444) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.2 (Sun May 19 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Remove bin entry from core [#441](https://github.com/intuit/auto/pull/441) ([@zephraph](https://github.com/zephraph))
+
+#### 📝  Documentation
+
+- Fix conventional commits link [#439](https://github.com/intuit/auto/pull/439) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v7.0.1 (Sat May 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix changelog indentation [#438](https://github.com/intuit/auto/pull/438) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- `auto`
+  - fix bundle step, must gzip correct folder [#437](https://github.com/intuit/auto/pull/437) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.0.0 (Fri May 17 2019)
+
+### Release Notes
+
+    _From #420_
+
+    old `afterRelease`
+
+```js
+auto.hooks.afterRelease.tap('MyPlugin', async (version, commits, releaseNotes) => {
+// do something
+});
+```
+
+new  `afterRelease`
+
+```js
+auto.hooks.afterRelease.tap( 'MyPlugin', async ({ version, commits, releaseNotes, response }) => {
+// do something
+);
+```
+
+_From #408_
+
+    Previously a user would have the following configuration in their `.autorc`:
+
+```json
+{
+"jira": "https://url-to-jira"
+}
+```
+
+this should be changed to:
+
+```json
+{
+"plugins": [
+["jira", { "url": "https://url-to-jira" }],
+// or
+["jira", "https://url-to-jira"]
+]
+}
+```
+
+## Plugin Authors
+
+If you are a plugin author that uses the `renderChangelogLine` hook you must change your usage.
+
+Before it was a bail hook. meaning on 1 plugin could effect the changelog message. The first to return would be the message.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+changelog.hooks.renderChangelogLine.tapPromise(
+'Stars',
+async (commits, renderLine) =>
+  commits.map(commit => `${renderLine(commit).replace('-', ':star:')}
+`)
+);
+);
+```
+
+Now it is a waterfall hook. Each plugin has the chance to change the commit message in some way, but it must return the args for the next plugin in the waterfall.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+changelog.hooks.renderChangelogLine.tapPromise(
+'Stars',
+async (commit, line) =>
+  [commit, `${line.replace('-', ':star:')}
+`]
+);
+);
+```
+
+_From #407_
+
+    Previously a user would have the following configuration in their `.autorc`:
+
+```json
+{
+"slack": "https://url-to-slack"
+}
+```
+
+this should be changed to:
+
+```json
+{
+"plugins": [
+["slack", { "url": "https://url-to-your-slack-hook.com" }],
+// or
+["slack", "https://url-to-your-slack-hook.com"]
+]
+}
+```
+
+---
+
+#### 💥  Breaking Change
+
+- Factor out filter accounts plugin [#409](https://github.com/intuit/auto/pull/409) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Move jira functionality to plugin [#408](https://github.com/intuit/auto/pull/408) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Move slack functionality to a plugin [#407](https://github.com/intuit/auto/pull/407) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - V7 Release [#406](https://github.com/intuit/auto/pull/406) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`
+  - switch auto.args to auto.options on core [#432](https://github.com/intuit/auto/pull/432) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Use @auto-it scope [#428](https://github.com/intuit/auto/pull/428) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/omit-commits`
+  - Change filter-accounts plugin to omit-commits plugin [#425](https://github.com/intuit/auto/pull/425) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`, `@auto-it/slack`
+  - afterRelease returns an object so future updates will be easier [#420](https://github.com/intuit/auto/pull/420) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - Rename `auto pr` to `auto pr-status` [#413](https://github.com/intuit/auto/pull/413) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
+  - Restructure to Monorepo [#410](https://github.com/intuit/auto/pull/410) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`
+  - new hook: omit prs from release notes + add omit-release-notes plugin [#427](https://github.com/intuit/auto/pull/427) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Add Twitter Plugin [#422](https://github.com/intuit/auto/pull/422) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - add upload assets plugin [#421](https://github.com/intuit/auto/pull/421) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - Bundle `auto` for all major platforms [#418](https://github.com/intuit/auto/pull/418) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- add docs about omitReleaseNotes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- run the correct command  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- start  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - fix bundling plugin issue [#435](https://github.com/intuit/auto/pull/435) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/npm`
+  - Various Bug Fixes [#434](https://github.com/intuit/auto/pull/434) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - rename ghub to github  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/omit-commits`
+  - fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - fix problem where pr-body would only match after two were rendered [#431](https://github.com/intuit/auto/pull/431) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/npm`
+  - Parse monorepo packages outside of `packages` directory [#411](https://github.com/intuit/auto/pull/411) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update docs/pages/plugins.md
+
+Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- Add monorepo plugin create command [#430](https://github.com/intuit/auto/pull/430) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/released`
+  - Split args type between core and cli [#416](https://github.com/intuit/auto/pull/416) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Update @types/node-fetch to the latest version 🚀 [#426](https://github.com/intuit/auto/pull/426) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update node-fetch to the latest version 🚀 [#423](https://github.com/intuit/auto/pull/423) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+- Update cosmiconfig to the latest version 🚀 [#417](https://github.com/intuit/auto/pull/417) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@greenkeeper[bot]](https://github.com/greenkeeper[bot])
+
+---
+
+# v6.5.1 (Mon May 13 2019)
+
+#### 📝  Documentation
+
+- typo [#405](https://github.com/intuit/auto/pull/405) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v6.5.0 (Fri May 10 2019)
 
 #### 🚀  Enhancement

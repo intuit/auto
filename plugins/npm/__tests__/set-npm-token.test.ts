@@ -1,6 +1,6 @@
 // tslint:disable no-invalid-template-strings
 
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import setNpmToken from '../src/set-npm-token';
 import * as utils from '../src/utils';
 

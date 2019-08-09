@@ -4,13 +4,16 @@
 
 Current official plugins:
 
-- Chrome - publish code to Chrome Web Store
+- chrome - publish code to Chrome Web Store
 - conventional-commits - parse conventional commit messages for version bumps
-- filter-commits - Ignore commits made by certain accounts
 - jira - Include jira story links in the changelog
+- git-tag - Manage your projects version through just a git tag
 - npm - publish code to npm (DEFAULT)
+- omit-commits - Ignore commits made by certain accounts
+- omit-release-notes - Ignore release notes in PRs made by certain accounts
 - released - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
 - slack - post release notes to slack
+- twitter - post release notes to twitter
 - upload-assets - add extra assets to the release
 
 ## Using Plugins
@@ -29,10 +32,12 @@ auto shipit --plugins npm
 
 ### 2. `npm` package
 
-If you are using a plugin distributed on `npm` simply supply the name. Ensure that the plugin is added as a dependency of your project.
+Unofficial plugins pulled from NPM should be named in the format `auto-plugin-PLUGIN_NAME` where `PLUGIN_NAME` is the name of the plugin.
+
+That name is provided to auto to use that particular plugin.
 
 ```sh
-auto shipit --plugins NPM_PACKAGE_NAME
+auto shipit --plugins PLUGIN_NAME
 ```
 
 ### 3. Path

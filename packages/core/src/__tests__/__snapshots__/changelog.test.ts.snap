@@ -41,6 +41,26 @@ Bam!?
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes additional release notes should have tappable omit 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes additional release notes should omit renovate prs 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) ([@renovate-bot](https://github.custom.com/renovate-bot))
+
+#### Authors: 1
+
+- Adam Dierkens ([@renovate-bot](https://github.custom.com/renovate-bot))"
+`;
+
 exports[`generateReleaseNotes doesn't add additional release notes when there are none 1`] = `
 "#### 🚀  Enhancement
 

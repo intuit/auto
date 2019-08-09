@@ -1,6 +1,6 @@
 {
-  "name": "@intuit-auto/upload-assets",
-  "version": "6.5.0",
+  "name": "@auto-it/upload-assets",
+  "version": "7.2.3",
   "main": "dist/index.js",
   "description": "Upload assets plugin for auto",
   "author": {
@@ -8,7 +8,8 @@
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -26,8 +27,8 @@
     "automated",
     "continuos integration",
     "changelog",
-    "filter",
-    "omit"
+    "upload",
+    "assets"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -36,12 +37,12 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0",
+    "@auto-it/core": "link:../../packages/core",
     "dedent": "^0.7.0",
-    "file-type": "^11.0.0"
+    "file-type": "^12.1.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.25.5",
+    "@octokit/rest": "^16.28.1",
     "@types/dedent": "^0.7.0"
   }
 }

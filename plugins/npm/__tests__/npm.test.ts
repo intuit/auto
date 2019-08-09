@@ -1,6 +1,6 @@
-import * as Auto from '@intuit-auto/core';
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
+import * as Auto from '@auto-it/core';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import NPMPlugin, {
   changedPackages,
   getMonorepoPackage,
@@ -664,7 +664,7 @@ describe('canary', () => {
     });
   });
 
-  test('use lerna for independent monorepo', async () => {
+  test("doesn't force publish in independent mode", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -684,10 +684,17 @@ describe('canary', () => {
       )
     );
 
-    const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
-    expect(value).toBe(
-      '\n - @foo/app@1.2.4-canary.0\n - @foo/lib@1.1.0-canary.0'
-    );
+    await hooks.version.promise(Auto.SEMVER.patch);
+    expect(exec).toHaveBeenNthCalledWith(2, 'npx', [
+      'lerna',
+      'version',
+      'patch',
+      false,
+      '--no-commit-hooks',
+      '--yes',
+      '-m',
+      "'Bump version to: %v [skip ci]'"
+    ]);
   });
 
   test('error when no canary release found - independent', async () => {

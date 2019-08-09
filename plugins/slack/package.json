@@ -1,6 +1,6 @@
 {
-  "name": "@intuit-auto/slack",
-  "version": "6.5.0",
+  "name": "@auto-it/slack",
+  "version": "7.2.3",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "author": {
@@ -8,7 +8,8 @@
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@intuit-auto/core": "6.5.0",
+    "@auto-it/core": "link:../../packages/core",
     "node-fetch": "2.5.0",
     "url-join": "^4.0.0"
   },

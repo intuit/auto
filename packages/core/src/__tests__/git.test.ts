@@ -23,13 +23,15 @@ const lock = jest.fn();
 const errorHook = jest.fn();
 const get = jest.fn();
 const update = jest.fn();
+const paginate = jest.fn();
 
 jest.mock('@octokit/rest', () => {
   const instance = () => ({
     authenticate,
+    paginate,
     pulls: {
       get: getPr,
-      listCommits,
+      listCommits: { endpoint: listCommits },
       list
     },
     issues: {
@@ -333,7 +335,7 @@ describe('github', () => {
       get.mockReturnValueOnce({
         data: {
           body:
-            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
+            '# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n\nSome long thing\nand more\n<!-- GITHUB_RELEASE PR BODY: default -->\n'
         }
       });
 
@@ -450,9 +452,7 @@ describe('github', () => {
         data: undefined
       });
 
-      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({
-        login: 'lisowski54@gmail.com'
-      });
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({});
     });
 
     test('errors', async () => {

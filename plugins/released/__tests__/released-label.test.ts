@@ -1,11 +1,11 @@
-import Auto from '@intuit-auto/core';
-import makeCommitFromMsg from '@intuit-auto/core/dist/__tests__/make-commit-from-msg';
-import Git from '@intuit-auto/core/dist/git';
-import LogParse from '@intuit-auto/core/dist/log-parse';
-import { defaultLabelDefinition } from '@intuit-auto/core/dist/release';
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
-import { IAutoConfig } from '@intuit-auto/core/src/release';
+import Auto from '@auto-it/core';
+import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
+import Git from '@auto-it/core/dist/git';
+import LogParse from '@auto-it/core/dist/log-parse';
+import { defaultLabelDefinition } from '@auto-it/core/dist/release';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import { IAutoConfig } from '@auto-it/core/src/release';
 import ReleasedLabelPlugin from '../src';
 
 const git = new Git({ owner: '1', repo: '2' });
@@ -63,7 +63,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -71,6 +71,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump');
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [commit],
       releaseNotes: ''
     });
@@ -85,13 +86,14 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
 
     const commit = makeCommitFromMsg('normal commit with no bump');
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       commits: [commit],
       releaseNotes: ''
     });
@@ -106,13 +108,14 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: [],
       releaseNotes: ''
     });
@@ -130,7 +133,7 @@ describe('release label plugin', () => {
         options: { skipReleaseLabels: ['skip-release'] }
       },
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -140,6 +143,7 @@ describe('release label plugin', () => {
     });
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -154,7 +158,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -162,6 +166,7 @@ describe('release label plugin', () => {
     const commit = makeCommitFromMsg('normal commit with no bump (#123)');
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -181,13 +186,14 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: { dryRun: true },
+      options: { dryRun: true },
       comment,
       git
     } as unknown) as Auto);
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
@@ -205,7 +211,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -214,6 +220,7 @@ describe('release label plugin', () => {
 
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
       ]),
@@ -231,12 +238,13 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
 
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       newVersion: '1.0.0-canary',
       commits: await log.normalizeCommits([
         makeCommitFromMsg('normal commit with no bump (#123)')
@@ -254,7 +262,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -268,6 +276,7 @@ describe('release label plugin', () => {
     );
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -289,7 +298,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -299,6 +308,7 @@ describe('release label plugin', () => {
     );
     await autoHooks.afterRelease.promise({
       newVersion: '1.0.0',
+      lastRelease: '0.1.0',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''
     });
@@ -313,7 +323,7 @@ describe('release label plugin', () => {
       hooks: autoHooks,
       labels: defaultLabelDefinition,
       logger: dummyLog(),
-      args: {},
+      options: {},
       comment,
       git
     } as unknown) as Auto);
@@ -322,6 +332,7 @@ describe('release label plugin', () => {
       'normal commit with no bump (#123) closes #100'
     );
     await autoHooks.afterRelease.promise({
+      lastRelease: '0.1.0',
       newVersion: '1.0.0-canary',
       commits: await log.normalizeCommits([commit]),
       releaseNotes: ''

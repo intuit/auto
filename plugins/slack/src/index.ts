@@ -1,5 +1,5 @@
 import { githubToSlack } from '@atomist/slack-messages';
-import { Auto, IPlugin } from '@intuit-auto/core';
+import { Auto, IPlugin } from '@auto-it/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
 
@@ -18,6 +18,7 @@ const sanitizeMarkdown = (markdown: string) =>
 
 interface ISlackPluginOptions {
   url: string;
+  atTarget?: string;
 }
 
 export default class SlackPlugin implements IPlugin {
@@ -26,7 +27,14 @@ export default class SlackPlugin implements IPlugin {
   readonly options: ISlackPluginOptions;
 
   constructor(options: ISlackPluginOptions | string) {
-    this.options = typeof options === 'string' ? { url: options } : options;
+    if (typeof options === 'string') {
+      this.options = { url: options, atTarget: 'channel' };
+    } else {
+      this.options = {
+        url: options.url ? options.url : '',
+        atTarget: options.atTarget ? options.atTarget : 'channel'
+      };
+    }
   }
 
   apply(auto: Auto) {
@@ -37,7 +45,7 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
-        if ('dryRun' in auto.args && auto.args.dryRun) {
+        if ('dryRun' in auto.options && auto.options.dryRun) {
           return;
         }
 
@@ -74,13 +82,8 @@ export default class SlackPlugin implements IPlugin {
     const project = await auto.git.getProject();
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const releaseUrl = join(
-      project.html_url,
-      auto.git.options.owner,
-      auto.git.options.repo,
-      'releases/tag',
-      newVersion
-    );
+    const releaseUrl = join(project.html_url, 'releases/tag', newVersion);
+    const atTarget = this.options.atTarget;
 
     if (!token) {
       auto.logger.verbose.warn('Slack may need a token to send a message');
@@ -90,7 +93,7 @@ export default class SlackPlugin implements IPlugin {
       method: 'POST',
       body: JSON.stringify({
         text: [
-          `@channel: New release *<${releaseUrl}|${newVersion}>*`,
+          `@${atTarget}: New release *<${releaseUrl}|${newVersion}>*`,
           body
         ].join('\n'),
         // eslint-disable-next-line camelcase

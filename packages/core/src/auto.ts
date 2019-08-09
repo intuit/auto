@@ -12,7 +12,7 @@ import {
 } from 'tapable';
 
 import {
-  ApiArgs,
+  ApiOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -63,6 +63,7 @@ export interface IAutoHooks {
   afterRelease: AsyncParallelHook<
     [
       {
+        lastRelease: string;
         newVersion?: string;
         commits: IExtendedCommit[];
         releaseNotes: string;
@@ -78,7 +79,7 @@ export interface IAutoHooks {
   getRepository: AsyncSeriesBailHook<[], IRepository | void>;
   onCreateRelease: SyncHook<[Release]>;
   onCreateLogParse: SyncHook<[LogParse]>;
-  onCreateChangelog: SyncHook<[Changelog]>;
+  onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
   version: AsyncParallelHook<[SEMVER]>;
   afterVersion: AsyncParallelHook<[]>;
   publish: AsyncParallelHook<[SEMVER]>;
@@ -103,7 +104,7 @@ const loadEnv = () => {
 export default class Auto {
   hooks: IAutoHooks;
   logger: ILogger;
-  args: ApiArgs;
+  options: ApiOptions;
   baseBranch: string;
   config?: IAutoConfig;
 
@@ -112,19 +113,25 @@ export default class Auto {
   labels?: ILabelDefinitionMap;
   semVerLabels?: Map<VersionLabel, string>;
 
-  constructor(args: ApiArgs = {}) {
-    this.args = args;
-    this.baseBranch = args.baseBranch || 'master';
+  private versionBump?: SEMVER;
+
+  constructor(options: ApiOptions = {}) {
+    this.options = options;
+    this.baseBranch = options.baseBranch || 'master';
     this.logger = createLog(
-      args.veryVerbose ? 'veryVerbose' : args.verbose ? 'verbose' : undefined
+      options.veryVerbose
+        ? 'veryVerbose'
+        : options.verbose
+        ? 'verbose'
+        : undefined
     );
     this.hooks = makeHooks();
 
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
       release.hooks.onCreateChangelog.tap(
         'Link onCreateChangelog',
-        changelog => {
-          this.hooks.onCreateChangelog.call(changelog);
+        (changelog, version) => {
+          this.hooks.onCreateChangelog.call(changelog, version);
         }
       );
     });
@@ -144,7 +151,7 @@ export default class Auto {
   async loadConfig() {
     const configLoader = new Config(this.logger);
     const config = this.hooks.modifyConfig.call({
-      ...(await configLoader.loadConfig(this.args)),
+      ...(await configLoader.loadConfig(this.options)),
       baseBranch: this.baseBranch
     });
 
@@ -339,7 +346,9 @@ export default class Auto {
         throw new Error('No semver label!');
       }
 
-      this.logger.log.success(`PR is using label: ${semverTag}`);
+      this.logger.log.success(
+        `PR is using label: ${semverTag || skipReleaseTag}`
+      );
 
       let description;
 
@@ -557,13 +566,17 @@ export default class Auto {
       }
 
       newVersion = result;
-      const message =
-        options.message || 'Published PR with canary version: `%v`';
+      const message = options.message || 'Published PR with canary version: %v';
 
       if (message !== 'false' && pr) {
         await this.prBody({
           pr: Number(pr),
-          message: message.replace('%v', newVersion),
+          message: message.replace(
+            '%v',
+            !newVersion || newVersion.includes('\n')
+              ? newVersion
+              : `\`${newVersion}\``
+          ),
           context: 'canary-version'
         });
       }
@@ -729,7 +742,10 @@ export default class Auto {
     }
 
     const lastRelease = await this.git.getLatestRelease();
-    return this.release.getSemverBump(lastRelease);
+    const bump = await this.release.getSemverBump(lastRelease);
+    this.versionBump = bump;
+
+    return bump;
   }
 
   private async makeChangelog({
@@ -747,7 +763,8 @@ export default class Auto {
     const lastRelease = from || (await this.git.getLatestRelease());
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      to || undefined
+      to || undefined,
+      this.versionBump
     );
 
     this.logger.log.info('New Release Notes\n', releaseNotes);
@@ -786,7 +803,11 @@ export default class Auto {
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
     );
-    const releaseNotes = await this.release.generateReleaseNotes(lastRelease);
+    const releaseNotes = await this.release.generateReleaseNotes(
+      lastRelease,
+      undefined,
+      this.versionBump
+    );
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
@@ -804,7 +825,12 @@ export default class Auto {
       ? this.prefixRelease(rawVersion)
       : rawVersion;
 
-    if (!dryRun && parse(lastRelease) && eq(newVersion, lastRelease)) {
+    if (
+      !dryRun &&
+      parse(newVersion) &&
+      parse(lastRelease) &&
+      eq(newVersion, lastRelease)
+    ) {
       this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
       );
@@ -817,10 +843,13 @@ export default class Auto {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
       release = await this.git.publish(releaseNotes, newVersion);
     } else {
-      this.logger.log.info(`Would have released: ${newVersion}`);
+      this.logger.log.info(
+        `Would have released (unless ran with "shipit"): ${newVersion}`
+      );
     }
 
     await this.hooks.afterRelease.promise({
+      lastRelease,
       newVersion,
       commits: commitsInRelease,
       releaseNotes,
@@ -884,8 +913,8 @@ If a command fails manually run:
         `Got author: ${JSON.stringify(packageAuthor, undefined, 2)}`
       );
 
-      email = packageAuthor ? packageAuthor.email : email;
-      name = packageAuthor ? packageAuthor.name : name;
+      email = !email && packageAuthor ? packageAuthor.email : email;
+      name = !name && packageAuthor ? packageAuthor.name : name;
 
       if (email) {
         await execPromise('git', ['config', 'user.email', `"${email}"`]);

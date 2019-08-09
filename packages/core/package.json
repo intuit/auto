@@ -1,17 +1,15 @@
 {
-  "name": "@intuit-auto/core",
-  "version": "6.5.0",
+  "name": "@auto-it/core",
+  "version": "7.2.3",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
-  "bin": {
-    "auto": "dist/bin/auto.js"
-  },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -39,11 +37,11 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@octokit/graphql": "^2.1.1",
-    "@octokit/plugin-enterprise-compatibility": "^1.1.0",
+    "@octokit/graphql": "^2.1.2",
+    "@octokit/plugin-enterprise-compatibility": "^1.1.1",
     "@octokit/plugin-retry": "^2.2.0",
-    "@octokit/plugin-throttling": "^2.5.0",
-    "@octokit/rest": "^16.24.1",
+    "@octokit/plugin-throttling": "^2.6.0",
+    "@octokit/rest": "16.28.1",
     "arr-flatten": "^1.1.0",
     "cosmiconfig": "5.2.0",
     "dedent": "^0.7.0",

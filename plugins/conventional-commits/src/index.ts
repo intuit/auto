@@ -1,6 +1,6 @@
 import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
-import { Auto, IPlugin, VersionLabel } from '@intuit-auto/core';
+import { Auto, IPlugin, VersionLabel } from '@auto-it/core';
 
 export default class ConventionalCommitsPlugin implements IPlugin {
   name = 'Conventional Commits Parser';
@@ -42,21 +42,19 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           commit.pullRequest &&
           commit.labels.length === 0
         ) {
-          const lastRelease = await auto.git.getLatestRelease();
-          const allCommits = await auto.release.getCommits(lastRelease);
           const prCommits = await auto.git.getCommitsForPR(
             commit.pullRequest.number
           );
-          const allPrCommitHashes = prCommits.reduce(
-            (all, pr) => [...all, pr.sha],
-            [] as string[]
-          );
-          const extendedCommitsInPr = allCommits.filter(c =>
-            allPrCommitHashes.includes(c.hash)
-          );
 
+          // Omit the commit if one of the commits in the PR contains a CC message since it will already be counted
           return Boolean(
-            extendedCommitsInPr.find(c => Boolean(parse(c.subject)[0].header))
+            prCommits.find(c => {
+              try {
+                return Boolean(parse(c.commit.message)[0].header);
+              } catch (error) {
+                return false;
+              }
+            })
           );
         }
       });

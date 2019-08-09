@@ -7,9 +7,9 @@ Post your release notes to a slack channel
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/slack
+npm i --save-dev @auto-it/slack
 # or
-yarn add -D @intuit-auto/slack
+yarn add -D @auto-it/slack
 ```
 
 ## Usage
@@ -21,7 +21,12 @@ To use the plugin include it in your `.autorc`
   "plugins": [
     ["slack", { "url": "https://url-to-your-slack-hook.com" }],
     // or
-    ["slack", "https://url-to-your-slack-hook.com"]
+    ["slack", "https://url-to-your-slack-hook.com"],
+    // or
+    [
+      "slack",
+      { "url": "https://url-to-your-slack-hook.com", "atTarget": "here" }
+    ]
   ]
 }
 ```

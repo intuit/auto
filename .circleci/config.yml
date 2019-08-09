@@ -35,20 +35,11 @@ aliases:
   - &build
     name: Build
     command: yarn build
-  - &semver
-    name: Check PR for semVer label
-    command: yarn semver:check
   - &bundle
-    name: Check PR for semVer label
-    command: yarn semver:check
+    name: Bundle the code into binaries for multiple platforms
+    command: yarn lerna run bundle --scope=auto
 
 jobs:
-  semver:
-    <<: *defaults
-    steps:
-      - checkout
-      - run: *semver
-
   install:
     <<: *defaults
     steps:
@@ -118,10 +109,6 @@ workflows:
       - build:
           requires:
             - install
-
-      - semver: 
-          requires:
-            - build
 
       - lint:
           requires:

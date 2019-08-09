@@ -50,7 +50,7 @@ const makePrBodyIdentifier = (context: string) =>
 // A class to interact with the local git instance and the git remote.
 // currently it only interfaces with GitHub.
 export default class Git {
-  readonly ghub: Octokit;
+  readonly github: Octokit;
   readonly options: IGitOptions;
 
   private readonly baseUrl: string;
@@ -67,7 +67,7 @@ export default class Git {
     const gitHub = Octokit.plugin(enterpriseCompat)
       .plugin(retry)
       .plugin(throttling);
-    this.ghub = new gitHub({
+    this.github = new gitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
       previews: ['symmetra-preview'],
@@ -90,7 +90,7 @@ export default class Git {
         }
       }
     });
-    this.ghub.hook.error('request', error => {
+    this.github.hook.error('request', error => {
       if (error && error.headers && error.headers.authorization) {
         delete error.headers.authorization;
       }
@@ -100,7 +100,7 @@ export default class Git {
 
   @Memoize()
   async getLatestReleaseInfo() {
-    const latestRelease = await this.ghub.repos.getLatestRelease({
+    const latestRelease = await this.github.repos.getLatestRelease({
       owner: this.options.owner,
       repo: this.options.repo
     });
@@ -172,7 +172,7 @@ export default class Git {
     this.logger.verbose.info('Getting issue labels using:', args);
 
     try {
-      const labels = await this.ghub.issues.listLabelsOnIssue(args);
+      const labels = await this.github.issues.listLabelsOnIssue(args);
       this.logger.veryVerbose.info(
         'Got response for "listLabelsOnIssue":\n',
         labels
@@ -198,7 +198,7 @@ export default class Git {
     this.logger.verbose.info('Getting issue info using:', args);
 
     try {
-      const info = await this.ghub.issues.get(args);
+      const info = await this.github.issues.get(args);
       this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
       return info;
     } catch (e) {
@@ -217,7 +217,7 @@ export default class Git {
     };
 
     try {
-      const labels = await this.ghub.issues.listLabelsForRepo(args);
+      const labels = await this.github.issues.listLabelsForRepo(args);
       this.logger.veryVerbose.info(
         'Got response for "getProjectLabels":\n',
         labels
@@ -251,13 +251,11 @@ export default class Git {
   @Memoize()
   async getUserByEmail(email: string) {
     try {
-      const search = (await this.ghub.search.users({
+      const search = (await this.github.search.users({
         q: `in:email ${email}`
       })).data;
 
-      return search && search.items.length > 0
-        ? search.items[0]
-        : { login: email };
+      return search && search.items.length > 0 ? search.items[0] : {};
     } catch (error) {
       this.logger.verbose.warn(`Could not find user by email: ${email}`);
     }
@@ -266,7 +264,7 @@ export default class Git {
   @Memoize()
   async getUserByUsername(username: string) {
     try {
-      const user = await this.ghub.users.getByUsername({
+      const user = await this.github.users.getByUsername({
         username
       });
 
@@ -288,7 +286,7 @@ export default class Git {
 
     this.logger.verbose.info('Getting pull request info using:', args);
 
-    const result = await this.ghub.pulls.get(args);
+    const result = await this.github.pulls.get(args);
 
     this.logger.veryVerbose.info('Got pull request data\n', result);
     this.logger.verbose.info('Got pull request info');
@@ -302,7 +300,7 @@ export default class Git {
 
     this.logger.verbose.info('Searching repo using:\n', options);
 
-    const result = await this.ghub.search.issuesAndPullRequests(options);
+    const result = await this.github.search.issuesAndPullRequests(options);
 
     this.logger.veryVerbose.info('Got response from search\n', result);
     this.logger.verbose.info('Searched repo on GitHub.');
@@ -333,7 +331,7 @@ export default class Git {
 
     this.logger.verbose.info('Creating status using:\n', args);
 
-    const result = await this.ghub.repos.createStatus(args);
+    const result = await this.github.repos.createStatus(args);
 
     this.logger.veryVerbose.info('Got response from createStatues\n', result);
     this.logger.verbose.info('Created status on GitHub.');
@@ -347,7 +345,7 @@ export default class Git {
     const color = label.color
       ? tinyColor(label.color).toString('hex6')
       : tinyColor.random().toString('hex6');
-    const result = await this.ghub.issues.createLabel({
+    const result = await this.github.issues.createLabel({
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
@@ -367,7 +365,7 @@ export default class Git {
     const color = label.color
       ? tinyColor(label.color).toString('hex6')
       : tinyColor.random().toString('hex6');
-    const result = await this.ghub.issues.updateLabel({
+    const result = await this.github.issues.updateLabel({
       current_name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
@@ -384,7 +382,7 @@ export default class Git {
   async addLabelToPr(pr: number, label: string) {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
-    const result = await this.ghub.issues.addLabels({
+    const result = await this.github.issues.addLabels({
       issue_number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
@@ -400,7 +398,7 @@ export default class Git {
   async lockIssue(issue: number) {
     this.logger.verbose.info(`Locking #${issue} issue...`);
 
-    const result = await this.ghub.issues.lock({
+    const result = await this.github.issues.lock({
       issue_number: issue,
       owner: this.options.owner,
       repo: this.options.repo
@@ -416,7 +414,7 @@ export default class Git {
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
-    const result = (await this.ghub.repos.get({
+    const result = (await this.github.repos.get({
       owner: this.options.owner,
       repo: this.options.repo
     })).data;
@@ -430,7 +428,7 @@ export default class Git {
   async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
-    const result = (await this.ghub.pulls.list({
+    const result = (await this.github.pulls.list({
       owner: this.options.owner.toLowerCase(),
       repo: this.options.repo.toLowerCase(),
       ...options
@@ -446,11 +444,13 @@ export default class Git {
   async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
-    const result = (await this.ghub.pulls.listCommits({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase(),
-      pull_number: pr
-    })).data;
+    const result = await this.github.paginate(
+      this.github.pulls.listCommits.endpoint({
+        owner: this.options.owner.toLowerCase(),
+        repo: this.options.repo.toLowerCase(),
+        pull_number: pr
+      })
+    );
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
     this.logger.verbose.info(`Got commits for PR #${pr}.`);
@@ -463,7 +463,7 @@ export default class Git {
 
     this.logger.verbose.info('Getting previous comments on:', pr);
 
-    const comments = await this.ghub.issues.listComments({
+    const comments = await this.github.issues.listComments({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr
@@ -484,7 +484,7 @@ export default class Git {
 
     this.logger.verbose.info(`Deleting comment: ${commentId}`);
 
-    await this.ghub.issues.deleteComment({
+    await this.github.issues.deleteComment({
       owner: this.options.owner,
       repo: this.options.repo,
       comment_id: commentId
@@ -499,7 +499,7 @@ export default class Git {
     this.logger.verbose.info('Using comment identifier:', commentIdentifier);
     await this.deleteComment(pr, context);
     this.logger.verbose.info('Creating new comment');
-    const result = await this.ghub.issues.createComment({
+    const result = await this.github.issues.createComment({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr,
@@ -521,14 +521,14 @@ export default class Git {
     this.logger.verbose.info('Using PR body identifier:', id);
     this.logger.verbose.info('Getting previous pr body on:', pr);
 
-    const issue = await this.ghub.issues.get({
+    const issue = await this.github.issues.get({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr
     });
 
     this.logger.veryVerbose.info('Got PR description\n', issue.data.body);
-    const regex = new RegExp(`(${id})\\s(.+)\\s(${id})`);
+    const regex = new RegExp(`(${id})\\s*([\\S\\s]*)\\s*(${id})`);
     let body = issue.data.body;
 
     if (body.match(regex)) {
@@ -541,7 +541,7 @@ export default class Git {
 
     this.logger.verbose.info('Creating new pr body');
 
-    const result = await this.ghub.issues.update({
+    const result = await this.github.issues.update({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr,
@@ -557,7 +557,7 @@ export default class Git {
   async publish(releaseNotes: string, tag: string) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
-    const result = await this.ghub.repos.createRelease({
+    const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,

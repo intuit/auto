@@ -3,7 +3,6 @@ import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
-import dedent from 'dedent';
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinitionMap } from './release';
 import { ILogger } from './utils/logger';
@@ -35,6 +34,7 @@ export interface IChangelogHooks {
     [ICommitAuthor, string],
     string | void
   >;
+  omitReleaseNotes: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
 }
 
 const getHeaderDepth = (line: string) =>
@@ -77,6 +77,20 @@ export default class Changelog {
       'Default',
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
+    this.hooks.omitReleaseNotes.tap('Renovate', commit => {
+      const names = ['renovate-pro[bot]', 'renovate-bot'];
+
+      if (
+        commit.authors.find(author =>
+          Boolean(
+            (author.name && names.includes(author.name)) ||
+              (author.username && names.includes(author.username))
+          )
+        )
+      ) {
+        return true;
+      }
+    });
   }
 
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
@@ -90,8 +104,8 @@ export default class Changelog {
     this.logger.veryVerbose.info('\n', split);
     const sections: string[] = [];
 
-    this.createReleaseNotesSection(commits, sections);
-    this.logger.verbose.info('Added relase notes to changelog');
+    await this.createReleaseNotesSection(commits, sections);
+    this.logger.verbose.info('Added release notes to changelog');
 
     await this.createLabelSection(split, sections);
     this.logger.verbose.info('Added groups to changelog');
@@ -205,17 +219,18 @@ export default class Changelog {
               return;
             }
 
+            const username = (author.username || author.name) as string;
             const user = await this.hooks.renderChangelogAuthor.promise(
               author,
               commit,
               this.options
             );
 
-            if (user && seenUsers.has(user)) {
+            if (user && seenUsers.has(username)) {
               return;
             }
 
-            seenUsers.add(user as string);
+            seenUsers.add(username);
 
             const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
               author,
@@ -251,35 +266,39 @@ export default class Changelog {
       {} as { [label: string]: string }
     );
 
-    await Promise.all(
+    const labelSections = await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {
         const title = await this.hooks.renderChangelogTitle.promise(
           label,
           changelogTitles
         );
 
-        const lines = await Promise.all(
+        const lines = new Set<string>();
+
+        await Promise.all(
           labelCommits.map(async commit => {
             const [, line] = await this.hooks.renderChangelogLine.promise([
               commit,
               await this.generateCommitNote(commit)
             ]);
 
-            return line;
+            lines.add(line);
           })
         );
 
-        sections.push(
-          [
-            title,
-            ...lines.sort((a, b) => a.split('\n').length - b.split('\n').length)
-          ].join('\n')
-        );
+        return [
+          title,
+          ...[...lines].sort(
+            (a, b) => a.split('\n').length - b.split('\n').length
+          )
+        ].join('\n');
       })
     );
+
+    labelSections.map(section => sections.push(section));
   }
 
-  private createReleaseNotesSection(
+  private async createReleaseNotesSection(
     commits: IExtendedCommit[],
     sections: string[]
   ) {
@@ -287,10 +306,23 @@ export default class Changelog {
       return;
     }
 
-    const visited = new Set<number>();
     let section = '';
+    const visited = new Set<number>();
+    const included = await Promise.all(
+      commits.map(async commit => {
+        const omit = await this.hooks.omitReleaseNotes.promise(commit);
 
-    commits.map(commit => {
+        if (!omit) {
+          return commit;
+        }
+      })
+    );
+
+    included.map(commit => {
+      if (!commit) {
+        return;
+      }
+
       const pr = commit.pullRequest;
 
       if (!pr || !pr.body) {
@@ -322,21 +354,13 @@ export default class Changelog {
         }
       }
 
-      section += dedent`
-        _From #${pr.number}_
-
-        ${notes.trim()}\n\n
-      `;
+      section += `_From #${pr.number}_\n\n${notes.trim()}\n\n`;
     });
 
     if (!section) {
       return;
     }
 
-    sections.push(dedent`
-      ### Release Notes
-
-      ${section}---
-    `);
+    sections.push(`### Release Notes\n\n${section}---`);
   }
 }

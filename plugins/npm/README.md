@@ -7,9 +7,9 @@ Publish to NPM. Works in both a monorepo setting and for a single package. This 
 This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
 ```sh
-npm i --save-dev @intuit-auto/npm
+npm i --save-dev @auto-it/npm
 # or
-yarn add -D @intuit-auto/npm
+yarn add -D @auto-it/npm
 ```
 
 ## Usage

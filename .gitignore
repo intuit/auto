@@ -4,6 +4,7 @@ coverage
 package-lock.json
 _ignite
 .vscode/
+binary
 
 
 # Created by https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode

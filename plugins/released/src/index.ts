@@ -1,5 +1,5 @@
-import { Auto, IPlugin } from '@intuit-auto/core';
-import { IExtendedCommit } from '@intuit-auto/core/dist/log-parse';
+import { Auto, IPlugin } from '@auto-it/core';
+import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 import merge from 'deepmerge';
 
 interface IReleasedLabelPluginOptions {
@@ -45,7 +45,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
           return;
         }
 
-        if ('dryRun' in auto.args && auto.args.dryRun) {
+        if ('dryRun' in auto.options && auto.options.dryRun) {
           return;
         }
 

@@ -69,7 +69,7 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 
 ### Labels
 
-To override any of the default labels use the `labels` seciton in the `.autorc`.
+To override any of the default labels use the `labels` section in the `.autorc`.
 
 ```json
 {

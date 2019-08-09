@@ -17,7 +17,7 @@ export const makeHooks = (): IAutoHooks => ({
   afterShipIt: new AsyncParallelHook(['version', 'commits']),
   afterRelease: new AsyncParallelHook(['releaseInfo']),
   onCreateRelease: new SyncHook(['options']),
-  onCreateChangelog: new SyncHook(['changelog']),
+  onCreateChangelog: new SyncHook(['changelog', 'version']),
   onCreateLogParse: new SyncHook(['logParse']),
   getAuthor: new AsyncSeriesBailHook([]),
   getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
@@ -30,7 +30,7 @@ export const makeHooks = (): IAutoHooks => ({
 });
 
 export const makeReleaseHooks = (): IReleaseHooks => ({
-  onCreateChangelog: new SyncHook(['changelog']),
+  onCreateChangelog: new SyncHook(['changelog', 'version']),
   createChangelogTitle: new AsyncSeriesBailHook([]),
   onCreateLogParse: new SyncHook(['logParse'])
 });
@@ -41,12 +41,13 @@ export const makeLogParseHooks = (): ILogParseHooks => ({
 });
 
 export const makeChangelogHooks = (): IChangelogHooks => ({
-  renderChangelogLine: new AsyncSeriesBailHook(['lineData']),
+  renderChangelogLine: new AsyncSeriesWaterfallHook(['lineData']),
   renderChangelogTitle: new AsyncSeriesBailHook(['commits', 'lineRender']),
   renderChangelogAuthor: new AsyncSeriesBailHook([
     'author',
     'commit',
     'options'
   ]),
-  renderChangelogAuthorLine: new AsyncSeriesBailHook(['author', 'user'])
+  renderChangelogAuthorLine: new AsyncSeriesBailHook(['author', 'user']),
+  omitReleaseNotes: new AsyncSeriesBailHook(['commit'])
 });

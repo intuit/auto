@@ -2,8 +2,9 @@ import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
+import { Memoize } from 'typescript-memoize';
 
-import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@intuit-auto/core';
+import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, inc, ReleaseType } from 'semver';
 
@@ -61,7 +62,8 @@ export async function changedPackages(
   sha: string,
   packages: IMonorepoPackage[],
   lernaJson: { version?: string },
-  logger: ILogger
+  logger: ILogger,
+  version?: SEMVER
 ) {
   const changed = new Set<string>();
   const changedFiles = await execPromise('git', [
@@ -83,7 +85,10 @@ export async function changedPackages(
 
     changed.add(
       lernaJson.version === 'independent'
-        ? `${monorepoPackage.name}@${monorepoPackage.version}`
+        ? `${monorepoPackage.name}@${inc(
+            monorepoPackage.version,
+            version as ReleaseType
+          )}`
         : monorepoPackage.name
     );
   });
@@ -134,19 +139,7 @@ interface INpmConfig {
   forcePublish?: boolean;
 }
 
-const getLernaPackages = async () =>
-  execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
-    res.split('\n').map(packageInfo => {
-      const [packagePath, name, version] = packageInfo.split(':');
-      return { path: packagePath, name, version };
-    })
-  );
-
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
-const getIndependentPackageList = async () =>
-  getLernaPackages().then(packages =>
-    packages.map(p => `\n - ${p.name}@${p.version.split('+')[0]}`).join('')
-  );
 
 const checkClean = async (auto: Auto) => {
   const status = await execPromise('git', ['status', '--porcelain']);
@@ -172,6 +165,25 @@ export default class NPMPlugin implements IPlugin {
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
+  }
+
+  @Memoize()
+  async getLernaPackages() {
+    return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
+      res.split('\n').map(packageInfo => {
+        const [packagePath, name, version] = packageInfo.split(':');
+        return { path: packagePath, name, version };
+      })
+    );
+  }
+
+  @Memoize()
+  async getIndependentPackageList() {
+    return this.getLernaPackages().then(packages =>
+      packages
+        .map(p => `\n - \`${p.name}@${p.version.split('+')[0]}\``)
+        .join('')
+    );
   }
 
   apply(auto: Auto) {
@@ -222,8 +234,8 @@ export default class NPMPlugin implements IPlugin {
 
         if (monorepoVersion === 'independent') {
           previousVersion =
-            'dryRun' in auto.args && auto.args.dryRun
-              ? await getIndependentPackageList()
+            'dryRun' in auto.options && auto.options.dryRun
+              ? await this.getIndependentPackageList()
               : '';
         } else {
           const releasedPackage = getMonorepoPackage();
@@ -275,7 +287,7 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+    auto.hooks.onCreateChangelog.tap(this.name, (changelog, version) => {
       changelog.hooks.renderChangelogLine.tapPromise(
         'NPM - Monorepo',
         async ([commit, line]) => {
@@ -283,14 +295,15 @@ export default class NPMPlugin implements IPlugin {
             return [commit, line];
           }
 
-          const lernaPackages = await getLernaPackages();
+          const lernaPackages = await this.getLernaPackages();
           const lernaJson = getLernaJson();
 
           commit.packages = await changedPackages(
             commit.hash,
             lernaPackages,
             lernaJson,
-            auto.logger
+            auto.logger,
+            version
           );
 
           const section =
@@ -312,13 +325,16 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
-        const monorepoBump = await bumpLatest(getMonorepoPackage(), version);
+        const isIndependent = getLernaJson().version === 'independent';
+        const monorepoBump = !isIndependent
+          ? await bumpLatest(getMonorepoPackage(), version)
+          : undefined;
 
         await execPromise('npx', [
           'lerna',
           'version',
           monorepoBump || version,
-          this.forcePublish && '--force-publish',
+          !isIndependent && this.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
           '-m',
@@ -355,23 +371,22 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npx', [
           'lerna',
           'publish',
-          version,
-          '--canary',
+          `pre${version}`,
           '--dist-tag',
           'canary',
-          // Locally we use sha for canary version's postFix, but the --canary flag
-          // already attaches the SHA so we only attach postFix in PRs for context
           '--preid',
           `canary${postFix}`,
           '--force-publish', // you always want a canary version to publish
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
+          '--no-git-tag-version', // no need to tag and commit,
+          '--exact', // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
           ...verboseArgs
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        const packages = await getLernaPackages();
-        const independentPackages = await getIndependentPackageList();
+        const packages = await this.getLernaPackages();
+        const independentPackages = await this.getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
@@ -380,7 +395,7 @@ export default class NPMPlugin implements IPlugin {
             return { error: 'No packages were changed. No canary published.' };
           }
 
-          return independentPackages;
+          return `<details><summary>Canary Versions</summary>${independentPackages}</details>`;
         }
 
         const versioned = packages.find(p => p.version.includes('canary'));
@@ -433,7 +448,7 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
-        if (auto.args && auto.args.verbose) {
+        if (auto.options && auto.options.verbose) {
           await execPromise('git', ['status', '--short']);
         }
 

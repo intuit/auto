@@ -7,7 +7,8 @@
   },
   "license": "MIT",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -34,28 +35,25 @@
     "docs": "ignite",
     "docs:watch": "ignite --watch",
     "docs:publish": "./scripts/publish-docs.sh",
-    "bundle": "pkg packages/cli/package.json --out-path dist && yarn gzip",
-    "gzip": "ls dist/auto* | xargs gzip"
+    "create:plugin": "./scripts/create-plugin.js"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.4.0",
+    "change-case": "^3.1.0",
+    "copy-template-dir": "^1.4.0",
     "graphql": "^14.2.1",
     "husky": "^2.0.0",
-    "ignite": "^1.9.0",
-    "jest": "~24.5.0",
+    "ignite": "^1.10.2",
+    "jest": "~24.8.0",
     "lerna": "^3.13.4",
     "lint-staged": "^8.1.6",
-    "pkg": "^4.4.0",
     "prettier": "^1.16.4",
     "ts-jest": "^24.0.2",
-    "tslint": "~5.14.0",
+    "tslint": "~5.18.0",
     "tslint-config-prettier": "~1.18.0",
     "tslint-xo": "~0.16.0",
     "typescript": "~3.3.3333",
-    "typescript-tslint-plugin": "^0.3.1"
-  },
-  "pkg": {
-    "scripts": "plugins/**/dist/**/*.js"
+    "typescript-tslint-plugin": "^0.4.0"
   },
   "prettier": {
     "singleQuote": true
@@ -67,11 +65,11 @@
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
-      "prettier --write",
+      "prettier --write ",
       "git add"
     ],
     "*.{ts,tsx}": [
-      "prettier --parser typescript --write",
+      "prettier --parser typescript --write  ",
       "yarn lint --fix",
       "git add"
     ]
@@ -93,7 +91,8 @@
     },
     "testMatch": [
       "**/__tests__/*.test.+(ts|tsx|js)",
-      "!**/dist/**/*"
+      "!**/dist/**/*",
+      "!**/scripts/template-plugin/**/*"
     ],
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
@@ -127,15 +126,15 @@
       [
         "upload-assets",
         [
-          "./dist/auto-linux.gz",
-          "./dist/auto-macos.gz",
-          "./dist/auto-win.exe.gz"
+          "./packages/cli/binary/auto-linux.gz",
+          "./packages/cli/binary/auto-macos.gz",
+          "./packages/cli/binary/auto-win.exe.gz"
         ]
       ]
     ],
     "labels": {
-      "greenkeeper": {
-        "name": "greenkeeper",
+      "dependencies": {
+        "name": "dependencies",
         "title": "🔩 Dependency Updates"
       },
       "blog-post": {
@@ -144,7 +143,7 @@
       }
     },
     "skipReleaseLabels": [
-      "greenkeeper",
+      "dependencies",
       "blog-post"
     ]
   }

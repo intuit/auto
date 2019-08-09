@@ -1,14 +1,15 @@
 {
-  "name": "@intuit-auto/filter-accounts",
-  "version": "6.5.0",
+  "name": "@auto-it/omit-commits",
+  "version": "7.2.3",
   "main": "dist/index.js",
-  "description": "Filter accounts plugin for auto",
+  "description": "Omit commits plugin for auto",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "6.5.0"
+    "@auto-it/core": "link:../../packages/core"
   }
 }

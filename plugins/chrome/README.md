@@ -11,9 +11,9 @@ Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npm i --save-dev @intuit-auto/chrome
+npm i --save-dev @auto-it/chrome
 # or
-yarn add -D @intuit-auto/chrome
+yarn add -D @auto-it/chrome
 ```
 
 ## Usage

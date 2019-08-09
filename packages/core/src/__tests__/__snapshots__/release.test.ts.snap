@@ -2,56 +2,50 @@
 
 exports[`Release buildSearchQuery generates a valid query 1`] = `
 "{
-      
-        
-        
-
-        hash_abc123: search(query: \\"repo:test/test abc123\\", type: ISSUE, first: 1) {
-          edges {
-            node {
-              ... on PullRequest {
-                number
-                state
-                body
-                labels(first: 10) {
-                  edges {
-                    node {
-                      name
-                    }
-                  }
-                }
-              }
-            }
+    hash_abc123: search(query: \\"repo:Andrew/test abc123\\", type: ISSUE, first: 1) {
+edges {
+  node {
+    ... on PullRequest {
+      number
+      state
+      body
+      labels(first: 10) {
+        edges {
+          node {
+            name
           }
         }
-      
-
-        hash_3def78: search(query: \\"repo:test/test 3def78\\", type: ISSUE, first: 1) {
-          edges {
-            node {
-              ... on PullRequest {
-                number
-                state
-                body
-                labels(first: 10) {
-                  edges {
-                    node {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      
-      rateLimit {
-        limit
-        cost
-        remaining
-        resetAt
       }
-    }"
+    }
+  }
+}
+}
+
+    hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 1) {
+      edges {
+        node {
+          ... on PullRequest {
+            number
+            state
+            body
+            labels(first: 10) {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    rateLimit {
+      limit
+      cost
+      remaining
+      resetAt
+    }
+  }"
 `;
 
 exports[`Release generateReleaseNotes should allow user to configure section headings 1`] = `
@@ -76,6 +70,17 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`Release generateReleaseNotes should find ignore closed prs 1`] = `
+"#### 🐛  Bug Fix
+
+- Doom Patrol enabled  (adam@dierkens.com)
+- Autobots roll out!  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`Release generateReleaseNotes should find matching PRs for shas through search 1`] = `
 "#### 💥  Breaking Change
 
@@ -87,7 +92,7 @@ exports[`Release generateReleaseNotes should find matching PRs for shas through 
 
 #### Authors: 1
 
-- adam@dierkens.com"
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
@@ -142,6 +147,29 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 #### Authors: 1
 
 - Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`Release getCommits should be able to omit bye username 1`] = `
+Array [
+  Object {
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
+    "authors": Array [
+      Object {
+        "login": "andrew",
+        "name": "Andrew Lisowski",
+        "username": "andrew",
+      },
+    ],
+    "hash": "foo",
+    "labels": Array [],
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "Second",
+  },
+]
 `;
 
 exports[`Release getCommits should ignore rebased commits if no last release 1`] = `
@@ -257,6 +285,7 @@ Array [
     "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
+        "email": "adam@dierkens.com",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",
@@ -268,7 +297,7 @@ Array [
     "subject": "First",
   },
   Object {
-    "authorEmail": "lisowski54@gmail.com",
+    "authorEmail": "andrew@users.noreply.github.com",
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
@@ -286,10 +315,28 @@ Array [
     "subject": "Second",
   },
   Object {
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
+    "authors": Array [
+      Object {
+        "email": "lisowski54@gmail.com",
+        "name": "Andrew Lisowski",
+      },
+    ],
+    "hash": "foo",
+    "labels": Array [],
+    "packages": undefined,
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "Second",
+  },
+  Object {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
     "authors": Array [
       Object {
+        "email": "adam@dierkens.com",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",
