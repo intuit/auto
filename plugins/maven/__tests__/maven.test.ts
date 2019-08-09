@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-import * as Auto from '@intuit-auto/core';
-import { dummyLog } from '@intuit-auto/core/dist/utils/logger';
-import { makeHooks } from '@intuit-auto/core/dist/utils/make-hooks';
+import * as Auto from '@auto-it/core';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import MavenPlugin from '../src';
 
 const mockRead = (result: string) =>

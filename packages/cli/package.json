@@ -42,8 +42,8 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../core",
-    "@auto-it/npm": "link:../../packages/npm",
-    "@auto-it/released": "link:../../packages/released",
+    "@auto-it/npm": "link:../../plugins/npm",
+    "@auto-it/released": "link:../../plugins/released",
     "chalk": "^2.4.2",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",

@@ -1,5 +1,5 @@
 {
-  "name": "@intuit-auto/maven",
+  "name": "@auto-it/maven",
   "version": "7.2.3",
   "main": "dist/index.js",
   "description": "Maven publishing plugin for auto",
@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@intuit-auto/core": "link:../../packages/core",
+    "@auto-it/core": "link:../../packages/core",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
     "semver": "^6.0.0",

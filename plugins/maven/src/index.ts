@@ -1,6 +1,6 @@
 // tslint:disable early-exit
 
-import { Auto, execPromise, IPlugin, SEMVER } from '@intuit-auto/core';
+import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
 import parseGitHubUrl from 'parse-github-url';
 import path from 'path';
 import { promisify } from 'util';
