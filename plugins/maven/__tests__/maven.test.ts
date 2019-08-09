@@ -6,10 +6,10 @@ import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import MavenPlugin from '../src';
 
 const mockRead = (result: string) =>
-  // @ts-ignore
-  (fs.readFile = (a, b, cb) => {
-    cb(undefined, result);
-  });
+  jest
+    .spyOn(fs, 'readFile')
+    // @ts-ignore
+    .mockImplementationOnce((a, b, cb) => cb(undefined, result));
 
 describe('maven', () => {
   let hooks: Auto.IAutoHooks;
