@@ -1,3 +1,31 @@
+# v7.3.0 (Thu Aug 15 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Add Maven Plugin [#510](https://github.com/intuit/auto/pull/510) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump graphql from 14.2.1 to 14.4.2 [#507](https://github.com/intuit/auto/pull/507) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest from 24.5.0 to 24.8.0 [#505](https://github.com/intuit/auto/pull/505) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump enquirer from 2.3.0 to 2.3.1 [#504](https://github.com/intuit/auto/pull/504) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 6.1.1 to 6.3.0 [#499](https://github.com/intuit/auto/pull/499) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.0.7 to 12.6.8 [#500](https://github.com/intuit/auto/pull/500) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.0.0 to 6.0.1 [#501](https://github.com/intuit/auto/pull/501) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslint from 5.14.0 to 5.18.0 [#502](https://github.com/intuit/auto/pull/502) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/released`
+  - Bump deepmerge from 3.2.0 to 4.0.0 [#506](https://github.com/intuit/auto/pull/506) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/upload-assets`
+  - Bump file-type from 11.1.0 to 12.1.0 [#498](https://github.com/intuit/auto/pull/498) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.2.3 (Mon Jul 29 2019)
 
 #### 🐛  Bug Fix
