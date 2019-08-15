@@ -33,6 +33,7 @@
   - [Conventional Commits](../plugins/conventional-commits/README.md)
   - [Omit Commits](../plugins/omit-commits/README.md)
   - [Jira](../plugins/jira/README.md)
+  - [Maven](../plugins/maven/README.md)
   - [NPM](../plugins/npm/README.md)
   - [Released](../plugins/released/README.md)
   - [Slack](../plugins/slack/README.md)

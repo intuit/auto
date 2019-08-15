@@ -28,7 +28,7 @@
     "build:watch": "lerna run build --parallel -- --watch --preserveWatchOutput",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
-    "test": "jest --maxWorkers=2",
+    "test": "jest --runInBand",
     "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",

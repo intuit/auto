@@ -4,7 +4,7 @@ To include Jira story information in your changelogs you must include a URL to y
 
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @auto-it/jira

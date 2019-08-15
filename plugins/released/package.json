@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.2.3",
+    "@auto-it/core": "link:../../packages/core",
     "deepmerge": "^4.0.0"
   }
 }

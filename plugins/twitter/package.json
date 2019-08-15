@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "^7.2.3",
+    "@auto-it/core": "link:../../packages/core",
     "@types/twitter-text": "^2.0.0",
     "dedent": "^0.7.0",
     "semver": "^6.0.0",

@@ -1,8 +1,8 @@
 {
-  "name": "@auto-it/upload-assets",
+  "name": "@auto-it/maven",
   "version": "7.2.3",
   "main": "dist/index.js",
-  "description": "Upload assets plugin for auto",
+  "description": "Maven publishing plugin for auto",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -27,8 +27,8 @@
     "automated",
     "continuos integration",
     "changelog",
-    "upload",
-    "assets"
+    "released",
+    "comment"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -38,11 +38,9 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "dedent": "^0.7.0",
-    "file-type": "^12.1.0"
-  },
-  "devDependencies": {
-    "@octokit/rest": "^16.28.1",
-    "@types/dedent": "^0.7.0"
+    "parse-github-url": "^1.0.2",
+    "pom-parser": "^1.1.1",
+    "semver": "^6.0.0",
+    "xml2js-es6-promise": "^1.1.1"
   }
 }

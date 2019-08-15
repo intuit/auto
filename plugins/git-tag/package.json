@@ -35,7 +35,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "7.0.12",
+    "@auto-it/core": "link:../../packages/core",
     "semver": "^6.0.0"
   },
   "devDependencies": {
