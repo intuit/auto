@@ -1,3 +1,26 @@
+# v7.3.1 (Fri Aug 16 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - add extra logs [#517](https://github.com/intuit/auto/pull/517) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/jest from 24.0.15 to 24.0.17 [#511](https://github.com/intuit/auto/pull/511) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 2.0.0 to 3.0.3 [#512](https://github.com/intuit/auto/pull/512) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.13.4 to 3.16.4 [#508](https://github.com/intuit/auto/pull/508) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 1.16.4 to 1.18.2 [#514](https://github.com/intuit/auto/pull/514) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump cosmiconfig from 5.2.0 to 5.2.1 [#513](https://github.com/intuit/auto/pull/513) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.3.0 (Thu Aug 15 2019)
 
 #### 🚀  Enhancement
