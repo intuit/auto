@@ -43,6 +43,8 @@ import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
 const env = envCi();
+console.log({ env });
+console.log({ process });
 
 interface IAuthor {
   name?: string;
