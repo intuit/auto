@@ -142,6 +142,8 @@ export default class Auto {
     });
 
     loadEnv();
+
+    this.logger.verbose.info('ENV:', env);
   }
 
   /**
@@ -530,6 +532,8 @@ export default class Auto {
 
     pr = options.pr ? String(options.pr) : pr;
     build = options.build ? String(options.build) : build;
+
+    this.logger.verbose.info('Canary info found:', { pr, build });
 
     const head = await this.release.getCommitsInRelease('HEAD^');
     const labels = head.map(commit => commit.labels);
