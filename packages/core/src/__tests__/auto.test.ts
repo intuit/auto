@@ -784,6 +784,23 @@ describe('Auto', () => {
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
+    test('adds sha if no pr or build number is found', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.getSha = () => Promise.resolve('abc');
+      auto.git!.addToPrBody = jest.fn();
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
+
+      await auto.canary();
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abc');
+    });
+
     test("doesn't comment if there is an error", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
