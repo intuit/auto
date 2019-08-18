@@ -1,3 +1,16 @@
+# v7.3.2 (Sat Aug 17 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - attach sha to canary version if no (pr || build) [#519](https://github.com/intuit/auto/pull/519) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.3.1 (Fri Aug 16 2019)
 
 #### 🐛  Bug Fix
