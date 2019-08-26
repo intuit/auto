@@ -1,4 +1,4 @@
-import graphql from '@octokit/graphql';
+import { graphql } from '@octokit/graphql';
 import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
 import retry from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
