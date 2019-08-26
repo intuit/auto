@@ -441,7 +441,9 @@ export default class Git {
   }
 
   @Memoize()
-  async getCommitsForPR(pr: number) {
+  async getCommitsForPR(
+    pr: number
+  ): Promise<Octokit.PullsListCommitsResponseItem[]> {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
     const result = await this.github.paginate(

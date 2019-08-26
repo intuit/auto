@@ -186,6 +186,17 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
+  test('should include prs with released label', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)', { labels: ['released'] }),
+      makeCommitFromMsg('Third', { labels: ['patch'] })
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
   test("should use only email if author name doesn't exist", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();

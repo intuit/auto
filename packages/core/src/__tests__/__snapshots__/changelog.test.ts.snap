@@ -158,6 +158,17 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should include prs with released label 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+- Third  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
 "#### 🚀  Enhancement
 
@@ -194,7 +205,7 @@ exports[`generateReleaseNotes should use only email if author name doesn't exist
 "#### 🐛  Bug Fix
 
 - Another Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
+- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Authors: 1
 
