@@ -35,7 +35,7 @@ getProject.mockResolvedValue({
 });
 
 const mockLabels = (labels: string[]) => ({
-  data: { labels: labels.map(label => ({ name: label })) }
+  data: { labels: labels.map(label => ({ name: label })), user: {} }
 });
 
 // @ts-ignore
@@ -171,10 +171,6 @@ describe('Release', () => {
           }
         }
       ]);
-      getUserByUsername.mockReturnValueOnce({
-        login: 'andrew',
-        name: 'Andrew Lisowski'
-      });
       getUserByUsername.mockReturnValueOnce({
         login: 'andrew',
         name: 'Andrew Lisowski'
@@ -431,6 +427,32 @@ describe('Release', () => {
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
 
+    test('should get extra user data for login', async () => {
+      const gh = new Release(git);
+
+      const commits = [
+        {
+          hash: '1',
+          authors: [],
+          subject: 'I have a login attached',
+          pullRequest: {
+            number: '1235'
+          }
+        }
+      ];
+
+      getGitLog.mockReturnValueOnce(commits);
+      getPr.mockReturnValueOnce({
+        data: { labels: [], user: { login: 'adierkens' } }
+      });
+      getUserByUsername.mockReturnValueOnce({
+        login: 'adierkens',
+        name: 'Adam Dierkens'
+      });
+
+      expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
     test('should allow user to configure section headings', async () => {
       const gh = new Release(git);
 
@@ -604,10 +626,46 @@ describe('Release', () => {
           hash: '3'
         })
       ]);
-      getCommitsForPR.mockReturnValue([{ sha: '2' }]);
-      getCommitsForPR.mockReturnValue([{ sha: '2' }]);
-      getCommitsForPR.mockReturnValue([{ sha: '3' }]);
-      getCommitsForPR.mockReturnValue([{ sha: '3' }]);
+      getCommitsForPR.mockReturnValue([
+        {
+          sha: '2',
+          commit: {},
+          author: {
+            name: 'Adam Dierkens',
+            email: 'adam@dierkens.com'
+          }
+        }
+      ]);
+      getCommitsForPR.mockReturnValue([
+        {
+          sha: '2',
+          commit: {},
+          author: {
+            name: 'Adam Dierkens',
+            email: 'adam@dierkens.com'
+          }
+        }
+      ]);
+      getCommitsForPR.mockReturnValue([
+        {
+          sha: '3',
+          commit: {},
+          author: {
+            name: 'Adam Dierkens',
+            email: 'adam@dierkens.com'
+          }
+        }
+      ]);
+      getCommitsForPR.mockReturnValue([
+        {
+          sha: '3',
+          commit: {},
+          author: {
+            name: 'Adam Dierkens',
+            email: 'adam@dierkens.com'
+          }
+        }
+      ]);
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });

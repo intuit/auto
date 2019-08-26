@@ -95,6 +95,16 @@ exports[`Release generateReleaseNotes should find matching PRs for shas through 
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`Release generateReleaseNotes should get extra user data for login 1`] = `
+"#### 🐛  Bug Fix
+
+- I have a login attached [#1235](https://github.com/web/site/pull/1235) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))"
+`;
+
 exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 "#### 🚀  Enhancement
 
@@ -117,7 +127,7 @@ exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`]
 
 #### Authors: 1
 
-- adam@dierkens.com"
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `

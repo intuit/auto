@@ -1,4 +1,3 @@
-import flatten from 'arr-flatten';
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
@@ -45,6 +44,8 @@ const filterLabel = (commits: IExtendedCommit[], label: string) =>
 
 export default class Changelog {
   readonly hooks: IChangelogHooks;
+
+  private authors?: [IExtendedCommit, ICommitAuthor][];
   private readonly logger: ILogger;
   private readonly options: IGenerateReleaseNotesOptions;
 
@@ -102,15 +103,17 @@ export default class Changelog {
     const split = this.splitCommits(commits);
     this.logger.verbose.info('Split commits into groups');
     this.logger.veryVerbose.info('\n', split);
+
     const sections: string[] = [];
 
     await this.createReleaseNotesSection(commits, sections);
     this.logger.verbose.info('Added release notes to changelog');
 
+    this.authors = this.getAllAuthors(split);
     await this.createLabelSection(split, sections);
     this.logger.verbose.info('Added groups to changelog');
 
-    await this.createAuthorSection(split, sections);
+    await this.createAuthorSection(sections);
     this.logger.verbose.info('Added authors to changelog');
 
     const result = sections.join('\n\n');
@@ -146,7 +149,12 @@ export default class Changelog {
       });
 
     commits
-      .filter(({ labels }) => labels.length === 0)
+      .filter(
+        ({ labels }) =>
+          labels.length === 0 ||
+          // in this case we auto attached a patch when it was merged
+          (labels[0] === 'released' && labels.length === 1)
+      )
       .map(({ labels }) => labels.push('patch'));
 
     return Object.assign(
@@ -168,9 +176,15 @@ export default class Changelog {
     const result = new Set<string>();
 
     await Promise.all(
-      commit.authors.map(async author => {
+      commit.authors.map(async rawAuthor => {
+        const data = (this.authors!.find(
+          ([, commitAuthor]) =>
+            commitAuthor.name === rawAuthor.name ||
+            commitAuthor.email === rawAuthor.email
+        ) as [IExtendedCommit, ICommitAuthor]) || [{}, rawAuthor];
+
         const link = await this.hooks.renderChangelogAuthor.promise(
-          author,
+          data[1],
           commit,
           this.options
         );
@@ -200,9 +214,7 @@ export default class Changelog {
     return `- ${subject} ${pr}${user ? ` (${user})` : ''}`;
   }
 
-  private async createAuthorSection(split: ICommitSplit, sections: string[]) {
-    const seenUsers = new Set<string>();
-    const authors = new Set<string>();
+  private getAllAuthors(split: ICommitSplit) {
     const commits = Object.values(split).reduce(
       (
         labeledCommits: IExtendedCommit[],
@@ -211,38 +223,46 @@ export default class Changelog {
       []
     );
 
-    await Promise.all(
-      flatten(
-        commits.map(commit =>
-          commit.authors.map(async author => {
-            if (author.username === 'invalid-email-address') {
-              return;
-            }
-
-            const username = (author.username || author.name) as string;
-            const user = await this.hooks.renderChangelogAuthor.promise(
-              author,
-              commit,
-              this.options
-            );
-
-            if (user && seenUsers.has(username)) {
-              return;
-            }
-
-            seenUsers.add(username);
-
-            const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
-              author,
-              user as string
-            );
-
-            if (authorEntry && !authors.has(authorEntry)) {
-              authors.add(authorEntry);
-            }
-          })
-        )
+    return commits
+      .map(commit =>
+        commit.authors
+          .filter(
+            author =>
+              author.username !== 'invalid-email-address' &&
+              (author.name || author.email || author.username)
+          )
+          .map(author => [commit, author] as [IExtendedCommit, ICommitAuthor])
       )
+      .reduce((all, more) => [...all, ...more], [])
+      .sort(a => ('id' in a[1] ? 0 : 1));
+  }
+
+  private async createAuthorSection(sections: string[]) {
+    const authors = new Set<string>();
+    const authorsWithFullData = this.authors!.map(
+      ([, author]) => author
+    ).filter(author => 'id' in author);
+
+    await Promise.all(
+      this.authors!.map(async ([commit, author]) => {
+        const info =
+          authorsWithFullData.find(
+            u => u.name === author.name || u.email === author.email
+          ) || author;
+        const user = await this.hooks.renderChangelogAuthor.promise(
+          info,
+          commit,
+          this.options
+        );
+        const authorEntry = await this.hooks.renderChangelogAuthorLine.promise(
+          info,
+          user as string
+        );
+
+        if (authorEntry && !authors.has(authorEntry)) {
+          authors.add(authorEntry);
+        }
+      })
     );
 
     if (authors.size === 0) {

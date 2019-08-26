@@ -352,8 +352,8 @@ export default class Release {
       )
     );
 
-    return commitsInRelease.filter(
-      (commit): commit is IExtendedCommit => Boolean(commit)
+    return commitsInRelease.filter((commit): commit is IExtendedCommit =>
+      Boolean(commit)
     );
   }
 
@@ -610,6 +610,14 @@ export default class Release {
       const labels = info ? info.data.labels.map(l => l.name) : [];
       commit.labels = [...new Set([...labels, ...commit.labels])];
       commit.pullRequest.body = info.data.body;
+
+      if (!commit.authors.find(author => Boolean(author.username))) {
+        const user = await this.git.getUserByUsername(info.data.user.login);
+
+        if (user) {
+          commit.authors.push({ ...user, username: user.login });
+        }
+      }
     }
 
     return commit;
@@ -657,8 +665,8 @@ export default class Release {
 
       resolvedAuthors = await Promise.all(
         prCommits.map(async prCommit => {
-          if (!prCommit || !prCommit.author) {
-            return;
+          if (!prCommit.author) {
+            return prCommit.commit.author;
           }
 
           return {
