@@ -1,3 +1,38 @@
+# v7.3.3 (Mon Aug 26 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Improve Author Reporting [#531](https://github.com/intuit/auto/pull/531) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/node from 12.6.8 to 12.7.2 [#520](https://github.com/intuit/auto/pull/520) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 3.0.3 to 3.0.4 [#530](https://github.com/intuit/auto/pull/530) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump url-join from 4.0.0 to 4.0.1 [#527](https://github.com/intuit/auto/pull/527) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.17 to 24.0.18 [#522](https://github.com/intuit/auto/pull/522) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump typescript from 3.3.4000 to 3.5.3 [#528](https://github.com/intuit/auto/pull/528) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/chrome`, `@auto-it/maven`, `@auto-it/npm`
+  - Bump tapable from 2.0.0-beta.4 to 2.0.0-beta.8 [#515](https://github.com/intuit/auto/pull/515) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`
+  - Bump command-line-usage from 5.0.5 to 6.0.2 [#524](https://github.com/intuit/auto/pull/524) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/npm`
+  - Bump env-ci from 3.2.2 to 4.1.1 [#523](https://github.com/intuit/auto/pull/523) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/graphql from 2.1.2 to 4.0.0 [#529](https://github.com/intuit/auto/pull/529) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.28.1 to 16.28.7 [#521](https://github.com/intuit/auto/pull/521) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump @types/node-fetch from 2.3.3 to 2.5.0 [#526](https://github.com/intuit/auto/pull/526) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.3.2 (Sat Aug 17 2019)
 
 #### 🐛  Bug Fix
