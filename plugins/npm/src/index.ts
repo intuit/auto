@@ -320,7 +320,7 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
+    auto.hooks.version.tapPromise(this.name, async version => {
       await checkClean(auto);
 
       if (isMonorepo()) {
