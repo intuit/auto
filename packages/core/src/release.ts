@@ -1,3 +1,4 @@
+import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
 import GHub from '@octokit/rest';
 import dedent from 'dedent';
 import * as fs from 'fs';
@@ -307,24 +308,16 @@ export default class Release {
       commit => !commit.pullRequest
     );
     const batches = chunk(commitsWithoutPR, 10);
-    type Results = Record<string, ISearchResult>;
 
-    const queries = await Promise.all<Results | undefined>(
-      batches.map(batch => {
-        const batchQuery = buildSearchQuery(
-          this.git.options.owner,
-          this.git.options.repo,
-          batch
-        );
-
-        if (!batchQuery) {
-          return;
-        }
-
-        return this.git.graphql(batchQuery);
-      })
+    const queries = await Promise.all(
+      batches
+        .map(batch =>
+          buildSearchQuery(this.git.options.owner, this.git.options.repo, batch)
+        )
+        .filter((q): q is string => Boolean(q))
+        .map(q => this.git.graphql(q))
     );
-    const data = queries.filter((q): q is Results => Boolean(q));
+    const data = queries.filter((q): q is GraphQlQueryResponse => Boolean(q));
 
     if (!data.length) {
       return uniqueCommits;
@@ -338,6 +331,9 @@ export default class Release {
     Promise.all(
       data.map(results =>
         Object.entries(results)
+          .filter((result): result is [string, ISearchResult] =>
+            Boolean(result[1])
+          )
           .map(([key, result]) =>
             processQueryResult(key, result, commitsWithoutPR)
           )
@@ -352,8 +348,8 @@ export default class Release {
       )
     );
 
-    return commitsInRelease.filter(
-      (commit): commit is IExtendedCommit => Boolean(commit)
+    return commitsInRelease.filter((commit): commit is IExtendedCommit =>
+      Boolean(commit)
     );
   }
 

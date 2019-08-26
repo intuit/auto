@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
-    "@octokit/graphql": "^2.1.2",
+    "@octokit/graphql": "^4.0.0",
     "@octokit/plugin-enterprise-compatibility": "^1.1.1",
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/plugin-throttling": "^2.6.0",

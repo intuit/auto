@@ -70,8 +70,10 @@ jest.mock('@octokit/rest', () => {
   return instance;
 });
 
-jest.mock('@octokit/graphql', () => () => ({
-  status: 'success'
+jest.mock('@octokit/graphql', () => ({
+  graphql: () => ({
+    data: []
+  })
 }));
 
 const options = {
@@ -136,7 +138,7 @@ describe('github', () => {
     const gh = new Git(options);
     const result = await gh.graphql('{ someQuery }');
 
-    expect(result.status).toBe('success');
+    expect(result.data).not.toBeUndefined();
   });
 
   test('getFirstCommit ', async () => {
