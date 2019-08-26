@@ -42,7 +42,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "2.3.3",
+    "@types/node-fetch": "2.5.0",
     "@types/url-join": "^4.0.0"
   }
 }
