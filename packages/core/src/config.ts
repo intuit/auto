@@ -16,20 +16,20 @@ function normalizeLabels(config: cosmiconfig.Config) {
   let labels = defaultLabelDefinition;
 
   if (config.labels) {
-    const definitions = Object.entries(config.labels).map(
-      ([label, labelDef]: [string, Partial<ILabelDefinition> | string]) => {
-        const definition =
-          typeof labelDef === 'string' ? { name: labelDef } : labelDef;
+    const definitions = Object.entries<Partial<ILabelDefinition> | string>(
+      config.labels
+    ).map(([label, labelDef]) => {
+      const definition =
+        typeof labelDef === 'string' ? { name: labelDef } : labelDef;
 
-        if (!definition.name) {
-          definition.name = label;
-        }
-
-        return {
-          [label]: definition
-        };
+      if (!definition.name) {
+        definition.name = label;
       }
-    );
+
+      return {
+        [label]: definition
+      };
+    });
 
     labels = merge(labels, Object.assign({}, ...definitions));
   }
@@ -112,9 +112,7 @@ export default class Config {
         config = (await fetch(extend)).json();
         this.logger.verbose.note(`${extend} found: ${config}`);
       } catch (error) {
-        error.message = `Failed to get extended config from ${extend} -- ${
-          error.message
-        }`;
+        error.message = `Failed to get extended config from ${extend} -- ${error.message}`;
         throw error;
       }
     } else if (extend.startsWith('.')) {
