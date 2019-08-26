@@ -1,6 +1,6 @@
 // tslint:disable early-exit
 
-import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
+import { Auto, execPromise, IPlugin } from '@auto-it/core';
 import parseGitHubUrl from 'parse-github-url';
 import path from 'path';
 import { promisify } from 'util';
@@ -115,7 +115,7 @@ export default class MavenPlugin implements IPlugin {
       getPreviousVersion(auto)
     );
 
-    auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
+    auto.hooks.version.tapPromise(this.name, async version => {
       const previousVersion = await getPreviousVersion(auto);
       const newVersion =
         // After release we bump the version by a patch and add -SNAPSHOT

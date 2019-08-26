@@ -1,4 +1,4 @@
-import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
+import { Auto, execPromise, IPlugin } from '@auto-it/core';
 import * as fs from 'fs';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
@@ -45,18 +45,14 @@ export default class ChromeWebStorePlugin implements IPlugin {
       if (!fs.existsSync(this.manifest)) {
         this.reportWarning(
           auto,
-          `"${
-            this.manifest
-          }" must exist to publish. Or provide a custom path in you autorc`
+          `"${this.manifest}" must exist to publish. Or provide a custom path in you autorc`
         );
       }
 
       if (!fs.existsSync(this.build)) {
         this.reportWarning(
           auto,
-          `Path to either a zip file, or a directory to be zipped at ${
-            this.build
-          }`
+          `Path to either a zip file, or a directory to be zipped at ${this.build}`
         );
       }
 
@@ -111,18 +107,14 @@ export default class ChromeWebStorePlugin implements IPlugin {
         const { author } = manifest;
 
         auto.logger.log.info(
-          `${
-            this.name
-          }: You will need to manually set the author email in the .autorc.`
+          `${this.name}: You will need to manually set the author email in the .autorc.`
         );
 
         return author;
       }
 
       auto.logger.log.info(
-        `${
-          this.name
-        }: No author found in manifest You will need to manually set the author email and name in the .autorc.`
+        `${this.name}: No author found in manifest You will need to manually set the author email and name in the .autorc.`
       );
     });
 
@@ -140,13 +132,11 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
     auto.hooks.getRepository.tap(this.name, () => {
       auto.logger.verbose.info(
-        `${
-          this.name
-        }: Manifest.json has no field to store repo information. Use the .autorc to specify these options.`
+        `${this.name}: Manifest.json has no field to store repo information. Use the .autorc to specify these options.`
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version: SEMVER) => {
+    auto.hooks.version.tapPromise(this.name, async version => {
       // increment version
       const manifest = await getManifest(this.manifest);
       manifest.version = inc(manifest.version, version as ReleaseType);
