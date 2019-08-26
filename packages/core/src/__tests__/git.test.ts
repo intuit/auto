@@ -70,8 +70,10 @@ jest.mock('@octokit/rest', () => {
   return instance;
 });
 
-jest.mock('@octokit/graphql', () => () => ({
-  data: []
+jest.mock('@octokit/graphql', () => ({
+  graphql: () => ({
+    data: []
+  })
 }));
 
 const options = {

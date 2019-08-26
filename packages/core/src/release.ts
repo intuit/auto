@@ -309,7 +309,7 @@ export default class Release {
     );
     const batches = chunk(commitsWithoutPR, 10);
 
-    const data = await Promise.all(
+    const queries = await Promise.all(
       batches
         .map(batch =>
           buildSearchQuery(this.git.options.owner, this.git.options.repo, batch)
@@ -317,6 +317,7 @@ export default class Release {
         .filter((q): q is string => Boolean(q))
         .map(q => this.git.graphql(q))
     );
+    const data = queries.filter((q): q is GraphQlQueryResponse => Boolean(q));
 
     if (!data.length) {
       return uniqueCommits;
