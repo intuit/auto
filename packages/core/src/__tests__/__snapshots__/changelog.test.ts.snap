@@ -144,6 +144,16 @@ exports[`generateReleaseNotes should create note for PR commits without labels 1
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should create note for PR commits with only non config labels 1`] = `
+"#### 🐛  Bug Fix
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 "#### 🚀  Enhancement
 
