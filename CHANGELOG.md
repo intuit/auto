@@ -1,3 +1,16 @@
+# v7.3.4 (Mon Aug 26 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix PRs with non-configured labels being omitted from changelogs [#533](https://github.com/intuit/auto/pull/533) ([@bnigh](https://github.com/bnigh))
+
+#### Authors: 1
+
+- [@bnigh](https://github.com/bnigh)
+
+---
+
 # v7.3.3 (Mon Aug 26 2019)
 
 #### 🐛  Bug Fix
