@@ -151,7 +151,8 @@ export default class Changelog {
     commits
       .filter(
         ({ labels }) =>
-          labels.length === 0 ||
+          // in case pr commit doesn't contain a label for section inclusion
+          !sections.some(section => labels.includes(section.name)) ||
           // in this case we auto attached a patch when it was merged
           (labels[0] === 'released' && labels.length === 1)
       )
