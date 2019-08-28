@@ -14,6 +14,7 @@ Array [
     "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "pullRequest": undefined,
     "subject": "First",
   },
   Object {
@@ -28,6 +29,7 @@ Array [
     "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "pullRequest": undefined,
     "subject": "Second",
   },
   Object {
@@ -42,6 +44,7 @@ Array [
     "hash": "foo",
     "labels": Array [],
     "packages": undefined,
+    "pullRequest": undefined,
     "subject": "Third",
   },
 ]
