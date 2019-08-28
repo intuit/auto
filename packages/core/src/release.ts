@@ -1,5 +1,6 @@
 import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
 import GHub from '@octokit/rest';
+import on from 'await-to-js';
 import dedent from 'dedent';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
@@ -287,9 +288,12 @@ export default class Release {
     const allPrCommits = await Promise.all(
       allCommits
         .filter(commit => commit.pullRequest)
-        .map(async commit =>
-          this.git.getCommitsForPR(Number(commit.pullRequest!.number))
-        )
+        .map(async commit => {
+          const [err, commits = []] = await on(
+            this.git.getCommitsForPR(Number(commit.pullRequest!.number))
+          );
+          return err ? [] : commits;
+        })
     );
     const allPrCommitHashes = allPrCommits
       .filter(Boolean)
