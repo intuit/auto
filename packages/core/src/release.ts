@@ -655,11 +655,11 @@ export default class Release {
     // If there is a pull request we will attempt to get the authors
     // from any commit in the PR
     if (commit.pullRequest) {
-      const prCommits = await this.git.getCommitsForPR(
-        Number(commit.pullRequest.number)
+      const [prCommitsErr, prCommits] = await on(
+        this.git.getCommitsForPR(Number(commit.pullRequest.number))
       );
 
-      if (!prCommits) {
+      if (prCommitsErr || !prCommits) {
         return commit;
       }
 

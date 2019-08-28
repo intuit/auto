@@ -192,7 +192,7 @@ describe('Release', () => {
       expect(modifiedCommits).toMatchSnapshot();
     });
 
-    test('should be able to omit bye username', async () => {
+    test('should be able to omit by username', async () => {
       const commits = await logParse.normalizeCommits([
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
@@ -680,6 +680,26 @@ describe('Release', () => {
       );
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
+    });
+
+    test.only('should gracefully handle failed fetches to merged PRs', async () => {
+      const gh = new Release(git);
+
+      const commits = await logParse.normalizeCommits([
+        makeCommitFromMsg('First'),
+        makeCommitFromMsg('Second (#123)')
+      ]);
+
+      getGitLog.mockReturnValueOnce(commits);
+
+      getCommitsForPR
+        .mockReturnValueOnce(Promise.reject('bah'))
+        .mockReturnValueOnce(Promise.reject('bah'));
+
+      await expect(
+        gh.generateReleaseNotes('1234', '123')
+      ).resolves.toBeDefined();
+      expect(getCommitsForPR).toBeCalledTimes(2);
     });
   });
 
