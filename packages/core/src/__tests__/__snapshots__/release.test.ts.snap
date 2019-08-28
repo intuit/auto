@@ -159,7 +159,7 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release getCommits should be able to omit bye username 1`] = `
+exports[`Release getCommits should be able to omit by username 1`] = `
 Array [
   Object {
     "authorEmail": "lisowski54@gmail.com",

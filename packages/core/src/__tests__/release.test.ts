@@ -682,7 +682,7 @@ describe('Release', () => {
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
 
-    test.only('should gracefully handle failed fetches to merged PRs', async () => {
+    test('should gracefully handle failed fetches to merged PRs', async () => {
       const gh = new Release(git);
 
       const commits = await logParse.normalizeCommits([
@@ -699,7 +699,6 @@ describe('Release', () => {
       await expect(
         gh.generateReleaseNotes('1234', '123')
       ).resolves.toBeDefined();
-      expect(getCommitsForPR).toBeCalledTimes(2);
     });
   });
 
