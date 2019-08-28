@@ -4,7 +4,10 @@ import Git from '@auto-it/core/dist/git';
 import LogParse from '@auto-it/core/dist/log-parse';
 import { defaultLabelDefinition } from '@auto-it/core/dist/release';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
-import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import {
+  makeHooks,
+  makeLogParseHooks
+} from '@auto-it/core/dist/utils/make-hooks';
 import { IAutoConfig } from '@auto-it/core/src/release';
 import ReleasedLabelPlugin from '../src';
 
@@ -39,7 +42,7 @@ describe('release label plugin', () => {
     lockIssue.mockClear();
   });
 
-  test('should so nothing without PRs', async () => {
+  test('should init label', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
     releasedLabel.apply({ hooks: autoHooks } as Auto);
@@ -56,7 +59,31 @@ describe('release label plugin', () => {
     });
   });
 
-  test('should so nothing without PRs', async () => {
+  test('should omit released PRs', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    const logParseHooks = makeLogParseHooks();
+
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabelDefinition,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git
+    } as unknown) as Auto);
+    autoHooks.onCreateLogParse.call({ hooks: logParseHooks } as LogParse);
+
+    const included = makeCommitFromMsg('normal commit with no bump');
+    expect(await logParseHooks.omitCommit.promise(included)).toBeUndefined();
+
+    const omitted = makeCommitFromMsg('normal commit with no bump', {
+      labels: ['released']
+    });
+    expect(await logParseHooks.omitCommit.promise(omitted)).toBe(true);
+  });
+
+  test('should do nothing without PRs', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
     releasedLabel.apply(({

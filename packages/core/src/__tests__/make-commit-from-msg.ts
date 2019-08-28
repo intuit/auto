@@ -9,6 +9,9 @@ const makeCommitFromMsg = (
     labels?: string[];
     username?: string;
     packages?: string[];
+    pullRequest?: {
+      number: number;
+    };
   } = {}
 ): IExtendedCommit => ({
   hash: options.hash || 'foo',
@@ -23,7 +26,8 @@ const makeCommitFromMsg = (
     }
   ],
   subject,
-  packages: options.packages
+  packages: options.packages,
+  pullRequest: options.pullRequest
 });
 
 export default makeCommitFromMsg;
