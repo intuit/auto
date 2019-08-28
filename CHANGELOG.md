@@ -1,3 +1,16 @@
+# v7.3.5 (Wed Aug 28 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Ensure the release doesn't fail if a PR doesn't exist [#537](https://github.com/intuit/auto/pull/537) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.3.4 (Mon Aug 26 2019)
 
 #### 🐛  Bug Fix
