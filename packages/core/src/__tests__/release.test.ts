@@ -164,13 +164,15 @@ describe('Release', () => {
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
-      getCommitsForPR.mockReturnValueOnce([
-        {
-          author: {
-            login: 'andrew'
+      getCommitsForPR.mockReturnValueOnce(
+        Promise.resolve([
+          {
+            author: {
+              login: 'andrew'
+            }
           }
-        }
-      ]);
+        ])
+      );
       getUserByUsername.mockReturnValueOnce({
         login: 'andrew',
         name: 'Andrew Lisowski'
@@ -201,13 +203,15 @@ describe('Release', () => {
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
-      getCommitsForPR.mockReturnValueOnce([
-        {
-          author: {
-            login: 'andrew'
+      getCommitsForPR.mockReturnValueOnce(
+        Promise.resolve([
+          {
+            author: {
+              login: 'andrew'
+            }
           }
-        }
-      ]);
+        ])
+      );
       getUserByUsername.mockReturnValueOnce({
         login: 'andrew',
         name: 'Andrew Lisowski'
@@ -417,9 +421,9 @@ describe('Release', () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      getCommitsForPR.mockReturnValueOnce(undefined);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve(undefined));
       getPr.mockReturnValueOnce(mockLabels(['minor']));
-      getCommitsForPR.mockReturnValueOnce([{ sha: '3' }]);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve([{ sha: '3' }]));
       graphql.mockReturnValueOnce({
         hash_1: { edges: [] }
       });
@@ -478,9 +482,9 @@ describe('Release', () => {
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
       });
-      getCommitsForPR.mockReturnValueOnce(undefined);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve(undefined));
       // Rebased PR will have different commit SHAs than the commits in base branch
-      getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve([{ sha: '1a1a' }]));
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
       getPr.mockReturnValueOnce(mockLabels(['minor']));
@@ -516,9 +520,9 @@ describe('Release', () => {
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
       });
-      getCommitsForPR.mockReturnValueOnce(undefined);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve(undefined));
       // Rebased PR will have different commit SHAs than the commits in base branch
-      getCommitsForPR.mockReturnValueOnce([{ sha: '1a1a' }]);
+      getCommitsForPR.mockReturnValueOnce(Promise.resolve([{ sha: '1a1a' }]));
 
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
       getPr.mockReturnValueOnce(mockLabels(['minor']));
@@ -626,46 +630,54 @@ describe('Release', () => {
           hash: '3'
         })
       ]);
-      getCommitsForPR.mockReturnValue([
-        {
-          sha: '2',
-          commit: {},
-          author: {
-            name: 'Adam Dierkens',
-            email: 'adam@dierkens.com'
+      getCommitsForPR.mockReturnValue(
+        Promise.resolve([
+          {
+            sha: '2',
+            commit: {},
+            author: {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
           }
-        }
-      ]);
-      getCommitsForPR.mockReturnValue([
-        {
-          sha: '2',
-          commit: {},
-          author: {
-            name: 'Adam Dierkens',
-            email: 'adam@dierkens.com'
+        ])
+      );
+      getCommitsForPR.mockReturnValue(
+        Promise.resolve([
+          {
+            sha: '2',
+            commit: {},
+            author: {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
           }
-        }
-      ]);
-      getCommitsForPR.mockReturnValue([
-        {
-          sha: '3',
-          commit: {},
-          author: {
-            name: 'Adam Dierkens',
-            email: 'adam@dierkens.com'
+        ])
+      );
+      getCommitsForPR.mockReturnValue(
+        Promise.resolve([
+          {
+            sha: '3',
+            commit: {},
+            author: {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
           }
-        }
-      ]);
-      getCommitsForPR.mockReturnValue([
-        {
-          sha: '3',
-          commit: {},
-          author: {
-            name: 'Adam Dierkens',
-            email: 'adam@dierkens.com'
+        ])
+      );
+      getCommitsForPR.mockReturnValue(
+        Promise.resolve([
+          {
+            sha: '3',
+            commit: {},
+            author: {
+              name: 'Adam Dierkens',
+              email: 'adam@dierkens.com'
+            }
           }
-        }
-      ]);
+        ])
+      );
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
     });
