@@ -292,9 +292,7 @@ export default class Auto {
         });
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${
-            error.status
-          }`
+          `Failed to post status to Pull Request with error code ${error.status}`
         );
       }
 
@@ -387,9 +385,7 @@ export default class Auto {
         this.logger.log.success('Posted status to Pull Request.');
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${
-            error.status
-          }`
+          `Failed to post status to Pull Request with error code ${error.status}`
         );
       }
     } else {
@@ -944,7 +940,10 @@ If a command fails manually run:
    * Apply all of the plugins in the config.
    */
   private loadPlugins(config: IAutoConfig) {
-    const pluginsPaths = config.plugins || ['npm'];
+    const pluginsPaths = [
+      require.resolve('./plugins/filter-non-pull-request'),
+      ...(config.plugins || ['npm'])
+    ];
 
     pluginsPaths
       .map(plugin =>
