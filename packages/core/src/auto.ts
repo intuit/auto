@@ -941,7 +941,7 @@ If a command fails manually run:
    */
   private loadPlugins(config: IAutoConfig) {
     const pluginsPaths = [
-      path.join(__dirname, './plugins/filter-non-pull-request'),
+     require.resolve('./plugins/filter-non-pull-request')
       ...(config.plugins || ['npm'])
     ];
 
