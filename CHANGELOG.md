@@ -1,3 +1,21 @@
+# v7.3.6 (Wed Aug 28 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/released`
+  - omit commit+prs that: aren't found in repo, are issues, or have the "released" label [#538](https://github.com/intuit/auto/pull/538) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- [Security] Bump mixin-deep from 1.3.1 to 1.3.2 [#536](https://github.com/intuit/auto/pull/536) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.3.5 (Wed Aug 28 2019)
 
 #### 🐛  Bug Fix
