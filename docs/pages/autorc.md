@@ -107,6 +107,49 @@ You can customize everything about a label
 }
 ```
 
+#### Multiple Labels
+
+You have can multiple labels for each of the default labels.
+
+```json
+{
+  "labels": {
+    "major": [
+      {
+        "name": "BREAKING",
+        "title": "SUPER BREAKING CHANGED",
+      },
+      {
+        "name": "Version: Major",
+        "title": "The API has changed:",
+        "description": "Add this label to a PR to create a major release",
+      }
+    ],
+    ...
+  }
+}
+```
+
+::: message is-warning
+:warning: If you override any of the semantic versioning labels the default values are overridden too! Make sure to include that label if you still want it to be used during version calculation.
+:::
+
+```json
+{
+  "labels": {
+    "minor": [
+      "minor",
+      {
+        "name": "New Component",
+        "title": "🧩 New Component",
+        "description": "A new component has been added to the design-system",
+      }
+    ],
+    ...
+  }
+}
+```
+
 #### Changelog Titles
 
 By default auto will create sections in the changelog for the following labels.

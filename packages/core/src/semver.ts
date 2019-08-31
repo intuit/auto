@@ -10,7 +10,7 @@ enum SEMVER {
   noVersion = ''
 }
 
-export type IVersionLabels = Map<VersionLabel, string>;
+export type IVersionLabels = Map<VersionLabel, string[]>;
 
 export default SEMVER;
 
@@ -37,14 +37,19 @@ export function calculateSemVerBump(
   { onlyPublishWithReleaseLabel, skipReleaseLabels = [] }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
+  const skip = labelMap.get('skip-release') || [];
 
-  if (!skipReleaseLabels.includes(labelMap.get('skip-release')!)) {
-    skipReleaseLabels.push(labelMap.get('skip-release')!);
-  }
+  skip.forEach(skipLabel => {
+    if (!skipReleaseLabels.includes(skipLabel)) {
+      skipReleaseLabels.push(skipLabel);
+    }
+  });
 
   labels.map(pr => {
     pr.forEach(label => {
-      const userLabel = [...labelMap.entries()].find(pair => pair[1] === label);
+      const userLabel = [...labelMap.entries()].find(pair =>
+        pair[1].includes(label)
+      );
       labelSet.add(userLabel ? userLabel[0] : label);
     });
   });
@@ -53,10 +58,12 @@ export function calculateSemVerBump(
   let isPrerelease = false;
 
   if (labels.length > 0 && labels[0].length > 0) {
-    isPrerelease = labels[0].includes(labelMap.get('prerelease')!);
+    const prereleaseLabels = labelMap.get('prerelease') || [];
+    const releaseLabels = labelMap.get('release') || [];
+    isPrerelease = labels[0].some(label => prereleaseLabels.includes(label));
     skipRelease = onlyPublishWithReleaseLabel
-      ? !labels[0].includes(labelMap.get('release')!)
-      : !!labels[0].find(label => skipReleaseLabels.includes(label));
+      ? !labels[0].some(label => releaseLabels.includes(label))
+      : labels[0].some(label => skipReleaseLabels.includes(label));
   }
 
   const version = [...labelSet].reduce(getHigherSemverTag, SEMVER.patch);

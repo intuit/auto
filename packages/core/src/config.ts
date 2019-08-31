@@ -7,31 +7,51 @@ import { ApiOptions } from './auto-args';
 import {
   defaultLabelDefinition,
   getVersionMap,
-  ILabelDefinition
+  ILabelDefinition,
+  ILabelDefinitionMap
 } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
 
-function normalizeLabels(config: cosmiconfig.Config) {
+export function normalizeLabel(
+  name: string,
+  label:
+    | string
+    | Partial<ILabelDefinition>
+    | (Partial<ILabelDefinition> | string)[]
+): Partial<ILabelDefinition>[] {
+  const baseLabel = (defaultLabelDefinition[name] || [{}])[0];
+
+  if (typeof label === 'string') {
+    return [{ ...baseLabel, name: label }];
+  }
+
+  if (Array.isArray(label)) {
+    return label
+      .map(l => normalizeLabel(name, l))
+      .reduce((acc, item) => [...acc, ...item], []);
+  }
+
+  if (!label.name) {
+    label.name = name;
+  }
+
+  return [{ ...baseLabel, ...label }];
+}
+
+export function normalizeLabels(config: cosmiconfig.Config) {
   let labels = defaultLabelDefinition;
 
   if (config.labels) {
     const definitions = Object.entries<Partial<ILabelDefinition> | string>(
       config.labels
-    ).map(([label, labelDef]) => {
-      const definition =
-        typeof labelDef === 'string' ? { name: labelDef } : labelDef;
+    ).map(([label, labelDef]) => ({
+      [label]: normalizeLabel(label, labelDef)
+    }));
 
-      if (!definition.name) {
-        definition.name = label;
-      }
-
-      return {
-        [label]: definition
-      };
-    });
-
-    labels = merge(labels, Object.assign({}, ...definitions));
+    labels = merge.all([labels, ...definitions], {
+      arrayMerge: (destinationArray, sourceArray) => sourceArray
+    }) as ILabelDefinitionMap;
   }
 
   return labels;
@@ -81,7 +101,9 @@ export default class Config {
     const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
 
     if (!skipReleaseLabels.includes(semVerLabels.get('skip-release')!)) {
-      skipReleaseLabels.push(semVerLabels.get('skip-release')!);
+      (semVerLabels.get('skip-release') || []).map(l =>
+        skipReleaseLabels.push(l)
+      );
     }
 
     return {

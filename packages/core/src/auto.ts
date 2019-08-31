@@ -36,7 +36,7 @@ import Release, {
   ILabelDefinitionMap,
   VersionLabel
 } from './release';
-import SEMVER, { calculateSemVerBump } from './semver';
+import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
@@ -111,7 +111,7 @@ export default class Auto {
   release?: Release;
   git?: Git;
   labels?: ILabelDefinitionMap;
-  semVerLabels?: Map<VersionLabel, string>;
+  semVerLabels?: IVersionLabels;
 
   private versionBump?: SEMVER;
 
@@ -327,7 +327,7 @@ export default class Auto {
       sha = res.data.head.sha;
 
       const labels = await this.git.getLabels(prNumber);
-      const labelTexts = [...this.semVerLabels.values()];
+      const labelValues = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseTag = labels.find(
@@ -336,7 +336,7 @@ export default class Auto {
       );
       const semverTag = labels.find(
         l =>
-          labelTexts.includes(l) &&
+          labelValues.some(labelValue => labelValue.includes(l)) &&
           !!this.release &&
           !this.release.options.skipReleaseLabels.includes(l) &&
           l !== 'release'

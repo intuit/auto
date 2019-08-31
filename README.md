@@ -120,17 +120,21 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## :rocket: Projects Using `auto` :rocket:
 
-:star: [webpack-inject-plugin](https://github.com/adierkens/webpack-inject-plugin) - A webpack plugin to dynamically inject code into the bundle.
+:star: [Storybookjs design-system](https://github.com/storybookjs/design-system) - Storybook's official design system
 
-:star: [storybook-addon-notes-github-markdown-css](https://github.com/hipstersmoothie/github-markdown-css) - Make your notes addon look like github markdown.
-
-:star: [html-webpack-insert-text-plugin](https://github.com/hipstersmoothie/html-webpack-insert-text-plugin) - Insert text into the head or body of your HTML
+:star: [space-kit](https://github.com/apollographql/space-kit) - Home base for Apollo's design system
 
 :star: [react-glider](https://github.com/hipstersmoothie/react-glider) - A react wrapper for glider.js
 
 :star: [Ignite](https://github.com/intuit/Ignite) - Modern markdown documentation generator
 
 :star: [reaction](https://github.com/artsy/reaction) - Artsy’s React Components
+
+:star: [emission](https://github.com/artsy/emission) - Artsy’s React Native Components
+
+:star: [webpack-inject-plugin](https://github.com/adierkens/webpack-inject-plugin) - A webpack plugin to dynamically inject code into the bundle.
+
+:star: [html-webpack-insert-text-plugin](https://github.com/hipstersmoothie/html-webpack-insert-text-plugin) - Insert text into the head or body of your HTML
 
 ## :nail_care: `auto` Badge :nail_care:
 
