@@ -40,7 +40,7 @@ describe('normalizeLabel', () => {
         name: 'major',
         title: '💥  Breaking Change'
       },
-      label
+      { ...label, title: '💥  Breaking Change' }
     ]);
   });
 });

@@ -20,9 +20,10 @@ export function normalizeLabel(
     | Partial<ILabelDefinition>
     | (Partial<ILabelDefinition> | string)[]
 ): Partial<ILabelDefinition>[] {
+  const baseLabel = (defaultLabelDefinition[name] || [{}])[0];
+
   if (typeof label === 'string') {
-    const baseLabel = defaultLabelDefinition[name] || [[]];
-    return [{ ...baseLabel[0], name: label }];
+    return [{ ...baseLabel, name: label }];
   }
 
   if (Array.isArray(label)) {
@@ -35,8 +36,7 @@ export function normalizeLabel(
     label.name = name;
   }
 
-  const defaultLabel = (defaultLabelDefinition[label.name] || [])[0] || {};
-  return [{ ...defaultLabel, ...label }];
+  return [{ ...baseLabel, ...label }];
 }
 
 function normalizeLabels(config: cosmiconfig.Config) {
