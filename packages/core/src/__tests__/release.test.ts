@@ -838,10 +838,10 @@ describe('Release', () => {
 
     test('should be able to configure labels', async () => {
       const customLabels = merge(defaultLabelDefinition, {
-        [SEMVER.major]: { name: 'Version: Major' },
-        [SEMVER.minor]: { name: 'Version: Minor' },
-        [SEMVER.patch]: { name: 'Version: Patch' },
-        release: { name: 'Deploy' }
+        [SEMVER.major]: [{ name: 'Version: Major' }],
+        [SEMVER.minor]: [{ name: 'Version: Minor' }],
+        [SEMVER.patch]: [{ name: 'Version: Patch' }],
+        release: [{ name: 'Deploy' }]
       });
 
       const gh = new Release(git, {
@@ -877,9 +877,9 @@ describe('Release', () => {
     test('should add labels', async () => {
       const gh = new Release(git);
       const customLabels = {
-        [SEMVER.major]: { name: '1', description: 'major' },
-        [SEMVER.minor]: { name: '2', description: 'minor' },
-        [SEMVER.patch]: { name: '3', description: 'patch' }
+        [SEMVER.major]: [{ name: '1', description: 'major' }],
+        [SEMVER.minor]: [{ name: '2', description: 'minor' }],
+        [SEMVER.patch]: [{ name: '3', description: 'patch' }]
       };
 
       await gh.addLabelsToProject(customLabels);
@@ -913,7 +913,7 @@ describe('Release', () => {
       );
 
       const labels = {
-        [SEMVER.patch]: { name: '3', description: 'three' }
+        [SEMVER.patch]: [{ name: '3', description: 'three' }]
       };
 
       await gh.addLabelsToProject(labels);
@@ -927,8 +927,8 @@ describe('Release', () => {
     test('should not add old labels', async () => {
       const gh = new Release(git);
       const labels = {
-        [SEMVER.major]: { name: '1', description: 'major' },
-        [SEMVER.minor]: { name: '2', description: 'minor' }
+        [SEMVER.major]: [{ name: '1', description: 'major' }],
+        [SEMVER.minor]: [{ name: '2', description: 'minor' }]
       };
 
       getProjectLabels.mockReturnValueOnce(['1']);
@@ -951,7 +951,7 @@ describe('Release', () => {
         baseBranch: 'master'
       });
       const labels = {
-        release: { name: 'deploy', description: 'release the code' }
+        release: [{ name: 'deploy', description: 'release the code' }]
       };
 
       await gh.addLabelsToProject(labels);
@@ -981,7 +981,9 @@ describe('Release', () => {
         baseBranch: 'master'
       });
       const labels = {
-        'skip-release': { name: 'no!', description: 'Do not create a release' }
+        'skip-release': [
+          { name: 'no!', description: 'Do not create a release' }
+        ]
       };
 
       await gh.addLabelsToProject(labels);

@@ -312,11 +312,13 @@ describe('generateReleaseNotes', () => {
     const options = testOptions();
     options.labels = {
       ...options.labels,
-      pushToBaseBranch: {
-        name: 'pushToBaseBranch',
-        title: 'Custom Title',
-        description: 'N/A'
-      }
+      pushToBaseBranch: [
+        {
+          name: 'pushToBaseBranch',
+          title: 'Custom Title',
+          description: 'N/A'
+        }
+      ]
     };
 
     const changelog = new Changelog(dummyLog(), options);
@@ -346,11 +348,13 @@ describe('generateReleaseNotes', () => {
     const options = testOptions();
     options.labels = {
       ...options.labels,
-      minor: {
-        name: 'Version: Minor',
-        title: 'Woo Woo New Features',
-        description: 'N/A'
-      }
+      minor: [
+        {
+          name: 'Version: Minor',
+          title: 'Woo Woo New Features',
+          description: 'N/A'
+        }
+      ]
     };
 
     const changelog = new Changelog(dummyLog(), options);

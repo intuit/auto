@@ -22,7 +22,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           );
 
           if (conventionalCommit.header && incrementLabel) {
-            commit.labels = [...commit.labels, incrementLabel];
+            commit.labels = [...commit.labels, ...incrementLabel];
           }
         } catch (error) {
           auto.logger.verbose.info(

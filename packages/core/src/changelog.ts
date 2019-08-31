@@ -53,12 +53,19 @@ export default class Changelog {
     this.logger = logger;
     this.options = options;
     this.hooks = makeChangelogHooks();
-    this.options.labels.pushToBaseBranch = {
+
+    const pushToMasterLabel = {
       name: 'pushToBaseBranch',
       title: `⚠️  Pushed to ${options.baseBranch}`,
-      description: 'N/A',
-      ...(this.options.labels.pushToBaseBranch || {})
+      description: 'N/A'
     };
+
+    this.options.labels.pushToBaseBranch = this.options.labels.pushToBaseBranch
+      ? this.options.labels.pushToBaseBranch.map(l => ({
+          ...pushToMasterLabel,
+          ...l
+        }))
+      : [pushToMasterLabel];
   }
 
   loadDefaultHooks() {
@@ -140,13 +147,15 @@ export default class Changelog {
   private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
     const order = ['major', 'minor', 'patch'];
-    const sections = Object.values(this.options.labels)
-      .filter(label => label.title)
-      .sort((a, b) => {
-        const bIndex = order.indexOf(b.name) + 1 || order.length + 1;
-        const aIndex = order.indexOf(a.name) + 1 || order.length + 1;
+    const sections = Object.entries(this.options.labels)
+      .filter(([, label]) => label.some(l => l.title))
+      .sort(([a], [b]) => {
+        const bIndex = order.indexOf(b) + 1 || order.length + 1;
+        const aIndex = order.indexOf(a) + 1 || order.length + 1;
         return aIndex - bIndex;
-      });
+      })
+      .map(([, labels]) => labels)
+      .reduce((acc, item) => [...acc, ...item], []);
 
     commits
       .filter(
@@ -277,10 +286,12 @@ export default class Changelog {
 
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
-      (titles, [, labelDef]) => {
-        if (labelDef.title) {
-          titles[labelDef.name] = labelDef.title;
-        }
+      (titles, [, labels]) => {
+        labels.map(labelDef => {
+          if (labelDef.title) {
+            titles[labelDef.name] = labelDef.title;
+          }
+        });
 
         return titles;
       },

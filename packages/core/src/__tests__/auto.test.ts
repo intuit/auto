@@ -116,12 +116,12 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toEqual([
-      'Version: Major',
-      'Version: Minor',
-      'Version: Patch',
-      'skip-release',
-      'release',
-      'prerelease'
+      ['Version: Major'],
+      ['Version: Minor'],
+      ['Version: Patch'],
+      ['skip-release'],
+      ['release'],
+      ['prerelease']
     ]);
   });
 
@@ -154,11 +154,13 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual({
-      description: 'Increment the minor version when merged',
-      name: 'feature',
-      title: '🚀  Enhancement'
-    });
+    expect(auto.release!.options.labels.minor).toEqual([
+      {
+        description: 'Increment the minor version when merged',
+        name: 'feature',
+        title: '🚀  Enhancement'
+      }
+    ]);
   });
 
   test('should be able to omit properties from label definition', async () => {
@@ -176,11 +178,13 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual({
-      description: 'This is a test',
-      name: 'minor',
-      title: '🚀  Enhancement'
-    });
+    expect(auto.release!.options.labels.minor).toEqual([
+      {
+        description: 'This is a test',
+        name: 'minor',
+        title: '🚀  Enhancement'
+      }
+    ]);
   });
 
   test('arbitrary labels should be able to omit name', async () => {
@@ -198,10 +202,12 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.fooBar).toEqual({
-      description: 'This is a test',
-      name: 'fooBar'
-    });
+    expect(auto.release!.options.labels.fooBar).toEqual([
+      {
+        description: 'This is a test',
+        name: 'fooBar'
+      }
+    ]);
   });
 
   describe('createLabels', () => {
@@ -921,20 +927,24 @@ describe('hooks', () => {
     auto.logger = dummyLog();
 
     auto.hooks.modifyConfig.tap('test', testConfig => {
-      testConfig.labels.released = {
-        name: 'released',
-        description: 'This issue/pull request has been released'
-      };
+      testConfig.labels.released = [
+        {
+          name: 'released',
+          description: 'This issue/pull request has been released'
+        }
+      ];
 
       return testConfig;
     });
 
     await auto.loadConfig();
 
-    expect(auto.labels!.released).toEqual({
-      description: 'This issue/pull request has been released',
-      name: 'released'
-    });
+    expect(auto.labels!.released).toEqual([
+      {
+        description: 'This issue/pull request has been released',
+        name: 'released'
+      }
+    ]);
   });
 
   describe('logParse', () => {
@@ -944,7 +954,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
+          commit.labels = [...auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });
@@ -964,7 +974,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
+          commit.labels = [...auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });
