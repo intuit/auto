@@ -39,7 +39,7 @@ export function normalizeLabel(
   return [{ ...baseLabel, ...label }];
 }
 
-function normalizeLabels(config: cosmiconfig.Config) {
+export function normalizeLabels(config: cosmiconfig.Config) {
   let labels = defaultLabelDefinition;
 
   if (config.labels) {

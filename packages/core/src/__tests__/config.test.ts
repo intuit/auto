@@ -1,4 +1,4 @@
-import Config, { normalizeLabel } from '../config';
+import Config, { normalizeLabel, normalizeLabels } from '../config';
 import { dummyLog } from '../utils/logger';
 
 const fetchSpy = jest.fn();
@@ -41,6 +41,26 @@ describe('normalizeLabel', () => {
         title: '💥  Breaking Change'
       },
       { ...label, title: '💥  Breaking Change' }
+    ]);
+  });
+});
+
+describe('normalizeLabels', () => {
+  test('user labels should override defaults', () => {
+    expect(normalizeLabels({}).minor).toEqual([
+      {
+        description: 'Increment the minor version when merged',
+        name: 'minor',
+        title: '🚀  Enhancement'
+      }
+    ]);
+
+    expect(normalizeLabels({ labels: { minor: ['foo'] } }).minor).toEqual([
+      {
+        description: 'Increment the minor version when merged',
+        name: 'foo',
+        title: '🚀  Enhancement'
+      }
     ]);
   });
 });
