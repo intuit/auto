@@ -319,15 +319,23 @@ export default class Changelog {
         );
 
         return [
-          title,
-          ...[...lines].sort(
-            (a, b) => a.split('\n').length - b.split('\n').length
-          )
-        ].join('\n');
+          title as string,
+          [...lines].sort((a, b) => a.split('\n').length - b.split('\n').length)
+        ] as [string, string[]];
       })
     );
 
-    labelSections.map(section => sections.push(section));
+    const mergedSections = labelSections.reduce(
+      (acc, [title, commits]) => ({
+        ...acc,
+        [title]: [...(acc[title] || []), ...commits]
+      }),
+      {} as Record<string, string[]>
+    );
+
+    Object.entries(mergedSections)
+      .map(([title, lines]) => [title, ...lines].join('\n'))
+      .map(section => sections.push(section));
   }
 
   private async createReleaseNotesSection(

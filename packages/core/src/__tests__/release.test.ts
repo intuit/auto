@@ -943,7 +943,7 @@ describe('Release', () => {
 
       await gh.addLabelsToProject(labels);
 
-      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: patch');
+      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: 3');
       expect(mockLogger.log.log).toHaveBeenCalledWith(
         '\nYou can see these, and more at https://github.com/web/site/labels'
       );
