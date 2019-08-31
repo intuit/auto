@@ -1,3 +1,16 @@
+# v7.4.0 (Sat Aug 31 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/conventional-commits`
+  - add ability for configured labels to be an array [#540](https://github.com/intuit/auto/pull/540) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.3.6 (Wed Aug 28 2019)
 
 #### 🐛  Bug Fix
