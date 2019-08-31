@@ -109,7 +109,7 @@ You can customize everything about a label
 
 #### Multiple Labels
 
-You have multiple labels for each of the default labels.
+You have can multiple labels for each of the default labels.
 
 ```json
 {
@@ -131,7 +131,7 @@ You have multiple labels for each of the default labels.
 ```
 
 ::: message is-warning
-:warning: If you override any of the semantic versioning labels the default values are lost! Make sure to include that label if you still want it to be used during version calculation.
+:warning: If you override any of the semantic versioning labels the default values are overridden too! Make sure to include that label if you still want it to be used during version calculation.
 :::
 
 ```json
