@@ -13,12 +13,16 @@ import {
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
 
-function normalizeLabel(
+export function normalizeLabel(
   name: string,
-  label: string | Partial<ILabelDefinition> | Partial<ILabelDefinition>[]
+  label:
+    | string
+    | Partial<ILabelDefinition>
+    | (Partial<ILabelDefinition> | string)[]
 ): Partial<ILabelDefinition>[] {
   if (typeof label === 'string') {
-    return [{ ...defaultLabelDefinition[name][0], name: label }];
+    const baseLabel = defaultLabelDefinition[name] || [[]];
+    return [{ ...baseLabel[0], name: label }];
   }
 
   if (Array.isArray(label)) {

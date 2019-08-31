@@ -1,4 +1,4 @@
-import Config from '../config';
+import Config, { normalizeLabel } from '../config';
 import { dummyLog } from '../utils/logger';
 
 const fetchSpy = jest.fn();
@@ -14,6 +14,36 @@ const log = dummyLog();
 
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
+
+describe('normalizeLabel', () => {
+  test('should handle string', () => {
+    expect(normalizeLabel('foo', 'foo')).toEqual([{ name: 'foo' }]);
+  });
+
+  test('should handle object', () => {
+    const label = { name: 'foo', description: 'something' };
+    expect(normalizeLabel('foo', label)).toEqual([label]);
+  });
+
+  test('should attach name', () => {
+    const label = { description: 'something' };
+    expect(normalizeLabel('foo', label)).toEqual([
+      { name: 'foo', description: 'something' }
+    ]);
+  });
+
+  test('should handle arrays', () => {
+    const label = { name: 'foo', description: 'something' };
+    expect(normalizeLabel('major', ['major', label])).toEqual([
+      {
+        description: 'Increment the major version when merged',
+        name: 'major',
+        title: '💥  Breaking Change'
+      },
+      label
+    ]);
+  });
+});
 
 describe('loadExtendConfig', () => {
   test('should reject when no config found', async () => {

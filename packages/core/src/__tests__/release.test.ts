@@ -2,7 +2,11 @@ import merge from 'deepmerge';
 import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
-import Release, { buildSearchQuery, defaultLabelDefinition } from '../release';
+import Release, {
+  buildSearchQuery,
+  defaultLabelDefinition,
+  getVersionMap
+} from '../release';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -102,6 +106,27 @@ const git = new Git({
   owner: 'Andrew',
   repo: 'test',
   token: 'MY_TOKEN'
+});
+
+describe('getVersionMap', () => {
+  test('should return the default map', () => {
+    expect(getVersionMap()).toEqual(
+      new Map([
+        ['major', ['major']],
+        ['minor', ['minor']],
+        ['patch', ['patch']],
+        ['skip-release', ['skip-release']],
+        ['release', ['release']],
+        ['prerelease', ['prerelease']]
+      ])
+    );
+  });
+
+  test('should add custom labels', () => {
+    expect(
+      getVersionMap({ major: [{ name: 'major' }, { name: 'BREAKING' }] })
+    ).toEqual(new Map([['major', ['major', 'BREAKING']]]));
+  });
 });
 
 describe('Release', () => {
