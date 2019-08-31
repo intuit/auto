@@ -508,7 +508,10 @@ export default class Release {
     }
 
     const repoMetadata = await this.git.getProject();
-    const justLabelNames = labelsToCreate.map(([name]) => name);
+    const justLabelNames = labelsToCreate.reduce<string[]>(
+      (acc, [, cLabel]) => [...acc, ...(cLabel || []).map(l => l.name)],
+      []
+    );
 
     if (justLabelNames.length > 0) {
       const state = options.dryRun ? 'Would have created' : 'Created';
