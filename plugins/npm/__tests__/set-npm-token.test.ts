@@ -31,6 +31,15 @@ describe('set npm token', () => {
     );
   });
 
+  test('should write a new npmrc w/o name', async () => {
+    loadPackageJson.mockReturnValueOnce({});
+    await setNpmToken(dummyLog());
+    expect(writeFile).toHaveBeenCalledWith(
+      '/User/name/.npmrc',
+      'npm.registry.com:_authToken=${NPM_TOKEN}'
+    );
+  });
+
   test('should use registry from packageJson', async () => {
     loadPackageJson.mockReturnValueOnce({
       name: 'test',

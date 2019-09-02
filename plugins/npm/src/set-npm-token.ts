@@ -27,7 +27,7 @@ export default async function setTokenOnCI(logger: ILogger) {
 
   if (publishConfig.registry) {
     registry = publishConfig.registry;
-  } else if (name.startsWith('@')) {
+  } else if (name && name.startsWith('@')) {
     const scope = name.split(`/`)[0];
     registry = registryUrl(scope);
   } else {
