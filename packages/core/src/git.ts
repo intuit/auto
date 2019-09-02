@@ -367,6 +367,7 @@ export default class Git {
       : tinyColor.random().toString('hex6');
     const result = await this.github.issues.updateLabel({
       current_name: label.name,
+      name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
       color: color.replace('#', ''),
