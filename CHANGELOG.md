@@ -1,3 +1,16 @@
+# v7.4.2 (Mon Sep 02 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - label creation is case insensitive [#548](https://github.com/intuit/auto/pull/548) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.4.1 (Sun Sep 01 2019)
 
 #### 🐛  Bug Fix
