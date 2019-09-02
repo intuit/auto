@@ -969,6 +969,26 @@ describe('Release', () => {
       });
     });
 
+    test('should not add old labels - case sensitive', async () => {
+      const gh = new Release(git);
+      const labels = {
+        [SEMVER.major]: [{ name: 'major', description: '' }],
+        [SEMVER.minor]: [{ name: 'Minor', description: '' }]
+      };
+
+      getProjectLabels.mockReturnValueOnce(['Major', 'minor']);
+      await gh.addLabelsToProject(labels);
+
+      expect(updateLabel).toHaveBeenCalledWith(SEMVER.major, {
+        name: 'major',
+        description: ''
+      });
+      expect(updateLabel).toHaveBeenCalledWith(SEMVER.minor, {
+        description: '',
+        name: 'Minor'
+      });
+    });
+
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
         skipReleaseLabels: [],
