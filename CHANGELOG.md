@@ -1,3 +1,16 @@
+# v7.4.3 (Mon Sep 02 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - set-token: handle when no name in root package.json [#549](https://github.com/intuit/auto/pull/549) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.4.2 (Mon Sep 02 2019)
 
 #### 🐛  Bug Fix
