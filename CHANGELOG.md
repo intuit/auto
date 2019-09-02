@@ -1,3 +1,16 @@
+# v7.4.1 (Sun Sep 01 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix create-labels bug [#542](https://github.com/intuit/auto/pull/542) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.4.0 (Sat Aug 31 2019)
 
 #### 🚀  Enhancement
