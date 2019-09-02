@@ -462,7 +462,9 @@ export default class Release {
     labels: Partial<ILabelDefinitionMap>,
     options: ICreateLabelsOptions = {}
   ) {
-    const oldLabels = (await this.git.getProjectLabels()) || [];
+    const oldLabels = ((await this.git.getProjectLabels()) || []).map(l =>
+      l.toLowerCase()
+    );
     const labelsToCreate = Object.entries(labels).filter(
       ([versionLabel, labelDef]) => {
         if (!labelDef) {
@@ -496,7 +498,7 @@ export default class Release {
 
           return Promise.all(
             labelDefs.map(async labelDef => {
-              if (oldLabels.some(o => labelDef.name === o)) {
+              if (oldLabels.some(o => labelDef.name.toLowerCase() === o)) {
                 return this.git.updateLabel(label, labelDef);
               }
 
