@@ -1,3 +1,26 @@
+# v7.4.4 (Tue Sep 03 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - Fix setting npm token with a URL that doesn't end in / [#551](https://github.com/intuit/auto/pull/551) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 24.8.0 to 24.9.0 [#547](https://github.com/intuit/auto/pull/547) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/graphql from 14.2.3 to 14.5.0 [#545](https://github.com/intuit/auto/pull/545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump dotenv from 8.0.0 to 8.1.0 [#544](https://github.com/intuit/auto/pull/544) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.5.3 to 3.6.2 [#543](https://github.com/intuit/auto/pull/543) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump node-fetch from 2.5.0 to 2.6.0 [#546](https://github.com/intuit/auto/pull/546) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.4.3 (Mon Sep 02 2019)
 
 #### 🐛  Bug Fix
