@@ -60,6 +60,7 @@ export interface IChangelogOptions extends IAuthorOptions {
 export interface IReleaseOptions extends IAuthorOptions {
   noVersionPrefix?: boolean;
   dryRun?: boolean;
+  from?: string;
   useVersion?: string;
 }
 

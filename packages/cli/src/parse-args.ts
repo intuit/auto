@@ -420,6 +420,13 @@ const commands: ICommand[] = [
       name,
       email,
       {
+        name: 'from',
+        type: String,
+        group: 'main',
+        description:
+          'Git revision (tag, commit sha, ...) to start release notes from. Defaults to latest tag.'
+      },
+      {
         name: 'use-version',
         type: String,
         group: 'main',
@@ -429,7 +436,10 @@ const commands: ICommand[] = [
       baseBranch,
       ...defaultOptions
     ],
-    examples: ['{green $} auto release']
+    examples: [
+      '{green $} auto release',
+      '{green $} auto release --from v0.20.1 --use-version v0.21.0'
+    ]
   },
   {
     name: 'shipit',
