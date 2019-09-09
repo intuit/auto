@@ -56,6 +56,6 @@
     "@types/dedent": "^0.7.0",
     "@types/signale": "^1.2.1",
     "pkg": "^4.4.0",
-    "rimraf": "^2.6.3"
+    "rimraf": "^3.0.0"
   }
 }
