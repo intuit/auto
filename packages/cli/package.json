@@ -2,7 +2,7 @@
   "name": "auto",
   "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "7.4.4",
+  "version": "7.4.5",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
