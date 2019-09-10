@@ -586,7 +586,14 @@ export default class Auto {
       );
     }
 
-    const latestTag = await this.git.getLatestTagInBranch();
+    let latestTag: string;
+
+    try {
+      latestTag = await this.git.getLatestTagInBranch();
+    } catch (error) {
+      latestTag = await this.git.getFirstCommit();
+    }
+
     const commitsInRelease = await this.release.getCommits(latestTag);
     return { newVersion, commitsInRelease };
   }
