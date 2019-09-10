@@ -1,3 +1,25 @@
+# v7.4.5 (Mon Sep 09 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Canary: fallback to first commit if now tags exist [#560](https://github.com/intuit/auto/pull/560) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/node from 12.7.2 to 12.7.4 [#559](https://github.com/intuit/auto/pull/559) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.0.1 to 6.0.2 [#558](https://github.com/intuit/auto/pull/558) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 12.1.0 to 12.3.0 [#557](https://github.com/intuit/auto/pull/557) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`
+  - Bump rimraf from 2.6.3 to 3.0.0 [#556](https://github.com/intuit/auto/pull/556) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v7.4.4 (Tue Sep 03 2019)
 
 #### 🐛  Bug Fix
