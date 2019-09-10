@@ -790,6 +790,29 @@ describe('Auto', () => {
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
+    test.only('falls back to first commit', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestTagInBranch = () => {
+        throw new Error();
+      };
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.getSha = () => Promise.resolve('abc');
+      auto.release!.getCommits = () => Promise.resolve([]);
+      auto.git!.getFirstCommit = () => Promise.resolve('abcd');
+      auto.git!.addToPrBody = jest.fn();
+      auto.release!.getCommitsInRelease = jest
+        .fn()
+        .mockReturnValue(Promise.resolve([makeCommitFromMsg('Test Commit')]));
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
+
+      await auto.canary({ pr: 123, build: 1 });
+      expect(auto.release!.getCommits).toHaveBeenCalledWith('abcd');
+    });
+
     test('adds sha if no pr or build number is found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
