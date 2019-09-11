@@ -27,7 +27,16 @@ describe('set npm token', () => {
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       '/User/name/.npmrc',
-      'npm.registry.com:_authToken=${NPM_TOKEN}'
+      'npm.registry.com/:_authToken=${NPM_TOKEN}'
+    );
+  });
+
+  test('should write a new npmrc w/o name', async () => {
+    loadPackageJson.mockReturnValueOnce({});
+    await setNpmToken(dummyLog());
+    expect(writeFile).toHaveBeenCalledWith(
+      '/User/name/.npmrc',
+      'npm.registry.com/:_authToken=${NPM_TOKEN}'
     );
   });
 
@@ -39,7 +48,7 @@ describe('set npm token', () => {
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       '/User/name/.npmrc',
-      '//my-registry.com:_authToken=${NPM_TOKEN}'
+      '//my-registry.com/:_authToken=${NPM_TOKEN}'
     );
   });
 
@@ -50,7 +59,7 @@ describe('set npm token', () => {
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       '/User/name/.npmrc',
-      'foo.registry.com:_authToken=${NPM_TOKEN}'
+      'foo.registry.com/:_authToken=${NPM_TOKEN}'
     );
   });
 
@@ -59,7 +68,7 @@ describe('set npm token', () => {
       name: 'test',
       publishConfig: { registry: 'https://my-registry.com' }
     });
-    readFile.mockReturnValueOnce('//my-registry.com:_authToken=${NPM_TOKEN}');
+    readFile.mockReturnValueOnce('//my-registry.com/:_authToken=${NPM_TOKEN}');
 
     await setNpmToken(dummyLog());
     expect(writeFile).not.toHaveBeenCalled();

@@ -1,3 +1,100 @@
+# v7.4.5 (Mon Sep 09 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Canary: fallback to first commit if now tags exist [#560](https://github.com/intuit/auto/pull/560) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/node from 12.7.2 to 12.7.4 [#559](https://github.com/intuit/auto/pull/559) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.0.1 to 6.0.2 [#558](https://github.com/intuit/auto/pull/558) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 12.1.0 to 12.3.0 [#557](https://github.com/intuit/auto/pull/557) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`
+  - Bump rimraf from 2.6.3 to 3.0.0 [#556](https://github.com/intuit/auto/pull/556) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
+# v7.4.4 (Tue Sep 03 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - Fix setting npm token with a URL that doesn't end in / [#551](https://github.com/intuit/auto/pull/551) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 24.8.0 to 24.9.0 [#547](https://github.com/intuit/auto/pull/547) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/graphql from 14.2.3 to 14.5.0 [#545](https://github.com/intuit/auto/pull/545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump dotenv from 8.0.0 to 8.1.0 [#544](https://github.com/intuit/auto/pull/544) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.5.3 to 3.6.2 [#543](https://github.com/intuit/auto/pull/543) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump node-fetch from 2.5.0 to 2.6.0 [#546](https://github.com/intuit/auto/pull/546) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
+# v7.4.3 (Mon Sep 02 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - set-token: handle when no name in root package.json [#549](https://github.com/intuit/auto/pull/549) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.4.2 (Mon Sep 02 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - label creation is case insensitive [#548](https://github.com/intuit/auto/pull/548) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.4.1 (Sun Sep 01 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix create-labels bug [#542](https://github.com/intuit/auto/pull/542) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v7.4.0 (Sat Aug 31 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/conventional-commits`
+  - add ability for configured labels to be an array [#540](https://github.com/intuit/auto/pull/540) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.3.6 (Wed Aug 28 2019)
 
 #### 🐛  Bug Fix

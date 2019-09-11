@@ -2,7 +2,11 @@ import merge from 'deepmerge';
 import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
-import Release, { buildSearchQuery, defaultLabelDefinition } from '../release';
+import Release, {
+  buildSearchQuery,
+  defaultLabelDefinition,
+  getVersionMap
+} from '../release';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
@@ -102,6 +106,27 @@ const git = new Git({
   owner: 'Andrew',
   repo: 'test',
   token: 'MY_TOKEN'
+});
+
+describe('getVersionMap', () => {
+  test('should return the default map', () => {
+    expect(getVersionMap()).toEqual(
+      new Map([
+        ['major', ['major']],
+        ['minor', ['minor']],
+        ['patch', ['patch']],
+        ['skip-release', ['skip-release']],
+        ['release', ['release']],
+        ['prerelease', ['prerelease']]
+      ])
+    );
+  });
+
+  test('should add custom labels', () => {
+    expect(
+      getVersionMap({ major: [{ name: 'major' }, { name: 'BREAKING' }] })
+    ).toEqual(new Map([['major', ['major', 'BREAKING']]]));
+  });
 });
 
 describe('Release', () => {
@@ -838,10 +863,10 @@ describe('Release', () => {
 
     test('should be able to configure labels', async () => {
       const customLabels = merge(defaultLabelDefinition, {
-        [SEMVER.major]: { name: 'Version: Major' },
-        [SEMVER.minor]: { name: 'Version: Minor' },
-        [SEMVER.patch]: { name: 'Version: Patch' },
-        release: { name: 'Deploy' }
+        [SEMVER.major]: [{ name: 'Version: Major' }],
+        [SEMVER.minor]: [{ name: 'Version: Minor' }],
+        [SEMVER.patch]: [{ name: 'Version: Patch' }],
+        release: [{ name: 'Deploy' }]
       });
 
       const gh = new Release(git, {
@@ -877,9 +902,9 @@ describe('Release', () => {
     test('should add labels', async () => {
       const gh = new Release(git);
       const customLabels = {
-        [SEMVER.major]: { name: '1', description: 'major' },
-        [SEMVER.minor]: { name: '2', description: 'minor' },
-        [SEMVER.patch]: { name: '3', description: 'patch' }
+        [SEMVER.major]: [{ name: '1', description: 'major' }],
+        [SEMVER.minor]: [{ name: '2', description: 'minor' }],
+        [SEMVER.patch]: [{ name: '3', description: 'patch' }]
       };
 
       await gh.addLabelsToProject(customLabels);
@@ -913,12 +938,12 @@ describe('Release', () => {
       );
 
       const labels = {
-        [SEMVER.patch]: { name: '3', description: 'three' }
+        [SEMVER.patch]: [{ name: '3', description: 'three' }]
       };
 
       await gh.addLabelsToProject(labels);
 
-      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: patch');
+      expect(mockLogger.log.log).toHaveBeenCalledWith('Created labels: 3');
       expect(mockLogger.log.log).toHaveBeenCalledWith(
         '\nYou can see these, and more at https://github.com/web/site/labels'
       );
@@ -927,8 +952,8 @@ describe('Release', () => {
     test('should not add old labels', async () => {
       const gh = new Release(git);
       const labels = {
-        [SEMVER.major]: { name: '1', description: 'major' },
-        [SEMVER.minor]: { name: '2', description: 'minor' }
+        [SEMVER.major]: [{ name: '1', description: 'major' }],
+        [SEMVER.minor]: [{ name: '2', description: 'minor' }]
       };
 
       getProjectLabels.mockReturnValueOnce(['1']);
@@ -944,6 +969,26 @@ describe('Release', () => {
       });
     });
 
+    test('should not add old labels - case sensitive', async () => {
+      const gh = new Release(git);
+      const labels = {
+        [SEMVER.major]: [{ name: 'major', description: '' }],
+        [SEMVER.minor]: [{ name: 'Minor', description: '' }]
+      };
+
+      getProjectLabels.mockReturnValueOnce(['Major', 'minor']);
+      await gh.addLabelsToProject(labels);
+
+      expect(updateLabel).toHaveBeenCalledWith(SEMVER.major, {
+        name: 'major',
+        description: ''
+      });
+      expect(updateLabel).toHaveBeenCalledWith(SEMVER.minor, {
+        description: '',
+        name: 'Minor'
+      });
+    });
+
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
         skipReleaseLabels: [],
@@ -951,7 +996,7 @@ describe('Release', () => {
         baseBranch: 'master'
       });
       const labels = {
-        release: { name: 'deploy', description: 'release the code' }
+        release: [{ name: 'deploy', description: 'release the code' }]
       };
 
       await gh.addLabelsToProject(labels);
@@ -981,7 +1026,9 @@ describe('Release', () => {
         baseBranch: 'master'
       });
       const labels = {
-        'skip-release': { name: 'no!', description: 'Do not create a release' }
+        'skip-release': [
+          { name: 'no!', description: 'Do not create a release' }
+        ]
       };
 
       await gh.addLabelsToProject(labels);

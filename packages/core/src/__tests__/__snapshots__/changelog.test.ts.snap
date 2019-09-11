@@ -134,7 +134,7 @@ exports[`generateReleaseNotes should create note for PR commits 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`generateReleaseNotes should create note for PR commits without labels 1`] = `
+exports[`generateReleaseNotes should create note for PR commits with only non config labels 1`] = `
 "#### 🐛  Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
@@ -144,7 +144,7 @@ exports[`generateReleaseNotes should create note for PR commits without labels 1
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`generateReleaseNotes should create note for PR commits with only non config labels 1`] = `
+exports[`generateReleaseNotes should create note for PR commits without labels 1`] = `
 "#### 🐛  Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
@@ -173,6 +173,17 @@ exports[`generateReleaseNotes should include prs with released label 1`] = `
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 - Third  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should merge sections with same changelog title 1`] = `
+"#### Enhancement
+
+- Second Feature [#1236](https://github.custom.com/foobar/auto/pull/1236) (adam@dierkens.com)
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Authors: 1
 

@@ -116,12 +116,12 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toEqual([
-      'Version: Major',
-      'Version: Minor',
-      'Version: Patch',
-      'skip-release',
-      'release',
-      'prerelease'
+      ['Version: Major'],
+      ['Version: Minor'],
+      ['Version: Patch'],
+      ['skip-release'],
+      ['release'],
+      ['prerelease']
     ]);
   });
 
@@ -154,11 +154,13 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual({
-      description: 'Increment the minor version when merged',
-      name: 'feature',
-      title: '🚀  Enhancement'
-    });
+    expect(auto.release!.options.labels.minor).toEqual([
+      {
+        description: 'Increment the minor version when merged',
+        name: 'feature',
+        title: '🚀  Enhancement'
+      }
+    ]);
   });
 
   test('should be able to omit properties from label definition', async () => {
@@ -176,11 +178,13 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual({
-      description: 'This is a test',
-      name: 'minor',
-      title: '🚀  Enhancement'
-    });
+    expect(auto.release!.options.labels.minor).toEqual([
+      {
+        description: 'This is a test',
+        name: 'minor',
+        title: '🚀  Enhancement'
+      }
+    ]);
   });
 
   test('arbitrary labels should be able to omit name', async () => {
@@ -198,10 +202,12 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.fooBar).toEqual({
-      description: 'This is a test',
-      name: 'fooBar'
-    });
+    expect(auto.release!.options.labels.fooBar).toEqual([
+      {
+        description: 'This is a test',
+        name: 'fooBar'
+      }
+    ]);
   });
 
   describe('createLabels', () => {
@@ -884,6 +890,29 @@ describe('Auto', () => {
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
+    test.only('falls back to first commit', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestTagInBranch = () => {
+        throw new Error();
+      };
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.git!.getSha = () => Promise.resolve('abc');
+      auto.release!.getCommits = () => Promise.resolve([]);
+      auto.git!.getFirstCommit = () => Promise.resolve('abcd');
+      auto.git!.addToPrBody = jest.fn();
+      auto.release!.getCommitsInRelease = jest
+        .fn()
+        .mockReturnValue(Promise.resolve([makeCommitFromMsg('Test Commit')]));
+      const canary = jest.fn();
+      auto.hooks.canary.tap('test', canary);
+      auto.release!.getCommits = jest.fn();
+
+      await auto.canary({ pr: 123, build: 1 });
+      expect(auto.release!.getCommits).toHaveBeenCalledWith('abcd');
+    });
+
     test('adds sha if no pr or build number is found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -1021,20 +1050,24 @@ describe('hooks', () => {
     auto.logger = dummyLog();
 
     auto.hooks.modifyConfig.tap('test', testConfig => {
-      testConfig.labels.released = {
-        name: 'released',
-        description: 'This issue/pull request has been released'
-      };
+      testConfig.labels.released = [
+        {
+          name: 'released',
+          description: 'This issue/pull request has been released'
+        }
+      ];
 
       return testConfig;
     });
 
     await auto.loadConfig();
 
-    expect(auto.labels!.released).toEqual({
-      description: 'This issue/pull request has been released',
-      name: 'released'
-    });
+    expect(auto.labels!.released).toEqual([
+      {
+        description: 'This issue/pull request has been released',
+        name: 'released'
+      }
+    ]);
   });
 
   describe('logParse', () => {
@@ -1044,7 +1077,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
+          commit.labels = [...auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });
@@ -1064,7 +1097,7 @@ describe('hooks', () => {
 
       auto.hooks.onCreateLogParse.tap('test', logParse => {
         logParse.hooks.parseCommit.tap('test parse', commit => {
-          commit.labels = [auto.semVerLabels!.get(SEMVER.major)!];
+          commit.labels = [...auto.semVerLabels!.get(SEMVER.major)!];
           return commit;
         });
       });

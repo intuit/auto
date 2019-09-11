@@ -312,11 +312,13 @@ describe('generateReleaseNotes', () => {
     const options = testOptions();
     options.labels = {
       ...options.labels,
-      pushToBaseBranch: {
-        name: 'pushToBaseBranch',
-        title: 'Custom Title',
-        description: 'N/A'
-      }
+      pushToBaseBranch: [
+        {
+          name: 'pushToBaseBranch',
+          title: 'Custom Title',
+          description: 'N/A'
+        }
+      ]
     };
 
     const changelog = new Changelog(dummyLog(), options);
@@ -346,17 +348,56 @@ describe('generateReleaseNotes', () => {
     const options = testOptions();
     options.labels = {
       ...options.labels,
-      minor: {
-        name: 'Version: Minor',
-        title: 'Woo Woo New Features',
-        description: 'N/A'
-      }
+      minor: [
+        {
+          name: 'Version: Minor',
+          title: 'Woo Woo New Features',
+          description: 'N/A'
+        }
+      ]
     };
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['Version: Minor']
+      }
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('should merge sections with same changelog title', async () => {
+    const options = testOptions();
+    options.labels = {
+      ...options.labels,
+      minor: [
+        { name: 'new-component', title: 'Enhancement' },
+        {
+          name: 'Version: Minor',
+          title: 'Enhancement',
+          description: 'N/A'
+        }
+      ]
+    };
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '3',
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'Second Feature (#1236)',
+        labels: ['new-component']
+      },
       {
         hash: '2',
         authorName: 'Adam Dierkens',

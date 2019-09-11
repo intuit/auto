@@ -13,7 +13,7 @@ import { ICreateLabelsOptions } from './auto-args';
 import Changelog from './changelog';
 import Git from './git';
 import LogParse, { IExtendedCommit } from './log-parse';
-import SEMVER, { calculateSemVerBump } from './semver';
+import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { makeReleaseHooks } from './utils/make-hooks';
@@ -82,59 +82,78 @@ export interface ILabelDefinition {
 }
 
 export interface ILabelDefinitionMap {
-  [label: string]: ILabelDefinition;
+  [label: string]: ILabelDefinition[];
 }
 
 export const defaultLabelDefinition: ILabelDefinitionMap = {
-  [SEMVER.major]: {
-    name: 'major',
-    title: '💥  Breaking Change',
-    description: 'Increment the major version when merged'
-  },
-  [SEMVER.minor]: {
-    name: 'minor',
-    title: '🚀  Enhancement',
-    description: 'Increment the minor version when merged'
-  },
-  [SEMVER.patch]: {
-    name: 'patch',
-    title: '🐛  Bug Fix',
-    description: 'Increment the patch version when merged'
-  },
-  'skip-release': {
-    name: 'skip-release',
-    description: 'Preserve the current version when merged'
-  },
-  release: {
-    name: 'release',
-    description: 'Create a release when this pr is merged'
-  },
-  prerelease: {
-    name: 'prerelease',
-    title: '🚧 Prerelease',
-    description: 'Create a pre-release version when merged'
-  },
-  internal: {
-    name: 'internal',
-    title: '🏠  Internal',
-    description: 'Changes only affect the internal API'
-  },
-  documentation: {
-    name: 'documentation',
-    title: '📝  Documentation',
-    description: 'Changes only affect the documentation'
-  }
+  [SEMVER.major]: [
+    {
+      name: 'major',
+      title: '💥  Breaking Change',
+      description: 'Increment the major version when merged'
+    }
+  ],
+  [SEMVER.minor]: [
+    {
+      name: 'minor',
+      title: '🚀  Enhancement',
+      description: 'Increment the minor version when merged'
+    }
+  ],
+  [SEMVER.patch]: [
+    {
+      name: 'patch',
+      title: '🐛  Bug Fix',
+      description: 'Increment the patch version when merged'
+    }
+  ],
+  'skip-release': [
+    {
+      name: 'skip-release',
+      description: 'Preserve the current version when merged'
+    }
+  ],
+  release: [
+    {
+      name: 'release',
+      description: 'Create a release when this pr is merged'
+    }
+  ],
+  prerelease: [
+    {
+      name: 'prerelease',
+      title: '🚧 Prerelease',
+      description: 'Create a pre-release version when merged'
+    }
+  ],
+  internal: [
+    {
+      name: 'internal',
+      title: '🏠  Internal',
+      description: 'Changes only affect the internal API'
+    }
+  ],
+  documentation: [
+    {
+      name: 'documentation',
+      title: '📝  Documentation',
+      description: 'Changes only affect the documentation'
+    }
+  ]
 };
 
 export const getVersionMap = (labels = defaultLabelDefinition) =>
-  Object.entries(labels).reduce((semVer, [label, labelDef]) => {
-    if (isVersionLabel(label)) {
-      semVer.set(label, labelDef.name);
-    }
+  Object.entries(labels).reduce(
+    (semVer, [label, labelDef]) => {
+      if (isVersionLabel(label)) {
+        semVer.set(label, labelDef.map(l => l.name));
+      }
 
-    return semVer;
-    // tslint:disable-next-line align
-  }, new Map<VersionLabel, string>());
+      return semVer;
+      // tslint:disable-next-line align
+    },
+    new Map() as IVersionLabels
+  );
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -238,7 +257,7 @@ export default class Release {
 
   private readonly git: Git;
   private readonly logger: ILogger;
-  private readonly versionLabels: Map<VersionLabel, string>;
+  private readonly versionLabels: IVersionLabels;
 
   constructor(
     git: Git,
@@ -443,7 +462,9 @@ export default class Release {
     labels: Partial<ILabelDefinitionMap>,
     options: ICreateLabelsOptions = {}
   ) {
-    const oldLabels = await this.git.getProjectLabels();
+    const oldLabels = ((await this.git.getProjectLabels()) || []).map(l =>
+      l.toLowerCase()
+    );
     const labelsToCreate = Object.entries(labels).filter(
       ([versionLabel, labelDef]) => {
         if (!labelDef) {
@@ -470,22 +491,29 @@ export default class Release {
 
     if (!options.dryRun) {
       await Promise.all(
-        labelsToCreate.map(async ([label, labelDef]) => {
-          if (!labelDef) {
+        labelsToCreate.map(async ([label, labelDefs]) => {
+          if (!labelDefs) {
             return;
           }
 
-          if (oldLabels && oldLabels.includes(labelDef.name)) {
-            await this.git.updateLabel(label, labelDef);
-          } else {
-            await this.git.createLabel(label, labelDef);
-          }
+          return Promise.all(
+            labelDefs.map(async labelDef => {
+              if (oldLabels.some(o => labelDef.name.toLowerCase() === o)) {
+                return this.git.updateLabel(label, labelDef);
+              }
+
+              return this.git.createLabel(label, labelDef);
+            })
+          );
         })
       );
     }
 
     const repoMetadata = await this.git.getProject();
-    const justLabelNames = labelsToCreate.map(([name]) => name);
+    const justLabelNames = labelsToCreate.reduce<string[]>(
+      (acc, [, cLabel]) => [...acc, ...(cLabel || []).map(l => l.name)],
+      []
+    );
 
     if (justLabelNames.length > 0) {
       const state = options.dryRun ? 'Would have created' : 'Created';

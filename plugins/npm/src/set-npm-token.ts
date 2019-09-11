@@ -2,6 +2,7 @@ import { ILogger } from '@auto-it/core';
 import envCi from 'env-ci';
 import path from 'path';
 import registryUrl from 'registry-url';
+import urlJoin from 'url-join';
 import userHome from 'user-home';
 
 import { loadPackageJson, readFile, writeFile } from './utils';
@@ -27,7 +28,7 @@ export default async function setTokenOnCI(logger: ILogger) {
 
   if (publishConfig.registry) {
     registry = publishConfig.registry;
-  } else if (name.startsWith('@')) {
+  } else if (name && name.startsWith('@')) {
     const scope = name.split(`/`)[0];
     registry = registryUrl(scope);
   } else {
@@ -37,7 +38,8 @@ export default async function setTokenOnCI(logger: ILogger) {
   logger.verbose.note(`Using ${registry} registry for package`);
 
   const url = registry.replace(/^https?:/, ``);
-  const authTokenString = `${url}:_authToken=\${NPM_TOKEN}`;
+  // tslint:disable-next-line no-invalid-template-strings
+  const authTokenString = urlJoin(url, ':_authToken=${NPM_TOKEN}');
 
   logger.verbose.info(`Will set authentication token string in ${rc}`);
 
