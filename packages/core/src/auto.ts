@@ -791,12 +791,16 @@ export default class Auto {
     );
   }
 
-  private async makeRelease({ dryRun, useVersion }: IReleaseOptions = {}) {
+  private async makeRelease({
+    dryRun,
+    from,
+    useVersion
+  }: IReleaseOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
 
-    let lastRelease = await this.git.getLatestRelease();
+    let lastRelease = from || (await this.git.getLatestRelease());
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
