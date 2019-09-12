@@ -890,7 +890,7 @@ describe('Auto', () => {
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
-    test.only('falls back to first commit', async () => {
+    test('falls back to first commit', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
