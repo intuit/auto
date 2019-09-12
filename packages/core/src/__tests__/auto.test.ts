@@ -651,19 +651,36 @@ describe('Auto', () => {
       expect(auto.version()).rejects.toBeTruthy();
     });
 
-    test('should make a comment', async () => {
+    test('should calculate version with default options', async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const getSemverBump = jest.fn();
-      auto.git!.getLatestRelease = jest.fn();
-      auto.release!.getSemverBump = getSemverBump;
-      getSemverBump.mockReturnValueOnce('patch');
+      auto.git!.getLatestRelease = jest.fn(() => Promise.resolve('v1.2.3'));
+      auto.release!.getSemverBump = jest.fn(() =>
+        Promise.resolve(SEMVER.patch)
+      );
       console.log = jest.fn();
 
       await auto.version();
+      expect(auto.release!.getSemverBump).toHaveBeenCalledWith('v1.2.3');
       expect(console.log).toHaveBeenCalledWith('patch');
+    });
+
+    test('should calculate version with from option', async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getLatestRelease = jest.fn(() => Promise.resolve('v1.2.3'));
+      auto.release!.getSemverBump = jest.fn(() =>
+        Promise.resolve(SEMVER.minor)
+      );
+      console.log = jest.fn();
+
+      await auto.version({ from: 'v1.1.0' });
+      expect(auto.release!.getSemverBump).toHaveBeenCalledWith('v1.1.0');
+      expect(console.log).toHaveBeenCalledWith('minor');
     });
   });
 
@@ -790,7 +807,7 @@ describe('Auto', () => {
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
-    test.only('falls back to first commit', async () => {
+    test('falls back to first commit', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();

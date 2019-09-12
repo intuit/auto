@@ -12,7 +12,8 @@ import Auto, {
   IPRCheckOptions,
   IPRStatusOptions,
   IReleaseOptions,
-  IShipItOptions
+  IShipItOptions,
+  IVersionOptions
 } from '@auto-it/core';
 
 export async function run(command: string, args: ApiOptions) {
@@ -48,7 +49,7 @@ export async function run(command: string, args: ApiOptions) {
       break;
     case 'version':
       await auto.loadConfig();
-      await auto.version();
+      await auto.version(args as IVersionOptions);
       break;
     case 'changelog':
       await auto.loadConfig();

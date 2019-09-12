@@ -22,7 +22,8 @@ import {
   IPRCheckOptions,
   IPRStatusOptions,
   IReleaseOptions,
-  IShipItOptions
+  IShipItOptions,
+  IVersionOptions
 } from './auto-args';
 
 import Changelog from './changelog';
@@ -487,9 +488,9 @@ export default class Auto {
   /**
    * Calculate the version bump for the current state of the repository.
    */
-  async version() {
+  async version(options: IVersionOptions = {}) {
     this.logger.verbose.info("Using command: 'version'");
-    const bump = await this.getVersion();
+    const bump = await this.getVersion(options);
     console.log(bump);
   }
 
@@ -743,12 +744,11 @@ export default class Auto {
     );
   }
 
-  private async getVersion() {
+  private async getVersion({ from }: IVersionOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
-
-    const lastRelease = await this.git.getLatestRelease();
+    const lastRelease = from || (await this.git.getLatestRelease());
     const bump = await this.release.getSemverBump(lastRelease);
     this.versionBump = bump;
 
