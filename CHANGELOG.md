@@ -1,3 +1,16 @@
+# v7.5.0 (Thu Sep 12 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add 'from' option for release command [#552](https://github.com/intuit/auto/pull/552) ([@bnigh](https://github.com/bnigh))
+
+#### Authors: 1
+
+- [@bnigh](https://github.com/bnigh)
+
+---
+
 # v7.4.5 (Mon Sep 09 2019)
 
 #### 🐛  Bug Fix
