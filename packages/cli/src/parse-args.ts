@@ -358,6 +358,13 @@ const commands: ICommand[] = [
         group: 'main'
       },
       skipReleaseLabels,
+      {
+        name: 'from',
+        type: String,
+        group: 'main',
+        description:
+          'Git revision (tag, commit sha, ...) to calculate version bump from. Defaults to latest github release'
+      },
       ...defaultOptions
     ],
     examples: [

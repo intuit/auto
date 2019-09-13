@@ -9,6 +9,8 @@ Options
 
   --only-publish-with-release-label    Only bump version if 'release' label is on pull request
   --skip-release-labels string[]       Labels that will not create a release. Defaults to just 'skip-release'
+  --from string                        Git revision (tag, commit sha, ...) to calculate version bump from.
+                                       Defaults to latest github release
 
 Global Options
 

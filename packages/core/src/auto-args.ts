@@ -47,6 +47,7 @@ export interface IPRStatusOptions {
 export interface IVersionOptions {
   skipReleaseLabels?: string[];
   onlyPublishWithReleaseLabel?: boolean;
+  from?: string;
 }
 
 export interface IChangelogOptions extends IAuthorOptions {
