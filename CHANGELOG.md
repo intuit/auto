@@ -1,3 +1,16 @@
+# v7.6.0 (Thu Sep 12 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add 'from' option for version command [#561](https://github.com/intuit/auto/pull/561) ([@bnigh](https://github.com/bnigh))
+
+#### Authors: 1
+
+- [@bnigh](https://github.com/bnigh)
+
+---
+
 # v7.5.0 (Thu Sep 12 2019)
 
 #### 🚀  Enhancement
