@@ -13,7 +13,7 @@ interface IJiraCommit extends IExtendedCommit {
   };
 }
 
-const jira = /\[?([\w]{3,}-\d+)\]?:?\s?[-\s]*([\S ]+)?/;
+const jira = /\[?([\w]{1,}-\d+)\]?:?\s?[-\s]*([\S ]+)?/;
 
 export function parseJira(commit: IExtendedCommit): IJiraCommit {
   // Support 'JIRA-XXX:' and '[JIRA-XXX]' and '[JIRA-XXX] - '
