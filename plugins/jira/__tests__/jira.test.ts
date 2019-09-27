@@ -23,18 +23,14 @@ describe('parse jira', () => {
 
   test('story found', () => {
     const jira = {
-      number: ['PLAYA-5052']
+      number: ['P-5052']
     };
 
-    expect(parseJira(makeCommitFromMsg('PLAYA-5052: Add log')).jira).toEqual(
+    expect(parseJira(makeCommitFromMsg('P-5052: Add log')).jira).toEqual(jira);
+    expect(parseJira(makeCommitFromMsg('[P-5052] - Add log')).jira).toEqual(
       jira
     );
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052] - Add log')).jira).toEqual(
-      jira
-    );
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052] Add log')).jira).toEqual(
-      jira
-    );
+    expect(parseJira(makeCommitFromMsg('[P-5052] Add log')).jira).toEqual(jira);
   });
 
   test('story found, pr no title', () => {
