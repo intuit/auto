@@ -1,3 +1,28 @@
+# v7.6.1 (Fri Sep 27 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/jira`
+  - Fix jira plugin regex [#572](https://github.com/intuit/auto/pull/572) (velu_ganapathy@intuit.com [@vganapat](https://github.com/vganapat))
+
+#### 🔩 Dependency Updates
+
+- Bump enquirer from 2.3.1 to 2.3.2 [#569](https://github.com/intuit/auto/pull/569) ([@vganapat](https://github.com/vganapat))
+- Bump typescript from 3.6.2 to 3.6.3 [#568](https://github.com/intuit/auto/pull/568) ([@vganapat](https://github.com/vganapat))
+- Bump typescript-tslint-plugin from 0.4.0 to 0.5.4 [#566](https://github.com/intuit/auto/pull/566) ([@vganapat](https://github.com/vganapat))
+- Bump @types/node from 12.7.4 to 12.7.5 [#565](https://github.com/intuit/auto/pull/565) ([@vganapat](https://github.com/vganapat))
+- Bump husky from 3.0.4 to 3.0.5 [#564](https://github.com/intuit/auto/pull/564) ([@vganapat](https://github.com/vganapat))
+- Bump tslint from 5.18.0 to 5.20.0 [#563](https://github.com/intuit/auto/pull/563) ([@vganapat](https://github.com/vganapat))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump @types/node-fetch from 2.5.0 to 2.5.2 [#570](https://github.com/intuit/auto/pull/570) ([@vganapat](https://github.com/vganapat))
+
+#### Authors: 2
+
+- [@vganapat](https://github.com/vganapat)
+- Velu Ganapathy (velu_ganapathy@intuit.com)
+
+---
+
 # v7.6.0 (Thu Sep 12 2019)
 
 #### 🚀  Enhancement
