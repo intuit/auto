@@ -1,3 +1,17 @@
+# v7.6.2 (Mon Sep 30 2019)
+
+#### 🏠  Internal
+
+- `@auto-it/core`
+  - Update Octokit [#574](https://github.com/intuit/auto/pull/574) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.6.1 (Fri Sep 27 2019)
 
 #### 🐛  Bug Fix
