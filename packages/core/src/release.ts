@@ -12,7 +12,7 @@ import { Memoize } from 'typescript-memoize';
 import { ICreateLabelsOptions } from './auto-args';
 import Changelog from './changelog';
 import Git from './git';
-import LogParse, { IExtendedCommit } from './log-parse';
+import LogParse, { ICommitAuthor, IExtendedCommit } from './log-parse';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
@@ -610,10 +610,11 @@ export default class Release {
       return [];
     }
 
-    const data = await Promise.all(prsSinceLastRelease.items.map(
-      async (pr: { number: number }) =>
+    const data = await Promise.all(
+      prsSinceLastRelease.items.map(async (pr: { number: number }) =>
         this.git.getPullRequest(Number(pr.number))
-    ) as GHub.Response<GHub.PullsGetResponse>[]);
+      )
+    );
 
     return data.map(item => item.data);
   }
@@ -678,7 +679,9 @@ export default class Release {
   }
 
   private async attachAuthor(commit: IExtendedCommit) {
-    let resolvedAuthors = [];
+    let resolvedAuthors: (
+      | (ICommitAuthor & { login?: string })
+      | Partial<GHub.UsersGetByUsernameResponse>)[] = [];
 
     // If there is a pull request we will attempt to get the authors
     // from any commit in the PR
@@ -719,7 +722,7 @@ export default class Release {
 
     commit.authors = resolvedAuthors.map(author => ({
       ...author,
-      ...(author && author.login ? { username: author.login } : {})
+      ...(author && 'login' in author ? { username: author.login } : {})
     }));
 
     commit.authors.map(author => {
