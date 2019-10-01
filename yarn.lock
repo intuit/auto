@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@atomist/slack-messages" "~1.1.0"
     "@octokit/graphql" "^4.0.0"
@@ -35,7 +35,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -49,7 +49,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2829,9 +2829,9 @@ ajv@^6.1.0, ajv@^6.5.5:
     uri-js "^4.2.2"
 
 all-contributors-cli@^6.4.0:
-  version "6.8.1"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.8.1.tgz#70c8c560ad05d054c09798d4a155887c82c5d553"
-  integrity sha512-06nnLE9Gl0gGqUIzmELNT/k8IWF31Xgq97GkuMJjEOS+3DFXuJ/0U+AJwa9UxP3Ivlqn484xXx4o3XDqPhytjA==
+  version "6.9.1"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.9.1.tgz#29f0867c6215a1691b25e83c23bc16f30f83f31a"
+  integrity sha512-z0I/u78s1Robx2p57X28gg+ZHgtRe7iABmEw1O/UFRDpqAHvlF3P7rmug0d99nsNIehrOSayO6XQey4bOHe4Iw==
   dependencies:
     "@babel/runtime" "^7.2.0"
     async "^3.0.1"
@@ -2842,7 +2842,7 @@ all-contributors-cli@^6.4.0:
     lodash "^4.11.2"
     pify "^4.0.1"
     request "^2.72.0"
-    yargs "^13.1.0"
+    yargs "^14.0.0"
 
 alphanum-sort@^1.0.0:
   version "1.0.2"
@@ -10806,7 +10806,7 @@ os-locale@^2.0.0:
     lcid "^1.0.0"
     mem "^1.1.0"
 
-os-locale@^3.0.0, os-locale@^3.1.0:
+os-locale@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/os-locale/-/os-locale-3.1.0.tgz#a802a6ee17f24c10483ab9935719cef4ed16bf1a"
   integrity sha512-Z8l3R4wYWM40/52Z+S265okfFj8Kt2cC2MKY+xNi3kFs+XGI7WXu/I309QQQYbRW4ijiZ+yxs9pqEhJh0DqW3Q==
@@ -15255,14 +15255,6 @@ yargs-parser@^11.1.1:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
-yargs-parser@^13.1.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-13.1.0.tgz#7016b6dd03e28e1418a510e258be4bff5a31138f"
-  integrity sha512-Yq+32PrijHRri0vVKQEm+ys8mbqWjLiwQkMFNXEENutzLPP0bE4Lcd4iA3OQY5HF+GD3xXxf0MEHb8E4/SA3AA==
-  dependencies:
-    camelcase "^5.0.0"
-    decamelize "^1.2.0"
-
 yargs-parser@^13.1.1:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-13.1.1.tgz#d26058532aa06d365fe091f6a1fc06b2f7e5eca0"
@@ -15314,29 +15306,29 @@ yargs@^12.0.1:
     y18n "^3.2.1 || ^4.0.0"
     yargs-parser "^11.1.1"
 
-yargs@^13.1.0:
-  version "13.2.4"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-13.2.4.tgz#0b562b794016eb9651b98bd37acf364aa5d6dc83"
-  integrity sha512-HG/DWAJa1PAnHT9JAhNa8AbAv3FPaiLzioSjCcmuXXhP8MlpHO5vwls4g4j6n30Z74GVQj8Xa62dWVx1QCGklg==
-  dependencies:
-    cliui "^5.0.0"
-    find-up "^3.0.0"
-    get-caller-file "^2.0.1"
-    os-locale "^3.1.0"
-    require-directory "^2.1.1"
-    require-main-filename "^2.0.0"
-    set-blocking "^2.0.0"
-    string-width "^3.0.0"
-    which-module "^2.0.0"
-    y18n "^4.0.0"
-    yargs-parser "^13.1.0"
-
 yargs@^13.3.0:
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-13.3.0.tgz#4c657a55e07e5f2cf947f8a366567c04a0dedc83"
   integrity sha512-2eehun/8ALW8TLoIl7MVaRUrg+yCnenu8B4kBlRxj3GJGDKU1Og7sMXPNm1BYyM1DOJmTZ4YeN/Nwxv+8XJsUA==
   dependencies:
     cliui "^5.0.0"
+    find-up "^3.0.0"
+    get-caller-file "^2.0.1"
+    require-directory "^2.1.1"
+    require-main-filename "^2.0.0"
+    set-blocking "^2.0.0"
+    string-width "^3.0.0"
+    which-module "^2.0.0"
+    y18n "^4.0.0"
+    yargs-parser "^13.1.1"
+
+yargs@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-14.0.0.tgz#ba4cacc802b3c0b3e36a9e791723763d57a85066"
+  integrity sha512-ssa5JuRjMeZEUjg7bEL99AwpitxU/zWGAGpdj0di41pOEmJti8NR6kyUIJBkR78DTYNPZOU08luUo0GTHuB+ow==
+  dependencies:
+    cliui "^5.0.0"
+    decamelize "^1.2.0"
     find-up "^3.0.0"
     get-caller-file "^2.0.1"
     require-directory "^2.1.1"
