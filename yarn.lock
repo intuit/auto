@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@atomist/slack-messages" "~1.1.0"
     "@octokit/graphql" "^4.0.0"
@@ -35,7 +35,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -49,7 +49,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.6.0"
+  version "7.6.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7331,9 +7331,9 @@ humanize-url@^1.0.0:
     strip-url-auth "^1.0.0"
 
 husky@^3.0.3:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-3.0.5.tgz#d7db27c346645a8dc52df02aa534a377ad7925e0"
-  integrity sha512-cKd09Jy9cDyNIvAdN2QQAP/oA21sle4FWXjIMDttailpLAYZuBE7WaPmhrkj+afS8Sj9isghAtFvWSQ0JiwOHg==
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-3.0.7.tgz#05e869006c7d9a31b27893aeda520e730bd125b9"
+  integrity sha512-fIrkaREoQk6DO8KnSX16Aq7Kg9SxqYYQZH/9b+4AxXyXNNgpJLsc8lWlQCShLus1nbujIyZ/WQZBHGwClohK/w==
   dependencies:
     chalk "^2.4.2"
     cosmiconfig "^5.2.1"
