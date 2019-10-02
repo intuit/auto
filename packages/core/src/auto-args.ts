@@ -71,6 +71,7 @@ export interface ICommentOptions {
   context?: string;
   dryRun?: boolean;
   delete?: boolean;
+  edit?: boolean;
 }
 
 export type IPRBodyOptions = ICommentOptions;

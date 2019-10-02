@@ -461,7 +461,7 @@ export default class Git {
     return result;
   }
 
-  async deleteComment(pr: number, context = 'default') {
+  async getCommentId(pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Getting previous comments on:', pr);
@@ -475,25 +475,31 @@ export default class Git {
     this.logger.veryVerbose.info('Got PR comments\n', comments);
 
     const oldMessage = comments.data.find(comment =>
-      comment.body.includes(commentIdentifier)
+        comment.body.includes(commentIdentifier)
     );
 
     if (!oldMessage) {
-      return;
+      return -1;
     }
 
     this.logger.verbose.info('Found previous message from same scope.');
-    const commentId = oldMessage.id;
+    return oldMessage.id;
+  }
 
-    this.logger.verbose.info(`Deleting comment: ${commentId}`);
+  async deleteComment(pr: number, context = 'default') {
+    const commentId = await this.getCommentId(pr, context);
 
-    await this.github.issues.deleteComment({
-      owner: this.options.owner,
-      repo: this.options.repo,
-      comment_id: commentId
-    });
+    if (commentId != -1) {
+      this.logger.verbose.info(`Deleting comment: ${commentId}`);
 
-    this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
+      await this.github.issues.deleteComment({
+        owner: this.options.owner,
+        repo: this.options.repo,
+        comment_id: commentId
+      });
+
+      this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
+    }
   }
 
   async createComment(message: string, pr: number, context = 'default') {
@@ -516,6 +522,30 @@ export default class Git {
     this.logger.verbose.info('Successfully posted comment to PR');
 
     return result;
+  }
+
+  async editComment(message: string, pr: number, context = 'default') {
+    const commentIdentifier = makeCommentIdentifier(context);
+
+    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
+    const commentId = await this.getCommentId(pr, context);
+    if (commentId != -1) {
+      this.logger.verbose.info('Editing comment');
+      const result = await this.github.issues.updateComment({
+        owner: this.options.owner,
+        repo: this.options.repo,
+        comment_id: commentId,
+        body: `${commentIdentifier}\n${message}`
+      });
+
+      this.logger.veryVerbose.info(
+          'Got response from editing comment\n',
+          result
+      );
+      this.logger.verbose.info('Successfully edited comment on PR');
+
+      return result;
+    }
   }
 
   async addToPrBody(message: string, pr: number, context = 'default') {
