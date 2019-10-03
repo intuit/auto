@@ -9,6 +9,7 @@ const getByUsername = jest.fn();
 const getPr = jest.fn();
 const createStatus = jest.fn();
 const createComment = jest.fn();
+const updateComment = jest.fn();
 const listComments = jest.fn();
 const deleteComment = jest.fn();
 const listCommits = jest.fn();
@@ -37,6 +38,7 @@ jest.mock('@octokit/rest', () => {
     issues: {
       listLabelsOnIssue,
       createComment,
+      updateComment,
       listComments,
       deleteComment,
       listLabelsForRepo,
@@ -92,6 +94,7 @@ describe('github', () => {
     getPr.mockClear();
     createStatus.mockClear();
     createComment.mockClear();
+    updateComment.mockClear();
     listComments.mockClear();
     deleteComment.mockClear();
     listLabelsForRepo.mockClear();
@@ -302,6 +305,62 @@ describe('github', () => {
 
       expect(deleteComment).toHaveBeenCalled();
       expect(deleteComment.mock.calls[0][0].comment_id).toBe(1000);
+    });
+  });
+
+  describe('editComment', () => {
+    test('should post comment if none exists', async () => {
+      const gh = new Git(options);
+
+      listComments.mockReturnValue({ data: [] });
+      await gh.editComment('Some long thing', 22, 'default');
+
+      expect(createComment).toHaveBeenCalled();
+      expect(updateComment).not.toHaveBeenCalled();
+    });
+
+    test('should edit old comment', async () => {
+      const gh = new Git(options);
+
+      listComments.mockReturnValue({
+        data: [
+          {
+            body: '<!-- GITHUB_RELEASE COMMENT: default -->\nSome cool message',
+            id: 1337
+          }
+        ]
+      });
+
+      await gh.editComment('Some long thing', 22, 'default');
+
+      expect(updateComment).toHaveBeenCalled();
+      expect(updateComment.mock.calls[0][0].comment_id).toBe(1337);
+      expect(createComment).not.toHaveBeenCalled();
+    });
+
+    test('should return a non-negative number if context exists', async () => {
+      const gh = new Git(options);
+
+      listComments.mockReturnValue({
+        data: [
+          {
+            body: '<!-- GITHUB_RELEASE COMMENT: default -->\nSome cool message',
+            id: 1337
+          }
+        ]
+      });
+
+      const commentId = await gh.getCommentId(22, 'default');
+      expect(commentId).toEqual(1337);
+    });
+
+    test('should return -1 if context does not exist', async () => {
+      const gh = new Git(options);
+
+      listComments.mockReturnValue({data: [] });
+
+      const commentId = await gh.getCommentId(22, 'default');
+      expect(commentId).toEqual(-1);
     });
   });
 

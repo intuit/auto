@@ -461,7 +461,7 @@ export default class Git {
     return result;
   }
 
-  async deleteComment(pr: number, context = 'default') {
+  async getCommentId(pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info('Getting previous comments on:', pr);
@@ -479,20 +479,25 @@ export default class Git {
     );
 
     if (!oldMessage) {
-      return;
+      return -1;
     }
 
     this.logger.verbose.info('Found previous message from same scope.');
-    const commentId = oldMessage.id;
+    return oldMessage.id;
+  }
 
+  async deleteComment(pr: number, context = 'default') {
+    const commentId = await this.getCommentId(pr, context);
+
+    if (commentId === -1) {
+      return;
+    }
     this.logger.verbose.info(`Deleting comment: ${commentId}`);
-
     await this.github.issues.deleteComment({
       owner: this.options.owner,
       repo: this.options.repo,
       comment_id: commentId
     });
-
     this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
   }
 
@@ -514,6 +519,31 @@ export default class Git {
       result
     );
     this.logger.verbose.info('Successfully posted comment to PR');
+
+    return result;
+  }
+
+  async editComment(message: string, pr: number, context = 'default') {
+    const commentIdentifier = makeCommentIdentifier(context);
+
+    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
+    const commentId = await this.getCommentId(pr, context);
+    if (commentId === -1) {
+      return this.createComment(message, pr, context);
+    }
+    this.logger.verbose.info('Editing comment');
+    const result = await this.github.issues.updateComment({
+      owner: this.options.owner,
+      repo: this.options.repo,
+      comment_id: commentId,
+      body: `${commentIdentifier}\n${message}`
+    });
+
+    this.logger.veryVerbose.info(
+        'Got response from editing comment\n',
+        result
+    );
+    this.logger.verbose.info('Successfully edited comment on PR');
 
     return result;
   }

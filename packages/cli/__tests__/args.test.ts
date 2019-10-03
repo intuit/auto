@@ -79,4 +79,14 @@ describe('root parser', () => {
       }
     ]);
   });
+
+  test('allow edit in comment', () => {
+    expect(parseArgs(['comment', '--edit', '--message', 'foo'])).toEqual([
+      'comment',
+      {
+        edit: true,
+        message: 'foo'
+      }
+    ]);
+  });
 });

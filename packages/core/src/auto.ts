@@ -408,7 +408,8 @@ export default class Auto {
       pr,
       context = 'default',
       dryRun,
-      delete: deleteFlag
+      delete: deleteFlag,
+      edit: editFlag
     } = options;
     if (!this.git) {
       throw this.createErrorMessage();
@@ -422,19 +423,27 @@ export default class Auto {
         this.logger.log.info(
           `Would have deleted comment on ${prNumber} under "${context}" context`
         );
+      } else if (editFlag) {
+        this.logger.log.info(
+            `Would have edited the comment on ${prNumber} under "${context}" context.\n\nNew message: ${message}`
+        );
       } else {
         this.logger.log.info(
           `Would have commented on ${prNumber} under "${context}" context:\n\n${message}`
         );
       }
+    } else if (editFlag && message) {
+      await this.git.editComment(message, prNumber, context);
+      this.logger.log.success(`Edited comment on PR #${prNumber} under context "${context}"`);
     } else {
       if (deleteFlag) {
         await this.git.deleteComment(prNumber, context);
+        this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
       }
 
       if (message) {
         await this.git.createComment(message, prNumber, context);
-        this.logger.log.success(`Commented on PR #${pr}`);
+        this.logger.log.success(`Commented on PR #${prNumber}`);
       }
     }
   }
