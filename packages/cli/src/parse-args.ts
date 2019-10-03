@@ -274,7 +274,8 @@ const commands: ICommand[] = [
     ],
     examples: [
       '{green $} auto comment --delete',
-      '{green $} auto comment --pr 123 --comment "# Why you\'re wrong..."'
+      '{green $} auto comment --pr 123 --message "# Why you\'re wrong..."',
+      '{green $} auto comment --pr 123 --edit --message "This smells..." --context code-smell'
     ]
   },
   {

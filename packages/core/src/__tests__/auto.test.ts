@@ -578,6 +578,18 @@ describe('Auto', () => {
       expect(deleteComment).toHaveBeenCalled();
     });
 
+    test('should edit a comment', async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const editComment = jest.fn();
+      auto.git!.editComment = editComment;
+
+      await auto.comment({ pr: 10, message: 'foo', edit: true });
+      expect(editComment).toHaveBeenCalled();
+    });
+
     test('should not delete a comment in dry run mode', async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
@@ -585,12 +597,18 @@ describe('Auto', () => {
 
       const deleteComment = jest.fn();
       auto.git!.deleteComment = deleteComment;
+      const editComment = jest.fn();
+      auto.git!.editComment = editComment;
 
       await auto.comment({ pr: 10, message: 'foo bar', dryRun: true });
       expect(deleteComment).not.toHaveBeenCalled();
 
       await auto.comment({ pr: 10, delete: true, dryRun: true });
       expect(deleteComment).not.toHaveBeenCalled();
+
+      await auto.comment({ pr: 10, message: 'foo bar', edit: true, dryRun: true });
+      expect(deleteComment).not.toHaveBeenCalled();
+      expect(editComment).not.toHaveBeenCalled();
     });
   });
 

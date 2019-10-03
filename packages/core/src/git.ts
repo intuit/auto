@@ -475,7 +475,7 @@ export default class Git {
     this.logger.veryVerbose.info('Got PR comments\n', comments);
 
     const oldMessage = comments.data.find(comment =>
-        comment.body.includes(commentIdentifier)
+      comment.body.includes(commentIdentifier)
     );
 
     if (!oldMessage) {
@@ -545,6 +545,8 @@ export default class Git {
       this.logger.verbose.info('Successfully edited comment on PR');
 
       return result;
+    } else {
+      await this.createComment(message, pr, context);
     }
   }
 
