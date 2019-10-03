@@ -439,8 +439,8 @@ export default class Auto {
       if (deleteFlag) {
         await this.git.deleteComment(prNumber, context);
         this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
-      } 
-      
+      }
+
       if (message) {
         await this.git.createComment(message, prNumber, context);
         this.logger.log.success(`Commented on PR #${prNumber}`);
