@@ -211,13 +211,6 @@ const deleteFlag: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const editFlag: commandLineUsage.OptionDefinition = {
-  name: 'edit',
-  type: Boolean,
-  alias: 'e',
-  group: 'main'
-};
-
 interface ICommand {
   name: string;
   summary: string;
@@ -266,8 +259,14 @@ const commands: ICommand[] = [
     options: [
       pr,
       context,
+      {
+        name: 'edit',
+        type: Boolean,
+        alias: 'e',
+        group: 'main',
+        description: 'Edit old comment'
+      },
       { ...deleteFlag, description: 'Delete old comment' },
-      { ...editFlag, description: 'Edit old comment' },
       { ...message, description: 'Message to post to comment' },
       dryRun,
       ...defaultOptions
