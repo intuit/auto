@@ -432,18 +432,15 @@ export default class Auto {
           `Would have commented on ${prNumber} under "${context}" context:\n\n${message}`
         );
       }
-    } else {
-      if (editFlag && message) {
-        await this.git.editComment(message, prNumber, context);
-        this.logger.log.success(`Edited comment on PR #${pr} under context "${context}"`);
-      } else {
-        if (deleteFlag) {
-          await this.git.deleteComment(prNumber, context);
-        } else if (message) {
-          await this.git.createComment(message, prNumber, context);
-          this.logger.log.success(`Commented on PR #${pr}`);
-        }
-      }
+    } else if (editFlag && message) {
+      await this.git.editComment(message, prNumber, context);
+      this.logger.log.success(`Edited comment on PR #${prNumber} under context "${context}"`);
+    } else if (deleteFlag) {
+      await this.git.deleteComment(prNumber, context);
+      this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
+    } else if (message) {
+      await this.git.createComment(message, prNumber, context);
+      this.logger.log.success(`Commented on PR #${prNumber}`);
     }
   }
 
