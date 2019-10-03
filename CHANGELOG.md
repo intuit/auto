@@ -1,3 +1,29 @@
+# v7.7.0 (Thu Oct 03 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`
+  - Ability to edit comments [#583](https://github.com/intuit/auto/pull/583) (alex_sutedja@intuit.com [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump graphql from 14.5.4 to 14.5.8 [#582](https://github.com/intuit/auto/pull/582) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump env-ci from 4.1.1 to 4.1.3 [#581](https://github.com/intuit/auto/pull/581) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 3.0.5 to 3.0.7 [#579](https://github.com/intuit/auto/pull/579) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.7.5 to 12.7.8 [#578](https://github.com/intuit/auto/pull/578) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 8.1.6 to 9.4.0 [#577](https://github.com/intuit/auto/pull/577) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.8.1 to 6.9.1 [#575](https://github.com/intuit/auto/pull/575) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.30.0 to 16.30.1 [#576](https://github.com/intuit/auto/pull/576) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- asutedja (alex_sutedja@intuit.com)
+
+---
+
 # v7.6.2 (Mon Sep 30 2019)
 
 #### 🏠  Internal
