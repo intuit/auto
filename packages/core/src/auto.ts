@@ -435,12 +435,16 @@ export default class Auto {
     } else if (editFlag && message) {
       await this.git.editComment(message, prNumber, context);
       this.logger.log.success(`Edited comment on PR #${prNumber} under context "${context}"`);
-    } else if (deleteFlag) {
-      await this.git.deleteComment(prNumber, context);
-      this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
-    } else if (message) {
-      await this.git.createComment(message, prNumber, context);
-      this.logger.log.success(`Commented on PR #${prNumber}`);
+    } else {
+      if (deleteFlag) {
+        await this.git.deleteComment(prNumber, context);
+        this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
+      } 
+      
+      if (message) {
+        await this.git.createComment(message, prNumber, context);
+        this.logger.log.success(`Commented on PR #${prNumber}`);
+      }
     }
   }
 
