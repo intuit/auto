@@ -1,3 +1,17 @@
+# v7.8.0 (Fri Oct 04 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - proxy support in auto [#584](https://github.com/intuit/auto/pull/584) (ykhandelwal@intuit.com [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ykhandelwal (ykhandelwal@intuit.com)
+
+---
+
 # v7.7.0 (Thu Oct 03 2019)
 
 #### 🚀  Enhancement
