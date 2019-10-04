@@ -67,7 +67,7 @@ GH_TOKEN=YOUR_TOKEN
 NPM_TOKEN=PUBLISH_TOKEN
 ```
 
-If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set it in your CI as well.
+If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set the variable in your CI as well.
 
 ```bash
 https_proxy=<PROXYHOST>:<PROXYPORT>
