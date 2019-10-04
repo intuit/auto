@@ -43,7 +43,7 @@ import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
-const proxyUrl = process.env.https_proxy;
+const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
 
 interface IAuthor {
