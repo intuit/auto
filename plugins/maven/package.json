@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/maven",
-  "version": "7.7.0",
+  "version": "7.8.0",
   "main": "dist/index.js",
   "description": "Maven publishing plugin for auto",
   "author": {
