@@ -11,6 +11,7 @@ import {
   SyncWaterfallHook
 } from 'tapable';
 
+import HttpsProxyAgent from 'https-proxy-agent';
 import {
   ApiOptions,
   ICanaryOptions,
@@ -25,8 +26,6 @@ import {
   IShipItOptions,
   IVersionOptions
 } from './auto-args';
-
-import HttpsProxyAgent from 'https-proxy-agent';
 import Changelog from './changelog';
 import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
@@ -754,7 +753,8 @@ export default class Auto {
         repo: gitOptions.repo,
         token: gitOptions.token,
         baseUrl: gitOptions.baseUrl,
-        graphqlBaseUrl: gitOptions.graphqlBaseUrl
+        graphqlBaseUrl: gitOptions.graphqlBaseUrl,
+        agent: gitOptions.agent
       },
       this.logger
     );

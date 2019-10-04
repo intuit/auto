@@ -15,7 +15,6 @@ import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 
 const gitlog = promisify(gitlogNode);
-const proxyUrl = process.env.https_proxy;
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
@@ -28,7 +27,7 @@ export interface IGitOptions {
   baseUrl?: string;
   graphqlBaseUrl?: string;
   token?: string;
-  agent?: string;
+  agent?: HttpsProxyAgent;
 }
 
 class GitAPIError extends Error {
@@ -65,14 +64,13 @@ export default class Git {
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
     this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
-
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     const gitHub = Octokit.plugin(enterpriseCompat)
       .plugin(retry)
       .plugin(throttling);
     this.github = new gitHub({
       baseUrl: this.baseUrl,
-      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
+      agent: this.options.agent,
       auth: this.options.token,
       previews: ['symmetra-preview'],
       throttle: {
