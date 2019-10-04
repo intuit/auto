@@ -4,6 +4,7 @@ import retry from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
+import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 
@@ -26,6 +27,7 @@ export interface IGitOptions {
   baseUrl?: string;
   graphqlBaseUrl?: string;
   token?: string;
+  agent?: HttpsProxyAgent;
 }
 
 class GitAPIError extends Error {
@@ -62,13 +64,13 @@ export default class Git {
     this.options = options;
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
     this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
-
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     const gitHub = Octokit.plugin(enterpriseCompat)
       .plugin(retry)
       .plugin(throttling);
     this.github = new gitHub({
       baseUrl: this.baseUrl,
+      agent: this.options.agent,
       auth: this.options.token,
       previews: ['symmetra-preview'],
       throttle: {
@@ -539,10 +541,7 @@ export default class Git {
       body: `${commentIdentifier}\n${message}`
     });
 
-    this.logger.veryVerbose.info(
-        'Got response from editing comment\n',
-        result
-    );
+    this.logger.veryVerbose.info('Got response from editing comment\n', result);
     this.logger.verbose.info('Successfully edited comment on PR');
 
     return result;

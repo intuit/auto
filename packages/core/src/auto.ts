@@ -11,6 +11,7 @@ import {
   SyncWaterfallHook
 } from 'tapable';
 
+import HttpsProxyAgent from 'https-proxy-agent';
 import {
   ApiOptions,
   ICanaryOptions,
@@ -25,7 +26,6 @@ import {
   IShipItOptions,
   IVersionOptions
 } from './auto-args';
-
 import Changelog from './changelog';
 import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
@@ -43,6 +43,7 @@ import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
+const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
 
 interface IAuthor {
@@ -182,6 +183,7 @@ export default class Auto {
       repo: config.repo,
       ...repository,
       token,
+      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi || 'https://api.github.com',
       graphqlBaseUrl:
         config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
@@ -425,7 +427,7 @@ export default class Auto {
         );
       } else if (editFlag) {
         this.logger.log.info(
-            `Would have edited the comment on ${prNumber} under "${context}" context.\n\nNew message: ${message}`
+          `Would have edited the comment on ${prNumber} under "${context}" context.\n\nNew message: ${message}`
         );
       } else {
         this.logger.log.info(
@@ -434,11 +436,15 @@ export default class Auto {
       }
     } else if (editFlag && message) {
       await this.git.editComment(message, prNumber, context);
-      this.logger.log.success(`Edited comment on PR #${prNumber} under context "${context}"`);
+      this.logger.log.success(
+        `Edited comment on PR #${prNumber} under context "${context}"`
+      );
     } else {
       if (deleteFlag) {
         await this.git.deleteComment(prNumber, context);
-        this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
+        this.logger.log.success(
+          `Deleted comment on PR #${prNumber} under context "${context}"`
+        );
       }
 
       if (message) {
@@ -747,7 +753,8 @@ export default class Auto {
         repo: gitOptions.repo,
         token: gitOptions.token,
         baseUrl: gitOptions.baseUrl,
-        graphqlBaseUrl: gitOptions.graphqlBaseUrl
+        graphqlBaseUrl: gitOptions.graphqlBaseUrl,
+        agent: gitOptions.agent
       },
       this.logger
     );
