@@ -146,5 +146,8 @@
       "dependencies",
       "blog-post"
     ]
+  },
+  "dependencies": {
+    "https-proxy-agent": "^2.2.2"
   }
 }

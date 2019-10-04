@@ -62,9 +62,12 @@ You must configure some environment variables for publishing and releasing to wo
 
 You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys! These env vars will override these any variable already set on the process. This enables you to have a per project configuration that isn't effected by your global setup.
 
+If call require to use the http or https proxy, add http_proxy or https_proxy command or add these to .env file.
+
 ```bash
 GH_TOKEN=YOUR_TOKEN
 NPM_TOKEN=PUBLISH_TOKEN
+https_proxy=<PROXYHOST>:<PROXYPORT>
 ```
 
 ### 4. Script

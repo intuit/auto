@@ -4,6 +4,7 @@ import retry from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
+import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 
@@ -14,6 +15,7 @@ import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 
 const gitlog = promisify(gitlogNode);
+const proxyUrl = process.env.https_proxy;
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
@@ -26,6 +28,7 @@ export interface IGitOptions {
   baseUrl?: string;
   graphqlBaseUrl?: string;
   token?: string;
+  agent?: string;
 }
 
 class GitAPIError extends Error {
@@ -69,6 +72,7 @@ export default class Git {
       .plugin(throttling);
     this.github = new gitHub({
       baseUrl: this.baseUrl,
+      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
       auth: this.options.token,
       previews: ['symmetra-preview'],
       throttle: {
@@ -539,10 +543,7 @@ export default class Git {
       body: `${commentIdentifier}\n${message}`
     });
 
-    this.logger.veryVerbose.info(
-        'Got response from editing comment\n',
-        result
-    );
+    this.logger.veryVerbose.info('Got response from editing comment\n', result);
     this.logger.verbose.info('Successfully edited comment on PR');
 
     return result;
