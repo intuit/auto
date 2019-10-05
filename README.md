@@ -39,6 +39,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [conventional-commits](./plugins/conventional-commits) - parse conventional commit messages for version bumps
 - [jira](./plugins/jira) - Include jira story links in the changelog
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
+- [maven](./plugins/maven) - publish code with maven
 - [npm](./plugins/npm) - publish code to npm (DEFAULT)
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
@@ -181,6 +182,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
