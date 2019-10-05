@@ -7,21 +7,21 @@
 
 :hammer: Tool APIs :wrench:
 
-- [Setup](pages/auto-init.md)
-  - [auto init](pages/auto-init.md#auto-init)
-  - [auto create-labels](pages/auto-init.md#auto-create-labels)
+- [Setup](pages/generated/init.md)
+  - [auto init](pages/generated/init.md#init)
+  - [auto create-labels](pages/generated/init.md#create-labels)
 - [Publishing](pages/publishing.md)
-  - [auto version](pages/auto-version.md)
-  - [auto changelog](pages/auto-changelog.md)
-  - [auto release](pages/auto-release.md)
-  - [auto shipit](pages/auto-shipit.md)
-  - [auto canary](pages/auto-canary.md)
+  - [auto version](pages/generated/version.md)
+  - [auto changelog](pages/generated/changelog.md)
+  - [auto release](pages/generated/release.md)
+  - [auto shipit](pages/generated/shipit.md)
+  - [auto canary](pages/generated/canary.md)
 - [PR Interaction](pages/pr-interaction.md)
-  - [auto label](pages/auto-label.md)
-  - [auto pr-status](pages/auto-pr-status.md)
-  - [auto pr-check](pages/auto-pr-check.md)
-  - [auto pr-body](pages/auto-pr-body.md)
-  - [auto comment](pages/auto-comment.md)
+  - [auto label](pages/generated/label.md)
+  - [auto pr-status](pages/generated/pr-status.md)
+  - [auto pr-check](pages/generated/pr-check.md)
+  - [auto pr-body](pages/generated/pr-body.md)
+  - [auto comment](pages/generated/comment.md)
 
 ---
 

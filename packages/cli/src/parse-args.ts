@@ -190,7 +190,7 @@ const deleteFlag: Option = {
   group: 'main'
 };
 
-const commands: Command[] = [
+export const commands: Command[] = [
   {
     name: 'init',
     group: 'Setup Command',
@@ -218,7 +218,8 @@ const commands: Command[] = [
   {
     name: 'label',
     group: 'Pull Request Interaction Commands',
-    description: 'Get the labels for a pull request',
+    description:
+      "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!",
     options: [
       { ...pr, description: `${pr.description} (defaults to last merged PR)` }
     ],
@@ -331,7 +332,8 @@ const commands: Command[] = [
   {
     name: 'version',
     group: 'Release Commands',
-    description: 'Get the semantic version bump for the given changes.',
+    description:
+      'Get the semantic version bump for the given changes. Requires all PRs to have labels for the change type. If a PR does not have a label associated with it, it will default to `patch`.',
     options: [
       {
         name: 'only-publish-with-release-label',
@@ -362,7 +364,8 @@ const commands: Command[] = [
   {
     name: 'changelog',
     group: 'Release Commands',
-    description: "Prepend release notes to 'CHANGELOG.md'",
+    description:
+      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.",
     options: [
       dryRun,
       noVersionPrefix,
