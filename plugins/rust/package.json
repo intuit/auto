@@ -1,0 +1,46 @@
+{
+  "name": "@auto-it/rust",
+  "version": "7.8.0",
+  "main": "dist/index.js",
+  "description": "Deploy Rust crates to crates.io",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "rust",
+    "crates.io"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@auto-it/core": "link:../../packages/core",
+    "semver": "^6.0.0",
+    "env-ci": "^4.1.1",
+    "user-home": "^2.0.0",
+    "toml": "^3.0.0"
+  }
+}
