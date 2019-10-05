@@ -45,14 +45,11 @@
     "@auto-it/npm": "link:../../plugins/npm",
     "@auto-it/released": "link:../../plugins/released",
     "chalk": "^2.4.2",
-    "command-line-args": "^5.1.1",
-    "command-line-usage": "^6.0.2",
+    "command-line-application": "^0.9.1",
     "dedent": "^0.7.0",
     "signale": "^1.4.0"
   },
   "devDependencies": {
-    "@types/command-line-args": "^5.0.0",
-    "@types/command-line-usage": "^5.0.1",
     "@types/dedent": "^0.7.0",
     "@types/signale": "^1.2.1",
     "pkg": "^4.4.0",

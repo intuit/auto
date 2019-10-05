@@ -4265,6 +4265,20 @@ combined-stream@^1.0.5, combined-stream@^1.0.6, combined-stream@~1.0.5, combined
   dependencies:
     delayed-stream "~1.0.0"
 
+command-line-application@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.9.1.tgz#bf7d8d22e22832abe06453f7d7d8539af88f7a88"
+  integrity sha512-rAb6ES/5yMvXNoforaFxm3zLsz7n4Ja0y+ukgm/5mWwdFf0vyFdb3k1Vzlnogowg1gqhC6rJN0u4pCWn0lsqGg==
+  dependencies:
+    "@types/command-line-args" "^5.0.0"
+    "@types/command-line-usage" "^5.0.1"
+    chalk "^2.4.1"
+    command-line-args "^5.1.1"
+    command-line-usage "^6.0.0"
+    meant "^1.0.1"
+    remove-markdown "^0.3.0"
+    tslib "1.10.0"
+
 command-line-args@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/command-line-args/-/command-line-args-5.1.1.tgz#88e793e5bb3ceb30754a86863f0401ac92fd369a"
@@ -4275,7 +4289,7 @@ command-line-args@^5.1.1:
     lodash.camelcase "^4.3.0"
     typical "^4.0.0"
 
-command-line-usage@^6.0.2:
+command-line-usage@^6.0.0:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/command-line-usage/-/command-line-usage-6.0.2.tgz#b130e3495ae743ce4833e1c9373bbb0898275dda"
   integrity sha512-Jr9RQM43qWDwpRJOa0lgZw0LhiU8tgOqoR+xxIcb3eT5vFZi69fBWUODMSBtGUYI1qTlElPl3txFQY6rChVuXQ==
@@ -12639,6 +12653,11 @@ remove-array-items@^1.0.0:
   resolved "https://registry.yarnpkg.com/remove-array-items/-/remove-array-items-1.1.1.tgz#fd745ff73d0822e561ea910bf1b401fc7843e693"
   integrity sha512-MXW/jtHyl5F1PZI7NbpS8SOtympdLuF20aoWJT5lELR1p/HJDd5nqW8Eu9uLh/hCRY3FgvrIT5AwDCgBODklcA==
 
+remove-markdown@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/remove-markdown/-/remove-markdown-0.3.0.tgz#5e4b667493a93579728f3d52ecc1db9ca505dc98"
+  integrity sha1-XktmdJOpNXlyjz1S7MHbnKUF3Jg=
+
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
@@ -14220,6 +14239,11 @@ ts-jest@^24.0.2:
     resolve "1.x"
     semver "^5.5"
     yargs-parser "10.x"
+
+tslib@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
+  integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
 tslib@1.9.0:
   version "1.9.0"
