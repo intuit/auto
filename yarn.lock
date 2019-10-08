@@ -5162,9 +5162,9 @@ deepmerge@^2.0.1:
   integrity sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA==
 
 deepmerge@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.1.0.tgz#f4647b378c0a9d32965470e477c01ae55451b19a"
-  integrity sha512-tJlmKE535XRVBrzMRMqlm4V2S/l3yO/qr9Ad0MUqgR5jh9epGrALs8Q6+pROMa6ntDieAlnmYM/cDFCtNjp4+Q==
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.1.1.tgz#ee0866e4019fe62c1276b9062d4c4803d9aea14c"
+  integrity sha512-+qO5WbNBKBaZez95TffdUDnGIo4+r5kmsX8aOb7PDHvXsTbghAmleuxjs6ytNaf5Eg4FGBXDS5vqO61TRi6BMg==
 
 defaults@^1.0.3:
   version "1.0.3"
