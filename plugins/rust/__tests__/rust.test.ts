@@ -206,11 +206,16 @@ describe('RustPlugin', () => {
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         await hooks.version.promise(Auto.SEMVER.patch);
-        expect(exec).toHaveBeenCalledWith('git', ['add', 'Cargo.toml']);
+        expect(exec).toHaveBeenCalledWith('cargo', ['build']);
+        expect(exec).toHaveBeenCalledWith('git', [
+          'add',
+          'Cargo.toml',
+          'Cargo.lock'
+        ]);
         expect(exec).toHaveBeenCalledWith('git', [
           'commit',
           '-m',
-          `Bump version to: 1.2.4 [skip ci]`,
+          `'Bump version to: 1.2.4 [skip ci]'`,
           '--no-verify'
         ]);
       });
