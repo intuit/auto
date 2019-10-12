@@ -79,11 +79,14 @@ export default class RustPlugin implements IPlugin {
     auto.hooks.version.tapPromise(this.name, async version => {
       const versionNew = bumpVersion(version);
       auto.logger.log.info(`Bumped version to: ${versionNew}`);
-      await execPromise('git', ['add', 'Cargo.toml']);
+      auto.logger.log.info('Building to update Cargo.lock');
+      await execPromise('cargo', ['build']);
+      auto.logger.verbose.info('Committing files');
+      await execPromise('git', ['add', 'Cargo.toml', 'Cargo.lock']);
       await execPromise('git', [
         'commit',
         '-m',
-        `Bump version to: ${versionNew} [skip ci]`,
+        `'Bump version to: ${versionNew} [skip ci]'`,
         '--no-verify'
       ]);
       auto.logger.log.info('Create git commit for new version');
