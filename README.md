@@ -46,6 +46,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [slack](./plugins/slack) - Post release notes to slack
 - [twitter](./plugins/twitter) - Post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - Add extra assets to the release
+- [crates](./plugins/crates) - Publish Rust crates
 
 ## Start Developing
 

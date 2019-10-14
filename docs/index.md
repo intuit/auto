@@ -40,6 +40,7 @@
   - [Upload Assets](../plugins/upload-assets/README.md)
   - [Git Tag](../plugins/git-tag/README.md)
   - [Writing Plugins](pages/writing-plugins.md)
+  - [Crates](../plugins/crates/README.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
 ---
