@@ -1,4 +1,4 @@
-# Rust Plugin
+# CratesPlugin Plugin
 
 Deploy Rust crates to [crates.io](https://crates.io/).
 
@@ -7,20 +7,20 @@ Deploy Rust crates to [crates.io](https://crates.io/).
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npm i --save-dev @auto-cli/rust
+npm i --save-dev @auto-cli/crates
 # or
-yarn add -D @auto-cli/rust
+yarn add -D @auto-cli/crates
 ```
 
 ## Usage
 
 ```json
 {
-  "plugins": ["rust"]
+  "plugins": ["crates"]
 }
 ```
 
-## Rust Project Configuration
+## Crates Project Configuration
 
 This plugin handles incrementing the crate version, but it requires that your crate be ready for publishing. You can view [the publishing reference](https://doc.rust-lang.org/cargo/reference/publishing.html) for more information on that process.
 

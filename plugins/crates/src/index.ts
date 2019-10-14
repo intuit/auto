@@ -42,23 +42,23 @@ export function bumpVersion(bumpBy: any) {
   return versionNew;
 }
 
-interface IRustPluginOptions {
+interface ICratesPluginOptions {
   dryRun?: boolean;
 }
 
-export default class RustPlugin implements IPlugin {
-  name = 'Rust';
+export default class CratesPlugin implements IPlugin {
+  name = 'Crates';
 
-  readonly options: IRustPluginOptions;
+  readonly options: ICratesPluginOptions;
 
-  constructor(options: IRustPluginOptions = {}) {
+  constructor(options: ICratesPluginOptions = {}) {
     this.options = options;
   }
 
   apply(auto: Auto) {
     auto.hooks.beforeShipIt.tap(this.name, () => {
       if (!checkForCreds()) {
-        throw new Error('Cargo token is needed for the Rust plugin!');
+        throw new Error('Cargo token is needed for the Crates plugin!');
       }
     });
 

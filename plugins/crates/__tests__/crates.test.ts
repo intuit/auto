@@ -1,7 +1,11 @@
 import * as Auto from '@auto-it/core';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
-import RustPlugin, { bumpVersion, checkForCreds, getCargoConfig } from '../src';
+import CratesPlugin, {
+  bumpVersion,
+  checkForCreds,
+  getCargoConfig
+} from '../src';
 
 const sampleCargoToml = `[package]
 name = "example"
@@ -71,7 +75,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('RustPlugin', () => {
+describe('CratesPlugin', () => {
   describe('getCargoConfig', () => {
     test('returns an error if the file does not exist', () => {
       const errorMessage = 'file does not exist';
@@ -154,7 +158,7 @@ describe('RustPlugin', () => {
     describe('beforeShipIt', () => {
       test('throws error if no Cargo creds', async () => {
         existsSync.mockReturnValueOnce(false);
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         try {
@@ -162,13 +166,13 @@ describe('RustPlugin', () => {
           throw new Error('should not hit');
         } catch (err) {
           expect(err.toString()).toMatch(
-            /Cargo token is needed for the Rust plugin/
+            /Cargo token is needed for the Crates plugin/
           );
         }
       });
       test('does not throw error if Cargo creds', async () => {
         existsSync.mockReturnValueOnce(true);
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         await hooks.beforeShipIt.promise();
@@ -178,7 +182,7 @@ describe('RustPlugin', () => {
     describe('getAuthor', () => {
       test('returns author', async () => {
         readFileSync.mockReturnValueOnce(sampleCargoToml);
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         expect(await hooks.getAuthor.promise()).toEqual([
@@ -191,7 +195,7 @@ describe('RustPlugin', () => {
       test('returns version', async () => {
         const prefixRelease = (str: string) => str;
         readFileSync.mockReturnValueOnce(sampleCargoToml);
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         expect(await hooks.getPreviousVersion.promise(prefixRelease)).toEqual(
@@ -202,7 +206,7 @@ describe('RustPlugin', () => {
 
     describe('version', () => {
       test('does versioning', async () => {
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         await hooks.version.promise(Auto.SEMVER.patch);
@@ -223,7 +227,7 @@ describe('RustPlugin', () => {
 
     describe('publish', () => {
       test('does publishing', async () => {
-        const plugin = new RustPlugin();
+        const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         await hooks.publish.promise(Auto.SEMVER.patch);
