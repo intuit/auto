@@ -2,7 +2,7 @@ import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { inc } from 'semver';
+import { inc, ReleaseType } from 'semver';
 import toml from 'toml';
 import userHome from 'user-home';
 
@@ -29,7 +29,7 @@ export function bumpVersion(bumpBy: SEMVER) {
   const content = fs.readFileSync(filePath).toString();
   const config = toml.parse(content);
   const versionOld = config.package.version;
-  const versionNew = inc(versionOld, bumpBy);
+  const versionNew = inc(versionOld, bumpBy as ReleaseType);
 
   if (!versionNew) {
     throw new Error(`Could not increment previous version: ${versionOld}`);
