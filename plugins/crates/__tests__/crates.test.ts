@@ -115,12 +115,8 @@ describe('CratesPlugin', () => {
       readFileSync.mockReturnValueOnce(sampleCargoToml);
     });
 
-    test('throws error if no bumpBy', () => {
-      expect(() => bumpVersion(undefined)).toThrow('Unknown bump-by');
-      expect(readFileSync).not.toHaveBeenCalled();
-    });
-
     test('throws error if could not bump version', () => {
+      // @ts-ignore
       expect(() => bumpVersion('wrong')).toThrow(
         'Could not increment previous version'
       );
@@ -129,19 +125,19 @@ describe('CratesPlugin', () => {
 
     describe('bumps version and writes to file', () => {
       test('patch', () => {
-        const versionNew = bumpVersion('patch');
+        const versionNew = bumpVersion(Auto.SEMVER.patch);
         expect(versionNew).toBe('1.2.4');
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });
 
       test('minor', () => {
-        const versionNew = bumpVersion('minor');
+        const versionNew = bumpVersion(Auto.SEMVER.minor);
         expect(versionNew).toBe('1.3.0');
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });
 
       test('major', () => {
-        const versionNew = bumpVersion('major');
+        const versionNew = bumpVersion(Auto.SEMVER.major);
         expect(versionNew).toBe('2.0.0');
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });

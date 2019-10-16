@@ -25,15 +25,12 @@ export function checkForCreds() {
 }
 
 export function bumpVersion(bumpBy: SEMVER) {
-  if (!bumpBy) {
-    throw new Error(`Unknown bump-by: ${bumpBy}`);
-  }
-
   const filePath = path.join(process.cwd(), 'Cargo.toml');
   const content = fs.readFileSync(filePath).toString();
   const config = toml.parse(content);
   const versionOld = config.package.version;
   const versionNew = inc(versionOld, bumpBy);
+
   if (!versionNew) {
     throw new Error(`Could not increment previous version: ${versionOld}`);
   }
