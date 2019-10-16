@@ -10,6 +10,9 @@
       "path": "plugins/chrome"
     },
     {
+      "path": "plugins/crates"
+    },
+    {
       "path": "plugins/conventional-commits"
     },
     {
