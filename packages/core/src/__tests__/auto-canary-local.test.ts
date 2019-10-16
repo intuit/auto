@@ -19,7 +19,7 @@ test('shipit should publish canary in locally when not on master', async () => {
 
   auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
   auto.git!.getSha = () => Promise.resolve('abc');
-  auto.git!.createComment = jest.fn();
+  jest.spyOn(auto.git!, 'createComment').mockImplementation();
   auto.release!.getCommitsInRelease = () => Promise.resolve([]);
   auto.release!.getCommits = () => Promise.resolve([]);
   const canary = jest.fn();

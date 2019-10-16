@@ -5,7 +5,7 @@ import makeCommitFromMsg from './make-commit-from-msg';
 describe('parsePR', () => {
   test('should do nothing without merge commit', () => {
     const commit = makeCommitFromMsg('Not a merge');
-    expect(parsePR(commit)).toEqual(commit);
+    expect(parsePR(commit)).toStrictEqual(commit);
   });
 
   test('should parse number base and comment', () => {
@@ -13,7 +13,7 @@ describe('parsePR', () => {
       'Merge pull request #1234 from Another PR\nComments about the PR'
     );
 
-    expect(parsePR(commit)).toEqual({
+    expect(parsePR(commit)).toStrictEqual({
       ...commit,
       pullRequest: {
         number: 1234,
@@ -27,12 +27,12 @@ describe('parsePR', () => {
 describe('parseSquashPR', () => {
   test('should do nothing squash merge commit', () => {
     const commit = makeCommitFromMsg('Not a squash');
-    expect(parseSquashPR(commit)).toEqual(commit);
+    expect(parseSquashPR(commit)).toStrictEqual(commit);
   });
 
   test('should parse PR number and comment', () => {
     const commit = makeCommitFromMsg('Some Message (#1234)');
-    expect(parseSquashPR(commit)).toEqual({
+    expect(parseSquashPR(commit)).toStrictEqual({
       ...commit,
       pullRequest: {
         number: 1234

@@ -16,13 +16,9 @@ jest.mock('parse-github-url', () => () => parseResult);
 test('should throw without a repo', async () => {
   expect.assertions(1);
 
-  try {
-    await packageConfig();
-  } catch (error) {
-    expect(error.message.trim()).toBe(
-      'Cannot read repo info from package.json'
-    );
-  }
+  await expect(packageConfig()).rejects.toStrictEqual(
+    new Error('Cannot read repo info from package.json')
+  );
 });
 
 test('should throw without an owner', async () => {
@@ -32,13 +28,11 @@ test('should throw without an owner', async () => {
   });
   parseResult = undefined;
 
-  try {
-    await packageConfig();
-  } catch (error) {
-    expect(error.message.trim()).toBe(
+  await expect(packageConfig()).rejects.toStrictEqual(
+    new Error(
       'Cannot read owner and package name from GitHub URL in package.json'
-    );
-  }
+    )
+  );
 });
 
 test('should throw without an package name', async () => {
@@ -50,13 +44,11 @@ test('should throw without an package name', async () => {
     owner: 'black-panther'
   };
 
-  try {
-    await packageConfig();
-  } catch (error) {
-    expect(error.message.trim()).toBe(
+  await expect(packageConfig()).rejects.toStrictEqual(
+    new Error(
       'Cannot read owner and package name from GitHub URL in package.json'
-    );
-  }
+    )
+  );
 });
 
 test('should correctly parse package info', async () => {
@@ -69,7 +61,7 @@ test('should correctly parse package info', async () => {
     name: 'operation-foo'
   };
 
-  expect(await packageConfig()).toEqual({
+  expect(await packageConfig()).toStrictEqual({
     repo: 'operation-foo',
     owner: 'black-panther'
   });

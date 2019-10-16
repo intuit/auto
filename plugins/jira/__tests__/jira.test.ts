@@ -18,7 +18,7 @@ describe('parse jira', () => {
       ...makeCommitFromMsg('Add log')
     };
 
-    expect(parseJira(commit)).toEqual(commit);
+    expect(parseJira(commit)).toStrictEqual(commit);
   });
 
   test('story found', () => {
@@ -26,11 +26,15 @@ describe('parse jira', () => {
       number: ['P-5052']
     };
 
-    expect(parseJira(makeCommitFromMsg('P-5052: Add log')).jira).toEqual(jira);
-    expect(parseJira(makeCommitFromMsg('[P-5052] - Add log')).jira).toEqual(
+    expect(parseJira(makeCommitFromMsg('P-5052: Add log')).jira).toStrictEqual(
       jira
     );
-    expect(parseJira(makeCommitFromMsg('[P-5052] Add log')).jira).toEqual(jira);
+    expect(
+      parseJira(makeCommitFromMsg('[P-5052] - Add log')).jira
+    ).toStrictEqual(jira);
+    expect(parseJira(makeCommitFromMsg('[P-5052] Add log')).jira).toStrictEqual(
+      jira
+    );
   });
 
   test('story found, pr no title', () => {
@@ -38,26 +42,28 @@ describe('parse jira', () => {
       number: ['PLAYA-5052']
     };
 
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052]')).jira).toEqual(jira);
+    expect(parseJira(makeCommitFromMsg('[PLAYA-5052]')).jira).toStrictEqual(
+      jira
+    );
   });
 
-  test('story found', () => {
+  test('story found multiple', () => {
     const jira = {
       number: ['PLAYA-5052', 'PLAYA-6000']
     };
 
     expect(
       parseJira(makeCommitFromMsg('PLAYA-5052 PLAYA-6000: Add log')).jira
-    ).toEqual(jira);
+    ).toStrictEqual(jira);
     expect(
       parseJira(makeCommitFromMsg('[PLAYA-5052][PLAYA-6000] - Add log')).jira
-    ).toEqual(jira);
+    ).toStrictEqual(jira);
     expect(
       parseJira(makeCommitFromMsg('[PLAYA-5052] PLAYA-6000: Add log')).jira
-    ).toEqual(jira);
+    ).toStrictEqual(jira);
     expect(
       parseJira(makeCommitFromMsg('PLAYA-5052 [PLAYA-6000] - Add log')).jira
-    ).toEqual(jira);
+    ).toStrictEqual(jira);
   });
 });
 

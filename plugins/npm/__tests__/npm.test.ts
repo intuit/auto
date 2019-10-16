@@ -58,7 +58,14 @@ describe('changedPackages ', () => {
   test('should return nothing without a package directory', async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
-    expect(await changedPackages('sha', [], {}, dummyLog())).toEqual([]);
+    expect(
+      await changedPackages({
+        sha: 'sha',
+        packages: [],
+        lernaJson: {},
+        logger: dummyLog()
+      })
+    ).toStrictEqual([]);
   });
 
   test('should match files in package directory', async () => {
@@ -67,9 +74,9 @@ describe('changedPackages ', () => {
     );
 
     expect(
-      await changedPackages(
-        'sha',
-        [
+      await changedPackages({
+        sha: 'sha',
+        packages: [
           {
             name: 'foo',
             path: 'packages/foo',
@@ -81,10 +88,10 @@ describe('changedPackages ', () => {
             version: '1.0.0'
           }
         ],
-        {},
-        dummyLog()
-      )
-    ).toEqual(['foo', 'bar']);
+        lernaJson: {},
+        logger: dummyLog()
+      })
+    ).toStrictEqual(['foo', 'bar']);
   });
 
   test('should match files in package directory with @scope/ names', async () => {
@@ -93,9 +100,9 @@ describe('changedPackages ', () => {
     );
 
     expect(
-      await changedPackages(
-        'sha',
-        [
+      await changedPackages({
+        sha: 'sha',
+        packages: [
           {
             name: '@scope/foo',
             path: 'packages/@scope/foo',
@@ -107,22 +114,22 @@ describe('changedPackages ', () => {
             version: '1.0.0'
           }
         ],
-        {},
-        dummyLog()
-      )
-    ).toEqual(['@scope/foo', '@scope/bar']);
+        lernaJson: {},
+        logger: dummyLog()
+      })
+    ).toStrictEqual(['@scope/foo', '@scope/bar']);
   });
 });
 
 describe('getMonorepoPackage', () => {
   test('should default to 0.0.0', () => {
     monorepoPackages.mockReturnValueOnce([]);
-    expect(getMonorepoPackage()).toEqual({});
+    expect(getMonorepoPackage()).toStrictEqual({});
   });
 
   test('should find greatest package version', () => {
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
-    expect(getMonorepoPackage()).toEqual({ version: '0.1.2' });
+    expect(getMonorepoPackage()).toStrictEqual({ version: '0.1.2' });
   });
 });
 
@@ -181,7 +188,7 @@ describe('getAuthor', () => {
         }
       }
     `;
-    expect(await hooks.getAuthor.promise()).toEqual({
+    expect(await hooks.getAuthor.promise()).toStrictEqual({
       name: 'Adam',
       email: 'adam@email.com'
     });
@@ -199,7 +206,7 @@ describe('getAuthor', () => {
         "author": "Adam<adam@email.com>"
       }
     `;
-    expect(await hooks.getAuthor.promise()).toEqual({
+    expect(await hooks.getAuthor.promise()).toStrictEqual({
       name: 'Adam',
       email: 'adam@email.com'
     });
@@ -282,11 +289,13 @@ describe('getPreviousVersion', () => {
 test('should use string semver if no published package', async () => {
   const plugin = new NPMPlugin({ setRcToken: false });
 
-  expect(plugin).toEqual({
-    forcePublish: true,
-    name: 'NPM',
-    setRcToken: false
-  });
+  expect(plugin).toStrictEqual(
+    expect.objectContaining({
+      forcePublish: true,
+      name: 'NPM',
+      setRcToken: false
+    })
+  );
 });
 
 describe('publish', () => {
@@ -524,23 +533,6 @@ describe('publish', () => {
     await hooks.publish.promise(Auto.SEMVER.patch);
     expect(exec).toHaveBeenCalledWith('npm', ['publish']);
   });
-
-  test('should publish private scoped packages to private', async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "@scope/test",
-        "private": true
-      }
-    `;
-
-    await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith('npm', ['publish']);
-  });
 });
 
 describe('canary', () => {
@@ -659,7 +651,7 @@ describe('canary', () => {
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
-    expect(value).toEqual({
+    expect(value).toStrictEqual({
       error: 'No packages were changed. No canary published.'
     });
   });
@@ -718,7 +710,7 @@ describe('canary', () => {
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
-    expect(value).toEqual({
+    expect(value).toStrictEqual({
       error: 'No packages were changed. No canary published.'
     });
   });

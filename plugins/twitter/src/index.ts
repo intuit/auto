@@ -33,14 +33,23 @@ const removeLastLine = (text: string) =>
     .join('\n')
     .trim();
 
-const makeTweet = (
-  releaseNotes: string,
-  message: string,
-  versionBump: ReleaseType,
-  newVersion: string,
-  repo: string,
-  url: string
-) => {
+interface MakeTweetArgs {
+  releaseNotes: string;
+  message: string;
+  versionBump: ReleaseType;
+  newVersion: string;
+  repo: string;
+  url: string;
+}
+
+const makeTweet = ({
+  releaseNotes,
+  message,
+  versionBump,
+  newVersion,
+  repo,
+  url
+}: MakeTweetArgs) => {
   const build = (notes: string) =>
     message
       .replace('%release', versionBump)
@@ -71,7 +80,7 @@ export default class TwitterPlugin implements IPlugin {
   name = 'Twitter';
 
   readonly options: ITwitterPluginOptions;
-  private readonly tweet: (message: string) => Promise<any>;
+  private readonly tweet: (message: string) => Promise<void>;
 
   constructor(options: Partial<ITwitterPluginOptions> = {}) {
     this.options = { ...defaults, ...options };
@@ -112,14 +121,14 @@ export default class TwitterPlugin implements IPlugin {
         }
 
         await this.tweet(
-          makeTweet(
+          makeTweet({
             releaseNotes,
-            this.options.message,
+            message: this.options.message,
             versionBump,
             newVersion,
-            auto.git.options.repo,
-            response.data.html_url
-          )
+            repo: auto.git.options.repo,
+            url: response.data.html_url
+          })
         );
       }
     );

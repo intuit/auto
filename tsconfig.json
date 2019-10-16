@@ -10,10 +10,6 @@
     "declaration": true,
     "lib": ["es6", "es2017", "es2017.object"],
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "plugins": [
-      { "name": "typescript-tslint-plugin", "configFile": "./tslint.json" }
-    ],
-    "typeRoots": ["./node_modules/@types/"]
+    "experimentalDecorators": true
   }
 }

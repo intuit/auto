@@ -8,7 +8,7 @@ import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 
-import { Memoize } from 'typescript-memoize';
+import { Memoize as memoize } from 'typescript-memoize';
 
 import { ILabelDefinition } from './release';
 import execPromise from './utils/exec-promise';
@@ -65,16 +65,19 @@ export default class Git {
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
     this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const gitHub = Octokit.plugin(enterpriseCompat)
+    const GitHub = Octokit.plugin(enterpriseCompat)
       .plugin(retry)
       .plugin(throttling);
-    this.github = new gitHub({
+    this.github = new GitHub({
       baseUrl: this.baseUrl,
       agent: this.options.agent,
       auth: this.options.token,
       previews: ['symmetra-preview'],
       throttle: {
-        onRateLimit: (retryAfter: number, opts: any) => {
+        onRateLimit: (
+          retryAfter: number,
+          opts: { request: { retryCount: number }; method: string; url: string }
+        ) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
@@ -84,7 +87,10 @@ export default class Git {
             return true;
           }
         },
-        onAbuseLimit: (retryAfter: number, opts: any) => {
+        onAbuseLimit: (
+          retryAfter: number,
+          opts: { request: { retryCount: number }; method: string; url: string }
+        ) => {
           // does not retry, only logs an error
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${opts.url}`
@@ -96,11 +102,12 @@ export default class Git {
       if (error && error.headers && error.headers.authorization) {
         delete error.headers.authorization;
       }
+
       throw error;
     });
   }
 
-  @Memoize()
+  @memoize()
   async getLatestReleaseInfo() {
     const latestRelease = await this.github.repos.getLatestRelease({
       owner: this.options.owner,
@@ -110,7 +117,7 @@ export default class Git {
     return latestRelease.data;
   }
 
-  @Memoize()
+  @memoize()
   async getLatestRelease(): Promise<string> {
     try {
       const latestRelease = await this.getLatestReleaseInfo();
@@ -161,7 +168,7 @@ export default class Git {
     return result;
   }
 
-  @Memoize()
+  @memoize()
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
@@ -187,7 +194,7 @@ export default class Git {
     }
   }
 
-  @Memoize()
+  @memoize()
   async getPr(prNumber: number) {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
 
@@ -232,7 +239,7 @@ export default class Git {
     }
   }
 
-  @Memoize()
+  @memoize()
   async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     const log = await gitlog({
       repo: process.cwd(),
@@ -250,7 +257,7 @@ export default class Git {
     }));
   }
 
-  @Memoize()
+  @memoize()
   async getUserByEmail(email: string) {
     try {
       const search = (await this.github.search.users({
@@ -263,7 +270,7 @@ export default class Git {
     }
   }
 
-  @Memoize()
+  @memoize()
   async getUserByUsername(username: string) {
     try {
       const user = await this.github.users.getByUsername({
@@ -276,7 +283,7 @@ export default class Git {
     }
   }
 
-  @Memoize()
+  @memoize()
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
@@ -413,7 +420,7 @@ export default class Git {
     return result;
   }
 
-  @Memoize()
+  @memoize()
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
@@ -443,7 +450,7 @@ export default class Git {
     return result;
   }
 
-  @Memoize()
+  @memoize()
   async getCommitsForPR(
     pr: number
   ): Promise<Octokit.PullsListCommitsResponseItem[]> {
@@ -494,6 +501,7 @@ export default class Git {
     if (commentId === -1) {
       return;
     }
+
     this.logger.verbose.info(`Deleting comment: ${commentId}`);
     await this.github.issues.deleteComment({
       owner: this.options.owner,
@@ -533,6 +541,7 @@ export default class Git {
     if (commentId === -1) {
       return this.createComment(message, pr, context);
     }
+
     this.logger.verbose.info('Editing comment');
     const result = await this.github.issues.updateComment({
       owner: this.options.owner,
