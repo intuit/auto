@@ -24,7 +24,7 @@ export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
   const { owner, name } =
     parseGitHubUrl(
       typeof repository === 'string' ? repository : repository.url
-    ) || ({} as any);
+    ) || {};
 
   if (!owner || !name) {
     throw new Error(

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as path from 'path';
 import Auto from '../auto';
 import { ILogger } from './logger';
@@ -14,11 +16,7 @@ export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger
 ): IPlugin | undefined {
-  // tslint:disable-next-line:no-unnecessary-initializer
-  let plugin:
-    | IPluginConstructor
-    | { default: IPluginConstructor }
-    | undefined = undefined;
+  let plugin: IPluginConstructor | { default: IPluginConstructor } | undefined;
 
   // Try requiring a path
   if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
@@ -28,8 +26,11 @@ export default function loadPlugin(
   // Try requiring a path from cwd
   if (!plugin && (pluginPath.startsWith('.') || pluginPath.startsWith('/'))) {
     plugin = tryRequire(path.join(process.cwd(), pluginPath));
-    logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
-    return;
+
+    if (!plugin) {
+      logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
+      return;
+    }
   }
 
   // For pkg bundle
@@ -63,6 +64,7 @@ export default function loadPlugin(
 
   try {
     if ('default' in plugin && plugin.default) {
+      // eslint-disable-next-line new-cap
       return new plugin.default(options);
     }
 

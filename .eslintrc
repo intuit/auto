@@ -1,0 +1,67 @@
+{
+  "parser": "@typescript-eslint/parser",
+
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+
+  "extends": [
+    "xo",
+    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+
+  "plugins": ["prettier", "jest", "@typescript-eslint"],
+
+  "rules": {
+    /* xo config */
+
+    // makes commenting out lines quickly a hassle
+    "capitalized-comments": 0,
+    "default-param-last": 0,
+    "complexity": ["error", { "max": 25 }],
+
+    /* jest plugin */
+
+    "jest/no-empty-title": 2,
+    "jest/prefer-strict-equal": 2,
+    "jest/prefer-spy-on": 2,
+    "jest/no-standalone-expect": 2,
+    "jest/no-try-expect": 2,
+    "jest/no-export": 2,
+    "jest/no-truthy-falsy": 1,
+    "jest/no-duplicate-hooks": 1,
+    "jest/no-if": 1,
+    "jest/prefer-to-have-length": 1,
+
+    /* typescript */
+
+    "@typescript-eslint/no-this-alias": 2,
+    "@typescript-eslint/no-unnecessary-type-assertion": 2,
+    "@typescript-eslint/no-useless-constructor": 2,
+    // if we turn this on babel adds regeneratorRuntime which makes builds harder and larger
+    "@typescript-eslint/promise-function-async": 0,
+    // just rely on typescript inference
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0
+  },
+
+  "overrides": [
+    {
+      "files": ["*.test.*"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/no-explicit-any": 0,
+        "require-atomic-updates": 0,
+        "max-nested-callbacks": 0,
+        "@typescript-eslint/ban-ts-ignore": 0
+      }
+    }
+  ]
+}

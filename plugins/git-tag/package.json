@@ -31,7 +31,7 @@
   "scripts": {
     "build": "tsc -b",
     "start": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {

@@ -287,7 +287,7 @@ export default class Changelog {
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
       (titles, [, labels]) => {
-        labels.map(labelDef => {
+        labels.forEach(labelDef => {
           if (labelDef.title) {
             titles[labelDef.name] = labelDef.title;
           }
@@ -358,7 +358,7 @@ export default class Changelog {
       })
     );
 
-    included.map(commit => {
+    included.forEach(commit => {
       if (!commit) {
         return;
       }

@@ -1,4 +1,4 @@
-// tslint:disable no-unnecessary-type-annotation
+/* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
 
 import dedent from 'dedent';
 import { prompt } from 'enquirer';
@@ -11,7 +11,7 @@ import { defaultLabelDefinition, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);
-const isObject = (value: any) => typeof value === 'object' && value !== null;
+const isObject = <T>(value: T) => typeof value === 'object' && value !== null;
 
 async function getFlags() {
   return prompt([
@@ -154,7 +154,9 @@ async function getCustomLabels(onlyLabels = false) {
         title:  #{title}
         desc:   #{description}
       `,
-      validate: (state: any) => {
+      validate: (state: {
+        values: { name?: string; title?: string; description?: string };
+      }) => {
         if (!state.values.name) {
           return 'Label is required for new label';
         }
@@ -198,7 +200,7 @@ export default async function init(
   const autoRc = Object.entries({
     ...flags,
     labels
-  } as { [key: string]: any }).reduce(
+  }).reduce(
     (all, [key, value]) => {
       if (
         value === '' ||
@@ -213,7 +215,7 @@ export default async function init(
         [key]: value
       };
     },
-    {} as { [key: string]: any }
+    {} as { [key: string]: number | {} | boolean }
   );
 
   if (Object.keys(autoRc).length === 0) {

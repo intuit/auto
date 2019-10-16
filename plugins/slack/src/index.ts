@@ -96,7 +96,6 @@ export default class SlackPlugin implements IPlugin {
           `@${atTarget}: New release *<${releaseUrl}|${newVersion}>*`,
           body
         ].join('\n'),
-        // eslint-disable-next-line camelcase
         link_names: 1
       }),
       headers: { 'Content-Type': 'application/json' }

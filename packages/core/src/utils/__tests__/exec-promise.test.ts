@@ -31,7 +31,7 @@ this error
 });
 
 test('prints stderr when exec exits without a code', async () => {
-  console.log = jest.fn();
+  jest.spyOn(console, 'log').mockImplementation();
   await exec('>&2 echo "this error"');
 
   return expect(console.log).toHaveBeenCalledWith('this error\n');

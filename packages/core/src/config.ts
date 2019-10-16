@@ -142,6 +142,7 @@ export default class Config {
       if (extend.endsWith('package.json')) {
         config = config && config.auto;
       }
+
       this.logger.verbose.note(`${extend} found: ${config}`);
     } else {
       config = tryRequire(`${extend}/package.json`);

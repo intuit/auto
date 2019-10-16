@@ -8,7 +8,7 @@ import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
-import { Memoize } from 'typescript-memoize';
+import { Memoize as memoize } from 'typescript-memoize';
 import { ICreateLabelsOptions } from './auto-args';
 import Changelog from './changelog';
 import Git from './git';
@@ -49,7 +49,7 @@ export interface IAutoConfig {
   skipReleaseLabels: string[];
   onlyPublishWithReleaseLabel?: boolean;
   noVersionPrefix?: boolean;
-  plugins?: (string | [string, any])[];
+  plugins?: (string | [string, number | boolean | string | object])[];
   labels: ILabelDefinitionMap;
 }
 
@@ -468,21 +468,21 @@ export default class Release {
     const labelsToCreate = Object.entries(labels).filter(
       ([versionLabel, labelDef]) => {
         if (!labelDef) {
-          return;
+          return false;
         }
 
         if (
           versionLabel === 'release' &&
           !this.options.onlyPublishWithReleaseLabel
         ) {
-          return;
+          return false;
         }
 
         if (
           versionLabel === 'skip-release' &&
           this.options.onlyPublishWithReleaseLabel
         ) {
-          return;
+          return false;
         }
 
         return true;
@@ -564,7 +564,7 @@ export default class Release {
     return inc(lastTag, bump as ReleaseType);
   }
 
-  @Memoize()
+  @memoize()
   private async createLogParse() {
     const logParse = new LogParse();
 
@@ -584,7 +584,7 @@ export default class Release {
     return logParse;
   }
 
-  @Memoize()
+  @memoize()
   private async getPRsSinceLastRelease() {
     let lastRelease: { published_at: string };
 
@@ -625,31 +625,35 @@ export default class Release {
    * @param commits Commits to modify
    */
   private async addPrInfoToCommit(commit: IExtendedCommit) {
-    if (!commit.labels) {
-      commit.labels = [];
+    const modifiedCommit = { ...commit };
+
+    if (!modifiedCommit.labels) {
+      modifiedCommit.labels = [];
     }
 
-    if (commit.pullRequest) {
-      const info = await this.git.getPr(commit.pullRequest.number);
+    if (modifiedCommit.pullRequest) {
+      const info = await this.git.getPr(modifiedCommit.pullRequest.number);
 
       if (!info || !info.data) {
-        return commit;
+        return modifiedCommit;
       }
 
       const labels = info ? info.data.labels.map(l => l.name) : [];
-      commit.labels = [...new Set([...labels, ...commit.labels])];
-      commit.pullRequest.body = info.data.body;
+      modifiedCommit.labels = [
+        ...new Set([...labels, ...modifiedCommit.labels])
+      ];
+      modifiedCommit.pullRequest.body = info.data.body;
 
-      if (!commit.authors.find(author => Boolean(author.username))) {
+      if (!modifiedCommit.authors.find(author => Boolean(author.username))) {
         const user = await this.git.getUserByUsername(info.data.user.login);
 
         if (user) {
-          commit.authors.push({ ...user, username: user.login });
+          modifiedCommit.authors.push({ ...user, username: user.login });
         }
       }
     }
 
-    return commit;
+    return modifiedCommit;
   }
 
   /**
@@ -679,15 +683,16 @@ export default class Release {
   }
 
   private async attachAuthor(commit: IExtendedCommit) {
+    const modifiedCommit = { ...commit };
     let resolvedAuthors: (
       | (ICommitAuthor & { login?: string })
       | Partial<GHub.UsersGetByUsernameResponse>)[] = [];
 
     // If there is a pull request we will attempt to get the authors
     // from any commit in the PR
-    if (commit.pullRequest) {
+    if (modifiedCommit.pullRequest) {
       const [prCommitsErr, prCommits] = await on(
-        this.git.getCommitsForPR(Number(commit.pullRequest.number))
+        this.git.getCommitsForPR(Number(modifiedCommit.pullRequest.number))
       );
 
       if (prCommitsErr || !prCommits) {
@@ -720,17 +725,17 @@ export default class Release {
       });
     }
 
-    commit.authors = resolvedAuthors.map(author => ({
+    modifiedCommit.authors = resolvedAuthors.map(author => ({
       ...author,
       ...(author && 'login' in author ? { username: author.login } : {})
     }));
 
-    commit.authors.map(author => {
+    modifiedCommit.authors.forEach(author => {
       this.logger.veryVerbose.info(
         `Found author: ${author.username} ${author.email} ${author.name}`
       );
     });
 
-    return commit;
+    return modifiedCommit;
   }
 }

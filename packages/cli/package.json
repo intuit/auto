@@ -35,7 +35,7 @@
   "scripts": {
     "build": "tsc -b",
     "start": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2",
     "bundle": "rimraf binary && pkg . --out-path binary && yarn gzip",
     "gzip": "ls binary/auto* | xargs gzip"

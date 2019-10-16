@@ -8,10 +8,12 @@ describe('loadPlugins', () => {
   test('should require custom plugins -- fallback to cwd', async () => {
     expect(
       loadPlugin([path.join(__dirname, './test-plugin.ts'), {}], logger)
-    ).toEqual({
-      name: 'foo',
-      config: {}
-    });
+    ).toStrictEqual(
+      expect.objectContaining({
+        name: 'foo',
+        config: {}
+      })
+    );
   });
 
   test('should load config', async () => {
@@ -20,9 +22,11 @@ describe('loadPlugins', () => {
         [path.join(__dirname, './test-plugin.ts'), 'do the thing'],
         logger
       )
-    ).toEqual({
-      name: 'foo',
-      config: 'do the thing'
-    });
+    ).toStrictEqual(
+      expect.objectContaining({
+        name: 'foo',
+        config: 'do the thing'
+      })
+    );
   });
 });
