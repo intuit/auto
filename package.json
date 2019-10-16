@@ -29,6 +29,7 @@
     "lint": "eslint packages plugins --ext .ts",
     "precommit": "lint-staged",
     "test": "jest --runInBand",
+    "test:coverage": "npm run test -- --coverage",
     "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
@@ -80,26 +81,18 @@
     ]
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "js",
       "json"
     ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    },
     "testMatch": [
       "**/__tests__/*.test.+(ts|tsx|js)",
       "!**/dist/**/*",
       "!**/scripts/template-plugin/**/*"
     ],
-    "collectCoverage": true,
     "coverageDirectory": "./coverage",
     "collectCoverageFrom": [
       "packages/**/*.ts",
