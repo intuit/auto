@@ -1,4 +1,4 @@
-# CratesPlugin Plugin
+# Crates Plugin
 
 Deploy Rust crates to [crates.io](https://crates.io/).
 
