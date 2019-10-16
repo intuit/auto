@@ -43,33 +43,38 @@ const mockLabels = (labels: string[]) => ({
 });
 
 // @ts-ignore
-jest.mock('../git.ts', () => (...args) => {
-  constructor(...args);
-  return {
-    options: { owner: 'test', repo: 'test', version: '1.0.0' },
-    graphql,
-    getGitLog,
-    getPr,
-    getLatestRelease,
-    getPullRequest,
-    getSha,
-    createStatus,
-    createComment,
-    getProject,
-    changedPackages,
-    getCommitsForPR,
-    getUserByUsername,
-    getUserByEmail,
-    getProjectLabels,
-    createLabel,
-    updateLabel,
-    getPullRequests,
-    getLatestReleaseInfo,
-    searchRepo,
-    getCommitDate,
-    getFirstCommit
-  };
-});
+jest.mock(
+  '../git.ts',
+  () =>
+    class MockGit {
+      constructor(...args: any[]) {
+        constructor(...args);
+      }
+
+      options = { owner: 'test', repo: 'test', version: '1.0.0' };
+      graphql = graphql;
+      getGitLog = getGitLog;
+      getPr = getPr;
+      getLatestRelease = getLatestRelease;
+      getPullRequest = getPullRequest;
+      getSha = getSha;
+      createStatus = createStatus;
+      createComment = createComment;
+      getProject = getProject;
+      changedPackages = changedPackages;
+      getCommitsForPR = getCommitsForPR;
+      getUserByUsername = getUserByUsername;
+      getUserByEmail = getUserByEmail;
+      getProjectLabels = getProjectLabels;
+      createLabel = createLabel;
+      updateLabel = updateLabel;
+      getPullRequests = getPullRequests;
+      getLatestReleaseInfo = getLatestReleaseInfo;
+      searchRepo = searchRepo;
+      getCommitDate = getCommitDate;
+      getFirstCommit = getFirstCommit;
+    }
+);
 
 getGitLog.mockReturnValue([]);
 
@@ -89,10 +94,8 @@ jest.mock('fs', () => ({
   readFile: (a, b, cb) => {
     cb(undefined, readResult);
   },
-  // @ts-ignore
-  ReadStream: () => undefined,
-  // @ts-ignore
-  WriteStream: () => undefined,
+  ReadStream: function() {},
+  WriteStream: function() {},
   // @ts-ignore
   closeSync: () => undefined,
   // @ts-ignore

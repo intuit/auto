@@ -26,17 +26,19 @@ jest.mock('cosmiconfig', () => () => ({
 }));
 
 jest.mock('@octokit/rest', () => {
-  const instance = () => ({
-    authenticate: () => undefined,
-    search: {
-      issuesAndPullRequests: () => ({ data: { items: [] } })
-    },
-    hook: {
-      error: () => undefined
-    }
-  });
+  const instance = class MockOctokit {
+    static plugin = () => instance;
 
-  instance.plugin = () => instance;
+    authenticate = () => undefined;
+
+    search = {
+      issuesAndPullRequests: () => ({ data: { items: [] } })
+    };
+
+    hook = {
+      error: () => undefined
+    };
+  };
 
   return instance;
 });

@@ -27,15 +27,19 @@ const update = jest.fn();
 const paginate = jest.fn();
 
 jest.mock('@octokit/rest', () => {
-  const instance = () => ({
-    authenticate,
-    paginate,
-    pulls: {
+  const instance = class MockOctokit {
+    static plugin = () => instance;
+
+    authenticate = authenticate;
+    paginate = paginate;
+
+    pulls = {
       get: getPr,
       listCommits: { endpoint: listCommits },
       list
-    },
-    issues: {
+    };
+
+    issues = {
       listLabelsOnIssue,
       createComment,
       updateComment,
@@ -48,26 +52,28 @@ jest.mock('@octokit/rest', () => {
       lock,
       get,
       update
-    },
-    repos: {
+    };
+
+    repos = {
       createStatus,
       createRelease,
       getLatestRelease,
       get: getProject
-    },
-    search: {
+    };
+
+    search = {
       users: getUser,
       issuesAndPullRequests
-    },
-    users: {
-      getByUsername
-    },
-    hook: {
-      error: errorHook
-    }
-  });
+    };
 
-  instance.plugin = () => instance;
+    users = {
+      getByUsername
+    };
+
+    hook = {
+      error: errorHook
+    };
+  };
 
   return instance;
 });

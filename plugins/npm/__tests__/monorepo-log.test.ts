@@ -18,10 +18,8 @@ jest.mock('fs', () => ({
   readFile: jest.fn(),
   // @ts-ignore
   readFileSync: () => readFileSync(),
-  // @ts-ignore
-  ReadStream: () => undefined,
-  // @ts-ignore
-  WriteStream: () => undefined,
+  ReadStream: function() {},
+  WriteStream: function() {},
   // @ts-ignore
   closeSync: () => undefined,
   // @ts-ignore

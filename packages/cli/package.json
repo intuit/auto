@@ -48,7 +48,8 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.0.2",
     "dedent": "^0.7.0",
-    "signale": "^1.4.0"
+    "signale": "^1.4.0",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",

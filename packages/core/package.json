@@ -58,6 +58,7 @@
     "signale": "^1.4.0",
     "tapable": "^2.0.0-beta.2",
     "tinycolor2": "^1.4.1",
+    "tslib": "1.10.0",
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },

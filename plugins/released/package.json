@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "deepmerge": "^4.0.0"
+    "deepmerge": "^4.0.0",
+    "tslib": "1.10.0"
   }
 }
