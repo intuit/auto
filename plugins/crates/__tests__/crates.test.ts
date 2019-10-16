@@ -55,10 +55,8 @@ jest.mock('fs', () => ({
   },
   // @ts-ignore
   readFileSync: (...args) => readFileSync(...args),
-  // @ts-ignore
-  ReadStream: () => undefined,
-  // @ts-ignore
-  WriteStream: () => undefined,
+  ReadStream: function() {},
+  WriteStream: function() {},
   // @ts-ignore
   closeSync: () => undefined,
   // @ts-ignore
@@ -78,18 +76,16 @@ afterEach(() => {
 describe('CratesPlugin', () => {
   describe('getCargoConfig', () => {
     test('returns an error if the file does not exist', () => {
-      const errorMessage = 'file does not exist';
+      const error = new Error('file does not exist');
+
       readFileSync.mockImplementation(() => {
-        throw new Error(errorMessage);
+        throw error;
       });
-      try {
-        getCargoConfig();
-        throw new Error('should not hit');
-      } catch (err) {
-        expect(err.toString()).toMatch(errorMessage);
-        expect(readFileSync).toHaveBeenCalledTimes(1);
-      }
+
+      expect(() => getCargoConfig()).toThrow(error);
+      expect(readFileSync).toHaveBeenCalledTimes(1);
     });
+
     test('returns data if file exists', () => {
       readFileSync.mockReturnValueOnce(sampleCargoToml);
       const data = getCargoConfig();
@@ -105,6 +101,7 @@ describe('CratesPlugin', () => {
       expect(res).toBe(false);
       expect(existsSync).toHaveBeenCalledTimes(1);
     });
+
     test('returns true if the file exists', () => {
       existsSync.mockReturnValueOnce(true);
       const res = checkForCreds();
@@ -117,35 +114,32 @@ describe('CratesPlugin', () => {
     beforeEach(() => {
       readFileSync.mockReturnValueOnce(sampleCargoToml);
     });
+
     test('throws error if no bumpBy', () => {
-      try {
-        bumpVersion(undefined);
-        throw new Error('should not hit');
-      } catch (err) {
-        expect(err.toString()).toMatch(/Unknown bump-by/);
-        expect(readFileSync).not.toHaveBeenCalled();
-      }
+      expect(() => bumpVersion(undefined)).toThrow('Unknown bump-by');
+      expect(readFileSync).not.toHaveBeenCalled();
     });
+
     test('throws error if could not bump version', () => {
-      try {
-        bumpVersion('wrong');
-        throw new Error('should not hit');
-      } catch (err) {
-        expect(err.toString()).toMatch(/Could not increment previous version/);
-        expect(readFileSync).toHaveBeenCalledTimes(1);
-      }
+      expect(() => bumpVersion('wrong')).toThrow(
+        'Could not increment previous version'
+      );
+      expect(readFileSync).toHaveBeenCalledTimes(1);
     });
+
     describe('bumps version and writes to file', () => {
       test('patch', () => {
         const versionNew = bumpVersion('patch');
         expect(versionNew).toBe('1.2.4');
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });
+
       test('minor', () => {
         const versionNew = bumpVersion('minor');
         expect(versionNew).toBe('1.3.0');
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });
+
       test('major', () => {
         const versionNew = bumpVersion('major');
         expect(versionNew).toBe('2.0.0');
@@ -161,21 +155,19 @@ describe('CratesPlugin', () => {
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        try {
-          await hooks.beforeShipIt.promise();
-          throw new Error('should not hit');
-        } catch (err) {
-          expect(err.toString()).toMatch(
-            /Cargo token is needed for the Crates plugin/
-          );
-        }
+
+        await expect(hooks.beforeShipIt.promise()).rejects.toThrow(
+          'Cargo token is needed for the Crates plugin'
+        );
       });
+
       test('does not throw error if Cargo creds', async () => {
         existsSync.mockReturnValueOnce(true);
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        await hooks.beforeShipIt.promise();
+
+        await expect(hooks.beforeShipIt.promise()).resolves.not.toThrow();
       });
     });
 
@@ -185,7 +177,7 @@ describe('CratesPlugin', () => {
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        expect(await hooks.getAuthor.promise()).toEqual([
+        expect(await hooks.getAuthor.promise()).toStrictEqual([
           'example <example@example.com>'
         ]);
       });
@@ -198,9 +190,9 @@ describe('CratesPlugin', () => {
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        expect(await hooks.getPreviousVersion.promise(prefixRelease)).toEqual(
-          '1.2.3'
-        );
+        expect(
+          await hooks.getPreviousVersion.promise(prefixRelease)
+        ).toStrictEqual('1.2.3');
       });
     });
 

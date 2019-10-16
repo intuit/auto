@@ -1,4 +1,4 @@
-import { Auto, execPromise, IPlugin } from '@auto-it/core';
+import { Auto, execPromise, IPlugin, SEMVER } from '@auto-it/core';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
@@ -19,14 +19,16 @@ export function checkForCreds() {
   if (isCi) {
     return process.env.CARGO_REGISTRY_TOKEN;
   }
+
   const credsFile = path.join(userHome, '.cargo', 'credentials');
   return fs.existsSync(credsFile);
 }
 
-export function bumpVersion(bumpBy: any) {
+export function bumpVersion(bumpBy: SEMVER) {
   if (!bumpBy) {
     throw new Error(`Unknown bump-by: ${bumpBy}`);
   }
+
   const filePath = path.join(process.cwd(), 'Cargo.toml');
   const content = fs.readFileSync(filePath).toString();
   const config = toml.parse(content);
@@ -35,6 +37,7 @@ export function bumpVersion(bumpBy: any) {
   if (!versionNew) {
     throw new Error(`Could not increment previous version: ${versionOld}`);
   }
+
   const replaceOld = `version = "${versionOld}"`;
   const replaceNew = `version = "${versionNew}"`;
   const contentNew = content.replace(replaceOld, replaceNew);
@@ -92,7 +95,7 @@ export default class CratesPlugin implements IPlugin {
       auto.logger.log.info('Create git commit for new version');
     });
 
-    auto.hooks.publish.tapPromise(this.name, async version => {
+    auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.log.info('Publishing via cargo');
       await execPromise('cargo', ['publish']);
       auto.logger.log.info('Publish complete');
