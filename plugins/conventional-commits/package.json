@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "parse-commit-message": "4.0.0",
+    "parse-commit-message": "4.1.3",
     "tslib": "1.10.0"
   }
 }
