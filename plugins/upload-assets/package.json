@@ -39,7 +39,8 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "dedent": "^0.7.0",
-    "file-type": "^12.1.0"
+    "file-type": "^12.1.0",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "@octokit/rest": "^16.28.1",

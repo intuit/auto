@@ -32,6 +32,7 @@
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
     tinycolor2 "^1.4.1"
+    tslib "1.10.0"
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
 
@@ -45,6 +46,7 @@
     parse-github-url "1.0.2"
     registry-url "^5.1.0"
     semver "^6.0.0"
+    tslib "1.10.0"
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
     user-home "^2.0.0"
@@ -54,6 +56,7 @@
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
+    tslib "1.10.0"
 
 "@babel/cli@7.2.0":
   version "7.2.0"
@@ -14493,6 +14496,11 @@ ts-jest@^24.0.2:
     resolve "1.x"
     semver "^5.5"
     yargs-parser "10.x"
+
+tslib@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
+  integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
 tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
