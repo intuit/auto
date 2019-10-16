@@ -22,10 +22,10 @@
     "plugins/*"
   ],
   "scripts": {
-    "clean": "lerna clean --yes && rm -rf node_modules && rm -rf packages/*/dist && rm -rf plugins/*/dist",
+    "clean": "lerna clean --yes && rimraf node_modules '+(packages|plugins)/**/+(dist|tsconfig.tsbuildinfo)'",
     "semver:check": "./scripts/post-install.sh",
-    "build": "lerna run build --stream",
-    "build:watch": "lerna run build --parallel -- --watch --preserveWatchOutput",
+    "build": "tsc -b tsconfig.dev.json",
+    "start": "npm run build -- --watch",
     "lint": "tslint -p . --format stylish",
     "precommit": "lint-staged",
     "test": "jest --runInBand",

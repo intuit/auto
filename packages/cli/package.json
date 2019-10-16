@@ -33,8 +33,8 @@
     "cli"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
     "lint": "tslint -p . --format stylish",
     "test": "jest --maxWorkers=2",
     "bundle": "rimraf binary && pkg . --out-path binary && yarn gzip",
@@ -55,7 +55,6 @@
     "@types/command-line-usage": "^5.0.1",
     "@types/dedent": "^0.7.0",
     "@types/signale": "^1.2.1",
-    "pkg": "^4.4.0",
-    "rimraf": "^3.0.0"
+    "pkg": "^4.4.0"
   }
 }
