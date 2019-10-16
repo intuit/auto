@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "module": "commonjs",
     "strict": true,
     "downlevelIteration": true,
@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": true,
-    "lib": ["es6", "es2017", "es2017.object"],
+    "lib": ["esnext"],
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true

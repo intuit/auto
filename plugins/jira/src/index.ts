@@ -63,7 +63,8 @@ export default class JiraPlugin implements IPlugin {
 
           if (jiraCommit.jira && this.options.url) {
             const link = join(this.options.url, ...jiraCommit.jira.number);
-            const [, , rest] = commit.subject.match(jira);
+            const [, , rest] = commit.subject.match(jira) || [];
+
             line = line.replace(
               jira,
               `[${jiraCommit.jira.number}](${link})${rest ? ':' : ''} $2`
