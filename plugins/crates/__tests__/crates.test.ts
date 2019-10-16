@@ -40,7 +40,6 @@ const readFileSync = jest.fn();
 const writeFile = jest.fn();
 const writeFileSync = jest.fn();
 const readResult = '{}';
-readFileSync.mockReturnValue('{}');
 
 // @ts-ignore
 jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
@@ -78,7 +77,7 @@ describe('CratesPlugin', () => {
     test('returns an error if the file does not exist', () => {
       const error = new Error('file does not exist');
 
-      readFileSync.mockImplementation(() => {
+      readFileSync.mockImplementationOnce(() => {
         throw error;
       });
 
@@ -195,6 +194,8 @@ describe('CratesPlugin', () => {
     describe('version', () => {
       test('does versioning', async () => {
         const plugin = new CratesPlugin();
+        readFileSync.mockReturnValueOnce(sampleCargoToml);
+
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
         await hooks.version.promise(Auto.SEMVER.patch);
