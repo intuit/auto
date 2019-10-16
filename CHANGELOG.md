@@ -1,3 +1,50 @@
+# v7.9.0 (Wed Oct 16 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/crates`
+  - Crates (Rust language) plugin [#587](https://github.com/intuit/auto/pull/587) ([@Celeo](https://github.com/Celeo) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- update plugin template [#606](https://github.com/intuit/auto/pull/606) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Modern build output [#607](https://github.com/intuit/auto/pull/607) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Update Tooling [#605](https://github.com/intuit/auto/pull/605) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- update README.md [#586](https://github.com/intuit/auto/pull/586) ([@Celeo](https://github.com/Celeo))
+
+#### 🔩 Dependency Updates
+
+- Bump lerna from 3.16.5 to 3.17.0 [#598](https://github.com/intuit/auto/pull/598) ([@Celeo](https://github.com/Celeo))
+- Bump lint-staged from 9.4.0 to 9.4.1 [#595](https://github.com/intuit/auto/pull/595) ([@Celeo](https://github.com/Celeo))
+- Bump @types/node from 12.7.11 to 12.7.12 [#600](https://github.com/intuit/auto/pull/600) ([@Celeo](https://github.com/Celeo))
+- Bump lint-staged from 9.4.1 to 9.4.2 [#601](https://github.com/intuit/auto/pull/601) ([@Celeo](https://github.com/Celeo))
+- Bump deepmerge from 4.0.0 to 4.1.1 [#597](https://github.com/intuit/auto/pull/597) ([@Celeo](https://github.com/Celeo))
+- Bump ts-jest from 24.0.2 to 24.1.0 [#580](https://github.com/intuit/auto/pull/580) ([@Celeo](https://github.com/Celeo))
+- Bump @octokit/graphql from 4.2.0 to 4.2.2 [#599](https://github.com/intuit/auto/pull/599) ([@Celeo](https://github.com/Celeo))
+- Bump lerna from 3.16.4 to 3.16.5 [#589](https://github.com/intuit/auto/pull/589) ([@Celeo](https://github.com/Celeo))
+- Bump @types/node from 12.7.8 to 12.7.11 [#590](https://github.com/intuit/auto/pull/590) ([@Celeo](https://github.com/Celeo))
+- Bump deepmerge from 4.0.0 to 4.1.0 [#591](https://github.com/intuit/auto/pull/591) ([@Celeo](https://github.com/Celeo))
+- Bump ignite from 1.10.2 to 1.10.5 [#592](https://github.com/intuit/auto/pull/592) ([@Celeo](https://github.com/Celeo))
+- Bump husky from 3.0.7 to 3.0.8 [#594](https://github.com/intuit/auto/pull/594) ([@Celeo](https://github.com/Celeo))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.30.1 to 16.32.0 [#593](https://github.com/intuit/auto/pull/593) ([@Celeo](https://github.com/Celeo))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.32.0 to 16.33.1 [#602](https://github.com/intuit/auto/pull/602) ([@Celeo](https://github.com/Celeo))
+- `@auto-it/core`
+  - Bump https-proxy-agent from 2.2.2 to 3.0.0 [#588](https://github.com/intuit/auto/pull/588) ([@Celeo](https://github.com/Celeo))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Matt Boulanger ([@Celeo](https://github.com/Celeo))
+
+---
+
 # v7.8.0 (Fri Oct 04 2019)
 
 #### 🚀  Enhancement
