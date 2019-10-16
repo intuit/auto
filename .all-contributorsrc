@@ -109,11 +109,20 @@
         "code"
       ]
     },
-   {
+    {
       "login": "yogikhan",
       "name": "Yogesh Khandlewal",
       "avatar_url": "https://avatars3.githubusercontent.com/u/16071601?v=4",
       "profile": "https://github.com/yogikhan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Celeo",
+      "name": "Matt Boulanger",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/772507?v=4",
+      "profile": "https://github.com/Celeo",
       "contributions": [
         "code"
       ]
