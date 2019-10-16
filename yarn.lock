@@ -2140,9 +2140,9 @@
     url-template "^2.0.8"
 
 "@octokit/graphql@^4.0.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-4.2.0.tgz#99e739f3cba12ab83136a8a82fffdbfa0715ed28"
-  integrity sha512-6JKVE2cJPZVIM1LLsy7M4rKcaE3r6dbP7o895FLEpClHeMDv1a+k3yANue0ycMhM1Es9/WEy8hjBaBpOBETw6A==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-4.2.2.tgz#b998a16f7778fbb4204d1a9c4e2cde2525ba183a"
+  integrity sha512-4DD0mF3OOTVrhUPOZUvDzhmxEGNsF4UVMR5anMNJJPN6PqNBqMwYgKRslYIAk7bAVE370TSU3UzrZNfCr/fJXQ==
   dependencies:
     "@octokit/request" "^5.0.0"
     universal-user-agent "^4.0.0"
