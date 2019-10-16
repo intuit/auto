@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "module": "commonjs", // Resolve modules the node way
+    "lib": ["esnext"], // Use newest ecma script features
+    /* Outputs: */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "target": "es2017", // Target Node 8.x
+    "importHelpers": true, // Use tslib for helper code
+    /* Syntax: */
     "strict": true,
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "declaration": true,
-    "lib": ["esnext"],
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "importHelpers": true
+    "experimentalDecorators": true
   }
 }
