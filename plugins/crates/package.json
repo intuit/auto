@@ -38,9 +38,10 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "semver": "^6.0.0",
     "env-ci": "^4.1.1",
-    "user-home": "^2.0.0",
-    "toml": "^3.0.0"
+    "semver": "^6.0.0",
+    "toml": "^3.0.0",
+    "tslib": "1.10.0",
+    "user-home": "^2.0.0"
   }
 }
