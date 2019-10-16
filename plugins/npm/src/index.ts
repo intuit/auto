@@ -2,7 +2,7 @@ import envCi from 'env-ci';
 import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
-import { Memoize } from 'typescript-memoize';
+import { Memoize as memoize } from 'typescript-memoize';
 
 import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
@@ -21,9 +21,7 @@ function isMonorepo() {
 async function getPublishedVersion(name: string) {
   try {
     return await execPromise('npm', ['view', name, 'version']);
-  } catch (error) {
-    return;
-  }
+  } catch (error) {}
 }
 
 export async function greaterRelease(
@@ -58,13 +56,23 @@ const inFolder = (parent: string, child: string) => {
   );
 };
 
-export async function changedPackages(
-  sha: string,
-  packages: IMonorepoPackage[],
-  lernaJson: { version?: string },
-  logger: ILogger,
-  version?: SEMVER
-) {
+interface ChangedPackagesArgs {
+  sha: string;
+  packages: IMonorepoPackage[];
+  lernaJson: {
+    version?: string;
+  };
+  logger: ILogger;
+  version?: SEMVER;
+}
+
+export async function changedPackages({
+  sha,
+  packages,
+  lernaJson,
+  logger,
+  version
+}: ChangedPackagesArgs) {
   const changed = new Set<string>();
   const changedFiles = await execPromise('git', [
     'show',
@@ -167,7 +175,7 @@ export default class NPMPlugin implements IPlugin {
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
   }
 
-  @Memoize()
+  @memoize()
   async getLernaPackages() {
     return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
       res.split('\n').map(packageInfo => {
@@ -177,7 +185,7 @@ export default class NPMPlugin implements IPlugin {
     );
   }
 
-  @Memoize()
+  @memoize()
   async getIndependentPackageList() {
     return this.getLernaPackages().then(packages =>
       packages
@@ -298,17 +306,17 @@ export default class NPMPlugin implements IPlugin {
           const lernaPackages = await this.getLernaPackages();
           const lernaJson = getLernaJson();
 
-          commit.packages = await changedPackages(
-            commit.hash,
-            lernaPackages,
+          const packages = await changedPackages({
+            sha: commit.hash,
+            packages: lernaPackages,
             lernaJson,
-            auto.logger,
+            logger: auto.logger,
             version
-          );
+          });
 
           const section =
-            commit.packages && commit.packages.length
-              ? commit.packages.map(p => `\`${p}\``).join(', ')
+            packages && packages.length
+              ? packages.map(p => `\`${p}\``).join(', ')
               : 'monorepo';
 
           if (section === 'monorepo') {
@@ -326,9 +334,9 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const isIndependent = getLernaJson().version === 'independent';
-        const monorepoBump = !isIndependent
-          ? await bumpLatest(getMonorepoPackage(), version)
-          : undefined;
+        const monorepoBump = isIndependent
+          ? undefined
+          : await bumpLatest(getMonorepoPackage(), version);
 
         await execPromise('npx', [
           'lerna',

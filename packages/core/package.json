@@ -30,9 +30,9 @@
     "node"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
@@ -41,7 +41,7 @@
     "@octokit/plugin-enterprise-compatibility": "^1.1.1",
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/plugin-throttling": "^2.6.0",
-    "@octokit/rest": "16.32.0",
+    "@octokit/rest": "16.33.1",
     "await-to-js": "^2.1.1",
     "cosmiconfig": "5.2.1",
     "dedent": "^0.7.0",
@@ -58,6 +58,7 @@
     "signale": "^1.4.0",
     "tapable": "^2.0.0-beta.2",
     "tinycolor2": "^1.4.1",
+    "tslib": "1.10.0",
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },

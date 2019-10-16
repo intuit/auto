@@ -31,9 +31,9 @@
     "comment"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
     "semver": "^6.0.0",
+    "tslib": "1.10.0",
     "xml2js-es6-promise": "^1.1.1"
   }
 }

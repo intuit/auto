@@ -28,7 +28,7 @@ describe('canary in ci', () => {
     auto.hooks.canary.tap('test', canary);
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
-    auto.release!.getCommits = jest.fn();
+    jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
     await auto.canary();
     expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
@@ -43,7 +43,7 @@ describe('canary in ci', () => {
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
-    auto.release!.getCommits = jest.fn();
+    jest.spyOn(auto.release!, 'getCommits').mockImplementation();
     auto.hooks.canary.tap('test', () => '1.2.4-canary.123.1');
 
     const version = await auto.canary({ pr: 123, build: 1 });
@@ -60,7 +60,7 @@ describe('canary in ci', () => {
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
-    auto.release!.getCommits = jest.fn();
+    jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
     await auto.canary({ pr: 123, build: 1, message: 'false' });
     expect(addToPrBody).not.toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('canary in ci', () => {
       Promise.resolve([makeCommitFromMsg('Test Commit')]);
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
-    auto.release!.getCommits = jest.fn();
+    jest.spyOn(auto.release!, 'getCommits').mockImplementation();
     auto.hooks.canary.tap('test', (bump, post) => `1.2.4-canary${post}`);
 
     const version = await auto.canary({ pr: 456, build: 5 });
@@ -89,7 +89,7 @@ describe('shipit in ci', () => {
     await auto.loadConfig();
 
     auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-    auto.git!.addToPrBody = jest.fn();
+    jest.spyOn(auto.git!, 'addToPrBody').mockImplementation();
     auto.release!.getCommitsInRelease = () => Promise.resolve([]);
     auto.release!.getCommits = () => Promise.resolve([]);
     const canary = jest.fn();

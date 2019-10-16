@@ -31,9 +31,9 @@
     "lerna"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
@@ -44,6 +44,7 @@
     "parse-github-url": "1.0.2",
     "registry-url": "^5.1.0",
     "semver": "^6.0.0",
+    "tslib": "1.10.0",
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0",
     "user-home": "^2.0.0"

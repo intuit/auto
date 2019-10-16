@@ -1,13 +1,9 @@
 import main, { run } from '../src/run';
 
 test('throws error for unknown args', async () => {
-  expect.assertions(1);
-
-  try {
-    await run('foo', {});
-  } catch (error) {
-    expect(error).toEqual(new Error("idk what i'm doing."));
-  }
+  await expect(run('foo', {})).rejects.toStrictEqual(
+    new Error("idk what i'm doing.")
+  );
 });
 
 test('throws exits for caught error', async () => {

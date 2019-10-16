@@ -515,6 +515,30 @@ function filterCommands(allCommands: ICommand[], include: string[]) {
     }));
 }
 
+function styleTypes(
+  command: ICommand,
+  option: commandLineUsage.OptionDefinition
+) {
+  const isRequired =
+    command.require && command.require.includes(option.name as Flags);
+
+  if (isRequired && option.type === Number) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline number}} [{rgb(254,91,92) required}]';
+  } else if (option.type === Number) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline number}}';
+  }
+
+  if (isRequired && option.type === String) {
+    option.typeLabel =
+      '{rgb(173, 216, 230) {underline string}} [{rgb(254,91,92) required}]';
+  } else if (option.multiple && option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string[]}}';
+  } else if (option.type === String) {
+    option.typeLabel = '{rgb(173, 216, 230) {underline string}}';
+  }
+}
+
 function printRootHelp() {
   const options = [
     { ...version, group: 'misc' },
@@ -619,30 +643,6 @@ function printVersion() {
   const packagePath = path.join(__dirname, '../package.json');
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   console.log(`v${packageJson.version}`);
-}
-
-function styleTypes(
-  command: ICommand,
-  option: commandLineUsage.OptionDefinition
-) {
-  const isRequired =
-    command.require && command.require.includes(option.name as Flags);
-
-  if (isRequired && option.type === Number) {
-    option.typeLabel =
-      '{rgb(173, 216, 230) {underline number}} [{rgb(254,91,92) required}]';
-  } else if (option.type === Number) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline number}}';
-  }
-
-  if (isRequired && option.type === String) {
-    option.typeLabel =
-      '{rgb(173, 216, 230) {underline string}} [{rgb(254,91,92) required}]';
-  } else if (option.multiple && option.type === String) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline string[]}}';
-  } else if (option.type === String) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline string}}';
-  }
 }
 
 export default function parseArgs(testArgs?: string[]) {

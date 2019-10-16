@@ -31,9 +31,9 @@
     "twitter"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "@types/twitter-text": "^2.0.0",
     "dedent": "^0.7.0",
     "semver": "^6.0.0",
+    "tslib": "1.10.0",
     "tweet-tweet": "^1.0.4",
     "twitter-text": "^3.0.0"
   },

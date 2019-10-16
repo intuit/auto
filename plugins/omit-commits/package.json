@@ -31,12 +31,13 @@
     "omit"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core"
+    "@auto-it/core": "link:../../packages/core",
+    "tslib": "1.10.0"
   }
 }

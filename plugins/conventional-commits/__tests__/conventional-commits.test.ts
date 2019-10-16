@@ -31,7 +31,7 @@ test('should do nothing when conventional commit message is not present', async 
   } as LogParse);
 
   const commit = makeCommitFromMsg('normal commit with no bump');
-  expect(await logParseHooks.parseCommit.promise({ ...commit })).toEqual(
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual(
     commit
   );
 });
@@ -52,7 +52,7 @@ test('should add correct semver label to commit', async () => {
   } as LogParse);
 
   const commit = makeCommitFromMsg('fix: normal commit with no bump');
-  expect(await logParseHooks.parseCommit.promise({ ...commit })).toEqual({
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
     ...commit,
     labels: ['patch']
   });
@@ -74,7 +74,7 @@ test('should add major semver label to commit', async () => {
   } as LogParse);
 
   const commit = makeCommitFromMsg('BREAKING: normal commit with no bump');
-  expect(await logParseHooks.parseCommit.promise({ ...commit })).toEqual({
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
     ...commit,
     labels: ['major']
   });

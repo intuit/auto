@@ -48,14 +48,7 @@ export default async function execPromise(
 
     child.on('exit', code => {
       // No code, no errors
-      if (!code) {
-        // Tools can occasionally print to stderr but not fail, so print that just in case.
-        if (allStderr.length) {
-          console.log(allStderr);
-        }
-        // Resolve the string of the whole stdout
-        completed(allStdout.trim());
-      } else {
+      if (code) {
         // The command bailed for whatever reason, print a verbose error message
         // with the stdout underneath
         let appendedStdErr = '';
@@ -63,6 +56,14 @@ export default async function execPromise(
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : '';
 
         reject(new Error(`Running command '${cmd}' failed${appendedStdErr}`));
+      } else {
+        // Tools can occasionally print to stderr but not fail, so print that just in case.
+        if (allStderr.length) {
+          console.log(allStderr);
+        }
+
+        // Resolve the string of the whole stdout
+        completed(allStdout.trim());
       }
     });
   });

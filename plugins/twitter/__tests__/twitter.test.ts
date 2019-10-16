@@ -13,10 +13,8 @@ const mockGit = {
   options: { repo: 'Test-Repo' }
 } as any;
 
-describe('Twitter Plugin', () => {
-  test('should throw without proper tokens set', async () => {
-    expect(() => new TwitterPlugin()).toThrow();
-  });
+test('Twitter Plugin should throw without proper tokens set', async () => {
+  expect(() => new TwitterPlugin()).toThrow();
 });
 
 describe('Twitter Plugin', () => {

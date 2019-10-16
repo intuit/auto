@@ -38,7 +38,7 @@ export default async function setTokenOnCI(logger: ILogger) {
   logger.verbose.note(`Using ${registry} registry for package`);
 
   const url = registry.replace(/^https?:/, ``);
-  // tslint:disable-next-line no-invalid-template-strings
+  // eslint-disable-next-line no-template-curly-in-string
   const authTokenString = urlJoin(url, ':_authToken=${NPM_TOKEN}');
 
   logger.verbose.info(`Will set authentication token string in ${rc}`);

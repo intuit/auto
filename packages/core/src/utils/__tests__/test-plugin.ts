@@ -1,8 +1,8 @@
 module.exports = class Test {
   name = 'foo';
-  config: any;
+  config: {};
 
-  constructor(config: any) {
+  constructor(config: {}) {
     this.config = config;
   }
 };

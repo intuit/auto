@@ -33,9 +33,9 @@
     "cli"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2",
     "bundle": "rimraf binary && pkg . --out-path binary && yarn gzip",
     "gzip": "ls binary/auto* | xargs gzip"
@@ -48,14 +48,14 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.0.2",
     "dedent": "^0.7.0",
-    "signale": "^1.4.0"
+    "signale": "^1.4.0",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",
     "@types/command-line-usage": "^5.0.1",
     "@types/dedent": "^0.7.0",
     "@types/signale": "^1.2.1",
-    "pkg": "^4.4.0",
-    "rimraf": "^3.0.0"
+    "pkg": "^4.4.0"
   }
 }

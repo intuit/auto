@@ -1,0 +1,46 @@
+{
+  "files": [],
+  "include": [],
+
+  "references": [
+    {
+      "path": "packages/cli"
+    },
+    {
+      "path": "plugins/chrome"
+    },
+    {
+      "path": "plugins/conventional-commits"
+    },
+    {
+      "path": "plugins/git-tag"
+    },
+    {
+      "path": "plugins/jira"
+    },
+    {
+      "path": "plugins/maven"
+    },
+    {
+      "path": "plugins/npm"
+    },
+    {
+      "path": "plugins/omit-commits"
+    },
+    {
+      "path": "plugins/omit-release-notes"
+    },
+    {
+      "path": "plugins/released"
+    },
+    {
+      "path": "plugins/slack"
+    },
+    {
+      "path": "plugins/twitter"
+    },
+    {
+      "path": "plugins/upload-assets"
+    }
+  ]
+}

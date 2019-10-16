@@ -5,7 +5,7 @@ defaults: &defaults
   docker:
     - image: circleci/node:8.14-browsers
   environment:
-    TZ: '/usr/share/zoneinfo/America/Los_Angeles'
+    TZ: "/usr/share/zoneinfo/America/Los_Angeles"
 
 aliases:
   # Circle related commands
@@ -31,7 +31,7 @@ aliases:
     command: yarn lint
   - &test
     name: Test
-    command: yarn test
+    command: yarn test:coverage
   - &build
     name: Build
     command: yarn build
