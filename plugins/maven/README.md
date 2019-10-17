@@ -7,9 +7,9 @@ Release a Java project to a [maven](https://maven.apache.org/) instance.
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npm i --save-dev @auto-cli/maven
+npm i --save-dev @auto-it/maven
 # or
-yarn add -D @auto-cli/maven
+yarn add -D @auto-it/maven
 ```
 
 ## Usage
