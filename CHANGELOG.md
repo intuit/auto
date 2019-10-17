@@ -1,3 +1,16 @@
+# v7.9.2 (Thu Oct 17 2019)
+
+#### 🏠  Internal
+
+- `auto`
+  - Switch to command-line-application and command-line-docs [#585](https://github.com/intuit/auto/pull/585) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.9.1 (Thu Oct 17 2019)
 
 #### 🐛  Bug Fix
