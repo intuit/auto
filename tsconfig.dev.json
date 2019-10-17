@@ -16,6 +16,9 @@
       "path": "plugins/conventional-commits"
     },
     {
+      "path": "plugins/first-time-contributor"
+    },
+    {
       "path": "plugins/git-tag"
     },
     {

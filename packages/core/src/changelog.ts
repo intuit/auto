@@ -1,4 +1,8 @@
-import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
+import {
+  AsyncSeriesBailHook,
+  AsyncSeriesWaterfallHook,
+  SyncHook
+} from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
@@ -33,6 +37,7 @@ export interface IChangelogHooks {
     [ICommitAuthor, string],
     string | void
   >;
+  addToBody: AsyncSeriesWaterfallHook<[string[], IExtendedCommit[]]>;
   omitReleaseNotes: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
 }
 
@@ -44,10 +49,10 @@ const filterLabel = (commits: IExtendedCommit[], label: string) =>
 
 export default class Changelog {
   readonly hooks: IChangelogHooks;
+  readonly options: IGenerateReleaseNotesOptions;
 
   private authors?: [IExtendedCommit, ICommitAuthor][];
   private readonly logger: ILogger;
-  private readonly options: IGenerateReleaseNotesOptions;
 
   constructor(logger: ILogger, options: IGenerateReleaseNotesOptions) {
     this.logger = logger;
@@ -112,6 +117,9 @@ export default class Changelog {
     this.logger.veryVerbose.info('\n', split);
 
     const sections: string[] = [];
+
+    const extraNotes = (await this.hooks.addToBody.promise([], commits)) || [];
+    extraNotes.filter(Boolean).forEach(note => sections.push(note));
 
     await this.createReleaseNotesSection(commits, sections);
     this.logger.verbose.info('Added release notes to changelog');

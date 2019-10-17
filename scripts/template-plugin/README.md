@@ -1,3 +1,13 @@
 # {{title}} Plugin
 
 {{description}}
+
+## Installation
+
+This plugin is not included with the `auto` CLI installed via NPM. To install:
+
+```sh
+npm i --save-dev @auto-it/{{kebab}}
+# or
+yarn add -D @auto-it/{{kebab}}
+```

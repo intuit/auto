@@ -41,6 +41,7 @@ export const makeLogParseHooks = (): ILogParseHooks => ({
 });
 
 export const makeChangelogHooks = (): IChangelogHooks => ({
+  addToBody: new AsyncSeriesWaterfallHook(['notes', 'commits']),
   renderChangelogLine: new AsyncSeriesWaterfallHook(['lineData']),
   renderChangelogTitle: new AsyncSeriesBailHook(['commits', 'lineRender']),
   renderChangelogAuthor: new AsyncSeriesBailHook([

@@ -123,6 +123,7 @@
     "plugins": [
       "npm",
       "released",
+      "first-time-contributor",
       [
         "upload-assets",
         [
