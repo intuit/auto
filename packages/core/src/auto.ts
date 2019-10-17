@@ -560,7 +560,7 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${build}`;
     }
 
-    if (!('isPr' in env) || !build) {
+    if (!pr || !build) {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 

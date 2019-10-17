@@ -937,7 +937,7 @@ describe('Auto', () => {
       jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1.abc');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
