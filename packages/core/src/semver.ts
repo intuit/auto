@@ -45,7 +45,7 @@ export function calculateSemVerBump(
     }
   });
 
-  labels.map(pr => {
+  labels.forEach(pr => {
     pr.forEach(label => {
       const userLabel = [...labelMap.entries()].find(pair =>
         pair[1].includes(label)

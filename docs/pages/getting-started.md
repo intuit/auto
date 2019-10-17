@@ -77,6 +77,12 @@ GH_TOKEN=YOUR_TOKEN
 NPM_TOKEN=PUBLISH_TOKEN
 ```
 
+If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set the variable in your CI as well.
+
+```bash
+https_proxy=<PROXYHOST>:<PROXYPORT>
+```
+
 ### 4. Script
 
 `auto` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.

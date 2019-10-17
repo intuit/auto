@@ -33,7 +33,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();
 
-    plugin.postToSlack = jest.fn();
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
@@ -50,7 +50,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();
 
-    plugin.postToSlack = jest.fn();
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks, options: { dryRun: true } } as Auto);
 
@@ -68,7 +68,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();
 
-    plugin.postToSlack = jest.fn();
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -86,7 +86,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();
 
-    plugin.postToSlack = jest.fn();
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
     // @ts-ignore
     plugin.apply({
       hooks,
@@ -109,7 +109,7 @@ describe('postToSlack', () => {
     const plugin = new SlackPlugin({ url: undefined });
     const hooks = makeHooks();
 
-    plugin.postToSlack = jest.fn();
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -126,7 +126,7 @@ describe('postToSlack', () => {
   test('should warn when no token', async () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const logger = dummyLog();
-    logger.verbose.warn = jest.fn();
+    jest.spyOn(logger.verbose, 'warn').mockImplementation();
     process.env.SLACK_TOKEN = '';
 
     await plugin.postToSlack(
@@ -195,7 +195,7 @@ describe('postToSlack', () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       'https://custom-slack-url?token=MY_TOKEN'
     );
-    expect(fetchSpy.mock.calls[0][1].body.includes('@here'));
+    expect(fetchSpy.mock.calls[0][1].body.includes('@here')).toBe(true);
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 });

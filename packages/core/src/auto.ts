@@ -11,6 +11,7 @@ import {
   SyncWaterfallHook
 } from 'tapable';
 
+import HttpsProxyAgent from 'https-proxy-agent';
 import {
   ApiOptions,
   ICanaryOptions,
@@ -25,7 +26,6 @@ import {
   IShipItOptions,
   IVersionOptions
 } from './auto-args';
-
 import Changelog from './changelog';
 import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
@@ -34,8 +34,7 @@ import LogParse, { IExtendedCommit } from './log-parse';
 import Release, {
   getVersionMap,
   IAutoConfig,
-  ILabelDefinitionMap,
-  VersionLabel
+  ILabelDefinitionMap
 } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
@@ -43,6 +42,7 @@ import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 
+const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
 
 interface IAuthor {
@@ -182,6 +182,7 @@ export default class Auto {
       repo: config.repo,
       ...repository,
       token,
+      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi || 'https://api.github.com',
       graphqlBaseUrl:
         config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
@@ -226,7 +227,9 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'label'");
     let labels: string[] = [];
 
-    if (!pr) {
+    if (pr) {
+      labels = await this.git.getLabels(pr);
+    } else {
       const pulls = await this.git.getPullRequests({
         state: 'closed'
       });
@@ -235,13 +238,11 @@ export default class Auto {
           (a, b) =>
             new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
         )
-        .find(pull => !!pull.merged_at);
+        .find(pull => pull.merged_at);
 
       if (lastMerged) {
         labels = lastMerged.labels.map(label => label.name);
       }
-    } else {
-      labels = await this.git.getLabels(pr);
     }
 
     if (labels.length) {
@@ -284,7 +285,9 @@ export default class Auto {
     // tslint:disable-next-line variable-name
     const target_url = url;
 
-    if (!dryRun) {
+    if (dryRun) {
+      this.logger.verbose.info('`pr` dry run complete.');
+    } else {
       try {
         await this.git.createStatus({
           ...options,
@@ -298,8 +301,6 @@ export default class Auto {
       }
 
       this.logger.log.success('Posted status to Pull Request.');
-    } else {
-      this.logger.verbose.info('`pr` dry run complete.');
     }
 
     this.logger.verbose.success('Finished `pr` command');
@@ -332,13 +333,12 @@ export default class Auto {
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseTag = labels.find(
-        l =>
-          !!this.release && this.release.options.skipReleaseLabels.includes(l)
+        l => this.release && this.release.options.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelValues.some(labelValue => labelValue.includes(l)) &&
-          !!this.release &&
+          this.release &&
           !this.release.options.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
@@ -374,7 +374,9 @@ export default class Auto {
 
     this.logger.verbose.info('Posting status to GitHub\n', msg);
 
-    if (!dryRun) {
+    if (dryRun) {
+      this.logger.verbose.info('`pr-check` dry run complete.');
+    } else {
       try {
         await this.git.createStatus({
           ...options,
@@ -389,8 +391,6 @@ export default class Auto {
           `Failed to post status to Pull Request with error code ${error.status}`
         );
       }
-    } else {
-      this.logger.verbose.info('`pr-check` dry run complete.');
     }
 
     this.logger.verbose.success('Finished `pr-check` command');
@@ -425,7 +425,7 @@ export default class Auto {
         );
       } else if (editFlag) {
         this.logger.log.info(
-            `Would have edited the comment on ${prNumber} under "${context}" context.\n\nNew message: ${message}`
+          `Would have edited the comment on ${prNumber} under "${context}" context.\n\nNew message: ${message}`
         );
       } else {
         this.logger.log.info(
@@ -434,11 +434,15 @@ export default class Auto {
       }
     } else if (editFlag && message) {
       await this.git.editComment(message, prNumber, context);
-      this.logger.log.success(`Edited comment on PR #${prNumber} under context "${context}"`);
+      this.logger.log.success(
+        `Edited comment on PR #${prNumber} under context "${context}"`
+      );
     } else {
       if (deleteFlag) {
         await this.git.deleteComment(prNumber, context);
-        this.logger.log.success(`Deleted comment on PR #${prNumber} under context "${context}"`);
+        this.logger.log.success(
+          `Deleted comment on PR #${prNumber} under context "${context}"`
+        );
       }
 
       if (message) {
@@ -556,7 +560,7 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${build}`;
     }
 
-    if (!('isPr' in env) || !build) {
+    if (!pr || !build) {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
@@ -747,7 +751,8 @@ export default class Auto {
         repo: gitOptions.repo,
         token: gitOptions.token,
         baseUrl: gitOptions.baseUrl,
-        graphqlBaseUrl: gitOptions.graphqlBaseUrl
+        graphqlBaseUrl: gitOptions.graphqlBaseUrl,
+        agent: gitOptions.agent
       },
       this.logger
     );
@@ -757,6 +762,7 @@ export default class Auto {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
+
     const lastRelease = from || (await this.git.getLatestRelease());
     const bump = await this.release.getSemverBump(lastRelease);
     this.versionBump = bump;
@@ -859,13 +865,13 @@ export default class Auto {
 
     let release: Response<ReposCreateReleaseResponse> | undefined;
 
-    if (!dryRun) {
-      this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-      release = await this.git.publish(releaseNotes, newVersion);
-    } else {
+    if (dryRun) {
       this.logger.log.info(
         `Would have released (unless ran with "shipit"): ${newVersion}`
       );
+    } else {
+      this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
+      release = await this.git.publish(releaseNotes, newVersion);
     }
 
     await this.hooks.afterRelease.promise({
@@ -967,10 +973,11 @@ If a command fails manually run:
 
     pluginsPaths
       .map(plugin =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
       )
       .map(plugin => loadPlugin(plugin, this.logger))
-      .filter((plugin): plugin is IPlugin => !!plugin)
+      .filter((plugin): plugin is IPlugin => Boolean(plugin))
       .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);

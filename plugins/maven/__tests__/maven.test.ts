@@ -36,7 +36,7 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getAuthor.promise()).toEqual(
+      expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
           email: 'test@email.com',
           name: 'Andrew Lisowski'
@@ -63,7 +63,7 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getAuthor.promise()).toEqual(
+      expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
           email: 'test@email.com',
           name: 'Andrew Lisowski'
@@ -71,7 +71,7 @@ describe('maven', () => {
       );
     });
 
-    test('should get author from pom.xml', async () => {
+    test('should get author from pom.xml - simple', async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -99,7 +99,7 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getRepository.promise()).toEqual(
+      expect(await hooks.getRepository.promise()).toStrictEqual(
         expect.objectContaining({
           owner: 'Fuego-Tools',
           repo: 'java-test-project'

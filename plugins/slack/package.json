@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "7.6.2",
+  "version": "7.9.1",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "author": {
@@ -30,15 +30,16 @@
     "slack"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "npm run build -- -w",
-    "lint": "tslint -p . --format stylish",
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
     "@auto-it/core": "link:../../packages/core",
     "node-fetch": "2.6.0",
+    "tslib": "1.10.0",
     "url-join": "^4.0.0"
   },
   "devDependencies": {

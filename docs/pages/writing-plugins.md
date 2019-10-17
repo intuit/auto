@@ -81,7 +81,7 @@ auto.hooks.modifyConfig.tap('test', config => {
 
 #### beforeShipIt
 
-Happens before `shipit` is run. This is a great throw an error if a token or key is not present.
+Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present.
 
 ```ts
 auto.hooks.beforeRun.tapPromise('NPM', async config => {

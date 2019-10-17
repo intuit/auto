@@ -10,7 +10,7 @@
 
 <br />
 
-Automated releases powered by pull request labels. Streamline you release workflow and publish constantly! `auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
+Automated releases powered by pull request labels. Streamline your release workflow and publish constantly! `auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
 
 Release Features:
 
@@ -35,22 +35,23 @@ Visit [the docs](https://intuit.github.io/auto/) for more information.
 
 Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
 
-- [chrome](./plugins/chrome) - publish code to Chrome Web Store
-- [conventional-commits](./plugins/conventional-commits) - parse conventional commit messages for version bumps
-- [jira](./plugins/jira) - Include jira story links in the changelog
+- [chrome](./plugins/chrome) - Publish code to Chrome Web Store
+- [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
+- [jira](./plugins/jira) - Include Jira story links in the changelog
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
-- [maven](./plugins/maven) - publish code with maven
-- [npm](./plugins/npm) - publish code to npm (DEFAULT)
+- [maven](./plugins/maven) - Publish code with maven
+- [npm](./plugins/npm) - Publish code to npm (DEFAULT)
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
 - [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
-- [slack](./plugins/slack) - post release notes to slack
-- [twitter](./plugins/twitter) - post release notes to twitter
-- [upload-assets](./plugins/upload-assets) - add extra assets to the release
+- [slack](./plugins/slack) - Post release notes to slack
+- [twitter](./plugins/twitter) - Post release notes to twitter
+- [upload-assets](./plugins/upload-assets) - Add extra assets to the release
+- [crates](./plugins/crates) - Publish Rust crates
 
 ## Start Developing
 
-To get set up, fork and clone the project and run the following command:
+To get set up, fork and clone the project then run the following command:
 
 ```sh
 yarn
@@ -102,12 +103,12 @@ yarn contributors:add
 
 ### Create a new plugin
 
-Get stated developing a new plugin in the monorepo in seconds.
+Get started developing a new plugin in the monorepo in seconds.
 
-The two arguments are
+The two arguments are:
 
 1. A spaced name
-2. a description
+2. A description
 
 ```sh
 yarn create:plugin "My Plugin" "Do something really cool"
@@ -115,7 +116,7 @@ yarn create:plugin "My Plugin" "Do something really cool"
 
 ## Contributing
 
-Feel free to make and [issue](https://github.com/intuit/auto/issues) or open a [pull request](https://github.com/intuit/auto/pulls)!
+Feel free to make an [issue](https://github.com/intuit/auto/issues) or open a [pull request](https://github.com/intuit/auto/pulls)!
 
 Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
@@ -147,7 +148,7 @@ Does your project use `auto`? Then use our custom badge!
 
 [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto&style=for-the-badge)](https://github.com/intuit/auto)
 
-[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto&style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAACzElEQVR4AYXBW2iVBQAA4O+/nLlLO9NM7JSXasko2ASZMaKyhRKEDH2ohxHVWy6EiIiiLOgiZG9CtdgG0VNQoJEXRogVgZYylI1skiKVITPTTtnv3M7+v8UvnG3M+r7APLIRxStn69qzqeBBrMYyBDiL4SD0VeFmRwtrkrI5IjP0F7rjzrSjvbTqwubiLZffySrhRrSghBJa8EBYY0NyLJt8bDBOtzbEY72TldQ1kRm6otana8JK3/kzN/3V/NBPU6HsNnNlZAz/ukOalb0RBJKeQnykd7LiX5Fp/YXuQlfUuhXbg8Di5GL9jbXFq/tLa86PpxPhAPrwCYaiorS8L/uuPJh1hZFbcR8mewrx0d7JShr3F7pNW4vX0GRakKWVk7taDq7uPvFWw8YkMcPVb+vfvfRZ1i7zqFwjtmFouL72y6C/0L0Ie3GvaQXRyYVB3YZNE32/+A/D9bVLcRB3yw3hkRCdaDUtFl6Ykr20aaLvKoqIXUdbMj6GFzAmdxfWx9iIRrkDr1f27cFONGMUo/gRI/jNbIMYxJOoR1cY0OGaVPb5z9mlKbyJP/EsdmIXvsFmM7Ql42nEblX3xI1BbYbTkXCqRnxUbgzPo4T7sQBNeBG7zbAiDI8nWfZDhQWYCG4PFr+HMBQ6l5VPJybeRyJXwsdYJ/cRnlJV0yB4ZlUYtFQIkMZnst8fRrPcKezHCblz2IInMIkPzbbyb9mW42nWInc2xmE0y61AJ06oGsXL5rcOK1UdCbEXiVwNXsEy/6+EbaiVG8eeEAfxvaoSBnCH61uOD7BS1Ul8ESHBKWxCrdyd6EYNKihgEVrwOAbQruoytuBYIFfAc3gVN6iawhjKyNCEpYhVJXgbOzARyaU4hCtYizq5EI1YgiUoIlT1B7ZjByqmRWYbwtdYjoWoN7+LOIQefIqKawLzK6ID69GGpQgwhhEcwGGUzfEPAiPqsCXadFsAAAAASUVORK5CYII=)](https://github.com/intuit/auto) [![Greenkeeper badge](https://badges.greenkeeper.io/intuit/auto.svg)](https://greenkeeper.io/)
+[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto&style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAACzElEQVR4AYXBW2iVBQAA4O+/nLlLO9NM7JSXasko2ASZMaKyhRKEDH2ohxHVWy6EiIiiLOgiZG9CtdgG0VNQoJEXRogVgZYylI1skiKVITPTTtnv3M7+v8UvnG3M+r7APLIRxStn69qzqeBBrMYyBDiL4SD0VeFmRwtrkrI5IjP0F7rjzrSjvbTqwubiLZffySrhRrSghBJa8EBYY0NyLJt8bDBOtzbEY72TldQ1kRm6otana8JK3/kzN/3V/NBPU6HsNnNlZAz/ukOalb0RBJKeQnykd7LiX5Fp/YXuQlfUuhXbg8Di5GL9jbXFq/tLa86PpxPhAPrwCYaiorS8L/uuPJh1hZFbcR8mewrx0d7JShr3F7pNW4vX0GRakKWVk7taDq7uPvFWw8YkMcPVb+vfvfRZ1i7zqFwjtmFouL72y6C/0L0Ie3GvaQXRyYVB3YZNE32/+A/D9bVLcRB3yw3hkRCdaDUtFl6Ykr20aaLvKoqIXUdbMj6GFzAmdxfWx9iIRrkDr1f27cFONGMUo/gRI/jNbIMYxJOoR1cY0OGaVPb5z9mlKbyJP/EsdmIXvsFmM7Ql42nEblX3xI1BbYbTkXCqRnxUbgzPo4T7sQBNeBG7zbAiDI8nWfZDhQWYCG4PFr+HMBQ6l5VPJybeRyJXwsdYJ/cRnlJV0yB4ZlUYtFQIkMZnst8fRrPcKezHCblz2IInMIkPzbbyb9mW42nWInc2xmE0y61AJ06oGsXL5rcOK1UdCbEXiVwNXsEy/6+EbaiVG8eeEAfxvaoSBnCH61uOD7BS1Ul8ESHBKWxCrdyd6EYNKihgEVrwOAbQruoytuBYIFfAc3gVN6iawhjKyNCEpYhVJXgbOzARyaU4hCtYizq5EI1YgiUoIlT1B7ZjByqmRWYbwtdYjoWoN7+LOIQefIqKawLzK6ID69GGpQgwhhEcwGGUzfEPAiPqsCXadFsAAAAASUVORK5CYII=)](https://github.com/intuit/auto)
 
 ## :art: Prior Art :art:
 
@@ -177,6 +178,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/hello-woof"><img src="https://avatars2.githubusercontent.com/u/48960849?v=4" width="100px;" alt="Zachary Sherwin"/><br /><sub><b>Zachary Sherwin</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/bnigh"><img src="https://avatars3.githubusercontent.com/u/8219313?v=4" width="100px;" alt="bnigh"/><br /><sub><b>bnigh</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bnigh" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/su7edja"><img src="https://avatars0.githubusercontent.com/u/2717065?v=4" width="100px;" alt="su7edja"/><br /><sub><b>su7edja</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=su7edja" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/yogikhan"><img src="https://avatars3.githubusercontent.com/u/16071601?v=4" width="100px;" alt="Yogesh Khandlewal"/><br /><sub><b>Yogesh Khandlewal</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=yogikhan" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Celeo"><img src="https://avatars1.githubusercontent.com/u/772507?v=4" width="100px;" alt="Matt Boulanger"/><br /><sub><b>Matt Boulanger</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Celeo" title="Code">💻</a></td>
   </tr>
 </table>
 

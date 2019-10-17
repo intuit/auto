@@ -26,17 +26,19 @@ jest.mock('cosmiconfig', () => () => ({
 }));
 
 jest.mock('@octokit/rest', () => {
-  const instance = () => ({
-    authenticate: () => undefined,
-    search: {
-      issuesAndPullRequests: () => ({ data: { items: [] } })
-    },
-    hook: {
-      error: () => undefined
-    }
-  });
+  const instance = class MockOctokit {
+    static plugin = () => instance;
 
-  instance.plugin = () => instance;
+    authenticate = () => undefined;
+
+    search = {
+      issuesAndPullRequests: () => ({ data: { items: [] } })
+    };
+
+    hook = {
+      error: () => undefined
+    };
+  };
 
   return instance;
 });
@@ -115,7 +117,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect([...auto.semVerLabels!.values()]).toEqual([
+    expect([...auto.semVerLabels!.values()]).toStrictEqual([
       ['Version: Major'],
       ['Version: Minor'],
       ['Version: Patch'],
@@ -138,7 +140,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.skipReleaseLabels).toEqual(['NOPE']);
+    expect(auto.release!.options.skipReleaseLabels).toStrictEqual(['NOPE']);
   });
 
   test('should be able to add label as string', async () => {
@@ -154,7 +156,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual([
+    expect(auto.release!.options.labels.minor).toStrictEqual([
       {
         description: 'Increment the minor version when merged',
         name: 'feature',
@@ -178,7 +180,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toEqual([
+    expect(auto.release!.options.labels.minor).toStrictEqual([
       {
         description: 'This is a test',
         name: 'minor',
@@ -202,7 +204,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.fooBar).toEqual([
+    expect(auto.release!.options.labels.fooBar).toStrictEqual([
       {
         description: 'This is a test',
         name: 'fooBar'
@@ -217,7 +219,7 @@ describe('Auto', () => {
       });
       const auto = new Auto();
       auto.logger = dummyLog();
-      expect(auto.createLabels()).rejects.toBeTruthy();
+      await expect(auto.createLabels()).rejects.not.toBeUndefined();
     });
 
     test('should create the labels', async () => {
@@ -228,7 +230,7 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      auto.release!.addLabelsToProject = jest.fn();
+      jest.spyOn(auto.release!, 'addLabelsToProject').mockImplementation();
       await auto.createLabels();
       expect(auto.release!.addLabelsToProject).toMatchSnapshot();
     });
@@ -241,7 +243,7 @@ describe('Auto', () => {
       });
       const auto = new Auto();
       auto.logger = dummyLog();
-      expect(auto.label({ pr: 13 })).rejects.toBeTruthy();
+      await expect(auto.label({ pr: 13 })).rejects.not.toBeUndefined();
     });
 
     test('should get labels', async () => {
@@ -252,7 +254,7 @@ describe('Auto', () => {
       const getLabels = jest.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(['foo']);
-      console.log = jest.fn();
+      jest.spyOn(console, 'log').mockImplementation();
 
       await auto.label({ pr: 13 });
       expect(console.log).toHaveBeenCalledWith('foo');
@@ -276,7 +278,7 @@ describe('Auto', () => {
           labels: [{ name: 'foo' }, { name: 'bar' }]
         }
       ]);
-      console.log = jest.fn();
+      jest.spyOn(console, 'log').mockImplementation();
 
       await auto.label();
       expect(console.log).toHaveBeenCalledWith('foo\nbar');
@@ -291,7 +293,10 @@ describe('Auto', () => {
       const getPullRequests = jest.fn();
       auto.git!.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([]);
-      console.log = jest.fn();
+      jest
+        .spyOn(console, 'log')
+        .mockImplementation()
+        .mockReset();
 
       await auto.label();
       expect(console.log).not.toHaveBeenCalled();
@@ -316,7 +321,7 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
-      expect(auto.prStatus(required)).rejects.toBeTruthy();
+      await expect(auto.prStatus(required)).rejects.not.toBeUndefined();
     });
 
     test('should catch exceptions when status fails to post', async () => {
@@ -412,7 +417,9 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
-      expect(auto.prCheck({ pr: 13, ...required })).rejects.toBeTruthy();
+      await expect(
+        auto.prCheck({ pr: 13, ...required })
+      ).rejects.not.toBeUndefined();
     });
 
     test('should do nothing with dryRun', async () => {
@@ -520,7 +527,7 @@ describe('Auto', () => {
       );
     });
 
-    test('should pass with skip release label', async () => {
+    test('should pass with release label', async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
@@ -551,7 +558,7 @@ describe('Auto', () => {
 
       await expect(
         auto.comment({ pr: 10, message: 'foo' })
-      ).rejects.toBeTruthy();
+      ).rejects.not.toBeUndefined();
     });
 
     test('should make a comment', async () => {
@@ -606,7 +613,12 @@ describe('Auto', () => {
       await auto.comment({ pr: 10, delete: true, dryRun: true });
       expect(deleteComment).not.toHaveBeenCalled();
 
-      await auto.comment({ pr: 10, message: 'foo bar', edit: true, dryRun: true });
+      await auto.comment({
+        pr: 10,
+        message: 'foo bar',
+        edit: true,
+        dryRun: true
+      });
       expect(deleteComment).not.toHaveBeenCalled();
       expect(editComment).not.toHaveBeenCalled();
     });
@@ -619,7 +631,7 @@ describe('Auto', () => {
 
       await expect(
         auto.prBody({ pr: 10, message: 'foo' })
-      ).rejects.toBeTruthy();
+      ).rejects.not.toBeUndefined();
     });
 
     test('should make a pr body update', async () => {
@@ -666,7 +678,7 @@ describe('Auto', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
-      expect(auto.version()).rejects.toBeTruthy();
+      await expect(auto.version()).rejects.not.toBeUndefined();
     });
 
     test('should calculate version with default options', async () => {
@@ -674,11 +686,13 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      auto.git!.getLatestRelease = jest.fn(() => Promise.resolve('v1.2.3'));
-      auto.release!.getSemverBump = jest.fn(() =>
-        Promise.resolve(SEMVER.patch)
-      );
-      console.log = jest.fn();
+      jest
+        .spyOn(auto.git!, 'getLatestRelease')
+        .mockImplementation(() => Promise.resolve('v1.2.3'));
+      jest
+        .spyOn(auto.release!, 'getSemverBump')
+        .mockImplementation(() => Promise.resolve(SEMVER.patch));
+      jest.spyOn(console, 'log').mockImplementation();
 
       await auto.version();
       expect(auto.release!.getSemverBump).toHaveBeenCalledWith('v1.2.3');
@@ -690,11 +704,13 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      auto.git!.getLatestRelease = jest.fn(() => Promise.resolve('v1.2.3'));
-      auto.release!.getSemverBump = jest.fn(() =>
-        Promise.resolve(SEMVER.minor)
-      );
-      console.log = jest.fn();
+      jest
+        .spyOn(auto.git!, 'getLatestRelease')
+        .mockImplementation(() => Promise.resolve('v1.2.3'));
+      jest
+        .spyOn(auto.release!, 'getSemverBump')
+        .mockImplementation(() => Promise.resolve(SEMVER.minor));
+      jest.spyOn(console, 'log').mockImplementation();
 
       await auto.version({ from: 'v1.1.0' });
       expect(auto.release!.getSemverBump).toHaveBeenCalledWith('v1.1.0');
@@ -707,7 +723,7 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
-      expect(auto.changelog()).rejects.toBeTruthy();
+      await expect(auto.changelog()).rejects.not.toBeUndefined();
     });
 
     test('should do nothing on a dryRun', async () => {
@@ -718,7 +734,7 @@ describe('Auto', () => {
 
       const addToChangelog = jest.fn();
       auto.release!.addToChangelog = addToChangelog;
-      auto.release!.generateReleaseNotes = jest.fn();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
 
       await auto.changelog({ from: 'v1.0.0', dryRun: true });
       expect(addToChangelog).not.toHaveBeenCalled();
@@ -735,7 +751,7 @@ describe('Auto', () => {
 
       const addToChangelog = jest.fn();
       auto.release!.addToChangelog = addToChangelog;
-      auto.release!.generateReleaseNotes = jest.fn();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
 
       await auto.changelog({ from: 'v1.0.0' });
       expect(addToChangelog).toHaveBeenCalled();
@@ -760,7 +776,7 @@ describe('Auto', () => {
         dryRun: true
       });
 
-      expect(hookFn).not.toBeCalled();
+      expect(hookFn).not.toHaveBeenCalled();
     });
   });
 
@@ -770,14 +786,14 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.release!.generateReleaseNotes = jest.fn();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
 
       auto.hooks.getPreviousVersion.tap('test', () => '1.2.3');
       const afterRelease = jest.fn();
       auto.hooks.afterRelease.tap('test', afterRelease);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.runRelease();
       expect(afterRelease).not.toHaveBeenCalled();
@@ -788,17 +804,17 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.git!.publish = jest.fn();
-      auto.release!.generateReleaseNotes = jest.fn(() =>
-        Promise.resolve('releaseNotes')
-      );
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest
+        .spyOn(auto.release!, 'generateReleaseNotes')
+        .mockImplementation(() => Promise.resolve('releaseNotes'));
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
 
       auto.hooks.getPreviousVersion.tap('test', () => '1.2.4');
       const afterRelease = jest.fn();
       auto.hooks.afterRelease.tap('test', afterRelease);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -820,17 +836,17 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.git!.publish = jest.fn();
-      auto.release!.generateReleaseNotes = jest.fn(() =>
-        Promise.resolve('releaseNotes')
-      );
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest
+        .spyOn(auto.release!, 'generateReleaseNotes')
+        .mockImplementation(() => Promise.resolve('releaseNotes'));
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
 
       auto.hooks.getPreviousVersion.tap('test', () => '1.2.4');
       const afterRelease = jest.fn();
       auto.hooks.afterRelease.tap('test', afterRelease);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.runRelease({
         from: 'v1.2.0'
@@ -854,17 +870,17 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.git!.publish = jest.fn();
-      auto.release!.generateReleaseNotes = jest.fn(() =>
-        Promise.resolve('releaseNotes')
-      );
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest
+        .spyOn(auto.release!, 'generateReleaseNotes')
+        .mockImplementation(() => Promise.resolve('releaseNotes'));
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
 
       auto.hooks.getPreviousVersion.tap('test', () => '1.2.4');
       const afterRelease = jest.fn();
       auto.hooks.afterRelease.tap('test', afterRelease);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.runRelease({
         useVersion: 'v1.3.0'
@@ -889,7 +905,7 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
-      expect(auto.canary()).rejects.toBeTruthy();
+      await expect(auto.canary()).rejects.not.toBeUndefined();
     });
 
     test('does not call canary hook in dry-run', async () => {
@@ -901,7 +917,7 @@ describe('Auto', () => {
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary({ pr: 123, build: 1, dryRun: true });
       expect(canary).not.toHaveBeenCalled();
@@ -913,15 +929,15 @@ describe('Auto', () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       auto.git!.getSha = () => Promise.resolve('abc');
-      auto.git!.addToPrBody = jest.fn();
+      jest.spyOn(auto.git!, 'addToPrBody').mockImplementation();
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1.abc');
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.123.1');
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
@@ -932,17 +948,19 @@ describe('Auto', () => {
       auto.git!.getLatestTagInBranch = () => {
         throw new Error();
       };
+
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       auto.git!.getSha = () => Promise.resolve('abc');
       auto.release!.getCommits = () => Promise.resolve([]);
       auto.git!.getFirstCommit = () => Promise.resolve('abcd');
-      auto.git!.addToPrBody = jest.fn();
-      auto.release!.getCommitsInRelease = jest
-        .fn()
+      jest.spyOn(auto.git!, 'addToPrBody').mockImplementation();
+      jest
+        .spyOn(auto.release!, 'getCommitsInRelease')
+        .mockImplementation()
         .mockReturnValue(Promise.resolve([makeCommitFromMsg('Test Commit')]));
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
       expect(auto.release!.getCommits).toHaveBeenCalledWith('abcd');
@@ -954,12 +972,12 @@ describe('Auto', () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       auto.git!.getSha = () => Promise.resolve('abc');
-      auto.git!.addToPrBody = jest.fn();
+      jest.spyOn(auto.git!, 'addToPrBody').mockImplementation();
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
       auto.hooks.canary.tap('test', canary);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary();
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abc');
@@ -969,7 +987,7 @@ describe('Auto', () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
-      auto.prBody = jest.fn();
+      jest.spyOn(auto, 'prBody').mockImplementation();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       auto.git!.getSha = () => Promise.resolve('abc');
       auto.release!.getCommitsInRelease = () =>
@@ -978,7 +996,7 @@ describe('Auto', () => {
       const canary = jest.fn();
       canary.mockReturnValue({ error: 'ooops' });
       auto.hooks.canary.tap('test', canary);
-      auto.release!.getCommits = jest.fn();
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
       expect(auto.prBody).not.toHaveBeenCalled();
@@ -1026,7 +1044,7 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 
-      expect(auto.shipit()).rejects.toBeTruthy();
+      await expect(auto.shipit()).rejects.not.toBeUndefined();
     });
 
     test('should not publish when no latest version found', async () => {
@@ -1049,10 +1067,10 @@ describe('Auto', () => {
       await auto.loadConfig();
 
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.git!.publish = jest.fn();
-      auto.release!.getCommitsInRelease = jest.fn();
-      auto.release!.generateReleaseNotes = jest.fn();
-      auto.release!.addToChangelog = jest.fn();
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
+      jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
       const afterShipIt = jest.fn();
       auto.hooks.afterShipIt.tap('test', afterShipIt);
 
@@ -1066,10 +1084,10 @@ describe('Auto', () => {
       await auto.loadConfig();
 
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      auto.git!.publish = jest.fn();
-      auto.release!.getCommitsInRelease = jest.fn();
-      auto.release!.generateReleaseNotes = jest.fn();
-      auto.release!.addToChangelog = jest.fn();
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
+      jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
       const version = jest.fn();
       auto.hooks.version.tap('test', version);
 
@@ -1097,7 +1115,7 @@ describe('hooks', () => {
 
     await auto.loadConfig();
 
-    expect(auto.labels!.released).toEqual([
+    expect(auto.labels!.released).toStrictEqual([
       {
         description: 'This issue/pull request has been released',
         name: 'released'
@@ -1120,7 +1138,7 @@ describe('hooks', () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = async () => Promise.resolve('1.0.0');
 
-      console.log = jest.fn();
+      jest.spyOn(console, 'log').mockImplementation();
       await auto.version();
 
       expect(console.log).toHaveBeenCalledWith('major');
@@ -1148,7 +1166,7 @@ describe('hooks', () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = async () => Promise.resolve('1.0.0');
 
-      console.log = jest.fn();
+      jest.spyOn(console, 'log').mockImplementation();
       await auto.version();
 
       expect(console.log).toHaveBeenCalledWith('patch');

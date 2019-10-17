@@ -27,15 +27,19 @@ const update = jest.fn();
 const paginate = jest.fn();
 
 jest.mock('@octokit/rest', () => {
-  const instance = () => ({
-    authenticate,
-    paginate,
-    pulls: {
+  const instance = class MockOctokit {
+    static plugin = () => instance;
+
+    authenticate = authenticate;
+    paginate = paginate;
+
+    pulls = {
       get: getPr,
       listCommits: { endpoint: listCommits },
       list
-    },
-    issues: {
+    };
+
+    issues = {
       listLabelsOnIssue,
       createComment,
       updateComment,
@@ -48,26 +52,28 @@ jest.mock('@octokit/rest', () => {
       lock,
       get,
       update
-    },
-    repos: {
+    };
+
+    repos = {
       createStatus,
       createRelease,
       getLatestRelease,
       get: getProject
-    },
-    search: {
+    };
+
+    search = {
       users: getUser,
       issuesAndPullRequests
-    },
-    users: {
-      getByUsername
-    },
-    hook: {
-      error: errorHook
-    }
-  });
+    };
 
-  instance.plugin = () => instance;
+    users = {
+      getByUsername
+    };
+
+    hook = {
+      error: errorHook
+    };
+  };
 
   return instance;
 });
@@ -114,7 +120,7 @@ describe('github', () => {
         ]
       });
 
-      expect(await gh.getLabels(123)).toEqual([
+      expect(await gh.getLabels(123)).toStrictEqual([
         'minor',
         'documentation',
         'major',
@@ -125,7 +131,7 @@ describe('github', () => {
     test('handles errors', async () => {
       const gh = new Git(options);
 
-      expect(gh.getLabels(123)).rejects.toBeTruthy();
+      await expect(gh.getLabels(123)).rejects.toBeInstanceOf(Error);
     });
   });
 
@@ -216,7 +222,7 @@ describe('github', () => {
         target_url: 'google.com',
         description: 'testing'
       })
-    ).toBeTruthy();
+    ).not.toBeUndefined();
   });
 
   test('search', async () => {
@@ -239,7 +245,7 @@ describe('github', () => {
 
     getProject.mockReturnValueOnce({ data: true });
 
-    expect(await gh.getProject()).toBeTruthy();
+    expect(await gh.getProject()).not.toBeUndefined();
   });
 
   describe('createComment', () => {
@@ -351,21 +357,21 @@ describe('github', () => {
       });
 
       const commentId = await gh.getCommentId(22, 'default');
-      expect(commentId).toEqual(1337);
+      expect(commentId).toStrictEqual(1337);
     });
 
     test('should return -1 if context does not exist', async () => {
       const gh = new Git(options);
 
-      listComments.mockReturnValue({data: [] });
+      listComments.mockReturnValue({ data: [] });
 
       const commentId = await gh.getCommentId(22, 'default');
-      expect(commentId).toEqual(-1);
+      expect(commentId).toStrictEqual(-1);
     });
   });
 
   describe('addToPrBody', () => {
-    test('should add to PR body if none exists', async () => {
+    test('should add to PR body if exists', async () => {
       const gh = new Git(options);
 
       get.mockReturnValueOnce({ data: { body: '# My Content' } });
@@ -460,7 +466,7 @@ describe('github', () => {
     expect(listCommits).toHaveBeenCalled();
   });
 
-  test('getCommitsForPR', async () => {
+  test('getPullRequests', async () => {
     const gh = new Git(options);
 
     list.mockReturnValueOnce({
@@ -479,7 +485,7 @@ describe('github', () => {
         data: { name: 'Andrew Lisowski' }
       });
 
-      expect(await gh.getUserByUsername('andrew')).toEqual({
+      expect(await gh.getUserByUsername('andrew')).toStrictEqual({
         name: 'Andrew Lisowski'
       });
     });
@@ -501,7 +507,7 @@ describe('github', () => {
         data: { items: [{ login: 'hipstersmoothie' }] }
       });
 
-      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toStrictEqual({
         login: 'hipstersmoothie'
       });
     });
@@ -513,7 +519,7 @@ describe('github', () => {
         data: undefined
       });
 
-      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toEqual({});
+      expect(await gh.getUserByEmail('lisowski54@gmail.com')).toStrictEqual({});
     });
 
     test('errors', async () => {
@@ -547,7 +553,7 @@ describe('github', () => {
     test('handles errors', async () => {
       const gh = new Git(options);
 
-      expect(gh.getLatestRelease()).rejects.toBeTruthy();
+      await expect(gh.getLatestRelease()).rejects.not.toBeUndefined();
     });
   });
 
@@ -559,7 +565,7 @@ describe('github', () => {
         data: [{ name: 'first label' }, { name: 'second label' }]
       });
 
-      expect(await gh.getProjectLabels()).toEqual([
+      expect(await gh.getProjectLabels()).toStrictEqual([
         'first label',
         'second label'
       ]);
@@ -568,7 +574,7 @@ describe('github', () => {
     test('throw for errors', async () => {
       const gh = new Git(options);
 
-      expect(gh.getProjectLabels()).rejects.toBeTruthy();
+      await expect(gh.getProjectLabels()).rejects.not.toBeUndefined();
     });
   });
 
@@ -576,13 +582,13 @@ describe('github', () => {
     test('return pr', async () => {
       const gh = new Git(options);
       get.mockReturnValueOnce({ success: true });
-      expect(await gh.getPr(123)).toEqual({ success: true });
+      expect(await gh.getPr(123)).toStrictEqual({ success: true });
     });
 
     test('throw for errors', async () => {
       const gh = new Git(options);
       get.mockRejectedValueOnce(Error);
-      await expect(gh.getPr(120)).rejects.toBeTruthy();
+      await expect(gh.getPr(120)).rejects.not.toBeUndefined();
     });
   });
 
@@ -619,7 +625,7 @@ describe('github', () => {
     test('throw for errors', async () => {
       const gh = new Git(options);
 
-      expect(gh.getProjectLabels()).rejects.toBeTruthy();
+      await expect(gh.getProjectLabels()).rejects.not.toBeUndefined();
     });
   });
 
@@ -633,10 +639,10 @@ describe('github', () => {
         headers
       });
 
-      // tslint:disable-next-line:no-unused
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const gh = new Git(options);
 
-      expect(errorHook).toBeCalled();
+      expect(errorHook).toHaveBeenCalled();
 
       const errorHandler = errorHook.mock.calls[0][1] as (
         error: HookError

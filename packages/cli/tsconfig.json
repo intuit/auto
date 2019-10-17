@@ -1,7 +1,22 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist"
-  },
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*", "../../typings/**/*"]
+  "include": ["src/**/*", "../../typings/**/*"],
+
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true
+  },
+
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../../plugins/npm"
+    },
+    {
+      "path": "../../plugins/released"
+    }
+  ]
 }

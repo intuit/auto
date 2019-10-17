@@ -17,24 +17,24 @@ jest.mock('import-cwd', () => (path: string) => importMock(path));
 
 describe('normalizeLabel', () => {
   test('should handle string', () => {
-    expect(normalizeLabel('foo', 'foo')).toEqual([{ name: 'foo' }]);
+    expect(normalizeLabel('foo', 'foo')).toStrictEqual([{ name: 'foo' }]);
   });
 
   test('should handle object', () => {
     const label = { name: 'foo', description: 'something' };
-    expect(normalizeLabel('foo', label)).toEqual([label]);
+    expect(normalizeLabel('foo', label)).toStrictEqual([label]);
   });
 
   test('should attach name', () => {
     const label = { description: 'something' };
-    expect(normalizeLabel('foo', label)).toEqual([
+    expect(normalizeLabel('foo', label)).toStrictEqual([
       { name: 'foo', description: 'something' }
     ]);
   });
 
   test('should handle arrays', () => {
     const label = { name: 'foo', description: 'something' };
-    expect(normalizeLabel('major', ['major', label])).toEqual([
+    expect(normalizeLabel('major', ['major', label])).toStrictEqual([
       {
         description: 'Increment the major version when merged',
         name: 'major',
@@ -47,7 +47,7 @@ describe('normalizeLabel', () => {
 
 describe('normalizeLabels', () => {
   test('user labels should override defaults', () => {
-    expect(normalizeLabels({}).minor).toEqual([
+    expect(normalizeLabels({}).minor).toStrictEqual([
       {
         description: 'Increment the minor version when merged',
         name: 'minor',
@@ -55,13 +55,15 @@ describe('normalizeLabels', () => {
       }
     ]);
 
-    expect(normalizeLabels({ labels: { minor: ['foo'] } }).minor).toEqual([
-      {
-        description: 'Increment the minor version when merged',
-        name: 'foo',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(normalizeLabels({ labels: { minor: ['foo'] } }).minor).toStrictEqual(
+      [
+        {
+          description: 'Increment the minor version when merged',
+          name: 'foo',
+          title: '🚀  Enhancement'
+        }
+      ]
+    );
   });
 });
 
@@ -79,7 +81,7 @@ describe('loadExtendConfig', () => {
     importMock.mockImplementation(path =>
       path === '../fake/path.json' ? { someOption: 'url' } : undefined
     );
-    expect(await config.loadExtendConfig('../fake/path.json')).toEqual({
+    expect(await config.loadExtendConfig('../fake/path.json')).toStrictEqual({
       someOption: 'url'
     });
   });
@@ -90,7 +92,7 @@ describe('loadExtendConfig', () => {
     importMock.mockImplementation(path =>
       path === './package.json' ? { auto: { someOption: 'url' } } : undefined
     );
-    expect(await config.loadExtendConfig('./package.json')).toEqual({
+    expect(await config.loadExtendConfig('./package.json')).toStrictEqual({
       someOption: 'url'
     });
   });
@@ -139,7 +141,7 @@ describe('loadExtendConfig', () => {
         : undefined
     );
 
-    expect(await config.loadExtendConfig('@artsy')).toEqual({
+    expect(await config.loadExtendConfig('@artsy')).toStrictEqual({
       onlyPublishWithReleaseLabel: true
     });
   });
@@ -153,7 +155,7 @@ describe('loadExtendConfig', () => {
         : undefined
     );
 
-    expect(await config.loadExtendConfig('fuego')).toEqual({
+    expect(await config.loadExtendConfig('fuego')).toStrictEqual({
       noVersionPrefix: true
     });
   });

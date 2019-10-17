@@ -1,8 +1,8 @@
 {
-  "name": "@auto-it/conventional-commits",
+  "name": "@auto-it/crates",
   "version": "7.9.1",
   "main": "dist/index.js",
-  "description": "Conventional commit plugin for auto",
+  "description": "Deploy Rust crates to crates.io",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -27,17 +27,21 @@
     "automated",
     "continuos integration",
     "changelog",
-    "conventional commits"
+    "rust",
+    "crates.io"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "start": "npm run build -- -w",
-    "lint": "eslint src --ext .ts",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "parse-commit-message": "4.0.0",
-    "tslib": "1.10.0"
+    "env-ci": "^4.1.1",
+    "semver": "^6.0.0",
+    "toml": "^3.0.0",
+    "tslib": "1.10.0",
+    "user-home": "^2.0.0"
   }
 }

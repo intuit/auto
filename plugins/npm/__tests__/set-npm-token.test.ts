@@ -1,4 +1,4 @@
-// tslint:disable no-invalid-template-strings
+/* eslint-disable no-template-curly-in-string */
 
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import setNpmToken from '../src/set-npm-token';
