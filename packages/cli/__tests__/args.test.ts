@@ -25,7 +25,7 @@ describe('root parser', () => {
   });
 
   test('should print help for complex command', () => {
-    parseArgs('pr --help'.split(' '));
+    parseArgs('pr-status --help'.split(' '));
     expect(log).toHaveBeenCalled();
   });
 
@@ -44,19 +44,19 @@ describe('root parser', () => {
   test('should parse just provided args', () => {
     expect(parseArgs('label --pr 2 --owner adam'.split(' '))).toStrictEqual([
       'label',
-      {
+      expect.objectContaining({
         pr: 2,
         owner: 'adam'
-      }
+      })
     ]);
   });
 
   test('should parse args as camelCase', () => {
     expect(parseArgs('changelog -d'.split(' '))).toStrictEqual([
       'changelog',
-      {
+      expect.objectContaining({
         dryRun: true
-      }
+      })
     ]);
   });
 
@@ -69,19 +69,19 @@ describe('root parser', () => {
   test('allow array of options to or', () => {
     expect(parseArgs(['comment', '--message', 'foo'])).toStrictEqual([
       'comment',
-      {
+      expect.objectContaining({
         message: 'foo'
-      }
+      })
     ]);
   });
 
   test('allow edit in comment', () => {
     expect(parseArgs(['comment', '--edit', '--message', 'foo'])).toStrictEqual([
       'comment',
-      {
+      expect.objectContaining({
         edit: true,
         message: 'foo'
-      }
+      })
     ]);
   });
 });

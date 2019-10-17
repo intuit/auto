@@ -33,8 +33,9 @@
     "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
-    "docs": "ignite",
-    "docs:watch": "ignite --watch",
+    "docs": "yarn docs:build && ignite",
+    "docs:build": "./docs/generate-command-docs.js",
+    "docs:watch": "yarn docs --watch",
     "docs:publish": "./scripts/publish-docs.sh",
     "create:plugin": "./scripts/create-plugin.js"
   },
@@ -43,6 +44,7 @@
     "@typescript-eslint/parser": "^2.4.0",
     "all-contributors-cli": "^6.4.0",
     "change-case": "^3.1.0",
+    "command-line-docs": "^0.0.6",
     "copy-template-dir": "^1.4.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
@@ -52,7 +54,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "graphql": "^14.2.1",
     "husky": "^3.0.3",
-    "ignite": "^1.10.2",
+    "ignite": "^1.10.5",
     "jest": "~24.9.0",
     "lerna": "^3.13.4",
     "lint-staged": "^9.4.0",
@@ -114,7 +116,7 @@
     "logo": "logo.gif",
     "bulmaTheme": "materia",
     "githubURL": "https://github.com/intuit/auto",
-    "customHead": "<style>.content p > .header-image { max-width: 200px !important; } .navbar { box-shadow: none !important; border-bottom: 1px solid lightgrey; } .list { font-size: 1.2rem; } .is-purple { background: #870048 !important;  } .has-text-purple { color: #870048 !important;  } .is-red { background: #C5000B !important;  } .is-yellow { background: #F1A60E !important;  } a.navbar-item.is-active, a.navbar-item:hover, a.navbar-link.is-active, a.navbar-link:hover { background-color: #f5f5f5;color: #870048; } .button.is-link.is-inverted.is-outlined:hover { background-color: #fff;color: #870048; } p .image { max-width: 100% !important; }.menu .menu-list a.is-active {background-color: transparent;color: #870048;} .blogPost .mediumImage .image { max-width: 400px !important; }</style>",
+    "customHead": "<style>.content p > .header-image { max-width: 200px !important; } .navbar { box-shadow: none !important; border-bottom: 1px solid lightgrey; } .list { font-size: 1.2rem; } .is-purple { background: #870048 !important;  } .has-text-purple { color: #870048 !important;  } .is-red { background: #C5000B !important;  } .is-yellow { background: #F1A60E !important;  } a.navbar-item.is-active, a.navbar-item:hover, a.navbar-link.is-active, a.navbar-link:hover { background-color: #f5f5f5;color: #870048; } .button.is-link.is-inverted.is-outlined:hover { background-color: #fff;color: #870048; } p .image { max-width: 100% !important; }.menu .menu-list a.is-active {background-color: transparent;color: #870048;} .blogPost .mediumImage .image { max-width: 400px !important; }table code {white-space: nowrap;}      </style>",
     "favicon": "favicon.png"
   },
   "auto": {

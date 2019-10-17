@@ -2,10 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import chalk from 'chalk';
-import commandLineArgs from 'command-line-args';
-import commandLineUsage from 'command-line-usage';
+import { app, Command, Option } from 'command-line-application';
 import dedent from 'dedent';
-import signale from 'signale';
 
 import {
   ApiOptions,
@@ -56,87 +54,68 @@ const logo = `
     ${g('\\   ▔▔▔▔▔   /')}      |    \\_ |______ |_____ |______ |     | ______| |______
      ${g('\\         /')}
       ${g('▔▔▔▔▔▔▔▔▔ ')}
-`;
-
-const help: commandLineUsage.OptionDefinition = {
-  name: 'help',
-  alias: 'h',
-  type: Boolean
-};
+`.replace(/\\/g, '\\\\');
 
 const version = {
   name: 'version',
   alias: 'V',
   type: Boolean,
-  description: "Display auto's version"
+  description: "Display auto's version",
+  group: 'global'
 };
 
-const mainDefinitions = [
-  { name: 'command', type: String, defaultOption: true },
-  {
-    ...help,
-    description: 'Display the help output. Works on each command as well'
-  },
-  version
-];
-
 const defaultOptions = [
-  {
-    ...help,
-    description: 'Display the help output for the command',
-    group: 'misc'
-  },
   {
     name: 'verbose',
     alias: 'v',
     type: Boolean,
     description: 'Show some more logs',
-    group: 'misc'
+    group: 'global'
   },
   {
     name: 'very-verbose',
     alias: 'w',
     type: Boolean,
     description: 'Show a lot more logs',
-    group: 'misc'
+    group: 'global'
   },
   {
     name: 'repo',
     type: String,
     description:
       'The repo to set the status on. Defaults to looking in the package definition for the platform',
-    group: 'misc'
+    group: 'global'
   },
   {
     name: 'owner',
     type: String,
     description:
       'The owner of the GitHub repo. Defaults to reading from the package definition for the platform',
-    group: 'misc'
+    group: 'global'
   },
   {
     name: 'github-api',
     type: String,
     description: 'GitHub API to use',
-    group: 'misc'
+    group: 'global'
   },
   {
     name: 'plugins',
     type: String,
     multiple: true,
     description: 'Plugins to load auto with. (defaults to just npm)',
-    group: 'misc'
+    group: 'global'
   }
 ];
 
-const baseBranch: commandLineUsage.OptionDefinition = {
+const baseBranch: Option = {
   name: 'base-branch',
   type: String,
   description: 'Branch to treat as the "master" branch',
-  group: 'misc'
+  group: 'global'
 };
 
-const pr: commandLineUsage.OptionDefinition = {
+const pr: Option = {
   name: 'pr',
   type: Number,
   description:
@@ -144,7 +123,7 @@ const pr: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const dryRun: commandLineUsage.OptionDefinition = {
+const dryRun: Option = {
   name: 'dry-run',
   alias: 'd',
   type: Boolean,
@@ -152,21 +131,21 @@ const dryRun: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const url: commandLineUsage.OptionDefinition = {
+const url: Option = {
   name: 'url',
   type: String,
   description: 'URL to associate with this status',
   group: 'main'
 };
 
-const noVersionPrefix: commandLineUsage.OptionDefinition = {
+const noVersionPrefix: Option = {
   name: 'no-version-prefix',
   type: Boolean,
   description: "Use the version as the tag without the 'v' prefix",
   group: 'main'
 };
 
-const name: commandLineUsage.OptionDefinition = {
+const name: Option = {
   name: 'name',
   type: String,
   description:
@@ -174,7 +153,7 @@ const name: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const email: commandLineUsage.OptionDefinition = {
+const email: Option = {
   name: 'email',
   type: String,
   description:
@@ -182,21 +161,21 @@ const email: commandLineUsage.OptionDefinition = {
   group: 'main'
 };
 
-const context: commandLineUsage.OptionDefinition = {
+const context: Option = {
   name: 'context',
   type: String,
   description: 'A string label to differentiate this status from others',
   group: 'main'
 };
 
-const message: commandLineUsage.OptionDefinition = {
+const message: Option = {
   name: 'message',
   group: 'main',
   type: String,
   alias: 'm'
 };
 
-const skipReleaseLabels: commandLineUsage.OptionDefinition = {
+const skipReleaseLabels: Option = {
   name: 'skip-release-labels',
   type: String,
   group: 'main',
@@ -205,24 +184,17 @@ const skipReleaseLabels: commandLineUsage.OptionDefinition = {
     "Labels that will not create a release. Defaults to just 'skip-release'"
 };
 
-const deleteFlag: commandLineUsage.OptionDefinition = {
+const deleteFlag: Option = {
   name: 'delete',
   type: Boolean,
   group: 'main'
 };
 
-interface ICommand {
-  name: string;
-  summary: string;
-  options?: commandLineUsage.OptionDefinition[];
-  require?: (Flags | Flags[])[];
-  examples: any[];
-}
-
-const commands: ICommand[] = [
+export const commands: Command[] = [
   {
     name: 'init',
-    summary: 'Interactive setup for most configurable options',
+    group: 'Setup Command',
+    description: 'Interactive setup for most configurable options',
     examples: ['{green $} auto init'],
     options: [
       {
@@ -237,23 +209,26 @@ const commands: ICommand[] = [
   },
   {
     name: 'create-labels',
-    summary:
+    group: 'Setup Command',
+    description:
       "Create your project's labels on github. If labels exist it will update them.",
     examples: ['{green $} auto create-labels'],
-    options: [...defaultOptions, dryRun]
+    options: [dryRun]
   },
   {
     name: 'label',
-    summary: 'Get the labels for a pull request',
+    group: 'Pull Request Interaction Commands',
+    description:
+      "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!",
     options: [
-      { ...pr, description: `${pr.description} (defaults to last merged PR)` },
-      ...defaultOptions
+      { ...pr, description: `${pr.description} (defaults to last merged PR)` }
     ],
     examples: ['{green $} auto label --pr 123']
   },
   {
     name: 'comment',
-    summary:
+    group: 'Pull Request Interaction Commands',
+    description:
       'Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.',
     require: [['message', 'delete']],
     options: [
@@ -268,8 +243,7 @@ const commands: ICommand[] = [
       },
       { ...deleteFlag, description: 'Delete old comment' },
       { ...message, description: 'Message to post to comment' },
-      dryRun,
-      ...defaultOptions
+      dryRun
     ],
     examples: [
       '{green $} auto comment --delete',
@@ -279,7 +253,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'pr-check',
-    summary: 'Check that a pull request has a SemVer label',
+    group: 'Pull Request Interaction Commands',
+    description: 'Check that a pull request has a SemVer label',
     require: ['url'],
     options: [
       pr,
@@ -289,14 +264,14 @@ const commands: ICommand[] = [
         ...context,
         defaultValue: 'ci/pr-check'
       },
-      skipReleaseLabels,
-      ...defaultOptions
+      skipReleaseLabels
     ],
     examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
   {
     name: 'pr-status',
-    summary: 'Set the status on a PR commit',
+    group: 'Pull Request Interaction Commands',
+    description: 'Set the status on a PR commit',
     require: ['state', 'url', 'description', 'context'],
     options: [
       {
@@ -330,8 +305,7 @@ const commands: ICommand[] = [
         group: 'main',
         description: 'A string label to differentiate this status from others'
       },
-      dryRun,
-      ...defaultOptions
+      dryRun
     ],
     examples: [
       `{green $} auto pr \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`
@@ -339,7 +313,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'pr-body',
-    summary:
+    group: 'Pull Request Interaction Commands',
+    description:
       'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
     require: [['message', 'delete']],
     options: [
@@ -347,8 +322,7 @@ const commands: ICommand[] = [
       context,
       { ...deleteFlag, description: 'Delete old PR body update' },
       { ...message, description: 'Message to post to PR body' },
-      dryRun,
-      ...defaultOptions
+      dryRun
     ],
     examples: [
       '{green $} auto pr-body --delete',
@@ -357,7 +331,9 @@ const commands: ICommand[] = [
   },
   {
     name: 'version',
-    summary: 'Get the semantic version bump for the given changes.',
+    group: 'Release Commands',
+    description:
+      'Get the semantic version bump for the given changes. Requires all PRs to have labels for the change type. If a PR does not have a label associated with it, it will default to `patch`.',
     options: [
       {
         name: 'only-publish-with-release-label',
@@ -372,8 +348,7 @@ const commands: ICommand[] = [
         group: 'main',
         description:
           'Git revision (tag, commit sha, ...) to calculate version bump from. Defaults to latest github release'
-      },
-      ...defaultOptions
+      }
     ],
     examples: [
       {
@@ -388,7 +363,9 @@ const commands: ICommand[] = [
   },
   {
     name: 'changelog',
-    summary: "Prepend release notes to 'CHANGELOG.md'",
+    group: 'Release Commands',
+    description:
+      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.",
     options: [
       dryRun,
       noVersionPrefix,
@@ -412,8 +389,7 @@ const commands: ICommand[] = [
         description:
           "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
       },
-      baseBranch,
-      ...defaultOptions
+      baseBranch
     ],
     examples: [
       {
@@ -428,7 +404,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'release',
-    summary: 'Auto-generate a github release',
+    group: 'Release Commands',
+    description: 'Auto-generate a github release',
     options: [
       dryRun,
       noVersionPrefix,
@@ -448,8 +425,7 @@ const commands: ICommand[] = [
         description:
           'Version number to publish as. Defaults to reading from the package definition for the platform.'
       },
-      baseBranch,
-      ...defaultOptions
+      baseBranch
     ],
     examples: [
       '{green $} auto release',
@@ -458,7 +434,8 @@ const commands: ICommand[] = [
   },
   {
     name: 'shipit',
-    summary: dedent`
+    group: 'Release Commands',
+    description: dedent`
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
 
       1. call from base branch -> latest version released
@@ -466,11 +443,12 @@ const commands: ICommand[] = [
       3. call locally when not on base branch -> canary version released
     `,
     examples: ['{green $} auto shipit'],
-    options: [...defaultOptions, baseBranch, dryRun]
+    options: [baseBranch, dryRun]
   },
   {
     name: 'canary',
-    summary: dedent`
+    group: 'Release Commands',
+    description: dedent`
       Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD.
 
       1. In PR: 1.2.3-canary.123.0 + add version to PR body
@@ -483,7 +461,6 @@ const commands: ICommand[] = [
       '{green $} auto canary --message false'
     ],
     options: [
-      ...defaultOptions,
       dryRun,
       {
         ...pr,
@@ -506,139 +483,6 @@ const commands: ICommand[] = [
   }
 ];
 
-function filterCommands(allCommands: ICommand[], include: string[]) {
-  return allCommands
-    .filter(command => include.includes(command.name))
-    .map(command => ({
-      name: command.name,
-      summary: command.summary
-    }));
-}
-
-function styleTypes(
-  command: ICommand,
-  option: commandLineUsage.OptionDefinition
-) {
-  const isRequired =
-    command.require && command.require.includes(option.name as Flags);
-
-  if (isRequired && option.type === Number) {
-    option.typeLabel =
-      '{rgb(173, 216, 230) {underline number}} [{rgb(254,91,92) required}]';
-  } else if (option.type === Number) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline number}}';
-  }
-
-  if (isRequired && option.type === String) {
-    option.typeLabel =
-      '{rgb(173, 216, 230) {underline string}} [{rgb(254,91,92) required}]';
-  } else if (option.multiple && option.type === String) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline string[]}}';
-  } else if (option.type === String) {
-    option.typeLabel = '{rgb(173, 216, 230) {underline string}}';
-  }
-}
-
-function printRootHelp() {
-  const options = [
-    { ...version, group: 'misc' },
-    ...mainDefinitions,
-    ...defaultOptions
-  ];
-  options.forEach(option => {
-    styleTypes({} as ICommand, option);
-  });
-
-  const usage = commandLineUsage([
-    {
-      content: logo.replace(/\\/g, '\\\\'),
-      raw: true
-    },
-    {
-      content:
-        'Generate releases based on semantic version labels on pull requests'
-    },
-    {
-      header: 'Synopsis',
-      content: '$ auto <command> <options>'
-    },
-    {
-      header: 'Setup Commands',
-      content: filterCommands(commands, ['init', 'create-labels'])
-    },
-    {
-      header: 'Release Commands',
-      content: filterCommands(commands, [
-        'release',
-        'version',
-        'changelog',
-        'canary',
-        'shipit'
-      ])
-    },
-    {
-      header: 'Pull Request Interaction Commands',
-      content: filterCommands(commands, [
-        'label',
-        'pr-check',
-        'pr-status',
-        'pr-body',
-        'comment'
-      ])
-    },
-    {
-      header: 'Global Options',
-      optionList: options,
-      group: 'misc'
-    }
-  ]);
-
-  console.log(usage);
-}
-
-function printCommandHelp(command: ICommand) {
-  const sections: commandLineUsage.Section[] = [
-    {
-      header: `auto ${command.name}`,
-      content: command.summary
-    }
-  ];
-
-  if (command.options) {
-    const hasLocalOptions = command.options.filter(
-      option => option.group === 'main'
-    );
-
-    if (hasLocalOptions.length > 0) {
-      sections.push({
-        header: 'Options',
-        optionList: command.options,
-        group: 'main'
-      });
-    }
-
-    const hasGlobalOptions = command.options.filter(
-      option => option.group === 'misc'
-    );
-
-    if (hasGlobalOptions.length > 0) {
-      sections.push({
-        header: 'Global Options',
-        optionList: command.options,
-        group: 'misc'
-      });
-    }
-  }
-
-  sections.push({
-    header: 'Examples',
-    content: command.examples,
-    raw: command.name === 'pr'
-  });
-
-  console.log(commandLineUsage(sections));
-}
-
 function printVersion() {
   const packagePath = path.join(__dirname, '../package.json');
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
@@ -646,64 +490,31 @@ function printVersion() {
 }
 
 export default function parseArgs(testArgs?: string[]) {
-  const mainOptions = commandLineArgs(mainDefinitions, {
-    stopAtFirstUnknown: true,
-    camelCase: true,
-    argv: testArgs
-  });
-  const argv = mainOptions._unknown || [];
-  const command = commands.find(c => c.name === mainOptions.command);
-
-  if (!command && mainOptions.version) {
-    printVersion();
-    return [];
-  }
-
-  if (!command) {
-    printRootHelp();
-    return [];
-  }
-
-  const options = command.options || [];
-
-  options.forEach(option => {
-    styleTypes(command, option);
-  });
-
-  if (mainOptions.help) {
-    printCommandHelp(command);
-    return [];
-  }
-
-  const autoOptions: ApiOptions = commandLineArgs(options, {
-    argv,
-    camelCase: true
-  })._all;
-
-  if (command.require) {
-    const missing = command.require
-      .filter(
-        option =>
-          (typeof option === 'string' && !(option in autoOptions)) ||
-          (typeof option === 'object' && !option.find(o => o in autoOptions)) ||
-          // tslint:disable-next-line strict-type-predicates
-          autoOptions[option as keyof ApiOptions] === null
-      )
-      .map(option =>
-        typeof option === 'string'
-          ? `--${option}`
-          : `(--${option.join(' || --')})`
-      );
-    const multiple = missing.length > 1;
-
-    if (missing.length > 0) {
-      printCommandHelp(command);
-      signale.error(
-        `Missing required flag${multiple ? 's' : ''}: ${missing.join(', ')}`
-      );
-      return process.exit(1);
+  const mainOptions = app(
+    {
+      name: 'auto',
+      logo,
+      description:
+        'Generate releases based on semantic version labels on pull requests, and other pull request automation tools.',
+      commands,
+      options: [version, ...defaultOptions]
+    },
+    {
+      argv: testArgs
     }
+  );
+
+  if (!mainOptions) {
+    return [];
   }
 
-  return [mainOptions.command, autoOptions];
+  if (!mainOptions._command) {
+    if (mainOptions.version) {
+      printVersion();
+    }
+
+    return [];
+  }
+
+  return [mainOptions._command, mainOptions] as [string, ApiOptions];
 }

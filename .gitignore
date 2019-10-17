@@ -5,6 +5,7 @@ package-lock.json
 _ignite
 .vscode/
 binary
+docs/pages/generated
 **/tsconfig.tsbuildinfo
 
 # Created by https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
