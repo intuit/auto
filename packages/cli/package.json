@@ -45,7 +45,7 @@
     "@auto-it/npm": "link:../../plugins/npm",
     "@auto-it/released": "link:../../plugins/released",
     "chalk": "^2.4.2",
-    "command-line-application": "^0.9.2",
+    "command-line-application": "^0.9.3",
     "dedent": "^0.7.0",
     "signale": "^1.4.0",
     "tslib": "1.10.0"
