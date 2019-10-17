@@ -37,6 +37,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
+- [crates](./plugins/crates) - Publish Rust crates
 - [jira](./plugins/jira) - Include Jira story links in the changelog
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [maven](./plugins/maven) - Publish code with maven
@@ -47,7 +48,6 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [slack](./plugins/slack) - Post release notes to slack
 - [twitter](./plugins/twitter) - Post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - Add extra assets to the release
-- [crates](./plugins/crates) - Publish Rust crates
 
 ## Start Developing
 
