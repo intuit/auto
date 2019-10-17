@@ -1,3 +1,21 @@
+# v7.9.1 (Thu Oct 17 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - only add hash to canary version if no pr or build detected [#609](https://github.com/intuit/auto/pull/609) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `@auto-it/crates`, `@auto-it/maven`
+  - fix install names in readmes [#608](https://github.com/intuit/auto/pull/608) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.9.0 (Wed Oct 16 2019)
 
 #### 🚀  Enhancement
