@@ -44,7 +44,7 @@
     "@typescript-eslint/parser": "^2.4.0",
     "all-contributors-cli": "^6.4.0",
     "change-case": "^3.1.0",
-    "command-line-docs": "^0.0.5",
+    "command-line-docs": "^0.0.6",
     "copy-template-dir": "^1.4.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",

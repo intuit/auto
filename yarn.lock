@@ -4331,21 +4331,23 @@ combined-stream@^1.0.5, combined-stream@^1.0.6, combined-stream@~1.0.5, combined
   dependencies:
     delayed-stream "~1.0.0"
 
-command-line-application@^0.1.8:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.1.9.tgz#7b07906630b2d1dca42cb24047f1874dfc4a415b"
-  integrity sha512-vyLGiUm487R9SjGCLgzTfiB8qzHzBzKnr77gJ0g5PNe61iZaV8T4qDTX9+nAPv4Hx/QMFT0fPAQ7NOXMWwiORA==
+command-line-application@^0.8.0:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.8.1.tgz#e09e6f8b0f42073684a47ba4b1d1d4972c3938a9"
+  integrity sha512-ZfdsXsjDjVC4XbJZ2DBjDn42Cje7XNeGCN3cMLsuOdAhQJNUJRn11rVK6ZPOpyceeUFg7mOjvHK4N56SScxFqg==
   dependencies:
     "@types/command-line-args" "^5.0.0"
     "@types/command-line-usage" "^5.0.1"
+    chalk "^2.4.1"
     command-line-args "^5.1.1"
     command-line-usage "^5.0.5"
+    meant "^1.0.1"
     remove-markdown "^0.3.0"
 
-command-line-application@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.9.1.tgz#bf7d8d22e22832abe06453f7d7d8539af88f7a88"
-  integrity sha512-rAb6ES/5yMvXNoforaFxm3zLsz7n4Ja0y+ukgm/5mWwdFf0vyFdb3k1Vzlnogowg1gqhC6rJN0u4pCWn0lsqGg==
+command-line-application@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.9.2.tgz#ad81e8924e87d1dd0f543924a7ad2d8cf9c0e508"
+  integrity sha512-L4wG/AJBGOiS7qec5FYZoD/D7g9a8+0DHKdUVlHdlFX/q8oVcgABSSXJXZ0wQr6sCVMDgWzzZff/j7jPoxZr7w==
   dependencies:
     "@types/command-line-args" "^5.0.0"
     "@types/command-line-usage" "^5.0.1"
@@ -4366,12 +4368,12 @@ command-line-args@^5.1.1:
     lodash.camelcase "^4.3.0"
     typical "^4.0.0"
 
-command-line-docs@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/command-line-docs/-/command-line-docs-0.0.5.tgz#42995c4de78d88e0681db4b0aa5ae3f3fbbce426"
-  integrity sha512-FdtpeKKkxF3/3v8w+Mka/zz2XGjwikqPnZYiXL+mfcEDWQ5zbrmGqsvVcd+WFhTv2DrYdPrF1X5g1GhPBzHGYA==
+command-line-docs@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/command-line-docs/-/command-line-docs-0.0.6.tgz#d21a39f50dce2c9da0db43d72fe00a2f8cc1b090"
+  integrity sha512-Y8GNHzZqBbL4PRnZL2ASahNuwLgIlu2MryZlB/iGDp+RRdgl9I4tY2ChXUQwmN75FU3c4ZWg39wXP374ehawFQ==
   dependencies:
-    command-line-application "^0.1.8"
+    command-line-application "^0.8.0"
     dedent "^0.7.0"
 
 command-line-usage@^5.0.5:
