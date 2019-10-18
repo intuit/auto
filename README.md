@@ -63,6 +63,20 @@ To get set up, fork and clone the project then run the following command:
 yarn
 ```
 
+### Build/Typecheck
+
+You must build at least once before running the tests or lint.
+
+```sh
+yarn build
+```
+
+In watch mode:
+
+```sh
+yarn start
+```
+
 ### Cleaning
 
 ```sh
@@ -81,30 +95,10 @@ yarn lint
 yarn test
 ```
 
-### Build/Typecheck
-
-```sh
-yarn build
-```
-
-In watch mode:
-
-```sh
-yarn build:watch
-```
-
 ### Run the docs
-
-To deploy the docs you will need to add the `documentation` label to your pull request.
 
 ```sh
 yarn docs:watch
-```
-
-### Adding a contributor
-
-```sh
-yarn contributors:add
 ```
 
 ### Create a new plugin
