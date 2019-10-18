@@ -1,8 +1,4 @@
-import {
-  AsyncSeriesBailHook,
-  AsyncSeriesWaterfallHook,
-  SyncHook
-} from 'tapable';
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
 
