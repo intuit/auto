@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`First Time Contributor Plugin should exclude a past contributor 1`] = `
+Array [
+  ":tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jeff, for all your work!",
+]
+`;
+
+exports[`First Time Contributor Plugin should include a username if it exists 1`] = `
+Array [
+  ":tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Jeff ([@jeff-the-snake](https://github.com/jeff-the-snake))
+
+:heart: Andrew ([@hipstersmoothie](https://github.com/hipstersmoothie))",
+]
+`;
+
+exports[`First Time Contributor Plugin should include all authors with no past contributors 1`] = `
+Array [
+  ":tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Jeff
+
+:heart: Andrew",
+]
+`;
+
+exports[`First Time Contributor Plugin should include only username if no name exists 1`] = `
+Array [
+  ":tada: This release contains work from a new contributor! :tada:
+
+Thank you, [@jeff-the-snake](https://github.com/jeff-the-snake), for all your work!",
+]
+`;
+
+exports[`First Time Contributor Plugin should not include past contributors - email 1`] = `Array []`;
+
+exports[`First Time Contributor Plugin should not include past contributors 1`] = `Array []`;

@@ -16,11 +16,17 @@ const makeCommitFromMsg = (
 ): IExtendedCommit => ({
   hash: options.hash || 'foo',
   labels: options.labels || [],
-  authorName: options.name || 'Adam Dierkens',
+  authorName:
+    options.name !== undefined && options.name !== null
+      ? options.name
+      : 'Adam Dierkens',
   authorEmail: options.email || 'adam@dierkens.com',
   authors: [
     {
-      name: options.name || 'Adam Dierkens',
+      name:
+        options.name !== undefined && options.name !== null
+          ? options.name
+          : 'Adam Dierkens',
       email: options.email || 'adam@dierkens.com',
       ...(options.username ? { username: options.username } : {})
     }

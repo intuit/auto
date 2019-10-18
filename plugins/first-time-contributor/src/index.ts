@@ -25,10 +25,6 @@ export default class FirstTimeContributorPlugin implements IPlugin {
       changelog.hooks.addToBody.tapPromise(
         this.name,
         async (notes, commits) => {
-          if (!auto.git) {
-            return notes;
-          }
-
           const contributors = (await Promise.all([
             execPromise(
               "git log --format='%aN' $(git rev-list HEAD | tail -n 1)..$(git describe --tags --abbrev=0) | sort -u"
