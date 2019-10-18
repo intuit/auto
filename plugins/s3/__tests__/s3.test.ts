@@ -66,6 +66,36 @@ describe('S3 Plugin', () => {
     expect(plugin.aws.command).toHaveBeenCalled();
   });
 
+  test('should replace version', async () => {
+    process.env.AWS_ACCESS_KEY = 'AWS_ACCESS_KEY';
+    process.env.AWS_SECRET_KEY = 'AWS_SECRET_KEY';
+    process.env.AWS_SESSION_TOKEN = 'AWS_SESSION_TOKEN';
+
+    const hooks = makeHooks();
+    const plugin = new S3({
+      bucket: 'BUCKET_NAME',
+      region: 'REGION_NAME',
+      files: [['test-files', '$VERSION/andrew-test']]
+    });
+
+    plugin.apply({
+      hooks,
+      logger: dummyLog()
+    } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [],
+      releaseNotes: ''
+    });
+
+    // @ts-ignore
+    expect(plugin.aws.command).toHaveBeenCalledWith(
+      's3 sync test-files s3://BUCKET_NAME/1.0.0/andrew-test --region REGION_NAME'
+    );
+  });
+
   test('should not overwrite when "overwrite" is set to false', async () => {
     process.env.AWS_ACCESS_KEY = 'AWS_ACCESS_KEY';
     process.env.AWS_SECRET_KEY = 'AWS_SECRET_KEY';
