@@ -4,41 +4,40 @@ import dedent from 'dedent';
 import urlJoin from 'url-join';
 import { URL } from 'url';
 
+const JUST_NAME = '%aN' as const;
+const JUST_EMAIL = '%cE' as const;
+
+type Format = typeof JUST_NAME | typeof JUST_EMAIL;
+
+const getContributors = async (format: Format) => {
+  const start = '$(git rev-list HEAD | tail -n 1)';
+  const lastRelease = '$(git describe --tags --abbrev=0)';
+
+  return execPromise(
+    `git log --format='${format}' ${start}..${lastRelease} | sort -u`
+  );
+};
+
 export default class FirstTimeContributorPlugin implements IPlugin {
   name = 'First Time Contributor';
 
   apply(auto: Auto) {
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
-      const renderContributor = (n: ICommitAuthor) => {
-        let line = n.name || '';
-
-        if (n.username) {
-          const base = new URL(changelog.options.baseUrl).origin;
-          const link = `[@${n.username}](${urlJoin(base, n.username)})`;
-
-          line += n.name ? ` (${link})` : link;
-        }
-
-        return line;
+      const base = new URL(changelog.options.baseUrl).origin;
+      const renderContributor = ({ name, username }: ICommitAuthor) => {
+        const link = `[@${username}](${urlJoin(base, username || '')})`;
+        return `${name}${username ? (name ? ` (${link})` : link) : ''}`;
       };
 
       changelog.hooks.addToBody.tapPromise(
         this.name,
         async (notes, commits) => {
-          const contributors = (await Promise.all([
-            execPromise(
-              "git log --format='%aN' $(git rev-list HEAD | tail -n 1)..$(git describe --tags --abbrev=0) | sort -u"
-            ),
-            execPromise(
-              "git log --format='%cE' $(git rev-list HEAD | tail -n 1)..$(git describe --tags --abbrev=0) | sort -u"
-            )
-          ]))
-            .join('\n')
-            .split('\n');
+          const authors = commits.flatMap(c => c.authors);
 
-          const authors = commits
-            .map(c => c.authors)
-            .reduce<ICommitAuthor[]>((acc, i) => [...acc, ...i], []);
+          const contributors = await Promise.all([
+            getContributors(JUST_NAME),
+            getContributors(JUST_EMAIL)
+          ]).then(lists => lists.join('\n').split('\n'));
 
           const newContributors = authors.filter(
             ({ name = '', email = '', username = '' }) =>

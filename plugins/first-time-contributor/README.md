@@ -1,6 +1,6 @@
 # First Time Contributor Plugin
 
-Thanks first time contributors for their work right in your release notes.
+Thank first time contributors for their work right in your release notes.
 
 ## Installation
 
