@@ -11,3 +11,14 @@ npm i --save-dev @auto-it/{{kebab}}
 # or
 yarn add -D @auto-it/{{kebab}}
 ```
+
+## Usage
+
+```json
+{
+  "plugins": [
+    ["{{kebab}}"]
+    // other plugins
+  ]
+}
+```

@@ -669,6 +669,15 @@ export default class Auto {
     return lastVersion;
   }
 
+  /**
+   * A utility function for plugins to check the process for tokens.
+   */
+  checkEnv(pluginName: string, key: string) {
+    if (!process.env[key]) {
+      this.logger.log.warn(`${pluginName}: No "${key}" found in environment`);
+    }
+  }
+
   private async publishLatest(options: IShipItOptions) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
