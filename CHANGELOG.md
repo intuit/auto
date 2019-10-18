@@ -1,3 +1,16 @@
+# v7.11.0 (Fri Oct 18 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/chrome`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/s3`, `@auto-it/twitter`
+  - New Plugin: Amazon S3 [#466](https://github.com/intuit/auto/pull/466) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.10.0 (Fri Oct 18 2019)
 
 ### Release Notes
