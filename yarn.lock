@@ -3332,12 +3332,12 @@ await-to-js@^2.1.1:
   resolved "https://registry.yarnpkg.com/await-to-js/-/await-to-js-2.1.1.tgz#c2093cd5a386f2bb945d79b292817bbc3f41b31b"
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
-aws-cli-js@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.0.5.tgz#6af0bcd1714ca2a938f051e5a4ca8195624d2865"
-  integrity sha512-EbqEyuocuX+0LEBom9jlHglgQ28ppTaFdZFfTA6/bbGVCnoxP0pn+S6fCD4OsbFqzIxtAHU19+biE/ovPyqNVg==
+aws-cli-js@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.0.6.tgz#2772bf1283838b75bc3b57bd988bdd63bf3e3d9d"
+  integrity sha512-fxNyextpwSdVq0fRDrsjD+OX28aZFbBbqIEjft2ef77OnmOlNMsSHZyGkxBQJozGB2EWdKX4kM5yn+9yPZLxBQ==
   dependencies:
-    lodash "4.17.11"
+    lodash "4.17.15"
     nodeify-ts "1.0.6"
 
 aws-sign2@~0.6.0:
@@ -9897,15 +9897,15 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@4.17.11, lodash@^4.0.1, lodash@^4.11.2, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
-
-lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14:
+lodash@4.17.15, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.0.1, lodash@^4.11.2, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
 log-driver@1.2.5:
   version "1.2.5"

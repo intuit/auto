@@ -67,9 +67,7 @@ export default class S3Plugin implements IPlugin {
 
         if (!shouldWrite) {
           auto.logger.log.note(
-            `${
-              this.name
-            }: ${local} not synced, already exists and "overwrite" is set to "false"`
+            `${this.name}: ${local} not synced, already exists and "overwrite" is set to "false"`
           );
           return;
         }
