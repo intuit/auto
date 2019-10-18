@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/chrome",
-  "version": "7.9.2",
+  "version": "7.10.0",
   "main": "dist/index.js",
   "description": "Chrome publishing plugin for auto",
   "author": {
