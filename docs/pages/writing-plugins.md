@@ -261,6 +261,29 @@ auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
 
 ### Changelog Hooks
 
+#### addToBody
+
+Add extra content to your changelogs.
+This hook provide all the current "extra" notes and all of the commits for the changelog.
+You must return the notes array.
+
+The following adds a random GIF from [giphy](https://giphy.com) to each new changelog.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Giphy',
+    async (notes, commits) => {
+      const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_KEY}`);
+      const json = await response.json();
+      const { data: gif } = json;
+
+      return [...notes, `![${gif.title}](${gif.url})\n`]
+    }
+  );
+);
+```
+
 #### renderChangelogLine
 
 Change how the changelog renders lines. This hook provides the commit and the current state of the line render. You must return the commit and the line string state as a tuple ([commit, line]).
