@@ -38,9 +38,9 @@ export default class S3Plugin implements IPlugin {
       auto.checkEnv(this.name, 'AWS_SESSION_TOKEN');
     });
 
-    auto.hooks.afterRelease.tapPromise(this.name, async () => {
+    auto.hooks.afterRelease.tapPromise(this.name, async ({ newVersion }) => {
       await Promise.all(
-        this.options.map(option => this.processBucket(auto, option))
+        this.options.map(option => this.processBucket(auto, newVersion, option))
       );
     });
   }
@@ -49,7 +49,11 @@ export default class S3Plugin implements IPlugin {
     return this.aws.command(`s3 ls s3://${bucket}/${path}`);
   }
 
-  private async processBucket(auto: Auto, options: IUploadAssetsPluginOptions) {
+  private async processBucket(
+    auto: Auto,
+    newVersion: string = '',
+    options: IUploadAssetsPluginOptions
+  ) {
     const { bucket, region, files, overwrite = true } = options;
 
     auto.logger.log.pending(
@@ -63,7 +67,10 @@ export default class S3Plugin implements IPlugin {
     await Promise.all(
       options.files.map(async ([local, remote]) => {
         const shouldWrite = overwrite || !(await this.exists(bucket, remote));
-        const url = `s3://${bucket}/${remote}`;
+        const url = `s3://${bucket}/${remote}`.replace(
+          /\$VERSION/g,
+          newVersion
+        );
 
         if (!shouldWrite) {
           auto.logger.log.note(

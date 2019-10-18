@@ -12,7 +12,7 @@ Must have the [aws-cli](https://docs.aws.amazon.com/cli/index.html) on your mach
 
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @auto-it/s3
@@ -24,6 +24,20 @@ yarn add -D @auto-it/s3
 
 Publish a single asset to s3.
 
+`bucket`: Bucket to deploy to
+`region`: Region to deploy to
+`files`: An array of tuples mapping local build files to remote deploy paths.
+
+```txt
+EX:
+
+given: `[["components/button/dist", "components/button"]]`
+
+=> Deploy the files in "components/button/dist" to s3://bucket/components/button on `region`
+```
+
+**Full**:
+
 ```json
 {
   "plugins": [
@@ -33,6 +47,26 @@ Publish a single asset to s3.
         "bucket": "BUCKET_NAME",
         "region": "REGION_NAME",
         "files": [["components/button/dist", "components/button"]]
+      }
+    ]
+    // other plugins
+  ]
+}
+```
+
+### Versioning Deploys
+
+To version your deployed assets simply add `$VERSION` in the `remote` path. This will be replaced with the new version being released.
+
+```json
+{
+  "plugins": [
+    [
+      "s3",
+      {
+        "bucket": "BUCKET_NAME",
+        "region": "REGION_NAME",
+        "files": [["components/button/dist", "$VERSION/components/button"]]
       }
     ]
     // other plugins
