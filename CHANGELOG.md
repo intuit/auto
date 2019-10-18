@@ -1,3 +1,46 @@
+# v7.10.0 (Fri Oct 18 2019)
+
+### Release Notes
+
+_From #610_
+
+This PR also introduces the `changelog.addToBody` hook. This can be used to add whatever extra content you want to a changelog.
+
+The following adds a random GIF from [giphy](https://giphy.com) to each new changelog.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Giphy',
+    async (notes, commits) => {
+      const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_KEY}`);
+      const json = await response.json();
+      const { data: gif } = json;
+
+      return [...notes, `![${gif.title}](${gif.url})\n`]
+    }
+  );
+);
+```
+
+---
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/crates`, `@auto-it/first-time-contributor`
+  - New Plugin: "first-time-contributor" [#610](https://github.com/intuit/auto/pull/610) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️  Pushed to master
+
+- `@auto-it/first-time-contributor`
+  - fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.9.2 (Thu Oct 17 2019)
 
 #### 🏠  Internal
