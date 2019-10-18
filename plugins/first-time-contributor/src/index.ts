@@ -1,5 +1,6 @@
 import { Auto, IPlugin, execPromise } from '@auto-it/core';
 import { ICommitAuthor } from '@auto-it/core/dist/log-parse';
+import flatMap from 'array.prototype.flatmap';
 import dedent from 'dedent';
 import urlJoin from 'url-join';
 import { URL } from 'url';
@@ -32,7 +33,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
       changelog.hooks.addToBody.tapPromise(
         this.name,
         async (notes, commits) => {
-          const authors = commits.flatMap(c => c.authors);
+          const authors = flatMap(commits, c => c.authors);
 
           const contributors = await Promise.all([
             getContributors(JUST_NAME),
