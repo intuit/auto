@@ -51,7 +51,7 @@ export default class S3Plugin implements IPlugin {
 
   private async processBucket(
     auto: Auto,
-    newVersion: string = '',
+    newVersion = '',
     options: IUploadAssetsPluginOptions
   ) {
     const { bucket, region, files, overwrite = true } = options;

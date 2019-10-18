@@ -16,7 +16,7 @@ describe('S3 Plugin', () => {
     const plugin = new S3(options);
 
     // @ts-ignore
-    expect(plugin.options).toEqual([options]);
+    expect(plugin.options).toStrictEqual([options]);
   });
 
   test('should accept an array options objects', () => {
@@ -35,7 +35,7 @@ describe('S3 Plugin', () => {
     const plugin = new S3(options);
 
     // @ts-ignore
-    expect(plugin.options).toEqual(options);
+    expect(plugin.options).toStrictEqual(options);
   });
 
   test('should try to write a file to s3 using aws CLI', async () => {
