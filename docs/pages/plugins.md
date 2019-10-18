@@ -2,20 +2,6 @@
 
 `auto` uses the package [tapable](https://github.com/webpack/tapable) to expose a plugin system.
 
-Current official plugins:
-
-- chrome - publish code to Chrome Web Store
-- conventional-commits - parse conventional commit messages for version bumps
-- jira - Include jira story links in the changelog
-- git-tag - Manage your projects version through just a git tag
-- npm - publish code to npm (DEFAULT)
-- omit-commits - Ignore commits made by certain accounts
-- omit-release-notes - Ignore release notes in PRs made by certain accounts
-- released - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
-- slack - post release notes to slack
-- twitter - post release notes to twitter
-- upload-assets - add extra assets to the release
-
 ## Using Plugins
 
 To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins). Specifying a plugin overrides the defaults.

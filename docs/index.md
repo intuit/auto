@@ -29,20 +29,29 @@
 
 - [.autorc](pages/autorc.md)
 - [Plugins](pages/plugins.md)
-  - [NPM](../plugins/npm/README.md)
-  - [Maven](../plugins/maven/README.md)
-  - [Crates](../plugins/crates/README.md)
-  - [Chrome Web Store](../plugins/chrome/README.md)
-  - [First Time Contributor](../plugins/first-time-contributor/README.md)
-  - [Git Tag](../plugins/git-tag/README.md)
-  - [Conventional Commits](../plugins/conventional-commits/README.md)
-  - [Omit Commits](../plugins/omit-commits/README.md)
-  - [Jira](../plugins/jira/README.md)
-  - [Released](../plugins/released/README.md)
-  - [Slack](../plugins/slack/README.md)
-  - [Upload Assets](../plugins/upload-assets/README.md)
-  - [Writing Plugins](pages/writing-plugins.md)
+- [Writing Plugins](pages/writing-plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
+
+Package Manager Plugins
+
+- [Chrome Web Store](../plugins/chrome/README.md)
+- [Crates](../plugins/crates/README.md)
+- [NPM](../plugins/npm/README.md)
+- [Maven](../plugins/maven/README.md)
+
+Functionality Plugins
+
+- [Amazon S3](../plugins/s3/README.md)
+- [Conventional Commits](../plugins/conventional-commits/README.md)
+- [First Time Contributor](../plugins/first-time-contributor/README.md)
+- [Git Tag](../plugins/git-tag/README.md)
+- [Jira](../plugins/jira/README.md)
+- [Omit Commits](../plugins/omit-commits/README.md)
+- [Omit Release Notes](../plugins/omit-release-notes/README.md)
+- [Released](../plugins/released/README.md)
+- [Slack](../plugins/slack/README.md)
+- [Twitter](../plugins/twitter/README.md)
+- [Upload Assets](../plugins/upload-assets/README.md)
 
 ---
 

@@ -57,26 +57,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
       }
 
       // Secrets
-
-      if (!process.env.CLIENT_ID) {
-        this.reportWarning(auto, 'CLIENT_ID environment variable must be set');
-      }
-
-      if (!process.env.CLIENT_SECRET) {
-        this.reportWarning(
-          auto,
-          'CLIENT_SECRET environment variable must be set'
-        );
-      }
-
-      if (process.env.REFRESH_TOKEN) {
-        return;
-      }
-
-      this.reportWarning(
-        auto,
-        'REFRESH_TOKEN environment variable must be set'
-      );
+      auto.checkEnv(this.name, 'CLIENT_ID');
+      auto.checkEnv(this.name, 'CLIENT_SECRET');
+      auto.checkEnv(this.name, 'REFRESH_TOKEN');
     });
 
     auto.hooks.beforeShipIt.tap(this.name, () => {

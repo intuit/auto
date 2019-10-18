@@ -2,9 +2,18 @@
 
 Post tweets after a release is made.
 
+## Prerequisites
+
+To post tweets to twitter you need the following secrets set in your environment:
+
+- `TWITTER_ACCESS_TOKEN`
+- `TWITTER_ACCESS_TOKEN_SECRET`
+- `TWITTER_CONSUMER_KEY`
+- `TWITTER_CONSUMER_KEY_SECRET`
+
 ## Installation
 
-This plugin is not included with the `auto` CLI. To install:
+This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
 npm i --save-dev @auto-it/twitter
