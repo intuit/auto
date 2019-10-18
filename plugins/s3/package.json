@@ -1,0 +1,41 @@
+{
+  "name": "@auto-it/s3",
+  "version": "7.1.2",
+  "main": "dist/index.js",
+  "description": "Post your built artifacts to s3",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "tslint -p . --format stylish",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@auto-it/core": "7.1.2",
+    "aws-cli-js": "^2.0.5"
+  }
+}

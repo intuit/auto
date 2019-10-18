@@ -6,6 +6,14 @@ This plugin allows you to automate the publishing of chrome extensions
 Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
 :::
 
+## Prerequisites
+
+To publish to the chrome web store you will need the following secrets set in your environment. See [here](https://github.com/DrewML/chrome-webstore-upload/blob/master/How%20to%20generate%20Google%20API%20keys.md) for a guide one how to get these values.
+
+- `CLIENT_ID`
+- `CLIENT_SECRET`
+- `REFRESH_TOKEN`
+
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
@@ -45,11 +53,3 @@ Or you can set these values in the autorc:
 ::: message is-warning
 :warning: You must have a manifest.json for this plugin to work.
 :::
-
-## Chrome Environment Variables
-
-To publish to the chrome web store you will need the following values. See [here](https://github.com/DrewML/chrome-webstore-upload/blob/master/How%20to%20generate%20Google%20API%20keys.md) for a guide one how to get these values.
-
-- CLIENT_ID
-- CLIENT_SECRET
-- REFRESH_TOKEN
