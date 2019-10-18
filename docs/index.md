@@ -33,6 +33,7 @@
   - [Maven](../plugins/maven/README.md)
   - [Crates](../plugins/crates/README.md)
   - [Chrome Web Store](../plugins/chrome/README.md)
+  - [First Time Contributor](../plugins/first-time-contributor/README.md)
   - [Git Tag](../plugins/git-tag/README.md)
   - [Conventional Commits](../plugins/conventional-commits/README.md)
   - [Omit Commits](../plugins/omit-commits/README.md)

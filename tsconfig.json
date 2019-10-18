@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs", // Resolve modules the node way
-    "lib": ["esnext"], // Use newest ecma script features
+    "lib": ["es2017"], // Use newest ecma script features
     /* Outputs: */
     "sourceMap": true,
     "declaration": true,

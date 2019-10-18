@@ -35,13 +35,19 @@ Visit [the docs](https://intuit.github.io/auto/) for more information.
 
 Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
 
+**Package Managers:**
+
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
-- [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
 - [crates](./plugins/crates) - Publish Rust crates
-- [jira](./plugins/jira) - Include Jira story links in the changelog
-- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [maven](./plugins/maven) - Publish code with maven
 - [npm](./plugins/npm) - Publish code to npm (DEFAULT)
+
+**Extra Functionality:**
+
+- [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
+- [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
+- [jira](./plugins/jira) - Include Jira story links in the changelog
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
 - [released](./plugins/released) - Add a `released` label to published PRs, comment with the version it's included in and comment on the issues the PR closes
@@ -55,6 +61,20 @@ To get set up, fork and clone the project then run the following command:
 
 ```sh
 yarn
+```
+
+### Build/Typecheck
+
+You must build at least once before running the tests or lint.
+
+```sh
+yarn build
+```
+
+In watch mode:
+
+```sh
+yarn start
 ```
 
 ### Cleaning
@@ -75,30 +95,10 @@ yarn lint
 yarn test
 ```
 
-### Build/Typecheck
-
-```sh
-yarn build
-```
-
-In watch mode:
-
-```sh
-yarn build:watch
-```
-
 ### Run the docs
-
-To deploy the docs you will need to add the `documentation` label to your pull request.
 
 ```sh
 yarn docs:watch
-```
-
-### Adding a contributor
-
-```sh
-yarn contributors:add
 ```
 
 ### Create a new plugin

@@ -13,6 +13,7 @@ const { version } = JSON.parse(
 const inDir = path.join(__dirname, './template-plugin');
 const kebab = changeCase.paramCase(name);
 const outDir = path.join(__dirname, '../plugins', kebab);
+const TSCONFIG = path.join(__dirname, '../tsconfig.dev.json');
 
 fs.mkdirSync(outDir);
 
@@ -33,4 +34,19 @@ copy(inDir, outDir, vars, (err, createdFiles) => {
     log.info(`Created ${path.relative(outDir, filePath)}`)
   );
   log.success(`Created @auto-it/${kebab} plugin!`);
+});
+
+fs.readFile(TSCONFIG, 'utf8', (err, data) => {
+  if (err) {
+    throw err;
+  }
+
+  const json = JSON.parse(data);
+
+  json.references.push({
+    path: `plugins/${kebab}`
+  });
+
+  fs.writeFileSync(TSCONFIG, JSON.stringify(json, null, 2));
+  log.success(`Updated tsconfig.dev.json!`);
 });
