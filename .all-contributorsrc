@@ -126,6 +126,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "jeff",
+      "name": "Jeff",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/391321?v=4",
+      "profile": "https://github.com/jeff",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

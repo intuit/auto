@@ -42,6 +42,7 @@ Package Manager Plugins
 
 Functionality Plugins
 
+- [All Contributors](../plugins/all-contributors/README.md)
 - [Amazon S3](../plugins/s3/README.md)
 - [Conventional Commits](../plugins/conventional-commits/README.md)
 - [First Time Contributor](../plugins/first-time-contributor/README.md)

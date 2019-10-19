@@ -48,8 +48,29 @@ If you configure an pre-configured contribution type the arrays are not merged, 
     [
       "all-contributors",
       {
-        "plugin": "**/plugin",
-        "example": ["*.stories.*", "*.examples.*", "*.snippet.*"]
+        "types": {
+          "plugin": "**/plugin",
+          "example": ["*.stories.*", "*.examples.*", "*.snippet.*"]
+        }
+      }
+    ]
+  ]
+}
+```
+
+### Exclude Users
+
+Useful for excluding bots from getting into your contributors.
+
+**`auto.rc`**
+
+```json
+{
+  "plugins": [
+    [
+      "all-contributors",
+      {
+        "exclude": ["dependabot", "ci-services"]
       }
     ]
   ]

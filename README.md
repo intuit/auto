@@ -39,14 +39,15 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [crates](./plugins/crates) - Publish Rust crates
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [maven](./plugins/maven) - Publish code with maven
 - [npm](./plugins/npm) - Publish code to npm (DEFAULT)
 
 **Extra Functionality:**
 
+- [all-contributors](./plugins/all-contributors) - Automatically add contributors as changelogs are produced using [`all-contributors-cli](https://www.npmjs.com/package/all-contributors-cli)
 - [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
 - [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
-- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [jira](./plugins/jira) - Include Jira story links in the changelog
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
@@ -181,12 +182,12 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/su7edja"><img src="https://avatars0.githubusercontent.com/u/2717065?v=4" width="100px;" alt="su7edja"/><br /><sub><b>su7edja</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=su7edja" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/yogikhan"><img src="https://avatars3.githubusercontent.com/u/16071601?v=4" width="100px;" alt="Yogesh Khandlewal"/><br /><sub><b>Yogesh Khandlewal</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=yogikhan" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Celeo"><img src="https://avatars1.githubusercontent.com/u/772507?v=4" width="100px;" alt="Matt Boulanger"/><br /><sub><b>Matt Boulanger</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Celeo" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/jeff"><img src="https://avatars3.githubusercontent.com/u/391321?v=4" width="100px;" alt="Jeff"/><br /><sub><b>Jeff</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jeff" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

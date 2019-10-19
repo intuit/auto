@@ -12,6 +12,7 @@ const makeCommitFromMsg = (
     pullRequest?: {
       number: number;
     };
+    files?: string[];
   } = {}
 ): IExtendedCommit => ({
   hash: options.hash || 'foo',
@@ -21,7 +22,7 @@ const makeCommitFromMsg = (
       ? options.name
       : 'Adam Dierkens',
   authorEmail: options.email || 'adam@dierkens.com',
-  files: [],
+  files: options.files || [],
   authors: [
     {
       name:
