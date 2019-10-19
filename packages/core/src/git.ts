@@ -253,7 +253,8 @@ export default class Git {
       hash: commit.hash,
       authorName: commit.authorName,
       authorEmail: commit.authorEmail,
-      subject: commit.rawBody!
+      subject: commit.rawBody!,
+      files: commit.files
     }));
   }
 

@@ -7,11 +7,15 @@ import tryRequire from './try-require';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
+/** A plugin to auto */
 export interface IPlugin {
+  /** The name to identify the plugin by */
   name: string;
+  /** Called when registering the plugin with auto */
   apply(auto: Auto): void;
 }
 
+/** Try to load a plugin in various ways */
 export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger

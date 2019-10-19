@@ -1,7 +1,6 @@
 {
   "files": [],
   "include": [],
-
   "references": [
     {
       "path": "packages/cli"
@@ -47,6 +46,9 @@
     },
     {
       "path": "plugins/upload-assets"
+    },
+    {
+      "path": "plugins/all-contributors"
     }
   ]
 }

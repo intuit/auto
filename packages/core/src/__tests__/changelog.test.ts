@@ -36,7 +36,9 @@ describe('createUserLink', () => {
         },
         {
           hash: '1',
+          files: [],
           labels: [],
+
           pullRequest: {
             number: 22
           },
@@ -72,6 +74,7 @@ describe('createUserLink', () => {
         },
         {
           hash: '1',
+          files: [],
           labels: [],
           pullRequest: {
             number: 22
@@ -215,12 +218,14 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: 'foo',
+        files: [],
         labels: [],
         authorEmail: 'adam@dierkens.com',
         subject: 'Another Feature (#1234)'
       },
       {
         hash: 'foo',
+        files: [],
         labels: [],
         subject: 'One Feature (#1235)'
       }
@@ -236,6 +241,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '1',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'I was a push to master\n\n',
@@ -243,6 +249,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -269,6 +276,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '0a',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'something\n\n',
@@ -276,6 +284,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '0',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'docs\n\n',
@@ -284,6 +293,7 @@ describe('generateReleaseNotes', () => {
 
       {
         hash: '1',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'I was a push to master\n\n',
@@ -291,6 +301,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -298,6 +309,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -327,6 +339,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '1',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'I was a push to master\n\n',
@@ -334,6 +347,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -363,6 +377,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -393,6 +408,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '3',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'Second Feature (#1236)',
@@ -400,6 +416,7 @@ describe('generateReleaseNotes', () => {
       },
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -417,6 +434,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -447,6 +465,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -481,6 +500,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -504,6 +524,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',
@@ -545,6 +566,7 @@ describe('generateReleaseNotes', () => {
     const commits = await logParse.normalizeCommits([
       {
         hash: '2',
+        files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
         subject: 'First Feature (#1235)',

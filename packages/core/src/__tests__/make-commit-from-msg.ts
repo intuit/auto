@@ -21,6 +21,7 @@ const makeCommitFromMsg = (
       ? options.name
       : 'Adam Dierkens',
   authorEmail: options.email || 'adam@dierkens.com',
+  files: [],
   authors: [
     {
       name:

@@ -124,6 +124,7 @@
       "npm",
       "released",
       "first-time-contributor",
+      "all-contributors",
       [
         "upload-assets",
         [
