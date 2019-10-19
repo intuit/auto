@@ -817,12 +817,12 @@ export default class Auto {
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
 
-    // await this.release.addToChangelog(
-    //   releaseNotes,
-    //   lastRelease,
-    //   currentVersion,
-    //   message
-    // );
+    await this.release.addToChangelog(
+      releaseNotes,
+      lastRelease,
+      currentVersion,
+      message
+    );
 
     await this.hooks.afterAddToChangelog.promise({
       commits: await this.release.getCommitsInRelease(
