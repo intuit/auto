@@ -752,6 +752,7 @@ describe('Auto', () => {
       const addToChangelog = jest.fn();
       auto.release!.addToChangelog = addToChangelog;
       jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
+      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
 
       await auto.changelog({ from: 'v1.0.0' });
       expect(addToChangelog).toHaveBeenCalled();
