@@ -124,7 +124,19 @@
       "npm",
       "released",
       "first-time-contributor",
-      "all-contributors",
+      [
+        "all-contributors",
+        {
+          "types": {
+            "plugin": "**/plugin/**/*",
+            "code": [
+              "**/src/**/*",
+              "**/package.json",
+              "**/tsconfig.json"
+            ]
+          }
+        }
+      ],
       [
         "upload-assets",
         [
