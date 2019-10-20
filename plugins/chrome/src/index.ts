@@ -154,7 +154,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        auto.options.baseBranch
+        auto.baseBranch
       ]);
     });
   }

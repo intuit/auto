@@ -28,13 +28,12 @@ export default class GitTagPlugin implements IPlugin {
       }
 
       await execPromise('git', ['tag', newTag]);
-      auto.logger.verbose.info(`Created tag: ${newTag}`);
       await execPromise('git', [
         'push',
         '--follow-tags',
         '--set-upstream',
         'origin',
-        auto.options.baseBranch
+        auto.baseBranch
       ]);
     });
   }
