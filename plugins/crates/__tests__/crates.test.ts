@@ -226,7 +226,7 @@ describe('CratesPlugin', () => {
           '--follow-tags',
           '--set-upstream',
           'origin',
-          '$branch'
+          'master'
         ]);
       });
     });

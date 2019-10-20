@@ -479,12 +479,13 @@ export default class NPMPlugin implements IPlugin {
           ? ['publish', '--access', 'public', ...verboseArgs]
           : ['publish', ...verboseArgs]
       );
+      auto.logger.verbose.info('Pushing tag to github');
       await execPromise('git', [
         'push',
         '--follow-tags',
         '--set-upstream',
         'origin',
-        '$branch'
+        auto.options.baseBranch
       ]);
       auto.logger.verbose.info('Successfully published repo');
     });
