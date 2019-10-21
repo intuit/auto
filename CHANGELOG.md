@@ -1,3 +1,48 @@
+# v7.12.0 (Mon Oct 21 2019)
+
+### Release Notes
+
+_From #612_
+
+### Commit Files
+
+Plugin authors can now write plugins that do things based on the files in a commit. Anywhere you can receive a `commit` object you will also receive the files changed in that commit.
+
+### `afterAddToChangelog`
+
+A new hook is available to plugin developers. the `afterAddToChangelog` enables developers to run bits of automation after the new changelog is created. This is useful for getting extra commits into a release before publishing. The `all-contributors` plugin utilizes this hook.
+
+---
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/all-contributors`
+  - New Plugin: All contributors [#612](https://github.com/intuit/auto/pull/612) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Move git-tag to "Package Manager Plugins" [#611](https://github.com/intuit/auto/pull/611) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump env-ci from 4.1.3 to 4.5.0 [#619](https://github.com/intuit/auto/pull/619) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.9.1 to 6.9.3 [#623](https://github.com/intuit/auto/pull/623) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 2.6.0 to 2.7.0 [#622](https://github.com/intuit/auto/pull/622) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 3.0.8 to 3.0.9 [#621](https://github.com/intuit/auto/pull/621) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.18 to 24.0.19 [#620](https://github.com/intuit/auto/pull/620) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.17.0 to 3.18.1 [#618](https://github.com/intuit/auto/pull/618) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-xo from 0.27.1 to 0.27.2 [#617](https://github.com/intuit/auto/pull/617) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump dotenv from 8.1.0 to 8.2.0 [#616](https://github.com/intuit/auto/pull/616) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.7.12 to 12.11.1 [#615](https://github.com/intuit/auto/pull/615) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump lodash from 4.17.11 to 4.17.15 [#614](https://github.com/intuit/auto/pull/614) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.11.0 (Fri Oct 18 2019)
 
 #### 🚀  Enhancement
