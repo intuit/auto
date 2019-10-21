@@ -5923,9 +5923,9 @@ eslint-config-prettier@^6.4.0:
     get-stdin "^6.0.0"
 
 eslint-config-xo@^0.27.1:
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-xo/-/eslint-config-xo-0.27.1.tgz#e302231d4c054e855865c0f7c700ade23f506552"
-  integrity sha512-os4vvQCSZb7WdUMar52z97c2q6j29oIDj/Kb9HeOZ/jW7gqx3JjUQdLm+nq9hHpwgbS0vUx+Hm4HD7lVUltBPw==
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-xo/-/eslint-config-xo-0.27.2.tgz#71aff3d5b5554e9e5b5e1853e21da7799bb53f1f"
+  integrity sha512-qEuZP0zNQkWpOdNZvWnfY2GNp1AZ33uXgeOXl4DN5YVLHFvekHbeSM2FFZ8A489fp1rCCColVRlJsYMf28o4DA==
 
 eslint-import-resolver-node@^0.3.2:
   version "0.3.2"
