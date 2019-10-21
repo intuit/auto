@@ -125,6 +125,19 @@
       "released",
       "first-time-contributor",
       [
+        "all-contributors",
+        {
+          "types": {
+            "plugin": "**/plugin/**/*",
+            "code": [
+              "**/src/**/*",
+              "**/package.json",
+              "**/tsconfig.json"
+            ]
+          }
+        }
+      ],
+      [
         "upload-assets",
         [
           "./packages/cli/binary/auto-linux.gz",

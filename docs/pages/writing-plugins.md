@@ -91,6 +91,25 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
+#### afterAddToChangelog
+
+Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`.
+Useful for getting extra commits into a release before publishing.
+
+- commits - the commits in the changelog
+- currentVersion - version that was just released
+- lastRelease - the version before the current version
+- releaseNotes - generated release notes for the release
+
+```ts
+auto.hooks.afterRelease.tap(
+  'MyPlugin',
+  async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
+    // do something
+  }
+);
+```
+
 #### afterRelease
 
 Ran after the `release` command has run. This hooks gets the following arguments:

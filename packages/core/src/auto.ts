@@ -60,6 +60,16 @@ export interface IAutoHooks {
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
   beforeRun: SyncHook<[IAutoConfig]>;
   beforeShipIt: SyncHook<[]>;
+  afterAddToChangelog: AsyncParallelHook<
+    [
+      {
+        commits: IExtendedCommit[];
+        releaseNotes: string;
+        currentVersion: string;
+        lastRelease: string;
+      }
+    ]
+  >;
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
   afterRelease: AsyncParallelHook<
     [
@@ -813,6 +823,16 @@ export default class Auto {
       currentVersion,
       message
     );
+
+    await this.hooks.afterAddToChangelog.promise({
+      commits: await this.release.getCommitsInRelease(
+        lastRelease,
+        to || undefined
+      ),
+      releaseNotes,
+      lastRelease,
+      currentVersion
+    });
   }
 
   private async makeRelease({

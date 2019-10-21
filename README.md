@@ -39,14 +39,15 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [crates](./plugins/crates) - Publish Rust crates
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [maven](./plugins/maven) - Publish code with maven
 - [npm](./plugins/npm) - Publish code to npm (DEFAULT)
 
 **Extra Functionality:**
 
+- [all-contributors](./plugins/all-contributors) - Automatically add contributors as changelogs are produced using [`all-contributors-cli](https://www.npmjs.com/package/all-contributors-cli)
 - [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
 - [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
-- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
 - [jira](./plugins/jira) - Include Jira story links in the changelog
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts

@@ -6,6 +6,7 @@ declare module 'gitlog' {
     subject: string;
     rawBody?: string;
     labels?: string[];
+    files: string[];
   }
 
   interface IGitlogOptions {

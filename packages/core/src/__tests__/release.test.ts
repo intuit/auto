@@ -566,6 +566,7 @@ describe('Release', () => {
           makeCommitFromMsg('Feature (#124)'),
           {
             hash: '1',
+            files: [],
             authorName: 'Adam Dierkens',
             authorEmail: 'adam@dierkens.com',
             subject: 'I am a commit with a related PR'
