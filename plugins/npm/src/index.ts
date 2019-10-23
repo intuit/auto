@@ -484,7 +484,7 @@ export default class NPMPlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        '$branch'
+        auto.baseBranch
       ]);
       auto.logger.verbose.info('Successfully published repo');
     });

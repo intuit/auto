@@ -33,7 +33,7 @@ export default class GitTagPlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        '$branch'
+        auto.baseBranch
       ]);
     });
   }

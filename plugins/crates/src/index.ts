@@ -102,7 +102,7 @@ export default class CratesPlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        '$branch'
+        auto.baseBranch
       ]);
       auto.logger.log.info('Push complete');
     });

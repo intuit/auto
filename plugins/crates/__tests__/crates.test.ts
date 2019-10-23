@@ -218,7 +218,11 @@ describe('CratesPlugin', () => {
       test('does publishing', async () => {
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
-        plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+        plugin.apply({
+          hooks,
+          logger: dummyLog(),
+          baseBranch: 'master'
+        } as Auto.Auto);
         await hooks.publish.promise(Auto.SEMVER.patch);
         expect(exec).toHaveBeenCalledWith('cargo', ['publish']);
         expect(exec).toHaveBeenCalledWith('git', [
@@ -226,7 +230,7 @@ describe('CratesPlugin', () => {
           '--follow-tags',
           '--set-upstream',
           'origin',
-          '$branch'
+          'master'
         ]);
       });
     });
