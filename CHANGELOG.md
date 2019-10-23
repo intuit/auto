@@ -1,3 +1,19 @@
+# v7.12.2 (Wed Oct 23 2019)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Rocio Montes ([@roxiomontes](https://github.com/roxiomontes)), for all your work!
+
+#### 🐛  Bug Fix
+
+- adding Auto svg logo [#625](https://github.com/intuit/auto/pull/625) ([@roxiomontes](https://github.com/roxiomontes))
+
+#### Authors: 1
+
+- Rocio Montes ([@roxiomontes](https://github.com/roxiomontes))
+
+---
+
 # v7.12.1 (Wed Oct 23 2019)
 
 #### 🐛  Bug Fix
