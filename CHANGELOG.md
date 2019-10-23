@@ -1,3 +1,16 @@
+# v7.12.1 (Wed Oct 23 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/maven`, `@auto-it/npm`
+  - Fix windows git refspec problem [#613](https://github.com/intuit/auto/pull/613) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v7.12.0 (Mon Oct 21 2019)
 
 ### Release Notes
