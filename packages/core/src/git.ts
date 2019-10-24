@@ -7,6 +7,7 @@ import gitlogNode, { ICommit } from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
+import dedent from 'dedent';
 
 import { Memoize as memoize } from 'typescript-memoize';
 
@@ -241,21 +242,40 @@ export default class Git {
 
   @memoize()
   async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
-    const log = await gitlog({
-      repo: process.cwd(),
-      number: Number.MAX_SAFE_INTEGER,
-      fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
-      branch: `${start.trim()}..${end.trim()}`,
-      execOptions: { maxBuffer: 1000 * 1024 }
-    });
+    try {
+      const log = await gitlog({
+        repo: process.cwd(),
+        number: Number.MAX_SAFE_INTEGER,
+        fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
+        branch: `${start.trim()}..${end.trim()}`,
+        execOptions: { maxBuffer: 1000 * 1024 }
+      });
 
-    return log.map(commit => ({
-      hash: commit.hash,
-      authorName: commit.authorName,
-      authorEmail: commit.authorEmail,
-      subject: commit.rawBody!,
-      files: commit.files
-    }));
+      return log.map(commit => ({
+        hash: commit.hash,
+        authorName: commit.authorName,
+        authorEmail: commit.authorEmail,
+        subject: commit.rawBody!,
+        files: commit.files
+      }));
+    } catch (error) {
+      const tag = error.match(/ambiguous argument '(\S+)\.\.HEAD'/);
+
+      if (tag) {
+        this.logger.log.error(
+          dedent`
+            Missing tag "${tag[1]}" so the command could not run.
+
+            To fix this run the following command:
+
+            git fetch --tags\n
+          `
+        );
+        process.exit(1);
+      }
+
+      throw new Error(error);
+    }
   }
 
   @memoize()

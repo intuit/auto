@@ -36,7 +36,6 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@atomist/slack-messages": "~1.1.0",
     "@octokit/graphql": "^4.0.0",
     "@octokit/plugin-enterprise-compatibility": "^1.1.1",
     "@octokit/plugin-retry": "^2.2.0",

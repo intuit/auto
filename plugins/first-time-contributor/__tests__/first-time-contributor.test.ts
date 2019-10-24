@@ -94,8 +94,6 @@ describe('First Time Contributor Plugin', () => {
       makeCommitFromMsg('foo', { username: 'jeff-the-snake', name: '' })
     ];
 
-    console.log(commits);
-
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
 });
