@@ -1,3 +1,16 @@
+# v7.12.3 (Thu Oct 24 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/first-time-contributor`
+  - better error messaging when tags aren't present [#626](https://github.com/intuit/auto/pull/626) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.2 (Wed Oct 23 2019)
 
 :tada: This release contains work from a new contributor! :tada:
