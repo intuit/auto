@@ -8,9 +8,8 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.11.0"
+  version "7.12.3"
   dependencies:
-    "@atomist/slack-messages" "~1.1.0"
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "^1.1.1"
     "@octokit/plugin-retry" "^2.2.0"
@@ -37,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.11.0"
+  version "7.12.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -52,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.11.0"
+  version "7.12.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2900,6 +2899,21 @@ ajv@^6.10.0, ajv@^6.10.2:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+all-contributors-cli@6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.4.0.tgz#3fea26c5f91a555f3c8612696bc0d67f6160b04d"
+  integrity sha512-VyRqp7GnINHrcJ37y+gT554xoKzjTQy7P/rEXXDEEjWsIcrEjqW7/zI9KhzfG/sTKr5aDFo7qvXg/UiMhTYgIA==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    async "^2.0.0-rc.1"
+    chalk "^2.3.0"
+    didyoumean "^1.2.1"
+    inquirer "^6.2.1"
+    lodash "^4.11.2"
+    pify "^4.0.1"
+    request "^2.72.0"
+    yargs "^13.1.0"
+
 all-contributors-cli@^6.4.0:
   version "6.9.3"
   resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.9.3.tgz#84995eac024402107f15e836364a9d5bf39b0d46"
@@ -3215,6 +3229,13 @@ async-limiter@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
   integrity sha512-jp/uFnooOiO+L211eZOoSyzpOITMXx1rBITauYykG3BRYPu8h0UcxsPNB04RR5vo4Tyz3+ay17tR6JVf9qzYWg==
+
+async@^2.0.0-rc.1:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
+  integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
+  dependencies:
+    lodash "^4.17.14"
 
 async@^2.6.1:
   version "2.6.1"
@@ -7707,9 +7728,9 @@ https-proxy-agent@^2.2.1:
     debug "^3.1.0"
 
 https-proxy-agent@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-3.0.0.tgz#0106efa5d63d6d6f3ab87c999fa4877a3fd1ff97"
-  integrity sha512-y4jAxNEihqvBI5F3SaO2rtsjIOnnNA8sEbuiP+UhJZJHeM2NRm6c09ax2tgqme+SgUUvjao2fJXF4h3D6Cb2HQ==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-3.0.1.tgz#b8c286433e87602311b01c8ea34413d856a4af81"
+  integrity sha512-+ML2Rbh6DAuee7d07tYGEKOEi2voWPUGan+ExdPbPW6Z3svq+JCqr0v8WmKPOkz1vOVykPCBSuobe7G8GJUtVg==
   dependencies:
     agent-base "^4.3.0"
     debug "^3.1.0"
@@ -15651,7 +15672,7 @@ yargs@^11.0.0:
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
 
-yargs@^13.3.0:
+yargs@^13.1.0, yargs@^13.3.0:
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-13.3.0.tgz#4c657a55e07e5f2cf947f8a366567c04a0dedc83"
   integrity sha512-2eehun/8ALW8TLoIl7MVaRUrg+yCnenu8B4kBlRxj3GJGDKU1Og7sMXPNm1BYyM1DOJmTZ4YeN/Nwxv+8XJsUA==
