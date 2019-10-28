@@ -4412,9 +4412,9 @@ command-line-application@^0.8.0:
     remove-markdown "^0.3.0"
 
 command-line-application@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.9.3.tgz#3c9ce8cc15fa38bf398fc2ef6e2755d2d15e6014"
-  integrity sha512-/xzhsmBjggqM1xqLKvNf6yEe1zu3VzDdhb6Z7PjW1G0lM0TNUvH3iKZGrC52xTlTilW/g23tishK8tYGxr+Tgg==
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/command-line-application/-/command-line-application-0.9.5.tgz#ae538f549d41f7496cf5d6cf356425c34ed30555"
+  integrity sha512-dLL/2HDrOScJrZbvAPCNGme9ZR758Uv50mD5nHQz8Y8DE/BgFfSHxlIF9azu+hWtlVpcb0F9CVbo57Omu250Ew==
   dependencies:
     "@types/command-line-args" "^5.0.0"
     "@types/command-line-usage" "^5.0.1"
@@ -14628,15 +14628,10 @@ ts-jest@^24.0.2:
     semver "^5.5"
     yargs-parser "10.x"
 
-tslib@1.10.0:
+tslib@1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
-
-tslib@^1.8.1, tslib@^1.9.0:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
-  integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
 
 tsutils@^3.17.1:
   version "3.17.1"
