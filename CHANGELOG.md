@@ -1,3 +1,31 @@
+# v7.12.4 (Tue Oct 29 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/released`
+  - Update released plugin message creation to replace all tokens [#638](https://github.com/intuit/auto/pull/638) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 2.4.0 to 2.5.0 [#636](https://github.com/intuit/auto/pull/636) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/graphql from 4.2.2 to 4.3.0 [#637](https://github.com/intuit/auto/pull/637) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 22.19.0 to 23.0.1 [#634](https://github.com/intuit/auto/pull/634) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump command-line-application from 0.9.3 to 0.9.5 [#635](https://github.com/intuit/auto/pull/635) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.4.0 to 2.5.0 [#633](https://github.com/intuit/auto/pull/633) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump https-proxy-agent from 3.0.0 to 3.0.1 [#632](https://github.com/intuit/auto/pull/632) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.18.1 to 3.18.3 [#630](https://github.com/intuit/auto/pull/630) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 12.3.0 to 12.3.1 [#629](https://github.com/intuit/auto/pull/629) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.0.2 to 6.2.0 [#628](https://github.com/intuit/auto/pull/628) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.33.1 to 16.34.0 [#631](https://github.com/intuit/auto/pull/631) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.3 (Thu Oct 24 2019)
 
 #### 🐛  Bug Fix
