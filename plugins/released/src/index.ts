@@ -147,7 +147,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
   private createReleasedComment(isIssue: boolean, version: string) {
     return this.options.message
-      .replace(TYPE, isIssue ? 'Issue' : 'PR')
-      .replace(VERSION, version);
+      .replace(new RegExp(TYPE, 'g'), isIssue ? 'Issue' : 'PR')
+      .replace(new RegExp(VERSION, 'g'), version);
   }
 }
