@@ -26,7 +26,6 @@
 
     /* jest plugin */
 
-    "jest/no-empty-title": 2,
     "jest/prefer-strict-equal": 2,
     "jest/prefer-spy-on": 2,
     "jest/no-standalone-expect": 2,
