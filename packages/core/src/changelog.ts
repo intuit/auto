@@ -160,6 +160,10 @@ export default class Changelog {
       })
       .map(([, labels]) => labels)
       .reduce((acc, item) => [...acc, ...item], []);
+    const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
+      this.options.labels,
+      'patch'
+    );
 
     commits
       .filter(
@@ -169,7 +173,7 @@ export default class Changelog {
           // in this case we auto attached a patch when it was merged
           (labels[0] === 'released' && labels.length === 1)
       )
-      .map(({ labels }) => labels.push('patch'));
+      .map(({ labels }) => labels.push(defaultPatchLabelName));
 
     return Object.assign(
       {},
@@ -183,6 +187,16 @@ export default class Changelog {
           ? {}
           : { [label.name]: matchedCommits };
       })
+    );
+  }
+
+  private getFirstLabelNameFromLabelKey(
+    labels: ILabelDefinitionMap,
+    labelKey: string
+  ) {
+    return (
+      (labels[labelKey] && labels[labelKey][0] && labels[labelKey][0].name) ||
+      labelKey
     );
   }
 

@@ -163,6 +163,28 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
+  test('should create note for PR commits without labels with custom patch label', async () => {
+    const options = testOptions();
+    options.labels = {
+      ...options.labels,
+      patch: [
+        {
+          name: 'Version: Patch',
+          title: '🐛  Bug Fix',
+          description: 'N/A'
+        }
+      ]
+    };
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)')
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
   test('should create note for PR commits with only non config labels', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
