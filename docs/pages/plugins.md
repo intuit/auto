@@ -42,6 +42,16 @@ If you want to use multiple plugins you can supply multiple.
 auto shipit --plugins npm NPM_PACKAGE_NAME ../path/to/plugin.js
 ```
 
+### None
+
+By default, `auto` defaults to use the `npm` plugin if you don't supply anything in the `.autorc` configuration file. If you don't want to include any plugins, you can supply an empty array in the `.autorc` configuration file like the following:
+
+```json
+{
+  "plugins": []
+}
+```
+
 ### Plugin Configuration
 
 To provide plugin specific config change the following:
