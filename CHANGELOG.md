@@ -1,3 +1,25 @@
+# v7.12.5 (Wed Oct 30 2019)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Athitya Kumar ([@athityakumar](https://github.com/athityakumar)), for all your work!
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Update changelog to include prs without labels when using custom patch label [#640](https://github.com/intuit/auto/pull/640) ([@bnigh](https://github.com/bnigh))
+
+#### 📝  Documentation
+
+- Adds documentation for using auto with no plugins [#641](https://github.com/intuit/auto/pull/641) ([@athityakumar](https://github.com/athityakumar))
+
+#### Authors: 2
+
+- [@bnigh](https://github.com/bnigh)
+- Athitya Kumar ([@athityakumar](https://github.com/athityakumar))
+
+---
+
 # v7.12.4 (Tue Oct 29 2019)
 
 #### 🐛  Bug Fix
