@@ -1,3 +1,28 @@
+# v7.12.5 (Tue Nov 05 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix issue with latest enterprise compat plugin [#655](https://github.com/intuit/auto/pull/655) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Update changelog to include prs without labels when using custom patch label [#640](https://github.com/intuit/auto/pull/640) ([@bnigh](https://github.com/bnigh))
+
+#### 🏠  Internal
+
+- more reliable docs publish [#642](https://github.com/intuit/auto/pull/642) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Adds documentation for using auto with no plugins [#641](https://github.com/intuit/auto/pull/641) ([@athityakumar](https://github.com/athityakumar))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- [@bnigh](https://github.com/bnigh)
+- Athitya Kumar ([@athityakumar](https://github.com/athityakumar))
+
+---
+
 # v7.12.5 (Wed Oct 30 2019)
 
 :tada: This release contains work from a new contributor! :tada:
