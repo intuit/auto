@@ -64,7 +64,7 @@
   "devDependencies": {
     "@types/cosmiconfig": "5.0.3",
     "@types/dedent": "^0.7.0",
-    "@types/dotenv": "^6.1.0",
+    "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",
     "@types/graphql": "^14.2.0",
     "@types/jest": "~24.0.9",
