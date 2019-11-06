@@ -21,8 +21,10 @@ const labels = {
 };
 
 const search = jest.fn();
-jest.mock('cosmiconfig', () => () => ({
-  search
+jest.mock('cosmiconfig', () => ({
+  cosmiconfig: () => ({
+    search
+  })
 }));
 
 jest.mock('@octokit/rest', () => {
