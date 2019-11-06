@@ -42,7 +42,7 @@
     "@octokit/plugin-throttling": "^2.6.0",
     "@octokit/rest": "16.34.1",
     "await-to-js": "^2.1.1",
-    "cosmiconfig": "5.2.1",
+    "cosmiconfig": "6.0.0",
     "dedent": "^0.7.0",
     "deepmerge": "^4.0.0",
     "dotenv": "^8.0.0",
@@ -62,7 +62,6 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@types/cosmiconfig": "5.0.3",
     "@types/dedent": "^0.7.0",
     "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",

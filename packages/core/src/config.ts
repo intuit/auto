@@ -1,4 +1,4 @@
-import cosmiconfig from 'cosmiconfig';
+import { cosmiconfig } from 'cosmiconfig';
 import merge from 'deepmerge';
 import fetch from 'node-fetch';
 import * as path from 'path';
@@ -12,6 +12,9 @@ import {
 } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ConfigObject = any;
 
 export function normalizeLabel(
   name: string,
@@ -39,7 +42,7 @@ export function normalizeLabel(
   return [{ ...baseLabel, ...label }];
 }
 
-export function normalizeLabels(config: cosmiconfig.Config) {
+export function normalizeLabels(config: ConfigObject) {
   let labels = defaultLabelDefinition;
 
   if (config.labels) {
@@ -80,7 +83,7 @@ export default class Config {
     });
     const result = await explorer.search();
 
-    let rawConfig: cosmiconfig.Config = {};
+    let rawConfig: ConfigObject = {};
 
     if (result && result.config) {
       rawConfig = result.config;
@@ -123,7 +126,7 @@ export default class Config {
    * @param extend Path or name of config to find
    */
   async loadExtendConfig(extend: string) {
-    let config: cosmiconfig.Config | { auto: cosmiconfig.Config };
+    let config: ConfigObject | { auto: ConfigObject };
 
     if (extend.endsWith('.js') || extend.endsWith('.mjs')) {
       throw new Error('Extended config cannot be a JavaScript file');
