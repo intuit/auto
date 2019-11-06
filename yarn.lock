@@ -14745,9 +14745,9 @@ twemoji-parser@^11.0.2:
   integrity sha512-5kO2XCcpAql6zjdLwRwJjYvAZyDy3+Uj7v1ipBzLthQmDL7Ce19bEqHr3ImSNeoSW2OA8u02XmARbXHaNO8GhA==
 
 twitter-text@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/twitter-text/-/twitter-text-3.0.0.tgz#662f255b8ca12412f5b126368496e2430480eae3"
-  integrity sha512-p5/mAvsYp0ESSgKjpaytWNJxrRqM04FnF5wLtc9+U1hXBrQujh/oz+4yR45JHIJfWOKSFZ/aLGaCasNwrqkkcw==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/twitter-text/-/twitter-text-3.0.1.tgz#463fbacc2c2f84f60a0f6b684b5e5ce9b2a4dc0d"
+  integrity sha512-hNFz4+rLw1pJ7m7YwPneJNK+8BXQqJoo4li6tQ0ZoZ5+sRUQWLYClWgOnzVRFPTUPNB7Z1/IQoG0Rf0wnUeGKQ==
   dependencies:
     babel-runtime "^6.26.0"
     punycode "1.4.1"
