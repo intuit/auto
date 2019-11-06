@@ -275,6 +275,23 @@ export default class Release {
     this.git = git;
   }
 
+  @memoize()
+  async makeChangelog(version?: SEMVER) {
+    const project = await this.git.getProject();
+    const changelog = new Changelog(this.logger, {
+      owner: this.git.options.owner,
+      repo: this.git.options.repo,
+      baseUrl: project.html_url,
+      labels: this.options.labels,
+      baseBranch: this.options.baseBranch
+    });
+
+    this.hooks.onCreateChangelog.call(changelog, version);
+    changelog.loadDefaultHooks();
+
+    return changelog;
+  }
+
   /**
    * Generate a changelog from a range of commits.
    *
@@ -287,17 +304,7 @@ export default class Release {
     version?: SEMVER
   ): Promise<string> {
     const commits = await this.getCommitsInRelease(from, to);
-    const project = await this.git.getProject();
-    const changelog = new Changelog(this.logger, {
-      owner: this.git.options.owner,
-      repo: this.git.options.repo,
-      baseUrl: project.html_url,
-      labels: this.options.labels,
-      baseBranch: this.options.baseBranch
-    });
-
-    this.hooks.onCreateChangelog.call(changelog, version);
-    changelog.loadDefaultHooks();
+    const changelog = await this.makeChangelog(version);
 
     return changelog.generateReleaseNotes(commits);
   }
@@ -376,6 +383,31 @@ export default class Release {
     );
   }
 
+  async updateChangelogFile(
+    title: string,
+    releaseNotes: string,
+    changelogPath: string
+  ) {
+    const date = new Date().toDateString();
+    let newChangelog = '#';
+
+    if (title) {
+      newChangelog += ` ${title}`;
+    }
+
+    newChangelog += ` (${date})\n\n${releaseNotes}`;
+
+    if (fs.existsSync(changelogPath)) {
+      this.logger.verbose.info('Old changelog exists, prepending changes.');
+      const oldChangelog = await readFile(changelogPath, 'utf8');
+      newChangelog = `${newChangelog}\n\n---\n\n${oldChangelog}`;
+    }
+
+    await writeFile(changelogPath, newChangelog);
+    this.logger.verbose.info('Wrote new changelog to filesystem.');
+    await execPromise('git', ['add', changelogPath]);
+  }
+
   /**
    * Prepend a set of release notes to the changelog.md
    *
@@ -387,8 +419,7 @@ export default class Release {
   async addToChangelog(
     releaseNotes: string,
     lastRelease: string,
-    currentVersion: string,
-    message = 'Update CHANGELOG.md [skip ci]'
+    currentVersion: string
   ) {
     this.hooks.createChangelogTitle.tapPromise('Default', async () => {
       let version;
@@ -414,27 +445,8 @@ export default class Release {
 
     this.logger.verbose.info('Adding new changes to changelog.');
     const title = await this.hooks.createChangelogTitle.promise();
-    const date = new Date().toDateString();
-    let newChangelog = '#';
 
-    if (title) {
-      newChangelog += ` ${title}`;
-    }
-
-    newChangelog += ` (${date})\n\n${releaseNotes}`;
-
-    if (fs.existsSync('CHANGELOG.md')) {
-      this.logger.verbose.info('Old changelog exists, prepending changes.');
-      const oldChangelog = await readFile('CHANGELOG.md', 'utf8');
-      newChangelog = `${newChangelog}\n\n---\n\n${oldChangelog}`;
-    }
-
-    await writeFile('CHANGELOG.md', newChangelog);
-    this.logger.verbose.info('Wrote new changelog to filesystem.');
-
-    await execPromise('git', ['add', 'CHANGELOG.md']);
-    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
-    this.logger.verbose.info('Commited new changelog.');
+    await this.updateChangelogFile(title || '', releaseNotes, 'CHANGELOG.md');
   }
 
   /**

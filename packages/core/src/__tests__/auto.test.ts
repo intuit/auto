@@ -742,24 +742,6 @@ describe('Auto', () => {
       expect(addToChangelog).not.toHaveBeenCalled();
     });
 
-    test('should add to changelog', async () => {
-      const auto = new Auto({
-        plugins: [],
-        ...defaults
-      });
-      auto.logger = dummyLog();
-      auto.hooks.getRepository.tap('test', () => ({ token: '1234' }));
-      await auto.loadConfig();
-
-      const addToChangelog = jest.fn();
-      auto.release!.addToChangelog = addToChangelog;
-      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
-      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
-
-      await auto.changelog({ from: 'v1.0.0' });
-      expect(addToChangelog).toHaveBeenCalled();
-    });
-
     test('should skip getRepository hook if passed in via cli', async () => {
       process.env.GH_TOKEN = 'XXXX';
       const auto = new Auto({
@@ -1069,6 +1051,8 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
+      // @ts-ignore
+      auto.makeChangelog = () => Promise.resolve();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
       jest.spyOn(auto.git!, 'publish').mockImplementation();
       jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();

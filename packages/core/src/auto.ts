@@ -8,7 +8,8 @@ import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   SyncHook,
-  SyncWaterfallHook
+  SyncWaterfallHook,
+  AsyncSeriesHook
 } from 'tapable';
 
 import HttpsProxyAgent from 'https-proxy-agent';
@@ -60,9 +61,21 @@ export interface IAutoHooks {
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
   beforeRun: SyncHook<[IAutoConfig]>;
   beforeShipIt: SyncHook<[]>;
-  afterAddToChangelog: AsyncParallelHook<
+  beforeCommitChangelog: AsyncSeriesHook<
     [
       {
+        bump: SEMVER;
+        commits: IExtendedCommit[];
+        releaseNotes: string;
+        currentVersion: string;
+        lastRelease: string;
+      }
+    ]
+  >;
+  afterAddToChangelog: AsyncSeriesHook<
+    [
+      {
+        bump: SEMVER;
         commits: IExtendedCommit[];
         releaseNotes: string;
         currentVersion: string;
@@ -793,7 +806,7 @@ export default class Auto {
     dryRun,
     from,
     to,
-    message
+    message = 'Update CHANGELOG.md [skip ci]'
   }: IChangelogOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
@@ -802,6 +815,7 @@ export default class Auto {
     await this.setGitUser();
 
     const lastRelease = from || (await this.git.getLatestRelease());
+    const bump = await this.release.getSemverBump(lastRelease, to);
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to || undefined,
@@ -820,11 +834,11 @@ export default class Auto {
     await this.release.addToChangelog(
       releaseNotes,
       lastRelease,
-      currentVersion,
-      message
+      currentVersion
     );
 
-    await this.hooks.afterAddToChangelog.promise({
+    const options = {
+      bump,
       commits: await this.release.getCommitsInRelease(
         lastRelease,
         to || undefined
@@ -832,7 +846,13 @@ export default class Auto {
       releaseNotes,
       lastRelease,
       currentVersion
-    });
+    };
+
+    await this.hooks.beforeCommitChangelog.promise(options);
+    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
+    this.logger.verbose.info('Committed new changelog.');
+
+    await this.hooks.afterAddToChangelog.promise(options);
   }
 
   private async makeRelease({

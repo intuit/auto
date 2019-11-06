@@ -1,4 +1,4 @@
-import Auto from '@auto-it/core';
+import Auto, { SEMVER } from '@auto-it/core';
 import { execSync } from 'child_process';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
@@ -32,6 +32,7 @@ describe('All Contributors Plugin', () => {
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
     await autoHooks.afterAddToChangelog.promise({
+      bump: SEMVER.patch,
       currentVersion: '0.0.0',
       lastRelease: '0.0.0',
       releaseNotes: '',
@@ -54,6 +55,7 @@ describe('All Contributors Plugin', () => {
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
     await autoHooks.afterAddToChangelog.promise({
+      bump: SEMVER.patch,
       currentVersion: '0.0.0',
       lastRelease: '0.0.0',
       releaseNotes: '',
@@ -76,6 +78,7 @@ describe('All Contributors Plugin', () => {
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
     await autoHooks.afterAddToChangelog.promise({
+      bump: SEMVER.patch,
       currentVersion: '0.0.0',
       lastRelease: '0.0.0',
       releaseNotes: '',
@@ -106,6 +109,7 @@ describe('All Contributors Plugin', () => {
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
     await autoHooks.afterAddToChangelog.promise({
+      bump: SEMVER.patch,
       currentVersion: '0.0.0',
       lastRelease: '0.0.0',
       releaseNotes: '',
@@ -132,6 +136,7 @@ describe('All Contributors Plugin', () => {
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
     await autoHooks.afterAddToChangelog.promise({
+      bump: SEMVER.patch,
       currentVersion: '0.0.0',
       lastRelease: '0.0.0',
       releaseNotes: '',
