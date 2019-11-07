@@ -1,3 +1,16 @@
+# v7.12.8 (Thu Nov 07 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - Fix multiple first-time-contributor thank you [#660](https://github.com/intuit/auto/pull/660) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.7 (Thu Nov 07 2019)
 
 #### 🐛  Bug Fix
