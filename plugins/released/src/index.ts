@@ -38,14 +38,6 @@ export default class ReleasedLabelPlugin implements IPlugin {
       return config;
     });
 
-    auto.hooks.onCreateLogParse.tap(this.name, logParse => {
-      logParse.hooks.omitCommit.tapPromise(this.name, async commit => {
-        if (commit.labels.includes(this.options.label)) {
-          return true;
-        }
-      });
-    });
-
     auto.hooks.afterRelease.tapPromise(
       this.name,
       async ({ newVersion, commits }) => {

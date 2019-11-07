@@ -59,30 +59,6 @@ describe('release label plugin', () => {
     });
   });
 
-  test('should omit released PRs', async () => {
-    const releasedLabel = new ReleasedLabelPlugin();
-    const autoHooks = makeHooks();
-    const logParseHooks = makeLogParseHooks();
-
-    releasedLabel.apply(({
-      hooks: autoHooks,
-      labels: defaultLabelDefinition,
-      logger: dummyLog(),
-      options: {},
-      comment,
-      git
-    } as unknown) as Auto);
-    autoHooks.onCreateLogParse.call({ hooks: logParseHooks } as LogParse);
-
-    const included = makeCommitFromMsg('normal commit with no bump');
-    expect(await logParseHooks.omitCommit.promise(included)).toBeUndefined();
-
-    const omitted = makeCommitFromMsg('normal commit with no bump', {
-      labels: ['released']
-    });
-    expect(await logParseHooks.omitCommit.promise(omitted)).toBe(true);
-  });
-
   test('should do nothing without PRs', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
