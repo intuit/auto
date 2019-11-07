@@ -37,7 +37,15 @@ export default class FirstTimeContributorPlugin implements IPlugin {
 
           const contributors = await Promise.all([
             getContributors(JUST_NAME),
-            getContributors(JUST_EMAIL)
+            getContributors(JUST_EMAIL),
+            auto
+              .git!.github.repos.listContributors({
+                repo: auto.git!.options.repo,
+                owner: auto.git!.options.owner
+              })
+              .then(response =>
+                response.data.map(collaborator => collaborator.login).join('\n')
+              )
           ]).then(lists => lists.join('\n').split('\n'));
 
           const newContributors = authors.filter(

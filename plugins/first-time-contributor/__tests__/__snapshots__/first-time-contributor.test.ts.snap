@@ -8,6 +8,14 @@ Thank you, Jeff, for all your work!",
 ]
 `;
 
+exports[`First Time Contributor Plugin should exclude a past contributor by username 1`] = `
+Array [
+  ":tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jeff123, for all your work!",
+]
+`;
+
 exports[`First Time Contributor Plugin should include a username if it exists 1`] = `
 Array [
   ":tada: This release contains work from new contributors! :tada:

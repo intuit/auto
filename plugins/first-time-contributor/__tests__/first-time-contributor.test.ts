@@ -7,18 +7,31 @@ import {
 } from '@auto-it/core/dist/utils/make-hooks';
 
 import FirstTimeContributor from '../src';
+import Octokit = require('@octokit/rest');
 
 const exec = jest.fn();
 exec.mockReturnValue('');
 // @ts-ignore
 jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
 
-const setup = () => {
+const setup = (
+  contributors: Partial<Octokit.ReposListContributorsResponseItem>[] = []
+) => {
   const plugin = new FirstTimeContributor();
   const hooks = makeHooks();
   const changelogHooks = makeChangelogHooks();
 
-  plugin.apply({ hooks } as Auto.Auto);
+  plugin.apply({
+    hooks,
+    git: {
+      options: { repo: 'repo', owner: 'test' },
+      github: {
+        repos: {
+          listContributors: () => Promise.resolve({ data: contributors })
+        }
+      }
+    } as any
+  } as Auto.Auto);
   hooks.onCreateChangelog.call(
     {
       hooks: changelogHooks,
@@ -52,6 +65,16 @@ describe('First Time Contributor Plugin', () => {
       makeCommitFromMsg('foo', { name: 'Andrew' })
     ];
     exec.mockReturnValueOnce('Andrew');
+
+    expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
+  });
+
+  test('should exclude a past contributor by username', async () => {
+    const hooks = setup([{ login: 'Andrew420' }]);
+    const commits = [
+      makeCommitFromMsg('foo', { name: 'Jeff123' }),
+      makeCommitFromMsg('foo', { name: 'Andrew420' })
+    ];
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
