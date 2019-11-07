@@ -189,6 +189,23 @@ exports[`generateReleaseNotes should include prs with released label 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should match authors correctly 1`] = `
+"#### 🏠  Internal
+
+- something  (andrew@email.com)
+
+#### 📝  Documentation
+
+- docs  (kendall@email.com)
+- another  ([@rdubzz](https://github.custom.com/rdubzz))
+
+#### Authors: 3
+
+- [@rdubzz](https://github.custom.com/rdubzz)
+- kendall@email.com
+- andrew@email.com"
+`;
+
 exports[`generateReleaseNotes should merge sections with same changelog title 1`] = `
 "#### Enhancement
 
@@ -236,7 +253,7 @@ exports[`generateReleaseNotes should use only email if author name doesn't exist
 "#### 🐛  Bug Fix
 
 - Another Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+- One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
 
 #### Authors: 1
 

@@ -342,6 +342,50 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
+  test('should match authors correctly', async () => {
+    const options = testOptions();
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '0a',
+        files: [],
+        subject: 'something\n\n',
+        labels: ['internal']
+      },
+      {
+        hash: '0',
+        files: [],
+        subject: 'docs\n\n',
+        labels: ['documentation']
+      },
+      {
+        hash: '0',
+        files: [],
+        subject: 'another\n\n',
+        labels: ['documentation']
+      }
+    ]);
+
+    commits.forEach((commit, index) => {
+      switch (index) {
+        case 0:
+          commit.authors = [{ email: 'andrew@email.com' }];
+          break;
+        case 1:
+          commit.authors = [{ email: 'kendall@email.com' }];
+          break;
+        case 2:
+          commit.authors = [{ username: 'rdubzz' }];
+          break;
+        default:
+      }
+    });
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
   test('should be able to customize pushToBaseBranch title', async () => {
     const options = testOptions();
     options.labels = {
