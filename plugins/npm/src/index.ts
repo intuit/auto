@@ -373,6 +373,8 @@ export default class NPMPlugin implements IPlugin {
           }
         });
 
+        this.renderMonorepoChangelog = true;
+
         // Cannot run git operations in parallel
         await promises.reduce(
           async (last, next) => last.then(() => next),
