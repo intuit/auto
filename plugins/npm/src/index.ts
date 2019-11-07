@@ -143,6 +143,7 @@ async function bumpLatest(
 const verbose = ['--loglevel', 'silly'];
 
 interface INpmConfig {
+  subPackageChangelogs?: boolean;
   setRcToken?: boolean;
   forcePublish?: boolean;
 }
@@ -166,11 +167,14 @@ export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
   private renderMonorepoChangelog: boolean;
+
+  private readonly subPackageChangelogs: boolean;
   private readonly setRcToken: boolean;
   private readonly forcePublish: boolean;
 
   constructor(config: INpmConfig = {}) {
     this.renderMonorepoChangelog = true;
+    this.subPackageChangelogs = config.subPackageChangelogs || true;
     this.setRcToken =
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
@@ -334,7 +338,7 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.beforeCommitChangelog.tapPromise(
       this.name,
       async ({ commits, bump }) => {
-        if (!isMonorepo() || !auto.release) {
+        if (!isMonorepo() || !auto.release || !this.subPackageChangelogs) {
           return;
         }
 
