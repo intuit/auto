@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/omit-commits",
-  "version": "7.12.8",
+  "version": "7.12.9",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
   "author": {
