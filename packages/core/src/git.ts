@@ -1,5 +1,6 @@
 import { graphql } from '@octokit/graphql';
 import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
+import path from 'path';
 import retry from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
@@ -256,7 +257,7 @@ export default class Git {
         authorName: commit.authorName,
         authorEmail: commit.authorEmail,
         subject: commit.rawBody!,
-        files: commit.files
+        files: (commit.files || []).map(file => path.resolve(file))
       }));
     } catch (error) {
       const tag = error.match(/ambiguous argument '(\S+)\.\.HEAD'/);

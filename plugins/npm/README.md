@@ -62,3 +62,21 @@ By default `auto` will force publish all packages for monorepos. To disable this
   ]
 }
 ```
+
+### subPackageChangelogs
+
+`auto` will create a changelog for each sub-package in a monorepo.
+You can disable this behavior by using the `subPackageChangelogs` option.
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "subPackageChangelogs": false
+      }
+    ]
+  ]
+}
+```

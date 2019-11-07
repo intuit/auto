@@ -29,7 +29,8 @@ jest.mock('fs', () => ({
 const logParse = new LogParse();
 const commitsPromise = logParse.normalizeCommits([
   makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
-    labels: ['major']
+    labels: ['major'],
+    files: ['packages/@foobar/release/package.json']
   }),
   makeCommitFromMsg('[PLAYA-5052] - Some Feature - Revert (#12345)', {
     labels: ['major']
@@ -129,4 +130,56 @@ test('should add versions for independent packages', async () => {
 
   const commits = await commitsPromise;
   expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+});
+
+test('should create extra change logs for sub-packages', async () => {
+  readFileSync.mockReturnValue('{ "version": "independent" }');
+
+  exec.mockImplementation(async command => {
+    if (command === 'npx') {
+      return Promise.resolve(
+        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
+      );
+    }
+
+    return Promise.resolve(
+      'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
+    );
+  });
+
+  const plugin = new NpmPlugin();
+  const hooks = makeHooks();
+  const update = jest.fn();
+
+  plugin.apply({
+    hooks,
+    logger: dummyLog(),
+    release: {
+      updateChangelogFile: update,
+      makeChangelog: () => {
+        const t = new Changelog(dummyLog(), {
+          owner: 'andrew',
+          repo: 'test',
+          baseUrl: 'https://github.custom.com/',
+          labels: defaultLabelDefinition,
+          baseBranch: 'master'
+        });
+        t.hooks.renderChangelogTitle.tap('test', label => label);
+        return t;
+      }
+    } as any
+  } as Auto.Auto);
+  await hooks.beforeCommitChangelog.promise({
+    bump: Auto.SEMVER.patch,
+    commits: await commitsPromise,
+    currentVersion: '1.0.0',
+    lastRelease: '0.1.0',
+    releaseNotes: ''
+  });
+
+  expect(update).toHaveBeenCalledWith(
+    'v1.0.1',
+    'major\n- [PLAYA-5052] - Some Feature [#12345](https://github.custom.com/pull/12345)',
+    'packages/@foobar/release/CHANGELOG.md'
+  );
 });

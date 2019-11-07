@@ -143,6 +143,7 @@ async function bumpLatest(
 const verbose = ['--loglevel', 'silly'];
 
 interface INpmConfig {
+  subPackageChangelogs?: boolean;
   setRcToken?: boolean;
   forcePublish?: boolean;
 }
@@ -165,10 +166,15 @@ const checkClean = async (auto: Auto) => {
 export default class NPMPlugin implements IPlugin {
   name = 'NPM';
 
+  private renderMonorepoChangelog: boolean;
+
+  private readonly subPackageChangelogs: boolean;
   private readonly setRcToken: boolean;
   private readonly forcePublish: boolean;
 
   constructor(config: INpmConfig = {}) {
+    this.renderMonorepoChangelog = true;
+    this.subPackageChangelogs = config.subPackageChangelogs || true;
     this.setRcToken =
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
@@ -293,38 +299,87 @@ export default class NPMPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, (changelog, version) => {
-      changelog.hooks.renderChangelogLine.tapPromise(
-        'NPM - Monorepo',
-        async ([commit, line]) => {
-          if (!isMonorepo()) {
-            return [commit, line];
+    auto.hooks.onCreateChangelog.tap(
+      this.name,
+      (changelog, version = SEMVER.patch) => {
+        changelog.hooks.renderChangelogLine.tapPromise(
+          'NPM - Monorepo',
+          async ([commit, line]) => {
+            if (!isMonorepo() || !this.renderMonorepoChangelog) {
+              return [commit, line];
+            }
+
+            const lernaPackages = await this.getLernaPackages();
+            const lernaJson = getLernaJson();
+
+            const packages = await changedPackages({
+              sha: commit.hash,
+              packages: lernaPackages,
+              lernaJson,
+              logger: auto.logger,
+              version
+            });
+
+            const section =
+              packages && packages.length
+                ? packages.map(p => `\`${p}\``).join(', ')
+                : 'monorepo';
+
+            if (section === 'monorepo') {
+              return [commit, line];
+            }
+
+            return [commit, [`- ${section}`, `  ${line}`].join('\n')];
           }
+        );
+      }
+    );
 
-          const lernaPackages = await this.getLernaPackages();
-          const lernaJson = getLernaJson();
-
-          const packages = await changedPackages({
-            sha: commit.hash,
-            packages: lernaPackages,
-            lernaJson,
-            logger: auto.logger,
-            version
-          });
-
-          const section =
-            packages && packages.length
-              ? packages.map(p => `\`${p}\``).join(', ')
-              : 'monorepo';
-
-          if (section === 'monorepo') {
-            return [commit, line];
-          }
-
-          return [commit, [`- ${section}`, `  ${line}`].join('\n')];
+    auto.hooks.beforeCommitChangelog.tapPromise(
+      this.name,
+      async ({ commits, bump }) => {
+        if (!isMonorepo() || !auto.release || !this.subPackageChangelogs) {
+          return;
         }
-      );
-    });
+
+        const lernaPackages = await this.getLernaPackages();
+        const changelog = await auto.release.makeChangelog(bump);
+
+        this.renderMonorepoChangelog = false;
+
+        const promises = lernaPackages.map(async lernaPackage => {
+          const includedCommits = commits.filter(commit =>
+            commit.files.some(file => {
+              const relative = path.relative(lernaPackage.path, file);
+
+              return (
+                relative &&
+                !relative.startsWith('..') &&
+                !path.isAbsolute(relative)
+              );
+            })
+          );
+          const title = `v${inc(lernaPackage.version, bump as ReleaseType)}`;
+          const releaseNotes = await changelog.generateReleaseNotes(
+            includedCommits
+          );
+
+          if (releaseNotes.trim()) {
+            await auto.release!.updateChangelogFile(
+              title,
+              releaseNotes,
+              path.join(lernaPackage.path, 'CHANGELOG.md')
+            );
+          }
+        });
+
+        // Cannot run git operations in parallel
+        await promises.reduce(
+          async (last, next) => last.then(() => next),
+          Promise.resolve()
+        );
+      }
+    );
 
     auto.hooks.version.tapPromise(this.name, async version => {
       await checkClean(auto);

@@ -374,22 +374,6 @@ describe('Release', () => {
       );
       expect(writeSpy.mock.calls[0][1].includes(readResult)).toBe(true);
     });
-
-    test('should be able to configure message', async () => {
-      const gh = new Release(git);
-      const message = 'pony foo';
-
-      existsSync.mockReturnValueOnce(true);
-      readResult = '# My old Notes';
-
-      await gh.addToChangelog(
-        '# My new Notes',
-        'asdklfhlkh24387513',
-        'v0.0.0',
-        message
-      );
-      expect(execSpy.mock.calls[1][1].includes(`"${message}"`)).toBe(true);
-    });
   });
 
   describe('generateReleaseNotes', () => {

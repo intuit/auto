@@ -91,18 +91,39 @@ auto.hooks.beforeRun.tapPromise('NPM', async config => {
 });
 ```
 
-#### afterAddToChangelog
+#### beforeCommitChangelog
 
-Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`.
-Useful for getting extra commits into a release before publishing.
+Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`.
+Useful for modifying the changelog as a whole or creating extra `changelog` files. These files can be apart of the commit that updates the changelog.
 
+- bump - the semver bump
 - commits - the commits in the changelog
 - currentVersion - version that was just released
 - lastRelease - the version before the current version
 - releaseNotes - generated release notes for the release
 
 ```ts
-auto.hooks.afterRelease.tap(
+auto.hooks.beforeCommitChangelog.tap(
+  'MyPlugin',
+  async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
+    // do something
+  }
+);
+```
+
+#### afterAddToChangelog
+
+Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`.
+Useful for getting extra commits into a release before publishing.
+
+- bump - the semver bump
+- commits - the commits in the changelog
+- currentVersion - version that was just released
+- lastRelease - the version before the current version
+- releaseNotes - generated release notes for the release
+
+```ts
+auto.hooks.afterAddToChangelog.tap(
   'MyPlugin',
   async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
     // do something
