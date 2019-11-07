@@ -197,7 +197,7 @@ const checkClean = async (auto: Auto) => {
 
 const defaultOptions: Required<INpmConfig> = {
   deprecateCanaries:
-    'This is a canary version of %package and should only be used for testing!\n\nPlease use %package@latest instead.',
+    'This is a canary version of "%package" and should only be used for testing!\n\nPlease use "%package@latest" instead.',
   forcePublish: true,
   setRcToken: true,
   subPackageChangelogs: true

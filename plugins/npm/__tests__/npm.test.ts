@@ -580,8 +580,64 @@ describe('canary', () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
+
     expect(exec.mock.calls[1]).toContain('npm');
     expect(exec.mock.calls[1][1]).toContain('1.2.4-canary.123.1');
+    expect(exec).toHaveBeenLastCalledWith('npm', [
+      'deprecate',
+      'test@1.2.4-canary.123.1',
+      'This is a canary version of "test" and should only be used for testing!\n\nPlease use "test@latest" instead.'
+    ]);
+  });
+
+  test('can turn off deprecation', async () => {
+    const plugin = new NPMPlugin({ deprecateCanaries: false });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
+    expect(exec).not.toHaveBeenLastCalledWith('npm', [
+      'deprecate',
+      'test@1.2.4-canary.123.1',
+      'This is a canary version of "test" and should only be used for testing!\n\nPlease use "test@latest" instead.'
+    ]);
+  });
+
+  test('can configure deprecation message', async () => {
+    const plugin = new NPMPlugin({ deprecateCanaries: 'oops %package' });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      git: { getLatestRelease: () => '1.2.3' }
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
+    expect(exec).toHaveBeenLastCalledWith('npm', [
+      'deprecate',
+      'test@1.2.4-canary.123.1',
+      'oops test'
+    ]);
   });
 
   test('publishes to public for scoped packages', async () => {
