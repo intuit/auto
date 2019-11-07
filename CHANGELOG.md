@@ -1,3 +1,16 @@
+# v7.13.1 (Thu Nov 07 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - Fix GitHub Release's release notes for monorepo during shipit [#663](https://github.com/intuit/auto/pull/663) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.13.0 (Thu Nov 07 2019)
 
 #### 🚀  Enhancement
