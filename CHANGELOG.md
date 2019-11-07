@@ -1,3 +1,34 @@
+# v7.12.7 (Thu Nov 07 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/released`
+  - Fix creating old changelogs [#659](https://github.com/intuit/auto/pull/659) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/node from 12.11.1 to 12.12.5 [#643](https://github.com/intuit/auto/pull/643) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump twitter-text from 3.0.0 to 3.0.1 [#651](https://github.com/intuit/auto/pull/651) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 6.5.1 to 6.6.0 [#649](https://github.com/intuit/auto/pull/649) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.4.0 to 6.5.0 [#652](https://github.com/intuit/auto/pull/652) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.19 to 24.0.21 [#647](https://github.com/intuit/auto/pull/647) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump deepmerge from 4.1.1 to 4.2.2 [#646](https://github.com/intuit/auto/pull/646) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.5.0 to 2.6.0 [#645](https://github.com/intuit/auto/pull/645) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump env-ci from 4.5.0 to 4.5.1 [#644](https://github.com/intuit/auto/pull/644) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump cosmiconfig from 5.2.1 to 6.0.0 [#650](https://github.com/intuit/auto/pull/650) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.34.0 to 16.34.1 [#653](https://github.com/intuit/auto/pull/653) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @types/dotenv from 6.1.1 to 8.2.0 [#648](https://github.com/intuit/auto/pull/648) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.5 (Tue Nov 05 2019)
 
 #### 🐛  Bug Fix
