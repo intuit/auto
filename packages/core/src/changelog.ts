@@ -207,8 +207,15 @@ export default class Changelog {
       commit.authors.map(async rawAuthor => {
         const data = (this.authors!.find(
           ([, commitAuthor]) =>
-            commitAuthor.name === rawAuthor.name ||
-            commitAuthor.email === rawAuthor.email
+            (commitAuthor.name &&
+              rawAuthor.name &&
+              commitAuthor.name === rawAuthor.name) ||
+            (commitAuthor.email &&
+              rawAuthor.email &&
+              commitAuthor.email === rawAuthor.email) ||
+            (commitAuthor.username &&
+              rawAuthor.username &&
+              commitAuthor.username === rawAuthor.username)
         ) as [IExtendedCommit, ICommitAuthor]) || [{}, rawAuthor];
 
         const link = await this.hooks.renderChangelogAuthor.promise(
@@ -216,6 +223,7 @@ export default class Changelog {
           commit,
           this.options
         );
+
         if (link) {
           result.add(link);
         }
