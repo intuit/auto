@@ -29,7 +29,8 @@ jest.mock('fs', () => ({
 const logParse = new LogParse();
 const commitsPromise = logParse.normalizeCommits([
   makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
-    labels: ['major']
+    labels: ['major'],
+    files: ['packages/@foobar/release/package.json']
   }),
   makeCommitFromMsg('[PLAYA-5052] - Some Feature - Revert (#12345)', {
     labels: ['major']
@@ -155,14 +156,17 @@ test('should create extra change logs for sub-packages', async () => {
     logger: dummyLog(),
     release: {
       updateChangelogFile: update,
-      makeChangelog: () =>
-        new Changelog(dummyLog(), {
+      makeChangelog: () => {
+        const t = new Changelog(dummyLog(), {
           owner: 'andrew',
           repo: 'test',
           baseUrl: 'https://github.custom.com/',
           labels: defaultLabelDefinition,
           baseBranch: 'master'
-        })
+        });
+        t.hooks.renderChangelogTitle.tap('test', label => label);
+        return t;
+      }
     } as any
   } as Auto.Auto);
   await hooks.beforeCommitChangelog.promise({
@@ -175,12 +179,7 @@ test('should create extra change logs for sub-packages', async () => {
 
   expect(update).toHaveBeenCalledWith(
     'v1.0.1',
-    '',
+    'major\n- [PLAYA-5052] - Some Feature [#12345](https://github.custom.com/pull/12345)',
     'packages/@foobar/release/CHANGELOG.md'
-  );
-  expect(update).toHaveBeenCalledWith(
-    'v1.0.1',
-    '',
-    'packages/@foobar/party/CHANGELOG.md'
   );
 });

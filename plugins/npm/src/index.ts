@@ -360,11 +360,13 @@ export default class NPMPlugin implements IPlugin {
             includedCommits
           );
 
-          await auto.release!.updateChangelogFile(
-            title,
-            releaseNotes,
-            path.join(lernaPackage.path, 'CHANGELOG.md')
-          );
+          if (releaseNotes.trim()) {
+            await auto.release!.updateChangelogFile(
+              title,
+              releaseNotes,
+              path.join(lernaPackage.path, 'CHANGELOG.md')
+            );
+          }
         });
 
         // Cannot run git operations in parallel
