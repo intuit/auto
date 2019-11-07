@@ -287,10 +287,10 @@ describe('getPreviousVersion', () => {
 test('should use string semver if no published package', async () => {
   const plugin = new NPMPlugin({ setRcToken: false });
 
-  expect(plugin).toStrictEqual(
+  // @ts-ignore
+  expect(plugin.options).toStrictEqual(
     expect.objectContaining({
       forcePublish: true,
-      name: 'NPM',
       setRcToken: false
     })
   );
