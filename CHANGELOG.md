@@ -1,3 +1,16 @@
+# v7.12.9 (Thu Nov 07 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix wrong author in changelog [#661](https://github.com/intuit/auto/pull/661) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.8 (Thu Nov 07 2019)
 
 #### 🐛  Bug Fix
