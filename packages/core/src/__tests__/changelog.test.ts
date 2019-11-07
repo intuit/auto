@@ -284,14 +284,6 @@ describe('generateReleaseNotes', () => {
 
   test('should order the section major, minor, patch, then the rest', async () => {
     const options = testOptions();
-    options.labels = {
-      documentation: options.labels.documentation,
-      internal: options.labels.internal,
-      patch: options.labels.patch,
-      minor: options.labels.minor,
-      major: options.labels.major
-    };
-
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
@@ -338,6 +330,50 @@ describe('generateReleaseNotes', () => {
         labels: ['major']
       }
     ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test.only('should match authors correctly', async () => {
+    const options = testOptions();
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '0a',
+        files: [],
+        subject: 'something\n\n',
+        labels: ['internal']
+      },
+      {
+        hash: '0',
+        files: [],
+        subject: 'docs\n\n',
+        labels: ['documentation']
+      },
+      {
+        hash: '0',
+        files: [],
+        subject: 'another\n\n',
+        labels: ['documentation']
+      }
+    ]);
+
+    commits.map((commit, index) => {
+      switch (index) {
+        case 0:
+          commit.authors = [{ email: 'andrew@email.com' }];
+          break;
+        case 1:
+          commit.authors = [{ email: 'kendall@email.com' }];
+          break;
+        case 2:
+          commit.authors = [{ username: 'rdubzz' }];
+          break;
+        default:
+      }
+    });
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
