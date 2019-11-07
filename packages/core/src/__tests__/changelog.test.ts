@@ -284,6 +284,14 @@ describe('generateReleaseNotes', () => {
 
   test('should order the section major, minor, patch, then the rest', async () => {
     const options = testOptions();
+    options.labels = {
+      documentation: options.labels.documentation,
+      internal: options.labels.internal,
+      patch: options.labels.patch,
+      minor: options.labels.minor,
+      major: options.labels.major
+    };
+
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
