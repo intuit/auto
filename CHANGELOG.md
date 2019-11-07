@@ -1,3 +1,16 @@
+# v7.13.0 (Thu Nov 07 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
+  - NPM: manage a changelog for each sub-package in monorepo [#658](https://github.com/intuit/auto/pull/658) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.12.9 (Thu Nov 07 2019)
 
 #### 🐛  Bug Fix
