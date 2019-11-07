@@ -334,7 +334,7 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test.only('should match authors correctly', async () => {
+  test('should match authors correctly', async () => {
     const options = testOptions();
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
@@ -360,7 +360,7 @@ describe('generateReleaseNotes', () => {
       }
     ]);
 
-    commits.map((commit, index) => {
+    commits.forEach((commit, index) => {
       switch (index) {
         case 0:
           commit.authors = [{ email: 'andrew@email.com' }];
