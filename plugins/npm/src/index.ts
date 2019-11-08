@@ -197,7 +197,7 @@ const checkClean = async (auto: Auto) => {
 
 const defaultOptions: Required<INpmConfig> = {
   deprecateCanaries:
-    'This is a canary version of "%package" and should only be used for testing!\n\nPlease use "%package@latest" instead.',
+    'This is a canary version of "%package" and should only be used for testing! Please use "%package@latest" instead.',
   forcePublish: true,
   setRcToken: true,
   subPackageChangelogs: true
@@ -209,22 +209,12 @@ const deprecate = async (
   message: string,
   ...args: string[]
 ) => {
-  try {
-    console.log('npm', [
-      'deprecate',
-      `${name}@${version}`,
-      message.replace(/%package/g, name),
-      ...args
-    ]);
-    await execPromise('npm', [
-      'deprecate',
-      `${name}@${version}`,
-      message.replace(/%package/g, name),
-      ...args
-    ]);
-  } catch (error) {
-    console.log(error);
-  }
+  await execPromise('npm', [
+    'deprecate',
+    `${name}@${version}`,
+    message.replace(/%package/g, name),
+    ...args
+  ]);
 };
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
@@ -520,8 +510,26 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
+
         const packages = await this.getLernaPackages();
         const independentPackages = await this.getIndependentPackageList();
+        const deprecateCanaries = async () => {
+          const deprecationMessage = this.options.deprecateCanaries;
+
+          if (deprecationMessage) {
+            await Promise.all(
+              packages.map(async p => {
+                deprecate(
+                  p.name,
+                  p.version,
+                  deprecationMessage,
+                  ...verboseArgs
+                );
+              })
+            );
+          }
+        };
+
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
@@ -530,6 +538,7 @@ export default class NPMPlugin implements IPlugin {
             return { error: 'No packages were changed. No canary published.' };
           }
 
+          await deprecateCanaries();
           return `<details><summary>Canary Versions</summary>${independentPackages}</details>`;
         }
 
@@ -539,16 +548,7 @@ export default class NPMPlugin implements IPlugin {
           return { error: 'No packages were changed. No canary published.' };
         }
 
-        const deprecationMessage = this.options.deprecateCanaries;
-
-        if (deprecationMessage) {
-          await Promise.all(
-            packages.map(async p => {
-              deprecate(p.name, p.version, deprecationMessage, ...verboseArgs);
-            })
-          );
-        }
-
+        await deprecateCanaries();
         return versioned.version.split('+')[0];
       }
 
