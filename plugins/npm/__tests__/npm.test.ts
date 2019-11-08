@@ -586,7 +586,7 @@ describe('canary', () => {
     expect(exec).toHaveBeenLastCalledWith('npm', [
       'deprecate',
       'test@1.2.4-canary.123.1',
-      'This is a canary version of "test" and should only be used for testing!\n\nPlease use "test@latest" instead.'
+      'This is a canary version of "test" and should only be used for testing! Please use "test@latest" instead.'
     ]);
   });
 
@@ -611,7 +611,7 @@ describe('canary', () => {
     expect(exec).not.toHaveBeenLastCalledWith('npm', [
       'deprecate',
       'test@1.2.4-canary.123.1',
-      'This is a canary version of "test" and should only be used for testing!\n\nPlease use "test@latest" instead.'
+      'This is a canary version of "test" and should only be used for testing! Please use "test@latest" instead.'
     ]);
   });
 
