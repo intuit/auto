@@ -257,12 +257,14 @@ export default class NPMPlugin implements IPlugin {
       ...args: string[]
     ) => {
       try {
+        const exact = `${name}@${version}`;
         await execPromise('npm', [
           'deprecate',
-          `${name}@${version}`,
-          message.replace(/%package/g, name),
+          exact,
+          `"${message.replace(/%package/g, name)}"`,
           ...args
         ]);
+        auto.logger.verbose.info(`Deprecated: "${exact}"`);
       } catch (error) {
         auto.logger.log.error(
           `Something went wrong! Couldn't deprecate "${name}@${version}"`
