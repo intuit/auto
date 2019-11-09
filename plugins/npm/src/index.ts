@@ -11,6 +11,7 @@ import { gt, inc, ReleaseType } from 'semver';
 import getConfigFromPackageJson from './package-config';
 import setTokenOnCI from './set-npm-token';
 import { loadPackageJson, readFile } from './utils';
+import { execSync } from 'child_process';
 
 const { isCi } = envCi();
 
@@ -257,7 +258,7 @@ export default class NPMPlugin implements IPlugin {
       ...args: string[]
     ) => {
       try {
-        console.log(await execPromise('npm', ['whoami']));
+        execSync('npm whoami', { stdio: 'inherit' });
 
         const exact = `${name}@${version}`;
         await execPromise('npm', [
