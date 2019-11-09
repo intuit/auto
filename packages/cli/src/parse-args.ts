@@ -441,6 +441,8 @@ export const commands: Command[] = [
       1. call from base branch -> latest version released
       2. call from PR in CI -> canary version released
       3. call locally when not on base branch -> canary version released
+
+      WARNING: Do not run "shipit" with "yarn". Yarn overrides the default registry and will break some NPM commands.
     `,
     examples: ['{green $} auto shipit'],
     options: [baseBranch, dryRun]
