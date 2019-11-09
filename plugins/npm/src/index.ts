@@ -258,7 +258,9 @@ export default class NPMPlugin implements IPlugin {
       ...args: string[]
     ) => {
       try {
-        execSync('npm whoami', { stdio: 'inherit' });
+        try {
+          execSync('npm whoami', { stdio: 'inherit' });
+        } catch (error) {}
 
         const exact = `${name}@${version}`;
         await execPromise('npm', [
