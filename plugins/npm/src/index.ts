@@ -261,6 +261,7 @@ export default class NPMPlugin implements IPlugin {
         try {
           console.log('here\n\n\n\n\n\n\n');
           execSync('npm config get registry', { stdio: 'inherit' });
+          execSync('npm config ls -l', { stdio: 'inherit' });
           execSync('cat ~/.npmrc', { stdio: 'inherit' });
 
           console.log('here\n\n\n\n\n\n\n');
