@@ -257,6 +257,8 @@ export default class NPMPlugin implements IPlugin {
       ...args: string[]
     ) => {
       try {
+        console.log(await execPromise('npm', ['whoami']));
+
         const exact = `${name}@${version}`;
         await execPromise('npm', [
           'deprecate',
