@@ -6,14 +6,30 @@
 
 To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins). Specifying a plugin overrides the defaults.
 
+::: message is-warning
+:warning: By default, `auto` defaults to use the `npm` plugin if you don't configure plugins in your `.autorc` configuration file.
+:::
+
+### None
+
+If you don't want to include the default plugins (ex: you're publishing to a platform other than npm), you can supply an empty array in the `.autorc` configuration file like the following:
+
+```json
+{
+  "plugins": []
+}
+```
+
 There are three ways to load a plugin.
 
 ### 1. Official Plugins
 
 To use an official plugin all you have to do is supply the name.
 
-```sh
-auto shipit --plugins npm
+```json
+{
+  "plugins": ["npm"]
+}
 ```
 
 ### 2. `npm` package
@@ -22,33 +38,19 @@ Unofficial plugins pulled from NPM should be named in the format `auto-plugin-PL
 
 That name is provided to auto to use that particular plugin.
 
-```sh
-auto shipit --plugins PLUGIN_NAME
+```json
+{
+  "plugins": ["auto-plugin-my-cool-plugin", "some-package"]
+}
 ```
 
 ### 3. Path
 
 Or if you have a plugin locally supply the path.
 
-```sh
-auto shipit --plugins ../path/to/plugin.js
-```
-
-### Multiple
-
-If you want to use multiple plugins you can supply multiple.
-
-```sh
-auto shipit --plugins npm NPM_PACKAGE_NAME ../path/to/plugin.js
-```
-
-### None
-
-By default, `auto` defaults to use the `npm` plugin if you don't supply anything in the `.autorc` configuration file. If you don't want to include any plugins, you can supply an empty array in the `.autorc` configuration file like the following:
-
 ```json
 {
-  "plugins": []
+  "plugins": ["../path/to/plugin.js"]
 }
 ```
 
