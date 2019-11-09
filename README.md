@@ -15,7 +15,7 @@ Automated releases powered by pull request labels. Streamline your release workf
 Release Features:
 
 - Calculate semantic version bumps from PRs
-- Skip a release with the `skip-release` label
+- Skip releases with the `skip-release` label
 - Publish canary releases from PRs or locally
 - Generate changelogs with fancy headers, authors, and monorepo package association
 - Use labels to create new changelog sections
