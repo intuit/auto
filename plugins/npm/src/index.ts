@@ -258,16 +258,6 @@ export default class NPMPlugin implements IPlugin {
       ...args: string[]
     ) => {
       try {
-        try {
-          console.log('here\n\n\n\n\n\n\n');
-          execSync('npm config get registry', { stdio: 'inherit' });
-          execSync('npm config ls -l', { stdio: 'inherit' });
-          execSync('cat ~/.npmrc', { stdio: 'inherit' });
-
-          console.log('here\n\n\n\n\n\n\n');
-          execSync('npm whoami', { stdio: 'inherit' });
-        } catch (error) {}
-
         const exact = `${name}@${version}`;
         await execPromise('npm', [
           'deprecate',
