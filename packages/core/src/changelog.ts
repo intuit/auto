@@ -338,7 +338,7 @@ export default class Changelog {
     }
 
     let authorSection = `#### Authors: ${authors.size}\n\n`;
-    authorSection += [...authors].join('\n');
+    authorSection += [...authors].sort((a, b) => a.localeCompare(b)).join('\n');
     sections.push(authorSection);
   }
 
