@@ -1,12 +1,9 @@
 import packageConfig from '../src/package-config';
 
-let readResult = '{}';
+let readResult = {};
 
-jest.mock('fs', () => ({
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, readResult);
-  }
+jest.mock('../src/utils', () => ({
+  loadPackageJson: () => readResult
 }));
 
 let parseResult: object | undefined = {};
@@ -23,9 +20,9 @@ test('should throw without a repo', async () => {
 
 test('should throw without an owner', async () => {
   expect.assertions(1);
-  readResult = JSON.stringify({
+  readResult = {
     repository: { url: 'fake.com' }
-  });
+  };
   parseResult = undefined;
 
   await expect(packageConfig()).rejects.toStrictEqual(
@@ -37,9 +34,9 @@ test('should throw without an owner', async () => {
 
 test('should throw without an package name', async () => {
   expect.assertions(1);
-  readResult = JSON.stringify({
+  readResult = {
     repository: { url: 'fake.com' }
-  });
+  };
   parseResult = {
     owner: 'black-panther'
   };
@@ -52,10 +49,10 @@ test('should throw without an package name', async () => {
 });
 
 test('should correctly parse package info', async () => {
-  readResult = JSON.stringify({
+  readResult = {
     version: '1.0.0',
     repository: { url: 'fake.com/black-panther/operation-foo' }
-  });
+  };
   parseResult = {
     owner: 'black-panther',
     name: 'operation-foo'

@@ -246,7 +246,7 @@ auto.hooks.version.tapPromise('NPM', async (version: SEMVER) => {
 });
 ```
 
-#### postVersion
+#### afterVersion
 
 Ran after the package has been versioned.
 
@@ -273,7 +273,7 @@ auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
 });
 ```
 
-#### postPublish
+#### afterPublish
 
 Ran after the package has been published.
 
@@ -368,7 +368,7 @@ auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
 
 #### renderChangelogAuthorLine
 
-Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as thier full name,.
+Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as their full name.
 
 ```ts
 auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>

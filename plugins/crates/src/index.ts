@@ -8,6 +8,7 @@ import userHome from 'user-home';
 
 const { isCi } = envCi();
 
+/** Get the parsed cargo.toml for the crate */
 export const getCargoConfig = () => {
   const content = fs
     .readFileSync(path.join(process.cwd(), 'Cargo.toml'))
@@ -15,6 +16,7 @@ export const getCargoConfig = () => {
   return toml.parse(content);
 };
 
+/** Get the credentials for publishing to crates.io */
 export function checkForCreds() {
   if (isCi) {
     return process.env.CARGO_REGISTRY_TOKEN;
@@ -24,6 +26,7 @@ export function checkForCreds() {
   return fs.existsSync(credsFile);
 }
 
+/** Bump the version in cargo.toml */
 export function bumpVersion(bumpBy: SEMVER) {
   const filePath = path.join(process.cwd(), 'Cargo.toml');
   const content = fs.readFileSync(filePath).toString();
@@ -43,18 +46,24 @@ export function bumpVersion(bumpBy: SEMVER) {
 }
 
 interface ICratesPluginOptions {
+  /** Do not actually do anything. Log what would be done. */
   dryRun?: boolean;
 }
 
+/** Deploy Rust crates */
 export default class CratesPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Crates';
 
+  /** The options of the plugin */
   readonly options: ICratesPluginOptions;
 
+  /** Initialize the plugin with it's options */
   constructor(options: ICratesPluginOptions = {}) {
     this.options = options;
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.beforeShipIt.tap(this.name, () => {
       if (!checkForCreds()) {

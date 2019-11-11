@@ -42,75 +42,94 @@ import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
+import { IAuthorOptions, IRepoOptions } from './auto-args';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
 
-interface IAuthor {
-  name?: string;
-  email?: string;
+interface ChangelogLifecycle {
+  /** The bump being applied to the version */
+  bump: SEMVER;
+  /** The commits included in the changelog */
+  commits: IExtendedCommit[];
+  /** The generated release notes for the commits */
+  releaseNotes: string;
+  /** The current version of the project */
+  currentVersion: string;
+  /** The last version of the project */
+  lastRelease: string;
 }
 
-interface IRepository {
-  owner?: string;
-  repo?: string;
+interface TestingToken {
+  /** A token used for testing */
   token?: string;
 }
 
 export interface IAutoHooks {
+  /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
+  /** Happens before anything is done. This is a great place to check for platform specific secrets. */
   beforeRun: SyncHook<[IAutoConfig]>;
+  /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: SyncHook<[]>;
-  beforeCommitChangelog: AsyncSeriesHook<
-    [
-      {
-        bump: SEMVER;
-        commits: IExtendedCommit[];
-        releaseNotes: string;
-        currentVersion: string;
-        lastRelease: string;
-      }
-    ]
-  >;
-  afterAddToChangelog: AsyncSeriesHook<
-    [
-      {
-        bump: SEMVER;
-        commits: IExtendedCommit[];
-        releaseNotes: string;
-        currentVersion: string;
-        lastRelease: string;
-      }
-    ]
-  >;
+  /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
+  beforeCommitChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
+  /** Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`. */
+  afterAddToChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
+  /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
+  /** Ran after the `release` command has run. */
   afterRelease: AsyncParallelHook<
     [
       {
+        /** The last version released */
         lastRelease: string;
+        /** The version being released */
         newVersion?: string;
+        /** The commits included in the release */
         commits: IExtendedCommit[];
+        /** The generated release notes for the commits */
         releaseNotes: string;
+        /** The response from creating the new release. */
         response?: Response<ReposCreateReleaseResponse>;
       }
     ]
   >;
-  getAuthor: AsyncSeriesBailHook<[], IAuthor | void>;
+  /** Get git author. Typically from a package distribution description file. */
+  getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
+  /** Get the previous version. Typically from a package distribution description file. */
   getPreviousVersion: AsyncSeriesBailHook<
     [(release: string) => string],
     string
   >;
-  getRepository: AsyncSeriesBailHook<[], IRepository | void>;
+  /** Get owner and repository. Typically from a package distribution description file. */
+  getRepository: AsyncSeriesBailHook<[], IRepoOptions & TestingToken | void>;
+  /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
+  /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
   onCreateLogParse: SyncHook<[LogParse]>;
+  /** This is where you hook into the changelog's hooks.  This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
   onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
+  /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<[SEMVER]>;
+  /** Ran after the package has been versioned. */
   afterVersion: AsyncParallelHook<[]>;
+  /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncParallelHook<[SEMVER]>;
-  canary: AsyncSeriesBailHook<[SEMVER, string], string | { error: string }>;
+  /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
+  canary: AsyncSeriesBailHook<
+    [SEMVER, string],
+    | string
+    | {
+        /** Error when creating the canary release */
+        error: string;
+      }
+  >;
+  /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
 }
 
+/** Load the .env file into process.env. Useful for local usage. */
 const loadEnv = () => {
   const envFile = path.resolve(process.cwd(), '.env');
 
@@ -125,20 +144,35 @@ const loadEnv = () => {
   });
 };
 
+/**
+ * The "auto" node API. Its public interface matches the
+ * commands you can run from the CLI
+ */
 export default class Auto {
+  /** Plugin entry points */
   hooks: IAutoHooks;
+  /** A logger that uses log levels */
   logger: ILogger;
+  /** Options auto was initialized with */
   options: ApiOptions;
+  /** The branch auto uses as master. */
   baseBranch: string;
+  /** The user configuration of auto (.autorc) */
   config?: IAutoConfig;
 
+  /** A class that handles creating releases */
   release?: Release;
+  /** A class that handles interacting with git and GitHub */
   git?: Git;
+  /** The labels configured by the user */
   labels?: ILabelDefinitionMap;
+  /** A map of semver bumps to labels that signify those bumps */
   semVerLabels?: IVersionLabels;
 
+  /** The version bump being used during "shipit" */
   private versionBump?: SEMVER;
 
+  /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
@@ -227,7 +261,7 @@ export default class Auto {
   /**
    * Create all of the user's labels on the git remote if the don't already exist
    *
-   * @param options Options for the createLabels functionality
+   * @param options - Options for the createLabels functionality
    */
   async createLabels(options: ICreateLabelsOptions = {}) {
     if (!this.release || !this.labels) {
@@ -240,7 +274,7 @@ export default class Auto {
   /**
    * Get the labels on a specific PR. Defaults to the labels of the last merged PR
    *
-   * @param options Options for the createLabels functionality
+   * @param options - Options for the createLabels functionality
    */
   async label({ pr }: ILabelOptions = {}) {
     if (!this.git) {
@@ -276,7 +310,7 @@ export default class Auto {
   /**
    * Create a status on a PR.
    *
-   * @param options Options for the pr status functionality
+   * @param options - Options for the pr status functionality
    */
   async prStatus({ dryRun, pr, url, ...options }: IPRStatusOptions) {
     if (!this.git) {
@@ -305,7 +339,6 @@ export default class Auto {
 
     this.logger.verbose.info('Found PR SHA:', sha);
 
-    // tslint:disable-next-line variable-name
     const target_url = url;
 
     if (dryRun) {
@@ -332,7 +365,7 @@ export default class Auto {
   /**
    * Check that a PR has a SEMVER label. Set a success status on the PR.
    *
-   * @param options Options for the pr check functionality
+   * @param options - Options for the pr check functionality
    */
   async prCheck({ dryRun, pr, url, ...options }: IPRCheckOptions) {
     if (!this.git || !this.release || !this.semVerLabels) {
@@ -341,7 +374,6 @@ export default class Auto {
 
     this.logger.verbose.info(`Using command: 'pr-check' for '${url}'`);
 
-    // tslint:disable-next-line variable-name
     const target_url = url;
     const prNumber = this.getPrNumber('prCheck', pr);
     let msg;
@@ -423,7 +455,7 @@ export default class Auto {
    * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
    * You can use the "context" option to multiple comments on a PR.
    *
-   * @param options Options for the comment functionality
+   * @param options - Options for the comment functionality
    */
   async comment(options: ICommentOptions) {
     const {
@@ -480,7 +512,7 @@ export default class Auto {
    * Older messages are removed. You can use the "context" option to multiple message
    * in a PR body.
    *
-   * @param options Options
+   * @param options - Options
    */
   async prBody(options: ICommentOptions) {
     const {
@@ -546,6 +578,7 @@ export default class Auto {
     await this.makeRelease(options);
   }
 
+  /** Create a canary (or test) version of the project */
   async canary(options: ICanaryOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -668,6 +701,7 @@ export default class Auto {
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
   }
 
+  /** Get the latest version number of the project */
   async getCurrentVersion(lastRelease: string) {
     this.hooks.getPreviousVersion.tap('None', () => {
       this.logger.veryVerbose.info(
@@ -701,6 +735,7 @@ export default class Auto {
     }
   }
 
+  /** On master: publish a new latest version */
   private async publishLatest(options: IShipItOptions) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -750,6 +785,7 @@ export default class Auto {
     return { newVersion, commitsInRelease };
   }
 
+  /** Get a pr number from user input or the env */
   private getPrNumber(command: string, pr?: number) {
     const envPr = 'pr' in env && Number(env.pr);
     const prNumber = pr || envPr;
@@ -763,6 +799,7 @@ export default class Auto {
     return prNumber;
   }
 
+  /** Create a client to interact with git */
   private startGit(gitOptions: IGitOptions) {
     if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
       throw new Error('Must set owner, repo, and GitHub token.');
@@ -790,6 +827,7 @@ export default class Auto {
     );
   }
 
+  /** Calculate a version from a tag using labels */
   private async getVersion({ from }: IVersionOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -802,6 +840,7 @@ export default class Auto {
     return bump;
   }
 
+  /** Make a changelog over a range of commits */
   private async makeChangelog({
     dryRun,
     from,
@@ -855,6 +894,7 @@ export default class Auto {
     await this.hooks.afterAddToChangelog.promise(options);
   }
 
+  /** Make a release over a range of commits */
   private async makeRelease({
     dryRun,
     from,
@@ -934,6 +974,7 @@ export default class Auto {
     return newVersion;
   }
 
+  /** Prefix a version with a "v" if needed */
   private readonly prefixRelease = (release: string) => {
     if (!this.release) {
       throw this.createErrorMessage();
@@ -944,6 +985,7 @@ export default class Auto {
       : `v${release}`;
   };
 
+  /** Create an auto initialization error */
   private createErrorMessage() {
     return new Error(
       `Auto is not initialized! Make sure the have run Auto.loadConfig`
@@ -1003,9 +1045,10 @@ If a command fails manually run:
     }
   }
 
+  /** Get the repo to interact with */
   private async getRepo(config: IAutoConfig) {
     if (config.owner && config.repo) {
-      return config as IRepository;
+      return config as IRepoOptions & TestingToken;
     }
 
     return this.hooks.getRepository.promise();

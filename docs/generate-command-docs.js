@@ -30,6 +30,7 @@ commands.map(command => {
   }
 });
 
+fs.mkdirSync(path.join(__dirname, './pages/generated'));
 fs.writeFileSync(
   path.join(__dirname, './pages/generated/init.md'),
   initCommands.join('\n')

@@ -14,6 +14,7 @@ export type IVersionLabels = Map<VersionLabel, string[]>;
 
 export default SEMVER;
 
+/** Given two labels determine the next SEMVER bump. */
 export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
   if (left === SEMVER.major || right === SEMVER.major) {
     return SEMVER.major;
@@ -27,10 +28,17 @@ export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
 }
 
 interface ISemVerOptions {
+  /** Only publish changes when "release" label is present */
   onlyPublishWithReleaseLabel?: boolean;
+  /** Labels to treat as "skip-release" labels */
   skipReleaseLabels?: string[];
 }
 
+/**
+ * Determine the version bump from the labels on merged PRs.
+ * Respects skip-release labels and the "onlyPublishWithReleaseLabel"
+ * strategy.
+ */
 export function calculateSemVerBump(
   labels: string[][],
   labelMap: IVersionLabels,

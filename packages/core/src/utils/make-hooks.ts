@@ -11,6 +11,7 @@ import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
 import { IReleaseHooks } from '../release';
 
+/** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   modifyConfig: new SyncWaterfallHook(['config']),
@@ -32,17 +33,20 @@ export const makeHooks = (): IAutoHooks => ({
   canary: new AsyncSeriesBailHook(['canaryVersion', 'postFix'])
 });
 
+/** Make the hooks for "Release" */
 export const makeReleaseHooks = (): IReleaseHooks => ({
   onCreateChangelog: new SyncHook(['changelog', 'version']),
   createChangelogTitle: new AsyncSeriesBailHook([]),
   onCreateLogParse: new SyncHook(['logParse'])
 });
 
+/** Make the hooks for "LogParse" */
 export const makeLogParseHooks = (): ILogParseHooks => ({
   parseCommit: new AsyncSeriesWaterfallHook(['commit']),
   omitCommit: new AsyncSeriesBailHook(['commit'])
 });
 
+/** Make the hooks for "Changelog" */
 export const makeChangelogHooks = (): IChangelogHooks => ({
   addToBody: new AsyncSeriesWaterfallHook(['notes', 'commits']),
   renderChangelogLine: new AsyncSeriesWaterfallHook(['lineData']),

@@ -9,18 +9,24 @@ const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 
 interface IUploadAssetsPluginOptions {
+  /** Paths to assets to uploade */
   assets: string[];
 }
 
+/** Attach extra assets to a GitHub Release */
 export default class UploadAssetsPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Upload Assets';
 
+  /** The options of the plugin */
   readonly options: IUploadAssetsPluginOptions;
 
+  /** Initialize the plugin with it's options */
   constructor(options: IUploadAssetsPluginOptions | string[]) {
     this.options = Array.isArray(options) ? { assets: options } : options;
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
       auto.logger.log.info(dedent`

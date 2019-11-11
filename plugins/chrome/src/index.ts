@@ -7,52 +7,62 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 interface IChromeWebStoreConfig {
+  /** The id of the chrome extension */
   id?: string;
+  /** The path to the manifest of the chrome extension */
   manifest?: string;
+  /** A path to the packaged extension */
   build: string;
 }
 
+/** Get the chrome plugin manifest. */
 async function getManifest(path: string) {
   return JSON.parse(await readFile(path, 'utf-8'));
 }
 
+/** This plugin allows you to automate the publishing of chrome extensions */
 export default class ChromeWebStorePlugin implements IPlugin {
+  /** The name of the plugin */
   readonly name = 'Chrome Web Store';
 
-  private readonly id: string;
-  private readonly manifest: string;
-  private readonly build: string;
+  /** The options of the plugin */
+  private readonly options: Required<IChromeWebStoreConfig>;
 
+  /** Initialize the plugin with it's options */
   constructor(config: IChromeWebStoreConfig) {
-    this.id = config.id || process.env.EXTENSION_ID!;
-    this.manifest = config.manifest || 'manifest.json';
-    this.build = config.build || process.env.EXTENSION_BUILD || 'extension.zip';
+    this.options = {
+      id: config.id || process.env.EXTENSION_ID!,
+      manifest: config.manifest || 'manifest.json',
+      build: config.build || process.env.EXTENSION_BUILD || 'extension.zip'
+    };
   }
 
+  /** Report a warning to the log */
   reportWarning(auto: Auto, message: string) {
     auto.logger.log.warn(`${this.name}: ${message}`);
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.beforeRun.tap(this.name, () => {
-      if (!this.id) {
+      if (!this.options.id) {
         this.reportWarning(
           auto,
           'EXTENSION_ID environment variable must be set or "id" in autorc'
         );
       }
 
-      if (!fs.existsSync(this.manifest)) {
+      if (!fs.existsSync(this.options.manifest)) {
         this.reportWarning(
           auto,
-          `"${this.manifest}" must exist to publish. Or provide a custom path in you autorc`
+          `"${this.options.manifest}" must exist to publish. Or provide a custom path in you autorc`
         );
       }
 
-      if (!fs.existsSync(this.build)) {
+      if (!fs.existsSync(this.options.build)) {
         this.reportWarning(
           auto,
-          `Path to either a zip file, or a directory to be zipped at ${this.build}`
+          `Path to either a zip file, or a directory to be zipped at ${this.options.build}`
         );
       }
 
@@ -67,9 +77,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
         process.env.CLIENT_ID &&
         process.env.CLIENT_SECRET &&
         process.env.REFRESH_TOKEN &&
-        fs.existsSync(this.manifest) &&
-        this.id &&
-        fs.existsSync(this.build)
+        fs.existsSync(this.options.manifest) &&
+        this.options.id &&
+        fs.existsSync(this.options.build)
       ) {
         return;
       }
@@ -84,7 +94,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         `${this.name}: Getting author information from package.json`
       );
 
-      const manifest = await getManifest(this.manifest);
+      const manifest = await getManifest(this.options.manifest);
 
       if (manifest.author) {
         const { author } = manifest;
@@ -102,7 +112,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
-      const manifest = await getManifest(this.manifest);
+      const manifest = await getManifest(this.options.manifest);
       const version = prefixRelease(manifest.version);
 
       auto.logger.verbose.info(
@@ -121,12 +131,15 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
     auto.hooks.version.tapPromise(this.name, async version => {
       // increment version
-      const manifest = await getManifest(this.manifest);
+      const manifest = await getManifest(this.options.manifest);
       manifest.version = inc(manifest.version, version as ReleaseType);
-      await writeFile(this.manifest, JSON.stringify(manifest, undefined, 2));
+      await writeFile(
+        this.options.manifest,
+        JSON.stringify(manifest, undefined, 2)
+      );
 
       // commit new version
-      await execPromise('git', ['add', this.manifest]);
+      await execPromise('git', ['add', this.options.manifest]);
       await execPromise('git', [
         'commit',
         '-m',
@@ -142,9 +155,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
       await execPromise('webstore', [
         'upload',
         '--extension-id',
-        this.id,
+        this.options.id,
         '--source',
-        this.build,
+        this.options.build,
         '--auto-publish'
       ]);
 

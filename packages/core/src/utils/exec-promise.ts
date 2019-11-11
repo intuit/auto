@@ -5,7 +5,7 @@ import { spawn } from 'child_process';
  * returning the stdout as a string if the command succeeds
  * and throwing if it does not.
  *
- * @param cmd the command as a string to pass in
+ * @param cmd - the command as a string to pass in
  */
 export default async function execPromise(
   cmd: string,

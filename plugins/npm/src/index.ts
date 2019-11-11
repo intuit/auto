@@ -14,16 +14,20 @@ import { loadPackageJson, readFile } from './utils';
 
 const { isCi } = envCi();
 
-function isMonorepo() {
-  return fs.existsSync('lerna.json');
-}
+/** Check if the project is a monorepo */
+const isMonorepo = () => fs.existsSync('lerna.json');
 
+/** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
   try {
     return await execPromise('npm', ['view', name, 'version']);
   } catch (error) {}
 }
 
+/**
+ * Determine the greatest version between last published version of a
+ * package and the version in the package.json.
+ */
 export async function greaterRelease(
   prefixRelease: (release: string) => string,
   name: string,
@@ -43,11 +47,15 @@ export async function greaterRelease(
 }
 
 interface IMonorepoPackage {
+  /** Path to the monorepo package */
   path: string;
+  /** Name to the monorepo package */
   name: string;
+  /** Version to the monorepo package */
   version: string;
 }
 
+/** Check if one path is within a parent path */
 const inFolder = (parent: string, child: string) => {
   const relative = path.relative(parent, child);
 
@@ -57,15 +65,27 @@ const inFolder = (parent: string, child: string) => {
 };
 
 interface ChangedPackagesArgs {
+  /** Commit hash to find changes for */
   sha: string;
+  /** All of the pacakges in the monorepo */
   packages: IMonorepoPackage[];
+  /** The lerna.json for the monorepo */
   lernaJson: {
+    /** The version of the monorepo */
     version?: string;
   };
+  /** An "auto" logger to use for loggin */
   logger: ILogger;
+  /** The semver bump being applied */
   version?: SEMVER;
 }
 
+/**
+ * Determine what packages in a monorepo have git changes.
+ * We are specifically not using `lerna changed` here because
+ * we only care about the package that changed, not what other
+ * packages that might effect.
+ */
 export async function changedPackages({
   sha,
   packages,
@@ -108,6 +128,7 @@ export async function changedPackages({
   return [...changed];
 }
 
+/** Get the package with the greatest version in a monorepo */
 export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
 
@@ -129,6 +150,11 @@ export function getMonorepoPackage() {
   );
 }
 
+/**
+ * Increment the version number of a package based the bigger
+ * release between the last published version and the version
+ * in the package.json.
+ */
 async function bumpLatest(
   { version: localVersion, name }: IPackageJSON,
   version: SEMVER
@@ -143,13 +169,21 @@ async function bumpLatest(
 const verbose = ['--loglevel', 'silly'];
 
 interface INpmConfig {
+  /** Whether to create sub-package changelogs */
   subPackageChangelogs?: boolean;
+  /** Whether to set the npm token on CI */
   setRcToken?: boolean;
+  /** Whether to force publish all the packages in a monorepo */
   forcePublish?: boolean;
 }
 
+/** Parse the lerna.json file. */
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
 
+/**
+ * Check if `git status` is clean. We try to ensure that no
+ * changes haven't been staged to match the behavior of NPM.
+ */
 const checkClean = async (auto: Auto) => {
   const status = await execPromise('git', ['status', '--porcelain']);
 
@@ -163,15 +197,22 @@ const checkClean = async (auto: Auto) => {
   );
 };
 
+/** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'NPM';
 
+  /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
 
+  /** Whether to create sub-package changelogs */
   private readonly subPackageChangelogs: boolean;
+  /** Whether to set the npm token in CI */
   private readonly setRcToken: boolean;
+  /** Whether to always publish all packages in a monorepo */
   private readonly forcePublish: boolean;
 
+  /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
     this.renderMonorepoChangelog = true;
     this.subPackageChangelogs = config.subPackageChangelogs || true;
@@ -181,6 +222,7 @@ export default class NPMPlugin implements IPlugin {
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
   }
 
+  /** Get all of the packages in the lerna monorepo */
   @memoize()
   async getLernaPackages() {
     return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
@@ -191,6 +233,7 @@ export default class NPMPlugin implements IPlugin {
     );
   }
 
+  /** Get all of the packages+version in the lerna "independent" monorepo */
   @memoize()
   async getIndependentPackageList() {
     return this.getLernaPackages().then(packages =>
@@ -200,6 +243,7 @@ export default class NPMPlugin implements IPlugin {
     );
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     const isVerbose =
       auto.logger.logLevel === 'verbose' ||

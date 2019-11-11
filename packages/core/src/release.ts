@@ -9,7 +9,11 @@ import { promisify } from 'util';
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import { Memoize as memoize } from 'typescript-memoize';
-import { ICreateLabelsOptions } from './auto-args';
+import {
+  ICreateLabelsOptions,
+  IAuthorOptions,
+  GlobalOptions
+} from './auto-args';
 import Changelog from './changelog';
 import Git from './git';
 import LogParse, { ICommitAuthor, IExtendedCommit } from './log-parse';
@@ -35,33 +39,43 @@ export const defaultLabels: VersionLabel[] = [
   'prerelease'
 ];
 
+/** Determine if a label is a label used for versioning */
 export const isVersionLabel = (label: string): label is VersionLabel =>
   defaultLabels.includes(label as VersionLabel);
 
-export interface IAutoConfig {
-  githubApi?: string;
-  baseBranch: string;
-  githubGraphqlApi?: string;
-  name?: string;
-  email?: string;
-  owner?: string;
-  repo?: string;
-  skipReleaseLabels: string[];
-  onlyPublishWithReleaseLabel?: boolean;
-  noVersionPrefix?: boolean;
-  plugins?: (string | [string, number | boolean | string | object])[];
-  labels: ILabelDefinitionMap;
-}
+export type IAutoConfig = IAuthorOptions &
+  GlobalOptions & {
+    /** The branch that is used as the base. defaults to master */
+    baseBranch: string;
+    /** Labels to count as "skip-release" */
+    skipReleaseLabels: string[];
+    /** Instead of publishing every PR only publish when "release" label is present */
+    onlyPublishWithReleaseLabel?: boolean;
+    /** Whether to prefix the version with a "v" */
+    noVersionPrefix?: boolean;
+    /** Plugins to initialize "auto" with */
+    plugins?: (string | [string, number | boolean | string | object])[];
+    /** The labels configured by the user */
+    labels: ILabelDefinitionMap;
+  };
 
 interface ISearchEdge {
+  /** Graphql search node */
   node: {
+    /** PR number */
     number: number;
+    /** State of the PR */
     state: 'MERGED' | 'CLOSED' | 'OPEN';
+    /** Body of the PR */
     body: string;
+    /** Labels attached to the PR */
     labels: {
+      /** Edges of the Query */
       edges: [
         {
+          /** Graphql search node */
           node: {
+            /** Name of the label */
             name: string;
           };
         }
@@ -71,13 +85,18 @@ interface ISearchEdge {
 }
 
 interface ISearchResult {
+  /** Results in the search */
   edges: ISearchEdge[];
 }
 
 export interface ILabelDefinition {
+  /** The label text */
   name: string;
+  /** A title to put in the changelog for the label */
   title?: string;
+  /** The color of the label */
   color?: string;
+  /** The description of the label */
   description?: string;
 }
 
@@ -142,6 +161,7 @@ export const defaultLabelDefinition: ILabelDefinitionMap = {
   ]
 };
 
+/** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabelDefinition) =>
   Object.entries(labels).reduce(
     (semVer, [label, labelDef]) => {
@@ -150,7 +170,6 @@ export const getVersionMap = (labels = defaultLabelDefinition) =>
       }
 
       return semVer;
-      // tslint:disable-next-line align
     },
     new Map() as IVersionLabels
   );
@@ -159,11 +178,18 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 export interface IReleaseHooks {
+  /** This is where you hook into the changelog's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
   onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
+  /** Control the titles in the `CHANGELOG.md` */
   createChangelogTitle: AsyncSeriesBailHook<[], string | void>;
+  /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
   onCreateLogParse: SyncHook<[LogParse]>;
 }
 
+/**
+ * Generate a GitHub graphql query to find all the commits related
+ * to a PR.
+ */
 export function buildSearchQuery(
   owner: string,
   project: string,
@@ -212,6 +238,7 @@ export function buildSearchQuery(
   }`;
 }
 
+/** Use the graphql query result to fill in more information about a commit */
 function processQueryResult(
   key: string,
   result: ISearchResult,
@@ -252,13 +279,19 @@ function processQueryResult(
  * A class for interacting with the git remote
  */
 export default class Release {
-  readonly options: IAutoConfig;
+  /** Plugin entry points */
   readonly hooks: IReleaseHooks;
+  /** Options Release was initialized with */
+  readonly options: IAutoConfig;
 
+  /** A class that handles interacting with git and GitHub */
   private readonly git: Git;
+  /** A logger that uses log levels */
   private readonly logger: ILogger;
+  /** The version bump being used during "shipit" */
   private readonly versionLabels: IVersionLabels;
 
+  /** Initialize the release manager */
   constructor(
     git: Git,
     options: IAutoConfig = {
@@ -275,6 +308,7 @@ export default class Release {
     this.git = git;
   }
 
+  /** Make the class that will generate changelogs for the project */
   @memoize()
   async makeChangelog(version?: SEMVER) {
     const project = await this.git.getProject();
@@ -295,8 +329,8 @@ export default class Release {
   /**
    * Generate a changelog from a range of commits.
    *
-   * @param from sha or tag to start changelog from
-   * @param to sha or tag to end changelog at (defaults to HEAD)
+   * @param from - sha or tag to start changelog from
+   * @param to - sha or tag to end changelog at (defaults to HEAD)
    */
   async generateReleaseNotes(
     from: string,
@@ -309,6 +343,7 @@ export default class Release {
     return changelog.generateReleaseNotes(commits);
   }
 
+  /** Get all the commits that will be included in a release */
   async getCommitsInRelease(from: string, to = 'HEAD') {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
@@ -383,6 +418,7 @@ export default class Release {
     );
   }
 
+  /** Update a changelog with a new set of release notes */
   async updateChangelogFile(
     title: string,
     releaseNotes: string,
@@ -411,10 +447,9 @@ export default class Release {
   /**
    * Prepend a set of release notes to the changelog.md
    *
-   * @param releaseNotes Release notes to prepend to the changelog
-   * @param lastRelease Last release version of the code. Could be the first commit SHA
-   * @param currentVersion Current version of the code
-   * @param message Message to commit the changelog with
+   * @param releaseNotes - Release notes to prepend to the changelog
+   * @param lastRelease - Last release version of the code. Could be the first commit SHA
+   * @param currentVersion - Current version of the code
    */
   async addToChangelog(
     releaseNotes: string,
@@ -452,8 +487,8 @@ export default class Release {
   /**
    * Get a range of commits. The commits will have PR numbers and labels attached
    *
-   * @param from Tag or SHA to start at
-   * @param to Tag or SHA to end at (defaults to HEAD)
+   * @param from - Tag or SHA to start at
+   * @param to - Tag or SHA to end at (defaults to HEAD)
    */
   async getCommits(from: string, to = 'HEAD'): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
@@ -470,6 +505,7 @@ export default class Release {
     return commits;
   }
 
+  /** Go through the configured labels and either add them to the project or update them */
   async addLabelsToProject(
     labels: Partial<ILabelDefinitionMap>,
     options: ICreateLabelsOptions = {}
@@ -549,8 +585,8 @@ export default class Release {
   /**
    * Calculate the SEMVER bump over a range of commits using the PR labels
    *
-   * @param from Tag or SHA to start at
-   * @param to Tag or SHA to end at (defaults to HEAD)
+   * @param from - Tag or SHA to start at
+   * @param to - Tag or SHA to end at (defaults to HEAD)
    */
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
@@ -571,11 +607,13 @@ export default class Release {
     return result;
   }
 
+  /** Given a tag get the next incremented version */
   async calcNextVersion(lastTag: string) {
     const bump = await this.getSemverBump(lastTag);
     return inc(lastTag, bump as ReleaseType);
   }
 
+  /** Create the class that will parse the log for PR info */
   @memoize()
   private async createLogParse() {
     const logParse = new LogParse();
@@ -596,9 +634,13 @@ export default class Release {
     return logParse;
   }
 
+  /** Get a the PRs that have been merged since the last GitHub release. */
   @memoize()
   private async getPRsSinceLastRelease() {
-    let lastRelease: { published_at: string };
+    let lastRelease: {
+      /** Date the last release was published */
+      published_at: string;
+    };
 
     try {
       lastRelease = await this.git.getLatestReleaseInfo();
@@ -623,8 +665,11 @@ export default class Release {
     }
 
     const data = await Promise.all(
-      prsSinceLastRelease.items.map(async (pr: { number: number }) =>
-        this.git.getPullRequest(Number(pr.number))
+      prsSinceLastRelease.items.map(
+        async (pr: {
+          /** The issue number of the pull request */
+          number: number;
+        }) => this.git.getPullRequest(Number(pr.number))
       )
     );
 
@@ -634,7 +679,7 @@ export default class Release {
   /**
    * Add the PR info (labels and body) to the commit
    *
-   * @param commits Commits to modify
+   * @param commit - Commit to modify
    */
   private async addPrInfoToCommit(commit: IExtendedCommit) {
     const modifiedCommit = { ...commit };
@@ -672,8 +717,6 @@ export default class Release {
    * Commits from rebased PRs do not have messages that tie them to a PR
    * Instead we have to find all PRs since the last release and try to match
    * their merge commit SHAs.
-   *
-   * @param commits Commits to modify
    */
   private getPRForRebasedCommits(
     commit: IExtendedCommit,
@@ -694,10 +737,14 @@ export default class Release {
     return commit;
   }
 
+  /** Parse the commit for information about the author and any other author that might have helped. */
   private async attachAuthor(commit: IExtendedCommit) {
     const modifiedCommit = { ...commit };
     let resolvedAuthors: (
-      | (ICommitAuthor & { login?: string })
+      | (ICommitAuthor & {
+          /** The GitHub user name of the git committer */
+          login?: string;
+        })
       | Partial<GHub.UsersGetByUsernameResponse>)[] = [];
 
     // If there is a pull request we will attempt to get the authors

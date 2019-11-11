@@ -483,12 +483,14 @@ export const commands: Command[] = [
   }
 ];
 
+/** Print the current version of "auto" */
 function printVersion() {
   const packagePath = path.join(__dirname, '../package.json');
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
   console.log(`v${packageJson.version}`);
 }
 
+/** Parse the CLI args and return command + options provided. */
 export default function parseArgs(testArgs?: string[]) {
   const mainOptions = app(
     {

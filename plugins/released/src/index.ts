@@ -3,8 +3,11 @@ import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 import merge from 'deepmerge';
 
 interface IReleasedLabelPluginOptions {
+  /** Message to use when posting on issues and pull requests */
   message: string;
+  /** The label to add to issues and pull requests */
   label: string;
+  /** Whether to lock the issue once the pull request has been released */
   lockIssues: boolean;
 }
 
@@ -17,17 +20,24 @@ const defaultOptions = {
 };
 
 const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
+
+/** Determine if string is a canary version */
 const isCanary = (version: string) => version.match('canary');
 
+/** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Released Label';
 
+  /** The options of the plugin */
   readonly options: IReleasedLabelPluginOptions;
 
+  /** Initialize the plugin with it's options */
   constructor(options: Partial<IReleasedLabelPluginOptions> = {}) {
     this.options = merge(defaultOptions, options);
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.modifyConfig.tap(this.name, config => {
       config.labels.released = config.labels.released || {
@@ -72,6 +82,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     );
   }
 
+  /** Add the release label + other stuff to a commit */
   private async addReleased(
     auto: Auto,
     commit: IExtendedCommit,
@@ -114,6 +125,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     );
   }
 
+  /** Add the templated comment to the pr and attach the "released" label */
   private async addCommentAndLabel(
     auto: Auto,
     newVersion: string,
@@ -137,6 +149,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     }
   }
 
+  /** Create a comment that fits the context (pr of issue) */
   private createReleasedComment(isIssue: boolean, version: string) {
     return this.options.message
       .replace(new RegExp(TYPE, 'g'), isIssue ? 'Issue' : 'PR')

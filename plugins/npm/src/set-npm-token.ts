@@ -9,6 +9,7 @@ import { loadPackageJson, readFile, writeFile } from './utils';
 
 const { isCi } = envCi();
 
+/** Set the .npmrc only when in a continuos integration environment */
 export default async function setTokenOnCI(logger: ILogger) {
   if (!isCi) {
     return;

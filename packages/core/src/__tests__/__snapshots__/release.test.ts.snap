@@ -174,7 +174,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -197,7 +196,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -220,7 +218,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 124,
     },
@@ -241,7 +238,6 @@ Array [
       "skip-release",
       "minor",
     ],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -264,7 +260,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 124,
     },
@@ -285,7 +280,6 @@ Array [
       "skip-release",
       "minor",
     ],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -310,7 +304,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": undefined,
     "subject": "First",
   },
@@ -327,7 +320,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -345,7 +337,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": Object {
       "number": 123,
     },
@@ -365,7 +356,6 @@ Array [
     "files": Array [],
     "hash": "foo",
     "labels": Array [],
-    "packages": undefined,
     "pullRequest": undefined,
     "subject": "Third",
   },

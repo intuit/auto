@@ -1,21 +1,16 @@
-import fs from 'fs';
 import parseGitHubUrl from 'parse-github-url';
-import { promisify } from 'util';
+import { loadPackageJson } from './utils';
 
 export interface IRepoConfig {
+  /** Owner of the repo (or GitHub user) */
   owner: string;
+  /** The project */
   repo: string;
 }
 
-const readFile = promisify(fs.readFile);
-
-const getPackageConfig = async (): Promise<IPackageJSON> => {
-  const pkgConfig = await readFile('./package.json', 'utf-8');
-  return JSON.parse(pkgConfig);
-};
-
+/** Try to the the owner/repo from the package.json */
 export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
-  const { repository } = await getPackageConfig();
+  const { repository } = await loadPackageJson();
 
   if (!repository) {
     throw new Error('Cannot read repo info from package.json');

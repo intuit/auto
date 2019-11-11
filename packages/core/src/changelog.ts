@@ -8,10 +8,15 @@ import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 
 export interface IGenerateReleaseNotesOptions {
+  /** Github repo owner (user) */
   owner: string;
+  /** GitHub project to operate on */
   repo: string;
+  /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl: string;
+  /** The labels configured by the user */
   labels: ILabelDefinitionMap;
+  /** The branch that is used as the base. defaults to master */
   baseBranch: string;
 }
 
@@ -20,36 +25,57 @@ interface ICommitSplit {
 }
 
 export interface IChangelogHooks {
+  /** Change how the changelog renders lines. */
   renderChangelogLine: AsyncSeriesWaterfallHook<[[IExtendedCommit, string]]>;
+  /** Change how the changelog renders titles */
   renderChangelogTitle: AsyncSeriesBailHook<
     [string, { [label: string]: string }],
     string | void
   >;
+  /** Change how the changelog renders authors. This is both the author on each commit note and the user in the author section (the part between parentheses). This is generally a link to some profile. */
   renderChangelogAuthor: AsyncSeriesBailHook<
     [ICommitAuthor, IExtendedCommit, IGenerateReleaseNotesOptions],
     string | void
   >;
+  /** Change how the changelog renders authors in the authors section. The hook provides the author object and the user created with `renderChangelogAuthor`. Here is where you might display extra info about the author, such as their full name. */
   renderChangelogAuthorLine: AsyncSeriesBailHook<
     [ICommitAuthor, string],
     string | void
   >;
+  /**
+   * Add extra content to your changelogs. This hook provide
+   * all the current "extra" notes and all of the commits for
+   * the changelog.
+   */
   addToBody: AsyncSeriesWaterfallHook<[string[], IExtendedCommit[]]>;
+  /** Control what commits effect the additional release notes section. */
   omitReleaseNotes: AsyncSeriesBailHook<[IExtendedCommit], boolean | void>;
 }
 
+/** Determine how deep the markdown headers are in a string */
 const getHeaderDepth = (line: string) =>
   line.split('').reduce((count, char) => (char === '#' ? count + 1 : count), 0);
 
+/** Filter for only commits that have a specific label */
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
   commits.filter(commit => commit.labels.includes(label));
 
+/**
+ * Manages creating the "Release Notes" that are included in
+ * both the CHANGELOG.md and GitHub releases.
+ */
 export default class Changelog {
+  /** Plugin entry points */
   readonly hooks: IChangelogHooks;
+  /** The options the changelog was initialized with */
   readonly options: IGenerateReleaseNotesOptions;
 
+  /** The authors in the current changelog */
   private authors?: [IExtendedCommit, ICommitAuthor][];
+  /** A logger that uses log levels */
   private readonly logger: ILogger;
 
+  /** Initialize the changelog generator with default hooks and labels */
   constructor(logger: ILogger, options: IGenerateReleaseNotesOptions) {
     this.logger = logger;
     this.options = options;
@@ -69,6 +95,7 @@ export default class Changelog {
       : [pushToMasterLabel];
   }
 
+  /** Load the default configuration */
   loadDefaultHooks() {
     this.hooks.renderChangelogAuthor.tap('Default', (author, commit) =>
       this.createUserLink(author, commit)
@@ -102,6 +129,7 @@ export default class Changelog {
     });
   }
 
+  /** Generate the release notes for a group of commits */
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
     if (commits.length === 0) {
       return '';
@@ -133,6 +161,7 @@ export default class Changelog {
     return result;
   }
 
+  /** Create a link to a user for use in the changelog */
   createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
 
@@ -145,9 +174,7 @@ export default class Changelog {
       : author.email || commit.authorEmail;
   }
 
-  /**
-   * Split commits into changelogTitle sections.
-   */
+  /** Split commits into changelogTitle sections. */
   private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
     const order = ['major', 'minor', 'patch'];
@@ -190,6 +217,7 @@ export default class Changelog {
     );
   }
 
+  /** Get the default label for a label key */
   private getFirstLabelNameFromLabelKey(
     labels: ILabelDefinitionMap,
     labelKey: string
@@ -200,6 +228,7 @@ export default class Changelog {
     );
   }
 
+  /** Create a list of users */
   private async createUserLinkList(commit: IExtendedCommit) {
     const result = new Set<string>();
 
@@ -233,6 +262,7 @@ export default class Changelog {
     return [...result].join(' ');
   }
 
+  /** Transform a commit into a line in the changelog */
   private async generateCommitNote(commit: IExtendedCommit) {
     const subject = commit.subject ? commit.subject.trim() : '';
     let pr = '';
@@ -250,6 +280,7 @@ export default class Changelog {
     return `- ${subject} ${pr}${user ? ` (${user})` : ''}`;
   }
 
+  /** Get all the authors in the provided commits */
   private getAllAuthors(split: ICommitSplit) {
     const commits = Object.values(split).reduce(
       (
@@ -273,6 +304,7 @@ export default class Changelog {
       .sort(a => ('id' in a[1] ? 0 : 1));
   }
 
+  /** Create a section in the changelog to showcase contributing authors */
   private async createAuthorSection(sections: string[]) {
     const authors = new Set<string>();
     const authorsWithFullData = this.authors!.map(
@@ -306,10 +338,11 @@ export default class Changelog {
     }
 
     let authorSection = `#### Authors: ${authors.size}\n\n`;
-    authorSection += [...authors].join('\n');
+    authorSection += [...authors].sort((a, b) => a.localeCompare(b)).join('\n');
     sections.push(authorSection);
   }
 
+  /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
       (titles, [, labels]) => {
@@ -364,6 +397,7 @@ export default class Changelog {
       .map(section => sections.push(section));
   }
 
+  /** Gather extra release notes to display at the top of the changelog */
   private async createReleaseNotesSection(
     commits: IExtendedCommit[],
     sections: string[]

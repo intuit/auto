@@ -1,5 +1,3 @@
-// tslint:disable early-exit
-
 import { Auto, execPromise, IPlugin } from '@auto-it/core';
 import parseGitHubUrl from 'parse-github-url';
 import path from 'path';
@@ -8,11 +6,15 @@ import { promisify } from 'util';
 import { parse } from 'pom-parser';
 import { inc, ReleaseType } from 'semver';
 
+/** Ensure a value is an array */
 const arrayify = <T>(arg: T | T[]): T[] => (Array.isArray(arg) ? arg : [arg]);
 const parsePom = promisify(parse);
+
+/** Get the maven pom.xml for a project */
 const getPom = async () =>
   parsePom({ filePath: path.join(process.cwd(), 'pom.xml') });
 
+/** Get the previous version from the pom.xml */
 async function getPreviousVersion(auto: Auto): Promise<string> {
   const pom = await getPom();
   const previousVersion = pom.pomObject && pom.pomObject.project.version;
@@ -29,9 +31,12 @@ async function getPreviousVersion(auto: Auto): Promise<string> {
   return previousVersion.replace('-SNAPSHOT', '');
 }
 
+/** Deploy project to maven */
 export default class MavenPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'maven';
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.omitCommit.tap(this.name, commit => {
