@@ -127,3 +127,7 @@ workflows:
       - publishDocs:
           requires:
             - release
+          filters:
+            branches:
+              only:
+                - master
