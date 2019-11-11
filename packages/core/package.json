@@ -69,7 +69,7 @@
     "@types/jest": "~24.0.9",
     "@types/lodash.chunk": "^4.2.6",
     "@types/node": "^12.0.0",
-    "@types/node-fetch": "2.5.2",
+    "@types/node-fetch": "2.5.3",
     "@types/semver": "^6.0.0",
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
