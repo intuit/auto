@@ -201,9 +201,9 @@ exports[`generateReleaseNotes should match authors correctly 1`] = `
 
 #### Authors: 3
 
-- [@rdubzz](https://github.custom.com/rdubzz)
+- andrew@email.com
 - kendall@email.com
-- andrew@email.com"
+- [@rdubzz](https://github.custom.com/rdubzz)"
 `;
 
 exports[`generateReleaseNotes should merge sections with same changelog title 1`] = `
