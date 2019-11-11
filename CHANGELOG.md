@@ -1,3 +1,22 @@
+# v7.13.2 (Sun Nov 10 2019)
+
+#### 📝  Documentation
+
+- clarify plugin docs [#664](https://github.com/intuit/auto/pull/664) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Add JSDoc comment to most everything [#665](https://github.com/intuit/auto/pull/665) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️  Pushed to master
+
+- skip ci when updating gh-pages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- set git user  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.13.1 (Thu Nov 07 2019)
 
 #### 🐛  Bug Fix
