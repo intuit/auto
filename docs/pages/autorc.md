@@ -5,7 +5,7 @@ All options for the CLI tools can also be configured via the `.autorc`. As CLI o
 We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config, so that means you can define this file a variety of ways. Our Cosmiconfig setup is a little custom and will start at the root of your project and start to search up the directory tree for the following:
 
 - a JSON or YAML, extension-less "rc file"
-- an "rc file" with the extensions .json, .yaml, or .yml
+- an "rc file" with the extensions `.json`, `.yaml`, or `.yml`
 - a package.json property
 
 We do not support writing configuration files in JavaScript.
