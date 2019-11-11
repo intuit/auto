@@ -116,7 +116,6 @@ describe('loadExtendConfig', () => {
       json: mockFetchJson
     });
 
-    // tslint:disable-next-line:no-http-string
     await config.loadExtendConfig('http://www.test.com/config.json');
     expect(fetchSpy).toHaveBeenCalled();
     expect(mockFetchJson).toHaveBeenCalled();
@@ -127,7 +126,6 @@ describe('loadExtendConfig', () => {
 
     fetchSpy.mockRejectedValueOnce(new Error());
     await expect(
-      // tslint:disable-next-line:no-http-string
       config.loadExtendConfig('http://www.test.com/config.json')
     ).rejects.toBeInstanceOf(Error);
   });

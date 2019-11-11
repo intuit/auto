@@ -24,15 +24,23 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
 export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, 'owner' | 'repo'>;
 
 export interface IGitOptions {
+  /** Github repo owner (user) */
   owner: string;
+  /** GitHub project to operate on */
   repo: string;
+  /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl?: string;
+  /** The URL to the GitHub graphql API (public or enterprise) the project is using */
   graphqlBaseUrl?: string;
+  /** A token to auth to GitHub with */
   token?: string;
+  /** An optional proxy agent to route requests through */
   agent?: HttpsProxyAgent;
 }
 
+/** An error originating from the GitHub */
 class GitAPIError extends Error {
+  /** Extend the base error */
   constructor(api: string, args: object, origError: Error) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
@@ -42,25 +50,45 @@ class GitAPIError extends Error {
   }
 }
 
+/** Make a comment to build automation in PRs off of. */
 const makeIdentifier = (type: string, context: string) =>
   `<!-- GITHUB_RELEASE ${type}: ${context} -->`;
 
+/** Make an identifier for `auto comment` */
 const makeCommentIdentifier = (context: string) =>
   makeIdentifier('COMMENT', context);
 
+/** Make an identifier for `auto pr-body` */
 const makePrBodyIdentifier = (context: string) =>
   makeIdentifier('PR BODY', context);
 
-// A class to interact with the local git instance and the git remote.
-// currently it only interfaces with GitHub.
+interface ThrottleOpts {
+  /** The request object */
+  request: { /** What retry we are on */ retryCount: number };
+  /** API method that was throttled */
+  method: string;
+  /** URL that was throttled */
+  url: string;
+}
+
+/**
+ * A class to interact with the local git instance and the git remote.
+ * currently it only interfaces with GitHub.
+ */
 export default class Git {
+  /** An octokit instance to use to interact with GitHub */
   readonly github: Octokit;
+  /** Options the git client was initialized with */
   readonly options: IGitOptions;
 
+  /** The GitHub api to communicate with through octokit */
   private readonly baseUrl: string;
+  /** The GitHub graphql api to communicate with through octokit */
   private readonly graphqlBaseUrl: string;
+  /** A logger that uses log levels */
   private readonly logger: ILogger;
 
+  /** Initialize the git interface and auth with GitHub */
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
     this.logger = logger;
     this.options = options;
@@ -76,10 +104,7 @@ export default class Git {
       auth: this.options.token,
       previews: ['symmetra-preview'],
       throttle: {
-        onRateLimit: (
-          retryAfter: number,
-          opts: { request: { retryCount: number }; method: string; url: string }
-        ) => {
+        onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
@@ -89,10 +114,7 @@ export default class Git {
             return true;
           }
         },
-        onAbuseLimit: (
-          retryAfter: number,
-          opts: { request: { retryCount: number }; method: string; url: string }
-        ) => {
+        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
           // does not retry, only logs an error
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${opts.url}`
@@ -109,6 +131,7 @@ export default class Git {
     });
   }
 
+  /** Get the "Latest Release" from GitHub */
   @memoize()
   async getLatestReleaseInfo() {
     const latestRelease = await this.github.repos.getLatestRelease({
@@ -119,6 +142,7 @@ export default class Git {
     return latestRelease.data;
   }
 
+  /** Get the "Latest Release" or the first commit SHA as a fallback */
   @memoize()
   async getLatestRelease(): Promise<string> {
     try {
@@ -143,6 +167,7 @@ export default class Git {
     }
   }
 
+  /** Get the date a commit sha was created */
   async getCommitDate(sha: string): Promise<string> {
     const date = await execPromise('git', ['show', '-s', '--format=%ci', sha]);
     const [day, time, timezone] = date.split(' ');
@@ -150,14 +175,13 @@ export default class Git {
     return `${day}T${time}${timezone}`;
   }
 
+  /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
     const list = await execPromise('git', ['rev-list', 'HEAD']);
     return list.split('\n').pop() as string;
   }
 
-  /**
-   * Get the SHA of the latest commit
-   */
+  /** Get the SHA of the latest commit */
   async getSha(short?: boolean): Promise<string> {
     const result = await execPromise('git', [
       'rev-parse',
@@ -170,6 +194,7 @@ export default class Git {
     return result;
   }
 
+  /** Get the labels for a PR */
   @memoize()
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
@@ -196,6 +221,7 @@ export default class Git {
     }
   }
 
+  /** Get all the information about a PR or issue */
   @memoize()
   async getPr(prNumber: number) {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
@@ -217,6 +243,7 @@ export default class Git {
     }
   }
 
+  /** Get the labels for a the project */
   async getProjectLabels() {
     this.logger.verbose.info(
       `Getting labels for project: ${this.options.repo}`
@@ -241,6 +268,7 @@ export default class Git {
     }
   }
 
+  /** Get the git log for a range of commits */
   @memoize()
   async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     try {
@@ -279,6 +307,7 @@ export default class Git {
     }
   }
 
+  /** Get the GitHub user for an email. Will not work if they do not have their email set to "public". */
   @memoize()
   async getUserByEmail(email: string) {
     try {
@@ -292,6 +321,7 @@ export default class Git {
     }
   }
 
+  /** Get the GitHub user for a username */
   @memoize()
   async getUserByUsername(username: string) {
     try {
@@ -305,6 +335,7 @@ export default class Git {
     }
   }
 
+  /** Get all the information about a PR or issue */
   @memoize()
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
@@ -325,6 +356,7 @@ export default class Git {
     return result;
   }
 
+  /** Search to GitHub project's issue and pull requests */
   async searchRepo(options: Octokit.SearchIssuesAndPullRequestsParams) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
@@ -339,6 +371,7 @@ export default class Git {
     return result.data;
   }
 
+  /** Run a graphql query on the GitHub project */
   async graphql(query: string) {
     this.logger.verbose.info('Querying Github using GraphQL:\n', query);
 
@@ -353,6 +386,7 @@ export default class Git {
     return data;
   }
 
+  /** Create a status (or checkmark) on a commit */
   async createStatus(prInfo: IPRInfo) {
     const args = {
       ...prInfo,
@@ -370,6 +404,7 @@ export default class Git {
     return result;
   }
 
+  /** Add a label to the project */
   async createLabel(name: string, label: ILabelDefinition) {
     this.logger.verbose.info(`Creating "${name}" label :\n${label.name}`);
 
@@ -390,6 +425,7 @@ export default class Git {
     return result;
   }
 
+  /** Update a label on the project */
   async updateLabel(name: string, label: ILabelDefinition) {
     this.logger.verbose.info(`Updating "${name}" label :\n${label.name}`);
 
@@ -411,6 +447,7 @@ export default class Git {
     return result;
   }
 
+  /** Add a label to and issue or pull request */
   async addLabelToPr(pr: number, label: string) {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
@@ -427,6 +464,7 @@ export default class Git {
     return result;
   }
 
+  /** Lock an issue */
   async lockIssue(issue: number) {
     this.logger.verbose.info(`Locking #${issue} issue...`);
 
@@ -442,6 +480,7 @@ export default class Git {
     return result;
   }
 
+  /** Get information about the GitHub project */
   @memoize()
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
@@ -457,6 +496,7 @@ export default class Git {
     return result;
   }
 
+  /** Get all the pull requests for a project */
   async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
@@ -472,6 +512,7 @@ export default class Git {
     return result;
   }
 
+  /** Get all the commits for a PR */
   @memoize()
   async getCommitsForPR(
     pr: number
@@ -492,6 +533,7 @@ export default class Git {
     return result;
   }
 
+  /** Find a comment that is using the context in a PR */
   async getCommentId(pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
@@ -517,6 +559,7 @@ export default class Git {
     return oldMessage.id;
   }
 
+  /** Delete a comment on an issue or pull request */
   async deleteComment(pr: number, context = 'default') {
     const commentId = await this.getCommentId(pr, context);
 
@@ -533,6 +576,7 @@ export default class Git {
     this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
   }
 
+  /** Create a comment on an issue or pull request */
   async createComment(message: string, pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
@@ -555,6 +599,7 @@ export default class Git {
     return result;
   }
 
+  /** Edit a comment on an issue or pull request */
   async editComment(message: string, pr: number, context = 'default') {
     const commentIdentifier = makeCommentIdentifier(context);
 
@@ -578,6 +623,7 @@ export default class Git {
     return result;
   }
 
+  /** Create a comment on a pull request body */
   async addToPrBody(message: string, pr: number, context = 'default') {
     const id = makePrBodyIdentifier(context);
 
@@ -617,6 +663,7 @@ export default class Git {
     return result;
   }
 
+  /** Create a release for the GitHub projecct */
   async publish(releaseNotes: string, tag: string) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
@@ -633,6 +680,7 @@ export default class Git {
     return result;
   }
 
+  /** Get the latest tag in the git tree */
   async getLatestTagInBranch() {
     return execPromise('git', ['describe', '--tags', '--abbrev=0']);
   }

@@ -57,7 +57,6 @@ describe('Auto', () => {
     });
 
     auto.logger = dummyLog();
-    auto.hooks.getRepository.tap('test', () => ({ token: '1234' }));
     await auto.loadConfig();
 
     const addToChangelog = jest.fn();

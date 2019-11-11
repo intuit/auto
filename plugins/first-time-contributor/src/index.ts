@@ -10,6 +10,7 @@ const JUST_EMAIL = '%cE' as const;
 
 type Format = typeof JUST_NAME | typeof JUST_EMAIL;
 
+/** Get some of the contributors from the git history */
 const getContributors = async (format: Format) => {
   const start = '$(git rev-list HEAD | tail -n 1)';
   const lastRelease = '$(git describe --tags --abbrev=0)';
@@ -19,12 +20,19 @@ const getContributors = async (format: Format) => {
   );
 };
 
+/**
+ * Thank first time contributors for their work right in your release notes.
+ */
 export default class FirstTimeContributorPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'First Time Contributor';
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
       const base = new URL(changelog.options.baseUrl).origin;
+
+      /** Format a string for the contributor */
       const renderContributor = ({ name, username }: ICommitAuthor) => {
         const link = `[@${username}](${urlJoin(base, username || '')})`;
         return `${name}${username ? (name ? ` (${link})` : link) : ''}`;

@@ -6,7 +6,9 @@ import tweetValidation from 'twitter-text';
 import { promisify } from 'util';
 
 interface ITwitterPluginOptions {
+  /** The message template to use to post to Twitter */
   message: string;
+  /** A threshold the semver has to pass to be posted to Twitter */
   threshold: SEMVER;
 }
 
@@ -23,9 +25,11 @@ const defaults: ITwitterPluginOptions = {
 
 const RELEASE_PRECEDENCE: ReleaseType[] = ['patch', 'minor', 'major'];
 
+/** Determine the release with the biggest semver change */
 const isGreaterThan = (a: ReleaseType, b: ReleaseType) =>
   RELEASE_PRECEDENCE.indexOf(a) > RELEASE_PRECEDENCE.indexOf(b);
 
+/** Remove the last line of text from a multiline string */
 const removeLastLine = (text: string) =>
   text
     .split('\n')
@@ -34,14 +38,21 @@ const removeLastLine = (text: string) =>
     .trim();
 
 interface MakeTweetArgs {
+  /** The generated release notes for the release */
   releaseNotes: string;
+  /** The message template to use to post to Twitter */
   message: string;
+  /** The semver bump applied to the version */
   versionBump: ReleaseType;
+  /** The new version to release (already bumped) */
   newVersion: string;
+  /** GitHub project to operate on */
   repo: string;
+  /** A url to link to the release */
   url: string;
 }
 
+/** Construct a tweet that contains the release notes across multiple tweets */
 const makeTweet = ({
   releaseNotes,
   message,
@@ -50,6 +61,7 @@ const makeTweet = ({
   repo,
   url
 }: MakeTweetArgs) => {
+  /** Replace all the variables in the message */
   const build = (notes: string) =>
     message
       .replace('%release', versionBump)
@@ -76,12 +88,18 @@ const makeTweet = ({
   return tweet;
 };
 
+/** Post your release notes to twitter during `auto release` */
 export default class TwitterPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Twitter';
 
+  /** The options of the plugin */
   readonly options: ITwitterPluginOptions;
+
+  /** Send a tweet */
   private readonly tweet: (message: string) => Promise<void>;
 
+  /** Initialize the plugin with it's options */
   constructor(options: Partial<ITwitterPluginOptions> = {}) {
     this.options = { ...defaults, ...options };
 
@@ -106,6 +124,7 @@ export default class TwitterPlugin implements IPlugin {
     );
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(
       this.name,

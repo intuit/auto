@@ -14,7 +14,7 @@
     "prettier/@typescript-eslint"
   ],
 
-  "plugins": ["prettier", "jest", "@typescript-eslint"],
+  "plugins": ["prettier", "jest", "@typescript-eslint", "eslint-plugin-jsdoc"],
 
   "rules": {
     /* xo config */
@@ -48,7 +48,31 @@
     "@typescript-eslint/camelcase": 0,
     "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
-    "@typescript-eslint/explicit-member-accessibility": 0
+    "@typescript-eslint/explicit-member-accessibility": 0,
+
+    /* jsdoc settings */
+    "jsdoc/check-alignment": 1,
+    "jsdoc/check-param-names": 1,
+    "jsdoc/check-tag-names": 1,
+    "jsdoc/implements-on-classes": 1,
+    "jsdoc/newline-after-description": 1,
+    "jsdoc/no-types": 1,
+    "jsdoc/require-param-description": 1,
+    "jsdoc/require-returns-check": 1,
+    "jsdoc/require-returns-description": 1,
+    "jsdoc/require-hyphen-before-param-description": [1, "always"],
+    "jsdoc/require-jsdoc": [
+      2,
+      {
+        "contexts": ["TSPropertySignature", "ClassProperty"],
+        "require": {
+          "ArrowFunctionExpression": true,
+          "FunctionDeclaration": true,
+          "ClassDeclaration": true,
+          "MethodDefinition": true
+        }
+      }
+    ]
   },
 
   "overrides": [
@@ -60,7 +84,8 @@
         "@typescript-eslint/no-explicit-any": 0,
         "require-atomic-updates": 0,
         "max-nested-callbacks": 0,
-        "@typescript-eslint/ban-ts-ignore": 0
+        "@typescript-eslint/ban-ts-ignore": 0,
+        "jsdoc/require-jsdoc": 0
       }
     }
   ]

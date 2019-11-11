@@ -1,5 +1,6 @@
 import importCwd from 'import-cwd';
 
+/** Try to require something either from the CWD or the regular way */
 export default function tryRequire(tryPath: string) {
   try {
     // Require from CWD

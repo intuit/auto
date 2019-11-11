@@ -20,7 +20,13 @@ export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger
 ): IPlugin | undefined {
-  let plugin: IPluginConstructor | { default: IPluginConstructor } | undefined;
+  let plugin:
+    | IPluginConstructor
+    | {
+        /** The plugin under the default export */
+        default: IPluginConstructor;
+      }
+    | undefined;
 
   // Try requiring a path
   if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
@@ -58,7 +64,10 @@ export default function loadPlugin(
   if (!plugin) {
     plugin = tryRequire(path.join('@auto-it', pluginPath)) as
       | IPluginConstructor
-      | { default: IPluginConstructor };
+      | {
+          /** The plugin under the default export */
+          default: IPluginConstructor;
+        };
   }
 
   if (!plugin) {

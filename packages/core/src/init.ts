@@ -11,8 +11,11 @@ import { defaultLabelDefinition, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);
+
+/** Determine if any value is an object */
 const isObject = <T>(value: T) => typeof value === 'object' && value !== null;
 
+/** Get all of the basic options for running "auto" */
 async function getFlags() {
   return prompt([
     {
@@ -70,8 +73,12 @@ async function getFlags() {
   ]);
 }
 
+/** Get label configuration from the user. */
 async function getCustomLabels(onlyLabels = false) {
-  const useCustomChangelogTitles: { value: boolean } = onlyLabels
+  const useCustomChangelogTitles: {
+    /** The result of the prompt */
+    value: boolean;
+  } = onlyLabels
     ? { value: onlyLabels }
     : await prompt({
         type: 'confirm',
@@ -136,7 +143,10 @@ async function getCustomLabels(onlyLabels = false) {
     }
   }
 
-  let getAnotherTitle: { value?: boolean } = await prompt({
+  let getAnotherTitle: {
+    /** The result of the prompt */
+    value?: boolean;
+  } = await prompt({
     type: 'confirm',
     name: 'value',
     message: 'Would you like to add additional labels?',
@@ -155,7 +165,15 @@ async function getCustomLabels(onlyLabels = false) {
         desc:   #{description}
       `,
       validate: (state: {
-        values: { name?: string; title?: string; description?: string };
+        /** The result of the prompt */
+        values: {
+          /** Name of the label */
+          name?: string;
+          /** Changelog title of the label */
+          title?: string;
+          /** Description of the label */
+          description?: string;
+        };
       }) => {
         if (!state.values.name) {
           return 'Label is required for new label';
@@ -191,6 +209,7 @@ async function getCustomLabels(onlyLabels = false) {
   return customLabels;
 }
 
+/** Run the interactive initialization prompt */
 export default async function init(
   { onlyLabels, dryRun }: IInitOptions,
   logger: ILogger

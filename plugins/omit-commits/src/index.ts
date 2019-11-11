@@ -1,26 +1,41 @@
 import { Auto, IPlugin } from '@auto-it/core';
 
 export interface IOmitCommitsPluginOptions {
+  /** Usernames to omit */
   username?: string | string[];
+  /** Emails to omit */
   email?: string | string[];
+  /** Names to omit */
   name?: string | string[];
+  /** Commit messages to omit */
   subject?: string | string[];
+  /** Labels to omit */
   labels?: string | string[];
 }
 
+/** Ensure a value is an array */
 const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 
+/** Filter certain commits out of the changelog and version calculation. */
 export default class OmitCommitsPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Omit Commits';
 
+  /** The options of the plugin */
   readonly options: {
+    /** Usernames to omit */
     username: string[];
+    /** Emails to omit */
     email: string[];
+    /** Names to omit */
     name: string[];
+    /** Commit messages to omit */
     subject: string[];
+    /** Labels to omit */
     labels: string[];
   };
 
+  /** Initialize the plugin with it's options */
   constructor(options: IOmitCommitsPluginOptions) {
     this.options = {
       username: options.username ? arrayify(options.username) : [],
@@ -31,6 +46,7 @@ export default class OmitCommitsPlugin implements IPlugin {
     };
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.omitCommit.tap(this.name, commit => {

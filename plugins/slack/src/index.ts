@@ -3,6 +3,7 @@ import { Auto, IPlugin } from '@auto-it/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
 
+/** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
     .split('\n')
@@ -17,15 +18,21 @@ const sanitizeMarkdown = (markdown: string) =>
     .join('\n');
 
 interface ISlackPluginOptions {
+  /** URL of the slack to post to */
   url: string;
+  /** Who to bother when posting to the channel */
   atTarget?: string;
 }
 
+/** Post your release notes to Slack during `auto release` */
 export default class SlackPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Slack';
 
+  /** The options of the plugin */
   readonly options: ISlackPluginOptions;
 
+  /** Initialize the plugin with it's options */
   constructor(options: ISlackPluginOptions | string) {
     if (typeof options === 'string') {
       this.options = { url: options, atTarget: 'channel' };
@@ -37,6 +44,7 @@ export default class SlackPlugin implements IPlugin {
     }
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(
       this.name,
@@ -72,6 +80,7 @@ export default class SlackPlugin implements IPlugin {
     );
   }
 
+  /** Post the release notes to slack */
   async postToSlack(auto: Auto, newVersion: string, releaseNotes: string) {
     if (!auto.git) {
       return;

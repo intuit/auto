@@ -1,17 +1,27 @@
 import { IExtendedCommit } from '../log-parse';
 
+/** Construct a dummy commit for testing. */
 const makeCommitFromMsg = (
   subject: string,
   options: {
+    /** Name of the committer */
     name?: string;
+    /** Hash of the commit */
     hash?: string;
+    /** Email of the committer */
     email?: string;
+    /** Labels on the commit */
     labels?: string[];
+    /** Username of the committer */
     username?: string;
+    /** Packages effected by the commit */
     packages?: string[];
+    /** PR info for the commit */
     pullRequest?: {
+      /** PR number attached to commit */
       number: number;
     };
+    /** Files included in commit */
     files?: string[];
   } = {}
 ): IExtendedCommit => ({
@@ -34,7 +44,6 @@ const makeCommitFromMsg = (
     }
   ],
   subject,
-  packages: options.packages,
   pullRequest: options.pullRequest
 });
 

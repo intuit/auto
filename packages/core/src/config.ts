@@ -16,6 +16,7 @@ import tryRequire from './utils/try-require';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
 
+/** Transform all types of label configuration into just 1 shape */
 export function normalizeLabel(
   name: string,
   label:
@@ -42,6 +43,10 @@ export function normalizeLabel(
   return [{ ...baseLabel, ...label }];
 }
 
+/**
+ * Go through all the labels in a config and make them
+ * follow the same format.
+ */
 export function normalizeLabels(config: ConfigObject) {
   let labels = defaultLabelDefinition;
 
@@ -60,9 +65,12 @@ export function normalizeLabels(config: ConfigObject) {
   return labels;
 }
 
+/** Load a user's configuration from the system and resolve any extended config */
 export default class Config {
+  /** A logger that uses log levels */
   logger: ILogger;
 
+  /** Initialize the config loader */
   constructor(logger: ILogger) {
     this.logger = logger;
   }
@@ -123,10 +131,15 @@ export default class Config {
    * ex: auto-config-MY_CONFIG
    * ex: @MY_CONFIG/auto-config
    *
-   * @param extend Path or name of config to find
+   * @param extend - Path or name of config to find
    */
   async loadExtendConfig(extend: string) {
-    let config: ConfigObject | { auto: ConfigObject };
+    let config:
+      | ConfigObject
+      | {
+          /** package.json field with auto config */
+          auto: ConfigObject;
+        };
 
     if (extend.endsWith('.js') || extend.endsWith('.mjs')) {
       throw new Error('Extended config cannot be a JavaScript file');

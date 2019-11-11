@@ -73,10 +73,13 @@ const defaultOptions: IAllContributorsPluginOptions = {
 
 /** Automatically add contributors as changelogs are produced. */
 export default class AllContributorsPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'All Contributors';
 
+  /** The options of the plugin */
   readonly options: Required<IAllContributorsPluginOptions>;
 
+  /** Initialize the plugin with it's options */
   constructor(options: IAllContributorsPluginOptions = {}) {
     this.options = {
       exclude: [...(defaultOptions.exclude || []), ...(options.exclude || [])],
@@ -84,6 +87,7 @@ export default class AllContributorsPlugin implements IPlugin {
     };
   }
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterAddToChangelog.tap(this.name, ({ commits }) => {
       const config: AllContributorsRc = JSON.parse(
@@ -99,6 +103,7 @@ export default class AllContributorsPlugin implements IPlugin {
 
         Object.keys(this.options.types || {})
           .filter((type): type is Contribution => {
+            /** Determine if path is the contribution type */
             const isType = (file: string) =>
               match(this.options.types[type as Contribution] || [], file);
             const isMatch = files.some(isType);

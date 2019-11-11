@@ -1,9 +1,12 @@
 import { Auto, execPromise, IPlugin } from '@auto-it/core';
 import { inc, ReleaseType } from 'semver';
 
+/** Manage your projects version through just a git tag. */
 export default class GitTagPlugin implements IPlugin {
+  /** The name of the plugin */
   name = 'Git Tag';
 
+  /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       if (!auto.git) {
