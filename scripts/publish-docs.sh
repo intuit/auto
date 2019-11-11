@@ -8,7 +8,7 @@ if [ ! -z "$SHOULD_PUBLISH" ]; then
   ignite
   git config --global user.name "Andrew Lisowski"
   git config --global user.email "lisowski54@gmail.com"
-  npx push-dir --cleanup --dir=_ignite/auto --branch=gh-pages
+  npx push-dir --cleanup --dir=_ignite/auto --branch=gh-pages --message "Update docs [skip ci]"
 else
   echo No documentation files changed since last tagged release.
 fi
