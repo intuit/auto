@@ -60,6 +60,11 @@ interface ChangelogLifecycle {
   lastRelease: string;
 }
 
+interface TestingToken {
+  /** A token used for testing */
+  token?: string;
+}
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
@@ -98,7 +103,7 @@ export interface IAutoHooks {
     string
   >;
   /** Get owner and repository. Typically from a package distribution description file. */
-  getRepository: AsyncSeriesBailHook<[], IRepoOptions | void>;
+  getRepository: AsyncSeriesBailHook<[], IRepoOptions & TestingToken | void>;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
   /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
@@ -219,7 +224,8 @@ export default class Auto {
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo(config);
-    const token = process.env.GH_TOKEN;
+    const token =
+      repository && repository.token ? repository.token : process.env.GH_TOKEN;
 
     if (!token || token === 'undefined') {
       this.logger.log.error(
@@ -1042,7 +1048,7 @@ If a command fails manually run:
   /** Get the repo to interact with */
   private async getRepo(config: IAutoConfig) {
     if (config.owner && config.repo) {
-      return config as IRepoOptions;
+      return config as IRepoOptions & TestingToken;
     }
 
     return this.hooks.getRepository.promise();
