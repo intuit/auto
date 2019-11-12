@@ -2,7 +2,7 @@
 
 All options for the CLI tools can also be configured via the `.autorc`. As CLI options you supply them in snake-case (`--foo-bar`), but as `.autorc` options you supply them in camelCase (`fooBar`),
 
-We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config, so that means you can define this file a variety of ways. Our Cosmiconfig setup is a little custom and will start at the root of your project and start to search up the directory tree for the following:
+We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config. This means you can define this file a variety of ways. Our `cosmiconfig` setup is a little custom and will start at the root of your project and start to search up the directory tree for the following:
 
 - a JSON or YAML, extension-less "rc file"
 - an "rc file" with the extensions `.json`, `.yaml`, or `.yml`
