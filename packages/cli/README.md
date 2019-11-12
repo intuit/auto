@@ -1,8 +1,27 @@
 # auto CLI
 
-Generate releases based on semantic version labels on pull requests
+`auto` is designed to be the most seamless way to automate releases using pull request labels. 
 
-```sh
+While built to run in a continuous integration (CI) environment, all `auto` commands work locally as well.
+
+## Installation
+```
+$ npm install auto
+```
+
+## Usage
+Interactive setup for most configurable options
+```
+$ auto init
+```
+Create your project's labels on github. If labels already exist, it will update them.
+```
+$ auto create-labels
+```
+
+## All Commands
+
+```
 $ auto -h
 
 Synopsis
@@ -24,8 +43,8 @@ Release Commands
               1. call from base branch -> latest version released
               2. call from PR in CI -> canary version released
               3. call locally when not on base branch -> canary version released
-  canary      Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary version for
-              your current git HEAD.
+  canary      Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release  
+              a canary version for your current git HEAD.
 
               1. In PR: 1.2.3-canary.123.0 + add version to PR body
               2. Locally: 1.2.3-canary.1810cfd
@@ -39,9 +58,10 @@ Pull Request Interaction Commands
              comment.
   pr-body    Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a
              context, and each context only has one comment.
+```
 
-Global Options
-
+## Available Global Options
+```
   -V, --version         Display auto's version
   -h, --help            Display the help output for the command
   -v, --verbose         Show some more logs
