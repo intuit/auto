@@ -167,7 +167,5 @@
       "blog-post"
     ]
   },
-  "dependencies": {
-    "auto": "^7.13.2"
-  }
+  "dependencies": {}
 }
