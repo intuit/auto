@@ -1,3 +1,22 @@
+# v7.14.0 (Tue Nov 12 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - detect PR number when running  "auto label" without "--pr" [#682](https://github.com/intuit/auto/pull/682) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `auto`
+  - Rewrite README Issue #666 [#680](https://github.com/intuit/auto/pull/680) ([@karenclo](https://github.com/karenclo) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Karen Lo ([@karenclo](https://github.com/karenclo))
+
+---
+
 # v7.13.3 (Tue Nov 12 2019)
 
 #### 🐛  Bug Fix
