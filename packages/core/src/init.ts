@@ -117,15 +117,15 @@ async function getCustomLabels(onlyLabels = false) {
       const { name, title, description } = response.value.values;
       const newLabel: Partial<ILabelDefinition> = {};
 
-      if (!labelDef.some(l => name !== l.name)) {
+      if (!labelDef?.some(l => name !== l.name)) {
         newLabel.name = name;
       }
 
-      if (!labelDef.some(l => title !== l.title)) {
+      if (!labelDef?.some(l => title !== l.title)) {
         newLabel.title = title;
       }
 
-      if (!labelDef.some(l => description !== l.description)) {
+      if (!labelDef?.some(l => description !== l.description)) {
         newLabel.description = description;
       }
 

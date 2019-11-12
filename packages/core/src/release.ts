@@ -101,7 +101,7 @@ export interface ILabelDefinition {
 }
 
 export interface ILabelDefinitionMap {
-  [label: string]: ILabelDefinition[];
+  [label: string]: ILabelDefinition[] | undefined;
 }
 
 export const defaultLabelDefinition: ILabelDefinitionMap = {
@@ -164,7 +164,7 @@ export const defaultLabelDefinition: ILabelDefinitionMap = {
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabelDefinition) =>
   Object.entries(labels).reduce((semVer, [label, labelDef]) => {
-    if (isVersionLabel(label)) {
+    if (isVersionLabel(label) && labelDef) {
       semVer.set(
         label,
         labelDef.map(l => l.name)
