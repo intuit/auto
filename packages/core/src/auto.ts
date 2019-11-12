@@ -11,6 +11,7 @@ import {
   SyncWaterfallHook,
   AsyncSeriesHook
 } from 'tapable';
+import dedent from 'dedent';
 
 import HttpsProxyAgent from 'https-proxy-agent';
 import {
@@ -103,7 +104,7 @@ export interface IAutoHooks {
     string
   >;
   /** Get owner and repository. Typically from a package distribution description file. */
-  getRepository: AsyncSeriesBailHook<[], IRepoOptions & TestingToken | void>;
+  getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
   /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
@@ -582,6 +583,17 @@ export default class Auto {
   async canary(options: ICanaryOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
+    }
+
+    if (!this.hooks.canary.isUsed()) {
+      this.logger.log.error(dedent`
+        None of the plugins that you are using implement the \`canary\` command!
+
+        "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
+        
+        If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
+      `);
+      process.exit(1);
     }
 
     // SailEnv falls back to commit SHA
