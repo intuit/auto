@@ -1,3 +1,35 @@
+# v7.13.3 (Tue Nov 12 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - warn when canary not implemented [#678](https://github.com/intuit/auto/pull/678) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- must trust github for docs to publish [#667](https://github.com/intuit/auto/pull/667) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/graphql from 4.3.0 to 4.3.1 [#676](https://github.com/intuit/auto/pull/676) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 12.3.1 to 12.4.0 [#675](https://github.com/intuit/auto/pull/675) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.5.0 to 2.6.1 [#674](https://github.com/intuit/auto/pull/674) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.0.1 to 23.0.3 [#673](https://github.com/intuit/auto/pull/673) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 1.18.2 to 1.19.1 [#672](https://github.com/intuit/auto/pull/672) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.21 to 24.0.22 [#671](https://github.com/intuit/auto/pull/671) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node-fetch from 2.5.2 to 2.5.3 [#669](https://github.com/intuit/auto/pull/669) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`
+  - Bump chalk from 2.4.2 to 3.0.0 [#670](https://github.com/intuit/auto/pull/670) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.9.3 to 6.10.0 [#677](https://github.com/intuit/auto/pull/677) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.13.2 (Sun Nov 10 2019)
 
 #### 📝  Documentation
