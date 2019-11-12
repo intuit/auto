@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/released",
-  "version": "7.13.3",
+  "version": "7.14.0",
   "main": "dist/index.js",
   "description": "Released plugin for auto. Comments with version + extra",
   "author": {
