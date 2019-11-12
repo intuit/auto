@@ -1,15 +1,15 @@
 # auto CLI
 
-`auto` is designed to be the most seamless way to automate releases using pull request labels. 
+`auto` is a tool designed to seamlessly automate the release workflow. It is powered by semantic version labels on pull requests, so does not require you to change your code or make drastic changes to your current workflow. 
 
-While built to run in a continuous integration (CI) environment, all `auto` commands work locally as well.
+While intended to run in a continuous integration (CI) environment, all `auto` commands can run locally as well.
 
 ## Installation
 ```
 $ npm install auto
 ```
 
-## Usage
+## Getting Started
 Interactive setup for most configurable options
 ```
 $ auto init
@@ -19,7 +19,7 @@ Create your project's labels on github. If labels already exist, it will update 
 $ auto create-labels
 ```
 
-## All Commands
+## Usage
 
 ```
 $ auto -h
@@ -54,10 +54,10 @@ Pull Request Interaction Commands
   label      Get the labels for a pull request
   pr-check   Check that a pull request has a SemVer label
   pr         Set the status on a PR commit
-  comment    Comment on a pull request with a markdown message. Each comment has a context, and each context only has one
-             comment.
-  pr-body    Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a
-             context, and each context only has one comment.
+  comment    Comment on a pull request with a markdown message. Each comment has a context, and each                 
+             context only has one comment.
+  pr-body    Update the body of a PR with a message. Appends to PR and will not overwrite user content.              
+             Each comment has a context, and each context only has one comment.
 ```
 
 ## Available Global Options
