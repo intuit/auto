@@ -5,16 +5,21 @@
 While intended to run in a continuous integration (CI) environment, all `auto` commands can run locally as well.
 
 ## Installation
+
 ```
 $ npm install auto
 ```
 
 ## Getting Started
+
 Interactive setup for most configurable options
+
 ```
 $ auto init
 ```
+
 Create your project's labels on github. If labels already exist, it will update them.
+
 ```
 $ auto create-labels
 ```
@@ -61,6 +66,7 @@ Pull Request Interaction Commands
 ```
 
 ## Available Global Options
+
 ```
   -V, --version         Display auto's version
   -h, --help            Display the help output for the command
