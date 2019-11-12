@@ -145,6 +145,14 @@ const loadEnv = () => {
   });
 };
 
+/** Get the pr number from user input or the CI env. */
+function getPrNumberFromEnv(pr?: number) {
+  const envPr = 'pr' in env && Number(env.pr);
+  const prNumber = pr || envPr;
+
+  return prNumber;
+}
+
 /**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
@@ -283,10 +291,12 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'label'");
+
+    const number = getPrNumberFromEnv(pr);
     let labels: string[] = [];
 
-    if (pr) {
-      labels = await this.git.getLabels(pr);
+    if (number) {
+      labels = await this.git.getLabels(number);
     } else {
       const pulls = await this.git.getPullRequests({
         state: 'closed'
@@ -799,12 +809,11 @@ export default class Auto {
 
   /** Get a pr number from user input or the env */
   private getPrNumber(command: string, pr?: number) {
-    const envPr = 'pr' in env && Number(env.pr);
-    const prNumber = pr || envPr;
+    const prNumber = getPrNumberFromEnv(pr);
 
     if (!prNumber) {
       throw new Error(
-        `Could not detect PR number. ${command} must be run from either a PR or have the PR number supllied via the --pr flag.`
+        `Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.`
       );
     }
 
