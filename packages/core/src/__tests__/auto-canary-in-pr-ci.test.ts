@@ -51,6 +51,24 @@ describe('canary in ci', () => {
     expect(version!.newVersion).toBe('1.2.4-canary.123.1');
   });
 
+  test('should fail when canaries not implemented', async () => {
+    const auto = new Auto({ ...defaults, plugins: [] });
+
+    // @ts-ignore
+    jest.spyOn(process, 'exit').mockImplementationOnce(() => {});
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+    auto.release!.getCommitsInRelease = () =>
+      Promise.resolve([makeCommitFromMsg('Test Commit')]);
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
+    jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+    await auto.canary({ pr: 123, build: 1, message: 'false' });
+    expect(process.exit).toHaveBeenCalled();
+  });
+
   test('should not comment when passed "false"', async () => {
     const auto = new Auto({ ...defaults, plugins: [] });
     auto.logger = dummyLog();
@@ -61,6 +79,7 @@ describe('canary in ci', () => {
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
     jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+    auto.hooks.canary.tap('test', (bump, post) => `1.2.4-canary${post}`);
 
     await auto.canary({ pr: 123, build: 1, message: 'false' });
     expect(addToPrBody).not.toHaveBeenCalled();
