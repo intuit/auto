@@ -30,6 +30,7 @@
 
 - [.autorc](pages/autorc.md)
 - [Plugins](pages/plugins.md)
+- [Non-npm Usage](pages/non-npm.md)
 - [Writing Plugins](pages/writing-plugins.md)
 - [Troubleshooting](pages/troubleshooting.md)
 
