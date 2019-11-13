@@ -1,3 +1,16 @@
+# v7.14.1 (Tue Nov 12 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/all-contributors`
+  - Fix bug where 'all-contributors' plugin wasn't picking up changes [#683](https://github.com/intuit/auto/pull/683) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.14.0 (Tue Nov 12 2019)
 
 #### 🚀  Enhancement
