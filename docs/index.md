@@ -62,3 +62,4 @@ Functionality Plugins
 - [CircleCI](pages/build-platforms/circleci.md)
 - [Travis CI](pages/build-platforms/travis.md)
 - [GitHub Actions](pages/build-platforms/github-actions.md)
+- [Jenkins 2](pages/build-platforms/jenkins.md)
