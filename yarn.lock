@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.13.2"
+  version "7.15.0"
   dependencies:
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "1.1.1"
@@ -36,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.13.2"
+  version "7.15.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -51,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.13.2"
+  version "7.15.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7880,10 +7880,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.10.6:
-  version "1.10.6"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.6.tgz#7437adb122add8eb87ad5371ff31407e7b3a11c4"
-  integrity sha512-kfn+Ayc2YdgsmKBWjPEAyqP50rdo7K51gy2Fs6QMKuCnRHbMPM8VQmf8OLndNMXriH9i3JGjUn2KOuhRUlsIgg==
+ignite@^1.10.7:
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.7.tgz#5e466980c6b429ff57404addacba2b116e6f6c56"
+  integrity sha512-AI7UEYdbn4BS8sxKPRRFUVX8H+fYW4jF3bT+qC6cMhnBQ6eMRqSeEKZ9W+wCO0DaH3GVua63oiLGGFXF1R/tAQ==
   dependencies:
     "@babel/cli" "7.2.0"
     "@babel/core" "7.2.0"
