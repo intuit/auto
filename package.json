@@ -30,7 +30,7 @@
     "precommit": "lint-staged",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
-    "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit -w",
+    "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "yarn docs:build && ignite",

@@ -89,7 +89,7 @@ jobs:
       - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run:
           name: Release
-          command: yarn run release
+          command: yarn auto shipit -w
 
   publishDocs:
     <<: *defaults
