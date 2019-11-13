@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/jira",
-  "version": "7.14.1",
+  "version": "7.15.0",
   "main": "dist/index.js",
   "description": "Jira plugin for auto",
   "author": {
