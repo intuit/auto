@@ -182,6 +182,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/su7edja"><img src="https://avatars0.githubusercontent.com/u/2717065?v=4" width="100px;" alt="su7edja"/><br /><sub><b>su7edja</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=su7edja" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/yogikhan"><img src="https://avatars3.githubusercontent.com/u/16071601?v=4" width="100px;" alt="Yogesh Khandlewal"/><br /><sub><b>Yogesh Khandlewal</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=yogikhan" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Celeo"><img src="https://avatars1.githubusercontent.com/u/772507?v=4" width="100px;" alt="Matt Boulanger"/><br /><sub><b>Matt Boulanger</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Celeo" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/karenclo"><img src="https://avatars1.githubusercontent.com/u/8535239?v=4" width="100px;" alt="Karen Lo"/><br /><sub><b>Karen Lo</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=karenclo" title="Documentation">📖</a></td>
   </tr>
 </table>
 
