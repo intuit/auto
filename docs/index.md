@@ -2,6 +2,7 @@
 
 - [Introduction](pages/introduction.md)
 - [Getting Started](pages/getting-started.md)
+- [Merging Quickly](pages/quick-merge.md)
 
 ---
 
