@@ -1,3 +1,25 @@
+# v7.15.1 (Wed Nov 13 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - add logs for where plugins were found [#691](https://github.com/intuit/auto/pull/691) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- add non-npm docs [#679](https://github.com/intuit/auto/pull/679) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add jenkins usage [#690](https://github.com/intuit/auto/pull/690) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add more platform docs [#689](https://github.com/intuit/auto/pull/689) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- modernize circleci docs [#688](https://github.com/intuit/auto/pull/688) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add docs on merging quickly [#686](https://github.com/intuit/auto/pull/686) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add docs on how to use within a lerna monorepo [#685](https://github.com/intuit/auto/pull/685) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.15.0 (Tue Nov 12 2019)
 
 #### 🚀  Enhancement
