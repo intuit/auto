@@ -203,20 +203,6 @@ const defaultOptions: Required<INpmConfig> = {
   subPackageChangelogs: true
 };
 
-const deprecate = async (
-  name: string,
-  version: string,
-  message: string,
-  ...args: string[]
-) => {
-  await execPromise('npm', [
-    'deprecate',
-    `${name}@${version}`,
-    message.replace(/%package/g, name),
-    ...args
-  ]);
-};
-
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
@@ -263,6 +249,28 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === 'verbose' ||
       auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
+
+    const deprecate = async (
+      name: string,
+      version: string,
+      message: string,
+      ...args: string[]
+    ) => {
+      try {
+        await execPromise('npm', [
+          'deprecate',
+          `${name}@${version}`,
+          message.replace(/%package/g, name),
+          ...args
+        ]);
+      } catch (error) {
+        auto.logger.log.error(
+          `Something went wrong! Couldn't deprecate "${name}@${version}"`
+        );
+        auto.logger.log.error(error);
+        process.exit(1);
+      }
+    };
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       if (!isCi) {
