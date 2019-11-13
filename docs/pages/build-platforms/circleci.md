@@ -41,8 +41,14 @@ workflows:
 If you are having problems make sure you have done the following:
 
 - `GH_TOKEN` is set
-- `NPM_TOKEN` is set (with the NPM plugin)
+- Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
 
 ### Problems pushing tags to github
 
 Go to Settings -> Checkout SSH Keys -> `Create and add YOUR_USERNAME user key`. This will create a key with the ability to push to github.
+
+## Examples
+
+- [`auto`](https://github.com/intuit/auto/blob/master/.circleci/config.yml)
+- [`Ignite`](https://github.com/intuit/Ignite/blob/master/.circleci/config.yml)
+- [`reaction`](https://github.com/artsy/reaction/blob/master/.circleci/config.yml)
