@@ -1,3 +1,16 @@
+# v7.15.0 (Tue Nov 12 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
+  - Default to `git-tag` plugin when run from binary [#684](https://github.com/intuit/auto/pull/684) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.14.1 (Tue Nov 12 2019)
 
 #### 🐛  Bug Fix
