@@ -132,22 +132,19 @@ export async function changedPackages({
 export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
 
-  return packages.reduce(
-    (greatest, subPackage) => {
-      if (subPackage.package.version) {
-        if (!greatest.version) {
-          return subPackage.package;
-        }
-
-        return gt(greatest.version, subPackage.package.version)
-          ? greatest
-          : subPackage.package;
+  return packages.reduce((greatest, subPackage) => {
+    if (subPackage.package.version) {
+      if (!greatest.version) {
+        return subPackage.package;
       }
 
-      return greatest;
-    },
-    {} as IPackageJSON
-  );
+      return gt(greatest.version, subPackage.package.version)
+        ? greatest
+        : subPackage.package;
+    }
+
+    return greatest;
+  }, {} as IPackageJSON);
 }
 
 /**
@@ -169,6 +166,7 @@ async function bumpLatest(
 const verbose = ['--loglevel', 'silly'];
 
 interface INpmConfig {
+  deprecateCanaries?: false | string;
   /** Whether to create sub-package changelogs */
   subPackageChangelogs?: boolean;
   /** Whether to set the npm token on CI */
@@ -197,6 +195,14 @@ const checkClean = async (auto: Auto) => {
   );
 };
 
+const defaultOptions: Required<INpmConfig> = {
+  deprecateCanaries:
+    'This is a canary version of %package and should only be used for testing!\n\nPlease use %package@latest instead.',
+  forcePublish: true,
+  setRcToken: true,
+  subPackageChangelogs: true
+};
+
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
@@ -204,22 +210,16 @@ export default class NPMPlugin implements IPlugin {
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
-
-  /** Whether to create sub-package changelogs */
-  private readonly subPackageChangelogs: boolean;
-  /** Whether to set the npm token in CI */
-  private readonly setRcToken: boolean;
-  /** Whether to always publish all packages in a monorepo */
-  private readonly forcePublish: boolean;
+  private readonly options: Required<INpmConfig>;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
     this.renderMonorepoChangelog = true;
-    this.subPackageChangelogs = config.subPackageChangelogs || true;
-    this.setRcToken =
-      typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
-    this.forcePublish =
-      typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
+
+    this.options = {
+      ...defaultOptions,
+      ...config
+    };
   }
 
   /** Get all of the packages in the lerna monorepo */
@@ -382,7 +382,11 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.beforeCommitChangelog.tapPromise(
       this.name,
       async ({ commits, bump }) => {
-        if (!isMonorepo() || !auto.release || !this.subPackageChangelogs) {
+        if (
+          !isMonorepo() ||
+          !auto.release ||
+          !this.options.subPackageChangelogs
+        ) {
           return;
         }
 
@@ -441,7 +445,7 @@ export default class NPMPlugin implements IPlugin {
           'lerna',
           'version',
           monorepoBump || version,
-          !isIndependent && this.forcePublish && '--force-publish',
+          !isIndependent && this.options.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
           '-m',
@@ -467,7 +471,7 @@ export default class NPMPlugin implements IPlugin {
     auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
       await checkClean(auto);
 
-      if (this.setRcToken) {
+      if (this.options.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
@@ -536,6 +540,15 @@ export default class NPMPlugin implements IPlugin {
           : ['publish', ...publishArgs, ...verboseArgs]
       );
 
+      if (this.options.deprecateCanaries) {
+        await execPromise('npm', [
+          'deprecate',
+          `${name}@${canaryVersion}`,
+          this.options.deprecateCanaries.replace(/%package/g, name),
+          ...verboseArgs
+        ]);
+      }
+
       auto.logger.verbose.info('Successfully published canary version');
       return canaryVersion;
     });
@@ -547,7 +560,7 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.log.error('Changed Files:\n', status);
       }
 
-      if (this.setRcToken) {
+      if (this.options.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
