@@ -42,15 +42,41 @@ Now your github project is set up to use `auto`.
 Getting started with `auto` is super easy.
 
 1. `auto init` (optional)
-2. `auto create-labels`
-3. Configure environment variables
+2. Configure environment variables
+3. `auto create-labels`
 4. Set up script
 
 ### 1. Initialize Options
 
 Initialize all options and configure label text. If this is not run then `auto` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
 
-### 2. Labels
+### 2. Environment Variables
+
+You must configure some environment variables for publishing and releasing to work properly.
+
+- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
+- `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
+
+#### Local `.env`
+
+You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys! These env vars will override these any variable already set on the process. This enables you to have a per project configuration that isn't effected by your global setup.
+
+**`PROJECT_ROOT/.env`:**
+
+```bash
+GH_TOKEN=YOUR_TOKEN
+NPM_TOKEN=PUBLISH_TOKEN
+```
+
+#### HTTP Proxy
+
+If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set the variable in your CI as well.
+
+```bash
+https_proxy=<PROXYHOST>:<PROXYPORT>
+```
+
+### 3. Labels
 
 After that, you need to set up the labels on your github project. The types of labels that `auto` uses are:
 
@@ -61,26 +87,8 @@ To create the labels for your project on GitHub, run the following command with 
 
 ```sh
 GH_TOKEN=YOUR_TOKEN auto create-labels
-```
-
-### 3. Environment Variables
-
-You must configure some environment variables for publishing and releasing to work properly.
-
-- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
-- `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
-
-You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys! These env vars will override these any variable already set on the process. This enables you to have a per project configuration that isn't effected by your global setup.
-
-```bash
-GH_TOKEN=YOUR_TOKEN
-NPM_TOKEN=PUBLISH_TOKEN
-```
-
-If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set the variable in your CI as well.
-
-```bash
-https_proxy=<PROXYHOST>:<PROXYPORT>
+# or with .env file
+auto create-labels
 ```
 
 ### 4. Script

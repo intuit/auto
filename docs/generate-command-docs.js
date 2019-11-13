@@ -30,7 +30,10 @@ commands.map(command => {
   }
 });
 
-fs.mkdirSync(path.join(__dirname, './pages/generated'));
+try {
+  fs.mkdirSync(path.join(__dirname, './pages/generated'));
+} catch (error) {}
+
 fs.writeFileSync(
   path.join(__dirname, './pages/generated/init.md'),
   initCommands.join('\n')

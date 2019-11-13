@@ -6,6 +6,16 @@
 
 ---
 
+:gear: Configuration
+
+- [.autorc](pages/autorc.md)
+- [Plugins](pages/plugins.md)
+- [Non-npm Usage](pages/non-npm.md)
+- [Writing Plugins](pages/writing-plugins.md)
+- [Troubleshooting](pages/troubleshooting.md)
+
+---
+
 :hammer: Tool APIs :wrench:
 
 - [Setup](pages/generated/init.md)
@@ -25,13 +35,6 @@
   - [auto comment](pages/generated/comment.md)
 
 ---
-
-:gear: Configuration
-
-- [.autorc](pages/autorc.md)
-- [Plugins](pages/plugins.md)
-- [Writing Plugins](pages/writing-plugins.md)
-- [Troubleshooting](pages/troubleshooting.md)
 
 Package Manager Plugins
 
