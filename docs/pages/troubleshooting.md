@@ -14,7 +14,7 @@ This error will occur when you do not have a `NPM_TOKEN` set.
 
 ### Still getting errors?!
 
-Make sure that npm is trying to publish to the correct registry. Force npm/lerna to use the public registry by adding the following to your package.json:
+Make sure that `npm` is trying to publish to the correct registry. Force `npm`/`lerna` to use the public registry by adding the following to your package.json:
 
 ```json
 {

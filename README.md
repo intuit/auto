@@ -39,9 +39,9 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [crates](./plugins/crates) - Publish Rust crates
-- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag
+- [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag (`default` when used with binary)
 - [maven](./plugins/maven) - Publish code with maven
-- [npm](./plugins/npm) - Publish code to npm (DEFAULT)
+- [npm](./plugins/npm) - Publish code to npm (`default` when installed through `npm`)
 
 **Extra Functionality:**
 

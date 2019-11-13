@@ -1,6 +1,6 @@
 # NPM Plugin
 
-Publish to NPM. Works in both a monorepo setting and for a single package. This plugin is loaded by default. If you configure `auto` to use any other plugin this will be lost. So you must add the `npm` plugin to your plugins array if you still want NPM functionality.
+Publish to NPM. Works in both a monorepo setting and for a single package. This plugin is loaded by default when `auto` is installed through `npm`. If you configure `auto` to use any other plugin this will be lost. So you must add the `npm` plugin to your plugins array if you still want NPM functionality.
 
 ## Prerequisites
 

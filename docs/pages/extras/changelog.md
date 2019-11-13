@@ -1,5 +1,5 @@
 ::: message is-warning
-:warning: This should be run before `npm version` so the `CHANGELOG.md` changes are committed before the release gets tagged.
+:warning: This should be run before you version your project so the `CHANGELOG.md` changes are committed before the release gets tagged.
 :::
 
 ## Changelog Titles

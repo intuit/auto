@@ -268,7 +268,7 @@ If you are using enterprise github and your company hosts the graphql at some ot
 
 ### name
 
-Git name to commit and release with. Defaults to package.json. Used in `auto changelog` and `auto release`
+Git name to commit and release with. Used in `auto changelog` and `auto release`
 
 ```json
 {
@@ -278,7 +278,7 @@ Git name to commit and release with. Defaults to package.json. Used in `auto cha
 
 ### email
 
-Git email to commit and release with. Defaults to package.json. Used in `auto changelog` and `auto release`
+Git email to commit and release with. Used in `auto changelog` and `auto release`
 
 ```json
 {

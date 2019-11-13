@@ -1079,9 +1079,11 @@ If a command fails manually run:
    * Apply all of the plugins in the config.
    */
   private loadPlugins(config: IAutoConfig) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
     const pluginsPaths = [
       require.resolve('./plugins/filter-non-pull-request'),
-      ...(config.plugins || ['npm'])
+      ...(config.plugins || defaultPlugins)
     ];
 
     pluginsPaths
