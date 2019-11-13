@@ -59,4 +59,6 @@ Functionality Plugins
 
 :bathtub: Continuous Integration
 
-- [CircleCI](pages/circleci.md)
+- [CircleCI](pages/build-platforms/circleci.md)
+- [Travis CI](pages/build-platforms/travis.md)
+- [GitHub Actions](pages/build-platforms/github-actions.md)
