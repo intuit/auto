@@ -74,6 +74,30 @@ describe('All Contributors Plugin', () => {
     expect(exec.mock.calls[0][0]).toBe('npx all-contributors add Jeff code');
   });
 
+  test('should find contributions from merge commit', async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+    mockRead('{ "contributors": [] }');
+    gitShow.mockReturnValueOnce('src/index.ts');
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: '0.0.0',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        makeCommitFromMsg('Do the thing', {
+          files: [],
+          username: 'Jeff'
+        })
+      ]
+    });
+
+    expect(exec.mock.calls[0][0]).toBe('npx all-contributors add Jeff code');
+  });
+
   test('should find a multiple contributions', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
@@ -130,7 +154,7 @@ describe('All Contributors Plugin', () => {
     );
   });
 
-  test('should not update if no new contribution tpyes', async () => {
+  test('should not update if no new contribution types', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
     mockRead(
