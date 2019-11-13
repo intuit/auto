@@ -1,6 +1,6 @@
 # Git Tag Plugin
 
-Manage your projects version through just a git tag.
+Manage your projects version through just a git tag. This plugin is loaded by default when `auto` is installed through the binaries released on GitHub.
 
 If you're using this plugin you aren't releasing your code to any platform (npm, maven, etc). Instead you version calculations is done entirely though git tags.
 

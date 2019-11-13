@@ -14,4 +14,7 @@ fi
 
 ## Without PR Number
 
-Running `auto label` without the PR number enables it to run in master after a PR has been merged. You can use these labels to automate more things in your merge build pipeline other than the release.
+Running `auto label` without the PR number will:
+
+- When run in master will get the labels for the last merged PR
+- When run for a PR in CI will use the PR's number

@@ -3,8 +3,10 @@ import { IPRStatusOptions } from '../auto-args';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
+import loadPlugin from '../utils/load-plugins';
 
 const importMock = jest.fn();
+jest.mock('../utils/load-plugins.ts');
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
 
@@ -58,6 +60,11 @@ jest.mock('gitlog', () => (a, cb) => {
 });
 
 describe('Auto', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    loadPlugin.mockClear();
+  });
+
   test('should use args', async () => {
     const auto = new Auto(defaults);
     auto.logger = dummyLog();
@@ -71,6 +78,36 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(auto.release).toBeDefined();
+  });
+
+  test('should default to npm in non-pkg', async () => {
+    search.mockReturnValueOnce({ config: defaults });
+    // @ts-ignore
+    loadPlugin.mockReturnValueOnce(() => ({ apply: () => {} }));
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    // @ts-ignore
+    expect(loadPlugin.mock.calls[1][0][0]).toBe('npm');
+  });
+
+  test('should default to git-tag in pkg', async () => {
+    // @ts-ignore
+    process.pkg = true
+    search.mockReturnValueOnce({ config: defaults });
+    // @ts-ignore
+    loadPlugin.mockReturnValueOnce(() => ({ apply: () => {} }));
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    // @ts-ignore
+    expect(loadPlugin.mock.calls[1][0][0]).toBe('git-tag');
+    // @ts-ignore
+    process.pkg = undefined
   });
 
   test('should throw if now GH_TOKEN set', async () => {

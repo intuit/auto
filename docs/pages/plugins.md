@@ -6,13 +6,16 @@
 
 To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins). Specifying a plugin overrides the defaults.
 
-::: message is-warning
-:warning: By default, `auto` defaults to use the `npm` plugin if you don't configure plugins in your `.autorc` configuration file.
-:::
+### Defaults
 
-### None
+If you don't configure plugins in your `.autorc` configuration file `auto` will use a default package manager plugin.
 
-If you don't want to include the default plugins (ex: you're publishing to a platform other than npm), you can supply an empty array in the `.autorc` configuration file like the following:
+- Installed through `npm` => uses [`npm`](../../plugins/npm/README.md)
+- Installed through executable => uses [`git-tag`](../../plugins/git-tag/README.md)
+
+### No Plugins
+
+If you don't want to include the default plugins, you can supply an empty array in the `.autorc` configuration file like the following:
 
 ```json
 {
