@@ -15,6 +15,7 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
+/** Require a plugin and log where it was found. */
 function requirePlugin(pluginPath: string, logger: ILogger) {
   const plugin = tryRequire(pluginPath);
 
