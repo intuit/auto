@@ -1,6 +1,9 @@
 # CircleCI
 
-The following config declares the `release` job and uses it in the `build_and_release` workflow. The `release` job will only run on commits to master.
+The following config declares the `release` job and uses it in the `build_and_release` workflow. The `release` job will run at the end of each build and either release:
+
+- a new `latest` version from `master`
+- a `canary` build from a pull request (if your package manager plugin implements them)
 
 ```yaml
 version: 2
@@ -20,24 +23,17 @@ jobs:
           at: ~/auto
       - run:
           name: Release
-          command: npm run release
+          command: npx auto shipit
 
 workflows:
   version: 2
   build_and_release:
     jobs:
-      - install:
-          filters:
-            tags:
-              only: /.*/
+      - install
 
       - release:
           requires:
             - install
-          filters:
-            branches:
-              only:
-                - master
 ```
 
 ## Troubleshooting
