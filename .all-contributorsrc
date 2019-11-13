@@ -126,6 +126,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "karenclo",
+      "name": "Karen Lo",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8535239?v=4",
+      "profile": "https://github.com/karenclo",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

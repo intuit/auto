@@ -1,4 +1,4 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, execPromise } from '@auto-it/core';
 import fs from 'fs';
 import path from 'path';
 import match from 'anymatch';
@@ -89,73 +89,95 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.afterAddToChangelog.tap(this.name, ({ commits }) => {
-      const config: AllContributorsRc = JSON.parse(
-        fs.readFileSync(rcFile, 'utf8')
-      );
-      const authorContributions: Record<string, Set<Contribution>> = {};
-      let didUpdate = false;
+    auto.hooks.afterAddToChangelog.tapPromise(
+      this.name,
+      async ({ commits }) => {
+        const config: AllContributorsRc = JSON.parse(
+          fs.readFileSync(rcFile, 'utf8')
+        );
+        const authorContributions: Record<string, Set<Contribution>> = {};
+        let didUpdate = false;
 
-      // 1. Find all the authors and their contribution types
-      commits.forEach(commit => {
-        const { authors } = commit;
-        let { files } = commit;
+        const commitsWithAllChangedFiles = await Promise.all(
+          commits.map(async commit => {
+            const extra = await execPromise('git', [
+              'show',
+              '--pretty=""',
+              '--name-only',
+              '--first-parent',
+              '-m',
+              commit.hash
+            ]);
 
-        Object.keys(this.options.types || {})
-          .filter((type): type is Contribution => {
-            /** Determine if path is the contribution type */
-            const isType = (file: string) =>
-              match(this.options.types[type as Contribution] || [], file);
-            const isMatch = files.some(isType);
-            files = files.filter(file => !isType(file));
+            commit.files = [
+              ...new Set([...commit.files, ...extra.split('\n')])
+            ];
 
-            return isMatch;
+            return commit;
           })
-          .forEach(contribution => {
-            authors.forEach(({ username }) => {
-              if (!username) {
-                return;
-              }
+        );
 
-              if (!authorContributions[username]) {
-                authorContributions[username] = new Set();
-              }
+        // 1. Find all the authors and their contribution types
+        commitsWithAllChangedFiles.forEach(commit => {
+          const { authors } = commit;
+          let { files } = commit;
 
-              authorContributions[username].add(contribution);
+          Object.keys(this.options.types || {})
+            .filter((type): type is Contribution => {
+              /** Determine if path is the contribution type */
+              const isType = (file: string) =>
+                match(this.options.types[type as Contribution] || [], file);
+              const isMatch = files.some(isType);
+              files = files.filter(file => !isType(file));
+
+              return isMatch;
+            })
+            .forEach(contribution => {
+              authors.forEach(({ username }) => {
+                if (!username) {
+                  return;
+                }
+
+                if (!authorContributions[username]) {
+                  authorContributions[username] = new Set();
+                }
+
+                authorContributions[username].add(contribution);
+              });
             });
-          });
-      });
+        });
 
-      // 2. Determine if contributor has update
-      Object.entries(authorContributions).forEach(
-        ([username, contributions]) => {
-          const { contributions: old = [] } =
-            config.contributors.find(
-              contributor => contributor.login === username
-            ) || {};
-          const hasNew = [...contributions].find(
-            contribution => !old.includes(contribution)
-          );
-
-          if (hasNew && !this.options.exclude.includes(username)) {
-            const newContributions = new Set([...old, ...contributions]);
-
-            didUpdate = true;
-            auto.logger.log.info(`Adding "${username}"'s contributions...`);
-
-            execSync(
-              `npx all-contributors add ${username} ${[
-                ...newContributions
-              ].join(',')}`,
-              { stdio: 'inherit' }
+        // 2. Determine if contributor has update
+        Object.entries(authorContributions).forEach(
+          ([username, contributions]) => {
+            const { contributions: old = [] } =
+              config.contributors.find(
+                contributor => contributor.login === username
+              ) || {};
+            const hasNew = [...contributions].find(
+              contribution => !old.includes(contribution)
             );
-          }
-        }
-      );
 
-      if (didUpdate) {
-        auto.logger.log.success('Updated contributors!');
+            if (hasNew && !this.options.exclude.includes(username)) {
+              const newContributions = new Set([...old, ...contributions]);
+
+              didUpdate = true;
+              auto.logger.log.info(`Adding "${username}"'s contributions...`);
+
+              execSync(
+                `npx all-contributors add ${username} ${[
+                  ...newContributions
+                ].join(',')}`,
+                { stdio: 'inherit' }
+              );
+            }
+          }
+        );
+
+        if (didUpdate) {
+          auto.logger.log.success('Updated contributors!');
+        }
       }
-    });
+    );
   }
 }
