@@ -445,7 +445,7 @@ export default class NPMPlugin implements IPlugin {
           '--no-commit-hooks',
           '--yes',
           '-m',
-          "'Bump version to: %v [skip ci]'",
+          '"Bump version to: %v [skip ci]"',
           ...verboseArgs
         ]);
         auto.logger.verbose.info('Successfully versioned repo');

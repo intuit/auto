@@ -395,7 +395,7 @@ describe('publish', () => {
       '--no-commit-hooks',
       '--yes',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -423,7 +423,7 @@ describe('publish', () => {
       '--no-commit-hooks',
       '--yes',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -495,7 +495,7 @@ describe('publish', () => {
       '--no-commit-hooks',
       '--yes',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -683,7 +683,7 @@ describe('canary', () => {
       '--no-commit-hooks',
       '--yes',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
