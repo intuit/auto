@@ -1,3 +1,16 @@
+# v7.15.2 (Thu Nov 14 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - Fixed string interpolation on Lerna version bump [#693](https://github.com/intuit/auto/pull/693) ([@jrnail23](https://github.com/jrnail23))
+
+#### Authors: 1
+
+- James Nail ([@jrnail23](https://github.com/jrnail23))
+
+---
+
 # v7.15.1 (Wed Nov 13 2019)
 
 #### 🐛  Bug Fix
