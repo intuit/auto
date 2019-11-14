@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/twitter",
-  "version": "7.15.1",
+  "version": "7.15.2",
   "main": "dist/index.js",
   "description": "Twitter plugin for auto",
   "author": {
