@@ -38,6 +38,7 @@ const updateFormula = () => {
 
   fs.writeFileSync('./Formula/auto.rb', newFormula);
 
+  execSync('git add ./Formula/auto.rb');
   execSync('git commit -m "Bump brew formula [skip ci]", --no-verify');
 };
 
