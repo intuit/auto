@@ -564,7 +564,10 @@ export default class NPMPlugin implements IPlugin {
           'lerna',
           'publish',
           '--yes',
-          'from-git',
+          // Plugins can add as many commits as they want, lerna will still
+          // publish the changed package versions. from-git broke when HEAD
+          // didn't contain the tags
+          'from-package',
           ...verboseArgs
         ]);
       } else {
