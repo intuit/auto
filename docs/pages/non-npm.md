@@ -17,7 +17,7 @@ chmod a+x ~/auto
 
 This executable contains all of the official `auto` plugins so you do not have to download anything extra. This version of `auto` uses the [git-tag](../../plugins/git-tag/README.md) plugins as the default instead of [npm](../../plugins/npm/README.md). If you specify any plugins this will be overriden.
 
-### Installation view brew (OSX)
+### Installation via brew (OSX)
 
 If you are on OSX you can install `auto` with brew.
 
