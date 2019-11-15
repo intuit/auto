@@ -22,32 +22,39 @@ const createFormula = (version, sha) => dedent`
   end
 `;
 
-const updateFormula = () => {
-  const pathToExecutable = path.join(
-    __dirname,
-    '../packages/cli/binary/auto-macos.gz'
-  );
-  const sha = execSync(`shasum --algorithm 256 ${pathToExecutable}`, {
-    encoding: 'utf8'
-  }).split(' ')[0];
-  const version = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '../lerna.json'))
-  ).version;
-
-  const newFormula = createFormula(version, sha);
-
-  fs.writeFileSync('./Formula/auto.rb', newFormula);
-
-  execSync('git add ./Formula/auto.rb');
-  execSync('git commit -m "Bump brew formula [skip ci]", --no-verify');
-};
-
 module.exports = class {
   constructor() {
     this.name = 'brew';
   }
 
   apply(auto) {
-    auto.hooks.afterVersion.tap('Update brew', updateFormula);
+    auto.hooks.afterVersion.tap('Update brew', () => {
+      try {
+        const pathToExecutable = path.join(
+          __dirname,
+          '../packages/cli/binary/auto-macos.gz'
+        );
+        const sha = execSync(`shasum --algorithm 256 ${pathToExecutable}`, {
+          encoding: 'utf8'
+        }).split(' ')[0];
+        const version = JSON.parse(
+          fs.readFileSync(path.join(__dirname, '../lerna.json'))
+        ).version;
+
+        auto.logger.log.info(`Updating brew formula: v${version}#${sha}`);
+
+        const newFormula = createFormula(version, sha);
+        const output = './Formula/auto.rb';
+
+        fs.writeFileSync(output, newFormula);
+        auto.logger.verbose.info(`Wrote new formula to: ${output}`);
+
+        execSync(`git add ${output}`);
+        execSync('git commit -m "Bump brew formula [skip ci]", --no-verify');
+        auto.logger.verbose.info('Committed new formula');
+      } catch (error) {
+        auto.logger.log.error(error);
+      }
+    });
   }
 };
