@@ -1,3 +1,16 @@
+# v7.16.2 (Thu Nov 14 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - More flexible monorepo publishing [#698](https://github.com/intuit/auto/pull/698) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.16.1 (Thu Nov 14 2019)
 
 #### 🐛  Bug Fix
