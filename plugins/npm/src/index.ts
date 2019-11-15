@@ -444,6 +444,7 @@ export default class NPMPlugin implements IPlugin {
           !isIndependent && this.forcePublish && '--force-publish',
           '--no-commit-hooks',
           '--yes',
+          '--no-push',
           '-m',
           '"Bump version to: %v [skip ci]"',
           ...verboseArgs
@@ -566,20 +567,18 @@ export default class NPMPlugin implements IPlugin {
           'from-git',
           ...verboseArgs
         ]);
+      } else {
+        const { private: isPrivate, name } = await loadPackageJson();
+        const isScopedPackage = name.match(/@\S+\/\S+/);
 
-        auto.logger.verbose.info('Successfully published repo');
-        return;
+        await execPromise(
+          'npm',
+          !isPrivate && isScopedPackage
+            ? ['publish', '--access', 'public', ...verboseArgs]
+            : ['publish', ...verboseArgs]
+        );
       }
 
-      const { private: isPrivate, name } = await loadPackageJson();
-      const isScopedPackage = name.match(/@\S+\/\S+/);
-
-      await execPromise(
-        'npm',
-        !isPrivate && isScopedPackage
-          ? ['publish', '--access', 'public', ...verboseArgs]
-          : ['publish', ...verboseArgs]
-      );
       await execPromise('git', [
         'push',
         '--follow-tags',
