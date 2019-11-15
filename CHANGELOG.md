@@ -1,3 +1,20 @@
+# v7.16.0 (Thu Nov 14 2019)
+
+#### 🚀  Enhancement
+
+- automatically update brew formula [#694](https://github.com/intuit/auto/pull/694) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- correct grammar [#696](https://github.com/intuit/auto/pull/696) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- correct docs [#695](https://github.com/intuit/auto/pull/695) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.15.2 (Thu Nov 14 2019)
 
 #### 🐛  Bug Fix
