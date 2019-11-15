@@ -22,7 +22,8 @@ This executable contains all of the official `auto` plugins so you do not have t
 If you are on OSX you can install `auto` with brew.
 
 ```sh
-brew install @intuit/auto/auto
+brew tap intuit/auto https://github.com/intuit/auto
+brew install auto
 ```
 
 ## Configuration
