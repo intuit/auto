@@ -47,11 +47,11 @@ module.exports = class {
         const output = './Formula/auto.rb';
 
         fs.writeFileSync(output, newFormula);
-        auto.logger.debug.info(`Wrote new formula to: ${output}`);
+        auto.logger.verbose.info(`Wrote new formula to: ${output}`);
 
         execSync(`git add ${output}`);
         execSync('git commit -m "Bump brew formula [skip ci]", --no-verify');
-        auto.logger.debug.info('Committed new formula');
+        auto.logger.verbose.info('Committed new formula');
       } catch (error) {
         auto.logger.log.error(error);
       }
