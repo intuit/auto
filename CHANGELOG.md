@@ -1,3 +1,16 @@
+# v7.16.1 (Thu Nov 14 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - match behavior between lerna and npm when pushing git tags [#697](https://github.com/intuit/auto/pull/697) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.16.0 (Thu Nov 14 2019)
 
 #### 🚀  Enhancement
