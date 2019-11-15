@@ -442,7 +442,7 @@ describe('publish', () => {
       'lerna',
       'publish',
       '--yes',
-      'from-git'
+      'from-package'
     ]);
   });
 
