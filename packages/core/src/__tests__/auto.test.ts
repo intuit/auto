@@ -95,7 +95,7 @@ describe('Auto', () => {
 
   test('should default to git-tag in pkg', async () => {
     // @ts-ignore
-    process.pkg = true
+    process.pkg = true;
     search.mockReturnValueOnce({ config: defaults });
     // @ts-ignore
     loadPlugin.mockReturnValueOnce(() => ({ apply: () => {} }));
@@ -107,7 +107,7 @@ describe('Auto', () => {
     // @ts-ignore
     expect(loadPlugin.mock.calls[1][0][0]).toBe('git-tag');
     // @ts-ignore
-    process.pkg = undefined
+    process.pkg = undefined;
   });
 
   test('should throw if now GH_TOKEN set', async () => {

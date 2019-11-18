@@ -3,7 +3,7 @@ import { URL } from 'url';
 import join from 'url-join';
 
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
-import { ILabelDefinitionMap } from './release';
+import { ILabelDefinitionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 
@@ -179,14 +179,14 @@ export default class Changelog {
     let currentCommits = [...commits];
     const order = ['major', 'minor', 'patch'];
     const sections = Object.entries(this.options.labels)
-      .filter(([, label]) => label.some(l => l.title))
+      .filter(([, label]) => label && label.some(l => l.title))
       .sort(([a], [b]) => {
         const bIndex = order.indexOf(b) + 1 || order.length + 1;
         const aIndex = order.indexOf(a) + 1 || order.length + 1;
         return aIndex - bIndex;
       })
       .map(([, labels]) => labels)
-      .reduce((acc, item) => [...acc, ...item], []);
+      .reduce<ILabelDefinition[]>((acc, item) => [...acc, ...(item || [])], []);
     const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
       this.options.labels,
       'patch'
@@ -222,10 +222,7 @@ export default class Changelog {
     labels: ILabelDefinitionMap,
     labelKey: string
   ) {
-    return (
-      (labels[labelKey] && labels[labelKey][0] && labels[labelKey][0].name) ||
-      labelKey
-    );
+    return labels[labelKey]?.[0]?.name || labelKey;
   }
 
   /** Create a list of users */
@@ -267,7 +264,7 @@ export default class Changelog {
     const subject = commit.subject ? commit.subject.trim() : '';
     let pr = '';
 
-    if (commit.pullRequest && commit.pullRequest.number) {
+    if (commit.pullRequest?.number) {
       const prLink = join(
         this.options.baseUrl,
         'pull',
@@ -345,7 +342,7 @@ export default class Changelog {
   /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = Object.entries(this.options.labels).reduce(
-      (titles, [, labels]) => {
+      (titles, [, labels = []]) => {
         labels.forEach(labelDef => {
           if (labelDef.title) {
             titles[labelDef.name] = labelDef.title;

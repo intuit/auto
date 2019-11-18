@@ -17,7 +17,7 @@ const getPom = async () =>
 /** Get the previous version from the pom.xml */
 async function getPreviousVersion(auto: Auto): Promise<string> {
   const pom = await getPom();
-  const previousVersion = pom.pomObject && pom.pomObject.project.version;
+  const previousVersion = pom.pomObject?.project.version;
 
   if (!previousVersion) {
     throw new Error('Cannot read version from the pom.xml.');
@@ -102,9 +102,7 @@ export default class MavenPlugin implements IPlugin {
       auto.logger.verbose.info('Maven: Getting repo information from pom.xml');
 
       const pom = await getPom();
-      const developers =
-        pom.pomObject.project.developers &&
-        pom.pomObject.project.developers.developer;
+      const developers = pom.pomObject.project.developers?.developer;
       const developer = developers ? arrayify(developers)[0] : undefined;
 
       if (!developer || !developer.name || !developer.email) {

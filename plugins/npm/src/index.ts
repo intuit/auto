@@ -59,9 +59,7 @@ interface IMonorepoPackage {
 const inFolder = (parent: string, child: string) => {
   const relative = path.relative(parent, child);
 
-  return Boolean(
-    relative && !relative.startsWith('..') && !path.isAbsolute(relative)
-  );
+  return Boolean(!relative?.startsWith('..') && !path.isAbsolute(relative));
 };
 
 interface ChangedPackagesArgs {
@@ -132,22 +130,19 @@ export async function changedPackages({
 export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
 
-  return packages.reduce(
-    (greatest, subPackage) => {
-      if (subPackage.package.version) {
-        if (!greatest.version) {
-          return subPackage.package;
-        }
-
-        return gt(greatest.version, subPackage.package.version)
-          ? greatest
-          : subPackage.package;
+  return packages.reduce((greatest, subPackage) => {
+    if (subPackage.package.version) {
+      if (!greatest.version) {
+        return subPackage.package;
       }
 
-      return greatest;
-    },
-    {} as IPackageJSON
-  );
+      return gt(greatest.version, subPackage.package.version)
+        ? greatest
+        : subPackage.package;
+    }
+
+    return greatest;
+  }, {} as IPackageJSON);
 }
 
 /**
@@ -364,10 +359,9 @@ export default class NPMPlugin implements IPlugin {
               version
             });
 
-            const section =
-              packages && packages.length
-                ? packages.map(p => `\`${p}\``).join(', ')
-                : 'monorepo';
+            const section = packages?.length
+              ? packages.map(p => `\`${p}\``).join(', ')
+              : 'monorepo';
 
             if (section === 'monorepo') {
               return [commit, line];
@@ -393,15 +387,7 @@ export default class NPMPlugin implements IPlugin {
 
         const promises = lernaPackages.map(async lernaPackage => {
           const includedCommits = commits.filter(commit =>
-            commit.files.some(file => {
-              const relative = path.relative(lernaPackage.path, file);
-
-              return (
-                relative &&
-                !relative.startsWith('..') &&
-                !path.isAbsolute(relative)
-              );
-            })
+            commit.files.some(file => inFolder(lernaPackage.path, file))
           );
           const title = `v${inc(lernaPackage.version, bump as ReleaseType)}`;
           const releaseNotes = await changelog.generateReleaseNotes(
@@ -556,7 +542,7 @@ export default class NPMPlugin implements IPlugin {
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
-        if (auto.options && auto.options.verbose) {
+        if (auto.options?.verbose) {
           await execPromise('git', ['status', '--short']);
         }
 

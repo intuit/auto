@@ -40,10 +40,12 @@ export default class ReleasedLabelPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.modifyConfig.tap(this.name, config => {
-      config.labels.released = config.labels.released || {
-        name: 'released',
-        description: 'This issue/pull request has been released.'
-      };
+      config.labels.released = config.labels.released || [
+        {
+          name: 'released',
+          description: 'This issue/pull request has been released.'
+        }
+      ];
 
       return config;
     });

@@ -639,8 +639,8 @@ describe('github', () => {
         headers
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const gh = new Git(options);
+      // eslint-disable-next-line no-new
+      new Git(options);
 
       expect(errorHook).toHaveBeenCalled();
 
