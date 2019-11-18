@@ -11,12 +11,12 @@ export default class FilterNonPullRequestPlugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.omitCommit.tapPromise(this.name, async commit => {
-        if (commit.pullRequest && commit.pullRequest.number) {
+        if (commit.pullRequest?.number) {
           const { number: prNumber } = commit.pullRequest;
           const [err, info] = await on(auto.git!.getPr(prNumber));
 
           // Omit PRs that don't exist on the repo
-          if (err && err.message.includes('Not Found')) {
+          if (err?.message.includes('Not Found')) {
             return true;
           }
 

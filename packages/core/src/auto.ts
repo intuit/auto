@@ -233,8 +233,7 @@ export default class Auto {
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo(config);
-    const token =
-      repository && repository.token ? repository.token : process.env.GH_TOKEN;
+    const token = (repository && repository.token) || process.env.GH_TOKEN;
 
     if (!token || token === 'undefined') {
       this.logger.log.error(
@@ -398,14 +397,13 @@ export default class Auto {
       const labelValues = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
-      const skipReleaseTag = labels.find(
-        l => this.release && this.release.options.skipReleaseLabels.includes(l)
+      const skipReleaseTag = labels.find(l =>
+        this.release?.options.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelValues.some(labelValue => labelValue.includes(l)) &&
-          this.release &&
-          !this.release.options.skipReleaseLabels.includes(l) &&
+          !this.release?.options.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 

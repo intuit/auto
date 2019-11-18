@@ -123,7 +123,7 @@ export default class Git {
       }
     });
     this.github.hook.error('request', error => {
-      if (error && error.headers && error.headers.authorization) {
+      if (error?.headers?.authorization) {
         delete error.headers.authorization;
       }
 
@@ -311,11 +311,13 @@ export default class Git {
   @memoize()
   async getUserByEmail(email: string) {
     try {
-      const search = (await this.github.search.users({
-        q: `in:email ${email}`
-      })).data;
+      const search = (
+        await this.github.search.users({
+          q: `in:email ${email}`
+        })
+      ).data;
 
-      return search && search.items.length > 0 ? search.items[0] : {};
+      return search?.items.length > 0 ? search.items[0] : {};
     } catch (error) {
       this.logger.verbose.warn(`Could not find user by email: ${email}`);
     }
@@ -485,10 +487,12 @@ export default class Git {
   async getProject() {
     this.logger.verbose.info('Getting project from GitHub');
 
-    const result = (await this.github.repos.get({
-      owner: this.options.owner,
-      repo: this.options.repo
-    })).data;
+    const result = (
+      await this.github.repos.get({
+        owner: this.options.owner,
+        repo: this.options.repo
+      })
+    ).data;
 
     this.logger.veryVerbose.info('Got response from repos\n', result);
     this.logger.verbose.info('Got project information.');
@@ -500,11 +504,13 @@ export default class Git {
   async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
     this.logger.verbose.info('Getting pull requests...');
 
-    const result = (await this.github.pulls.list({
-      owner: this.options.owner.toLowerCase(),
-      repo: this.options.repo.toLowerCase(),
-      ...options
-    })).data;
+    const result = (
+      await this.github.pulls.list({
+        owner: this.options.owner.toLowerCase(),
+        repo: this.options.repo.toLowerCase(),
+        ...options
+      })
+    ).data;
 
     this.logger.veryVerbose.info('Got response from pull requests', result);
     this.logger.verbose.info('Got pull request');

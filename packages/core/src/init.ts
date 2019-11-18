@@ -219,23 +219,20 @@ export default async function init(
   const autoRc = Object.entries({
     ...flags,
     labels
-  }).reduce(
-    (all, [key, value]) => {
-      if (
-        value === '' ||
-        value === false ||
-        (isObject(value) && Object.keys(value).length === 0)
-      ) {
-        return all;
-      }
+  }).reduce((all, [key, value]) => {
+    if (
+      value === '' ||
+      value === false ||
+      (isObject(value) && Object.keys(value).length === 0)
+    ) {
+      return all;
+    }
 
-      return {
-        ...all,
-        [key]: value
-      };
-    },
-    {} as { [key: string]: number | {} | boolean }
-  );
+    return {
+      ...all,
+      [key]: value
+    };
+  }, {} as { [key: string]: number | {} | boolean });
 
   if (Object.keys(autoRc).length === 0) {
     return;

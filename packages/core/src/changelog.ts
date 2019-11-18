@@ -267,7 +267,7 @@ export default class Changelog {
     const subject = commit.subject ? commit.subject.trim() : '';
     let pr = '';
 
-    if (commit.pullRequest && commit.pullRequest.number) {
+    if (commit.pullRequest?.number) {
       const prLink = join(
         this.options.baseUrl,
         'pull',

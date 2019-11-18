@@ -93,7 +93,7 @@ export default class Config {
 
     let rawConfig: ConfigObject = {};
 
-    if (result && result.config) {
+    if (result?.config) {
       rawConfig = result.config;
     }
 
@@ -155,28 +155,29 @@ export default class Config {
       }
     } else if (extend.startsWith('.')) {
       config = tryRequire(extend);
+
       if (extend.endsWith('package.json')) {
-        config = config && config.auto;
+        config = config?.auto;
       }
 
       this.logger.verbose.note(`${extend} found: ${config}`);
     } else {
       config = tryRequire(`${extend}/package.json`);
-      config = config && config.auto;
+      config = config?.auto;
       this.logger.verbose.note(`${extend} found: ${config}`);
     }
 
     if (!config) {
       const scope = `${extend}/auto-config/package.json`;
       config = tryRequire(scope);
-      config = config && config.auto;
+      config = config?.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
     if (!config) {
       const scope = `auto-config-${extend}/package.json`;
       config = tryRequire(scope);
-      config = config && config.auto;
+      config = config?.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
     }
 
