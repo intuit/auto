@@ -2,19 +2,19 @@
 
 `auto` is a tool designed to seamlessly automate the release workflow.
 It is powered by [semantic version](https://semver.org/) labels on pull requests.
-This approach does not require you to change your code or make drastic changes to your current workflow.
+This approach does not require you to change your code or make any drastic changes to your current workflow.
 
 While intended to run in a continuous integration (CI) environment, all `auto` commands can run locally as well.
 
 ## Installation
 
-`auto` by distributed through npm but you can use it with a variety of package management platforms.
+`auto` is distributed through npm, but you can use it with a variety of package management platforms.
 
 ```sh
 npm install auto
 ```
 
-For `auto` installation in `non-npm` environments,follow these [instructions](https://intuit.github.io/auto/pages/non-npm.html#installation)
+For `auto` installation in `non-npm` environments follow these [instructions](https://intuit.github.io/auto/pages/non-npm.html#installation).
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ Getting started with `auto` is super easy.
 
 If your project is already published or has releases then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
 
-To tag your last release find that last commit where you bumped the version and run the following commands with your version number.
+To tag your last release find the last commit where you bumped the version and run the following commands with your version number.
 
 ```sh
 git tag v1.2.3
@@ -45,15 +45,15 @@ In the `Tag version` field enter the version number you just tagged and click `P
    auto init
    ```
 
-   All options for the CLI tools can also be configured via the `.autorc` file.
+   All options can also be configured via the `.autorc` file.
    As CLI options you supply them in snake-case `(--foo-bar)`, but as `.autorc` options you supply them in camelCase `(fooBar)`,
 
-   [Exclusive options](https://intuit.github.io/auto/pages/autorc.html#exclusive) (extends, labels) can be set exclusively in the `.autorc` and do not exist as CLI flags.
+   [Exclusive options](https://intuit.github.io/auto/pages/autorc.html#exclusive) (extends, labels) can only be set in the `.autorc` and do not exist as CLI flags.
 
-   Any CLI option in the `.autorc` will get overridden by the CLI flags.
-   The following are options that might be more useful to set in the `.autorc` rather than with a flag
+   Any option in the `.autorc` will get overridden by the CLI flags if provided.
+   The following are options that might be more useful to set in the `.autorc` than with a flag:
 
-   ```sh
+   ```txt
      baseBranch           Configure what your repo considers the "master" branch.
      plugins              Specify your plugins to load
      githubApi            If you are using enterprise github, `auto` lets you configure the github API URL that it uses.
@@ -73,7 +73,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
 
    You can also store these values in a local file at the root of your project named `.env`.
    Make sure to add this file to your `.gitignore` so you don't commit any keys!
-   These env vars will override any variable already set on the process.
+   These environment variables will override any variable already set on the process.
    This enables you to have a per project configuration that isn't effected by your global setup.
 
    `PROJECT_ROOT/.env`:
@@ -83,7 +83,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
    NPM_TOKEN=PUBLISH_TOKEN
    ```
 
-3. Create your project's labels on github. If labels already exist, it will update them.
+3. Create your project's labels on github. If a label already exist, it will be updated.
 
    The types of labels that `auto` uses are:
 
@@ -102,7 +102,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
 4. Set up script
 
    `auto` is written so that each tool it exposes is useful in isolation. 
-   To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool.
+   To version, changelog, publish and release your code all at the same time we've included the `shipit` tool.
    This tool takes the default `auto` workflow and puts it into one command.
 
    It will:
@@ -194,4 +194,4 @@ Because `skip-release` is present no commits are made and the release is fine!
 
 ## Enterprise
 
-If you are using enterprise Github `auto` lets you configure the Github API URL that it uses. You can configure this by using the CLI option --github-api, by setting the value in your `.autorc`, or during `auto init`.
+If you are using enterprise Github, `auto` lets you configure the Github API URL that it uses. You can configure this by using the CLI option --github-api, by setting the value in your `.autorc`, or during `auto init`.
