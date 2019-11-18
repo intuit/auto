@@ -1,3 +1,38 @@
+# v7.16.3 (Mon Nov 18 2019)
+
+#### 🏠  Internal
+
+- `@auto-it/core`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/released`
+  - Upgrade to Typescript 3.7 [#711](https://github.com/intuit/auto/pull/711) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- force docs publish [#700](https://github.com/intuit/auto/pull/700) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`
+  - Modified packages/cli README [#701](https://github.com/intuit/auto/pull/701) ([@rdipika](https://github.com/rdipika) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.6.4 to 3.7.2 [#710](https://github.com/intuit/auto/pull/710) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.0.3 to 23.0.4 [#709](https://github.com/intuit/auto/pull/709) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.22 to 24.0.23 [#708](https://github.com/intuit/auto/pull/708) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.6.1 to 2.7.0 [#707](https://github.com/intuit/auto/pull/707) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 3.0.9 to 3.1.0 [#706](https://github.com/intuit/auto/pull/706) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.12.5 to 12.12.8 [#704](https://github.com/intuit/auto/pull/704) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 17.1.1 to 18.0.1 [#703](https://github.com/intuit/auto/pull/703) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.18.3 to 3.18.4 [#702](https://github.com/intuit/auto/pull/702) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- update ignite [#699](https://github.com/intuit/auto/pull/699) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.34.1 to 16.35.0 [#705](https://github.com/intuit/auto/pull/705) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- rdipika94 ([@rdipika](https://github.com/rdipika))
+
+---
+
 # v7.16.2 (Thu Nov 14 2019)
 
 #### 🐛  Bug Fix
