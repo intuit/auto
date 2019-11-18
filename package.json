@@ -40,8 +40,8 @@
     "create:plugin": "./scripts/create-plugin.js"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.6.1",
-    "@typescript-eslint/parser": "^2.6.1",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.7.0",
     "all-contributors-cli": "^6.4.0",
     "change-case": "^3.1.0",
     "command-line-docs": "^0.0.6",

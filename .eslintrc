@@ -38,6 +38,7 @@
 
     /* typescript */
 
+    "no-undef": 0,
     "@typescript-eslint/no-this-alias": 2,
     "@typescript-eslint/no-unnecessary-type-assertion": 2,
     "@typescript-eslint/no-useless-constructor": 2,
