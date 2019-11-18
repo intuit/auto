@@ -64,7 +64,7 @@
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
     "ts-jest": "^24.0.2",
-    "typescript": "~3.6.2"
+    "typescript": "~3.7.2"
   },
   "prettier": {
     "singleQuote": true
