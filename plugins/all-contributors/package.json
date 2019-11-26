@@ -41,7 +41,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "all-contributors-cli": "6.10.0"
+    "all-contributors-cli": "6.11.0"
   },
   "peerDependencies": {
     "all-contributors-cli": ">= 6.x"
