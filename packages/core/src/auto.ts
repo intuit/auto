@@ -706,12 +706,12 @@ export default class Auto {
 
     if (!this.hooks.next.isUsed()) {
       this.logger.log.error(dedent`
-          None of the plugins that you are using implement the \`next\` command!
+        None of the plugins that you are using implement the \`next\` command!
 
-          "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
+        "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
 
-          If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
-        `);
+        If you think your package manager has the ability to support "next" releases please file an issue or submit a pull request,
+      `);
       process.exit(1);
     }
 
@@ -772,10 +772,11 @@ export default class Auto {
     const isBaseBranch =
       !isPR && 'branch' in env && env.branch === this.baseBranch;
     const isNextBranch = 'branch' in env && env.branch === 'next';
-    const publishInfo =
-      (isBaseBranch && (await this.publishLatest(options))) ||
-      (isNextBranch && (await this.next())) ||
-      (await this.canary(options));
+    const publishInfo = isBaseBranch
+      ? await this.publishLatest(options)
+      : isNextBranch
+      ? await this.next()
+      : await this.canary(options);
 
     if (!publishInfo) {
       return;
