@@ -9,7 +9,8 @@ import {
   AsyncSeriesBailHook,
   SyncHook,
   SyncWaterfallHook,
-  AsyncSeriesHook
+  AsyncSeriesHook,
+  AsyncSeriesWaterfallHook
 } from 'tapable';
 import dedent from 'dedent';
 
@@ -126,6 +127,12 @@ export interface IAutoHooks {
         error: string;
       }
   >;
+  /**
+   * Used to publish a next release. In this hook you get the semver bump
+   * and an array of next versions that been released. If you make another
+   * next release be sure to add it the the array.
+   */
+  next: AsyncSeriesWaterfallHook<[string[], SEMVER]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
 }
@@ -689,6 +696,61 @@ export default class Auto {
   }
 
   /**
+   * Create a next (or test) version of the project. If on master will
+   * release to the default "next" branch.
+   */
+  async next() {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
+
+    if (!this.hooks.next.isUsed()) {
+      this.logger.log.error(dedent`
+        None of the plugins that you are using implement the \`next\` command!
+
+        "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
+
+        If you think your package manager has the ability to support "next" releases please file an issue or submit a pull request,
+      `);
+      process.exit(1);
+    }
+
+    const lastTag = await this.git.getLatestTagInBranch();
+    const commits = await this.release.getCommitsInRelease(lastTag);
+    const releaseNotes = await this.release.generateReleaseNotes(lastTag);
+    const labels = commits.map(commit => commit.labels);
+    const bump =
+      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
+      SEMVER.patch;
+
+    this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
+    const result = await this.hooks.next.promise([], bump);
+    const newVersion = result.join(', ');
+
+    await Promise.all(
+      result.map(async prerelease => {
+        const release = await this.git?.publish(releaseNotes, prerelease, true);
+
+        this.logger.verbose.info(release);
+
+        await this.hooks.afterRelease.promise({
+          lastRelease: lastTag,
+          newVersion: prerelease,
+          commits,
+          releaseNotes,
+          response: release
+        });
+      })
+    );
+
+    this.logger.log.success(
+      `Published next version${result.length > 1 ? `s` : ''}: ${newVersion}`
+    );
+
+    return { newVersion, commitsInRelease: commits };
+  }
+
+  /**
    * Run the full workflow.
    *
    * 1. Calculate version
@@ -709,8 +771,11 @@ export default class Auto {
     const isPR = 'isPr' in env && env.isPr;
     const isBaseBranch =
       !isPR && 'branch' in env && env.branch === this.baseBranch;
+    const isNextBranch = 'branch' in env && env.branch === 'next';
     const publishInfo = isBaseBranch
       ? await this.publishLatest(options)
+      : isNextBranch
+      ? await this.next()
       : await this.canary(options);
 
     if (!publishInfo) {
@@ -994,7 +1059,7 @@ export default class Auto {
   }
 
   /** Prefix a version with a "v" if needed */
-  private readonly prefixRelease = (release: string) => {
+  readonly prefixRelease = (release: string) => {
     if (!this.release) {
       throw this.createErrorMessage();
     }

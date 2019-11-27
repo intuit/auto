@@ -68,6 +68,10 @@ export async function run(command: string, args: ApiOptions) {
       await auto.loadConfig();
       await auto.canary(args as ICanaryOptions);
       break;
+    case 'next':
+      await auto.loadConfig();
+      await auto.next();
+      break;
     default:
       throw new Error(`idk what i'm doing.`);
   }

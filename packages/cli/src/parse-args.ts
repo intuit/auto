@@ -439,8 +439,10 @@ export const commands: Command[] = [
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
 
       1. call from base branch -> latest version released
-      2. call from PR in CI -> canary version released
-      3. call locally when not on base branch -> canary version released
+      2. call from next branch -> next version released
+      3. call from PR in CI -> canary version released
+      4. call locally when on next branch -> next version released
+      5. call locally when not on base/next branch -> canary version released
     `,
     examples: ['{green $} auto shipit'],
     options: [baseBranch, dryRun]
@@ -480,6 +482,18 @@ export const commands: Command[] = [
           "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
       }
     ]
+  },
+  {
+    name: 'next',
+    group: 'Release Commands',
+    description: dedent`
+      Make a release for your "next" release line.
+
+      1. Creates a prerelease on package management platform
+      2. Creates a prerelease on GitHub releases page.
+    `,
+    examples: ['{green $} auto next'],
+    options: [dryRun]
   }
 ];
 

@@ -396,7 +396,7 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %v [skip ci]"'
+      '"Bump version to: %s [skip ci]"'
     ]);
   });
 
@@ -425,7 +425,7 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %v [skip ci]"'
+      '"Bump version to: %s [skip ci]"'
     ]);
   });
 
@@ -498,7 +498,7 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %v [skip ci]"'
+      '"Bump version to: %s [skip ci]"'
     ]);
   });
 
@@ -687,7 +687,7 @@ describe('canary', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %v [skip ci]"'
+      '"Bump version to: %s [skip ci]"'
     ]);
   });
 

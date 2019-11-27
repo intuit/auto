@@ -670,14 +670,15 @@ export default class Git {
   }
 
   /** Create a release for the GitHub projecct */
-  async publish(releaseNotes: string, tag: string) {
+  async publish(releaseNotes: string, tag: string, prerelease = false) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
     const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
-      body: releaseNotes
+      body: releaseNotes,
+      prerelease
     });
 
     this.logger.veryVerbose.info('Got response from createRelease\n', result);
