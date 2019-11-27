@@ -132,6 +132,11 @@ export interface ICanaryOptions {
   message?: string | 'false';
 }
 
+export interface INextOptions {
+  /** Do not actually do anything */
+  dryRun?: boolean;
+}
+
 export type GlobalOptions = {
   /** The GitHub api to communicate with through octokit */
   githubApi?: string;

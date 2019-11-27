@@ -480,6 +480,18 @@ export const commands: Command[] = [
           "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
       }
     ]
+  },
+  {
+    name: 'next',
+    group: 'Release Commands',
+    description: dedent`
+      Make a release for your "next" release line.
+
+      1. Creates a prerelease on package management platform
+      2. Creates a prerelease on GitHub releases page.
+    `,
+    examples: ['{green $} auto next'],
+    options: [dryRun]
   }
 ];
 
