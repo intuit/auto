@@ -715,6 +715,8 @@ export default class Auto {
       process.exit(1);
     }
 
+    await this.setGitUser();
+
     const lastTag = await this.git.getLatestTagInBranch();
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
