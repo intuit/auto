@@ -771,9 +771,11 @@ export default class Auto {
     const isPR = 'isPr' in env && env.isPr;
     const isBaseBranch =
       !isPR && 'branch' in env && env.branch === this.baseBranch;
-    const publishInfo = isBaseBranch
-      ? await this.publishLatest(options)
-      : await this.canary(options);
+    const isNextBranch = 'branch' in env && env.branch === 'next';
+    const publishInfo =
+      (isBaseBranch && (await this.publishLatest(options))) ||
+      (isNextBranch && (await this.next())) ||
+      (await this.canary(options));
 
     if (!publishInfo) {
       return;
