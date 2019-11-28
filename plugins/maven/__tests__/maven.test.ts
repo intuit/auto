@@ -17,7 +17,6 @@ describe('maven', () => {
   beforeEach(() => {
     const plugin = new MavenPlugin();
     hooks = makeHooks();
-
     plugin.apply({
       hooks,
       logger: dummyLog(),
