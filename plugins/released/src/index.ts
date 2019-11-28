@@ -109,7 +109,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
       await this.addCommentAndLabel({
         auto,
         newVersion,
-        prOrIssue: commit.pullRequest.number
+        prOrIssue: commit.pullRequest.number,
+        isPrerelease
       });
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
