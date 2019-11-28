@@ -184,6 +184,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
       }
     } else if (!labels.includes(this.options.label)) {
       await auto.git!.addLabelToPr(prOrIssue, this.options.label);
+
+      if (labels.includes(this.options.prereleaseLabel)) {
+        await auto.git!.removeLabel(prOrIssue, this.options.prereleaseLabel);
+      }
     }
   }
 

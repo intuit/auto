@@ -466,6 +466,23 @@ export default class Git {
     return result;
   }
 
+  /** Add a label to and issue or pull request */
+  async removeLabel(pr: number, label: string) {
+    this.logger.verbose.info(`Removing "${label}" from #${pr}`);
+
+    const result = await this.github.issues.removeLabel({
+      issue_number: pr,
+      owner: this.options.owner,
+      repo: this.options.repo,
+      name: label
+    });
+
+    this.logger.veryVerbose.info('Got response from removeLabel\n', result);
+    this.logger.verbose.info('Removed label on Pull Request.');
+
+    return result;
+  }
+
   /** Lock an issue */
   async lockIssue(issue: number) {
     this.logger.verbose.info(`Locking #${issue} issue...`);
