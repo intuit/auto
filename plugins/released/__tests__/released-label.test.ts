@@ -55,6 +55,10 @@ describe('release label plugin', () => {
           {
             description: 'This issue/pull request has been released.',
             name: 'released'
+          },
+          {
+            description: 'This change is available in a prerelease.',
+            name: 'prerelease'
           }
         ]
       }

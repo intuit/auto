@@ -7,6 +7,8 @@ interface IReleasedLabelPluginOptions {
   message: string;
   /** The label to add to issues and pull requests */
   label: string;
+  /** The label to add to issues and pull requests that are in a prerelease */
+  prereleaseLabel: string;
   /** Whether to lock the issue once the pull request has been released */
   lockIssues: boolean;
 }
@@ -15,6 +17,7 @@ const TYPE = '%TYPE';
 const VERSION = '%VERSION';
 const defaultOptions = {
   label: 'released',
+  prereleaseLabel: 'prerelease',
   lockIssues: false,
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`
 };
@@ -42,8 +45,12 @@ export default class ReleasedLabelPlugin implements IPlugin {
     auto.hooks.modifyConfig.tap(this.name, config => {
       config.labels.released = config.labels.released || [
         {
-          name: 'released',
+          name: this.options.label,
           description: 'This issue/pull request has been released.'
+        },
+        {
+          name: this.options.prereleaseLabel,
+          description: 'This change is available in a prerelease.'
         }
       ];
 
@@ -53,10 +60,6 @@ export default class ReleasedLabelPlugin implements IPlugin {
     auto.hooks.afterRelease.tapPromise(
       this.name,
       async ({ newVersion, commits, response }) => {
-        if (response?.data.prerelease) {
-          return;
-        }
-
         if (!newVersion) {
           return;
         }
@@ -81,7 +84,12 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
         await Promise.all(
           commits.map(async commit =>
-            this.addReleased(auto, commit, newVersion)
+            this.addReleased(
+              auto,
+              commit,
+              newVersion,
+              response?.data.prerelease
+            )
           )
         );
       }
@@ -92,16 +100,17 @@ export default class ReleasedLabelPlugin implements IPlugin {
   private async addReleased(
     auto: Auto,
     commit: IExtendedCommit,
-    newVersion: string
+    newVersion: string,
+    isPrerelease = false
   ) {
     const messages = [commit.subject];
 
     if (commit.pullRequest) {
-      await this.addCommentAndLabel(
+      await this.addCommentAndLabel({
         auto,
         newVersion,
-        commit.pullRequest.number
-      );
+        prOrIssue: commit.pullRequest.number
+      });
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
       pr.data.body.split('\n').map(line => messages.push(line));
@@ -122,9 +131,15 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     await Promise.all(
       issues.map(async issue => {
-        await this.addCommentAndLabel(auto, newVersion, issue, true);
+        await this.addCommentAndLabel({
+          auto,
+          newVersion,
+          prOrIssue: issue,
+          isIssue: true,
+          isPrerelease
+        });
 
-        if (this.options.lockIssues && !isCanary(newVersion)) {
+        if (this.options.lockIssues && !isCanary(newVersion) && !isPrerelease) {
           await auto.git!.lockIssue(issue);
         }
       })
@@ -132,12 +147,24 @@ export default class ReleasedLabelPlugin implements IPlugin {
   }
 
   /** Add the templated comment to the pr and attach the "released" label */
-  private async addCommentAndLabel(
-    auto: Auto,
-    newVersion: string,
-    prOrIssue: number,
-    isIssue = false
-  ) {
+  private async addCommentAndLabel({
+    auto,
+    newVersion,
+    prOrIssue,
+    isIssue = false,
+    isPrerelease = false
+  }: {
+    /** Reference to auto instance */
+    auto: Auto;
+    /** The version being publishing */
+    newVersion: string;
+    /** Issue or pr number */
+    prOrIssue: number;
+    /** Whether it's an issue number */
+    isIssue?: boolean;
+    /** Whether the release was a prerelease */
+    isPrerelease?: boolean;
+  }) {
     // leave a comment with the new version
     const message = this.createReleasedComment(isIssue, newVersion);
     await auto.comment({ message, pr: prOrIssue, context: 'released' });
@@ -150,7 +177,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
     // add a `released` label to a PR
     const labels = await auto.git!.getLabels(prOrIssue);
 
-    if (!labels.includes(this.options.label)) {
+    if (isPrerelease) {
+      if (!labels.includes(this.options.prereleaseLabel)) {
+        await auto.git!.addLabelToPr(prOrIssue, this.options.prereleaseLabel);
+      }
+    } else if (!labels.includes(this.options.label)) {
       await auto.git!.addLabelToPr(prOrIssue, this.options.label);
     }
   }

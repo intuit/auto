@@ -63,12 +63,10 @@ export function calculateSemVerBump(
   });
 
   let skipRelease = false;
-  let isPrerelease = false;
 
   if (labels.length > 0 && labels[0].length > 0) {
-    const prereleaseLabels = labelMap.get('prerelease') || [];
     const releaseLabels = labelMap.get('release') || [];
-    isPrerelease = labels[0].some(label => prereleaseLabels.includes(label));
+
     skipRelease = onlyPublishWithReleaseLabel
       ? !labels[0].some(label => releaseLabels.includes(label))
       : labels[0].some(label => skipReleaseLabels.includes(label));
@@ -78,18 +76,6 @@ export function calculateSemVerBump(
 
   if (skipRelease) {
     return SEMVER.noVersion;
-  }
-
-  if (isPrerelease) {
-    if (version === SEMVER.major) {
-      return SEMVER.premajor;
-    }
-
-    if (version === SEMVER.minor) {
-      return SEMVER.preminor;
-    }
-
-    return SEMVER.prepatch;
   }
 
   return version;
