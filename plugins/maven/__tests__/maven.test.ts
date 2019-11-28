@@ -17,7 +17,11 @@ describe('maven', () => {
   beforeEach(() => {
     const plugin = new MavenPlugin();
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      hooks,
+      logger: dummyLog(),
+      prefixRelease: r => r
+    } as Auto.Auto);
   });
 
   describe('getAuthor', () => {
@@ -165,14 +169,14 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getPreviousVersion.promise(r => r)).toBe('1.0.0');
+      expect(await hooks.getPreviousVersion.promise()).toBe('1.0.0');
     });
 
     test('should throw when no version in pom.xml', async () => {
       mockRead('');
-      await expect(
-        hooks.getPreviousVersion.promise(r => r)
-      ).rejects.toBeInstanceOf(Error);
+      await expect(hooks.getPreviousVersion.promise()).rejects.toBeInstanceOf(
+        Error
+      );
     });
   });
 

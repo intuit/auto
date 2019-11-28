@@ -290,7 +290,7 @@ export default class NPMPlugin implements IPlugin {
       return author;
     });
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       let previousVersion = '';
 
       if (isMonorepo()) {
@@ -310,12 +310,12 @@ export default class NPMPlugin implements IPlugin {
           const releasedPackage = getMonorepoPackage();
 
           if (!releasedPackage.name && !releasedPackage.version) {
-            previousVersion = prefixRelease(monorepoVersion);
+            previousVersion = auto.prefixRelease(monorepoVersion);
           } else {
             previousVersion = await greaterRelease(
-              prefixRelease,
+              auto.prefixRelease,
               releasedPackage.name,
-              prefixRelease(monorepoVersion),
+              auto.prefixRelease(monorepoVersion),
               prereleaseBranch
             );
           }
@@ -328,9 +328,9 @@ export default class NPMPlugin implements IPlugin {
 
         previousVersion = version
           ? await greaterRelease(
-              prefixRelease,
+              auto.prefixRelease,
               name,
-              prefixRelease(version),
+              auto.prefixRelease(version),
               prereleaseBranch
             )
           : '0.0.0';

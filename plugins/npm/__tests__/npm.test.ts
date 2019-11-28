@@ -233,7 +233,8 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      prefixRelease: str => str
     } as Auto.Auto);
 
     readResult = `
@@ -241,7 +242,7 @@ describe('getPreviousVersion', () => {
         "name": "test"
       }
     `;
-    expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.0.0');
+    expect(await hooks.getPreviousVersion.promise()).toBe('0.0.0');
   });
 
   test('should get version from the package.json', async () => {
@@ -253,7 +254,8 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      prefixRelease: str => str
     } as Auto.Auto);
 
     readResult = `
@@ -262,7 +264,7 @@ describe('getPreviousVersion', () => {
         "version": "1.0.0"
       }
     `;
-    expect(await hooks.getPreviousVersion.promise(str => str)).toBe('1.0.0');
+    expect(await hooks.getPreviousVersion.promise()).toBe('1.0.0');
   });
 
   test('should get version from the lerna.json', async () => {
@@ -274,7 +276,8 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      prefixRelease: str => str
     } as Auto.Auto);
 
     readResult = `
@@ -283,7 +286,7 @@ describe('getPreviousVersion', () => {
         "version": "2.0.0"
       }
     `;
-    expect(await hooks.getPreviousVersion.promise(str => str)).toBe('2.0.0');
+    expect(await hooks.getPreviousVersion.promise()).toBe('2.0.0');
   });
 
   test('should get version greatest published monorepo package', async () => {
@@ -305,10 +308,11 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      prefixRelease: str => str
     } as Auto.Auto);
 
-    expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.1.2');
+    expect(await hooks.getPreviousVersion.promise()).toBe('0.1.2');
   });
 });
 

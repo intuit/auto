@@ -172,11 +172,11 @@ auto.hooks.getAuthor.tapPromise('NPM', async () => {
 Get the previous version. Typically from a package distribution description file.
 
 ```ts
-auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+auto.hooks.getPreviousVersion.tapPromise('NPM', async () => {
   const { version } = JSON.parse(await readFile('package.json', 'utf-8'));
 
   if (version) {
-    return prefixRelease(
+    return auto.prefixRelease(
       JSON.parse(await readFile('package.json', 'utf-8')).version
     );
   }
@@ -469,7 +469,7 @@ export default class NPMPlugin {
       }
     });
 
-    auto.hooks.getPreviousVersion.tapPromise('NPM', async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise('NPM', async () => {
       const { version } = JSON.parse(await readFile('package.json', 'utf-8'));
 
       auto.logger.log.info(
@@ -478,7 +478,7 @@ export default class NPMPlugin {
       );
 
       if (version) {
-        return prefixRelease(
+        return auto.prefixRelease(
           JSON.parse(await readFile('package.json', 'utf-8')).version
         );
       }
