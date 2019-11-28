@@ -184,10 +184,8 @@ describe('CratesPlugin', () => {
         readFileSync.mockReturnValueOnce(sampleCargoToml);
         const plugin = new CratesPlugin();
         const hooks = makeHooks();
-        plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        expect(
-          await hooks.getPreviousVersion.promise(prefixRelease)
-        ).toStrictEqual('1.2.3');
+        plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
+        expect(await hooks.getPreviousVersion.promise()).toStrictEqual('1.2.3');
       });
     });
 
