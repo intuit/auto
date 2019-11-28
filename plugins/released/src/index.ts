@@ -52,7 +52,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     auto.hooks.afterRelease.tapPromise(
       this.name,
-      async ({ newVersion, commits }) => {
+      async ({ newVersion, commits, response }) => {
+        if (response?.data.prerelease) {
+          return;
+        }
+
         if (!newVersion) {
           return;
         }
