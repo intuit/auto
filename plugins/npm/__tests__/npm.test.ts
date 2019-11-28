@@ -687,7 +687,8 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      git: { getLatestRelease: () => Promise.resolve('1.2.3') }
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
@@ -715,7 +716,8 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      git: { getLatestRelease: () => Promise.resolve('1.2.3') }
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
@@ -782,7 +784,8 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
-      logger: dummyLog()
+      logger: dummyLog(),
+      git: { getLatestRelease: () => Promise.resolve('@foo/lib:1.1.0') }
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
