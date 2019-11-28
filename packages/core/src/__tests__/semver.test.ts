@@ -10,18 +10,6 @@ test('ranks releases right', () => {
 });
 
 describe('calculateSemVerBump', () => {
-  test('publishes pre-releases', () => {
-    expect(calculateSemVerBump([['minor', 'prerelease']], semverMap)).toBe(
-      SEMVER.preminor
-    );
-    expect(calculateSemVerBump([['patch', 'prerelease']], semverMap)).toBe(
-      SEMVER.prepatch
-    );
-    expect(calculateSemVerBump([['major', 'prerelease']], semverMap)).toBe(
-      SEMVER.premajor
-    );
-  });
-
   test('should be able to use multiple labels for skip-release', () => {
     expect(
       calculateSemVerBump([['skip-release', 'major']], semverMap, {

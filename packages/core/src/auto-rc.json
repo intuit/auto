@@ -25,10 +25,6 @@
         "release": {
           "type": "string",
           "description": "Only used when in 'onlyPublishWithReleaseLabel' to publish pull requests."
-        },
-        "prerelease": {
-          "type": "string",
-          "description": "Label used to mark a pull request as a prerelease"
         }
       }
     },

@@ -119,8 +119,7 @@ describe('getVersionMap', () => {
         ['minor', ['minor']],
         ['patch', ['patch']],
         ['skip-release', ['skip-release']],
-        ['release', ['release']],
-        ['prerelease', ['prerelease']]
+        ['release', ['release']]
       ])
     );
   });

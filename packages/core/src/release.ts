@@ -27,16 +27,14 @@ export type VersionLabel =
   | SEMVER.minor
   | SEMVER.patch
   | 'skip-release'
-  | 'release'
-  | 'prerelease';
+  | 'release';
 
 export const defaultLabels: VersionLabel[] = [
   SEMVER.major,
   SEMVER.minor,
   SEMVER.patch,
   'skip-release',
-  'release',
-  'prerelease'
+  'release'
 ];
 
 /** Determine if a label is a label used for versioning */
@@ -136,13 +134,6 @@ export const defaultLabelDefinition: ILabelDefinitionMap = {
     {
       name: 'release',
       description: 'Create a release when this pr is merged'
-    }
-  ],
-  prerelease: [
-    {
-      name: 'prerelease',
-      title: '🚧 Prerelease',
-      description: 'Create a pre-release version when merged'
     }
   ],
   internal: [

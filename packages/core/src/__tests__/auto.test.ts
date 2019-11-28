@@ -162,7 +162,6 @@ describe('Auto', () => {
       ['Version: Patch'],
       ['skip-release'],
       ['release'],
-      ['prerelease']
     ]);
   });
 
