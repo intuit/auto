@@ -1,5 +1,6 @@
 import envCi from 'env-ci';
 import * as fs from 'fs';
+import { execSync } from 'child_process';
 import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
@@ -13,6 +14,9 @@ import setTokenOnCI from './set-npm-token';
 import { loadPackageJson, readFile } from './utils';
 
 const { isCi } = envCi();
+/** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
+const branch = execSync('git symbolic-ref --short HEAD', { encoding: 'utf8' });
+
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 
 /** Check if the project is a monorepo */
@@ -32,7 +36,8 @@ async function getPublishedVersion(name: string) {
 export async function greaterRelease(
   prefixRelease: (release: string) => string,
   name: string,
-  packageVersion: string
+  packageVersion: string,
+  prereleaseBranch?: string
 ) {
   const publishedVersion = await getPublishedVersion(name);
 
@@ -41,9 +46,11 @@ export async function greaterRelease(
   }
 
   const publishedPrefixed = prefixRelease(publishedVersion);
-  const baseVersion = packageVersion.includes('next')
-    ? inc(packageVersion, 'patch') || packageVersion
-    : packageVersion;
+  // The branch (ex: next) is also the --preid
+  const baseVersion =
+    prereleaseBranch && packageVersion.includes(prereleaseBranch)
+      ? inc(packageVersion, 'patch') || packageVersion
+      : packageVersion;
 
   return gte(baseVersion, publishedPrefixed)
     ? packageVersion
@@ -249,6 +256,10 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === 'verbose' ||
       auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
+    const prereleaseBranches = auto.config?.prereleaseBranches!;
+    const prereleaseBranch = prereleaseBranches.includes(branch)
+      ? branch
+      : prereleaseBranches[0];
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       if (!isCi) {
@@ -302,7 +313,8 @@ export default class NPMPlugin implements IPlugin {
             previousVersion = await greaterRelease(
               prefixRelease,
               releasedPackage.name,
-              prefixRelease(monorepoVersion)
+              prefixRelease(monorepoVersion),
+              prereleaseBranch
             );
           }
         }
@@ -313,7 +325,12 @@ export default class NPMPlugin implements IPlugin {
         const { version, name } = await loadPackageJson();
 
         previousVersion = version
-          ? await greaterRelease(prefixRelease, name, prefixRelease(version))
+          ? await greaterRelease(
+              prefixRelease,
+              name,
+              prefixRelease(version),
+              prereleaseBranch
+            )
           : '0.0.0';
       }
 
@@ -546,11 +563,13 @@ export default class NPMPlugin implements IPlugin {
 
       if (isMonorepo()) {
         const packages = await this.getLernaPackages();
-        const inPreRelease = packages.find(p => p.version.includes('next'));
+        const inPreRelease = packages.find(p =>
+          p.version.includes(prereleaseBranch)
+        );
         const isIndependent = getLernaJson().version === 'independent';
         const next =
           inPreRelease && !isIndependent
-            ? inc(lastRelease, `pre${bump}` as ReleaseType, 'next') ||
+            ? inc(lastRelease, `pre${bump}` as ReleaseType, prereleaseBranch) ||
               'prerelease'
             : '';
 
@@ -565,9 +584,9 @@ export default class NPMPlugin implements IPlugin {
             ? 'prerelease'
             : `pre${bump}`,
           '--dist-tag',
-          'next',
+          prereleaseBranch,
           '--preid',
-          'next',
+          prereleaseBranch,
           '--message',
           VERSION_COMMIT_MESSAGE,
           '--force-publish', // you always want a next version to publish
@@ -584,7 +603,7 @@ export default class NPMPlugin implements IPlugin {
         } else {
           const packages = await this.getLernaPackages();
           const { version = '' } =
-            packages.find(p => p.version.includes('next')) || {};
+            packages.find(p => p.version.includes(prereleaseBranch)) || {};
 
           preReleaseVersions.push(auto.prefixRelease(version));
         }
@@ -592,7 +611,8 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Detected single npm package');
 
         const next =
-          inc(lastRelease, `pre${bump}` as ReleaseType, 'next') || 'prerelease';
+          inc(lastRelease, `pre${bump}` as ReleaseType, prereleaseBranch) ||
+          'prerelease';
         const current = await auto.getCurrentVersion(lastRelease);
 
         await execPromise('npm', [
@@ -602,7 +622,12 @@ export default class NPMPlugin implements IPlugin {
           VERSION_COMMIT_MESSAGE,
           ...verboseArgs
         ]);
-        await execPromise('npm', ['publish', '--tag', 'next', ...verboseArgs]);
+        await execPromise('npm', [
+          'publish',
+          '--tag',
+          prereleaseBranch,
+          ...verboseArgs
+        ]);
         await execPromise('git', ['push', '--follow-tags']);
 
         auto.logger.verbose.info('Successfully published next version');

@@ -160,11 +160,9 @@ describe('release label plugin', () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
     releasedLabel.apply(({
+      config: { skipReleaseLabels: ['skip-release'] },
       hooks: autoHooks,
       labels: defaultLabelDefinition,
-      release: {
-        options: { skipReleaseLabels: ['skip-release'] }
-      },
       logger: dummyLog(),
       options: {},
       comment,

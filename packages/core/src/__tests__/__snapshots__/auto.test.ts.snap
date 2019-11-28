@@ -120,6 +120,9 @@ Object {
   },
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
+  "prereleaseBranches": Array [
+    "next",
+  ],
   "repo": "bar",
   "skipReleaseLabels": Array [
     "skip-release",
@@ -183,6 +186,9 @@ Object {
     ],
   },
   "owner": "foo",
+  "prereleaseBranches": Array [
+    "next",
+  ],
   "repo": "bar",
   "skipReleaseLabels": Array [
     "skip-release",

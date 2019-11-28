@@ -128,7 +128,7 @@ describe('Auto', () => {
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
-    expect(auto.release!.options).toMatchSnapshot();
+    expect(auto.release!.config).toMatchSnapshot();
   });
 
   test('should extend local config', async () => {
@@ -144,7 +144,7 @@ describe('Auto', () => {
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
-    expect(auto.release!.options).toMatchSnapshot();
+    expect(auto.release!.config).toMatchSnapshot();
     process.cwd = orig;
   });
 
@@ -161,7 +161,7 @@ describe('Auto', () => {
       ['Version: Minor'],
       ['Version: Patch'],
       ['skip-release'],
-      ['release'],
+      ['release']
     ]);
   });
 
@@ -178,7 +178,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.skipReleaseLabels).toStrictEqual(['NOPE']);
+    expect(auto.release!.config.skipReleaseLabels).toStrictEqual(['NOPE']);
   });
 
   test('should be able to add label as string', async () => {
@@ -194,7 +194,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toStrictEqual([
+    expect(auto.config!.labels.minor).toStrictEqual([
       {
         description: 'Increment the minor version when merged',
         name: 'feature',
@@ -218,7 +218,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toStrictEqual([
+    expect(auto.config!.labels.minor).toStrictEqual([
       {
         description: 'This is a test',
         name: 'minor',
@@ -242,7 +242,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.fooBar).toStrictEqual([
+    expect(auto.config!.labels.fooBar).toStrictEqual([
       {
         description: 'This is a test',
         name: 'fooBar'

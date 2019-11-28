@@ -405,12 +405,12 @@ export default class Auto {
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseTag = labels.find(l =>
-        this.release?.options.skipReleaseLabels.includes(l)
+        this.config?.skipReleaseLabels.includes(l)
       );
       const semverTag = labels.find(
         l =>
           labelValues.some(labelValue => labelValue.includes(l)) &&
-          !this.release?.options.skipReleaseLabels.includes(l) &&
+          !this.config?.skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 
@@ -773,7 +773,10 @@ export default class Auto {
     const isPR = 'isPr' in env && env.isPr;
     const isBaseBranch =
       !isPR && 'branch' in env && env.branch === this.baseBranch;
-    const isNextBranch = 'branch' in env && env.branch === 'next';
+    const isNextBranch =
+      'branch' in env &&
+      this.config?.prereleaseBranches?.some(branch => env.branch === branch);
+
     const publishInfo = isBaseBranch
       ? await this.publishLatest(options)
       : isNextBranch
@@ -1066,7 +1069,7 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    return this.release.options.noVersionPrefix || release.startsWith('v')
+    return this.config?.noVersionPrefix || release.startsWith('v')
       ? release
       : `v${release}`;
   };
@@ -1107,7 +1110,7 @@ If a command fails manually run:
         return;
       }
 
-      let { email, name } = this.release.options;
+      let { email, name } = this.release.config;
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );

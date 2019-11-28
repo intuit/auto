@@ -91,7 +91,7 @@ describe('postToSlack', () => {
     plugin.apply({
       hooks,
       options: {},
-      release: { options: { skipReleaseLabels: ['skip-release'] } }
+      config: { skipReleaseLabels: ['skip-release'] }
     } as Auto);
 
     await hooks.afterRelease.promise({
