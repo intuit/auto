@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/upload-assets",
-  "version": "8.0.0-next.2",
+  "version": "8.0.0-next.3",
   "main": "dist/index.js",
   "description": "Upload assets plugin for auto",
   "author": {
