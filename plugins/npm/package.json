@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/npm",
-  "version": "8.0.0-next.3",
+  "version": "8.0.0-next.4",
   "main": "dist/index.js",
   "description": "NPM publishing plugin for auto",
   "author": {
