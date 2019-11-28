@@ -24,7 +24,7 @@ export const makeHooks = (): IAutoHooks => ({
   onCreateChangelog: new SyncHook(['changelog', 'version']),
   onCreateLogParse: new SyncHook(['logParse']),
   getAuthor: new AsyncSeriesBailHook([]),
-  getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
+  getPreviousVersion: new AsyncSeriesBailHook([]),
   getRepository: new AsyncSeriesBailHook([]),
   version: new AsyncParallelHook(['version']),
   afterVersion: new AsyncParallelHook([]),

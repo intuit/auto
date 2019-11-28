@@ -100,10 +100,7 @@ export interface IAutoHooks {
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
   /** Get the previous version. Typically from a package distribution description file. */
-  getPreviousVersion: AsyncSeriesBailHook<
-    [(release: string) => string],
-    string
-  >;
+  getPreviousVersion: AsyncSeriesBailHook<[], string>;
   /** Get owner and repository. Typically from a package distribution description file. */
   getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
@@ -812,9 +809,7 @@ export default class Auto {
       return this.prefixRelease('0.0.0');
     });
 
-    const lastVersion = await this.hooks.getPreviousVersion.promise(
-      this.prefixRelease
-    );
+    const lastVersion = await this.hooks.getPreviousVersion.promise();
 
     if (
       parse(lastRelease) &&
