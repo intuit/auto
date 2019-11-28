@@ -207,6 +207,18 @@ const checkClean = async (auto: Auto) => {
 const markdownList = (lines: string[]) =>
   lines.map(line => `- \`${line}\``).join('\n');
 
+/** Bump the version but no too much */
+function determineBump(
+  version: string,
+  current: string,
+  bump: SEMVER,
+  tag: string
+) {
+  const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+
+  return lte(next, current) ? 'prerelease' : next;
+}
+
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
@@ -483,13 +495,26 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
 
+      const lastRelease = await auto.git!.getLatestRelease();
+      const isIndependent = getLernaJson().version === 'independent';
+
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
+
+        const packagesBefore = await this.getLernaPackages();
+        const next =
+          (isIndependent && `pre${version}`) ||
+          determineBump(
+            lastRelease,
+            packagesBefore[0].version,
+            version,
+            'canary'
+          );
 
         await execPromise('npx', [
           'lerna',
           'publish',
-          `pre${version}`,
+          next,
           '--dist-tag',
           'canary',
           '--preid',
@@ -503,12 +528,11 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
-        const packages = await this.getLernaPackages();
         const independentPackages = await this.getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
 
-        if (getLernaJson().version === 'independent') {
+        if (isIndependent) {
           if (!independentPackages.some(p => p.includes('canary'))) {
             return { error: 'No packages were changed. No canary published.' };
           }
@@ -518,6 +542,7 @@ export default class NPMPlugin implements IPlugin {
           )}</details>`;
         }
 
+        const packages = await this.getLernaPackages();
         const versioned = packages.find(p => p.version.includes('canary'));
 
         if (!versioned) {
@@ -529,7 +554,6 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info('Detected single npm package');
       const { private: isPrivate, name } = await loadPackageJson();
-      const lastRelease = await auto.git!.getLatestRelease();
       const current = await auto.getCurrentVersion(lastRelease);
       const nextVersion = inc(current, version as ReleaseType);
       const isScopedPackage = name.match(/@\S+\/\S+/);
@@ -569,22 +593,22 @@ export default class NPMPlugin implements IPlugin {
           p.version.includes(prereleaseBranch)
         );
         const isIndependent = getLernaJson().version === 'independent';
-        const next =
-          inPreRelease && !isIndependent
-            ? inc(lastRelease, `pre${bump}` as ReleaseType, prereleaseBranch) ||
-              'prerelease'
-            : '';
 
         auto.logger.verbose.info('Detected monorepo, using lerna');
-
         await execPromise('npx', [
           'lerna',
           'publish',
-          // It's hard to accurately predict how we should bump independent versions.
-          // So we just prerelease most of the time. (independent only)
-          inPreRelease && (isIndependent || lte(next, inPreRelease.version))
-            ? 'prerelease'
-            : `pre${bump}`,
+          (inPreRelease &&
+            // It's hard to accurately predict how we should bump independent versions.
+            // So we just prerelease most of the time. (independent only)
+            ((isIndependent && 'prerelease') ||
+              determineBump(
+                lastRelease,
+                inPreRelease.version,
+                bump,
+                prereleaseBranch
+              ))) ||
+            `pre${bump}`,
           '--dist-tag',
           prereleaseBranch,
           '--preid',
@@ -612,14 +636,17 @@ export default class NPMPlugin implements IPlugin {
       } else {
         auto.logger.verbose.info('Detected single npm package');
 
-        const next =
-          inc(lastRelease, `pre${bump}` as ReleaseType, prereleaseBranch) ||
-          'prerelease';
         const current = await auto.getCurrentVersion(lastRelease);
+        const next = determineBump(
+          lastRelease,
+          current,
+          bump,
+          prereleaseBranch
+        );
 
         await execPromise('npm', [
           'version',
-          lte(next, current) ? 'prerelease' : next,
+          next,
           '--message',
           VERSION_COMMIT_MESSAGE,
           ...verboseArgs
