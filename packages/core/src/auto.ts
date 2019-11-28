@@ -27,7 +27,8 @@ import {
   IPRStatusOptions,
   IReleaseOptions,
   IShipItOptions,
-  IVersionOptions
+  IVersionOptions,
+  INextOptions
 } from './auto-args';
 import Changelog from './changelog';
 import Config from './config';
@@ -699,7 +700,7 @@ export default class Auto {
    * Create a next (or test) version of the project. If on master will
    * release to the default "next" branch.
    */
-  async next() {
+  async next(options: INextOptions) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -724,6 +725,14 @@ export default class Auto {
     const bump =
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
+
+    if (options.dryRun) {
+      this.logger.log.success(
+        `Would have created prerelease version with: ${bump}`
+      );
+
+      return { newVersion: '', commitsInRelease: commits };
+    }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
     const result = await this.hooks.next.promise([], bump);
@@ -792,7 +801,7 @@ export default class Auto {
       isBaseBrach && shouldGraduate
         ? await this.publishLatest(options)
         : publishPrerelease
-        ? await this.next()
+        ? await this.next(options)
         : await this.canary(options);
 
     if (!publishInfo) {
