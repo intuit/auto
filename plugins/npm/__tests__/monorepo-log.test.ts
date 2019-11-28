@@ -80,7 +80,11 @@ test('should create sections for packages', async () => {
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+  plugin.apply({
+    config: { prereleaseBranches: ['next'] },
+    hooks,
+    logger: dummyLog()
+  } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
@@ -124,7 +128,11 @@ test('should add versions for independent packages', async () => {
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+  plugin.apply({
+    config: { prereleaseBranches: ['next'] },
+    hooks,
+    logger: dummyLog()
+  } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
@@ -152,6 +160,7 @@ test('should create extra change logs for sub-packages', async () => {
   const update = jest.fn();
 
   plugin.apply({
+    config: { prereleaseBranches: ['next'] },
     hooks,
     logger: dummyLog(),
     release: {

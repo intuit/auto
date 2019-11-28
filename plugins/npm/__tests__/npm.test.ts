@@ -161,7 +161,11 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -175,7 +179,11 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -196,7 +204,11 @@ describe('getAuthor', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -218,7 +230,11 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -234,7 +250,11 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(false);
     existsSync.mockReturnValueOnce(true);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -251,7 +271,11 @@ describe('getPreviousVersion', () => {
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -278,7 +302,11 @@ describe('getPreviousVersion', () => {
     // published version of test package
     exec.mockReturnValueOnce('0.1.2');
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     expect(await hooks.getPreviousVersion.promise(str => str)).toBe('0.1.2');
   });
@@ -306,6 +334,7 @@ describe('publish', () => {
     const hooks = makeHooks();
 
     plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -331,7 +360,11 @@ describe('publish', () => {
     const logger = dummyLog();
     logger.logLevel = 'veryVerbose';
 
-    plugin.apply({ hooks, logger } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -354,7 +387,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -375,7 +412,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
@@ -404,7 +445,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin({ forcePublish: false });
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
@@ -433,7 +478,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
 
@@ -450,7 +499,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     exec.mockReturnValueOnce('');
     exec.mockReturnValueOnce('1.0.0');
@@ -475,7 +528,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
@@ -506,7 +563,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -522,7 +583,11 @@ describe('publish', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
 
     readResult = `
       {
@@ -546,6 +611,7 @@ describe('canary', () => {
     const hooks = makeHooks();
 
     plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -570,6 +636,7 @@ describe('canary', () => {
     const hooks = makeHooks();
 
     plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -592,6 +659,7 @@ describe('canary', () => {
     const hooks = makeHooks();
 
     plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -612,7 +680,11 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -636,7 +708,11 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -661,7 +737,11 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
 
@@ -695,7 +775,11 @@ describe('canary', () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
 
