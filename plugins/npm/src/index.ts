@@ -528,6 +528,7 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         auto.logger.verbose.info('Successfully published canary version');
+        const packages = await this.getLernaPackages();
         const independentPackages = await this.getIndependentPackageList();
         // Reset after we read the packages from the system
         await execPromise('git', ['reset', '--hard', 'HEAD']);
@@ -542,7 +543,6 @@ export default class NPMPlugin implements IPlugin {
           )}</details>`;
         }
 
-        const packages = await this.getLernaPackages();
         const versioned = packages.find(p => p.version.includes('canary'));
 
         if (!versioned) {
