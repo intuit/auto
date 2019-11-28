@@ -1073,6 +1073,7 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
+      auto.release!.getCommitsInRelease = () => Promise.resolve([]);
       auto.git!.getLatestRelease = () => Promise.resolve('');
       auto.release!.getSemverBump = () => Promise.resolve(SEMVER.noVersion);
       const afterShipIt = jest.fn();
