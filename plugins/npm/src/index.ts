@@ -257,6 +257,8 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
     const prereleaseBranches = auto.config?.prereleaseBranches!;
+    // if ran from master we publish the prerelease to the first
+    // configured prerelease branch
     const prereleaseBranch = prereleaseBranches.includes(branch)
       ? branch
       : prereleaseBranches[0];

@@ -771,17 +771,29 @@ export default class Auto {
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const isPR = 'isPr' in env && env.isPr;
-    const isBaseBranch =
-      !isPR && 'branch' in env && env.branch === this.baseBranch;
-    const isNextBranch =
-      'branch' in env &&
-      this.config?.prereleaseBranches?.some(branch => env.branch === branch);
+    const head = await this.release.getCommitsInRelease('HEAD^');
+    const currentBranch = 'branch' in env && env.branch;
+    const isBaseBrach = !isPR && currentBranch === this.baseBranch;
+    const shouldGraduate =
+      !options.onlyGraduateWithReleaseLabel ||
+      (options.onlyGraduateWithReleaseLabel &&
+        head[0].labels.some(l =>
+          this.semVerLabels?.get('release')?.includes(l)
+        ));
+    const isPrereleaseBranch = this.config?.prereleaseBranches?.some(
+      branch => currentBranch === branch
+    );
+    const publishPrerelease =
+      isPrereleaseBranch ||
+      (currentBranch === this.baseBranch &&
+        options.onlyGraduateWithReleaseLabel);
 
-    const publishInfo = isBaseBranch
-      ? await this.publishLatest(options)
-      : isNextBranch
-      ? await this.next()
-      : await this.canary(options);
+    const publishInfo =
+      isBaseBrach && shouldGraduate
+        ? await this.publishLatest(options)
+        : publishPrerelease
+        ? await this.next()
+        : await this.canary(options);
 
     if (!publishInfo) {
       return;

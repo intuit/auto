@@ -445,7 +445,18 @@ export const commands: Command[] = [
       5. call locally when not on base/prerelease branch -> canary version released
     `,
     examples: ['{green $} auto shipit'],
-    options: [baseBranch, dryRun]
+    options: [
+      baseBranch,
+      dryRun,
+      {
+        name: 'only-graduate-with-release-label',
+        type: Boolean,
+        defaultValue: false,
+        group: 'main',
+        description:
+          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.'
+      }
+    ]
   },
   {
     name: 'canary',
