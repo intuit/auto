@@ -10,7 +10,11 @@ const setup = (mockGit?: { getLatestTagInBranch(): string }) => {
   const plugin = new GitTag();
   const hooks = makeHooks();
 
-  plugin.apply(({ hooks, git: mockGit } as unknown) as Auto.Auto);
+  plugin.apply(({
+    hooks,
+    git: mockGit,
+    prefixRelease: (r: string) => r
+  } as unknown) as Auto.Auto);
 
   return hooks;
 };
@@ -23,14 +27,14 @@ describe('Git Tag Plugin', () => {
   describe('getPreviousVersion', () => {
     test('should error without git', async () => {
       const hooks = setup();
-      await expect(
-        hooks.getPreviousVersion.promise(r => r)
-      ).rejects.toBeInstanceOf(Error);
+      await expect(hooks.getPreviousVersion.promise()).rejects.toBeInstanceOf(
+        Error
+      );
     });
 
     test('should get previous version', async () => {
       const hooks = setup({ getLatestTagInBranch: () => 'v1.0.0' });
-      const previousVersion = await hooks.getPreviousVersion.promise(r => r);
+      const previousVersion = await hooks.getPreviousVersion.promise();
       expect(previousVersion).toBe('v1.0.0');
     });
   });
