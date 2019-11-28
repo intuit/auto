@@ -352,6 +352,7 @@ describe('Release', () => {
       const gh = new Release(git, {
         noVersionPrefix: true,
         skipReleaseLabels: ['skip-release'],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -810,6 +811,7 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -831,6 +833,7 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -859,6 +862,7 @@ describe('Release', () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: customLabels,
         baseBranch: 'master'
       });
@@ -918,6 +922,7 @@ describe('Release', () => {
         git,
         {
           skipReleaseLabels: [],
+          prereleaseBranches: ['next'],
           labels: defaultLabelDefinition,
           baseBranch: 'master'
         },
@@ -979,6 +984,7 @@ describe('Release', () => {
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -995,6 +1001,7 @@ describe('Release', () => {
       gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -1009,6 +1016,7 @@ describe('Release', () => {
       let gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });
@@ -1026,6 +1034,7 @@ describe('Release', () => {
 
       gh = new Release(git, {
         skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: defaultLabelDefinition,
         baseBranch: 'master'
       });

@@ -121,7 +121,8 @@ export default class Config {
       ...rawConfig,
       ...args,
       labels,
-      skipReleaseLabels
+      skipReleaseLabels,
+      prereleaseBranches: rawConfig.prereleaseBranches || ['next']
     };
   }
 

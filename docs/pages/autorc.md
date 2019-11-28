@@ -22,6 +22,18 @@ auto init
 
 These options can be set exclusively in the `.autorc` and do not exist as CLI flags.
 
+### Prerelease Labels
+
+You can configure what branches `auto` treats as prerelease branches.
+By default only `next` is treated as a prerelease branch.
+If you configure `prereleaseLabels` it will override the default.
+
+```json
+{
+  "prereleaseLabels": ["next", "beta"]
+}
+```
+
 ### Extending
 
 If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
@@ -78,8 +90,7 @@ To override any of the default labels use the `labels` section in the `.autorc`.
     "minor": "Version: Minor",
     "patch": "Version: Patch",
     "skip-release": "NO!",
-    "release": "Autobots, rollout!",
-    "prerelease": "beta"
+    "release": "Autobots, rollout!"
   }
 }
 ```

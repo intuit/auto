@@ -47,6 +47,8 @@ export type IAutoConfig = IAuthorOptions &
     baseBranch: string;
     /** Labels to count as "skip-release" */
     skipReleaseLabels: string[];
+    /** Branches to create prereleases from */
+    prereleaseBranches: string[];
     /** Instead of publishing every PR only publish when "release" label is present */
     onlyPublishWithReleaseLabel?: boolean;
     /** Whether to prefix the version with a "v" */
@@ -273,7 +275,7 @@ export default class Release {
   /** Plugin entry points */
   readonly hooks: IReleaseHooks;
   /** Options Release was initialized with */
-  readonly options: IAutoConfig;
+  readonly config: IAutoConfig;
 
   /** A class that handles interacting with git and GitHub */
   private readonly git: Git;
@@ -285,17 +287,18 @@ export default class Release {
   /** Initialize the release manager */
   constructor(
     git: Git,
-    options: IAutoConfig = {
+    config: IAutoConfig = {
       baseBranch: 'master',
       skipReleaseLabels: [],
+      prereleaseBranches: ['next'],
       labels: defaultLabelDefinition
     },
     logger: ILogger = dummyLog()
   ) {
-    this.options = options;
+    this.config = config;
     this.logger = logger;
     this.hooks = makeReleaseHooks();
-    this.versionLabels = getVersionMap(options.labels);
+    this.versionLabels = getVersionMap(config.labels);
     this.git = git;
   }
 
@@ -307,8 +310,8 @@ export default class Release {
       owner: this.git.options.owner,
       repo: this.git.options.repo,
       baseUrl: project.html_url,
-      labels: this.options.labels,
-      baseBranch: this.options.baseBranch
+      labels: this.config.labels,
+      baseBranch: this.config.baseBranch
     });
 
     this.hooks.onCreateChangelog.call(changelog, version);
@@ -464,7 +467,7 @@ export default class Release {
         return '';
       }
 
-      return this.options.noVersionPrefix || version.startsWith('v')
+      return this.config.noVersionPrefix || version.startsWith('v')
         ? version
         : `v${version}`;
     });
@@ -512,14 +515,14 @@ export default class Release {
 
         if (
           versionLabel === 'release' &&
-          !this.options.onlyPublishWithReleaseLabel
+          !this.config.onlyPublishWithReleaseLabel
         ) {
           return false;
         }
 
         if (
           versionLabel === 'skip-release' &&
-          this.options.onlyPublishWithReleaseLabel
+          this.config.onlyPublishWithReleaseLabel
         ) {
           return false;
         }
@@ -582,7 +585,7 @@ export default class Release {
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
+    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.config;
     const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
