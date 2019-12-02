@@ -11,7 +11,6 @@ import { gt, inc, ReleaseType } from 'semver';
 import getConfigFromPackageJson from './package-config';
 import setTokenOnCI from './set-npm-token';
 import { loadPackageJson, readFile } from './utils';
-import { execSync } from 'child_process';
 
 const { isCi } = envCi();
 
