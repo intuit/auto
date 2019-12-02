@@ -164,6 +164,7 @@ async function bumpLatest(
 const verbose = ['--loglevel', 'silly'];
 
 interface INpmConfig {
+  /** Whether to auto-deprecate any canary that's published */
   deprecateCanaries?: false | string;
   /** Whether to create sub-package changelogs */
   subPackageChangelogs?: boolean;
@@ -208,6 +209,7 @@ export default class NPMPlugin implements IPlugin {
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
+  /** Configure options for the plugin */
   private readonly options: Required<INpmConfig>;
 
   /** Initialize the plugin with it's options */
@@ -248,6 +250,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
 
+    /** Deprecate a package version */
     const deprecate = async (
       name: string,
       version: string,
@@ -515,6 +518,7 @@ export default class NPMPlugin implements IPlugin {
 
         const packages = await this.getLernaPackages();
         const independentPackages = await this.getIndependentPackageList();
+        /** Deprecate all canaries in a monorepo */
         const deprecateCanaries = async () => {
           const deprecationMessage = this.options.deprecateCanaries;
 
