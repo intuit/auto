@@ -15,6 +15,8 @@ const defaults = {
 test('shipit should publish canary in locally when not on master', async () => {
   const auto = new Auto({ ...defaults, plugins: [] });
   auto.logger = dummyLog();
+  // @ts-ignore
+  auto.checkClean = () => Promise.resolve(true);
   await auto.loadConfig();
 
   auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');

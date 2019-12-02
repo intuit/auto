@@ -186,23 +186,6 @@ interface INpmConfig {
 /** Parse the lerna.json file. */
 const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
 
-/**
- * Check if `git status` is clean. We try to ensure that no
- * changes haven't been staged to match the behavior of NPM.
- */
-const checkClean = async (auto: Auto) => {
-  const status = await execPromise('git', ['status', '--porcelain']);
-
-  if (!status) {
-    return;
-  }
-
-  auto.logger.log.error('Changed Files:\n', status);
-  throw new Error(
-    'Working direction is not clean, make sure all files are commited'
-  );
-};
-
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
   lines.map(line => `- \`${line}\``).join('\n');
@@ -450,8 +433,6 @@ export default class NPMPlugin implements IPlugin {
     );
 
     auto.hooks.version.tapPromise(this.name, async version => {
-      await checkClean(auto);
-
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const isIndependent = getLernaJson().version === 'independent';
@@ -488,8 +469,6 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
-      await checkClean(auto);
-
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
@@ -578,8 +557,6 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
-      await checkClean(auto);
-
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
