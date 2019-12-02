@@ -27,7 +27,7 @@ To use the plugin include it in your `.autorc`
 
 ```json
 {
-  "plugins": ["npm", "released"]
+  "plugins": ["released"]
 }
 ```
 
@@ -40,7 +40,6 @@ Customize the label this plugin attaches to merged pull requests.
 ```json
 {
   "plugins": [
-    "npm",
     [
       "released",
       {
@@ -61,7 +60,6 @@ To customize the message this plugin uses on issues and pull requests use the fo
 ```json
 {
   "plugins": [
-    "npm",
     [
       "released",
       {
@@ -78,6 +76,6 @@ Lock issues that have been merged in PRs.
 
 ```json
 {
-  "plugins": ["npm", ["released", { "lockIssues": true }]]
+  "plugins": [["released", { "lockIssues": true }]]
 }
 ```

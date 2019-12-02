@@ -117,15 +117,15 @@ async function getCustomLabels(onlyLabels = false) {
       const { name, title, description } = response.value.values;
       const newLabel: Partial<ILabelDefinition> = {};
 
-      if (!labelDef.some(l => name !== l.name)) {
+      if (!labelDef?.some(l => name !== l.name)) {
         newLabel.name = name;
       }
 
-      if (!labelDef.some(l => title !== l.title)) {
+      if (!labelDef?.some(l => title !== l.title)) {
         newLabel.title = title;
       }
 
-      if (!labelDef.some(l => description !== l.description)) {
+      if (!labelDef?.some(l => description !== l.description)) {
         newLabel.description = description;
       }
 
@@ -219,23 +219,20 @@ export default async function init(
   const autoRc = Object.entries({
     ...flags,
     labels
-  }).reduce(
-    (all, [key, value]) => {
-      if (
-        value === '' ||
-        value === false ||
-        (isObject(value) && Object.keys(value).length === 0)
-      ) {
-        return all;
-      }
+  }).reduce((all, [key, value]) => {
+    if (
+      value === '' ||
+      value === false ||
+      (isObject(value) && Object.keys(value).length === 0)
+    ) {
+      return all;
+    }
 
-      return {
-        ...all,
-        [key]: value
-      };
-    },
-    {} as { [key: string]: number | {} | boolean }
-  );
+    return {
+      ...all,
+      [key]: value
+    };
+  }, {} as { [key: string]: number | {} | boolean });
 
   if (Object.keys(autoRc).length === 0) {
     return;

@@ -183,12 +183,15 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/yogikhan"><img src="https://avatars3.githubusercontent.com/u/16071601?v=4" width="100px;" alt="Yogesh Khandlewal"/><br /><sub><b>Yogesh Khandlewal</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=yogikhan" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Celeo"><img src="https://avatars1.githubusercontent.com/u/772507?v=4" width="100px;" alt="Matt Boulanger"/><br /><sub><b>Matt Boulanger</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Celeo" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/karenclo"><img src="https://avatars1.githubusercontent.com/u/8535239?v=4" width="100px;" alt="Karen Lo"/><br /><sub><b>Karen Lo</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=karenclo" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/jrnail23"><img src="https://avatars1.githubusercontent.com/u/392612?v=4" width="100px;" alt="James Nail"/><br /><sub><b>James Nail</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jrnail23" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jrnail23" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/rdipika"><img src="https://avatars3.githubusercontent.com/u/12812259?v=4" width="100px;" alt="rdipika94"/><br /><sub><b>rdipika94</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rdipika" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

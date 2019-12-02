@@ -51,10 +51,12 @@ describe('release label plugin', () => {
       await autoHooks.modifyConfig.promise({ labels: {} } as IAutoConfig)
     ).toStrictEqual({
       labels: {
-        released: {
-          description: 'This issue/pull request has been released.',
-          name: 'released'
-        }
+        released: [
+          {
+            description: 'This issue/pull request has been released.',
+            name: 'released'
+          }
+        ]
       }
     });
   });

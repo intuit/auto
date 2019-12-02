@@ -157,4 +157,5 @@ export type ApiOptions = GlobalOptions &
     | IReleaseOptions
     | IVersionOptions
     | ICanaryOptions
-    | IShipItOptions);
+    | IShipItOptions
+  );

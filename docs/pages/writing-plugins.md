@@ -54,7 +54,7 @@ Plugins work by hooking into various actions that `auto` has to do in order to f
 
 #### beforeRun
 
-Happens before anything is done. This is a great place to check for platform specific secrets such as a NPM token.
+Happens before anything is done. This is a great place to check for platform specific secrets such as a npm token.
 
 ```ts
 auto.hooks.beforeRun.tapPromise('NPM', async config => {

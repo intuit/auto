@@ -15,6 +15,17 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
+/** Require a plugin and log where it was found. */
+function requirePlugin(pluginPath: string, logger: ILogger) {
+  const plugin = tryRequire(pluginPath);
+
+  if (plugin) {
+    logger.verbose.info(`Found plugin using: ${pluginPath}`);
+  }
+
+  return plugin as IPluginConstructor;
+}
+
 /** Try to load a plugin in various ways */
 export default function loadPlugin(
   [pluginPath, options]: [string, any],
@@ -30,44 +41,39 @@ export default function loadPlugin(
 
   // Try requiring a path
   if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
-    plugin = tryRequire(pluginPath);
+    plugin = requirePlugin(pluginPath, logger);
   }
 
   // Try requiring a path from cwd
   if (!plugin && (pluginPath.startsWith('.') || pluginPath.startsWith('/'))) {
-    plugin = tryRequire(path.join(process.cwd(), pluginPath));
+    const localPath = path.join(process.cwd(), pluginPath);
+    plugin = requirePlugin(localPath, logger);
 
     if (!plugin) {
-      logger.log.warn(`Could not find plugin from path: ${pluginPath}`);
+      logger.log.warn(`Could not find plugin from path: ${localPath}`);
       return;
     }
   }
 
   // For pkg bundle
   if (!plugin) {
-    plugin = tryRequire(
-      path.join(
-        __dirname,
-        '../../../../../plugins/',
-        pluginPath,
-        'dist/index.js'
-      )
-    ) as IPluginConstructor;
+    const pkgPath = path.join(
+      __dirname,
+      '../../../../../plugins/',
+      pluginPath,
+      'dist/index.js'
+    );
+    plugin = requirePlugin(pkgPath, logger);
   }
 
   // For a user created plugin
   if (!plugin) {
-    plugin = tryRequire(`auto-plugin-${pluginPath}`) as IPluginConstructor;
+    plugin = requirePlugin(`auto-plugin-${pluginPath}`, logger);
   }
 
   // Try importing official plugin
   if (!plugin) {
-    plugin = tryRequire(path.join('@auto-it', pluginPath)) as
-      | IPluginConstructor
-      | {
-          /** The plugin under the default export */
-          default: IPluginConstructor;
-        };
+    plugin = requirePlugin(path.join('@auto-it', pluginPath), logger);
   }
 
   if (!plugin) {

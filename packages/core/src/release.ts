@@ -101,7 +101,7 @@ export interface ILabelDefinition {
 }
 
 export interface ILabelDefinitionMap {
-  [label: string]: ILabelDefinition[];
+  [label: string]: ILabelDefinition[] | undefined;
 }
 
 export const defaultLabelDefinition: ILabelDefinitionMap = {
@@ -163,16 +163,16 @@ export const defaultLabelDefinition: ILabelDefinitionMap = {
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabelDefinition) =>
-  Object.entries(labels).reduce(
-    (semVer, [label, labelDef]) => {
-      if (isVersionLabel(label)) {
-        semVer.set(label, labelDef.map(l => l.name));
-      }
+  Object.entries(labels).reduce((semVer, [label, labelDef]) => {
+    if (isVersionLabel(label) && labelDef) {
+      semVer.set(
+        label,
+        labelDef.map(l => l.name)
+      );
+    }
 
-      return semVer;
-    },
-    new Map() as IVersionLabels
-  );
+    return semVer;
+  }, new Map() as IVersionLabels);
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -745,7 +745,8 @@ export default class Release {
           /** The GitHub user name of the git committer */
           login?: string;
         })
-      | Partial<GHub.UsersGetByUsernameResponse>)[] = [];
+      | Partial<GHub.UsersGetByUsernameResponse>
+    )[] = [];
 
     // If there is a pull request we will attempt to get the authors
     // from any commit in the PR

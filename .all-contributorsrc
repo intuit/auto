@@ -135,6 +135,25 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "jrnail23",
+      "name": "James Nail",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/392612?v=4",
+      "profile": "https://github.com/jrnail23",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "rdipika",
+      "name": "rdipika94",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12812259?v=4",
+      "profile": "https://github.com/rdipika",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

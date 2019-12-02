@@ -394,8 +394,9 @@ describe('publish', () => {
       '--force-publish',
       '--no-commit-hooks',
       '--yes',
+      '--no-push',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -422,8 +423,9 @@ describe('publish', () => {
       false,
       '--no-commit-hooks',
       '--yes',
+      '--no-push',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -440,7 +442,7 @@ describe('publish', () => {
       'lerna',
       'publish',
       '--yes',
-      'from-git'
+      'from-package'
     ]);
   });
 
@@ -494,8 +496,9 @@ describe('publish', () => {
       '--force-publish',
       '--no-commit-hooks',
       '--yes',
+      '--no-push',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 
@@ -738,8 +741,9 @@ describe('canary', () => {
       false,
       '--no-commit-hooks',
       '--yes',
+      '--no-push',
       '-m',
-      "'Bump version to: %v [skip ci]'"
+      '"Bump version to: %v [skip ci]"'
     ]);
   });
 

@@ -234,6 +234,16 @@ Configure what your repo considers the "master" branch.
 }
 ```
 
+### Only Publish With Release Label
+
+Configure the default release behavior.
+
+```json
+{
+  "onlyPublishWithReleaseLabel": true
+}
+```
+
 ### Plugins
 
 It is useful to specify your plugins in the rc file rather than in all the commands.
