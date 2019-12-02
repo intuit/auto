@@ -609,6 +609,8 @@ export default class Auto {
       process.exit(1);
     }
 
+    await this.checkClean();
+
     // SailEnv falls back to commit SHA
     let pr: string | undefined;
     let build: string | undefined;
@@ -713,6 +715,7 @@ export default class Auto {
       process.exit(1);
     }
 
+    await this.checkClean();
     await this.setGitUser();
 
     const lastTag = await this.git.getLatestTagInBranch();
@@ -862,6 +865,7 @@ export default class Auto {
     await this.makeChangelog(options);
 
     if (!options.dryRun) {
+      await this.checkClean();
       this.logger.verbose.info('Calling version hook');
       await this.hooks.version.promise(version);
       this.logger.verbose.info('Calling after version hook');
@@ -1077,6 +1081,22 @@ export default class Auto {
     });
 
     return newVersion;
+  }
+
+
+  /** Check if `git status` is clean. */
+  readonly checkClean = async () => {
+    const status = await execPromise('git', ['status', '--porcelain']);
+
+    if (!status) {
+      return;
+    }
+
+    this.logger.log.error('Changed Files:\n', status);
+
+    throw new Error(
+      'Working direction is not clean, make sure all files are commited'
+    );
   }
 
   /** Prefix a version with a "v" if needed */

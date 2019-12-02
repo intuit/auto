@@ -924,6 +924,8 @@ describe('Auto', () => {
   describe('canary', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
 
       await expect(auto.canary()).rejects.not.toBeUndefined();
@@ -931,6 +933,9 @@ describe('Auto', () => {
 
     test('does not call canary hook in dry-run', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+   
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -946,6 +951,9 @@ describe('Auto', () => {
 
     test('calls the canary hook with the pr info', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+   
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -964,6 +972,8 @@ describe('Auto', () => {
 
     test('falls back to first commit', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestTagInBranch = () => {
@@ -989,6 +999,8 @@ describe('Auto', () => {
 
     test('adds sha if no pr or build number is found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -1006,6 +1018,8 @@ describe('Auto', () => {
 
     test("doesn't comment if there is an error", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       jest.spyOn(auto, 'prBody').mockImplementation();
@@ -1025,6 +1039,8 @@ describe('Auto', () => {
 
     test('defaults to sha when run locally', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1041,6 +1057,8 @@ describe('Auto', () => {
 
     test('works when PR has "skip-release" label', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1063,6 +1081,8 @@ describe('Auto', () => {
   describe('shipit', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
 
       await expect(auto.shipit()).rejects.not.toBeUndefined();
@@ -1070,6 +1090,8 @@ describe('Auto', () => {
 
     test('should not publish when no latest version found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1085,6 +1107,8 @@ describe('Auto', () => {
 
     test('should publish to latest on base branch', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1104,6 +1128,8 @@ describe('Auto', () => {
 
     test('should skip publish in dry run', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1118,6 +1144,8 @@ describe('Auto', () => {
       await auto.shipit({ dryRun: true });
       expect(version).not.toHaveBeenCalled();
     });
+
+
   });
 });
 
