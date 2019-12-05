@@ -10,7 +10,7 @@ enum SEMVER {
   noVersion = ''
 }
 
-export type IVersionLabels = Map<VersionLabel, string[]>;
+export type IVersionLabels = Map<VersionLabel | 'none', string[]>;
 
 export default SEMVER;
 
@@ -44,6 +44,7 @@ export function calculateSemVerBump(
 ) {
   const labelSet = new Set<string>();
   const skipReleaseLabels = labelMap.get('skip-release') || [];
+  const noReleaseLabels = labelMap.get('none') || [];
 
   labels.forEach(pr => {
     pr.forEach(label => {
@@ -62,6 +63,15 @@ export function calculateSemVerBump(
     skipRelease = onlyPublishWithReleaseLabel
       ? !labels[0].some(label => releaseLabels.includes(label))
       : labels[0].some(label => skipReleaseLabels.includes(label));
+  }
+
+  // If the pr has only 1 `none` release label, skip the release
+  if (
+    labels.length > 0 &&
+    labels[0].length === 1 &&
+    noReleaseLabels.includes(labels[0][0])
+  ) {
+    return SEMVER.noVersion;
   }
 
   const version = [...labelSet].reduce(getHigherSemverTag, SEMVER.patch);

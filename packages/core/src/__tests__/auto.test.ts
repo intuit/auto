@@ -1112,7 +1112,8 @@ describe('hooks', () => {
     auto.hooks.modifyConfig.tap('test', testConfig => {
       testConfig.labels.push({
         name: 'released',
-        description: 'This issue/pull request has been released'
+        description: 'This issue/pull request has been released',
+        releaseType: 'none'
       });
 
       return testConfig;

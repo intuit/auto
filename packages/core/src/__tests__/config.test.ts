@@ -21,7 +21,7 @@ describe('normalizeLabel', () => {
   test('should extend base label', () => {
     const label: ILabelDefinition = {
       name: 'foo',
-      type: SEMVER.major
+      releaseType: SEMVER.major
     };
 
     expect(normalizeLabel(label)).toStrictEqual({

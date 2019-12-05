@@ -86,11 +86,11 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 ```json
 {
   "labels": [
-    { "type": "major", "name": "Version: Major" },
-    { "type": "minor", "name": "Version: Minor" },
-    { "type": "patch", "name": "Version: Patch" },
-    { "type": "skip-release", "name": "NO!" },
-    { "type": "release", "name": "Autobots, rollout!" }
+    { "releaseType": "major", "name": "Version: Major" },
+    { "releaseType": "minor", "name": "Version: Minor" },
+    { "releaseType": "patch", "name": "Version: Patch" },
+    { "releaseType": "skip-release", "name": "NO!" },
+    { "releaseType": "release", "name": "Autobots, rollout!" }
   ]
 }
 ```
@@ -100,7 +100,7 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 You can customize everything about a label
 
 - `name` - The label text used for the label. If omitted defaults to the `key` value
-- `type` - The type of release to trigger (major, minor, patch, skip-release, release, or undefined)
+- `releaseType` - The type of release to trigger (major, minor, patch, skip-release, release, or none)
 - `overwrite` - Overwrite the default label associated with the `type`. (default: `false`)
 - `title` - The title to use in the changelog
 - `description` - The description to use when creating the label
@@ -114,7 +114,7 @@ You can customize everything about a label
       "title": "The API has changed:",
       "description": "Add this label to a PR to create a major release",
       "color": "blue",
-      "type": "major"
+      "releaseType": "major"
     }
   ]
 }
@@ -161,18 +161,17 @@ related to a TypeScript re-write.
 }
 ```
 
-#### Arbitrary Labels
+#### `none` Release
 
-If you want to `auto create-labels` to add other labels to your project (ones that aren't used for
-versioning or the changelog), you can use the `labels` section. Just omit the `title` property.
+A label with the `none` release type will not create a release when merged.
+If paired with a SEMVER label, the release is not skipped.
 
 ```json
 {
   "labels": [
     {
-      "name": "good first issue",
-      "description": "This is an issue that first time contributors can tackle easily",
-      "color": "purple"
+      "name": "documentation",
+      "releaseType": "none"
     }
   ]
 }

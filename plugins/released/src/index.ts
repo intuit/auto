@@ -46,14 +46,16 @@ export default class ReleasedLabelPlugin implements IPlugin {
       if (!config.labels.find(l => l.name === this.options.label)) {
         config.labels.push({
           name: this.options.label,
-          description: 'This issue/pull request has been released.'
+          description: 'This issue/pull request has been released.',
+          releaseType: 'none'
         });
       }
 
       if (!config.labels.find(l => l.name === this.options.prereleaseLabel)) {
         config.labels.push({
           name: this.options.prereleaseLabel,
-          description: 'This change is available in a prerelease.'
+          description: 'This change is available in a prerelease.',
+          releaseType: 'none'
         });
       }
 
@@ -78,7 +80,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
         }
 
         const skipReleaseLabels = (
-          auto.config?.labels.filter(l => l.type === 'skip-release') || []
+          auto.config?.labels.filter(l => l.releaseType === 'skip-release') ||
+          []
         ).map(l => l.name);
         const isSkipped = head.labels.find(label =>
           skipReleaseLabels.includes(label)

@@ -3,7 +3,7 @@ import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
 const semverMap = getVersionMap([
   ...defaultLabels,
-  { name: 'documentation', type: 'skip-release' }
+  { name: 'documentation', releaseType: 'skip-release' }
 ]);
 
 test('ranks releases right', () => {

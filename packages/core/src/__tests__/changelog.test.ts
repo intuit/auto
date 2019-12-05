@@ -172,7 +172,7 @@ describe('generateReleaseNotes', () => {
         name: 'Version: Patch',
         title: '🐛  Bug Fix',
         description: 'N/A',
-        type: SEMVER.patch
+        releaseType: SEMVER.patch
       }
     ];
 
@@ -393,7 +393,8 @@ describe('generateReleaseNotes', () => {
       {
         name: 'pushToBaseBranch',
         title: 'Custom Title',
-        description: 'N/A'
+        description: 'N/A',
+        releaseType: 'none'
       }
     ];
 
@@ -430,7 +431,7 @@ describe('generateReleaseNotes', () => {
         name: 'Version: Minor',
         title: 'Woo Woo New Features',
         description: 'N/A',
-        type: SEMVER.minor
+        releaseType: SEMVER.minor
       }
     ];
 
@@ -455,12 +456,16 @@ describe('generateReleaseNotes', () => {
     const options = testOptions();
     options.labels = [
       ...options.labels,
-      { name: 'new-component', title: 'Enhancement', type: SEMVER.minor },
+      {
+        name: 'new-component',
+        title: 'Enhancement',
+        releaseType: SEMVER.minor
+      },
       {
         name: 'Version: Minor',
         title: 'Enhancement',
         description: 'N/A',
-        type: SEMVER.minor
+        releaseType: SEMVER.minor
       }
     ];
 

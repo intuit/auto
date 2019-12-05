@@ -6,6 +6,7 @@ import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
+import SEMVER from './semver';
 
 export interface IGenerateReleaseNotesOptions {
   /** Github repo owner (user) */
@@ -85,7 +86,8 @@ export default class Changelog {
       this.options.labels.push({
         name: 'pushToBaseBranch',
         title: `⚠️  Pushed to ${options.baseBranch}`,
-        description: 'N/A'
+        description: 'N/A',
+        releaseType: SEMVER.patch
       });
   }
 
@@ -175,8 +177,10 @@ export default class Changelog {
     const sections = this.options.labels
       .filter(label => label.title)
       .sort((a, b) => {
-        const bIndex = order.indexOf(b.type || '') + 1 || order.length + 1;
-        const aIndex = order.indexOf(a.type || '') + 1 || order.length + 1;
+        const bIndex =
+          order.indexOf(b.releaseType || '') + 1 || order.length + 1;
+        const aIndex =
+          order.indexOf(a.releaseType || '') + 1 || order.length + 1;
         return aIndex - bIndex;
       })
       .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
@@ -216,7 +220,7 @@ export default class Changelog {
     labels: ILabelDefinition[],
     labelKey: string
   ) {
-    return labels.find(l => l.type === labelKey)?.name || labelKey;
+    return labels.find(l => l.releaseType === labelKey)?.name || labelKey;
   }
 
   /** Create a list of users */

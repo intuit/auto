@@ -409,7 +409,7 @@ export default class Git {
   /** Add a label to the project */
   async createLabel(label: ILabelDefinition) {
     this.logger.verbose.info(
-      `Creating "${label.type || 'general'}" label :\n${label.name}`
+      `Creating "${label.releaseType || 'general'}" label :\n${label.name}`
     );
 
     const color = label.color
@@ -432,7 +432,7 @@ export default class Git {
   /** Update a label on the project */
   async updateLabel(label: ILabelDefinition) {
     this.logger.verbose.info(
-      `Updating "${label.type || 'generic'}" label :\n${label.name}`
+      `Updating "${label.releaseType || 'generic'}" label :\n${label.name}`
     );
 
     const color = label.color

@@ -97,7 +97,7 @@ export interface ILabelDefinition {
   /** The description of the label */
   description?: string;
   /** What type of release this label signifies */
-  type?: VersionLabel;
+  releaseType: VersionLabel | 'none';
   /** Whether to overwrite the base label */
   overwrite?: boolean;
 }
@@ -107,46 +107,48 @@ export const defaultLabels: ILabelDefinition[] = [
     name: 'major',
     title: '💥  Breaking Change',
     description: 'Increment the major version when merged',
-    type: SEMVER.major
+    releaseType: SEMVER.major
   },
   {
     name: 'minor',
     title: '🚀  Enhancement',
     description: 'Increment the minor version when merged',
-    type: SEMVER.minor
+    releaseType: SEMVER.minor
   },
   {
     name: 'patch',
     title: '🐛  Bug Fix',
     description: 'Increment the patch version when merged',
-    type: SEMVER.patch
+    releaseType: SEMVER.patch
   },
   {
     name: 'skip-release',
     description: 'Preserve the current version when merged',
-    type: 'skip-release'
+    releaseType: 'skip-release'
   },
   {
     name: 'release',
     description: 'Create a release when this pr is merged',
-    type: 'release'
+    releaseType: 'release'
   },
   {
     name: 'internal',
     title: '🏠  Internal',
-    description: 'Changes only affect the internal API'
+    description: 'Changes only affect the internal API',
+    releaseType: 'none'
   },
   {
     name: 'documentation',
     title: '📝  Documentation',
-    description: 'Changes only affect the documentation'
+    description: 'Changes only affect the documentation',
+    releaseType: 'none'
   }
 ];
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabels) =>
-  labels.reduce((semVer, { type, name }) => {
-    if (type && isVersionLabel(type)) {
+  labels.reduce((semVer, { releaseType: type, name }) => {
+    if (type && (isVersionLabel(type) || type === 'none')) {
       const list = semVer.get(type) || [];
       semVer.set(type, [...list, name]);
     }
@@ -238,7 +240,7 @@ function processQueryResult(
       return;
     }
 
-    const labels: ILabelDefinition[] = result.edges[0].node.labels
+    const labels: { name: string }[] = result.edges[0].node.labels
       ? result.edges[0].node.labels.edges.map(edge => edge.node)
       : [];
     commit.pullRequest = {
@@ -495,14 +497,14 @@ export default class Release {
     );
     const labelsToCreate = labels.filter(label => {
       if (
-        label.type === 'release' &&
+        label.releaseType === 'release' &&
         !this.config.onlyPublishWithReleaseLabel
       ) {
         return false;
       }
 
       if (
-        label.type === 'skip-release' &&
+        label.releaseType === 'skip-release' &&
         this.config.onlyPublishWithReleaseLabel
       ) {
         return false;

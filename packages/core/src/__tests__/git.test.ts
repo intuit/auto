@@ -598,7 +598,7 @@ describe('github', () => {
     await gh.updateLabel({
       name: 'Foo bar',
       description: 'test',
-      type: 'release'
+      releaseType: 'release'
     });
 
     expect(updateLabel).toHaveBeenCalledWith(
@@ -618,7 +618,7 @@ describe('github', () => {
       await gh.createLabel({
         name: 'Foo bar',
         description: 'test',
-        type: 'release'
+        releaseType: 'release'
       });
 
       expect(createLabel).toHaveBeenCalledWith(

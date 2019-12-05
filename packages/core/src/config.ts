@@ -19,7 +19,7 @@ export function normalizeLabel(
   const baseLabel =
     defaultLabels.find(
       l =>
-        (label.type && l.type === label.type) ||
+        (label.releaseType && l.releaseType === label.releaseType) ||
         (label.name && l.name === label.name)
     ) || {};
   return { ...baseLabel, ...label };
@@ -33,7 +33,10 @@ export function normalizeLabels(config: ConfigObject) {
   if (config.labels) {
     const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
     const baseLabels = defaultLabels.filter(
-      d => !userLabels.some(u => u.type && u.type === d.type && u.overwrite)
+      d =>
+        !userLabels.some(
+          u => u.releaseType && u.releaseType === d.releaseType && u.overwrite
+        )
     );
 
     return [...baseLabels, ...userLabels];
