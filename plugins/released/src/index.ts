@@ -43,16 +43,19 @@ export default class ReleasedLabelPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.modifyConfig.tap(this.name, config => {
-      config.labels.released = config.labels.released || [
-        {
+      if (!config.labels.find(l => l.name === this.options.label)) {
+        config.labels.push({
           name: this.options.label,
           description: 'This issue/pull request has been released.'
-        },
-        {
+        });
+      }
+
+      if (!config.labels.find(l => l.name === this.options.prereleaseLabel)) {
+        config.labels.push({
           name: this.options.prereleaseLabel,
           description: 'This change is available in a prerelease.'
-        }
-      ];
+        });
+      }
 
       return config;
     });
@@ -74,8 +77,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
           return;
         }
 
+        const skipReleaseLabels = (
+          auto.config?.labels.filter(l => l.type === 'skip-release') || []
+        ).map(l => l.name);
         const isSkipped = head.labels.find(label =>
-          auto.config?.skipReleaseLabels.includes(label)
+          skipReleaseLabels.includes(label)
         );
 
         if (isSkipped) {

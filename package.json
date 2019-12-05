@@ -153,19 +153,17 @@
         ]
       ]
     ],
-    "labels": {
-      "dependencies": {
+    "labels": [
+      {
         "name": "dependencies",
-        "title": "🔩 Dependency Updates"
+        "title": "🔩 Dependency Updates",
+        "type": "skip-release"
       },
-      "blog-post": {
+      {
         "name": "blog-post",
-        "title": "📚 Blog Post"
+        "title": "📚 Blog Post",
+        "type": "skip-release"
       }
-    },
-    "skipReleaseLabels": [
-      "dependencies",
-      "blog-post"
     ]
   }
 }

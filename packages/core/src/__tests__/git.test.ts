@@ -595,7 +595,11 @@ describe('github', () => {
   test('updateLabel', async () => {
     const gh = new Git(options);
 
-    await gh.updateLabel('release', { name: 'Foo bar', description: 'test' });
+    await gh.updateLabel({
+      name: 'Foo bar',
+      description: 'test',
+      type: 'release'
+    });
 
     expect(updateLabel).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -611,7 +615,11 @@ describe('github', () => {
     test('should create a label', async () => {
       const gh = new Git(options);
 
-      await gh.createLabel('release', { name: 'Foo bar', description: 'test' });
+      await gh.createLabel({
+        name: 'Foo bar',
+        description: 'test',
+        type: 'release'
+      });
 
       expect(createLabel).toHaveBeenCalledWith(
         expect.objectContaining({

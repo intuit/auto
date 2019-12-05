@@ -30,8 +30,6 @@ export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
 interface ISemVerOptions {
   /** Only publish changes when "release" label is present */
   onlyPublishWithReleaseLabel?: boolean;
-  /** Labels to treat as "skip-release" labels */
-  skipReleaseLabels?: string[];
 }
 
 /**
@@ -42,16 +40,10 @@ interface ISemVerOptions {
 export function calculateSemVerBump(
   labels: string[][],
   labelMap: IVersionLabels,
-  { onlyPublishWithReleaseLabel, skipReleaseLabels = [] }: ISemVerOptions = {}
+  { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
-  const skip = labelMap.get('skip-release') || [];
-
-  skip.forEach(skipLabel => {
-    if (!skipReleaseLabels.includes(skipLabel)) {
-      skipReleaseLabels.push(skipLabel);
-    }
-  });
+  const skipReleaseLabels = labelMap.get('skip-release') || [];
 
   labels.forEach(pr => {
     pr.forEach(label => {

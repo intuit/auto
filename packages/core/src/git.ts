@@ -407,8 +407,10 @@ export default class Git {
   }
 
   /** Add a label to the project */
-  async createLabel(name: string, label: ILabelDefinition) {
-    this.logger.verbose.info(`Creating "${name}" label :\n${label.name}`);
+  async createLabel(label: ILabelDefinition) {
+    this.logger.verbose.info(
+      `Creating "${label.type || 'general'}" label :\n${label.name}`
+    );
 
     const color = label.color
       ? tinyColor(label.color).toString('hex6')
@@ -428,8 +430,10 @@ export default class Git {
   }
 
   /** Update a label on the project */
-  async updateLabel(name: string, label: ILabelDefinition) {
-    this.logger.verbose.info(`Updating "${name}" label :\n${label.name}`);
+  async updateLabel(label: ILabelDefinition) {
+    this.logger.verbose.info(
+      `Updating "${label.type || 'generic'}" label :\n${label.name}`
+    );
 
     const color = label.color
       ? tinyColor(label.color).toString('hex6')

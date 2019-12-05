@@ -29,7 +29,7 @@ export type VersionLabel =
   | 'skip-release'
   | 'release';
 
-export const defaultLabels: VersionLabel[] = [
+export const releaseLabels: VersionLabel[] = [
   SEMVER.major,
   SEMVER.minor,
   SEMVER.patch,
@@ -39,14 +39,12 @@ export const defaultLabels: VersionLabel[] = [
 
 /** Determine if a label is a label used for versioning */
 export const isVersionLabel = (label: string): label is VersionLabel =>
-  defaultLabels.includes(label as VersionLabel);
+  releaseLabels.includes(label as VersionLabel);
 
 export type IAutoConfig = IAuthorOptions &
   GlobalOptions & {
     /** The branch that is used as the base. defaults to master */
     baseBranch: string;
-    /** Labels to count as "skip-release" */
-    skipReleaseLabels: string[];
     /** Branches to create prereleases from */
     prereleaseBranches: string[];
     /** Instead of publishing every PR only publish when "release" label is present */
@@ -56,7 +54,7 @@ export type IAutoConfig = IAuthorOptions &
     /** Plugins to initialize "auto" with */
     plugins?: (string | [string, number | boolean | string | object])[];
     /** The labels configured by the user */
-    labels: ILabelDefinitionMap;
+    labels: ILabelDefinition[];
   };
 
 interface ISearchEdge {
@@ -98,70 +96,57 @@ export interface ILabelDefinition {
   color?: string;
   /** The description of the label */
   description?: string;
+  /** What type of release this label signifies */
+  type?: VersionLabel;
 }
 
-export interface ILabelDefinitionMap {
-  [label: string]: ILabelDefinition[] | undefined;
-}
-
-export const defaultLabelDefinition: ILabelDefinitionMap = {
-  [SEMVER.major]: [
-    {
-      name: 'major',
-      title: '💥  Breaking Change',
-      description: 'Increment the major version when merged'
-    }
-  ],
-  [SEMVER.minor]: [
-    {
-      name: 'minor',
-      title: '🚀  Enhancement',
-      description: 'Increment the minor version when merged'
-    }
-  ],
-  [SEMVER.patch]: [
-    {
-      name: 'patch',
-      title: '🐛  Bug Fix',
-      description: 'Increment the patch version when merged'
-    }
-  ],
-  'skip-release': [
-    {
-      name: 'skip-release',
-      description: 'Preserve the current version when merged'
-    }
-  ],
-  release: [
-    {
-      name: 'release',
-      description: 'Create a release when this pr is merged'
-    }
-  ],
-  internal: [
-    {
-      name: 'internal',
-      title: '🏠  Internal',
-      description: 'Changes only affect the internal API'
-    }
-  ],
-  documentation: [
-    {
-      name: 'documentation',
-      title: '📝  Documentation',
-      description: 'Changes only affect the documentation'
-    }
-  ]
-};
+export const defaultLabels: ILabelDefinition[] = [
+  {
+    name: 'major',
+    title: '💥  Breaking Change',
+    description: 'Increment the major version when merged',
+    type: SEMVER.major
+  },
+  {
+    name: 'minor',
+    title: '🚀  Enhancement',
+    description: 'Increment the minor version when merged',
+    type: SEMVER.minor
+  },
+  {
+    name: 'patch',
+    title: '🐛  Bug Fix',
+    description: 'Increment the patch version when merged',
+    type: SEMVER.patch
+  },
+  {
+    name: 'skip-release',
+    description: 'Preserve the current version when merged',
+    type: 'skip-release'
+  },
+  {
+    name: 'release',
+    description: 'Create a release when this pr is merged',
+    type: 'release'
+  },
+  {
+    name: 'internal',
+    title: '🏠  Internal',
+    description: 'Changes only affect the internal API'
+  },
+  {
+    name: 'documentation',
+    title: '📝  Documentation',
+    description: 'Changes only affect the documentation'
+  }
+];
 
 /** Construct a map of label => semver label */
-export const getVersionMap = (labels = defaultLabelDefinition) =>
-  Object.entries(labels).reduce((semVer, [label, labelDef]) => {
-    if (isVersionLabel(label) && labelDef) {
-      semVer.set(
-        label,
-        labelDef.map(l => l.name)
-      );
+export const getVersionMap = (labels = defaultLabels) =>
+  labels.reduce((semVer, { type, name }) => {
+    if (type && isVersionLabel(type)) {
+      const list = semVer.get(type) || [];
+      semVer.set(type, [...list, name]);
     }
 
     return semVer;
@@ -289,9 +274,8 @@ export default class Release {
     git: Git,
     config: IAutoConfig = {
       baseBranch: 'master',
-      skipReleaseLabels: [],
       prereleaseBranches: ['next'],
-      labels: defaultLabelDefinition
+      labels: defaultLabels
     },
     logger: ILogger = dummyLog()
   ) {
@@ -501,59 +485,45 @@ export default class Release {
 
   /** Go through the configured labels and either add them to the project or update them */
   async addLabelsToProject(
-    labels: Partial<ILabelDefinitionMap>,
+    labels: ILabelDefinition[],
     options: ICreateLabelsOptions = {}
   ) {
     const oldLabels = ((await this.git.getProjectLabels()) || []).map(l =>
       l.toLowerCase()
     );
-    const labelsToCreate = Object.entries(labels).filter(
-      ([versionLabel, labelDef]) => {
-        if (!labelDef) {
-          return false;
-        }
-
-        if (
-          versionLabel === 'release' &&
-          !this.config.onlyPublishWithReleaseLabel
-        ) {
-          return false;
-        }
-
-        if (
-          versionLabel === 'skip-release' &&
-          this.config.onlyPublishWithReleaseLabel
-        ) {
-          return false;
-        }
-
-        return true;
+    const labelsToCreate = labels.filter(label => {
+      if (
+        label.type === 'release' &&
+        !this.config.onlyPublishWithReleaseLabel
+      ) {
+        return false;
       }
-    );
+
+      if (
+        label.type === 'skip-release' &&
+        this.config.onlyPublishWithReleaseLabel
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
     if (!options.dryRun) {
       await Promise.all(
-        labelsToCreate.map(async ([label, labelDefs]) => {
-          if (!labelDefs) {
-            return;
+        labelsToCreate.map(async label => {
+          if (oldLabels.some(o => label.name.toLowerCase() === o)) {
+            return this.git.updateLabel(label);
           }
 
-          return Promise.all(
-            labelDefs.map(async labelDef => {
-              if (oldLabels.some(o => labelDef.name.toLowerCase() === o)) {
-                return this.git.updateLabel(label, labelDef);
-              }
-
-              return this.git.createLabel(label, labelDef);
-            })
-          );
+          return this.git.createLabel(label);
         })
       );
     }
 
     const repoMetadata = await this.git.getProject();
     const justLabelNames = labelsToCreate.reduce<string[]>(
-      (acc, [, cLabel]) => [...acc, ...(cLabel || []).map(l => l.name)],
+      (acc, label) => [...acc, label.name],
       []
     );
 
@@ -585,8 +555,8 @@ export default class Release {
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.config;
-    const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
+    const { onlyPublishWithReleaseLabel } = this.config;
+    const options = { onlyPublishWithReleaseLabel };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,

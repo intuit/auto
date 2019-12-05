@@ -1,16 +1,17 @@
 import dedent from 'dedent';
 import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
-import { defaultLabelDefinition } from '../release';
+import { defaultLabels } from '../release';
 import { dummyLog } from '../utils/logger';
 
 import makeCommitFromMsg from './make-commit-from-msg';
+import SEMVER from '../semver';
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
   owner: 'foobar',
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
-  labels: defaultLabelDefinition,
+  labels: defaultLabels,
   baseBranch: 'master'
 });
 
@@ -22,7 +23,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       baseBranch: 'master'
     });
     changelog.loadDefaultHooks();
@@ -61,7 +62,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       baseBranch: 'master'
     });
     changelog.loadDefaultHooks();
@@ -165,16 +166,15 @@ describe('generateReleaseNotes', () => {
 
   test('should create note for PR commits without labels with custom patch label', async () => {
     const options = testOptions();
-    options.labels = {
+    options.labels = [
       ...options.labels,
-      patch: [
-        {
-          name: 'Version: Patch',
-          title: '🐛  Bug Fix',
-          description: 'N/A'
-        }
-      ]
-    };
+      {
+        name: 'Version: Patch',
+        title: '🐛  Bug Fix',
+        description: 'N/A',
+        type: SEMVER.patch
+      }
+    ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
@@ -284,13 +284,13 @@ describe('generateReleaseNotes', () => {
 
   test('should order the section major, minor, patch, then the rest', async () => {
     const options = testOptions();
-    options.labels = {
-      documentation: options.labels.documentation,
-      internal: options.labels.internal,
-      patch: options.labels.patch,
-      minor: options.labels.minor,
-      major: options.labels.major
-    };
+    options.labels = [
+      options.labels.find(l => l.name === 'documentation')!,
+      options.labels.find(l => l.name === 'internal')!,
+      options.labels.find(l => l.name === 'patch')!,
+      options.labels.find(l => l.name === 'minor')!,
+      options.labels.find(l => l.name === 'major')!
+    ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
@@ -388,16 +388,14 @@ describe('generateReleaseNotes', () => {
 
   test('should be able to customize pushToBaseBranch title', async () => {
     const options = testOptions();
-    options.labels = {
+    options.labels = [
       ...options.labels,
-      pushToBaseBranch: [
-        {
-          name: 'pushToBaseBranch',
-          title: 'Custom Title',
-          description: 'N/A'
-        }
-      ]
-    };
+      {
+        name: 'pushToBaseBranch',
+        title: 'Custom Title',
+        description: 'N/A'
+      }
+    ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
@@ -426,16 +424,15 @@ describe('generateReleaseNotes', () => {
 
   test('should be able to customize titles', async () => {
     const options = testOptions();
-    options.labels = {
+    options.labels = [
       ...options.labels,
-      minor: [
-        {
-          name: 'Version: Minor',
-          title: 'Woo Woo New Features',
-          description: 'N/A'
-        }
-      ]
-    };
+      {
+        name: 'Version: Minor',
+        title: 'Woo Woo New Features',
+        description: 'N/A',
+        type: SEMVER.minor
+      }
+    ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
@@ -456,17 +453,16 @@ describe('generateReleaseNotes', () => {
 
   test('should merge sections with same changelog title', async () => {
     const options = testOptions();
-    options.labels = {
+    options.labels = [
       ...options.labels,
-      minor: [
-        { name: 'new-component', title: 'Enhancement' },
-        {
-          name: 'Version: Minor',
-          title: 'Enhancement',
-          description: 'N/A'
-        }
-      ]
-    };
+      { name: 'new-component', title: 'Enhancement', type: SEMVER.minor },
+      {
+        name: 'Version: Minor',
+        title: 'Enhancement',
+        description: 'N/A',
+        type: SEMVER.minor
+      }
+    ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();

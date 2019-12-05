@@ -3,7 +3,7 @@ import { URL } from 'url';
 import join from 'url-join';
 
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
-import { ILabelDefinitionMap, ILabelDefinition } from './release';
+import { ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
 
@@ -15,7 +15,7 @@ export interface IGenerateReleaseNotesOptions {
   /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl: string;
   /** The labels configured by the user */
-  labels: ILabelDefinitionMap;
+  labels: ILabelDefinition[];
   /** The branch that is used as the base. defaults to master */
   baseBranch: string;
 }
@@ -81,18 +81,12 @@ export default class Changelog {
     this.options = options;
     this.hooks = makeChangelogHooks();
 
-    const pushToMasterLabel = {
-      name: 'pushToBaseBranch',
-      title: `⚠️  Pushed to ${options.baseBranch}`,
-      description: 'N/A'
-    };
-
-    this.options.labels.pushToBaseBranch = this.options.labels.pushToBaseBranch
-      ? this.options.labels.pushToBaseBranch.map(l => ({
-          ...pushToMasterLabel,
-          ...l
-        }))
-      : [pushToMasterLabel];
+    if (!this.options.labels.find(l => l.name === 'pushToBaseBranch'))
+      this.options.labels.push({
+        name: 'pushToBaseBranch',
+        title: `⚠️  Pushed to ${options.baseBranch}`,
+        description: 'N/A'
+      });
   }
 
   /** Load the default configuration */
@@ -178,15 +172,15 @@ export default class Changelog {
   private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
     const order = ['major', 'minor', 'patch'];
-    const sections = Object.entries(this.options.labels)
-      .filter(([, label]) => label && label.some(l => l.title))
-      .sort(([a], [b]) => {
-        const bIndex = order.indexOf(b) + 1 || order.length + 1;
-        const aIndex = order.indexOf(a) + 1 || order.length + 1;
+    const sections = this.options.labels
+      .filter(label => label.title)
+      .sort((a, b) => {
+        const bIndex = order.indexOf(b.type || '') + 1 || order.length + 1;
+        const aIndex = order.indexOf(a.type || '') + 1 || order.length + 1;
         return aIndex - bIndex;
       })
-      .map(([, labels]) => labels)
-      .reduce<ILabelDefinition[]>((acc, item) => [...acc, ...(item || [])], []);
+      .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
+
     const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
       this.options.labels,
       'patch'
@@ -219,10 +213,10 @@ export default class Changelog {
 
   /** Get the default label for a label key */
   private getFirstLabelNameFromLabelKey(
-    labels: ILabelDefinitionMap,
+    labels: ILabelDefinition[],
     labelKey: string
   ) {
-    return labels[labelKey]?.[0]?.name || labelKey;
+    return labels.find(l => l.type === labelKey)?.name || labelKey;
   }
 
   /** Create a list of users */
@@ -341,18 +335,13 @@ export default class Changelog {
 
   /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
-    const changelogTitles = Object.entries(this.options.labels).reduce(
-      (titles, [, labels = []]) => {
-        labels.forEach(labelDef => {
-          if (labelDef.title) {
-            titles[labelDef.name] = labelDef.title;
-          }
-        });
+    const changelogTitles = this.options.labels.reduce((titles, label) => {
+      if (label.title) {
+        titles[label.name] = label.title;
+      }
 
-        return titles;
-      },
-      {} as { [label: string]: string }
-    );
+      return titles;
+    }, {} as { [label: string]: string });
 
     const labelSections = await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {

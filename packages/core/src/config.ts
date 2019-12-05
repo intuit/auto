@@ -4,12 +4,7 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 
 import { ApiOptions } from './auto-args';
-import {
-  defaultLabelDefinition,
-  getVersionMap,
-  ILabelDefinition,
-  ILabelDefinitionMap
-} from './release';
+import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
 
@@ -18,29 +13,15 @@ type ConfigObject = any;
 
 /** Transform all types of label configuration into just 1 shape */
 export function normalizeLabel(
-  name: string,
-  label:
-    | string
-    | Partial<ILabelDefinition>
-    | (Partial<ILabelDefinition> | string)[]
-): Partial<ILabelDefinition>[] {
-  const baseLabel = (defaultLabelDefinition[name] || [{}])[0];
-
-  if (typeof label === 'string') {
-    return [{ ...baseLabel, name: label }];
-  }
-
-  if (Array.isArray(label)) {
-    return label
-      .map(l => normalizeLabel(name, l))
-      .reduce((acc, item) => [...acc, ...item], []);
-  }
-
-  if (!label.name) {
-    label.name = name;
-  }
-
-  return [{ ...baseLabel, ...label }];
+  label: Partial<ILabelDefinition>
+): Partial<ILabelDefinition> {
+  const baseLabel =
+    defaultLabels.find(
+      l =>
+        (label.type && l.type === label.type) ||
+        (label.name && l.name === label.name)
+    ) || {};
+  return { ...baseLabel, ...label };
 }
 
 /**
@@ -48,21 +29,12 @@ export function normalizeLabel(
  * follow the same format.
  */
 export function normalizeLabels(config: ConfigObject) {
-  let labels = defaultLabelDefinition;
-
   if (config.labels) {
-    const definitions = Object.entries<Partial<ILabelDefinition> | string>(
-      config.labels
-    ).map(([label, labelDef]) => ({
-      [label]: normalizeLabel(label, labelDef)
-    }));
-
-    labels = merge.all([labels, ...definitions], {
-      arrayMerge: (destinationArray, sourceArray) => sourceArray
-    }) as ILabelDefinitionMap;
+    const userLabels = config.labels.map(normalizeLabel);
+    return [...defaultLabels, ...userLabels];
   }
 
-  return labels;
+  return defaultLabels;
 }
 
 /** Load a user's configuration from the system and resolve any extended config */
