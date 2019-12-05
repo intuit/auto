@@ -98,6 +98,8 @@ export interface ILabelDefinition {
   description?: string;
   /** What type of release this label signifies */
   type?: VersionLabel;
+  /** Whether to overwrite the base label */
+  overwrite?: boolean;
 }
 
 export const defaultLabels: ILabelDefinition[] = [

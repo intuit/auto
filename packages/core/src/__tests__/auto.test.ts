@@ -17,9 +17,9 @@ const defaults = {
 };
 
 const labels = [
-  { name: 'Version: Major', type: SEMVER.major },
-  { name: 'Version: Patch', type: SEMVER.patch },
-  { name: 'Version: Minor', type: SEMVER.minor }
+  { name: 'Version: Major', type: SEMVER.major, overwrite: true },
+  { name: 'Version: Patch', type: SEMVER.patch, overwrite: true },
+  { name: 'Version: Minor', type: SEMVER.minor, overwrite: true }
 ];
 
 const search = jest.fn();
@@ -157,11 +157,11 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
-      ['major', 'Version: Major'],
-      ['minor', 'Version: Minor'],
-      ['patch', 'Version: Patch'],
       ['skip-release'],
-      ['release']
+      ['release'],
+      ['Version: Major'],
+      ['Version: Patch'],
+      ['Version: Minor']
     ]);
   });
 
@@ -227,12 +227,10 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.config!.labels.find(l => l.name === 'fooBar')).toStrictEqual(
-      {
-        description: 'This is a test',
-        name: 'fooBar'
-      }
-    );
+    expect(auto.config!.labels.find(l => l.name === 'fooBar')).toStrictEqual({
+      description: 'This is a test',
+      name: 'fooBar'
+    });
   });
 
   describe('createLabels', () => {

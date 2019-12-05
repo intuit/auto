@@ -31,8 +31,12 @@ export function normalizeLabel(
  */
 export function normalizeLabels(config: ConfigObject) {
   if (config.labels) {
-    const userLabels = config.labels.map(normalizeLabel);
-    return [...defaultLabels, ...userLabels];
+    const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
+    const baseLabels = defaultLabels.filter(
+      d => !userLabels.some(u => u.type && u.type === d.type && u.overwrite)
+    );
+
+    return [...baseLabels, ...userLabels];
   }
 
   return defaultLabels;

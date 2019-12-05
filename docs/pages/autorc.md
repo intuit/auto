@@ -22,15 +22,15 @@ auto init
 
 These options can be set exclusively in the `.autorc` and do not exist as CLI flags.
 
-### Prerelease Labels
+### Prerelease Branches
 
 You can configure what branches `auto` treats as prerelease branches.
 By default only `next` is treated as a prerelease branch.
-If you configure `prereleaseLabels` it will override the default.
+If you configure `prereleaseBranches` it will override the default.
 
 ```json
 {
-  "prereleaseLabels": ["next", "beta"]
+  "prereleaseBranches": ["next", "beta"]
 }
 ```
 
@@ -81,17 +81,17 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 
 ### Labels
 
-To override any of the default labels use the `labels` section in the `.autorc`.
+To customize your project's labels use the `labels` section in your `.autorc`.
 
 ```json
 {
-  "labels": {
-    "major": "Version: Major",
-    "minor": "Version: Minor",
-    "patch": "Version: Patch",
-    "skip-release": "NO!",
-    "release": "Autobots, rollout!"
-  }
+  "labels": [
+    { "type": "major", "name": "Version: Major" },
+    { "type": "minor", "name": "Version: Minor" },
+    { "type": "patch", "name": "Version: Patch" },
+    { "type": "skip-release", "name": "NO!" },
+    { "type": "release", "name": "Autobots, rollout!" }
+  ]
 }
 ```
 
@@ -100,64 +100,23 @@ To override any of the default labels use the `labels` section in the `.autorc`.
 You can customize everything about a label
 
 - `name` - The label text used for the label. If omitted defaults to the `key` value
+- `type` - The type of release to trigger (major, minor, patch, skip-release, release, or undefined)
+- `overwrite` - Overwrite the default label associated with the `type`. (default: `false`)
 - `title` - The title to use in the changelog
 - `description` - The description to use when creating the label
 - `color` - The color of the label. Can be specified as a string in any of [these](https://github.com/bgrins/TinyColor#accepted-string-input) ways. If not specified the color is random
 
 ```json
 {
-  "labels": {
-    "major": {
+  "labels": [
+    {
       "name": "Version: Major",
       "title": "The API has changed:",
       "description": "Add this label to a PR to create a major release",
-      "color": "blue"
-    },
-    ...
-  }
-}
-```
-
-#### Multiple Labels
-
-You have can multiple labels for each of the default labels.
-
-```json
-{
-  "labels": {
-    "major": [
-      {
-        "name": "BREAKING",
-        "title": "SUPER BREAKING CHANGED",
-      },
-      {
-        "name": "Version: Major",
-        "title": "The API has changed:",
-        "description": "Add this label to a PR to create a major release",
-      }
-    ],
-    ...
-  }
-}
-```
-
-::: message is-warning
-:warning: If you override any of the semantic versioning labels the default values are overridden too! Make sure to include that label if you still want it to be used during version calculation.
-:::
-
-```json
-{
-  "labels": {
-    "minor": [
-      "minor",
-      {
-        "name": "New Component",
-        "title": "🧩 New Component",
-        "description": "A new component has been added to the design-system",
-      }
-    ],
-    ...
-  }
+      "color": "blue",
+      "type": "major"
+    }
+  ]
 }
 ```
 
@@ -175,12 +134,12 @@ To customize the title for the section in the changelog you can
 
 ```json
 {
-  "labels": {
-    "documentation": {
+  "labels": [
+    {
+      "name": "documentation",
       "title": "Docz"
-    },
-    ...
-  }
+    }
+  ]
 }
 ```
 
@@ -193,22 +152,12 @@ related to a TypeScript re-write.
 
 ```json
 {
-  "labels": {
-    "typescript": {
+  "labels": [
+    {
+      "name": "typescript",
       "title": "TypeScript Rewrite"
-    },
-    ...
-  }
-}
-```
-
-#### Multiple `skip-release`
-
-You can configure multiple labels to skip releases.
-
-```json
-{
-  "skipReleaseLabels": ["documentation", "project-files"]
+    }
+  ]
 }
 ```
 
@@ -219,13 +168,13 @@ versioning or the changelog), you can use the `labels` section. Just omit the `t
 
 ```json
 {
-  "labels": {
-    "good first issue": {
+  "labels": [
+    {
+      "name": "good first issue",
       "description": "This is an issue that first time contributors can tackle easily",
       "color": "purple"
-    },
-    ...
-  }
+    }
+  ]
 }
 ```
 

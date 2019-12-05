@@ -6,24 +6,6 @@ exports[`Auto createLabels should create the labels 1`] = `
     Array [
       Array [
         Object {
-          "description": "Increment the major version when merged",
-          "name": "major",
-          "title": "💥  Breaking Change",
-          "type": "major",
-        },
-        Object {
-          "description": "Increment the minor version when merged",
-          "name": "minor",
-          "title": "🚀  Enhancement",
-          "type": "minor",
-        },
-        Object {
-          "description": "Increment the patch version when merged",
-          "name": "patch",
-          "title": "🐛  Bug Fix",
-          "type": "patch",
-        },
-        Object {
           "description": "Preserve the current version when merged",
           "name": "skip-release",
           "type": "skip-release",
@@ -46,18 +28,21 @@ exports[`Auto createLabels should create the labels 1`] = `
         Object {
           "description": "Increment the major version when merged",
           "name": "Version: Major",
+          "overwrite": true,
           "title": "💥  Breaking Change",
           "type": "major",
         },
         Object {
           "description": "Increment the patch version when merged",
           "name": "Version: Patch",
+          "overwrite": true,
           "title": "🐛  Bug Fix",
           "type": "patch",
         },
         Object {
           "description": "Increment the minor version when merged",
           "name": "Version: Minor",
+          "overwrite": true,
           "title": "🚀  Enhancement",
           "type": "minor",
         },
