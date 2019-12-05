@@ -240,7 +240,10 @@ function processQueryResult(
       return;
     }
 
-    const labels: { name: string }[] = result.edges[0].node.labels
+    const labels: {
+      /** The label */
+      name: string;
+    }[] = result.edges[0].node.labels
       ? result.edges[0].node.labels.edges.map(edge => edge.node)
       : [];
     commit.pullRequest = {
