@@ -3,7 +3,8 @@ import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
 const semverMap = getVersionMap([
   ...defaultLabels,
-  { name: 'documentation', releaseType: 'skip-release' }
+  { name: 'documentation', releaseType: 'skip-release' },
+  { name: 'none', releaseType: 'none' }
 ]);
 
 test('ranks releases right', () => {
@@ -23,5 +24,13 @@ describe('calculateSemVerBump', () => {
     );
 
     expect(calculateSemVerBump([['major']], semverMap)).toBe(SEMVER.major);
+  });
+
+  test('should skip none sometimes', () => {
+    expect(calculateSemVerBump([['none']], semverMap)).toBe(SEMVER.noVersion);
+
+    expect(calculateSemVerBump([['none', 'major']], semverMap)).toBe(
+      SEMVER.major
+    );
   });
 });
