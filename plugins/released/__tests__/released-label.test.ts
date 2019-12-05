@@ -53,11 +53,13 @@ describe('release label plugin', () => {
       labels: [
         {
           description: 'This issue/pull request has been released.',
-          name: 'released'
+          name: 'released',
+          releaseType: 'none'
         },
         {
           description: 'This change is available in a prerelease.',
-          name: 'prerelease'
+          name: 'prerelease',
+          releaseType: 'none'
         }
       ]
     });

@@ -28,7 +28,7 @@ describe('normalizeLabel', () => {
       description: 'Increment the major version when merged',
       name: 'foo',
       title: '💥  Breaking Change',
-      type: SEMVER.major
+      releaseType: SEMVER.major
     });
   });
 });
@@ -39,18 +39,18 @@ describe('normalizeLabels', () => {
       description: 'Increment the minor version when merged',
       name: 'minor',
       title: '🚀  Enhancement',
-      type: SEMVER.minor
+      releaseType: SEMVER.minor
     });
 
     expect(
-      normalizeLabels({ labels: [{ name: 'foo', type: 'minor' }] }).find(
+      normalizeLabels({ labels: [{ name: 'foo', releaseType: 'minor' }] }).find(
         l => l.name === 'foo'
       )
     ).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'foo',
       title: '🚀  Enhancement',
-      type: SEMVER.minor
+      releaseType: SEMVER.minor
     });
   });
 });

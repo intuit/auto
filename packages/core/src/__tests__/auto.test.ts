@@ -17,9 +17,9 @@ const defaults = {
 };
 
 const labels = [
-  { name: 'Version: Major', type: SEMVER.major, overwrite: true },
-  { name: 'Version: Patch', type: SEMVER.patch, overwrite: true },
-  { name: 'Version: Minor', type: SEMVER.minor, overwrite: true }
+  { name: 'Version: Major', releaseType: SEMVER.major, overwrite: true },
+  { name: 'Version: Patch', releaseType: SEMVER.patch, overwrite: true },
+  { name: 'Version: Minor', releaseType: SEMVER.minor, overwrite: true }
 ];
 
 const search = jest.fn();
@@ -159,6 +159,7 @@ describe('Auto', () => {
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
       ['skip-release'],
       ['release'],
+      ['internal', 'documentation'],
       ['Version: Major'],
       ['Version: Patch'],
       ['Version: Minor']
@@ -172,7 +173,7 @@ describe('Auto', () => {
         labels: [
           {
             name: 'feature',
-            type: SEMVER.minor
+            releaseType: SEMVER.minor
           }
         ]
       }
@@ -186,7 +187,7 @@ describe('Auto', () => {
       description: 'Increment the minor version when merged',
       name: 'feature',
       title: '🚀  Enhancement',
-      type: SEMVER.minor
+      releaseType: SEMVER.minor
     });
   });
 
@@ -207,7 +208,7 @@ describe('Auto', () => {
       description: 'This is a test',
       name: 'minor',
       title: '🚀  Enhancement',
-      type: SEMVER.minor
+      releaseType: SEMVER.minor
     });
   });
 
@@ -1122,7 +1123,8 @@ describe('hooks', () => {
     await auto.loadConfig();
     expect(auto.labels!.find(l => l.name === 'released')).toStrictEqual({
       description: 'This issue/pull request has been released',
-      name: 'released'
+      name: 'released',
+      releaseType: 'none'
     });
   });
 

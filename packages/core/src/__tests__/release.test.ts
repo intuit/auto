@@ -119,7 +119,8 @@ describe('getVersionMap', () => {
         ['minor', ['minor']],
         ['patch', ['patch']],
         ['skip-release', ['skip-release']],
-        ['release', ['release']]
+        ['release', ['release']],
+        ['none', ['internal', 'documentation']]
       ])
     );
   });
@@ -903,17 +904,17 @@ describe('Release', () => {
       expect(createLabel).toHaveBeenCalledWith({
         name: '1',
         description: 'major',
-        type: SEMVER.major
+        releaseType: SEMVER.major
       });
       expect(createLabel).toHaveBeenCalledWith({
         name: '2',
         description: 'minor',
-        type: SEMVER.minor
+        releaseType: SEMVER.minor
       });
       expect(createLabel).toHaveBeenCalledWith({
         name: '3',
         description: 'patch',
-        type: SEMVER.patch
+        releaseType: SEMVER.patch
       });
     });
 
@@ -956,12 +957,12 @@ describe('Release', () => {
       expect(updateLabel).toHaveBeenCalledWith({
         name: '1',
         description: 'major',
-        type: SEMVER.major
+        releaseType: SEMVER.major
       });
       expect(createLabel).toHaveBeenCalledWith({
         description: 'minor',
         name: '2',
-        type: SEMVER.minor
+        releaseType: SEMVER.minor
       });
     });
 
@@ -978,12 +979,12 @@ describe('Release', () => {
       expect(updateLabel).toHaveBeenCalledWith({
         name: 'major',
         description: '',
-        type: SEMVER.major
+        releaseType: SEMVER.major
       });
       expect(updateLabel).toHaveBeenCalledWith({
         description: '',
         name: 'Minor',
-        type: SEMVER.minor
+        releaseType: SEMVER.minor
       });
     });
 
@@ -1005,7 +1006,7 @@ describe('Release', () => {
       expect(createLabel).not.toHaveBeenCalledWith({
         name: 'deploy',
         description: 'release the code',
-        type: 'release'
+        releaseType: 'release'
       });
 
       gh = new Release(git, {
@@ -1018,7 +1019,7 @@ describe('Release', () => {
       expect(createLabel).toHaveBeenCalledWith({
         name: 'deploy',
         description: 'release the code',
-        type: 'release'
+        releaseType: 'release'
       });
     });
 
@@ -1041,7 +1042,7 @@ describe('Release', () => {
       expect(createLabel).not.toHaveBeenCalledWith({
         name: 'no!',
         description: 'Do not create a release',
-        type: 'skip-release'
+        releaseType: 'skip-release'
       });
 
       gh = new Release(git, {
@@ -1053,7 +1054,7 @@ describe('Release', () => {
       expect(createLabel).toHaveBeenCalledWith({
         description: 'Do not create a release',
         name: 'no!',
-        type: 'skip-release'
+        releaseType: 'skip-release'
       });
     });
   });
