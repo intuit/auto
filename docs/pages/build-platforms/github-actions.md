@@ -57,7 +57,7 @@ If you are having problems make sure you have done the following:
 - Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
 - Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
 
-To add a secret for actions go to https://github.com/<owner>/<repo>/settings/secrets/new
+To add a secret for actions go to `https://github.com/<owner>/<repo>/settings/secrets/new`
 
 ## Examples
 
