@@ -80,8 +80,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
         }
 
         const skipReleaseLabels = (
-          auto.config?.labels.filter(l => l.releaseType === 'skip-release') ||
-          []
+          auto.config?.labels.filter(l => l.releaseType === 'skip') || []
         ).map(l => l.name);
         const isSkipped = head.labels.find(label =>
           skipReleaseLabels.includes(label)

@@ -118,7 +118,7 @@ describe('getVersionMap', () => {
         ['major', ['major']],
         ['minor', ['minor']],
         ['patch', ['patch']],
-        ['skip-release', ['skip-release']],
+        ['skip', ['skip-release']],
         ['release', ['release']],
         ['none', ['internal', 'documentation']]
       ])
@@ -1034,7 +1034,7 @@ describe('Release', () => {
         {
           name: 'no!',
           description: 'Do not create a release',
-          releaseType: 'skip-release'
+          releaseType: 'skip'
         }
       ];
 
@@ -1042,7 +1042,7 @@ describe('Release', () => {
       expect(createLabel).not.toHaveBeenCalledWith({
         name: 'no!',
         description: 'Do not create a release',
-        releaseType: 'skip-release'
+        releaseType: 'skip'
       });
 
       gh = new Release(git, {
@@ -1054,7 +1054,7 @@ describe('Release', () => {
       expect(createLabel).toHaveBeenCalledWith({
         description: 'Do not create a release',
         name: 'no!',
-        releaseType: 'skip-release'
+        releaseType: 'skip'
       });
     });
   });

@@ -41,8 +41,6 @@ export interface IPRCheckOptions {
   pr?: number;
   /** URL to attach to the checkmark */
   url?: string;
-  /** Labels to count as "skip-release" */
-  skipReleaseLabels?: string[];
   /** The context the check should be attached to */
   context?: string;
   /** Do not actually do anything */
@@ -67,8 +65,6 @@ export interface IPRStatusOptions {
 }
 
 export interface IVersionOptions {
-  /** Labels to count as "skip-release" */
-  skipReleaseLabels?: string[];
   /** Instead of publishing every PR only publish when "release" label is present */
   onlyPublishWithReleaseLabel?: boolean;
   /** Commit to start calculating the version from */

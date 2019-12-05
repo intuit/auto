@@ -175,15 +175,6 @@ const message: Option = {
   alias: 'm'
 };
 
-const skipReleaseLabels: Option = {
-  name: 'skip-release-labels',
-  type: String,
-  group: 'main',
-  multiple: true,
-  description:
-    "Labels that will not create a release. Defaults to just 'skip-release'"
-};
-
 const deleteFlag: Option = {
   name: 'delete',
   type: Boolean,
@@ -263,8 +254,7 @@ export const commands: Command[] = [
       {
         ...context,
         defaultValue: 'ci/pr-check'
-      },
-      skipReleaseLabels
+      }
     ],
     examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
@@ -341,7 +331,6 @@ export const commands: Command[] = [
         description: "Only bump version if 'release' label is on pull request",
         group: 'main'
       },
-      skipReleaseLabels,
       {
         name: 'from',
         type: String,
@@ -354,10 +343,6 @@ export const commands: Command[] = [
       {
         desc: 'Get the new version using the last release to head',
         example: '{green $} auto version'
-      },
-      {
-        desc: 'Skip releases with multiple labels',
-        example: '{green $} auto version --skip-release-labels documentation CI'
       }
     ]
   },

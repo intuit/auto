@@ -157,12 +157,12 @@
       {
         "name": "dependencies",
         "title": "🔩 Dependency Updates",
-        "type": "skip-release"
+        "type": "none"
       },
       {
         "name": "blog-post",
         "title": "📚 Blog Post",
-        "type": "skip-release"
+        "type": "none"
       }
     ]
   }

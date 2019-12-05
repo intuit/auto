@@ -89,7 +89,7 @@ To customize your project's labels use the `labels` section in your `.autorc`.
     { "releaseType": "major", "name": "Version: Major" },
     { "releaseType": "minor", "name": "Version: Minor" },
     { "releaseType": "patch", "name": "Version: Patch" },
-    { "releaseType": "skip-release", "name": "NO!" },
+    { "releaseType": "skip", "name": "NO!" },
     { "releaseType": "release", "name": "Autobots, rollout!" }
   ]
 }
@@ -100,7 +100,7 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 You can customize everything about a label
 
 - `name` - The label text used for the label. If omitted defaults to the `key` value
-- `releaseType` - The type of release to trigger (major, minor, patch, skip-release, release, or none)
+- `releaseType` - The type of release to trigger (major, minor, patch, skip, release, or none)
 - `overwrite` - Overwrite the default label associated with the `type`. (default: `false`)
 - `title` - The title to use in the changelog
 - `description` - The description to use when creating the label

@@ -92,10 +92,8 @@ export default class Config {
 
     const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
 
-    if (!skipReleaseLabels.includes(semVerLabels.get('skip-release')!)) {
-      (semVerLabels.get('skip-release') || []).map(l =>
-        skipReleaseLabels.push(l)
-      );
+    if (!skipReleaseLabels.includes(semVerLabels.get('skip')!)) {
+      (semVerLabels.get('skip') || []).map(l => skipReleaseLabels.push(l));
     }
 
     return {
@@ -205,7 +203,7 @@ export default class Config {
         You're using a deprecated configuration option!
 
         The "skipReleaseLabels" option no longer exists.
-        Instead set "type" to "skip-release" in your label configuration.
+        Instead set "type" to "skip" in your label configuration.
 
         ex:
 
@@ -214,7 +212,7 @@ export default class Config {
         |      {
         |        "name": "my-label",
         |        "description": "Really big stuff",
-        |        "type": "skip-release"
+        |        "type": "skip"
         |      }
         |    ]
         |  }

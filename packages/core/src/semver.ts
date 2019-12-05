@@ -43,7 +43,7 @@ export function calculateSemVerBump(
   { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
-  const skipReleaseLabels = labelMap.get('skip-release') || [];
+  const skipReleaseLabels = labelMap.get('skip') || [];
   const noReleaseLabels = labelMap.get('none') || [];
 
   labels.forEach(pr => {

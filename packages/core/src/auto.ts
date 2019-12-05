@@ -403,7 +403,7 @@ export default class Auto {
       const releaseTag = labels.find(l => l === 'release');
 
       const skipReleaseLabels = (
-        this.config?.labels.filter(l => l.releaseType === 'skip-release') || []
+        this.config?.labels.filter(l => l.releaseType === 'skip') || []
       ).map(l => l.name);
       const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
 

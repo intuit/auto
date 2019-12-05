@@ -26,14 +26,14 @@ export type VersionLabel =
   | SEMVER.major
   | SEMVER.minor
   | SEMVER.patch
-  | 'skip-release'
+  | 'skip'
   | 'release';
 
 export const releaseLabels: VersionLabel[] = [
   SEMVER.major,
   SEMVER.minor,
   SEMVER.patch,
-  'skip-release',
+  'skip',
   'release'
 ];
 
@@ -124,7 +124,7 @@ export const defaultLabels: ILabelDefinition[] = [
   {
     name: 'skip-release',
     description: 'Preserve the current version when merged',
-    releaseType: 'skip-release'
+    releaseType: 'skip'
   },
   {
     name: 'release',
@@ -504,7 +504,7 @@ export default class Release {
       }
 
       if (
-        label.releaseType === 'skip-release' &&
+        label.releaseType === 'skip' &&
         this.config.onlyPublishWithReleaseLabel
       ) {
         return false;
