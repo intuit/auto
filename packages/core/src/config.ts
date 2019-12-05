@@ -7,6 +7,7 @@ import { ApiOptions } from './auto-args';
 import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
+import dedent from 'dedent';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
@@ -76,6 +77,7 @@ export default class Config {
       );
     }
 
+    this.checkDeprecated(rawConfig);
     const labels = normalizeLabels(rawConfig);
     const semVerLabels = getVersionMap(labels);
 
@@ -163,5 +165,54 @@ export default class Config {
     }
 
     return config;
+  }
+
+  /** Ensure a user's config is not using deprecated options. */
+  private checkDeprecated(config: Record<string, any>) {
+    if (config.labels && !Array.isArray(config.labels)) {
+      this.logger.log.error(dedent`
+        You're using a deprecated configuration option!
+
+        The "labels" option no longer supports configuration with an object.
+        Instead supply your labels as an array of label objects.
+
+        ex:
+
+        |  {
+        |    "labels": [
+        |      {
+        |        "name": "my-label",
+        |        "description": "Really big stuff",
+        |        "type": "major"
+        |      }
+        |    ]
+        |  }
+      `);
+
+      process.exit(1);
+    }
+
+    if (config.labels && !Array.isArray(config.labels)) {
+      this.logger.log.error(dedent`
+        You're using a deprecated configuration option!
+
+        The "skipReleaseLabels" option no longer exists.
+        Instead set "type" to "skip-release" in your label configuration.
+
+        ex:
+
+        |  {
+        |    "labels": [
+        |      {
+        |        "name": "my-label",
+        |        "description": "Really big stuff",
+        |        "type": "skip-release"
+        |      }
+        |    ]
+        |  }
+      `);
+
+      process.exit(1);
+    }
   }
 }
