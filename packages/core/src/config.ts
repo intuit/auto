@@ -172,6 +172,7 @@ export default class Config {
   }
 
   /** Ensure a user's config is not using deprecated options. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private checkDeprecated(config: Record<string, any>) {
     if (config.labels && !Array.isArray(config.labels)) {
       this.logger.log.error(dedent`
@@ -196,7 +197,7 @@ export default class Config {
       process.exit(1);
     }
 
-    if (config.labels && !Array.isArray(config.labels)) {
+    if (config.skipReleaseLabels) {
       this.logger.log.error(dedent`
         You're using a deprecated configuration option!
 
