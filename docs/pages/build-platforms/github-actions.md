@@ -28,7 +28,7 @@ jobs:
           COMMIT_FILTER: skip ci
       - name: Prepare repository
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout "${GITHUB_REF:11}" --
           git remote rm origin
@@ -39,9 +39,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: yarn-deps-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-deps-${{ hashFiles('yarn.lock') }}
       - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn
@@ -53,8 +60,9 @@ jobs:
 
 If you are having problems make sure you have done the following:
 
-- `GH_TOKEN` is set
-- Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+- Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+
+To add a secret for actions go to https://github.com/<owner>/<repo>/settings/secrets/new
 
 ## Examples
 
