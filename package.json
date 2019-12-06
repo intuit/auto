@@ -156,13 +156,13 @@
     "labels": [
       {
         "name": "dependencies",
-        "title": "🔩 Dependency Updates",
-        "type": "none"
+        "changelogTitle": "🔩 Dependency Updates",
+        "releaseType": "none"
       },
       {
         "name": "blog-post",
-        "title": "📚 Blog Post",
-        "type": "none"
+        "changelogTitle": "📚 Blog Post",
+        "releaseType": "none"
       }
     ]
   }

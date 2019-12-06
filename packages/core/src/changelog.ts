@@ -85,7 +85,7 @@ export default class Changelog {
     if (!this.options.labels.find(l => l.name === 'pushToBaseBranch'))
       this.options.labels.push({
         name: 'pushToBaseBranch',
-        title: `⚠️  Pushed to ${options.baseBranch}`,
+        changelogTitle: `⚠️  Pushed to ${options.baseBranch}`,
         description: 'N/A',
         releaseType: SEMVER.patch
       });
@@ -175,7 +175,7 @@ export default class Changelog {
     let currentCommits = [...commits];
     const order = ['major', 'minor', 'patch'];
     const sections = this.options.labels
-      .filter(label => label.title)
+      .filter(label => label.changelogTitle)
       .sort((a, b) => {
         const bIndex =
           order.indexOf(b.releaseType || '') + 1 || order.length + 1;
@@ -340,8 +340,8 @@ export default class Changelog {
   /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
     const changelogTitles = this.options.labels.reduce((titles, label) => {
-      if (label.title) {
-        titles[label.name] = label.title;
+      if (label.changelogTitle) {
+        titles[label.name] = label.changelogTitle;
       }
 
       return titles;

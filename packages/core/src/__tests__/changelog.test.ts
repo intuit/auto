@@ -170,7 +170,7 @@ describe('generateReleaseNotes', () => {
       ...options.labels,
       {
         name: 'Version: Patch',
-        title: '🐛  Bug Fix',
+        changelogTitle: '🐛  Bug Fix',
         description: 'N/A',
         releaseType: SEMVER.patch
       }
@@ -392,7 +392,7 @@ describe('generateReleaseNotes', () => {
       ...options.labels,
       {
         name: 'pushToBaseBranch',
-        title: 'Custom Title',
+        changelogTitle: 'Custom Title',
         description: 'N/A',
         releaseType: 'none'
       }
@@ -429,7 +429,7 @@ describe('generateReleaseNotes', () => {
       ...options.labels,
       {
         name: 'Version: Minor',
-        title: 'Woo Woo New Features',
+        changelogTitle: 'Woo Woo New Features',
         description: 'N/A',
         releaseType: SEMVER.minor
       }
@@ -458,12 +458,12 @@ describe('generateReleaseNotes', () => {
       ...options.labels,
       {
         name: 'new-component',
-        title: 'Enhancement',
+        changelogTitle: 'Enhancement',
         releaseType: SEMVER.minor
       },
       {
         name: 'Version: Minor',
-        title: 'Enhancement',
+        changelogTitle: 'Enhancement',
         description: 'N/A',
         releaseType: SEMVER.minor
       }

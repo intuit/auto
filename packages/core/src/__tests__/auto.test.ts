@@ -186,7 +186,7 @@ describe('Auto', () => {
     expect(auto.config!.labels.find(l => l.name === 'feature')).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'feature',
-      title: '🚀  Enhancement',
+      changelogTitle: '🚀  Enhancement',
       releaseType: SEMVER.minor
     });
   });
@@ -207,7 +207,7 @@ describe('Auto', () => {
     ).toStrictEqual({
       description: 'This is a test',
       name: 'minor',
-      title: '🚀  Enhancement',
+      changelogTitle: '🚀  Enhancement',
       releaseType: SEMVER.minor
     });
   });
@@ -1121,7 +1121,7 @@ describe('hooks', () => {
     });
 
     await auto.loadConfig();
-    expect(auto.labels!.find(l => l.name === 'released')).toStrictEqual({
+    expect(auto.labels?.find(l => l.name === 'released')).toStrictEqual({
       description: 'This issue/pull request has been released',
       name: 'released',
       releaseType: 'none'

@@ -120,8 +120,8 @@ async function getCustomLabels(onlyLabels = false) {
         newLabel.name = name;
       }
 
-      if (name !== label.title) {
-        newLabel.title = title;
+      if (name !== label.changelogTitle) {
+        newLabel.changelogTitle = title;
       }
 
       if (name !== label.description) {
@@ -169,7 +169,7 @@ async function getCustomLabels(onlyLabels = false) {
           /** Name of the label */
           name?: string;
           /** Changelog title of the label */
-          title?: string;
+          changelogTitle?: string;
           /** Description of the label */
           description?: string;
         };
@@ -178,7 +178,7 @@ async function getCustomLabels(onlyLabels = false) {
           return 'Label is required for new label';
         }
 
-        if (!state.values.title) {
+        if (!state.values.changelogTitle) {
           return 'Title is required for new label';
         }
 

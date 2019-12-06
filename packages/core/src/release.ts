@@ -91,7 +91,7 @@ export interface ILabelDefinition {
   /** The label text */
   name: string;
   /** A title to put in the changelog for the label */
-  title?: string;
+  changelogTitle?: string;
   /** The color of the label */
   color?: string;
   /** The description of the label */
@@ -105,19 +105,19 @@ export interface ILabelDefinition {
 export const defaultLabels: ILabelDefinition[] = [
   {
     name: 'major',
-    title: '💥  Breaking Change',
+    changelogTitle: '💥  Breaking Change',
     description: 'Increment the major version when merged',
     releaseType: SEMVER.major
   },
   {
     name: 'minor',
-    title: '🚀  Enhancement',
+    changelogTitle: '🚀  Enhancement',
     description: 'Increment the minor version when merged',
     releaseType: SEMVER.minor
   },
   {
     name: 'patch',
-    title: '🐛  Bug Fix',
+    changelogTitle: '🐛  Bug Fix',
     description: 'Increment the patch version when merged',
     releaseType: SEMVER.patch
   },
@@ -133,13 +133,13 @@ export const defaultLabels: ILabelDefinition[] = [
   },
   {
     name: 'internal',
-    title: '🏠  Internal',
+    changelogTitle: '🏠  Internal',
     description: 'Changes only affect the internal API',
     releaseType: 'none'
   },
   {
     name: 'documentation',
-    title: '📝  Documentation',
+    changelogTitle: '📝  Documentation',
     description: 'Changes only affect the documentation',
     releaseType: 'none'
   }
