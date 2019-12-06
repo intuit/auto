@@ -1,4 +1,9 @@
-import { Auto, execPromise, IPlugin } from '@auto-it/core';
+import {
+  Auto,
+  determineNextVersion,
+  execPromise,
+  IPlugin
+} from '@auto-it/core';
 import { inc, ReleaseType } from 'semver';
 import { execSync } from 'child_process';
 
@@ -55,7 +60,12 @@ export default class GitTagPlugin implements IPlugin {
         : prereleaseBranches[0];
       const lastRelease = await auto.git.getLatestRelease();
       const current = await auto.getCurrentVersion(lastRelease);
-      const prerelease = auto.determineNextVersion(lastRelease, current, bump, prereleaseBranch)
+      const prerelease = determineNextVersion(
+        lastRelease,
+        current,
+        bump,
+        prereleaseBranch
+      );
 
       if (prerelease) {
         await execPromise('git', ['tag', prerelease]);

@@ -159,6 +159,25 @@ function getPrNumberFromEnv(pr?: number) {
 }
 
 /**
+ * Bump the version but no too much.
+ *
+ * @example
+ * currentVersion = 1.0.0
+ * nextVersion = 2.0.0-next.0
+ * output = 2.0.0-next.1
+ */
+export function determineNextVersion(
+  version: string,
+  current: string,
+  bump: SEMVER,
+  tag: string
+) {
+  const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+
+  return lte(next, current) ? 'prerelease' : next;
+}
+
+/**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
  */
@@ -1089,25 +1108,6 @@ export default class Auto {
       ? release
       : `v${release}`;
   };
-
-  /** 
-   * Bump the version but no too much.
-   * 
-   * @example
-   * currentVersion = 1.0.0
-   * nextVersion = 2.0.0-next.0
-   * output = 2.0.0-next.1
-   */
-  readonly determineNextVersion = (
-    version: string,
-    current: string,
-    bump: SEMVER,
-    tag: string
-  ) => {
-    const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
-
-    return lte(next, current) ? 'prerelease' : next;
-  }
 
   /** Create an auto initialization error */
   private createErrorMessage() {

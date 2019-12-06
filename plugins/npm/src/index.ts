@@ -5,7 +5,14 @@ import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
 
-import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
+import {
+  Auto,
+  determineNextVersion,
+  execPromise,
+  ILogger,
+  IPlugin,
+  SEMVER
+} from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, gte, inc, ReleaseType } from 'semver';
 
@@ -492,7 +499,7 @@ export default class NPMPlugin implements IPlugin {
         const packagesBefore = await this.getLernaPackages();
         const next =
           (isIndependent && `pre${version}`) ||
-          auto.determineNextVersion(
+          determineNextVersion(
             lastRelease,
             packagesBefore[0].version,
             version,
@@ -590,7 +597,7 @@ export default class NPMPlugin implements IPlugin {
             // It's hard to accurately predict how we should bump independent versions.
             // So we just prerelease most of the time. (independent only)
             ((isIndependent && 'prerelease') ||
-              auto.determineNextVersion(
+              determineNextVersion(
                 lastRelease,
                 inPreRelease.version,
                 bump,
@@ -625,7 +632,7 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Detected single npm package');
 
         const current = await auto.getCurrentVersion(lastRelease);
-        const next = auto.determineNextVersion(
+        const next = determineNextVersion(
           lastRelease,
           current,
           bump,
