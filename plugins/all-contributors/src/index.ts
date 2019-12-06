@@ -60,13 +60,16 @@ const defaultOptions: IAllContributorsPluginOptions = {
     'dependabot-preview[bot]',
     'greenkeeper[bot]',
     'dependabot[bot]',
-    'fossabot'
+    'fossabot',
+    'renovate',
+    'renovate[bot]',
+    'renovate-approve'
   ],
   types: {
     doc: ['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*'],
     example: ['**/*.stories*', '**/*.story.*'],
     infra: ['**/.circle/**/*', '**/.github/**/*', '**/travis.yml'],
-    test: ['**/*.test.*'],
+    test: ['**/*.test.*', '**/test/**', '**/__tests__/**'],
     code: ['**/src/**/*', '**/lib/**/*', '**/package.json', '**/tsconfig.json']
   }
 };
