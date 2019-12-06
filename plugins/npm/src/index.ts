@@ -5,9 +5,16 @@ import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
 
-import { Auto, execPromise, ILogger, IPlugin, SEMVER } from '@auto-it/core';
+import {
+  Auto,
+  determineNextVersion,
+  execPromise,
+  ILogger,
+  IPlugin,
+  SEMVER
+} from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
-import { gt, gte, lte, inc, ReleaseType } from 'semver';
+import { gt, gte, inc, ReleaseType } from 'semver';
 
 import getConfigFromPackageJson from './package-config';
 import setTokenOnCI from './set-npm-token';
@@ -189,18 +196,6 @@ const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
   lines.map(line => `- \`${line}\``).join('\n');
-
-/** Bump the version but no too much */
-function determineBump(
-  version: string,
-  current: string,
-  bump: SEMVER,
-  tag: string
-) {
-  const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
-
-  return lte(next, current) ? 'prerelease' : next;
-}
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
@@ -483,7 +478,7 @@ export default class NPMPlugin implements IPlugin {
         const packagesBefore = await this.getLernaPackages();
         const next =
           (isIndependent && `pre${version}`) ||
-          determineBump(
+          determineNextVersion(
             lastRelease,
             packagesBefore[0].version,
             version,
@@ -579,7 +574,7 @@ export default class NPMPlugin implements IPlugin {
             // It's hard to accurately predict how we should bump independent versions.
             // So we just prerelease most of the time. (independent only)
             ((isIndependent && 'prerelease') ||
-              determineBump(
+              determineNextVersion(
                 lastRelease,
                 inPreRelease.version,
                 bump,
@@ -614,7 +609,7 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Detected single npm package');
 
         const current = await auto.getCurrentVersion(lastRelease);
-        const next = determineBump(
+        const next = determineNextVersion(
           lastRelease,
           current,
           bump,

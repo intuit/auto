@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { eq, gt, inc, parse, ReleaseType } from 'semver';
+import { eq, gt, lte, inc, parse, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -156,6 +156,25 @@ function getPrNumberFromEnv(pr?: number) {
   const prNumber = pr || envPr;
 
   return prNumber;
+}
+
+/**
+ * Bump the version but no too much.
+ *
+ * @example
+ * currentVersion = 1.0.0
+ * nextVersion = 2.0.0-next.0
+ * output = 2.0.0-next.1
+ */
+export function determineNextVersion(
+  version: string,
+  current: string,
+  bump: SEMVER,
+  tag: string
+) {
+  const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+
+  return lte(next, current) ? 'prerelease' : next;
 }
 
 /**

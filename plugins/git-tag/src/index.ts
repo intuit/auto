@@ -1,5 +1,10 @@
-import { Auto, execPromise, IPlugin } from '@auto-it/core';
-import { inc, lte, ReleaseType } from 'semver';
+import {
+  Auto,
+  determineNextVersion,
+  execPromise,
+  IPlugin
+} from '@auto-it/core';
+import { inc, ReleaseType } from 'semver';
 import { execSync } from 'child_process';
 
 /** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
@@ -54,13 +59,13 @@ export default class GitTagPlugin implements IPlugin {
         ? branch
         : prereleaseBranches[0];
       const lastRelease = await auto.git.getLatestRelease();
-      const next =
-        inc(lastRelease, `pre${bump}` as ReleaseType, prereleaseBranch) ||
-        'prerelease';
       const current = await auto.getCurrentVersion(lastRelease);
-      const prerelease = lte(next, current)
-        ? inc(current, 'prerelease', prereleaseBranch)
-        : next;
+      const prerelease = determineNextVersion(
+        lastRelease,
+        current,
+        bump,
+        prereleaseBranch
+      );
 
       if (prerelease) {
         await execPromise('git', ['tag', prerelease]);
