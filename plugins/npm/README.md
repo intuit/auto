@@ -86,3 +86,28 @@ You can disable this behavior by using the `subPackageChangelogs` option.
   ]
 }
 ```
+
+### deprecateCanaries
+
+`auto` will mark canaries as deprecated, as these version should only be used for testing.
+
+```json
+{
+  "plugins": [
+    // Do not deprecate canary versions
+    [
+      "npm",
+      {
+        "deprecateCanaries": false
+      }
+    ],
+    // Or customize the message. Will replace %package with package name.
+    [
+      "npm",
+      {
+        "subPackageChangelogs": "This is a canary version of %package, please use @latest!"
+      }
+    ]
+  ]
+}
+```
