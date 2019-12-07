@@ -63,8 +63,11 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
+        const skipReleaseLabels = (
+          auto.config?.labels.filter(l => l.releaseType === 'skip') || []
+        ).map(l => l.name);
         const isSkipped = head.labels.find(label =>
-          auto.config?.skipReleaseLabels.includes(label)
+          skipReleaseLabels.includes(label)
         );
 
         if (isSkipped) {

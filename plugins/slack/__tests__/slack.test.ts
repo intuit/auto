@@ -2,6 +2,8 @@ import Auto from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/src/__tests__/make-commit-from-msg';
 import { dummyLog } from '@auto-it/core/src/utils/logger';
 import { makeHooks } from '@auto-it/core/src/utils/make-hooks';
+import { defaultLabels } from '@auto-it/core/dist/release';
+
 import SlackPlugin from '../src';
 
 const fetchSpy = jest.fn();
@@ -91,7 +93,7 @@ describe('postToSlack', () => {
     plugin.apply({
       hooks,
       options: {},
-      config: { skipReleaseLabels: ['skip-release'] }
+      config: { labels: defaultLabels }
     } as Auto);
 
     await hooks.afterRelease.promise({

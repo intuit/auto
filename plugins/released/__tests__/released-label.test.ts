@@ -2,13 +2,13 @@ import Auto from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
 import Git from '@auto-it/core/dist/git';
 import LogParse from '@auto-it/core/dist/log-parse';
-import { defaultLabelDefinition } from '@auto-it/core/dist/release';
+import { defaultLabels } from '@auto-it/core/dist/release';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import {
   makeHooks,
   makeLogParseHooks
 } from '@auto-it/core/dist/utils/make-hooks';
-import { IAutoConfig } from '@auto-it/core/src/release';
+
 import ReleasedLabelPlugin from '../src';
 
 const git = new Git({ owner: '1', repo: '2' });
@@ -48,20 +48,20 @@ describe('release label plugin', () => {
     releasedLabel.apply({ hooks: autoHooks } as Auto);
 
     expect(
-      await autoHooks.modifyConfig.promise({ labels: {} } as IAutoConfig)
+      await autoHooks.modifyConfig.promise({ labels: [] } as any)
     ).toStrictEqual({
-      labels: {
-        released: [
-          {
-            description: 'This issue/pull request has been released.',
-            name: 'released'
-          },
-          {
-            description: 'This change is available in a prerelease.',
-            name: 'prerelease'
-          }
-        ]
-      }
+      labels: [
+        {
+          description: 'This issue/pull request has been released.',
+          name: 'released',
+          releaseType: 'none'
+        },
+        {
+          description: 'This change is available in a prerelease.',
+          name: 'prerelease',
+          releaseType: 'none'
+        }
+      ]
     });
   });
 
@@ -72,7 +72,7 @@ describe('release label plugin', () => {
 
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -94,7 +94,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -117,7 +117,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -139,7 +139,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -160,9 +160,8 @@ describe('release label plugin', () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
     releasedLabel.apply(({
-      config: { skipReleaseLabels: ['skip-release'] },
+      config: { labels: defaultLabels },
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
       logger: dummyLog(),
       options: {},
       comment,
@@ -187,7 +186,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -217,7 +216,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -246,7 +245,7 @@ describe('release label plugin', () => {
 
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: { dryRun: true },
       comment,
@@ -271,7 +270,7 @@ describe('release label plugin', () => {
 
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -298,7 +297,7 @@ describe('release label plugin', () => {
 
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -322,7 +321,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -358,7 +357,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
@@ -383,7 +382,7 @@ describe('release label plugin', () => {
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
-      labels: defaultLabelDefinition,
+      labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,

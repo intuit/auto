@@ -16,11 +16,11 @@ const defaults = {
   token: 'XXXX'
 };
 
-const labels = {
-  major: 'Version: Major',
-  patch: 'Version: Patch',
-  minor: 'Version: Minor'
-};
+const labels = [
+  { name: 'Version: Major', releaseType: SEMVER.major, overwrite: true },
+  { name: 'Version: Patch', releaseType: SEMVER.patch, overwrite: true },
+  { name: 'Version: Minor', releaseType: SEMVER.minor, overwrite: true }
+];
 
 const search = jest.fn();
 jest.mock('cosmiconfig', () => ({
@@ -157,97 +157,81 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
-      ['Version: Major'],
-      ['Version: Minor'],
-      ['Version: Patch'],
       ['skip-release'],
-      ['release']
+      ['release'],
+      ['internal', 'documentation'],
+      ['Version: Major'],
+      ['Version: Patch'],
+      ['Version: Minor']
     ]);
-  });
-
-  test('should add extra skip label', async () => {
-    search.mockReturnValueOnce({
-      config: {
-        ...defaults,
-        labels: {
-          'skip-release': 'NOPE'
-        }
-      }
-    });
-    const auto = new Auto();
-    auto.logger = dummyLog();
-    await auto.loadConfig();
-
-    expect(auto.release!.config.skipReleaseLabels).toStrictEqual(['NOPE']);
   });
 
   test('should be able to add label as string', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          minor: 'feature'
-        }
+        labels: [
+          {
+            name: 'feature',
+            releaseType: SEMVER.minor
+          }
+        ]
       }
     });
+
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.config!.labels.minor).toStrictEqual([
-      {
-        description: 'Increment the minor version when merged',
-        name: 'feature',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(auto.config!.labels.find(l => l.name === 'feature')).toStrictEqual({
+      description: 'Increment the minor version when merged',
+      name: 'feature',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
   });
 
   test('should be able to omit properties from label definition', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          minor: {
-            description: 'This is a test'
-          }
-        }
+        labels: [{ name: 'minor', description: 'This is a test' }]
       }
     });
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.config!.labels.minor).toStrictEqual([
-      {
-        description: 'This is a test',
-        name: 'minor',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(
+      auto.config!.labels.find(l => l.description === 'This is a test')
+    ).toStrictEqual({
+      description: 'This is a test',
+      name: 'minor',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
   });
 
   test('arbitrary labels should be able to omit name', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          fooBar: {
+        labels: [
+          {
+            name: 'fooBar',
             description: 'This is a test'
           }
-        }
+        ]
       }
     });
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.config!.labels.fooBar).toStrictEqual([
-      {
-        description: 'This is a test',
-        name: 'fooBar'
-      }
-    ]);
+    expect(auto.config!.labels.find(l => l.name === 'fooBar')).toStrictEqual({
+      description: 'This is a test',
+      name: 'fooBar'
+    });
   });
 
   describe('createLabels', () => {
@@ -1155,24 +1139,21 @@ describe('hooks', () => {
     auto.logger = dummyLog();
 
     auto.hooks.modifyConfig.tap('test', testConfig => {
-      testConfig.labels.released = [
-        {
-          name: 'released',
-          description: 'This issue/pull request has been released'
-        }
-      ];
+      testConfig.labels.push({
+        name: 'released',
+        description: 'This issue/pull request has been released',
+        releaseType: 'none'
+      });
 
       return testConfig;
     });
 
     await auto.loadConfig();
-
-    expect(auto.labels!.released).toStrictEqual([
-      {
-        description: 'This issue/pull request has been released',
-        name: 'released'
-      }
-    ]);
+    expect(auto.labels?.find(l => l.name === 'released')).toStrictEqual({
+      description: 'This issue/pull request has been released',
+      name: 'released',
+      releaseType: 'none'
+    });
   });
 
   describe('logParse', () => {

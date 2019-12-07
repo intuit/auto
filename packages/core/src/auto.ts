@@ -38,7 +38,7 @@ import LogParse, { IExtendedCommit } from './log-parse';
 import Release, {
   getVersionMap,
   IAutoConfig,
-  ILabelDefinitionMap
+  ILabelDefinition
 } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
@@ -198,7 +198,7 @@ export default class Auto {
   /** A class that handles interacting with git and GitHub */
   git?: Git;
   /** The labels configured by the user */
-  labels?: ILabelDefinitionMap;
+  labels?: ILabelDefinition[];
   /** A map of semver bumps to labels that signify those bumps */
   semVerLabels?: IVersionLabels;
 
@@ -421,13 +421,15 @@ export default class Auto {
       const labelValues = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
-      const skipReleaseTag = labels.find(l =>
-        this.config?.skipReleaseLabels.includes(l)
-      );
+      const skipReleaseLabels = (
+        this.config?.labels.filter(l => l.releaseType === 'skip') || []
+      ).map(l => l.name);
+      const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
+
       const semverTag = labels.find(
         l =>
           labelValues.some(labelValue => labelValue.includes(l)) &&
-          !this.config?.skipReleaseLabels.includes(l) &&
+          !skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 

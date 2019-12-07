@@ -1,5 +1,7 @@
 import Config, { normalizeLabel, normalizeLabels } from '../config';
 import { dummyLog } from '../utils/logger';
+import SEMVER from '../semver';
+import { ILabelDefinition } from '../release';
 
 const fetchSpy = jest.fn();
 
@@ -16,54 +18,40 @@ const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 
 describe('normalizeLabel', () => {
-  test('should handle string', () => {
-    expect(normalizeLabel('foo', 'foo')).toStrictEqual([{ name: 'foo' }]);
-  });
+  test('should extend base label', () => {
+    const label: ILabelDefinition = {
+      name: 'foo',
+      releaseType: SEMVER.major
+    };
 
-  test('should handle object', () => {
-    const label = { name: 'foo', description: 'something' };
-    expect(normalizeLabel('foo', label)).toStrictEqual([label]);
-  });
-
-  test('should attach name', () => {
-    const label = { description: 'something' };
-    expect(normalizeLabel('foo', label)).toStrictEqual([
-      { name: 'foo', description: 'something' }
-    ]);
-  });
-
-  test('should handle arrays', () => {
-    const label = { name: 'foo', description: 'something' };
-    expect(normalizeLabel('major', ['major', label])).toStrictEqual([
-      {
-        description: 'Increment the major version when merged',
-        name: 'major',
-        title: '💥  Breaking Change'
-      },
-      { ...label, title: '💥  Breaking Change' }
-    ]);
+    expect(normalizeLabel(label)).toStrictEqual({
+      description: 'Increment the major version when merged',
+      name: 'foo',
+      changelogTitle: '💥  Breaking Change',
+      releaseType: SEMVER.major
+    });
   });
 });
 
 describe('normalizeLabels', () => {
   test('user labels should override defaults', () => {
-    expect(normalizeLabels({}).minor).toStrictEqual([
-      {
-        description: 'Increment the minor version when merged',
-        name: 'minor',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(normalizeLabels({}).find(l => l.name === 'minor')).toStrictEqual({
+      description: 'Increment the minor version when merged',
+      name: 'minor',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
 
-    expect(normalizeLabels({ labels: { minor: ['foo'] } }).minor).toStrictEqual(
-      [
-        {
-          description: 'Increment the minor version when merged',
-          name: 'foo',
-          title: '🚀  Enhancement'
-        }
-      ]
-    );
+    expect(
+      normalizeLabels({ labels: [{ name: 'foo', releaseType: 'minor' }] }).find(
+        l => l.name === 'foo'
+      )
+    ).toStrictEqual({
+      description: 'Increment the minor version when merged',
+      name: 'foo',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
   });
 });
 

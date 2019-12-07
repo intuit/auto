@@ -4,55 +4,51 @@ exports[`Auto createLabels should create the labels 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      Object {
-        "documentation": Array [
-          Object {
-            "description": "Changes only affect the documentation",
-            "name": "documentation",
-            "title": "📝  Documentation",
-          },
-        ],
-        "internal": Array [
-          Object {
-            "description": "Changes only affect the internal API",
-            "name": "internal",
-            "title": "🏠  Internal",
-          },
-        ],
-        "major": Array [
-          Object {
-            "description": "Increment the major version when merged",
-            "name": "Version: Major",
-            "title": "💥  Breaking Change",
-          },
-        ],
-        "minor": Array [
-          Object {
-            "description": "Increment the minor version when merged",
-            "name": "Version: Minor",
-            "title": "🚀  Enhancement",
-          },
-        ],
-        "patch": Array [
-          Object {
-            "description": "Increment the patch version when merged",
-            "name": "Version: Patch",
-            "title": "🐛  Bug Fix",
-          },
-        ],
-        "release": Array [
-          Object {
-            "description": "Create a release when this pr is merged",
-            "name": "release",
-          },
-        ],
-        "skip-release": Array [
-          Object {
-            "description": "Preserve the current version when merged",
-            "name": "skip-release",
-          },
-        ],
-      },
+      Array [
+        Object {
+          "description": "Preserve the current version when merged",
+          "name": "skip-release",
+          "releaseType": "skip",
+        },
+        Object {
+          "description": "Create a release when this pr is merged",
+          "name": "release",
+          "releaseType": "release",
+        },
+        Object {
+          "changelogTitle": "🏠  Internal",
+          "description": "Changes only affect the internal API",
+          "name": "internal",
+          "releaseType": "none",
+        },
+        Object {
+          "changelogTitle": "📝  Documentation",
+          "description": "Changes only affect the documentation",
+          "name": "documentation",
+          "releaseType": "none",
+        },
+        Object {
+          "changelogTitle": "💥  Breaking Change",
+          "description": "Increment the major version when merged",
+          "name": "Version: Major",
+          "overwrite": true,
+          "releaseType": "major",
+        },
+        Object {
+          "changelogTitle": "🐛  Bug Fix",
+          "description": "Increment the patch version when merged",
+          "name": "Version: Patch",
+          "overwrite": true,
+          "releaseType": "patch",
+        },
+        Object {
+          "changelogTitle": "🚀  Enhancement",
+          "description": "Increment the minor version when merged",
+          "name": "Version: Minor",
+          "overwrite": true,
+          "releaseType": "minor",
+        },
+      ],
       Object {},
     ],
   ],
@@ -69,55 +65,48 @@ exports[`Auto should extend config 1`] = `
 Object {
   "baseBranch": "master",
   "extends": "@artsy",
-  "labels": Object {
-    "documentation": Array [
-      Object {
-        "description": "Changes only affect the documentation",
-        "name": "documentation",
-        "title": "📝  Documentation",
-      },
-    ],
-    "internal": Array [
-      Object {
-        "description": "Changes only affect the internal API",
-        "name": "internal",
-        "title": "🏠  Internal",
-      },
-    ],
-    "major": Array [
-      Object {
-        "description": "Increment the major version when merged",
-        "name": "major",
-        "title": "💥  Breaking Change",
-      },
-    ],
-    "minor": Array [
-      Object {
-        "description": "Increment the minor version when merged",
-        "name": "minor",
-        "title": "🚀  Enhancement",
-      },
-    ],
-    "patch": Array [
-      Object {
-        "description": "Increment the patch version when merged",
-        "name": "patch",
-        "title": "🐛  Bug Fix",
-      },
-    ],
-    "release": Array [
-      Object {
-        "description": "Create a release when this pr is merged",
-        "name": "release",
-      },
-    ],
-    "skip-release": Array [
-      Object {
-        "description": "Preserve the current version when merged",
-        "name": "skip-release",
-      },
-    ],
-  },
+  "labels": Array [
+    Object {
+      "changelogTitle": "💥  Breaking Change",
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "releaseType": "major",
+    },
+    Object {
+      "changelogTitle": "🚀  Enhancement",
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "releaseType": "minor",
+    },
+    Object {
+      "changelogTitle": "🐛  Bug Fix",
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "releaseType": "patch",
+    },
+    Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+      "releaseType": "skip",
+    },
+    Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+      "releaseType": "release",
+    },
+    Object {
+      "changelogTitle": "🏠  Internal",
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "releaseType": "none",
+    },
+    Object {
+      "changelogTitle": "📝  Documentation",
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "releaseType": "none",
+    },
+  ],
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
   "prereleaseBranches": Array [
@@ -136,55 +125,48 @@ Object {
   "bar": "foo",
   "baseBranch": "master",
   "extends": "./fake.json",
-  "labels": Object {
-    "documentation": Array [
-      Object {
-        "description": "Changes only affect the documentation",
-        "name": "documentation",
-        "title": "📝  Documentation",
-      },
-    ],
-    "internal": Array [
-      Object {
-        "description": "Changes only affect the internal API",
-        "name": "internal",
-        "title": "🏠  Internal",
-      },
-    ],
-    "major": Array [
-      Object {
-        "description": "Increment the major version when merged",
-        "name": "major",
-        "title": "💥  Breaking Change",
-      },
-    ],
-    "minor": Array [
-      Object {
-        "description": "Increment the minor version when merged",
-        "name": "minor",
-        "title": "🚀  Enhancement",
-      },
-    ],
-    "patch": Array [
-      Object {
-        "description": "Increment the patch version when merged",
-        "name": "patch",
-        "title": "🐛  Bug Fix",
-      },
-    ],
-    "release": Array [
-      Object {
-        "description": "Create a release when this pr is merged",
-        "name": "release",
-      },
-    ],
-    "skip-release": Array [
-      Object {
-        "description": "Preserve the current version when merged",
-        "name": "skip-release",
-      },
-    ],
-  },
+  "labels": Array [
+    Object {
+      "changelogTitle": "💥  Breaking Change",
+      "description": "Increment the major version when merged",
+      "name": "major",
+      "releaseType": "major",
+    },
+    Object {
+      "changelogTitle": "🚀  Enhancement",
+      "description": "Increment the minor version when merged",
+      "name": "minor",
+      "releaseType": "minor",
+    },
+    Object {
+      "changelogTitle": "🐛  Bug Fix",
+      "description": "Increment the patch version when merged",
+      "name": "patch",
+      "releaseType": "patch",
+    },
+    Object {
+      "description": "Preserve the current version when merged",
+      "name": "skip-release",
+      "releaseType": "skip",
+    },
+    Object {
+      "description": "Create a release when this pr is merged",
+      "name": "release",
+      "releaseType": "release",
+    },
+    Object {
+      "changelogTitle": "🏠  Internal",
+      "description": "Changes only affect the internal API",
+      "name": "internal",
+      "releaseType": "none",
+    },
+    Object {
+      "changelogTitle": "📝  Documentation",
+      "description": "Changes only affect the documentation",
+      "name": "documentation",
+      "releaseType": "none",
+    },
+  ],
   "owner": "foo",
   "prereleaseBranches": Array [
     "next",
