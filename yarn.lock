@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "1.1.1"
@@ -36,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -51,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -4468,10 +4468,10 @@ commander@~2.8.1:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-comment-parser@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-0.7.0.tgz#9dc1f689a60d81fbcaf867d3c9eba3eb061ccfc1"
-  integrity sha512-m0SGP0RFO4P3hIBlIor4sBFPe5Y4HUeGgo/UZK/1Zdea5eUiqxroQ3lFqBDDSfWo9z9Q6LLnt2u0JqwacVEd/A==
+comment-parser@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-0.7.1.tgz#99607706e369305f89b0268f138fca7e795a60fc"
+  integrity sha512-YLgOoek/4xgO9wDbNi54wwnzpWseqz4ju2qbezDOv6PIf72w8Z7YajwVfEmd6dhnuRrEmo0vCIuG8B6gKz2d8A==
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -6026,13 +6026,13 @@ eslint-plugin-jest@^23.0.1:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
 eslint-plugin-jsdoc@^18.0.1:
-  version "18.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-18.4.1.tgz#f59089394ca64cd1d932812c2c84e03b3f868524"
-  integrity sha512-JyGUby6EPpyjfGBpTy3VRfG8yfJOjFc+l6GbusHVRludgrHsJpR105bm9IBv2s0mI6AxC8/r+Ec7kBubmDugTg==
+  version "18.4.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-18.4.3.tgz#69d45213d5eb3e5e7a80abcbc979602c7cfcfa6b"
+  integrity sha512-RcavGWoxukmq7ZQHJ3zDYUHQugJ+uAaoLSCueQjWIHq8xLoIINRo4yKLd03DKWVuoGNY3R+3xpmNjOpwlkOtnQ==
   dependencies:
-    comment-parser "^0.7.0"
+    comment-parser "^0.7.1"
     debug "^4.1.1"
-    jsdoctypeparser "^6.0.0"
+    jsdoctypeparser "^6.1.0"
     lodash "^4.17.15"
     object.entries-ponyfill "^1.0.1"
     regextras "^0.6.1"
@@ -9178,10 +9178,10 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
-jsdoctypeparser@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/jsdoctypeparser/-/jsdoctypeparser-6.0.0.tgz#b6778772339138cbddb6c7b0d182d105afe1d8ae"
-  integrity sha512-61VtBXLkHfOFSIdp/VDVNMksxK0ID0cPTNvxDR92tPA6K7r2AX0OcJegYxhJIwtpWKU4p3D9L3U02hhlP1kQLQ==
+jsdoctypeparser@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/jsdoctypeparser/-/jsdoctypeparser-6.1.0.tgz#acfb936c26300d98f1405cb03e20b06748e512a8"
+  integrity sha512-UCQBZ3xCUBv/PLfwKAJhp6jmGOSLFNKzrotXGNgbKhWvz27wPsCsVeP7gIcHPElQw2agBmynAitXqhxR58XAmA==
 
 jsdom@^11.5.1:
   version "11.12.0"
