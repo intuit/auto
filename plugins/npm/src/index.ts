@@ -473,6 +473,10 @@ export default class NPMPlugin implements IPlugin {
 
       const lastRelease = await auto.git!.getLatestRelease();
       const isIndependent = getLernaJson().version === 'independent';
+      const latestTag = (await auto.git?.getLatestTagInBranch()) || lastRelease;
+      const inPrerelease = prereleaseBranches.some(b =>
+        latestTag.includes(`-${b}.`)
+      );
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
@@ -482,7 +486,7 @@ export default class NPMPlugin implements IPlugin {
           (isIndependent && `pre${version}`) ||
           determineNextVersion(
             lastRelease,
-            packagesBefore[0].version,
+            inPrerelease ? latestTag : packagesBefore[0].version,
             version,
             'canary'
           );
