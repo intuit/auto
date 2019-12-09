@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "1.1.1"
@@ -36,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -51,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "7.16.3"
+  version "7.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2905,10 +2905,10 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-all-contributors-cli@6.11.1, all-contributors-cli@^6.4.0:
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.11.1.tgz#7a83d91bd1a337073d54c3cf63be7ed088cebb1c"
-  integrity sha512-UClGUdXtqvGaxWDW5IfKEpjHTwcMssYc62D+AsODksjtWTXZTVXI1EMZ9vxdxpOSDSOeeNVmfPZwL1aXn6Elaw==
+all-contributors-cli@6.11.2, all-contributors-cli@^6.4.0:
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.11.2.tgz#46f4f2ab7f7f412cfe7185b7c627a878f103e032"
+  integrity sha512-EFj1dSiiBQVbZ2HBPoaMCBbqOVGi1gnxP/iMJ5uDXqANcmDiB1BnfB2F8GjcHaCrmsS2UHFZC0zkEgBxrwYE+A==
   dependencies:
     "@babel/runtime" "^7.2.0"
     async "^3.0.1"
