@@ -821,6 +821,14 @@ export default class Auto {
       (currentBranch === this.baseBranch &&
         options.onlyGraduateWithReleaseLabel);
 
+    this.logger.veryVerbose.info({
+      currentBranch,
+      isBaseBrach,
+      isPR,
+      shouldGraduate,
+      isPrereleaseBranch,
+      publishPrerelease
+    })
     const publishInfo =
       isBaseBrach && shouldGraduate
         ? await this.publishLatest(options)
