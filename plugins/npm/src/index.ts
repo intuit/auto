@@ -625,7 +625,6 @@ export default class NPMPlugin implements IPlugin {
         );
         // Move branch back one commit
         await execPromise('git', ['reset', '--hard', 'HEAD~1']);
-        await execPromise('git', ['push', '--follow-tags']);
 
         auto.logger.verbose.info('Successfully published next version');
 
@@ -654,12 +653,12 @@ export default class NPMPlugin implements IPlugin {
           prereleaseBranch,
           ...verboseArgs
         ]);
-        await execPromise('git', ['push', '--follow-tags']);
 
         auto.logger.verbose.info('Successfully published next version');
         preReleaseVersions.push(auto.prefixRelease(version!));
       }
 
+      await execPromise('git', ['push', '--tags']);
       return preReleaseVersions;
     });
 
