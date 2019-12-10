@@ -167,14 +167,17 @@ function getPrNumberFromEnv(pr?: number) {
  * output = 2.0.0-next.1
  */
 export function determineNextVersion(
-  version: string,
-  current: string,
+  lastVersion: string,
+  currentVersion: string,
   bump: SEMVER,
   tag: string
 ) {
-  const next = inc(version, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+  const next =
+    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || 'prerelease';
 
-  return lte(next, current) ? 'prerelease' : next;
+  return lte(next, currentVersion)
+    ? inc(currentVersion, 'prerelease', tag) || 'prerelease'
+    : next;
 }
 
 /**
@@ -1104,7 +1107,6 @@ export default class Auto {
     return newVersion;
   }
 
-
   /** Check if `git status` is clean. */
   readonly checkClean = async () => {
     const status = await execPromise('git', ['status', '--porcelain']);
@@ -1118,7 +1120,7 @@ export default class Auto {
     throw new Error(
       'Working direction is not clean, make sure all files are commited'
     );
-  }
+  };
 
   /** Prefix a version with a "v" if needed */
   readonly prefixRelease = (release: string) => {

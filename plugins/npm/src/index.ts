@@ -465,29 +465,29 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info('Successfully versioned repo');
     });
 
-    auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
+    auto.hooks.canary.tapPromise(this.name, async (bump, postFix) => {
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info('Set CI NPM_TOKEN');
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
-      const isIndependent = getLernaJson().version === 'independent';
       const latestTag = (await auto.git?.getLatestTagInBranch()) || lastRelease;
       const inPrerelease = prereleaseBranches.some(b =>
         latestTag.includes(`-${b}.`)
       );
 
       if (isMonorepo()) {
+        const isIndependent = getLernaJson().version === 'independent';
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
         const packagesBefore = await getLernaPackages();
         const next =
-          (isIndependent && `pre${version}`) ||
+          (isIndependent && `pre${bump}`) ||
           determineNextVersion(
             lastRelease,
             inPrerelease ? latestTag : packagesBefore[0].version,
-            version,
+            bump,
             'canary'
           );
 
@@ -534,10 +534,14 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info('Detected single npm package');
       const { private: isPrivate, name } = await loadPackageJson();
-      const current = await auto.getCurrentVersion(lastRelease);
-      const nextVersion = inc(current, version as ReleaseType);
       const isScopedPackage = name.match(/@\S+\/\S+/);
-      const canaryVersion = `${nextVersion}-canary${postFix}`;
+      const current = await auto.getCurrentVersion(lastRelease);
+      const canaryVersion = determineNextVersion(
+        lastRelease,
+        current,
+        bump,
+        `canary${postFix}`
+      );
 
       await execPromise('npm', [
         'version',
@@ -588,45 +592,53 @@ export default class NPMPlugin implements IPlugin {
           prereleaseBranch,
           '--preid',
           prereleaseBranch,
-          '--message',
-          VERSION_COMMIT_MESSAGE,
+          '--no-push',
           // you always want a next version to publish
           '--force-publish',
           // skip prompts
           '--yes',
-          // we do not want to commit the next version. this causes
-          // merge conflicts when merged into master
-          '--no-git-tag-version',
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
           '--exact',
           ...verboseArgs
         ]);
 
+        // we do not want to commit the next version. this causes
+        // merge conflicts when merged into master. We also do not want
+        // to re-implement the magic lerna does. So instead we let lerna
+        // commit+tag the new version and roll back all the tags to the
+        // previous commit.
+        const tags = (
+          await execPromise('git', ['tag', '--points-at', 'HEAD'])
+        ).split('\n');
+        await Promise.all(
+          // Move tags back one commit
+          tags.map(tag => execPromise('git', ['tag', tag, '-f', 'HEAD^']))
+        );
+        // Move branch back one commit
+        await execPromise('git', ['reset', '--hard', 'HEAD~1']);
+        await execPromise('git', ['push', '--follow-tags']);
+
         auto.logger.verbose.info('Successfully published next version');
 
-        if (isIndependent) {
-          const independentPackages = await getIndependentPackageList();
-          preReleaseVersions = [...preReleaseVersions, ...independentPackages];
-        } else {
-          const packages = await getLernaPackages();
-          const { version = '' } =
-            packages.find(p => p.version.includes(prereleaseBranch)) || {};
-
-          preReleaseVersions.push(auto.prefixRelease(version));
-        }
+        preReleaseVersions = [
+          ...preReleaseVersions,
+          ...tags.map(auto.prefixRelease)
+        ];
       } else {
         auto.logger.verbose.info('Detected single npm package');
 
         await execPromise('npm', [
           'version',
           determineNextVersion(lastRelease, latestTag, bump, prereleaseBranch),
-          '--message',
           // we do not want to commit the next version. this causes
           // merge conflicts when merged into master
           '--no-git-tag-version',
-          VERSION_COMMIT_MESSAGE,
           ...verboseArgs
         ]);
+
+        const { version } = await loadPackageJson();
+        await execPromise('git', ['tag', auto.prefixRelease(version!)]);
+
         await execPromise('npm', [
           'publish',
           '--tag',
@@ -636,7 +648,6 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('git', ['push', '--follow-tags']);
 
         auto.logger.verbose.info('Successfully published next version');
-        const { version } = await loadPackageJson();
         preReleaseVersions.push(auto.prefixRelease(version!));
       }
 
