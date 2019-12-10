@@ -1,7 +1,7 @@
 import { Auto, IPlugin, execPromise } from '@auto-it/core';
 import { ICommitAuthor } from '@auto-it/core/dist/log-parse';
 import flatMap from 'array.prototype.flatmap';
-import dedent from 'dedent';
+import endent from 'endent';
 import urlJoin from 'url-join';
 import { URL } from 'url';
 
@@ -73,7 +73,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           let thankYou: string;
 
           if (lines.size > 1) {
-            thankYou = dedent`
+            thankYou = endent`
               :tada: This release contains work from new contributors! :tada:
             
               Thanks for all your work!\n\n${[...lines]
@@ -81,7 +81,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                 .join('\n\n')}
             `;
           } else {
-            thankYou = dedent`
+            thankYou = endent`
               :tada: This release contains work from a new contributor! :tada:
             
               Thank you, ${[...lines][0]}, for all your work!

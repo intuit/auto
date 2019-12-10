@@ -12,7 +12,7 @@ import {
   AsyncSeriesHook,
   AsyncSeriesWaterfallHook
 } from 'tapable';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import HttpsProxyAgent from 'https-proxy-agent';
 import {
@@ -623,7 +623,7 @@ export default class Auto {
     }
 
     if (!this.hooks.canary.isUsed()) {
-      this.logger.log.error(dedent`
+      this.logger.log.error(endent`
         None of the plugins that you are using implement the \`canary\` command!
 
         "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
@@ -729,7 +729,7 @@ export default class Auto {
     }
 
     if (!this.hooks.next.isUsed()) {
-      this.logger.log.error(dedent`
+      this.logger.log.error(endent`
         None of the plugins that you are using implement the \`next\` command!
 
         "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
@@ -791,14 +791,15 @@ export default class Auto {
         await this.prBody({
           pr: Number(pr),
           context: 'prerelease-version',
-          message: dedent`
+          message: endent`
             # Version
 
             ${message.replace('%v', result.map(r => `\`${r}\``).join('\n'))}
 
-            ## Changelog
-
-            ${await this.release.generateReleaseNotes(lastRelease)}
+            <details>
+              <summary>Changelog</summary>
+              ${await this.release.generateReleaseNotes(lastRelease)}
+            </details>
           `
         });
       }

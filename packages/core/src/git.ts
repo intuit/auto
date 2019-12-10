@@ -8,7 +8,7 @@ import gitlogNode, { ICommit } from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import { Memoize as memoize } from 'typescript-memoize';
 
@@ -292,7 +292,7 @@ export default class Git {
 
       if (tag) {
         this.logger.log.error(
-          dedent`
+          endent`
             Missing tag "${tag[1]}" so the command could not run.
 
             To fix this run the following command:

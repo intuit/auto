@@ -1,6 +1,6 @@
 import Auto, { SEMVER } from '@auto-it/core';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
-import dedent from 'dedent';
+import endent from 'endent';
 import TwitterPlugin from '../src';
 
 const tweet = jest.fn();
@@ -113,7 +113,7 @@ describe('Twitter Plugin', () => {
 
   test('should be able to configure message', async () => {
     const plugin = new TwitterPlugin({
-      message: dedent`
+      message: endent`
         v%version of %package was released!
 
         %link
@@ -141,7 +141,7 @@ describe('Twitter Plugin', () => {
     await hooks.afterRelease.promise({
       newVersion: '1.1.0',
       commits: [],
-      releaseNotes: dedent`
+      releaseNotes: endent`
         #### 🐛  Bug Fix
 
         - fix jira PR titles without additional subject [#404](https://github.com/intuit/auto/pull/404) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -169,7 +169,7 @@ describe('Twitter Plugin', () => {
     await hooks.afterRelease.promise({
       newVersion: '1.1.0',
       commits: [],
-      releaseNotes: dedent`
+      releaseNotes: endent`
         #### 🐛  Bug Fix
 
         - fix jira PR titles without additional subject [#404](https://github.com/intuit/auto/pull/404) ([@hipstersmoothie](https://github.com/hipstersmoothie))
