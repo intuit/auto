@@ -2,7 +2,7 @@ import { Auto, IPlugin } from '@auto-it/core';
 import dedent from 'dedent';
 import fileType from 'file-type';
 import fs from 'fs';
-import fg from 'fast-glob';
+import glob from 'fast-glob';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -30,7 +30,7 @@ export default class UploadAssetsPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
-      const assets = await fg(this.options.assets);
+      const assets = await glob(this.options.assets);
 
       auto.logger.log.info(dedent`
         Uploading:
