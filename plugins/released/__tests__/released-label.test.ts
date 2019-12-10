@@ -20,7 +20,7 @@ git.addLabelToPr = addLabelToPr;
 
 const getPr = jest.fn();
 git.getPullRequest = getPr;
-getPr.mockReturnValue({ data: { body: '' } });
+getPr.mockReturnValue({ data: { body: '', head: { ref: 'test' } } });
 
 const commits = jest.fn();
 git.getCommitsForPR = commits;
@@ -277,6 +277,35 @@ describe('release label plugin', () => {
       git
     } as unknown) as Auto);
 
+    getLabels.mockReturnValueOnce(['released']);
+
+    await autoHooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: await log.normalizeCommits([
+        makeCommitFromMsg('normal commit with no bump (#123)')
+      ]),
+      releaseNotes: ''
+    });
+
+    expect(addLabelToPr).not.toHaveBeenCalled();
+  });
+
+  test('should do nothing on pre-release branches', async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+
+    releasedLabel.apply(({
+      config: { prereleaseBranches: ['next'], labels: [] },
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git
+    } as unknown) as Auto);
+
+    getPr.mockReturnValueOnce({ data: { body: '', head: { ref: 'next' } } });
     getLabels.mockReturnValueOnce(['released']);
 
     await autoHooks.afterRelease.promise({

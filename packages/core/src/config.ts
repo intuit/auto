@@ -7,7 +7,7 @@ import { ApiOptions } from './auto-args';
 import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
-import dedent from 'dedent';
+import endent from 'endent';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
@@ -176,7 +176,7 @@ export default class Config {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private checkDeprecated(config: Record<string, any>) {
     if (config.labels && !Array.isArray(config.labels)) {
-      this.logger.log.error(dedent`
+      this.logger.log.error(endent`
         You're using a deprecated configuration option!
 
         The "labels" option no longer supports configuration with an object.
@@ -199,7 +199,7 @@ export default class Config {
     }
 
     if (config.skipReleaseLabels) {
-      this.logger.log.error(dedent`
+      this.logger.log.error(endent`
         You're using a deprecated configuration option!
 
         The "skipReleaseLabels" option no longer exists.

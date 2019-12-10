@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import chalk from 'chalk';
 import { app, Command, Option } from 'command-line-application';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import {
   ApiOptions,
@@ -414,14 +414,13 @@ export const commands: Command[] = [
   {
     name: 'shipit',
     group: 'Release Commands',
-    description: dedent`
+    description: endent`
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
 
-      1. call from base branch -> latest version released
-      2. call from prerelease branch -> prerelease version released
-      3. call from PR in CI -> canary version released
-      4. call locally when on prerelease branch -> prerelease version released
-      5. call locally when not on base/prerelease branch -> canary version released
+      1. call from base branch -> latest version released (LATEST)
+      2. call from prerelease branch -> prerelease version released (NEXT)
+      3. call from PR in CI -> canary version released (CANARY)
+      4. call locally when not on base/prerelease branch -> canary version released (CANARY)
     `,
     examples: ['{green $} auto shipit'],
     options: [
@@ -440,8 +439,8 @@ export const commands: Command[] = [
   {
     name: 'canary',
     group: 'Release Commands',
-    description: dedent`
-      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD.
+    description: endent`
+      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
 
       1. In PR: 1.2.3-canary.123.0 + add version to PR body
       2. Locally: 1.2.3-canary.1810cfd
@@ -476,8 +475,8 @@ export const commands: Command[] = [
   {
     name: 'next',
     group: 'Release Commands',
-    description: dedent`
-      Make a release for your "prerelease" release line.
+    description: endent`
+      Make a release for your "prerelease" release line. This is ran automatically from "shipit".
 
       1. Creates a prerelease on package management platform
       2. Creates a "Pre Release" on GitHub releases page.

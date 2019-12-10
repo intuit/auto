@@ -1,5 +1,5 @@
 import { Auto, IPlugin, SEMVER } from '@auto-it/core';
-import dedent from 'dedent';
+import endent from 'endent';
 import { diff, ReleaseType } from 'semver';
 import twitter from 'tweet-tweet';
 import tweetValidation from 'twitter-text';
@@ -14,7 +14,7 @@ interface ITwitterPluginOptions {
 
 const defaults: ITwitterPluginOptions = {
   threshold: SEMVER.minor,
-  message: dedent`
+  message: endent`
     A new %release version of %package was released!
 
     %notes
@@ -79,7 +79,7 @@ const makeTweet = ({
 
   while (!tweetValidation.parseTweet(tweet).valid) {
     truncatedNotes = removeLastLine(truncatedNotes);
-    tweet = build(dedent`
+    tweet = build(endent`
       ${truncatedNotes}
       …
     `);

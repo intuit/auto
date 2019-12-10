@@ -1,7 +1,7 @@
 import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
 import GHub from '@octokit/rest';
 import on from 'await-to-js';
-import dedent from 'dedent';
+import endent from 'endent';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
@@ -181,7 +181,7 @@ export function buildSearchQuery(
   const query = commits.reduce((q, commit) => {
     const subQuery = `repo:${repo} ${commit.hash}`;
 
-    return dedent`
+    return endent`
       ${q}
 
       hash_${commit.hash}: search(query: "${subQuery}", type: ISSUE, first: 1) {

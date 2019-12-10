@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
 
-import dedent from 'dedent';
+import endent from 'endent';
 import { prompt } from 'enquirer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -102,11 +102,11 @@ async function getCustomLabels(onlyLabels = false) {
         // @ts-ignore
         template:
           label.name === 'release' || label.name === 'skip-release'
-            ? dedent`
+            ? endent`
                 label:  #{name}
                 desc:   #{description}
               `
-            : dedent`
+            : endent`
                 label:  #{name}
                 title:  #{title}
                 desc:   #{description}
@@ -158,7 +158,7 @@ async function getCustomLabels(onlyLabels = false) {
       name: 'value',
       message: 'Add another label:',
       // @ts-ignore
-      template: dedent`
+      template: endent`
         label:  #{name}
         title:  #{title}
         desc:   #{description}

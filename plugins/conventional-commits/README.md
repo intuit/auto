@@ -17,6 +17,7 @@ yarn add -D @auto-it/conventional-commits
 ```json
 {
   "plugins": [
+    "npm",
     "conventional-commits"
     // other plugins
   ]

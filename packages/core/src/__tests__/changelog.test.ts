@@ -1,4 +1,4 @@
-import dedent from 'dedent';
+import endent from 'endent';
 import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
 import LogParse from '../log-parse';
 import { defaultLabels } from '../release';
@@ -508,7 +508,7 @@ describe('generateReleaseNotes', () => {
         labels: ['minor']
       }
     ]);
-    commits[0].pullRequest!.body = dedent`
+    commits[0].pullRequest!.body = endent`
       # Why
 
       Some words
@@ -539,7 +539,7 @@ describe('generateReleaseNotes', () => {
         labels: ['minor']
       }
     ]);
-    commits[0].pullRequest!.body = dedent`
+    commits[0].pullRequest!.body = endent`
       # Why
 
       Some words
@@ -574,7 +574,7 @@ describe('generateReleaseNotes', () => {
         labels: ['minor']
       }
     ]);
-    commits[0].pullRequest!.body = dedent`
+    commits[0].pullRequest!.body = endent`
       # Why
 
       Some words
@@ -599,7 +599,7 @@ describe('generateReleaseNotes', () => {
       }
     ]);
     commits[0].authors[0].username = 'renovate-bot';
-    commits[0].pullRequest!.body = dedent`
+    commits[0].pullRequest!.body = endent`
       # Why
 
       Some words
@@ -640,7 +640,7 @@ describe('generateReleaseNotes', () => {
         labels: ['minor', 'no-notes']
       }
     ]);
-    commits[0].pullRequest!.body = dedent`
+    commits[0].pullRequest!.body = endent`
       # Why
 
       Some words
