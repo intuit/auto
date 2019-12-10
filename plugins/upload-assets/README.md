@@ -21,7 +21,9 @@ Simply supply the paths to the assets to add to the release.
   "plugins": [
     ["upload-assets", { "assets": ["./path/to/file"] }],
     // or
-    ["upload-assets", ["./path/to/file"]]
+    ["upload-assets", ["./path/to/file"]],
+    // or use globs to upload multiple things
+    ["upload-assets", ["./path/**/to/*.file"]]
   ]
 }
 ```
