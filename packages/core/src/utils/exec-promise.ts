@@ -1,4 +1,7 @@
 import { spawn } from 'child_process';
+import createLog from './logger';
+
+const log = createLog('verbose');
 
 /**
  * Wraps up running a command into a single promise,
@@ -11,6 +14,7 @@ export default async function execPromise(
   cmd: string,
   args: (string | undefined | false)[] = []
 ) {
+  const callSite = new Error().stack;
   const filteredArgs = args.filter(
     (arg): arg is string => typeof arg === 'string'
   );
@@ -55,11 +59,18 @@ export default async function execPromise(
         appendedStdErr += allStdout.length ? `\n\n${allStdout}` : '';
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : '';
 
-        reject(new Error(`Running command '${cmd}' failed${appendedStdErr}`));
+        reject(
+          new Error(
+            `Running command '${cmd}' with args [${args.join(
+              ', '
+            )}] failed${appendedStdErr}`
+          )
+        );
+        log.verbose.error('Called from:', callSite);
       } else {
         // Tools can occasionally print to stderr but not fail, so print that just in case.
         if (allStderr.length) {
-          console.log(allStderr);
+          log.log.warn(allStderr);
         }
 
         // Resolve the string of the whole stdout
