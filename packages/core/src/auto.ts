@@ -742,6 +742,7 @@ export default class Auto {
     await this.checkClean();
     await this.setGitUser();
 
+    const lastRelease = await this.git.getLatestRelease();
     const lastTag = await this.git.getLatestTagInBranch();
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
@@ -790,7 +791,15 @@ export default class Auto {
         await this.prBody({
           pr: Number(pr),
           context: 'prerelease-version',
-          message: message.replace('%v', result.map(r => `\`${r}\``).join('\n'))
+          message: dedent`
+            # Version
+
+            ${message.replace('%v', result.map(r => `\`${r}\``).join('\n'))}
+
+            ## Changelog
+
+            ${await this.release.generateReleaseNotes(lastRelease)}
+          `
         });
       }
     }
