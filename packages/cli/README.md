@@ -165,8 +165,7 @@ Release Commands
 Global Options
 
   -V, --version         Display auto's version
-  -v, --verbose         Show some more logs
-  -w, --very-verbose    Show a lot more logs
+  -v, -vv, --verbose    Show some more logs. Pass -vv for very verbose logs.
   --repo string         The repo to set the status on. Defaults to looking in the package definition
                         for the platform
   --owner string        The owner of the GitHub repo. Defaults to reading from the package definition

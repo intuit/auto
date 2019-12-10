@@ -14,9 +14,7 @@ export interface IRepoOptions {
 
 export interface ILogOptions {
   /** Show more logs */
-  verbose?: boolean;
-  /** Show a lot more logs */
-  veryVerbose?: boolean;
+  verbose?: boolean | boolean[];
 }
 
 export interface IInitOptions {
