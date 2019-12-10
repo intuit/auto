@@ -333,8 +333,6 @@ describe('publish', () => {
     exec.mockClear();
   });
 
-
-
   test('should use silly logging in verbose mode', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -594,7 +592,10 @@ describe('canary', () => {
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
-      git: { getLatestRelease: () => '1.2.3' }
+      git: {
+        getLatestRelease: () => '1.2.3',
+        getLatestTagInBranch: () => '1.2.3'
+      }
     } as unknown) as Auto.Auto);
 
     readResult = `
@@ -605,7 +606,7 @@ describe('canary', () => {
 
     await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
     expect(exec.mock.calls[0]).toContain('npm');
-    expect(exec.mock.calls[0][1]).toContain('1.2.4-canary.123.1');
+    expect(exec.mock.calls[0][1]).toContain('1.2.4-canary.123.1.0');
   });
 
   test('publishes to public for scoped packages', async () => {
@@ -617,7 +618,10 @@ describe('canary', () => {
       hooks,
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
-      git: { getLatestRelease: () => '1.2.3' }
+      git: {
+        getLatestRelease: () => '1.2.3',
+        getLatestTagInBranch: () => '1.2.3'
+      }
     } as unknown) as Auto.Auto);
 
     readResult = `
@@ -638,8 +642,11 @@ describe('canary', () => {
       config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
-      git: { getLatestRelease: () => Promise.resolve('1.2.3') }
-    } as Auto.Auto);
+      git: {
+        getLatestRelease: () => Promise.resolve('1.2.3'),
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as any);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -667,8 +674,11 @@ describe('canary', () => {
       config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
-      git: { getLatestRelease: () => Promise.resolve('1.2.3') }
-    } as Auto.Auto);
+      git: {
+        getLatestRelease: () => Promise.resolve('1.2.3'),
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as any);
     existsSync.mockReturnValueOnce(true);
 
     readResult = `
@@ -733,8 +743,11 @@ describe('canary', () => {
       config: { prereleaseBranches: ['next'] },
       hooks,
       logger: dummyLog(),
-      git: { getLatestRelease: () => Promise.resolve('@foo/lib:1.1.0') }
-    } as Auto.Auto);
+      git: {
+        getLatestRelease: () => Promise.resolve('@foo/lib:1.1.0'),
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as any);
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
 
