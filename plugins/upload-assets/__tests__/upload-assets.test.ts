@@ -118,7 +118,11 @@ describe('Upload Assets Plugin', () => {
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);
-    expect(uploadReleaseAsset.mock.calls[0][0].name).toBe('test-2.txt');
-    expect(uploadReleaseAsset.mock.calls[1][0].name).toBe('test.txt');
+    expect(uploadReleaseAsset).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'test-2.txt' })
+    );
+    expect(uploadReleaseAsset).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'test.txt' })
+    );
   });
 });
