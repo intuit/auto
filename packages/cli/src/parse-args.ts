@@ -69,15 +69,9 @@ const defaultOptions = [
     name: 'verbose',
     alias: 'v',
     type: Boolean,
-    description: 'Show some more logs',
-    group: 'global'
-  },
-  {
-    name: 'very-verbose',
-    alias: 'w',
-    type: Boolean,
-    description: 'Show a lot more logs',
-    group: 'global'
+    description: 'Show some more logs. Pass -vv for very verbose logs.',
+    group: 'global',
+    multiple: true
   },
   {
     name: 'repo',

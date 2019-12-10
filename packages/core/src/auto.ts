@@ -213,7 +213,7 @@ export default class Auto {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
     this.logger = createLog(
-      options.veryVerbose
+      Array.isArray(options.verbose) && options.verbose.length > 1
         ? 'veryVerbose'
         : options.verbose
         ? 'verbose'
@@ -821,6 +821,14 @@ export default class Auto {
       (currentBranch === this.baseBranch &&
         options.onlyGraduateWithReleaseLabel);
 
+    this.logger.veryVerbose.info({
+      currentBranch,
+      isBaseBrach,
+      isPR,
+      shouldGraduate,
+      isPrereleaseBranch,
+      publishPrerelease
+    })
     const publishInfo =
       isBaseBrach && shouldGraduate
         ? await this.publishLatest(options)
