@@ -129,13 +129,15 @@ export interface ICanaryOptions {
   pr?: number;
   /** The build to attach the canary to */
   build?: number;
-  /** THe message used when attaching the canary version to a PR */
+  /** The message used when attaching the canary version to a PR */
   message?: string | 'false';
 }
 
 export interface INextOptions {
   /** Do not actually do anything */
   dryRun?: boolean;
+  /** The message used when attaching the prerelease version to a PR */
+  message?: string | 'false';
 }
 
 export type GlobalOptions = {

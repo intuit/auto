@@ -483,7 +483,14 @@ export const commands: Command[] = [
       2. Creates a "Pre Release" on GitHub releases page.
     `,
     examples: ['{green $} auto next'],
-    options: [dryRun]
+    options: [
+      dryRun,
+      {
+        ...message,
+        description:
+          'The message used when attaching the prerelease version to a PR'
+      }
+    ]
   }
 ];
 
