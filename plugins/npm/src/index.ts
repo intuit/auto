@@ -21,7 +21,16 @@ import { loadPackageJson, readFile } from './utils';
 
 const { isCi } = envCi();
 /** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
-const branch = execSync('git symbolic-ref --short HEAD', { encoding: 'utf8' });
+let branch: string;
+
+try {
+  branch = execSync('git symbolic-ref --short HEAD', {
+    encoding: 'utf8',
+    stdio: 'ignore'
+  });
+} catch (error) {
+  branch = '';
+}
 
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 
