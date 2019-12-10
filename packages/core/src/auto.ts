@@ -782,6 +782,19 @@ export default class Auto {
       `Published next version${result.length > 1 ? `s` : ''}: ${newVersion}`
     );
 
+    if ('isPr' in env && env.isPr) {
+      const message = options.message || 'Published prerelease version: %v';
+      const pr = 'pr' in env && env.pr;
+
+      if (pr) {
+        await this.prBody({
+          pr: Number(pr),
+          context: 'prerelease-version',
+          message: message.replace('%v', result.map(r => `\`${r}\``).join('\n'))
+        });
+      }
+    }
+
     return { newVersion, commitsInRelease: commits };
   }
 
@@ -801,11 +814,13 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
-    // env-ci sets branch to target branch (ex: master) in some CI services.
-    // so we should make sure we aren't in a PR just to be safe
     const isPR = 'isPr' in env && env.isPr;
     const head = await this.release.getCommitsInRelease('HEAD^');
-    const currentBranch = 'branch' in env && env.branch;
+    // env-ci sets branch to target branch (ex: master) in some CI services.
+    // so we should make sure we aren't in a PR just to be safe
+    const currentBranch = isPR
+      ? 'prBranch' in env && env.prBranch
+      : 'branch' in env && env.branch;
     const isBaseBrach = !isPR && currentBranch === this.baseBranch;
     const shouldGraduate =
       !options.onlyGraduateWithReleaseLabel ||
@@ -828,7 +843,7 @@ export default class Auto {
       shouldGraduate,
       isPrereleaseBranch,
       publishPrerelease
-    })
+    });
     const publishInfo =
       isBaseBrach && shouldGraduate
         ? await this.publishLatest(options)
