@@ -1,3 +1,57 @@
+# v7.17.0 (Fri Dec 06 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/all-contributors`
+  - add more defaults to all-contributors plugin [#756](https://github.com/intuit/auto/pull/756) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- docs(introduction): fix typo [#755](https://github.com/intuit/auto/pull/755) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+- fix docs build issue [#753](https://github.com/intuit/auto/pull/753) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Making the docs a little more solid... [#752](https://github.com/intuit/auto/pull/752) ([@zephraph](https://github.com/zephraph))
+- Slight improvements to GitHub actions docs [#750](https://github.com/intuit/auto/pull/750) ([@zephraph](https://github.com/zephraph))
+- Update autorc.md [#713](https://github.com/intuit/auto/pull/713) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/released`
+  - remove references to "npm" plugin in "released" docs [#712](https://github.com/intuit/auto/pull/712) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-jsdoc from 18.1.4 to 18.1.5 [#725](https://github.com/intuit/auto/pull/725) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.0.4 to 23.1.1 [#745](https://github.com/intuit/auto/pull/745) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 9.4.3 to 9.5.0 [#737](https://github.com/intuit/auto/pull/737) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump change-case from 3.1.0 to 4.0.0 [#744](https://github.com/intuit/auto/pull/744) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 6.7.1 to 6.7.2 [#738](https://github.com/intuit/auto/pull/738) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.12.12 to 12.12.14 [#736](https://github.com/intuit/auto/pull/736) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.8.0 to 2.9.0 [#741](https://github.com/intuit/auto/pull/741) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 24.1.0 to 24.2.0 [#742](https://github.com/intuit/auto/pull/742) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pom-parser from 1.1.1 to 1.2.0 [#740](https://github.com/intuit/auto/pull/740) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 18.1.5 to 18.4.1 [#739](https://github.com/intuit/auto/pull/739) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.7.0 to 2.9.0 [#724](https://github.com/intuit/auto/pull/724) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 6.6.0 to 6.7.1 [#719](https://github.com/intuit/auto/pull/719) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 18.0.1 to 18.1.4 [#718](https://github.com/intuit/auto/pull/718) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.7.0 to 2.8.0 [#720](https://github.com/intuit/auto/pull/720) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.18.4 to 3.19.0 [#714](https://github.com/intuit/auto/pull/714) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 9.4.2 to 9.4.3 [#717](https://github.com/intuit/auto/pull/717) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.7.0 to 2.8.0 [#716](https://github.com/intuit/auto/pull/716) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.12.8 to 12.12.12 [#722](https://github.com/intuit/auto/pull/722) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.5.0 to 6.7.0 [#723](https://github.com/intuit/auto/pull/723) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump @types/node-fetch from 2.5.3 to 2.5.4 [#721](https://github.com/intuit/auto/pull/721) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.10.0 to 6.11.0 [#715](https://github.com/intuit/auto/pull/715) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.11.0 to 6.11.1 [#743](https://github.com/intuit/auto/pull/743) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 4
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v7.16.3 (Mon Nov 18 2019)
 
 #### 🏠  Internal

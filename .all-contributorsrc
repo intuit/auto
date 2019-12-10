@@ -59,7 +59,8 @@
       "profile": "https://github.com/zephraph",
       "contributions": [
         "bug",
-        "code"
+        "code",
+        "doc"
       ]
     },
     {
@@ -151,6 +152,15 @@
       "name": "rdipika94",
       "avatar_url": "https://avatars3.githubusercontent.com/u/12812259?v=4",
       "profile": "https://github.com/rdipika",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "bmuenzenmeyer",
+      "name": "Brian Muenzenmeyer",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/298435?v=4",
+      "profile": "http://brianmuenzenmeyer.com",
       "contributions": [
         "doc"
       ]

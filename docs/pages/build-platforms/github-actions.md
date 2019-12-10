@@ -19,29 +19,30 @@ on: [push]
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v1
-      - name: Skip CI
-        uses: veggiemonk/skip-commit@master
-        env:
-          COMMIT_FILTER: skip ci
       - name: Prepare repository
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git checkout "${GITHUB_REF:11}" --
+          git checkout ${GITHUB_REF:11} --
           git remote rm origin
-          git remote add origin "https://$GH_TOKEN@github.com/hipstersmoothie/my-test-project"
-          git fetch origin
-          git branch --set-upstream-to origin/master
+          git remote add origin https://$<your-github-user>:GITHUB_TOKEN@github.com/<project-owner>/<project-repo>
+          git fetch origin --tags
+          git branch --set-upstream-to origin/${GITHUB_REF:11} ${GITHUB_REF:11}
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: yarn-deps-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-deps-${{ hashFiles('yarn.lock') }}
       - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn
@@ -53,8 +54,10 @@ jobs:
 
 If you are having problems make sure you have done the following:
 
-- `GH_TOKEN` is set
-- Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+- Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+- Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
+
+To add a secret for actions go to `https://github.com/<owner>/<repo>/settings/secrets/new`
 
 ## Examples
 
