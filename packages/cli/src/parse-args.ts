@@ -440,7 +440,7 @@ export const commands: Command[] = [
     name: 'canary',
     group: 'Release Commands',
     description: endent`
-      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD.
+      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
 
       1. In PR: 1.2.3-canary.123.0 + add version to PR body
       2. Locally: 1.2.3-canary.1810cfd
@@ -476,7 +476,7 @@ export const commands: Command[] = [
     name: 'next',
     group: 'Release Commands',
     description: endent`
-      Make a release for your "prerelease" release line.
+      Make a release for your "prerelease" release line. This is ran automatically from "shipit".
 
       1. Creates a prerelease on package management platform
       2. Creates a "Pre Release" on GitHub releases page.

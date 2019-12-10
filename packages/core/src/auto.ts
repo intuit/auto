@@ -692,13 +692,13 @@ export default class Auto {
       if (message !== 'false' && pr) {
         await this.prBody({
           pr: Number(pr),
+          context: 'canary-version',
           message: message.replace(
             '%v',
             !newVersion || newVersion.includes('\n')
               ? newVersion
               : `\`${newVersion}\``
-          ),
-          context: 'canary-version'
+          )
         });
       }
 
