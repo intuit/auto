@@ -786,7 +786,7 @@ export default class Auto {
       const message = options.message || 'Published prerelease version: %v';
       const pr = 'pr' in env && env.pr;
 
-      if (message !== 'false' && pr) {
+      if (pr) {
         await this.prBody({
           pr: Number(pr),
           context: 'prerelease-version',

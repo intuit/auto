@@ -137,7 +137,7 @@ export interface INextOptions {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** The message used when attaching the prerelease version to a PR */
-  message?: string | 'false';
+  message?: string;
 }
 
 export type GlobalOptions = {
