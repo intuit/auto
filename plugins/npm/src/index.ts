@@ -482,13 +482,14 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Detected monorepo, using lerna');
 
         const packagesBefore = await getLernaPackages();
+        const preid = `canary${postFix}`;
         const next =
           (isIndependent && `pre${bump}`) ||
           determineNextVersion(
             lastRelease,
             inPrerelease ? latestTag : packagesBefore[0].version,
             bump,
-            'canary'
+            preid
           );
 
         await execPromise('npx', [
@@ -497,13 +498,12 @@ export default class NPMPlugin implements IPlugin {
           next,
           '--dist-tag',
           'canary',
-          '--preid',
-          `canary${postFix}`,
           '--force-publish', // you always want a canary version to publish
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
           '--no-git-tag-version', // no need to tag and commit,
           '--exact', // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
+          ...(isIndependent ? ['--preid', preid] : []),
           ...verboseArgs
         ]);
 
