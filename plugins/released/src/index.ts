@@ -114,6 +114,13 @@ export default class ReleasedLabelPlugin implements IPlugin {
     const messages = [commit.subject];
 
     if (commit.pullRequest) {
+      const branch = (await auto.git?.getPullRequest(commit.pullRequest.number))
+        ?.data.head.ref;
+
+      if (branch && auto.config?.prereleaseBranches.includes(branch)) {
+        return;
+      }
+
       await this.addCommentAndLabel({
         auto,
         newVersion,
