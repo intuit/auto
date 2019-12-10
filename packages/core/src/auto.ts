@@ -213,7 +213,7 @@ export default class Auto {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
     this.logger = createLog(
-      Array.isArray(options.verbose) && options.verbose.length === 2
+      Array.isArray(options.verbose) && options.verbose.length > 1
         ? 'veryVerbose'
         : options.verbose
         ? 'verbose'
