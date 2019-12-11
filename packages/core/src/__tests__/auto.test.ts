@@ -919,7 +919,7 @@ describe('Auto', () => {
       const auto = new Auto(defaults);
       // @ts-ignore
       auto.checkClean = () => Promise.resolve(true);
-   
+
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -937,7 +937,7 @@ describe('Auto', () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       // @ts-ignore
       auto.checkClean = () => Promise.resolve(true);
-   
+
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -1062,6 +1062,62 @@ describe('Auto', () => {
     });
   });
 
+  describe('next', () => {
+    test('should throw when not initialized', async () => {
+      const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+
+      await expect(auto.next({})).rejects.not.toBeUndefined();
+    });
+
+    test('does not call next hook in dry-run', async () => {
+      const auto = new Auto(defaults);
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getProject = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.generateReleaseNotes = () => Promise.resolve('notes');
+      auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      const next = jest.fn();
+      auto.hooks.next.tap('test', next);
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+      await auto.next({ dryRun: true });
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    test('calls the next hook with the release info', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.publish = () => Promise.resolve({} as any);
+      auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.3');
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.generateReleaseNotes = () => Promise.resolve('notes');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap('test', afterRelease);
+      auto.hooks.next.tap('test', () => ['1.2.4-next.0']);
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+      await auto.next({});
+      expect(afterRelease).toHaveBeenCalled();
+    });
+  });
+
   describe('shipit', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
@@ -1128,8 +1184,6 @@ describe('Auto', () => {
       await auto.shipit({ dryRun: true });
       expect(version).not.toHaveBeenCalled();
     });
-
-
   });
 });
 

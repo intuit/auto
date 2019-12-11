@@ -106,8 +106,8 @@
       "packages/**/*.ts",
       "plugins/**/*.ts",
       "!**/dist/**/*",
-      "!src/**/*.test.ts",
-      "!src/**/__tests__/**/*"
+      "!**/*.test.ts",
+      "!**/__tests__/**/*"
     ],
     "coverageReporters": [
       "cobertura",

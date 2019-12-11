@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { execSync } from 'child_process';
 import parseAuthor from 'parse-author';
 import path from 'path';
+import { Memoize as memoize } from 'typescript-memoize';
 
 import {
   Auto,
@@ -171,8 +172,17 @@ export function getMonorepoPackage() {
   }, {} as IPackageJSON);
 }
 
+interface LernaPackage {
+  /** Path to package */
+  path: string;
+  /** Name of package */
+  name: string;
+  /** Version of package */
+  version: string;
+}
+
 /** Get all of the packages in the lerna monorepo */
-async function getLernaPackages() {
+async function getLernaPackages(): Promise<LernaPackage[]> {
   return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
     res.split('\n').map(packageInfo => {
       const [packagePath, name, version] = packageInfo.split(':');
@@ -301,6 +311,12 @@ export default class NPMPlugin implements IPlugin {
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
   }
 
+  /** A memoized version of getLernaPackages */
+  @memoize()
+  private async getLernaPackages() {
+    return getLernaPackages();
+  }
+
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     const isVerbose =
@@ -373,9 +389,8 @@ export default class NPMPlugin implements IPlugin {
               return [commit, line];
             }
 
-            const lernaPackages = await getLernaPackages();
+            const lernaPackages = await this.getLernaPackages();
             const lernaJson = getLernaJson();
-
             const packages = await changedPackages({
               sha: commit.hash,
               packages: lernaPackages,

@@ -45,6 +45,7 @@
     "registry-url": "^5.1.0",
     "semver": "^6.0.0",
     "tslib": "1.10.0",
+    "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0",
     "user-home": "^2.0.0"
   },
