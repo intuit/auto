@@ -63,3 +63,19 @@ test('should correctly parse package info', async () => {
     owner: 'black-panther'
   });
 });
+
+test('should correctly parse package info - string', async () => {
+  readResult = {
+    version: '1.0.0',
+    repository: 'black-panther/operation-foo'
+  };
+  parseResult = {
+    owner: 'black-panther',
+    name: 'operation-foo'
+  };
+
+  expect(await packageConfig()).toStrictEqual({
+    repo: 'operation-foo',
+    owner: 'black-panther'
+  });
+});

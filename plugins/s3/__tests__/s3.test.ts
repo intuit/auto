@@ -7,6 +7,22 @@ import S3, { IUploadAssetsPluginOptions } from '../src';
 jest.mock('aws-cli-js');
 
 describe('S3 Plugin', () => {
+  test('should warn about keys', () => {
+    const options: IUploadAssetsPluginOptions = {
+      bucket: 'BUCKET_NAME',
+      region: 'us-west-2',
+      files: [['test-files', 'andrew-test']]
+    };
+    const plugin = new S3(options);
+    const hooks = makeHooks();
+    const checkEnv = jest.fn();
+
+    plugin.apply({ checkEnv, hooks } as any);
+    hooks.beforeRun.call({} as any);
+
+    expect(checkEnv).toHaveBeenCalledTimes(3);
+  });
+
   test('should accept a options object', () => {
     const options: IUploadAssetsPluginOptions = {
       bucket: 'BUCKET_NAME',

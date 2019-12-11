@@ -223,6 +223,34 @@ describe('getAuthor', () => {
   });
 });
 
+describe('getRepository', () => {
+  test('should get package config', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog()
+    } as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "repository": "black-panther/operation-foo",
+        "author": {
+          "name": "Adam",
+          "email": "adam@email.com"
+        }
+      }
+    `;
+    expect(await hooks.getRepository.promise()).toStrictEqual({
+      owner: 'black-panther',
+      repo: 'operation-foo'
+    });
+  });
+});
+
 describe('getPreviousVersion', () => {
   test('should get use 0 if not version in package.json', async () => {
     const plugin = new NPMPlugin();
@@ -766,5 +794,114 @@ describe('canary', () => {
     expect(value).toStrictEqual({
       error: 'No packages were changed. No canary published.'
     });
+  });
+});
+
+describe('next', () => {
+  beforeEach(() => {
+    exec.mockClear();
+  });
+
+  test('works in single package', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => '1.2.3',
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+    `;
+
+    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
+      '1.2.4-next.0'
+    ]);
+
+    expect(exec).toHaveBeenCalledWith('npm', [
+      'version',
+      '1.2.4-next.0',
+      '--no-git-tag-version'
+    ]);
+    expect(exec).toHaveBeenCalledWith('git', ['tag', '1.2.4-next.0']);
+    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+    expect(exec).toHaveBeenCalledWith('npm', ['publish', '--tag', 'next']);
+  });
+
+  test('works in monorepo', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    exec.mockReturnValueOnce('');
+    exec.mockReturnValueOnce('1.2.4-next.0');
+
+    plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog(),
+      getCurrentVersion: () => '1.2.3',
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => '1.2.3',
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as unknown) as Auto.Auto);
+
+    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
+      '1.2.4-next.0'
+    ]);
+
+    expect(exec).toHaveBeenCalledWith(
+      'npx',
+      expect.arrayContaining(['lerna', 'publish', '1.2.4-next.0'])
+    );
+    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+  });
+
+  test('works in monorepo - independent', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+    exec.mockReturnValueOnce('');
+    exec.mockReturnValueOnce('@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0');
+
+    plugin.apply(({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      logger: dummyLog(),
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => '@foo/1@1.0.0-next.0',
+        getLatestTagInBranch: () => '@foo/1@1.0.0-next.0'
+      }
+    } as unknown) as Auto.Auto);
+
+    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
+      '@foo/1@1.0.0-next.0',
+      '@foo/2@2.0.0-next.0'
+    ]);
+
+    expect(exec).toHaveBeenCalledWith(
+      'npx',
+      expect.arrayContaining(['lerna', 'publish', 'prerelease'])
+    );
+    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
   });
 });
