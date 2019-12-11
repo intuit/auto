@@ -48,24 +48,6 @@ describe('postToSlack', () => {
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
 
-  test("doesn't post in dry run", async () => {
-    const plugin = new SlackPlugin('https://custom-slack-url');
-    const hooks = makeHooks();
-
-    jest.spyOn(plugin, 'postToSlack').mockImplementation();
-    // @ts-ignore
-    plugin.apply({ hooks, options: { dryRun: true } } as Auto);
-
-    await hooks.afterRelease.promise({
-      newVersion: '1.0.0',
-      lastRelease: '0.1.0',
-      commits: [],
-      releaseNotes: '# My Notes'
-    });
-
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
-  });
-
   test("doesn't post with no commits", async () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();

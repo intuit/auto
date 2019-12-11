@@ -239,31 +239,6 @@ describe('release label plugin', () => {
     );
   });
 
-  test('should do nothing with dryRun flag', async () => {
-    const releasedLabel = new ReleasedLabelPlugin();
-    const autoHooks = makeHooks();
-
-    releasedLabel.apply(({
-      hooks: autoHooks,
-      labels: defaultLabels,
-      logger: dummyLog(),
-      options: { dryRun: true },
-      comment,
-      git
-    } as unknown) as Auto);
-
-    await autoHooks.afterRelease.promise({
-      newVersion: '1.0.0',
-      lastRelease: '0.1.0',
-      commits: await log.normalizeCommits([
-        makeCommitFromMsg('normal commit with no bump (#123)')
-      ]),
-      releaseNotes: ''
-    });
-
-    expect(comment).not.toHaveBeenCalled();
-  });
-
   test('should do nothing when label is already present', async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
