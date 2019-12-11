@@ -485,14 +485,26 @@ export default class Release {
 
     const logParse = await this.createLogParse();
     const commits = (await logParse.normalizeCommits(gitlog)).filter(commit => {
-      const alreadyReleased = execSync(
-        `git merge-base --is-ancestor ${from} ${commit.hash}; echo $?`,
-        {
-          encoding: 'utf8'
-        }
-      ).trim();
+      // 0 exit code means that the commit is an ancestor of "from"
+      // and should not be released
+      const released =
+        execSync(
+          `git merge-base --is-ancestor ${commit.hash} ${from}; echo $?`,
+          {
+            encoding: 'utf8'
+          }
+        ).trim() === '0';
 
-      return alreadyReleased !== '0';
+      if (released) {
+        this.logger.verbose.warn(
+          `Commit already released omitting: "${commit.hash.slice(
+            0,
+            8
+          )}" with message "${commit.subject}"`
+        );
+      }
+
+      return !released;
     });
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
