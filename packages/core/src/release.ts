@@ -21,6 +21,7 @@ import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { makeReleaseHooks } from './utils/make-hooks';
+import { execSync } from 'child_process';
 
 export type VersionLabel =
   | SEMVER.major
@@ -483,7 +484,16 @@ export default class Release {
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
     const logParse = await this.createLogParse();
-    const commits = await logParse.normalizeCommits(gitlog);
+    const commits = (await logParse.normalizeCommits(gitlog)).filter(commit => {
+      const alreadyReleased = execSync(
+        `git merge-base --is-ancestor ${from} ${commit.hash}; echo $?`,
+        {
+          encoding: 'utf8'
+        }
+      ).trim();
+
+      return alreadyReleased !== '0';
+    });
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
