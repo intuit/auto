@@ -1,5 +1,13 @@
 import Auto from '../auto';
 import { dummyLog } from '../utils/logger';
+import child from 'child_process';
+
+const { execSync } = child;
+child.execSync = jest.fn().mockReturnValue('');
+
+afterAll(() => {
+  child.execSync = execSync;
+});
 
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));

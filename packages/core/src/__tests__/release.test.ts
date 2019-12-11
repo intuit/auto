@@ -10,6 +10,14 @@ import Release, {
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
+import child from 'child_process';
+
+const { execSync } = child;
+child.execSync = jest.fn().mockReturnValue('');
+
+afterAll(() => {
+  child.execSync = execSync;
+});
 
 const constructor = jest.fn();
 const getGitLog = jest.fn();
