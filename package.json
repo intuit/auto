@@ -26,7 +26,7 @@
     "semver:check": "./scripts/post-install.sh",
     "build": "tsc -b tsconfig.dev.json",
     "start": "npm run build -- --watch",
-    "lint": "eslint packages plugins --ext .ts",
+    "lint": "eslint packages plugins --ext .ts --cache",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
     "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
