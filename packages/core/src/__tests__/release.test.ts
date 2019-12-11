@@ -344,6 +344,7 @@ describe('Release', () => {
     test('should omit commits that have already been released', async () => {
       const gh = new Release(git);
 
+      jest.spyOn(console, 'log').mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: '2019-01-16'
       });

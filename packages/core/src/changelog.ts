@@ -310,7 +310,9 @@ export default class Changelog {
       this.authors!.map(async ([commit, author]) => {
         const info =
           authorsWithFullData.find(
-            u => u.name === author.name || u.email === author.email
+            u =>
+              (author.name && u.name === author.name) ||
+              (author.email && u.email === author.email)
           ) || author;
         const user = await this.hooks.renderChangelogAuthor.promise(
           info,
