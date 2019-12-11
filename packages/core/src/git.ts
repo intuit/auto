@@ -288,7 +288,7 @@ export default class Git {
         files: (commit.files || []).map(file => path.resolve(file))
       }));
     } catch (error) {
-      const tag = error.match(/ambiguous argument '(\S+)\.\.HEAD'/);
+      const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {
         this.logger.log.error(
