@@ -1127,15 +1127,15 @@ export default class Auto {
     } else {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
       release = await this.git.publish(releaseNotes, newVersion);
-    }
 
-    await this.hooks.afterRelease.promise({
-      lastRelease,
-      newVersion,
-      commits: commitsInRelease,
-      releaseNotes,
-      response: release
-    });
+      await this.hooks.afterRelease.promise({
+        lastRelease,
+        newVersion,
+        commits: commitsInRelease,
+        releaseNotes,
+        response: release
+      });
+    }
 
     return newVersion;
   }

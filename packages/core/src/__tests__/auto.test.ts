@@ -1178,11 +1178,12 @@ describe('Auto', () => {
       jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
       jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
       jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
-      const version = jest.fn();
-      auto.hooks.version.tap('test', version);
+      const spy = jest.fn();
+      auto.hooks.version.tap('test', spy);
+      auto.hooks.afterRelease.tap('test', spy);
 
       await auto.shipit({ dryRun: true });
-      expect(version).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });

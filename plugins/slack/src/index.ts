@@ -53,10 +53,6 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
-        if ('dryRun' in auto.options && auto.options.dryRun) {
-          return;
-        }
-
         const head = commits[0];
 
         if (!head) {
