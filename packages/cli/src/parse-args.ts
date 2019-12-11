@@ -480,6 +480,8 @@ export const commands: Command[] = [
 
       1. Creates a prerelease on package management platform
       2. Creates a "Pre Release" on GitHub releases page.
+
+      Calling the \`next\` command from a prerelease branch will publish a prerelease, otherwise it will publish to the default prerelease branch.
     `,
     examples: ['{green $} auto next'],
     options: [
