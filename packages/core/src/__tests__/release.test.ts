@@ -13,7 +13,8 @@ import makeCommitFromMsg from './make-commit-from-msg';
 import child from 'child_process';
 
 const { execSync } = child;
-child.execSync = jest.fn().mockReturnValue('');
+const exec = jest.fn();
+child.execSync = exec.mockReturnValue('');
 
 afterAll(() => {
   child.execSync = execSync;
@@ -153,16 +154,16 @@ describe('Release', () => {
     createLabel.mockClear();
   });
 
-  test('should use options owner, repo, and token', async () => {
-    const gh = new Release(git);
-
-    await gh.getCommits('12345');
-
-    expect(constructor.mock.calls[0][0].owner).toBe('Andrew');
-    expect(constructor.mock.calls[0][0].repo).toBe('test');
-  });
-
   describe('getCommits', () => {
+    test('should use options owner, repo, and token', async () => {
+      const gh = new Release(git);
+
+      await gh.getCommits('12345');
+
+      expect(constructor.mock.calls[0][0].owner).toBe('Andrew');
+      expect(constructor.mock.calls[0][0].repo).toBe('test');
+    });
+
     test('should default to HEAD', async () => {
       const gh = new Release(git);
       await gh.getCommits('12345');
@@ -336,6 +337,34 @@ describe('Release', () => {
           })
         ])
       );
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should omit commits that have already been released', async () => {
+      const gh = new Release(git);
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          makeCommitFromMsg('I was released previously', {
+            hash: '1a2b'
+          })
+        ])
+      );
+      exec.mockReturnValueOnce('1');
+      exec.mockReturnValueOnce('0');
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });

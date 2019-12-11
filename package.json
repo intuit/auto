@@ -27,7 +27,6 @@
     "build": "tsc -b tsconfig.dev.json",
     "start": "npm run build -- --watch",
     "lint": "eslint packages plugins --ext .ts",
-    "precommit": "lint-staged",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
     "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",

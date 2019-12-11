@@ -11,8 +11,11 @@ jest.mock('../utils/load-plugins.ts');
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
 
-const { execSync } = child;
-child.execSync = jest.fn().mockReturnValue('');
+jest
+  .spyOn(child, 'execSync')
+  .mockImplementation()
+  // @ts-ignore
+  .mockReturnValue('');
 
 const defaults = {
   owner: 'foo',
@@ -61,10 +64,6 @@ jest.mock('gitlog', () => (a, cb) => {
       rawBody: 'foo'
     }
   ]);
-});
-
-afterAll(() => {
-  child.execSync = execSync;
 });
 
 describe('Auto', () => {

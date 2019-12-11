@@ -288,6 +288,28 @@ Array [
 ]
 `;
 
+exports[`Release getCommits should omit commits that have already been released 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": Object {
+      "number": 124,
+    },
+    "subject": "Feature",
+  },
+]
+`;
+
 exports[`Release getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
