@@ -188,6 +188,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   <tr>
     <td align="center"><a href="https://github.com/rdipika"><img src="https://avatars3.githubusercontent.com/u/12812259?v=4" width="100px;" alt=""/><br /><sub><b>rdipika94</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rdipika" title="Documentation">📖</a></td>
     <td align="center"><a href="http://brianmuenzenmeyer.com"><img src="https://avatars1.githubusercontent.com/u/298435?v=4" width="100px;" alt=""/><br /><sub><b>Brian Muenzenmeyer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/sarah-vanderlaan"><img src="https://avatars0.githubusercontent.com/u/32620284?v=4" width="100px;" alt=""/><br /><sub><b>Sarah van der Laan</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sarah-vanderlaan" title="Documentation">📖</a></td>
   </tr>
 </table>
 
