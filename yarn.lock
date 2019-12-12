@@ -46,6 +46,7 @@
     registry-url "^5.1.0"
     semver "^6.0.0"
     tslib "1.10.0"
+    typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
     user-home "^2.0.0"
 
@@ -7829,10 +7830,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@^1.10.8:
-  version "1.10.8"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.8.tgz#c045ae1f4b5b305389f1e35b72eca08182ab20ab"
-  integrity sha512-Pvem4/HyU8PGK/xPUWCOuTVPXMGpOSP1VLE98zmqmQjpuo9ut7Xx/qO4GJMcnZ7uWr9lVcTtqh4bz4foDszfNw==
+ignite@^1.10.9:
+  version "1.10.9"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.10.9.tgz#983ccfc66171c3c886c750b6d79e8b6186aa562f"
+  integrity sha512-sVdM9snXMIwf8HnHRRRGlzt+musE5bUjHe0ebtRPcPkU7fibnmvSTg08Iv3khyUUtbKxHV4VALRNGwWJWjit1g==
   dependencies:
     "@babel/cli" "7.2.0"
     "@babel/core" "7.2.0"
