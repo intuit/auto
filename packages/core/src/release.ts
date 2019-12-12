@@ -784,7 +784,8 @@ export default class Release {
         resolvedAuthors.push({
           email: commit.authorEmail,
           name: commit.authorName,
-          ...author
+          ...author,
+          hash: commit.hash
         });
       }
     }
