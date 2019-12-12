@@ -64,10 +64,13 @@ describe('All Contributors Plugin', () => {
       lastRelease: '0.0.0',
       releaseNotes: '',
       commits: [
-        makeCommitFromMsg('Do the thing', {
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
           files: ['src/index.ts'],
-          username: 'Jeff'
-        })
+          authors: [{ username: 'Jeff', hash: '123' }]
+        }
       ]
     });
 
@@ -88,10 +91,13 @@ describe('All Contributors Plugin', () => {
       lastRelease: '0.0.0',
       releaseNotes: '',
       commits: [
-        makeCommitFromMsg('Do the thing', {
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
           files: [],
-          username: 'Jeff'
-        })
+          authors: [{ username: 'Jeff', hash: '123' }]
+        }
       ]
     });
 
@@ -111,14 +117,21 @@ describe('All Contributors Plugin', () => {
       lastRelease: '0.0.0',
       releaseNotes: '',
       commits: [
-        makeCommitFromMsg('Do the thing', {
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
           files: ['src/index.ts'],
-          username: 'Jeff'
-        }),
-        makeCommitFromMsg('Do other thing', {
+
+          authors: [{ username: 'Jeff', hash: '123' }]
+        },
+        {
+          subject: 'Do other thing',
+          hash: '123',
+          labels: [],
           files: ['src/index.test.ts'],
-          username: 'Jeff'
-        })
+          authors: [{ username: 'Jeff', hash: '123' }]
+        }
       ]
     });
 
@@ -142,10 +155,13 @@ describe('All Contributors Plugin', () => {
       lastRelease: '0.0.0',
       releaseNotes: '',
       commits: [
-        makeCommitFromMsg('Do the thing', {
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
           files: ['src/index.ts'],
-          username: 'Jeff'
-        })
+          authors: [{ username: 'Jeff', hash: '123' }]
+        }
       ]
     });
 

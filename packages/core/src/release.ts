@@ -760,22 +760,34 @@ export default class Release {
 
           return {
             ...prCommit.author,
-            ...(await this.git.getUserByUsername(prCommit.author.login))
+            ...(await this.git.getUserByUsername(prCommit.author.login)),
+            hash: prCommit.sha
           };
         })
       );
-    } else if (commit.authorEmail) {
-      const author = commit.authorEmail.includes('@users.noreply.github.com')
-        ? await this.git.getUserByUsername(
-            commit.authorEmail.split('@users')[0]
-          )
-        : await this.git.getUserByEmail(commit.authorEmail);
+    } else {
+      const [, response] = await on(this.git.getCommit(commit.hash));
 
-      resolvedAuthors.push({
-        email: commit.authorEmail,
-        name: commit.authorName,
-        ...author
-      });
+      if (response) {
+        const username = response.data.author.login;
+        const author = await this.git.getUserByUsername(username);
+
+        resolvedAuthors.push({
+          name: commit.authorName,
+          email: commit.authorEmail,
+          ...author,
+          hash: commit.hash
+        });
+      } else if (commit.authorEmail) {
+        const author = await this.git.getUserByEmail(commit.authorEmail);
+
+        resolvedAuthors.push({
+          email: commit.authorEmail,
+          name: commit.authorName,
+          ...author,
+          hash: commit.hash
+        });
+      }
     }
 
     modifiedCommit.authors = resolvedAuthors.map(author => ({

@@ -27,12 +27,14 @@ const getPr = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
 const getSha = jest.fn();
+const getCommit = jest
+  .fn()
+  .mockReturnValue(Promise.resolve({ data: { author: { login: '' } } }));
 const createStatus = jest.fn();
 const getProject = jest.fn();
 const createComment = jest.fn();
 const changedPackages = jest.fn();
 const getCommitsForPR = jest.fn().mockReturnValue(Promise.resolve(undefined));
-const getUserByEmail = jest.fn();
 const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
@@ -73,7 +75,6 @@ jest.mock(
       changedPackages = changedPackages;
       getCommitsForPR = getCommitsForPR;
       getUserByUsername = getUserByUsername;
-      getUserByEmail = getUserByEmail;
       getProjectLabels = getProjectLabels;
       createLabel = createLabel;
       updateLabel = updateLabel;
@@ -82,6 +83,7 @@ jest.mock(
       searchRepo = searchRepo;
       getCommitDate = getCommitDate;
       getFirstCommit = getFirstCommit;
+      getCommit = getCommit;
     }
 );
 
@@ -146,24 +148,11 @@ describe('getVersionMap', () => {
 
 describe('Release', () => {
   beforeEach(() => {
-    getGitLog.mockClear();
-    getPr.mockClear();
-    writeSpy.mockClear();
-    execSpy.mockClear();
-    execSpy.mockClear();
-    createLabel.mockClear();
+    jest.clearAllMocks();
+    getUserByUsername.mockReset();
   });
 
   describe('getCommits', () => {
-    test('should use options owner, repo, and token', async () => {
-      const gh = new Release(git);
-
-      await gh.getCommits('12345');
-
-      expect(constructor.mock.calls[0][0].owner).toBe('Andrew');
-      expect(constructor.mock.calls[0][0].repo).toBe('test');
-    });
-
     test('should default to HEAD', async () => {
       const gh = new Release(git);
       await gh.getCommits('12345');
@@ -185,8 +174,7 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce(commits);
       const gh = new Release(git);
-      await gh.getCommits('12345', '1234');
-      expect(getUserByUsername).not.toHaveBeenCalled();
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
 
     test('should resolve authors with PR commits', async () => {
@@ -213,17 +201,22 @@ describe('Release', () => {
           }
         ])
       );
-      getUserByUsername.mockReturnValueOnce({
-        login: 'andrew',
-        name: 'Andrew Lisowski'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
+
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
+      getUserByUsername.mockImplementation(username => {
+        if (username === 'andrew') {
+          return {
+            login: 'andrew',
+            name: 'Andrew Lisowski'
+          };
+        }
+
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
       });
 
       const gh = new Release(git);
@@ -252,17 +245,22 @@ describe('Release', () => {
           }
         ])
       );
-      getUserByUsername.mockReturnValueOnce({
-        login: 'andrew',
-        name: 'Andrew Lisowski'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
+
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
+      getUserByUsername.mockImplementation(username => {
+        if (username === 'andrew') {
+          return {
+            login: 'andrew',
+            name: 'Andrew Lisowski'
+          };
+        }
+
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
       });
 
       const gh = new Release(git);
@@ -310,6 +308,12 @@ describe('Release', () => {
           })
         ])
       );
+      getUserByUsername.mockImplementationOnce(username => {
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
+      });
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
@@ -337,6 +341,12 @@ describe('Release', () => {
           })
         ])
       );
+      getUserByUsername.mockImplementationOnce(() => {
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
+      });
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });

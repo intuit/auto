@@ -9,6 +9,8 @@ export interface ICommitAuthor {
   email?: string;
   /** Author's username */
   username?: string;
+  /** The commit this author created */
+  hash?: string;
 }
 
 export interface IPullRequest {
