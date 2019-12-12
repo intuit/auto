@@ -765,10 +765,10 @@ export default class Release {
           };
         })
       );
-    } else if (commit.authorEmail) {
-      const [err, response] = await on(this.git.getCommit(commit.hash));
+    } else {
+      const [, response] = await on(this.git.getCommit(commit.hash));
 
-      if (!err && response) {
+      if (response) {
         const username = response.data.author.login;
         const author = await this.git.getUserByUsername(username);
 
@@ -777,6 +777,14 @@ export default class Release {
           email: commit.authorEmail,
           ...author,
           hash: commit.hash
+        });
+      } else if (commit.authorEmail) {
+        const author = await this.git.getUserByEmail(commit.authorEmail);
+
+        resolvedAuthors.push({
+          email: commit.authorEmail,
+          name: commit.authorName,
+          ...author
         });
       }
     }
