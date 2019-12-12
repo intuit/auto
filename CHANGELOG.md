@@ -1,3 +1,171 @@
+# v8.0.0 (Wed Dec 11 2019)
+
+### Release Notes
+
+_From #758_
+
+![Final-banner-REd (1)](https://user-images.githubusercontent.com/1192452/70372434-e20d4100-1893-11ea-97a4-047aeec86db9.png)
+
+<!-- GITHUB_RELEASE PR BODY: prerelease-version -->
+
+_From #751_
+
+Label configuration just got a whole lot simpler 🎉 
+
+1. Labels can now only be supplied as an array of label objects.
+
+```json
+{
+  "labels": [
+    { "releaseType": "major", "name": "Version: Major" },
+    { "releaseType": "minor", "name": "Version: Minor" },
+    { "releaseType": "patch", "name": "Version: Patch" },
+  ]
+}
+```
+
+2. Instead of using `skipReleaseLabels` just set the label's `type` to `skip`
+
+```json
+{
+  "labels": [
+    { "releaseType": "skip", "name": "NO!" }
+  ]
+}
+```
+
+3. Overwrite default labels using `overwrite`
+
+```json
+{
+  "labels": [
+    { "releaseType": "major", "name": "Version: Major", "overwrite": true },
+  ]
+}
+```
+
+4. Add `none` `releaseType`. This will act as a `skip-release` unless paired with a SEMVER label
+
+```json
+{
+  "labels": [
+    { "releaseType": "none", "name": "documentation" },
+  ]
+}
+```
+
+5. Changed `title` to `changelogTitle`.
+
+```json
+{
+  "labels": [
+    { "changelogTitle": "New Docs Yo!", "name": "documentation" },
+  ]
+}
+```
+
+---
+
+#### 💥  Breaking Change
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Release v8 [#758](https://github.com/intuit/auto/pull/758) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
+- `auto`, `@auto-it/core`
+  - Deprecate "--very-verbose, -w" in favor of "-vv" [#771](https://github.com/intuit/auto/pull/771) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
+  - Simplify label configuration [#751](https://github.com/intuit/auto/pull/751) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/npm`
+  - move git clean check to core [#746](https://github.com/intuit/auto/pull/746) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/maven`, `@auto-it/npm`
+  - change getPreviousVersion hook args. can access prefixRelease from root class instead [#734](https://github.com/intuit/auto/pull/734) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`
+  - remove old use of prerelease label + add prerelease label to released plugin [#729](https://github.com/intuit/auto/pull/729) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - add release notes to prerelease PRs [#777](https://github.com/intuit/auto/pull/777) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - next: post comment w/prerelease version on prerelease PR branches [#773](https://github.com/intuit/auto/pull/773) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/upload-assets`
+  - Add glob support to the upload-assets plugin [#770](https://github.com/intuit/auto/pull/770) ([@adierkens](https://github.com/adierkens))
+- `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
+  - move determineNextVersion to core [#747](https://github.com/intuit/auto/pull/747) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`
+  - implment dry-run flag for next command [#733](https://github.com/intuit/auto/pull/733) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/git-tag`
+  - implement prerelease branches for git-tag plugin [#732](https://github.com/intuit/auto/pull/732) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/npm`
+  - shipit: add flag to only publish to 'latest' tag when "release" label is present [#731](https://github.com/intuit/auto/pull/731) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
+  - allow user to configure what branches are treated as prerelease branches [#730](https://github.com/intuit/auto/pull/730) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/npm`
+  - Add ability for "next" branch publishing [#726](https://github.com/intuit/auto/pull/726) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
+  - only grant contributions for work in commit [#786](https://github.com/intuit/auto/pull/786) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Fix some changelog bugs [#784](https://github.com/intuit/auto/pull/784) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - omit commits that have already been released [#783](https://github.com/intuit/auto/pull/783) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/released`, `@auto-it/slack`
+  - do not call afterRelease hooks during dry run [#780](https://github.com/intuit/auto/pull/780) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - do not add labels or comments to prerelease branch PRs [#778](https://github.com/intuit/auto/pull/778) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie) [@zephraph](https://github.com/zephraph) [@bmuenzenmeyer](https://github.com/bmuenzenmeyer) [@sarah-vanderlaan](https://github.com/sarah-vanderlaan))
+- `@auto-it/npm`
+  - fix branch detection in NPM plugin [#774](https://github.com/intuit/auto/pull/774) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Don't create a version commit for prereleases [#768](https://github.com/intuit/auto/pull/768) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/npm`
+  - ensure canary versions dont use extra bumps [#735](https://github.com/intuit/auto/pull/735) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/released`
+  - don't run released plugin on "next" branch PRs [#728](https://github.com/intuit/auto/pull/728) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - must set git user before publishing so we know we can commit [#727](https://github.com/intuit/auto/pull/727) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- reset monorepo version for next branch [#769](https://github.com/intuit/auto/pull/769) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/s3`
+  - add tests [#779](https://github.com/intuit/auto/pull/779) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/upload-assets`
+  - More resilient test case [#772](https://github.com/intuit/auto/pull/772) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `@auto-it/conventional-commits`
+  - Update README to include required npm plugin [#776](https://github.com/intuit/auto/pull/776) ([@sarah-vanderlaan](https://github.com/sarah-vanderlaan))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-import from 2.18.2 to 2.19.1 [#767](https://github.com/intuit/auto/pull/767) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump change-case from 4.0.0 to 4.1.0 [#766](https://github.com/intuit/auto/pull/766) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.12.14 to 12.12.15 [#765](https://github.com/intuit/auto/pull/765) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.9.0 to 2.10.0 [#764](https://github.com/intuit/auto/pull/764) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.7.2 to 3.7.3 [#763](https://github.com/intuit/auto/pull/763) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.9.0 to 2.10.0 [#762](https://github.com/intuit/auto/pull/762) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.0 to 4.4.1 [#760](https://github.com/intuit/auto/pull/760) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 18.4.1 to 18.4.3 [#759](https://github.com/intuit/auto/pull/759) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.11.1 to 6.11.2 [#761](https://github.com/intuit/auto/pull/761) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📚 Blog Post
+
+- create v8 announcement blog [#782](https://github.com/intuit/auto/pull/782) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 6
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Sarah van der Laan ([@sarah-vanderlaan](https://github.com/sarah-vanderlaan))
+
+---
+
 # v7.17.0 (Fri Dec 06 2019)
 
 #### 🚀  Enhancement
