@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "7.17.0",
+  "version": "8.0.0",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "author": {
@@ -43,9 +43,9 @@
     "@octokit/rest": "16.35.0",
     "await-to-js": "^2.1.1",
     "cosmiconfig": "6.0.0",
-    "endent": "^1.3.0",
     "deepmerge": "^4.0.0",
     "dotenv": "^8.0.0",
+    "endent": "^1.3.0",
     "enquirer": "^2.3.0",
     "env-ci": "^4.1.1",
     "gitlog": "^3.1.2",
