@@ -254,10 +254,13 @@ export default class Git {
         repo: this.options.repo,
         ref: sha
       });
-      this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
+      this.logger.veryVerbose.info(
+        'Got response for "repos.getCommit":\n',
+        info
+      );
       return info;
     } catch (e) {
-      throw new GitAPIError('getPr', [], e);
+      throw new GitAPIError('getCommit', [], e);
     }
   }
 

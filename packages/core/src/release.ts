@@ -766,16 +766,19 @@ export default class Release {
         })
       );
     } else if (commit.authorEmail) {
-      const username = (await this.git.getCommit(commit.hash)).data.author
-        .login;
-      const author = await this.git.getUserByUsername(username);
+      const [err, response] = await on(this.git.getCommit(commit.hash));
 
-      resolvedAuthors.push({
-        name: commit.authorName,
-        email: commit.authorEmail,
-        ...author,
-        hash: commit.hash
-      });
+      if (!err && response) {
+        const username = response.data.author.login;
+        const author = await this.git.getUserByUsername(username);
+
+        resolvedAuthors.push({
+          name: commit.authorName,
+          email: commit.authorEmail,
+          ...author,
+          hash: commit.hash
+        });
+      }
     }
 
     modifiedCommit.authors = resolvedAuthors.map(author => ({
