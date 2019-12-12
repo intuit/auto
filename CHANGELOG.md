@@ -1,3 +1,27 @@
+# v8.0.0 (Wed Dec 11 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/all-contributors`
+  - only grant contributions for work in commit [#785](https://github.com/intuit/auto/pull/785) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - display message when commit is omitted [#784](https://github.com/intuit/auto/pull/784) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - fix bug where author would get matched incorrectly [#784](https://github.com/intuit/auto/pull/784) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - handle unknown tag when supplying --from and --to [#784](https://github.com/intuit/auto/pull/784) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️  Pushed to master
+
+- `@auto-it/core`, `@auto-it/npm`
+  - fix sub-pacakge changelogs 
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v7.17.0 (Fri Dec 06 2019)
 
 #### 🚀  Enhancement
