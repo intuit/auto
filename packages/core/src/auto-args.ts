@@ -14,9 +14,7 @@ export interface IRepoOptions {
 
 export interface ILogOptions {
   /** Show more logs */
-  verbose?: boolean;
-  /** Show a lot more logs */
-  veryVerbose?: boolean;
+  verbose?: boolean | boolean[];
 }
 
 export interface IInitOptions {
@@ -41,8 +39,6 @@ export interface IPRCheckOptions {
   pr?: number;
   /** URL to attach to the checkmark */
   url?: string;
-  /** Labels to count as "skip-release" */
-  skipReleaseLabels?: string[];
   /** The context the check should be attached to */
   context?: string;
   /** Do not actually do anything */
@@ -67,8 +63,6 @@ export interface IPRStatusOptions {
 }
 
 export interface IVersionOptions {
-  /** Labels to count as "skip-release" */
-  skipReleaseLabels?: string[];
   /** Instead of publishing every PR only publish when "release" label is present */
   onlyPublishWithReleaseLabel?: boolean;
   /** Commit to start calculating the version from */
@@ -119,6 +113,13 @@ export type IPRBodyOptions = ICommentOptions;
 export interface IShipItOptions {
   /** Do not actually do anything */
   dryRun?: boolean;
+  /**
+   * Make auto publish prerelease versions when merging to master.
+   * Only PRs merged with "release" label will generate a "latest" release.
+   * Only use this flag if you do not want to maintain a prerelease branch,
+   * and instead only want to use master.
+   */
+  onlyGraduateWithReleaseLabel?: boolean;
 }
 
 export interface ICanaryOptions {
@@ -128,8 +129,15 @@ export interface ICanaryOptions {
   pr?: number;
   /** The build to attach the canary to */
   build?: number;
-  /** THe message used when attaching the canary version to a PR */
+  /** The message used when attaching the canary version to a PR */
   message?: string | 'false';
+}
+
+export interface INextOptions {
+  /** Do not actually do anything */
+  dryRun?: boolean;
+  /** The message used when attaching the prerelease version to a PR */
+  message?: string;
 }
 
 export type GlobalOptions = {

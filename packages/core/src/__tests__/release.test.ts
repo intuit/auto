@@ -1,15 +1,24 @@
-import merge from 'deepmerge';
 import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
 import Release, {
   buildSearchQuery,
-  defaultLabelDefinition,
-  getVersionMap
+  defaultLabels,
+  getVersionMap,
+  ILabelDefinition
 } from '../release';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
+import child from 'child_process';
+
+const { execSync } = child;
+const exec = jest.fn();
+child.execSync = exec.mockReturnValue('');
+
+afterAll(() => {
+  child.execSync = execSync;
+});
 
 const constructor = jest.fn();
 const getGitLog = jest.fn();
@@ -18,12 +27,14 @@ const getPr = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
 const getSha = jest.fn();
+const getCommit = jest
+  .fn()
+  .mockReturnValue(Promise.resolve({ data: { author: { login: '' } } }));
 const createStatus = jest.fn();
 const getProject = jest.fn();
 const createComment = jest.fn();
 const changedPackages = jest.fn();
 const getCommitsForPR = jest.fn().mockReturnValue(Promise.resolve(undefined));
-const getUserByEmail = jest.fn();
 const getUserByUsername = jest.fn();
 const getProjectLabels = jest.fn();
 const createLabel = jest.fn();
@@ -64,7 +75,6 @@ jest.mock(
       changedPackages = changedPackages;
       getCommitsForPR = getCommitsForPR;
       getUserByUsername = getUserByUsername;
-      getUserByEmail = getUserByEmail;
       getProjectLabels = getProjectLabels;
       createLabel = createLabel;
       updateLabel = updateLabel;
@@ -73,6 +83,7 @@ jest.mock(
       searchRepo = searchRepo;
       getCommitDate = getCommitDate;
       getFirstCommit = getFirstCommit;
+      getCommit = getCommit;
     }
 );
 
@@ -118,37 +129,27 @@ describe('getVersionMap', () => {
         ['major', ['major']],
         ['minor', ['minor']],
         ['patch', ['patch']],
-        ['skip-release', ['skip-release']],
+        ['skip', ['skip-release']],
         ['release', ['release']],
-        ['prerelease', ['prerelease']]
+        ['none', ['internal', 'documentation']]
       ])
     );
   });
 
   test('should add custom labels', () => {
     expect(
-      getVersionMap({ major: [{ name: 'major' }, { name: 'BREAKING' }] })
+      getVersionMap([
+        { name: 'major', releaseType: SEMVER.major },
+        { name: 'BREAKING', releaseType: SEMVER.major }
+      ])
     ).toStrictEqual(new Map([['major', ['major', 'BREAKING']]]));
   });
 });
 
 describe('Release', () => {
   beforeEach(() => {
-    getGitLog.mockClear();
-    getPr.mockClear();
-    writeSpy.mockClear();
-    execSpy.mockClear();
-    execSpy.mockClear();
-    createLabel.mockClear();
-  });
-
-  test('should use options owner, repo, and token', async () => {
-    const gh = new Release(git);
-
-    await gh.getCommits('12345');
-
-    expect(constructor.mock.calls[0][0].owner).toBe('Andrew');
-    expect(constructor.mock.calls[0][0].repo).toBe('test');
+    jest.clearAllMocks();
+    getUserByUsername.mockReset();
   });
 
   describe('getCommits', () => {
@@ -173,8 +174,7 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce(commits);
       const gh = new Release(git);
-      await gh.getCommits('12345', '1234');
-      expect(getUserByUsername).not.toHaveBeenCalled();
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
 
     test('should resolve authors with PR commits', async () => {
@@ -201,17 +201,22 @@ describe('Release', () => {
           }
         ])
       );
-      getUserByUsername.mockReturnValueOnce({
-        login: 'andrew',
-        name: 'Andrew Lisowski'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
+
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
+      getUserByUsername.mockImplementation(username => {
+        if (username === 'andrew') {
+          return {
+            login: 'andrew',
+            name: 'Andrew Lisowski'
+          };
+        }
+
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
       });
 
       const gh = new Release(git);
@@ -240,17 +245,22 @@ describe('Release', () => {
           }
         ])
       );
-      getUserByUsername.mockReturnValueOnce({
-        login: 'andrew',
-        name: 'Andrew Lisowski'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
-      });
-      getUserByEmail.mockReturnValueOnce({
-        login: 'adam',
-        name: 'Adam Dierkens'
+
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
+      getUserByUsername.mockImplementation(username => {
+        if (username === 'andrew') {
+          return {
+            login: 'andrew',
+            name: 'Andrew Lisowski'
+          };
+        }
+
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
       });
 
       const gh = new Release(git);
@@ -298,6 +308,12 @@ describe('Release', () => {
           })
         ])
       );
+      getUserByUsername.mockImplementationOnce(username => {
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
+      });
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
@@ -325,6 +341,41 @@ describe('Release', () => {
           })
         ])
       );
+      getUserByUsername.mockImplementationOnce(() => {
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens'
+        };
+      });
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should omit commits that have already been released', async () => {
+      const gh = new Release(git);
+
+      jest.spyOn(console, 'log').mockImplementationOnce(() => {});
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }]
+        }
+      });
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([
+          makeCommitFromMsg('Feature (#124)'),
+          makeCommitFromMsg('I was released previously', {
+            hash: '1a2b'
+          })
+        ])
+      );
+      exec.mockReturnValueOnce('1');
+      exec.mockReturnValueOnce('0');
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
@@ -352,8 +403,8 @@ describe('Release', () => {
     test('creates changelog with v in versions', async () => {
       const gh = new Release(git, {
         noVersionPrefix: true,
-        skipReleaseLabels: ['skip-release'],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
       await gh.addToChangelog('# My new Notes', '1.0.0', '1.0.0');
@@ -810,8 +861,8 @@ describe('Release', () => {
     test('should not publish a release in onlyPublishWithReleaseLabel without label', async () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
       const commits = [
@@ -831,8 +882,8 @@ describe('Release', () => {
     test('should publish a release in onlyPublishWithReleaseLabel with label', async () => {
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
       const commits = [
@@ -850,16 +901,17 @@ describe('Release', () => {
     });
 
     test('should be able to configure labels', async () => {
-      const customLabels = merge(defaultLabelDefinition, {
-        [SEMVER.major]: [{ name: 'Version: Major' }],
-        [SEMVER.minor]: [{ name: 'Version: Minor' }],
-        [SEMVER.patch]: [{ name: 'Version: Patch' }],
-        release: [{ name: 'Deploy' }]
-      });
+      const customLabels = [
+        ...defaultLabels,
+        { name: 'Version: Major', releaseType: SEMVER.major },
+        { name: 'Version: Minor', releaseType: SEMVER.minor },
+        { name: 'Version: Patch', releaseType: SEMVER.patch },
+        { name: 'Deploy', releaseType: 'release' }
+      ] as ILabelDefinition[];
 
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
+        prereleaseBranches: ['next'],
         labels: customLabels,
         baseBranch: 'master'
       });
@@ -889,25 +941,28 @@ describe('Release', () => {
   describe('addLabelsToProject', () => {
     test('should add labels', async () => {
       const gh = new Release(git);
-      const customLabels = {
-        [SEMVER.major]: [{ name: '1', description: 'major' }],
-        [SEMVER.minor]: [{ name: '2', description: 'minor' }],
-        [SEMVER.patch]: [{ name: '3', description: 'patch' }]
-      };
+      const customLabels: ILabelDefinition[] = [
+        { name: '1', description: 'major', releaseType: SEMVER.major },
+        { name: '2', description: 'minor', releaseType: SEMVER.minor },
+        { name: '3', description: 'patch', releaseType: SEMVER.patch }
+      ];
 
       await gh.addLabelsToProject(customLabels);
 
-      expect(createLabel).toHaveBeenCalledWith(SEMVER.major, {
+      expect(createLabel).toHaveBeenCalledWith({
         name: '1',
-        description: 'major'
+        description: 'major',
+        releaseType: SEMVER.major
       });
-      expect(createLabel).toHaveBeenCalledWith(SEMVER.minor, {
+      expect(createLabel).toHaveBeenCalledWith({
         name: '2',
-        description: 'minor'
+        description: 'minor',
+        releaseType: SEMVER.minor
       });
-      expect(createLabel).toHaveBeenCalledWith(SEMVER.patch, {
+      expect(createLabel).toHaveBeenCalledWith({
         name: '3',
-        description: 'patch'
+        description: 'patch',
+        releaseType: SEMVER.patch
       });
     });
 
@@ -918,16 +973,16 @@ describe('Release', () => {
       const gh = new Release(
         git,
         {
-          skipReleaseLabels: [],
-          labels: defaultLabelDefinition,
+          prereleaseBranches: ['next'],
+          labels: defaultLabels,
           baseBranch: 'master'
         },
         mockLogger
       );
 
-      const labels = {
-        [SEMVER.patch]: [{ name: '3', description: 'three' }]
-      };
+      const labels: ILabelDefinition[] = [
+        { name: '3', description: 'three', releaseType: SEMVER.patch }
+      ];
 
       await gh.addLabelsToProject(labels);
 
@@ -939,101 +994,115 @@ describe('Release', () => {
 
     test('should not add old labels', async () => {
       const gh = new Release(git);
-      const labels = {
-        [SEMVER.major]: [{ name: '1', description: 'major' }],
-        [SEMVER.minor]: [{ name: '2', description: 'minor' }]
-      };
+      const labels: ILabelDefinition[] = [
+        { name: '1', description: 'major', releaseType: SEMVER.major },
+        { name: '2', description: 'minor', releaseType: SEMVER.minor }
+      ];
 
       getProjectLabels.mockReturnValueOnce(['1']);
       await gh.addLabelsToProject(labels);
 
-      expect(updateLabel).toHaveBeenCalledWith(SEMVER.major, {
+      expect(updateLabel).toHaveBeenCalledWith({
         name: '1',
-        description: 'major'
+        description: 'major',
+        releaseType: SEMVER.major
       });
-      expect(createLabel).toHaveBeenCalledWith(SEMVER.minor, {
+      expect(createLabel).toHaveBeenCalledWith({
         description: 'minor',
-        name: '2'
+        name: '2',
+        releaseType: SEMVER.minor
       });
     });
 
     test('should not add old labels - case sensitive', async () => {
       const gh = new Release(git);
-      const labels = {
-        [SEMVER.major]: [{ name: 'major', description: '' }],
-        [SEMVER.minor]: [{ name: 'Minor', description: '' }]
-      };
+      const labels: ILabelDefinition[] = [
+        { name: 'major', description: '', releaseType: SEMVER.major },
+        { name: 'Minor', description: '', releaseType: SEMVER.minor }
+      ];
 
       getProjectLabels.mockReturnValueOnce(['Major', 'minor']);
       await gh.addLabelsToProject(labels);
 
-      expect(updateLabel).toHaveBeenCalledWith(SEMVER.major, {
+      expect(updateLabel).toHaveBeenCalledWith({
         name: 'major',
-        description: ''
-      });
-      expect(updateLabel).toHaveBeenCalledWith(SEMVER.minor, {
         description: '',
-        name: 'Minor'
+        releaseType: SEMVER.major
+      });
+      expect(updateLabel).toHaveBeenCalledWith({
+        description: '',
+        name: 'Minor',
+        releaseType: SEMVER.minor
       });
     });
 
     test('should add release label in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
-      const labels = {
-        release: [{ name: 'deploy', description: 'release the code' }]
-      };
+      const labels: ILabelDefinition[] = [
+        {
+          name: 'deploy',
+          description: 'release the code',
+          releaseType: 'release'
+        }
+      ];
 
       await gh.addLabelsToProject(labels);
-      expect(createLabel).not.toHaveBeenCalledWith('release', {
+      expect(createLabel).not.toHaveBeenCalledWith({
         name: 'deploy',
-        description: 'release the code'
+        description: 'release the code',
+        releaseType: 'release'
       });
 
       gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
       await gh.addLabelsToProject(labels);
-      expect(createLabel).toHaveBeenCalledWith('release', {
+      expect(createLabel).toHaveBeenCalledWith({
         name: 'deploy',
-        description: 'release the code'
+        description: 'release the code',
+        releaseType: 'release'
       });
     });
 
     test('should add skip-release label not in onlyPublishWithReleaseLabel mode', async () => {
       let gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
-      const labels = {
-        'skip-release': [
-          { name: 'no!', description: 'Do not create a release' }
-        ]
-      };
+      const labels: ILabelDefinition[] = [
+        {
+          name: 'no!',
+          description: 'Do not create a release',
+          releaseType: 'skip'
+        }
+      ];
 
       await gh.addLabelsToProject(labels);
-      expect(createLabel).not.toHaveBeenCalledWith('skip-release', {
+      expect(createLabel).not.toHaveBeenCalledWith({
         name: 'no!',
-        description: 'Do not create a release'
+        description: 'Do not create a release',
+        releaseType: 'skip'
       });
 
       gh = new Release(git, {
-        skipReleaseLabels: [],
-        labels: defaultLabelDefinition,
+        prereleaseBranches: ['next'],
+        labels: defaultLabels,
         baseBranch: 'master'
       });
       await gh.addLabelsToProject(labels);
-      expect(createLabel).toHaveBeenCalledWith('skip-release', {
+      expect(createLabel).toHaveBeenCalledWith({
         description: 'Do not create a release',
-        name: 'no!'
+        name: 'no!',
+        releaseType: 'skip'
       });
     });
   });

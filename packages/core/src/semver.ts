@@ -10,7 +10,7 @@ enum SEMVER {
   noVersion = ''
 }
 
-export type IVersionLabels = Map<VersionLabel, string[]>;
+export type IVersionLabels = Map<VersionLabel | 'none', string[]>;
 
 export default SEMVER;
 
@@ -30,8 +30,6 @@ export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
 interface ISemVerOptions {
   /** Only publish changes when "release" label is present */
   onlyPublishWithReleaseLabel?: boolean;
-  /** Labels to treat as "skip-release" labels */
-  skipReleaseLabels?: string[];
 }
 
 /**
@@ -42,16 +40,11 @@ interface ISemVerOptions {
 export function calculateSemVerBump(
   labels: string[][],
   labelMap: IVersionLabels,
-  { onlyPublishWithReleaseLabel, skipReleaseLabels = [] }: ISemVerOptions = {}
+  { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
-  const skip = labelMap.get('skip-release') || [];
-
-  skip.forEach(skipLabel => {
-    if (!skipReleaseLabels.includes(skipLabel)) {
-      skipReleaseLabels.push(skipLabel);
-    }
-  });
+  const skipReleaseLabels = labelMap.get('skip') || [];
+  const noReleaseLabels = labelMap.get('none') || [];
 
   labels.forEach(pr => {
     pr.forEach(label => {
@@ -63,33 +56,28 @@ export function calculateSemVerBump(
   });
 
   let skipRelease = false;
-  let isPrerelease = false;
 
   if (labels.length > 0 && labels[0].length > 0) {
-    const prereleaseLabels = labelMap.get('prerelease') || [];
     const releaseLabels = labelMap.get('release') || [];
-    isPrerelease = labels[0].some(label => prereleaseLabels.includes(label));
+
     skipRelease = onlyPublishWithReleaseLabel
       ? !labels[0].some(label => releaseLabels.includes(label))
       : labels[0].some(label => skipReleaseLabels.includes(label));
+  }
+
+  // If the pr has only 1 `none` release label, skip the release
+  if (
+    labels.length > 0 &&
+    labels[0].length === 1 &&
+    noReleaseLabels.includes(labels[0][0])
+  ) {
+    return SEMVER.noVersion;
   }
 
   const version = [...labelSet].reduce(getHigherSemverTag, SEMVER.patch);
 
   if (skipRelease) {
     return SEMVER.noVersion;
-  }
-
-  if (isPrerelease) {
-    if (version === SEMVER.major) {
-      return SEMVER.premajor;
-    }
-
-    if (version === SEMVER.minor) {
-      return SEMVER.preminor;
-    }
-
-    return SEMVER.prepatch;
   }
 
   return version;

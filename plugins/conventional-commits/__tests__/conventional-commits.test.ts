@@ -3,7 +3,7 @@ import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg
 import Git from '@auto-it/core/dist/git';
 import LogParse from '@auto-it/core/dist/log-parse';
 import Release, {
-  defaultLabelDefinition,
+  defaultLabels,
   getVersionMap
 } from '@auto-it/core/dist/release';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
@@ -13,14 +13,14 @@ import {
 } from '@auto-it/core/dist/utils/make-hooks';
 import ConventionalCommitsPlugin from '../src';
 
-const versionLabels = getVersionMap(defaultLabelDefinition);
+const versionLabels = getVersionMap(defaultLabels);
 
 test('should do nothing when conventional commit message is not present', async () => {
   const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
   const autoHooks = makeHooks();
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     semVerLabels: versionLabels,
     logger: dummyLog()
   } as Auto);
@@ -41,7 +41,7 @@ test('should add correct semver label to commit', async () => {
   const autoHooks = makeHooks();
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     semVerLabels: versionLabels,
     logger: dummyLog()
   } as Auto);
@@ -63,7 +63,7 @@ test('should add major semver label to commit', async () => {
   const autoHooks = makeHooks();
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     semVerLabels: versionLabels,
     logger: dummyLog()
   } as Auto);
@@ -96,7 +96,7 @@ test('should not include label-less head commit if any other commit in PR has co
   } as unknown) as Git;
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
@@ -133,7 +133,7 @@ test('should not include labeled head commit', async () => {
   } as unknown) as Git;
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,

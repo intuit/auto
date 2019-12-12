@@ -15,7 +15,7 @@ import { IReleaseHooks } from '../release';
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new SyncHook(['config']),
   modifyConfig: new SyncWaterfallHook(['config']),
-  beforeShipIt: new SyncHook([]),
+  beforeShipIt: new SyncHook(),
   afterAddToChangelog: new AsyncSeriesHook(['context']),
   beforeCommitChangelog: new AsyncSeriesHook(['context']),
   afterShipIt: new AsyncParallelHook(['version', 'commits']),
@@ -23,14 +23,15 @@ export const makeHooks = (): IAutoHooks => ({
   onCreateRelease: new SyncHook(['options']),
   onCreateChangelog: new SyncHook(['changelog', 'version']),
   onCreateLogParse: new SyncHook(['logParse']),
-  getAuthor: new AsyncSeriesBailHook([]),
-  getPreviousVersion: new AsyncSeriesBailHook(['prefixRelease']),
-  getRepository: new AsyncSeriesBailHook([]),
+  getAuthor: new AsyncSeriesBailHook(),
+  getPreviousVersion: new AsyncSeriesBailHook(),
+  getRepository: new AsyncSeriesBailHook(),
   version: new AsyncParallelHook(['version']),
-  afterVersion: new AsyncParallelHook([]),
+  afterVersion: new AsyncParallelHook(),
   publish: new AsyncParallelHook(['version']),
-  afterPublish: new AsyncParallelHook([]),
-  canary: new AsyncSeriesBailHook(['canaryVersion', 'postFix'])
+  afterPublish: new AsyncParallelHook(),
+  canary: new AsyncSeriesBailHook(['canaryVersion', 'postFix']),
+  next: new AsyncSeriesWaterfallHook(['preReleaseVersions', 'bump'])
 });
 
 /** Make the hooks for "Release" */

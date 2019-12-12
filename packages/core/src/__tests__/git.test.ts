@@ -19,6 +19,7 @@ const issuesAndPullRequests = jest.fn();
 const createLabel = jest.fn();
 const updateLabel = jest.fn();
 const addLabels = jest.fn();
+const removeLabel = jest.fn();
 const list = jest.fn();
 const lock = jest.fn();
 const errorHook = jest.fn();
@@ -49,6 +50,7 @@ jest.mock('@octokit/rest', () => {
       createLabel,
       updateLabel,
       addLabels,
+      removeLabel,
       lock,
       get,
       update
@@ -92,19 +94,7 @@ const options = {
 
 describe('github', () => {
   beforeEach(() => {
-    authenticate.mockClear();
-    listLabelsOnIssue.mockClear();
-    createRelease.mockClear();
-    getLatestRelease.mockClear();
-    getUser.mockClear();
-    getPr.mockClear();
-    createStatus.mockClear();
-    createComment.mockClear();
-    updateComment.mockClear();
-    listComments.mockClear();
-    deleteComment.mockClear();
-    listLabelsForRepo.mockClear();
-    addLabels.mockClear();
+    jest.clearAllMocks();
   });
 
   describe('getLabels', () => {
@@ -162,6 +152,12 @@ describe('github', () => {
     const gh = new Git(options);
     await gh.addLabelToPr(123, 'foo bar');
     expect(addLabels).toHaveBeenCalled();
+  });
+
+  test('removeLabel ', async () => {
+    const gh = new Git(options);
+    await gh.removeLabel(123, 'foo bar');
+    expect(removeLabel).toHaveBeenCalled();
   });
 
   test('lockIssue ', async () => {
@@ -474,7 +470,7 @@ describe('github', () => {
     });
 
     await gh.getPullRequests();
-    expect(listCommits).toHaveBeenCalled();
+    expect(list).toHaveBeenCalled();
   });
 
   describe('getUserByUsername', () => {
@@ -595,7 +591,11 @@ describe('github', () => {
   test('updateLabel', async () => {
     const gh = new Git(options);
 
-    await gh.updateLabel('release', { name: 'Foo bar', description: 'test' });
+    await gh.updateLabel({
+      name: 'Foo bar',
+      description: 'test',
+      releaseType: 'release'
+    });
 
     expect(updateLabel).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -611,7 +611,11 @@ describe('github', () => {
     test('should create a label', async () => {
       const gh = new Git(options);
 
-      await gh.createLabel('release', { name: 'Foo bar', description: 'test' });
+      await gh.createLabel({
+        name: 'Foo bar',
+        description: 'test',
+        releaseType: 'release'
+      });
 
       expect(createLabel).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -53,18 +53,17 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
-        if ('dryRun' in auto.options && auto.options.dryRun) {
-          return;
-        }
-
         const head = commits[0];
 
         if (!head) {
           return;
         }
 
+        const skipReleaseLabels = (
+          auto.config?.labels.filter(l => l.releaseType === 'skip') || []
+        ).map(l => l.name);
         const isSkipped = head.labels.find(label =>
-          auto.release!.options.skipReleaseLabels.includes(label)
+          skipReleaseLabels.includes(label)
         );
 
         if (isSkipped) {

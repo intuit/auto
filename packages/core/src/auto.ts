@@ -3,15 +3,16 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { eq, gt, inc, parse, ReleaseType } from 'semver';
+import { eq, gt, lte, inc, parse, ReleaseType } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   SyncHook,
   SyncWaterfallHook,
-  AsyncSeriesHook
+  AsyncSeriesHook,
+  AsyncSeriesWaterfallHook
 } from 'tapable';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import HttpsProxyAgent from 'https-proxy-agent';
 import {
@@ -26,7 +27,8 @@ import {
   IPRStatusOptions,
   IReleaseOptions,
   IShipItOptions,
-  IVersionOptions
+  IVersionOptions,
+  INextOptions
 } from './auto-args';
 import Changelog from './changelog';
 import Config from './config';
@@ -36,7 +38,7 @@ import LogParse, { IExtendedCommit } from './log-parse';
 import Release, {
   getVersionMap,
   IAutoConfig,
-  ILabelDefinitionMap
+  ILabelDefinition
 } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
@@ -99,10 +101,7 @@ export interface IAutoHooks {
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
   /** Get the previous version. Typically from a package distribution description file. */
-  getPreviousVersion: AsyncSeriesBailHook<
-    [(release: string) => string],
-    string
-  >;
+  getPreviousVersion: AsyncSeriesBailHook<[], string>;
   /** Get owner and repository. Typically from a package distribution description file. */
   getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
@@ -126,6 +125,12 @@ export interface IAutoHooks {
         error: string;
       }
   >;
+  /**
+   * Used to publish a next release. In this hook you get the semver bump
+   * and an array of next versions that been released. If you make another
+   * next release be sure to add it the the array.
+   */
+  next: AsyncSeriesWaterfallHook<[string[], SEMVER]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
 }
@@ -154,6 +159,28 @@ function getPrNumberFromEnv(pr?: number) {
 }
 
 /**
+ * Bump the version but no too much.
+ *
+ * @example
+ * currentVersion = 1.0.0
+ * nextVersion = 2.0.0-next.0
+ * output = 2.0.0-next.1
+ */
+export function determineNextVersion(
+  lastVersion: string,
+  currentVersion: string,
+  bump: SEMVER,
+  tag: string
+) {
+  const next =
+    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+
+  return lte(next, currentVersion)
+    ? inc(currentVersion, 'prerelease', tag) || 'prerelease'
+    : next;
+}
+
+/**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
  */
@@ -174,7 +201,7 @@ export default class Auto {
   /** A class that handles interacting with git and GitHub */
   git?: Git;
   /** The labels configured by the user */
-  labels?: ILabelDefinitionMap;
+  labels?: ILabelDefinition[];
   /** A map of semver bumps to labels that signify those bumps */
   semVerLabels?: IVersionLabels;
 
@@ -186,7 +213,7 @@ export default class Auto {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
     this.logger = createLog(
-      options.veryVerbose
+      Array.isArray(options.verbose) && options.verbose.length > 1
         ? 'veryVerbose'
         : options.verbose
         ? 'verbose'
@@ -397,13 +424,15 @@ export default class Auto {
       const labelValues = [...this.semVerLabels.values()];
       const releaseTag = labels.find(l => l === 'release');
 
-      const skipReleaseTag = labels.find(l =>
-        this.release?.options.skipReleaseLabels.includes(l)
-      );
+      const skipReleaseLabels = (
+        this.config?.labels.filter(l => l.releaseType === 'skip') || []
+      ).map(l => l.name);
+      const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
+
       const semverTag = labels.find(
         l =>
           labelValues.some(labelValue => labelValue.includes(l)) &&
-          !this.release?.options.skipReleaseLabels.includes(l) &&
+          !skipReleaseLabels.includes(l) &&
           l !== 'release'
       );
 
@@ -594,7 +623,7 @@ export default class Auto {
     }
 
     if (!this.hooks.canary.isUsed()) {
-      this.logger.log.error(dedent`
+      this.logger.log.error(endent`
         None of the plugins that you are using implement the \`canary\` command!
 
         "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
@@ -603,6 +632,8 @@ export default class Auto {
       `);
       process.exit(1);
     }
+
+    await this.checkClean();
 
     // SailEnv falls back to commit SHA
     let pr: string | undefined;
@@ -661,13 +692,13 @@ export default class Auto {
       if (message !== 'false' && pr) {
         await this.prBody({
           pr: Number(pr),
+          context: 'canary-version',
           message: message.replace(
             '%v',
             !newVersion || newVersion.includes('\n')
               ? newVersion
               : `\`${newVersion}\``
-          ),
-          context: 'canary-version'
+          )
         });
       }
 
@@ -689,6 +720,95 @@ export default class Auto {
   }
 
   /**
+   * Create a next (or test) version of the project. If on master will
+   * release to the default "next" branch.
+   */
+  async next(options: INextOptions) {
+    if (!this.git || !this.release) {
+      throw this.createErrorMessage();
+    }
+
+    if (!this.hooks.next.isUsed()) {
+      this.logger.log.error(endent`
+        None of the plugins that you are using implement the \`next\` command!
+
+        "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
+
+        If you think your package manager has the ability to support "next" releases please file an issue or submit a pull request,
+      `);
+      process.exit(1);
+    }
+
+    await this.checkClean();
+    await this.setGitUser();
+
+    const lastRelease = await this.git.getLatestRelease();
+    const lastTag = await this.git.getLatestTagInBranch();
+    const commits = await this.release.getCommitsInRelease(lastTag);
+    const releaseNotes = await this.release.generateReleaseNotes(lastTag);
+    const labels = commits.map(commit => commit.labels);
+    const bump =
+      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
+      SEMVER.patch;
+
+    if (options.dryRun) {
+      this.logger.log.success(
+        `Would have created prerelease version with: ${bump}`
+      );
+
+      return { newVersion: '', commitsInRelease: commits };
+    }
+
+    this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
+    const result = await this.hooks.next.promise([], bump);
+    const newVersion = result.join(', ');
+
+    await Promise.all(
+      result.map(async prerelease => {
+        const release = await this.git?.publish(releaseNotes, prerelease, true);
+
+        this.logger.verbose.info(release);
+
+        await this.hooks.afterRelease.promise({
+          lastRelease: lastTag,
+          newVersion: prerelease,
+          commits,
+          releaseNotes,
+          response: release
+        });
+      })
+    );
+
+    this.logger.log.success(
+      `Published next version${result.length > 1 ? `s` : ''}: ${newVersion}`
+    );
+
+    if ('isPr' in env && env.isPr) {
+      const message = options.message || 'Published prerelease version: %v';
+      const pr = 'pr' in env && env.pr;
+
+      if (pr) {
+        await this.prBody({
+          pr: Number(pr),
+          context: 'prerelease-version',
+          message: endent`
+            # Version
+
+            ${message.replace('%v', result.map(r => `\`${r}\``).join('\n'))}
+
+            <details>
+              <summary>Changelog</summary>
+              ${await this.release.generateReleaseNotes(lastRelease)}
+            </details>
+          `
+        });
+      }
+    }
+
+    return { newVersion, commitsInRelease: commits };
+  }
+
+  /**
    * Run the full workflow.
    *
    * 1. Calculate version
@@ -704,14 +824,42 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'shipit'");
     this.hooks.beforeShipIt.call();
 
+    const isPR = 'isPr' in env && env.isPr;
+    const head = await this.release.getCommitsInRelease('HEAD^');
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
-    const isPR = 'isPr' in env && env.isPr;
-    const isBaseBranch =
-      !isPR && 'branch' in env && env.branch === this.baseBranch;
-    const publishInfo = isBaseBranch
-      ? await this.publishLatest(options)
-      : await this.canary(options);
+    const currentBranch = isPR
+      ? 'prBranch' in env && env.prBranch
+      : 'branch' in env && env.branch;
+    const isBaseBrach = !isPR && currentBranch === this.baseBranch;
+    const shouldGraduate =
+      !options.onlyGraduateWithReleaseLabel ||
+      (options.onlyGraduateWithReleaseLabel &&
+        head[0].labels.some(l =>
+          this.semVerLabels?.get('release')?.includes(l)
+        ));
+    const isPrereleaseBranch = this.config?.prereleaseBranches?.some(
+      branch => currentBranch === branch
+    );
+    const publishPrerelease =
+      isPrereleaseBranch ||
+      (currentBranch === this.baseBranch &&
+        options.onlyGraduateWithReleaseLabel);
+
+    this.logger.veryVerbose.info({
+      currentBranch,
+      isBaseBrach,
+      isPR,
+      shouldGraduate,
+      isPrereleaseBranch,
+      publishPrerelease
+    });
+    const publishInfo =
+      isBaseBrach && shouldGraduate
+        ? await this.publishLatest(options)
+        : publishPrerelease
+        ? await this.next(options)
+        : await this.canary(options);
 
     if (!publishInfo) {
       return;
@@ -730,9 +878,7 @@ export default class Auto {
       return this.prefixRelease('0.0.0');
     });
 
-    const lastVersion = await this.hooks.getPreviousVersion.promise(
-      this.prefixRelease
-    );
+    const lastVersion = await this.hooks.getPreviousVersion.promise();
 
     if (
       parse(lastRelease) &&
@@ -776,6 +922,7 @@ export default class Auto {
     await this.makeChangelog(options);
 
     if (!options.dryRun) {
+      await this.checkClean();
       this.logger.verbose.info('Calling version hook');
       await this.hooks.version.promise(version);
       this.logger.verbose.info('Calling after version hook');
@@ -897,10 +1044,7 @@ export default class Auto {
 
     const options = {
       bump,
-      commits: await this.release.getCommitsInRelease(
-        lastRelease,
-        to || undefined
-      ),
+      commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
       lastRelease,
       currentVersion
@@ -980,26 +1124,41 @@ export default class Auto {
     } else {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
       release = await this.git.publish(releaseNotes, newVersion);
-    }
 
-    await this.hooks.afterRelease.promise({
-      lastRelease,
-      newVersion,
-      commits: commitsInRelease,
-      releaseNotes,
-      response: release
-    });
+      await this.hooks.afterRelease.promise({
+        lastRelease,
+        newVersion,
+        commits: commitsInRelease,
+        releaseNotes,
+        response: release
+      });
+    }
 
     return newVersion;
   }
 
+  /** Check if `git status` is clean. */
+  readonly checkClean = async () => {
+    const status = await execPromise('git', ['status', '--porcelain']);
+
+    if (!status) {
+      return;
+    }
+
+    this.logger.log.error('Changed Files:\n', status);
+
+    throw new Error(
+      'Working direction is not clean, make sure all files are commited'
+    );
+  };
+
   /** Prefix a version with a "v" if needed */
-  private readonly prefixRelease = (release: string) => {
+  readonly prefixRelease = (release: string) => {
     if (!this.release) {
       throw this.createErrorMessage();
     }
 
-    return this.release.options.noVersionPrefix || release.startsWith('v')
+    return this.config?.noVersionPrefix || release.startsWith('v')
       ? release
       : `v${release}`;
   };
@@ -1040,7 +1199,7 @@ If a command fails manually run:
         return;
       }
 
-      let { email, name } = this.release.options;
+      let { email, name } = this.release.config;
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );

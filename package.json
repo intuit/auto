@@ -26,11 +26,10 @@
     "semver:check": "./scripts/post-install.sh",
     "build": "tsc -b tsconfig.dev.json",
     "start": "npm run build -- --watch",
-    "lint": "eslint packages plugins --ext .ts",
-    "precommit": "lint-staged",
+    "lint": "eslint packages plugins --ext .ts --cache",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
-    "release": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js shipit",
+    "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "yarn docs:build && ignite",
@@ -55,7 +54,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "graphql": "^14.2.1",
     "husky": "^3.0.3",
-    "ignite": "^1.10.8",
+    "ignite": "^1.10.9",
     "jest": "~24.9.0",
     "jest-serializer-path": "^0.1.15",
     "lerna": "^3.13.4",
@@ -106,8 +105,8 @@
       "packages/**/*.ts",
       "plugins/**/*.ts",
       "!**/dist/**/*",
-      "!src/**/*.test.ts",
-      "!src/**/__tests__/**/*"
+      "!**/*.test.ts",
+      "!**/__tests__/**/*"
     ],
     "coverageReporters": [
       "cobertura",
@@ -153,19 +152,17 @@
         ]
       ]
     ],
-    "labels": {
-      "dependencies": {
+    "labels": [
+      {
         "name": "dependencies",
-        "title": "🔩 Dependency Updates"
+        "changelogTitle": "🔩 Dependency Updates",
+        "releaseType": "none"
       },
-      "blog-post": {
+      {
         "name": "blog-post",
-        "title": "📚 Blog Post"
+        "changelogTitle": "📚 Blog Post",
+        "releaseType": "none"
       }
-    },
-    "skipReleaseLabels": [
-      "dependencies",
-      "blog-post"
     ]
   }
 }

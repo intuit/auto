@@ -1,7 +1,11 @@
-import { getVersionMap } from '../release';
+import { getVersionMap, defaultLabels } from '../release';
 import SEMVER, { calculateSemVerBump, getHigherSemverTag } from '../semver';
 
-const semverMap = getVersionMap();
+const semverMap = getVersionMap([
+  ...defaultLabels,
+  { name: 'documentation', releaseType: 'skip' },
+  { name: 'none', releaseType: 'none' }
+]);
 
 test('ranks releases right', () => {
   expect(getHigherSemverTag(SEMVER.major, 'minor')).toBe('major');
@@ -10,35 +14,23 @@ test('ranks releases right', () => {
 });
 
 describe('calculateSemVerBump', () => {
-  test('publishes pre-releases', () => {
-    expect(calculateSemVerBump([['minor', 'prerelease']], semverMap)).toBe(
-      SEMVER.preminor
+  test('should be able to use multiple labels for skip-release', () => {
+    expect(calculateSemVerBump([['skip-release', 'major']], semverMap)).toBe(
+      SEMVER.noVersion
     );
-    expect(calculateSemVerBump([['patch', 'prerelease']], semverMap)).toBe(
-      SEMVER.prepatch
+
+    expect(calculateSemVerBump([['documentation', 'major']], semverMap)).toBe(
+      SEMVER.noVersion
     );
-    expect(calculateSemVerBump([['major', 'prerelease']], semverMap)).toBe(
-      SEMVER.premajor
-    );
+
+    expect(calculateSemVerBump([['major']], semverMap)).toBe(SEMVER.major);
   });
 
-  test('should be able to use multiple labels for skip-release', () => {
-    expect(
-      calculateSemVerBump([['skip-release', 'major']], semverMap, {
-        skipReleaseLabels: ['documentation']
-      })
-    ).toBe(SEMVER.noVersion);
+  test('should skip none sometimes', () => {
+    expect(calculateSemVerBump([['none']], semverMap)).toBe(SEMVER.noVersion);
 
-    expect(
-      calculateSemVerBump([['documentation', 'major']], semverMap, {
-        skipReleaseLabels: ['documentation']
-      })
-    ).toBe(SEMVER.noVersion);
-
-    expect(
-      calculateSemVerBump([['major']], semverMap, {
-        skipReleaseLabels: ['documentation']
-      })
-    ).toBe(SEMVER.major);
+    expect(calculateSemVerBump([['none', 'major']], semverMap)).toBe(
+      SEMVER.major
+    );
   });
 });

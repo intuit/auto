@@ -93,4 +93,36 @@ describe('Upload Assets Plugin', () => {
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);
   });
+
+  test('should upload multiple assets using a glob', async () => {
+    const plugin = new UploadAssets({
+      assets: [path.join(__dirname, './test-assets/test*.txt')]
+    });
+    const hooks = makeHooks();
+    const uploadReleaseAsset = jest.fn();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      git: { github: { repos: { uploadReleaseAsset } } }
+    } as unknown) as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [],
+      releaseNotes: '',
+      response: {
+        data: { upload_url: 'https://foo.com' }
+      } as Response<ReposCreateReleaseResponse>
+    });
+
+    expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);
+    expect(uploadReleaseAsset).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'test-2.txt' })
+    );
+    expect(uploadReleaseAsset).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'test.txt' })
+    );
+  });
 });

@@ -1,13 +1,13 @@
 /* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
 
-import dedent from 'dedent';
+import endent from 'endent';
 import { prompt } from 'enquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
 import { IInitOptions } from './auto-args';
-import { defaultLabelDefinition, ILabelDefinition } from './release';
+import { ILabelDefinition, defaultLabels } from './release';
 import { ILogger } from './utils/logger';
 
 const writeFile = promisify(fs.writeFile);
@@ -90,24 +90,23 @@ async function getCustomLabels(onlyLabels = false) {
   let customLabels = {};
 
   if (useCustomChangelogTitles.value) {
-    const labels = Object.entries(defaultLabelDefinition);
     let i = 0;
 
-    while (labels[i]) {
-      const [labelName, labelDef] = labels[i++];
+    while (defaultLabels[i]) {
+      const label = defaultLabels[i++];
       const response = await prompt({
         type: 'snippet',
         name: 'value',
-        message: `Customize the ${labelName} label:`,
-        initial: labelDef,
+        message: `Customize the ${label.name} label:`,
+        initial: label,
         // @ts-ignore
         template:
-          labelName === 'release' || labelName === 'skip-release'
-            ? dedent`
+          label.name === 'release' || label.name === 'skip-release'
+            ? endent`
                 label:  #{name}
                 desc:   #{description}
               `
-            : dedent`
+            : endent`
                 label:  #{name}
                 title:  #{title}
                 desc:   #{description}
@@ -117,27 +116,27 @@ async function getCustomLabels(onlyLabels = false) {
       const { name, title, description } = response.value.values;
       const newLabel: Partial<ILabelDefinition> = {};
 
-      if (!labelDef?.some(l => name !== l.name)) {
+      if (name !== label.name) {
         newLabel.name = name;
       }
 
-      if (!labelDef?.some(l => title !== l.title)) {
-        newLabel.title = title;
+      if (name !== label.changelogTitle) {
+        newLabel.changelogTitle = title;
       }
 
-      if (!labelDef?.some(l => description !== l.description)) {
+      if (name !== label.description) {
         newLabel.description = description;
       }
 
       if (Object.keys(newLabel).length === 1 && newLabel.name) {
         customLabels = {
           ...customLabels,
-          [labelName]: name
+          [label.name]: name
         };
       } else if (Object.keys(newLabel).length !== 0) {
         customLabels = {
           ...customLabels,
-          [labelName]: newLabel
+          [label.name]: newLabel
         };
       }
     }
@@ -159,7 +158,7 @@ async function getCustomLabels(onlyLabels = false) {
       name: 'value',
       message: 'Add another label:',
       // @ts-ignore
-      template: dedent`
+      template: endent`
         label:  #{name}
         title:  #{title}
         desc:   #{description}
@@ -170,7 +169,7 @@ async function getCustomLabels(onlyLabels = false) {
           /** Name of the label */
           name?: string;
           /** Changelog title of the label */
-          title?: string;
+          changelogTitle?: string;
           /** Description of the label */
           description?: string;
         };
@@ -179,7 +178,7 @@ async function getCustomLabels(onlyLabels = false) {
           return 'Label is required for new label';
         }
 
-        if (!state.values.title) {
+        if (!state.values.changelogTitle) {
           return 'Title is required for new label';
         }
 

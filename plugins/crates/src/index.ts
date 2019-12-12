@@ -78,9 +78,9 @@ export default class CratesPlugin implements IPlugin {
       return authors;
     });
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, async prefixRelease => {
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       const config = await getCargoConfig();
-      const version = prefixRelease(config.package.version);
+      const version = auto.prefixRelease(config.package.version);
       auto.logger.log.info(`Crate version: ${version}`);
       return version;
     });

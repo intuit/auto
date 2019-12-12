@@ -26,6 +26,7 @@
   - [auto changelog](pages/generated/changelog.md)
   - [auto release](pages/generated/release.md)
   - [auto shipit](pages/generated/shipit.md)
+  - [auto next](pages/generated/next.md)
   - [auto canary](pages/generated/canary.md)
 - [PR Interaction](pages/pr-interaction.md)
   - [auto label](pages/generated/label.md)

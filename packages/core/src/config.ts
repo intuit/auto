@@ -4,43 +4,25 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 
 import { ApiOptions } from './auto-args';
-import {
-  defaultLabelDefinition,
-  getVersionMap,
-  ILabelDefinition,
-  ILabelDefinitionMap
-} from './release';
+import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
+import endent from 'endent';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
 
 /** Transform all types of label configuration into just 1 shape */
 export function normalizeLabel(
-  name: string,
-  label:
-    | string
-    | Partial<ILabelDefinition>
-    | (Partial<ILabelDefinition> | string)[]
-): Partial<ILabelDefinition>[] {
-  const baseLabel = (defaultLabelDefinition[name] || [{}])[0];
-
-  if (typeof label === 'string') {
-    return [{ ...baseLabel, name: label }];
-  }
-
-  if (Array.isArray(label)) {
-    return label
-      .map(l => normalizeLabel(name, l))
-      .reduce((acc, item) => [...acc, ...item], []);
-  }
-
-  if (!label.name) {
-    label.name = name;
-  }
-
-  return [{ ...baseLabel, ...label }];
+  label: Partial<ILabelDefinition>
+): Partial<ILabelDefinition> {
+  const baseLabel =
+    defaultLabels.find(
+      l =>
+        (label.releaseType && l.releaseType === label.releaseType) ||
+        (label.name && l.name === label.name)
+    ) || {};
+  return { ...baseLabel, ...label };
 }
 
 /**
@@ -48,21 +30,19 @@ export function normalizeLabel(
  * follow the same format.
  */
 export function normalizeLabels(config: ConfigObject) {
-  let labels = defaultLabelDefinition;
-
   if (config.labels) {
-    const definitions = Object.entries<Partial<ILabelDefinition> | string>(
-      config.labels
-    ).map(([label, labelDef]) => ({
-      [label]: normalizeLabel(label, labelDef)
-    }));
+    const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
+    const baseLabels = defaultLabels.filter(
+      d =>
+        !userLabels.some(
+          u => u.releaseType && u.releaseType === d.releaseType && u.overwrite
+        )
+    );
 
-    labels = merge.all([labels, ...definitions], {
-      arrayMerge: (destinationArray, sourceArray) => sourceArray
-    }) as ILabelDefinitionMap;
+    return [...baseLabels, ...userLabels];
   }
 
-  return labels;
+  return defaultLabels;
 }
 
 /** Load a user's configuration from the system and resolve any extended config */
@@ -104,6 +84,7 @@ export default class Config {
       );
     }
 
+    this.checkDeprecated(rawConfig);
     const labels = normalizeLabels(rawConfig);
     const semVerLabels = getVersionMap(labels);
 
@@ -111,17 +92,16 @@ export default class Config {
 
     const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
 
-    if (!skipReleaseLabels.includes(semVerLabels.get('skip-release')!)) {
-      (semVerLabels.get('skip-release') || []).map(l =>
-        skipReleaseLabels.push(l)
-      );
+    if (!skipReleaseLabels.includes(semVerLabels.get('skip')!)) {
+      (semVerLabels.get('skip') || []).map(l => skipReleaseLabels.push(l));
     }
 
     return {
       ...rawConfig,
       ...args,
       labels,
-      skipReleaseLabels
+      skipReleaseLabels,
+      prereleaseBranches: rawConfig.prereleaseBranches || ['next']
     };
   }
 
@@ -190,5 +170,55 @@ export default class Config {
     }
 
     return config;
+  }
+
+  /** Ensure a user's config is not using deprecated options. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private checkDeprecated(config: Record<string, any>) {
+    if (config.labels && !Array.isArray(config.labels)) {
+      this.logger.log.error(endent`
+        You're using a deprecated configuration option!
+
+        The "labels" option no longer supports configuration with an object.
+        Instead supply your labels as an array of label objects.
+
+        ex:
+
+        |  {
+        |    "labels": [
+        |      {
+        |        "name": "my-label",
+        |        "description": "Really big stuff",
+        |        "type": "major"
+        |      }
+        |    ]
+        |  }
+      `);
+
+      process.exit(1);
+    }
+
+    if (config.skipReleaseLabels) {
+      this.logger.log.error(endent`
+        You're using a deprecated configuration option!
+
+        The "skipReleaseLabels" option no longer exists.
+        Instead set "type" to "skip" in your label configuration.
+
+        ex:
+
+        |  {
+        |    "labels": [
+        |      {
+        |        "name": "my-label",
+        |        "description": "Really big stuff",
+        |        "type": "skip"
+        |      }
+        |    ]
+        |  }
+      `);
+
+      process.exit(1);
+    }
   }
 }

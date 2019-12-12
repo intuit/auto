@@ -2,7 +2,7 @@ import * as Auto from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
 import Changelog from '@auto-it/core/dist/changelog';
 import LogParse from '@auto-it/core/dist/log-parse';
-import { defaultLabelDefinition } from '@auto-it/core/dist/release';
+import { defaultLabels } from '@auto-it/core/dist/release';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import NpmPlugin from '../src';
@@ -76,11 +76,15 @@ test('should create sections for packages', async () => {
     owner: 'andrew',
     repo: 'test',
     baseUrl: 'https://github.custom.com/',
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+  plugin.apply({
+    config: { prereleaseBranches: ['next'] },
+    hooks,
+    logger: dummyLog()
+  } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
@@ -120,11 +124,15 @@ test('should add versions for independent packages', async () => {
     owner: 'andrew',
     repo: 'test',
     baseUrl: 'https://github.custom.com/',
-    labels: defaultLabelDefinition,
+    labels: defaultLabels,
     baseBranch: 'master'
   });
 
-  plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+  plugin.apply({
+    config: { prereleaseBranches: ['next'] },
+    hooks,
+    logger: dummyLog()
+  } as Auto.Auto);
   hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
   changelog.loadDefaultHooks();
 
@@ -152,6 +160,7 @@ test('should create extra change logs for sub-packages', async () => {
   const update = jest.fn();
 
   plugin.apply({
+    config: { prereleaseBranches: ['next'] },
     hooks,
     logger: dummyLog(),
     release: {
@@ -161,7 +170,7 @@ test('should create extra change logs for sub-packages', async () => {
           owner: 'andrew',
           repo: 'test',
           baseUrl: 'https://github.custom.com/',
-          labels: defaultLabelDefinition,
+          labels: defaultLabels,
           baseBranch: 'master'
         });
         t.hooks.renderChangelogTitle.tap('test', label => label);

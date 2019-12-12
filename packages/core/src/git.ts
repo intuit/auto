@@ -8,7 +8,7 @@ import gitlogNode, { ICommit } from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import { Memoize as memoize } from 'typescript-memoize';
 
@@ -243,6 +243,27 @@ export default class Git {
     }
   }
 
+  /** Get information about specific commit */
+  @memoize()
+  async getCommit(sha: string) {
+    this.logger.verbose.info(`Getting info for commit: ${sha}`);
+
+    try {
+      const info = await this.github.repos.getCommit({
+        owner: this.options.owner,
+        repo: this.options.repo,
+        ref: sha
+      });
+      this.logger.veryVerbose.info(
+        'Got response for "repos.getCommit":\n',
+        info
+      );
+      return info;
+    } catch (e) {
+      throw new GitAPIError('getCommit', [], e);
+    }
+  }
+
   /** Get the labels for a the project */
   async getProjectLabels() {
     this.logger.verbose.info(
@@ -288,11 +309,11 @@ export default class Git {
         files: (commit.files || []).map(file => path.resolve(file))
       }));
     } catch (error) {
-      const tag = error.match(/ambiguous argument '(\S+)\.\.HEAD'/);
+      const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {
         this.logger.log.error(
-          dedent`
+          endent`
             Missing tag "${tag[1]}" so the command could not run.
 
             To fix this run the following command:
@@ -407,8 +428,10 @@ export default class Git {
   }
 
   /** Add a label to the project */
-  async createLabel(name: string, label: ILabelDefinition) {
-    this.logger.verbose.info(`Creating "${name}" label :\n${label.name}`);
+  async createLabel(label: ILabelDefinition) {
+    this.logger.verbose.info(
+      `Creating "${label.releaseType || 'general'}" label :\n${label.name}`
+    );
 
     const color = label.color
       ? tinyColor(label.color).toString('hex6')
@@ -428,8 +451,10 @@ export default class Git {
   }
 
   /** Update a label on the project */
-  async updateLabel(name: string, label: ILabelDefinition) {
-    this.logger.verbose.info(`Updating "${name}" label :\n${label.name}`);
+  async updateLabel(label: ILabelDefinition) {
+    this.logger.verbose.info(
+      `Updating "${label.releaseType || 'generic'}" label :\n${label.name}`
+    );
 
     const color = label.color
       ? tinyColor(label.color).toString('hex6')
@@ -462,6 +487,23 @@ export default class Git {
 
     this.logger.veryVerbose.info('Got response from addLabels\n', result);
     this.logger.verbose.info('Added labels on Pull Request.');
+
+    return result;
+  }
+
+  /** Add a label to and issue or pull request */
+  async removeLabel(pr: number, label: string) {
+    this.logger.verbose.info(`Removing "${label}" from #${pr}`);
+
+    const result = await this.github.issues.removeLabel({
+      issue_number: pr,
+      owner: this.options.owner,
+      repo: this.options.repo,
+      name: label
+    });
+
+    this.logger.veryVerbose.info('Got response from removeLabel\n', result);
+    this.logger.verbose.info('Removed label on Pull Request.');
 
     return result;
   }
@@ -670,14 +712,15 @@ export default class Git {
   }
 
   /** Create a release for the GitHub projecct */
-  async publish(releaseNotes: string, tag: string) {
+  async publish(releaseNotes: string, tag: string, prerelease = false) {
     this.logger.verbose.info('Creating release on GitHub for tag:', tag);
 
     const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
-      body: releaseNotes
+      body: releaseNotes,
+      prerelease
     });
 
     this.logger.veryVerbose.info('Got response from createRelease\n', result);

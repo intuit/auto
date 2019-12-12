@@ -13,7 +13,8 @@ import Auto, {
   IPRStatusOptions,
   IReleaseOptions,
   IShipItOptions,
-  IVersionOptions
+  IVersionOptions,
+  INextOptions
 } from '@auto-it/core';
 
 /** Spin up the "auto" node API and provide it the parsed CLI args. */
@@ -67,6 +68,10 @@ export async function run(command: string, args: ApiOptions) {
     case 'canary':
       await auto.loadConfig();
       await auto.canary(args as ICanaryOptions);
+      break;
+    case 'next':
+      await auto.loadConfig();
+      await auto.next(args as INextOptions);
       break;
     default:
       throw new Error(`idk what i'm doing.`);

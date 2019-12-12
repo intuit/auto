@@ -1,7 +1,8 @@
 import { Auto, IPlugin } from '@auto-it/core';
-import dedent from 'dedent';
+import endent from 'endent';
 import fileType from 'file-type';
 import fs from 'fs';
+import glob from 'fast-glob';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -9,7 +10,7 @@ const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 
 interface IUploadAssetsPluginOptions {
-  /** Paths to assets to uploade */
+  /** Paths to assets to upload */
   assets: string[];
 }
 
@@ -29,15 +30,17 @@ export default class UploadAssetsPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
-      auto.logger.log.info(dedent`
+      const assets = await glob(this.options.assets);
+
+      auto.logger.log.info(endent`
         Uploading:
 
-        ${this.options.assets.map(asset => `\t- ${asset}`).join('\n')}
+        ${assets.map(asset => `\t- ${asset}`).join('\n')}
 
       `);
 
       await Promise.all(
-        this.options.assets.map(async asset => {
+        assets.map(async asset => {
           if (!auto.git || !response) {
             return;
           }

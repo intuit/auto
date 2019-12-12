@@ -1,7 +1,7 @@
 import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
 import GHub from '@octokit/rest';
 import on from 'await-to-js';
-import dedent from 'dedent';
+import endent from 'endent';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
@@ -21,34 +21,33 @@ import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { makeReleaseHooks } from './utils/make-hooks';
+import { execSync } from 'child_process';
 
 export type VersionLabel =
   | SEMVER.major
   | SEMVER.minor
   | SEMVER.patch
-  | 'skip-release'
-  | 'release'
-  | 'prerelease';
+  | 'skip'
+  | 'release';
 
-export const defaultLabels: VersionLabel[] = [
+export const releaseLabels: VersionLabel[] = [
   SEMVER.major,
   SEMVER.minor,
   SEMVER.patch,
-  'skip-release',
-  'release',
-  'prerelease'
+  'skip',
+  'release'
 ];
 
 /** Determine if a label is a label used for versioning */
 export const isVersionLabel = (label: string): label is VersionLabel =>
-  defaultLabels.includes(label as VersionLabel);
+  releaseLabels.includes(label as VersionLabel);
 
 export type IAutoConfig = IAuthorOptions &
   GlobalOptions & {
     /** The branch that is used as the base. defaults to master */
     baseBranch: string;
-    /** Labels to count as "skip-release" */
-    skipReleaseLabels: string[];
+    /** Branches to create prereleases from */
+    prereleaseBranches: string[];
     /** Instead of publishing every PR only publish when "release" label is present */
     onlyPublishWithReleaseLabel?: boolean;
     /** Whether to prefix the version with a "v" */
@@ -56,7 +55,7 @@ export type IAutoConfig = IAuthorOptions &
     /** Plugins to initialize "auto" with */
     plugins?: (string | [string, number | boolean | string | object])[];
     /** The labels configured by the user */
-    labels: ILabelDefinitionMap;
+    labels: ILabelDefinition[];
   };
 
 interface ISearchEdge {
@@ -93,82 +92,66 @@ export interface ILabelDefinition {
   /** The label text */
   name: string;
   /** A title to put in the changelog for the label */
-  title?: string;
+  changelogTitle?: string;
   /** The color of the label */
   color?: string;
   /** The description of the label */
   description?: string;
+  /** What type of release this label signifies */
+  releaseType: VersionLabel | 'none';
+  /** Whether to overwrite the base label */
+  overwrite?: boolean;
 }
 
-export interface ILabelDefinitionMap {
-  [label: string]: ILabelDefinition[] | undefined;
-}
-
-export const defaultLabelDefinition: ILabelDefinitionMap = {
-  [SEMVER.major]: [
-    {
-      name: 'major',
-      title: '💥  Breaking Change',
-      description: 'Increment the major version when merged'
-    }
-  ],
-  [SEMVER.minor]: [
-    {
-      name: 'minor',
-      title: '🚀  Enhancement',
-      description: 'Increment the minor version when merged'
-    }
-  ],
-  [SEMVER.patch]: [
-    {
-      name: 'patch',
-      title: '🐛  Bug Fix',
-      description: 'Increment the patch version when merged'
-    }
-  ],
-  'skip-release': [
-    {
-      name: 'skip-release',
-      description: 'Preserve the current version when merged'
-    }
-  ],
-  release: [
-    {
-      name: 'release',
-      description: 'Create a release when this pr is merged'
-    }
-  ],
-  prerelease: [
-    {
-      name: 'prerelease',
-      title: '🚧 Prerelease',
-      description: 'Create a pre-release version when merged'
-    }
-  ],
-  internal: [
-    {
-      name: 'internal',
-      title: '🏠  Internal',
-      description: 'Changes only affect the internal API'
-    }
-  ],
-  documentation: [
-    {
-      name: 'documentation',
-      title: '📝  Documentation',
-      description: 'Changes only affect the documentation'
-    }
-  ]
-};
+export const defaultLabels: ILabelDefinition[] = [
+  {
+    name: 'major',
+    changelogTitle: '💥  Breaking Change',
+    description: 'Increment the major version when merged',
+    releaseType: SEMVER.major
+  },
+  {
+    name: 'minor',
+    changelogTitle: '🚀  Enhancement',
+    description: 'Increment the minor version when merged',
+    releaseType: SEMVER.minor
+  },
+  {
+    name: 'patch',
+    changelogTitle: '🐛  Bug Fix',
+    description: 'Increment the patch version when merged',
+    releaseType: SEMVER.patch
+  },
+  {
+    name: 'skip-release',
+    description: 'Preserve the current version when merged',
+    releaseType: 'skip'
+  },
+  {
+    name: 'release',
+    description: 'Create a release when this pr is merged',
+    releaseType: 'release'
+  },
+  {
+    name: 'internal',
+    changelogTitle: '🏠  Internal',
+    description: 'Changes only affect the internal API',
+    releaseType: 'none'
+  },
+  {
+    name: 'documentation',
+    changelogTitle: '📝  Documentation',
+    description: 'Changes only affect the documentation',
+    releaseType: 'none'
+  }
+];
 
 /** Construct a map of label => semver label */
-export const getVersionMap = (labels = defaultLabelDefinition) =>
-  Object.entries(labels).reduce((semVer, [label, labelDef]) => {
-    if (isVersionLabel(label) && labelDef) {
-      semVer.set(
-        label,
-        labelDef.map(l => l.name)
-      );
+export const getVersionMap = (labels = defaultLabels) =>
+  labels.reduce((semVer, { releaseType: type, name }) => {
+    if (type && (isVersionLabel(type) || type === 'none')) {
+      const list = semVer.get(type) || [];
+      semVer.set(type, [...list, name]);
     }
 
     return semVer;
@@ -199,7 +182,7 @@ export function buildSearchQuery(
   const query = commits.reduce((q, commit) => {
     const subQuery = `repo:${repo} ${commit.hash}`;
 
-    return dedent`
+    return endent`
       ${q}
 
       hash_${commit.hash}: search(query: "${subQuery}", type: ISSUE, first: 1) {
@@ -258,7 +241,10 @@ function processQueryResult(
       return;
     }
 
-    const labels: ILabelDefinition[] = result.edges[0].node.labels
+    const labels: {
+      /** The label */
+      name: string;
+    }[] = result.edges[0].node.labels
       ? result.edges[0].node.labels.edges.map(edge => edge.node)
       : [];
     commit.pullRequest = {
@@ -282,7 +268,7 @@ export default class Release {
   /** Plugin entry points */
   readonly hooks: IReleaseHooks;
   /** Options Release was initialized with */
-  readonly options: IAutoConfig;
+  readonly config: IAutoConfig;
 
   /** A class that handles interacting with git and GitHub */
   private readonly git: Git;
@@ -294,17 +280,17 @@ export default class Release {
   /** Initialize the release manager */
   constructor(
     git: Git,
-    options: IAutoConfig = {
+    config: IAutoConfig = {
       baseBranch: 'master',
-      skipReleaseLabels: [],
-      labels: defaultLabelDefinition
+      prereleaseBranches: ['next'],
+      labels: defaultLabels
     },
     logger: ILogger = dummyLog()
   ) {
-    this.options = options;
+    this.config = config;
     this.logger = logger;
     this.hooks = makeReleaseHooks();
-    this.versionLabels = getVersionMap(options.labels);
+    this.versionLabels = getVersionMap(config.labels);
     this.git = git;
   }
 
@@ -316,8 +302,8 @@ export default class Release {
       owner: this.git.options.owner,
       repo: this.git.options.repo,
       baseUrl: project.html_url,
-      labels: this.options.labels,
-      baseBranch: this.options.baseBranch
+      labels: this.config.labels,
+      baseBranch: this.config.baseBranch
     });
 
     this.hooks.onCreateChangelog.call(changelog, version);
@@ -473,7 +459,7 @@ export default class Release {
         return '';
       }
 
-      return this.options.noVersionPrefix || version.startsWith('v')
+      return this.config.noVersionPrefix || version.startsWith('v')
         ? version
         : `v${version}`;
     });
@@ -498,7 +484,28 @@ export default class Release {
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
     const logParse = await this.createLogParse();
-    const commits = await logParse.normalizeCommits(gitlog);
+    const commits = (await logParse.normalizeCommits(gitlog)).filter(commit => {
+      // 0 exit code means that the commit is an ancestor of "from"
+      // and should not be released
+      const released =
+        execSync(
+          `git merge-base --is-ancestor ${commit.hash} ${from}; echo $?`,
+          {
+            encoding: 'utf8'
+          }
+        ).trim() === '0';
+
+      if (released) {
+        this.logger.verbose.warn(
+          `Commit already released omitting: "${commit.hash.slice(
+            0,
+            8
+          )}" with message "${commit.subject}"`
+        );
+      }
+
+      return !released;
+    });
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -507,59 +514,45 @@ export default class Release {
 
   /** Go through the configured labels and either add them to the project or update them */
   async addLabelsToProject(
-    labels: Partial<ILabelDefinitionMap>,
+    labels: ILabelDefinition[],
     options: ICreateLabelsOptions = {}
   ) {
     const oldLabels = ((await this.git.getProjectLabels()) || []).map(l =>
       l.toLowerCase()
     );
-    const labelsToCreate = Object.entries(labels).filter(
-      ([versionLabel, labelDef]) => {
-        if (!labelDef) {
-          return false;
-        }
-
-        if (
-          versionLabel === 'release' &&
-          !this.options.onlyPublishWithReleaseLabel
-        ) {
-          return false;
-        }
-
-        if (
-          versionLabel === 'skip-release' &&
-          this.options.onlyPublishWithReleaseLabel
-        ) {
-          return false;
-        }
-
-        return true;
+    const labelsToCreate = labels.filter(label => {
+      if (
+        label.releaseType === 'release' &&
+        !this.config.onlyPublishWithReleaseLabel
+      ) {
+        return false;
       }
-    );
+
+      if (
+        label.releaseType === 'skip' &&
+        this.config.onlyPublishWithReleaseLabel
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
     if (!options.dryRun) {
       await Promise.all(
-        labelsToCreate.map(async ([label, labelDefs]) => {
-          if (!labelDefs) {
-            return;
+        labelsToCreate.map(async label => {
+          if (oldLabels.some(o => label.name.toLowerCase() === o)) {
+            return this.git.updateLabel(label);
           }
 
-          return Promise.all(
-            labelDefs.map(async labelDef => {
-              if (oldLabels.some(o => labelDef.name.toLowerCase() === o)) {
-                return this.git.updateLabel(label, labelDef);
-              }
-
-              return this.git.createLabel(label, labelDef);
-            })
-          );
+          return this.git.createLabel(label);
         })
       );
     }
 
     const repoMetadata = await this.git.getProject();
     const justLabelNames = labelsToCreate.reduce<string[]>(
-      (acc, [, cLabel]) => [...acc, ...(cLabel || []).map(l => l.name)],
+      (acc, label) => [...acc, label.name],
       []
     );
 
@@ -591,8 +584,8 @@ export default class Release {
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
     const labels = commits.map(commit => commit.labels);
-    const { onlyPublishWithReleaseLabel, skipReleaseLabels } = this.options;
-    const options = { onlyPublishWithReleaseLabel, skipReleaseLabels };
+    const { onlyPublishWithReleaseLabel } = this.config;
+    const options = { onlyPublishWithReleaseLabel };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
@@ -767,22 +760,34 @@ export default class Release {
 
           return {
             ...prCommit.author,
-            ...(await this.git.getUserByUsername(prCommit.author.login))
+            ...(await this.git.getUserByUsername(prCommit.author.login)),
+            hash: prCommit.sha
           };
         })
       );
-    } else if (commit.authorEmail) {
-      const author = commit.authorEmail.includes('@users.noreply.github.com')
-        ? await this.git.getUserByUsername(
-            commit.authorEmail.split('@users')[0]
-          )
-        : await this.git.getUserByEmail(commit.authorEmail);
+    } else {
+      const [, response] = await on(this.git.getCommit(commit.hash));
 
-      resolvedAuthors.push({
-        email: commit.authorEmail,
-        name: commit.authorName,
-        ...author
-      });
+      if (response) {
+        const username = response.data.author.login;
+        const author = await this.git.getUserByUsername(username);
+
+        resolvedAuthors.push({
+          name: commit.authorName,
+          email: commit.authorEmail,
+          ...author,
+          hash: commit.hash
+        });
+      } else if (commit.authorEmail) {
+        const author = await this.git.getUserByEmail(commit.authorEmail);
+
+        resolvedAuthors.push({
+          email: commit.authorEmail,
+          name: commit.authorName,
+          ...author,
+          hash: commit.hash
+        });
+      }
     }
 
     modifiedCommit.authors = resolvedAuthors.map(author => ({

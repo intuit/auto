@@ -50,6 +50,23 @@ Customize the label this plugin attaches to merged pull requests.
 }
 ```
 
+### Prerelease Label
+
+Customize the prerelease label this plugin attaches to pull requests merged to prerelease branches.
+
+```json
+{
+  "plugins": [
+    [
+      "released",
+      {
+        "prereleaseLabel": "🚧"
+      }
+    ]
+  ]
+}
+```
+
 ### Message
 
 To customize the message this plugin uses on issues and pull requests use the following format.

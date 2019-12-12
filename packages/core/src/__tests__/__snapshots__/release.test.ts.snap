@@ -3,42 +3,42 @@
 exports[`Release buildSearchQuery generates a valid query 1`] = `
 "{
     hash_abc123: search(query: \\"repo:Andrew/test abc123\\", type: ISSUE, first: 1) {
-edges {
-  node {
-    ... on PullRequest {
-      number
-      state
-      body
-      labels(first: 10) {
-        edges {
-          node {
-            name
+  edges {
+    node {
+      ... on PullRequest {
+        number
+        state
+        body
+        labels(first: 10) {
+          edges {
+            node {
+              name
+            }
           }
         }
       }
     }
   }
 }
-}
 
-    hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 1) {
-      edges {
-        node {
-          ... on PullRequest {
-            number
-            state
-            body
-            labels(first: 10) {
-              edges {
-                node {
-                  name
-                }
-              }
+hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 1) {
+  edges {
+    node {
+      ... on PullRequest {
+        number
+        state
+        body
+        labels(first: 10) {
+          edges {
+            node {
+              name
             }
           }
         }
       }
     }
+  }
+}
     rateLimit {
       limit
       cost
@@ -166,6 +166,7 @@ Array [
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
+        "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
@@ -229,7 +230,10 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "1a2b",
+        "login": "adam",
         "name": "Adam Dierkens",
+        "username": "adam",
       },
     ],
     "files": Array [],
@@ -271,7 +275,10 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "1a2b",
+        "login": "adam",
         "name": "Adam Dierkens",
+        "username": "adam",
       },
     ],
     "files": Array [],
@@ -288,6 +295,81 @@ Array [
 ]
 `;
 
+exports[`Release getCommits should not resolve authors with no PR commits 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "First",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "Second",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "Third",
+  },
+]
+`;
+
+exports[`Release getCommits should omit commits that have already been released 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": Object {
+      "number": 124,
+    },
+    "subject": "Feature",
+  },
+]
+`;
+
 exports[`Release getCommits should resolve authors with PR commits 1`] = `
 Array [
   Object {
@@ -296,6 +378,7 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "foo",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",
@@ -312,6 +395,7 @@ Array [
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
+        "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
@@ -348,6 +432,7 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "foo",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",

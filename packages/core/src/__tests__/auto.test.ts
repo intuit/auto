@@ -4,11 +4,18 @@ import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
 import makeCommitFromMsg from './make-commit-from-msg';
 import loadPlugin from '../utils/load-plugins';
+import child from 'child_process';
 
 const importMock = jest.fn();
 jest.mock('../utils/load-plugins.ts');
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
+
+jest
+  .spyOn(child, 'execSync')
+  .mockImplementation()
+  // @ts-ignore
+  .mockReturnValue('');
 
 const defaults = {
   owner: 'foo',
@@ -16,11 +23,11 @@ const defaults = {
   token: 'XXXX'
 };
 
-const labels = {
-  major: 'Version: Major',
-  patch: 'Version: Patch',
-  minor: 'Version: Minor'
-};
+const labels = [
+  { name: 'Version: Major', releaseType: SEMVER.major, overwrite: true },
+  { name: 'Version: Patch', releaseType: SEMVER.patch, overwrite: true },
+  { name: 'Version: Minor', releaseType: SEMVER.minor, overwrite: true }
+];
 
 const search = jest.fn();
 jest.mock('cosmiconfig', () => ({
@@ -128,7 +135,7 @@ describe('Auto', () => {
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
-    expect(auto.release!.options).toMatchSnapshot();
+    expect(auto.release!.config).toMatchSnapshot();
   });
 
   test('should extend local config', async () => {
@@ -144,7 +151,7 @@ describe('Auto', () => {
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
-    expect(auto.release!.options).toMatchSnapshot();
+    expect(auto.release!.config).toMatchSnapshot();
     process.cwd = orig;
   });
 
@@ -157,98 +164,81 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
-      ['Version: Major'],
-      ['Version: Minor'],
-      ['Version: Patch'],
       ['skip-release'],
       ['release'],
-      ['prerelease']
+      ['internal', 'documentation'],
+      ['Version: Major'],
+      ['Version: Patch'],
+      ['Version: Minor']
     ]);
-  });
-
-  test('should add extra skip label', async () => {
-    search.mockReturnValueOnce({
-      config: {
-        ...defaults,
-        labels: {
-          'skip-release': 'NOPE'
-        }
-      }
-    });
-    const auto = new Auto();
-    auto.logger = dummyLog();
-    await auto.loadConfig();
-
-    expect(auto.release!.options.skipReleaseLabels).toStrictEqual(['NOPE']);
   });
 
   test('should be able to add label as string', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          minor: 'feature'
-        }
+        labels: [
+          {
+            name: 'feature',
+            releaseType: SEMVER.minor
+          }
+        ]
       }
     });
+
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toStrictEqual([
-      {
-        description: 'Increment the minor version when merged',
-        name: 'feature',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(auto.config!.labels.find(l => l.name === 'feature')).toStrictEqual({
+      description: 'Increment the minor version when merged',
+      name: 'feature',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
   });
 
   test('should be able to omit properties from label definition', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          minor: {
-            description: 'This is a test'
-          }
-        }
+        labels: [{ name: 'minor', description: 'This is a test' }]
       }
     });
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.minor).toStrictEqual([
-      {
-        description: 'This is a test',
-        name: 'minor',
-        title: '🚀  Enhancement'
-      }
-    ]);
+    expect(
+      auto.config!.labels.find(l => l.description === 'This is a test')
+    ).toStrictEqual({
+      description: 'This is a test',
+      name: 'minor',
+      changelogTitle: '🚀  Enhancement',
+      releaseType: SEMVER.minor
+    });
   });
 
   test('arbitrary labels should be able to omit name', async () => {
     search.mockReturnValueOnce({
       config: {
         ...defaults,
-        labels: {
-          fooBar: {
+        labels: [
+          {
+            name: 'fooBar',
             description: 'This is a test'
           }
-        }
+        ]
       }
     });
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    expect(auto.release!.options.labels.fooBar).toStrictEqual([
-      {
-        description: 'This is a test',
-        name: 'fooBar'
-      }
-    ]);
+    expect(auto.config!.labels.find(l => l.name === 'fooBar')).toStrictEqual({
+      description: 'This is a test',
+      name: 'fooBar'
+    });
   });
 
   describe('createLabels', () => {
@@ -925,6 +915,8 @@ describe('Auto', () => {
   describe('canary', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
 
       await expect(auto.canary()).rejects.not.toBeUndefined();
@@ -932,6 +924,9 @@ describe('Auto', () => {
 
     test('does not call canary hook in dry-run', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -947,6 +942,9 @@ describe('Auto', () => {
 
     test('calls the canary hook with the pr info', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -965,6 +963,8 @@ describe('Auto', () => {
 
     test('falls back to first commit', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestTagInBranch = () => {
@@ -990,6 +990,8 @@ describe('Auto', () => {
 
     test('adds sha if no pr or build number is found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
@@ -1007,6 +1009,8 @@ describe('Auto', () => {
 
     test("doesn't comment if there is an error", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
       jest.spyOn(auto, 'prBody').mockImplementation();
@@ -1026,6 +1030,8 @@ describe('Auto', () => {
 
     test('defaults to sha when run locally', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1042,6 +1048,8 @@ describe('Auto', () => {
 
     test('works when PR has "skip-release" label', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1061,9 +1069,67 @@ describe('Auto', () => {
     });
   });
 
+  describe('next', () => {
+    test('should throw when not initialized', async () => {
+      const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+
+      await expect(auto.next({})).rejects.not.toBeUndefined();
+    });
+
+    test('does not call next hook in dry-run', async () => {
+      const auto = new Auto(defaults);
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getProject = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.generateReleaseNotes = () => Promise.resolve('notes');
+      auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.3');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      const next = jest.fn();
+      auto.hooks.next.tap('test', next);
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+      await auto.next({ dryRun: true });
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    test('calls the next hook with the release info', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.publish = () => Promise.resolve({} as any);
+      auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.3');
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      auto.release!.generateReleaseNotes = () => Promise.resolve('notes');
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap('test', afterRelease);
+      auto.hooks.next.tap('test', () => ['1.2.4-next.0']);
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+      await auto.next({});
+      expect(afterRelease).toHaveBeenCalled();
+    });
+  });
+
   describe('shipit', () => {
     test('should throw when not initialized', async () => {
       const auto = new Auto(defaults);
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
 
       await expect(auto.shipit()).rejects.not.toBeUndefined();
@@ -1071,9 +1137,12 @@ describe('Auto', () => {
 
     test('should not publish when no latest version found', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
+      auto.release!.getCommitsInRelease = () => Promise.resolve([]);
       auto.git!.getLatestRelease = () => Promise.resolve('');
       auto.release!.getSemverBump = () => Promise.resolve(SEMVER.noVersion);
       const afterShipIt = jest.fn();
@@ -1085,6 +1154,8 @@ describe('Auto', () => {
 
     test('should publish to latest on base branch', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1104,6 +1175,8 @@ describe('Auto', () => {
 
     test('should skip publish in dry run', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
 
@@ -1112,11 +1185,12 @@ describe('Auto', () => {
       jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
       jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
       jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
-      const version = jest.fn();
-      auto.hooks.version.tap('test', version);
+      const spy = jest.fn();
+      auto.hooks.version.tap('test', spy);
+      auto.hooks.afterRelease.tap('test', spy);
 
       await auto.shipit({ dryRun: true });
-      expect(version).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });
@@ -1127,24 +1201,21 @@ describe('hooks', () => {
     auto.logger = dummyLog();
 
     auto.hooks.modifyConfig.tap('test', testConfig => {
-      testConfig.labels.released = [
-        {
-          name: 'released',
-          description: 'This issue/pull request has been released'
-        }
-      ];
+      testConfig.labels.push({
+        name: 'released',
+        description: 'This issue/pull request has been released',
+        releaseType: 'none'
+      });
 
       return testConfig;
     });
 
     await auto.loadConfig();
-
-    expect(auto.labels!.released).toStrictEqual([
-      {
-        description: 'This issue/pull request has been released',
-        name: 'released'
-      }
-    ]);
+    expect(auto.labels?.find(l => l.name === 'released')).toStrictEqual({
+      description: 'This issue/pull request has been released',
+      name: 'released',
+      releaseType: 'none'
+    });
   });
 
   describe('logParse', () => {

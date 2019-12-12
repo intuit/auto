@@ -2,6 +2,8 @@ import Auto from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/src/__tests__/make-commit-from-msg';
 import { dummyLog } from '@auto-it/core/src/utils/logger';
 import { makeHooks } from '@auto-it/core/src/utils/make-hooks';
+import { defaultLabels } from '@auto-it/core/dist/release';
+
 import SlackPlugin from '../src';
 
 const fetchSpy = jest.fn();
@@ -46,24 +48,6 @@ describe('postToSlack', () => {
     expect(plugin.postToSlack).not.toHaveBeenCalled();
   });
 
-  test("doesn't post in dry run", async () => {
-    const plugin = new SlackPlugin('https://custom-slack-url');
-    const hooks = makeHooks();
-
-    jest.spyOn(plugin, 'postToSlack').mockImplementation();
-    // @ts-ignore
-    plugin.apply({ hooks, options: { dryRun: true } } as Auto);
-
-    await hooks.afterRelease.promise({
-      newVersion: '1.0.0',
-      lastRelease: '0.1.0',
-      commits: [],
-      releaseNotes: '# My Notes'
-    });
-
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
-  });
-
   test("doesn't post with no commits", async () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const hooks = makeHooks();
@@ -91,7 +75,7 @@ describe('postToSlack', () => {
     plugin.apply({
       hooks,
       options: {},
-      release: { options: { skipReleaseLabels: ['skip-release'] } }
+      config: { labels: defaultLabels }
     } as Auto);
 
     await hooks.afterRelease.promise({

@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import chalk from 'chalk';
 import { app, Command, Option } from 'command-line-application';
-import dedent from 'dedent';
+import endent from 'endent';
 
 import {
   ApiOptions,
@@ -69,15 +69,9 @@ const defaultOptions = [
     name: 'verbose',
     alias: 'v',
     type: Boolean,
-    description: 'Show some more logs',
-    group: 'global'
-  },
-  {
-    name: 'very-verbose',
-    alias: 'w',
-    type: Boolean,
-    description: 'Show a lot more logs',
-    group: 'global'
+    description: 'Show some more logs. Pass -vv for very verbose logs.',
+    group: 'global',
+    multiple: true
   },
   {
     name: 'repo',
@@ -175,15 +169,6 @@ const message: Option = {
   alias: 'm'
 };
 
-const skipReleaseLabels: Option = {
-  name: 'skip-release-labels',
-  type: String,
-  group: 'main',
-  multiple: true,
-  description:
-    "Labels that will not create a release. Defaults to just 'skip-release'"
-};
-
 const deleteFlag: Option = {
   name: 'delete',
   type: Boolean,
@@ -263,8 +248,7 @@ export const commands: Command[] = [
       {
         ...context,
         defaultValue: 'ci/pr-check'
-      },
-      skipReleaseLabels
+      }
     ],
     examples: ['{green $} auto pr-check --url http://your-ci.com/build/123']
   },
@@ -341,7 +325,6 @@ export const commands: Command[] = [
         description: "Only bump version if 'release' label is on pull request",
         group: 'main'
       },
-      skipReleaseLabels,
       {
         name: 'from',
         type: String,
@@ -354,10 +337,6 @@ export const commands: Command[] = [
       {
         desc: 'Get the new version using the last release to head',
         example: '{green $} auto version'
-      },
-      {
-        desc: 'Skip releases with multiple labels',
-        example: '{green $} auto version --skip-release-labels documentation CI'
       }
     ]
   },
@@ -435,21 +414,33 @@ export const commands: Command[] = [
   {
     name: 'shipit',
     group: 'Release Commands',
-    description: dedent`
+    description: endent`
       Run the full \`auto\` release pipeline. Detects if in a lerna project.
 
-      1. call from base branch -> latest version released
-      2. call from PR in CI -> canary version released
-      3. call locally when not on base branch -> canary version released
+      1. call from base branch -> latest version released (LATEST)
+      2. call from prerelease branch -> prerelease version released (NEXT)
+      3. call from PR in CI -> canary version released (CANARY)
+      4. call locally when not on base/prerelease branch -> canary version released (CANARY)
     `,
     examples: ['{green $} auto shipit'],
-    options: [baseBranch, dryRun]
+    options: [
+      baseBranch,
+      dryRun,
+      {
+        name: 'only-graduate-with-release-label',
+        type: Boolean,
+        defaultValue: false,
+        group: 'main',
+        description:
+          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.'
+      }
+    ]
   },
   {
     name: 'canary',
     group: 'Release Commands',
-    description: dedent`
-      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD.
+    description: endent`
+      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
 
       1. In PR: 1.2.3-canary.123.0 + add version to PR body
       2. Locally: 1.2.3-canary.1810cfd
@@ -478,6 +469,27 @@ export const commands: Command[] = [
         ...message,
         description:
           "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
+      }
+    ]
+  },
+  {
+    name: 'next',
+    group: 'Release Commands',
+    description: endent`
+      Make a release for your "prerelease" release line. This is ran automatically from "shipit".
+
+      1. Creates a prerelease on package management platform
+      2. Creates a "Pre Release" on GitHub releases page.
+
+      Calling the \`next\` command from a prerelease branch will publish a prerelease, otherwise it will publish to the default prerelease branch.
+    `,
+    examples: ['{green $} auto next'],
+    options: [
+      dryRun,
+      {
+        ...message,
+        description:
+          'The message used when attaching the prerelease version to a PR'
       }
     ]
   }
