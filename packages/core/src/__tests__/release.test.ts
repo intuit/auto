@@ -29,7 +29,7 @@ const getLatestRelease = jest.fn();
 const getSha = jest.fn();
 const getCommit = jest
   .fn()
-  .mockReturnValue({ data: { author: { login: '' } } });
+  .mockReturnValue(Promise.resolve({ data: { author: { login: '' } } }));
 const createStatus = jest.fn();
 const getProject = jest.fn();
 const createComment = jest.fn();
@@ -202,7 +202,9 @@ describe('Release', () => {
         ])
       );
 
-      getCommit.mockReturnValueOnce({ data: { author: { login: 'adam' } } });
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
       getUserByUsername.mockImplementation(username => {
         if (username === 'andrew') {
           return {
@@ -244,7 +246,9 @@ describe('Release', () => {
         ])
       );
 
-      getCommit.mockReturnValueOnce({ data: { author: { login: 'adam' } } });
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
+      );
       getUserByUsername.mockImplementation(username => {
         if (username === 'andrew') {
           return {
