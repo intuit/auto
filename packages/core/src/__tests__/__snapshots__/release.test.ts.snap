@@ -166,6 +166,7 @@ Array [
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
+        "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
@@ -229,7 +230,10 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "1a2b",
+        "login": "adam",
         "name": "Adam Dierkens",
+        "username": "adam",
       },
     ],
     "files": Array [],
@@ -271,7 +275,10 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "1a2b",
+        "login": "adam",
         "name": "Adam Dierkens",
+        "username": "adam",
       },
     ],
     "files": Array [],
@@ -284,6 +291,59 @@ Array [
       "number": 123,
     },
     "subject": "I was rebased",
+  },
+]
+`;
+
+exports[`Release getCommits should not resolve authors with no PR commits 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "First",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "Second",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "foo",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "Third",
   },
 ]
 `;
@@ -318,6 +378,7 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "foo",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",
@@ -334,6 +395,7 @@ Array [
     "authorName": "Andrew Lisowski",
     "authors": Array [
       Object {
+        "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
@@ -370,6 +432,7 @@ Array [
     "authors": Array [
       Object {
         "email": "adam@dierkens.com",
+        "hash": "foo",
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",

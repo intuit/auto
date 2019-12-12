@@ -1044,10 +1044,7 @@ export default class Auto {
 
     const options = {
       bump,
-      commits: await this.release.getCommitsInRelease(
-        lastRelease,
-        to || undefined
-      ),
+      commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
       lastRelease,
       currentVersion

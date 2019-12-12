@@ -243,6 +243,24 @@ export default class Git {
     }
   }
 
+  /** Get information about specific commit */
+  @memoize()
+  async getCommit(sha: string) {
+    this.logger.verbose.info(`Getting info for commit: ${sha}`);
+
+    try {
+      const info = await this.github.repos.getCommit({
+        owner: this.options.owner,
+        repo: this.options.repo,
+        ref: sha
+      });
+      this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
+      return info;
+    } catch (e) {
+      throw new GitAPIError('getPr', [], e);
+    }
+  }
+
   /** Get the labels for a the project */
   async getProjectLabels() {
     this.logger.verbose.info(

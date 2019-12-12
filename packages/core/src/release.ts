@@ -760,21 +760,21 @@ export default class Release {
 
           return {
             ...prCommit.author,
-            ...(await this.git.getUserByUsername(prCommit.author.login))
+            ...(await this.git.getUserByUsername(prCommit.author.login)),
+            hash: prCommit.sha
           };
         })
       );
     } else if (commit.authorEmail) {
-      const author = commit.authorEmail.includes('@users.noreply.github.com')
-        ? await this.git.getUserByUsername(
-            commit.authorEmail.split('@users')[0]
-          )
-        : await this.git.getUserByEmail(commit.authorEmail);
+      const username = (await this.git.getCommit(commit.hash)).data.author
+        .login;
+      const author = await this.git.getUserByUsername(username);
 
       resolvedAuthors.push({
-        email: commit.authorEmail,
         name: commit.authorName,
-        ...author
+        email: commit.authorEmail,
+        ...author,
+        hash: commit.hash
       });
     }
 
