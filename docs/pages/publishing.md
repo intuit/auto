@@ -1,6 +1,6 @@
 # Publishing
 
-`auto`'s main use it to automate the release process for your project This can be broken down into three core steps:
+`auto`'s main use it to automate the release process for your project. This can be broken down into three core steps:
 
 ```text
 pre: (optional) Check if new version
