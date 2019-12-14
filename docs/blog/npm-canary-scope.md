@@ -53,7 +53,3 @@ If you do not see the method for you build platform, please make a pull request!
 ```
 
 Now when people make pull requests to your repos it will get published under your `canaryScope` for un-trusted accounts.
-
-::: message is-success
-Tip: Every npm account is also a scope! So you can set `canaryScope` to your username. :tada:
-:::
