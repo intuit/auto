@@ -95,8 +95,9 @@ If your project is private you have nothing to worry about, but if your project 
 #### Setup
 
 1. Create a test scope that you publish canaries under (ex: `@auto-canary` or `@auto-test`)
-2. Set the default `NPM_TOKEN` to a token that can publish to that scope (this is used for any pull request)
-3. Set up a `secure` token that is only accessible on the main fork (still named `NPM_TOKEN`)
+2. Create a user that only has access to that scope
+3. Set the default `NPM_TOKEN` to a token that can publish to that scope (this is used for any pull request)
+4. Set up a `secure` token that is only accessible on the main fork (still named `NPM_TOKEN`)
 
 Step 3 might not be possible on your build platform.
 The following are the ways the `auto` team knows how to do it.
