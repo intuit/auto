@@ -246,10 +246,10 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = this.hooks.modifyConfig.call({
+    const config = {
       ...(await configLoader.loadConfig(this.options)),
       baseBranch: this.baseBranch
-    });
+    };
 
     this.logger.verbose.success('Loaded `auto` with config:', config);
 
@@ -257,6 +257,7 @@ export default class Auto {
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
+    this.config = this.hooks.modifyConfig.call(config)
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo(config);
