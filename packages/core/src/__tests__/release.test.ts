@@ -308,7 +308,7 @@ describe('Release', () => {
           })
         ])
       );
-      getUserByUsername.mockImplementationOnce(username => {
+      getUserByUsername.mockImplementationOnce(() => {
         return {
           login: 'adam',
           name: 'Adam Dierkens'
