@@ -18,7 +18,7 @@ import { gt, gte, inc, ReleaseType } from 'semver';
 
 import getConfigFromPackageJson from './package-config';
 import setTokenOnCI from './set-npm-token';
-import { loadPackageJson, readFile } from './utils';
+import { loadPackageJson, readFile, writeFile } from './utils';
 
 const { isCi } = envCi();
 /** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
@@ -92,7 +92,7 @@ const inFolder = (parent: string, child: string) => {
 interface ChangedPackagesArgs {
   /** Commit hash to find changes for */
   sha: string;
-  /** All of the pacakges in the monorepo */
+  /** All of the packages in the monorepo */
   packages: IMonorepoPackage[];
   /** The lerna.json for the monorepo */
   lernaJson: {
@@ -191,8 +191,8 @@ async function getLernaPackages(): Promise<LernaPackage[]> {
   );
 }
 
-/** Get all of the packages+version in the lerna "independent" monorepo */
-async function getIndependentPackageList() {
+/** Get all of the packages+version in the lerna monorepo */
+async function getPackageList() {
   return getLernaPackages().then(packages =>
     packages.map(p => `${p.name}@${p.version.split('+')[0]}`)
   );
@@ -223,6 +223,8 @@ interface INpmConfig {
   setRcToken?: boolean;
   /** Whether to force publish all the packages in a monorepo */
   forcePublish?: boolean;
+  /** A scope to publish canary versions under */
+  canaryScope?: string;
 }
 
 /** Parse the lerna.json file. */
@@ -246,7 +248,7 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
     if (monorepoVersion === 'independent') {
       previousVersion =
         'dryRun' in auto.options && auto.options.dryRun
-          ? markdownList(await getIndependentPackageList())
+          ? markdownList(await getPackageList())
           : '';
     } else {
       const releasedPackage = getMonorepoPackage();
@@ -286,6 +288,41 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
   return previousVersion;
 }
 
+/** Remove the @ sign */
+const sanitizeScope = (canaryScope: string) => canaryScope.replace('@', '');
+
+/** Add a npm scope to a package name. Can have leading @ or not. */
+const addCanaryScope = (canaryScope: string, name: string) =>
+  `@${sanitizeScope(canaryScope)}/${name}`;
+
+/** Change the scope of all the packages to the canary scope */
+async function setCanaryScope(canaryScope: string, paths: string[]) {
+  await Promise.all(
+    paths.map(async p => {
+      const packageJson = await loadPackageJson(p);
+      const newJson = { ...packageJson };
+      const name = packageJson.name.match(/@\S+\/\S+/)
+        ? packageJson.name.split('/')[1]
+        : packageJson.name;
+
+      newJson.name = addCanaryScope(canaryScope, name);
+      await writeFile(
+        path.join(p, 'package.json'),
+        JSON.stringify(newJson, null, 2)
+      );
+    })
+  );
+}
+
+/** Reset the scope changes of all the packages  */
+async function gitReset() {
+  await execPromise('git', ['reset', '--hard', 'HEAD']);
+}
+
+/** Make a HTML detail */
+const makeDetail = (summary: string, body: string[]) =>
+  `<details><summary>${summary}</summary>\n${markdownList(body)}</details>`;
+
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
@@ -300,6 +337,8 @@ export default class NPMPlugin implements IPlugin {
   private readonly setRcToken: boolean;
   /** Whether to always publish all packages in a monorepo */
   private readonly forcePublish: boolean;
+  /** A scope to publish canary versions under */
+  private readonly canaryScope: string | undefined;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
@@ -309,6 +348,7 @@ export default class NPMPlugin implements IPlugin {
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
       typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
+    this.canaryScope = config.canaryScope || undefined;
   }
 
   /** A memoized version of getLernaPackages */
@@ -516,6 +556,13 @@ export default class NPMPlugin implements IPlugin {
             preid
           );
 
+        if (this.canaryScope) {
+          await setCanaryScope(
+            this.canaryScope,
+            packagesBefore.map(p => p.path)
+          );
+        }
+
         await execPromise('npx', [
           'lerna',
           'publish',
@@ -533,18 +580,16 @@ export default class NPMPlugin implements IPlugin {
 
         auto.logger.verbose.info('Successfully published canary version');
         const packages = await getLernaPackages();
-        const independentPackages = await getIndependentPackageList();
-        // Reset after we read the packages from the system
-        await execPromise('git', ['reset', '--hard', 'HEAD']);
+        const packageList = await getPackageList();
+        // Reset after we read the packages from the system!
+        await gitReset();
 
         if (isIndependent) {
-          if (!independentPackages.some(p => p.includes('canary'))) {
+          if (!packageList.some(p => p.includes('canary'))) {
             return { error: 'No packages were changed. No canary published.' };
           }
 
-          return `<details><summary>Canary Versions</summary>${markdownList(
-            independentPackages
-          )}</details>`;
+          return makeDetail('Canary Versions', packageList);
         }
 
         const versioned = packages.find(p => p.version.includes('canary'));
@@ -553,7 +598,16 @@ export default class NPMPlugin implements IPlugin {
           return { error: 'No packages were changed. No canary published.' };
         }
 
-        return versioned.version.split('+')[0];
+        const version = versioned.version.split('+')[0];
+
+        return this.canaryScope
+          ? makeDetail(
+              `Published under canary scope @${sanitizeScope(
+                this.canaryScope
+              )}`,
+              packageList
+            )
+          : version;
       }
 
       auto.logger.verbose.info('Detected single npm package');
@@ -566,6 +620,10 @@ export default class NPMPlugin implements IPlugin {
         bump,
         `canary${postFix}`
       );
+
+      if (this.canaryScope) {
+        await setCanaryScope(this.canaryScope, ['./']);
+      }
 
       await execPromise('npm', [
         'version',
@@ -580,6 +638,10 @@ export default class NPMPlugin implements IPlugin {
           ? ['publish', '--access', 'public', ...publishArgs, ...verboseArgs]
           : ['publish', ...publishArgs, ...verboseArgs]
       );
+
+      if (this.canaryScope) {
+        await gitReset();
+      }
 
       auto.logger.verbose.info('Successfully published canary version');
       return canaryVersion;
