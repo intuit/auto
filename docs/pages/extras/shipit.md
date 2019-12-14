@@ -1,3 +1,14 @@
+## Release Pipeline
+
+Below is the basics steps auto takes when releasing your code through the `shipit` command.
+
+![The default shipit workflow](../../images/default-auto.png)
+
+You can customize how this pipeline operates with various flags.
+The following shows how those flags can effect the workflow.
+
+![The entire shipit workflow](../../images/complete-auto.png)
+
 ## Prereleases
 
 If you are interested in pre-releases (ex: `alpha`, `beta`, `next`) `auto` has the ability to publish pre-releases in various ways.
