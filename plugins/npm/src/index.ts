@@ -321,7 +321,7 @@ async function gitReset() {
 
 /** Make a HTML detail */
 const makeDetail = (summary: string, body: string[]) =>
-  `<details><summary>${summary}</summary>${markdownList(body)}</details>`;
+  `<details><summary>${summary}</summary>\n${markdownList(body)}</details>`;
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
@@ -602,7 +602,9 @@ export default class NPMPlugin implements IPlugin {
 
         return this.canaryScope
           ? makeDetail(
-              `Published under canary scope ${sanitizeScope(this.canaryScope)}`,
+              `Published under canary scope @${sanitizeScope(
+                this.canaryScope
+              )}`,
               packageList
             )
           : version;
