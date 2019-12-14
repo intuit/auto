@@ -306,7 +306,10 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
         : packageJson.name;
 
       newJson.name = addCanaryScope(canaryScope, name);
-      await writeFile(p, JSON.stringify(newJson, null, 2));
+      await writeFile(
+        path.join(p, 'package.json'),
+        JSON.stringify(newJson, null, 2)
+      );
     })
   );
 }
