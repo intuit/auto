@@ -120,5 +120,3 @@ If you do not see the method for you build platform, please make a pull request!
   ]
 }
 ```
-
-> Tip: Every npm account is also a scope! So you can set `canaryScope` to your username. :tada:
