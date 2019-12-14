@@ -44,14 +44,16 @@ export function calculateSemVerBump(
 ) {
   const labelSet = new Set<string>();
   const skipReleaseLabels = labelMap.get('skip') || [];
-  const noReleaseLabels = labelMap.get('none') || [];
 
   labels.forEach(pr => {
     pr.forEach(label => {
       const userLabel = [...labelMap.entries()].find(pair =>
         pair[1].includes(label)
       );
-      labelSet.add(userLabel ? userLabel[0] : label);
+
+      if (userLabel) {
+        labelSet.add(userLabel[0]);
+      }
     });
   });
 
@@ -67,9 +69,8 @@ export function calculateSemVerBump(
 
   // If PRs only have none or skip labels, skip the release
   const onlyNoReleaseLabels = [...labelSet].reduce(
-    (condition, label) =>
-      condition &&
-      (noReleaseLabels.includes(label) || skipReleaseLabels.includes(label)),
+    (condition, releaseType) =>
+      condition && (releaseType === 'none' || releaseType === 'skip'),
     true
   );
 
