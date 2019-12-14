@@ -12,7 +12,8 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
   labels: defaultLabels,
-  baseBranch: 'master'
+  baseBranch: 'master',
+  prereleaseBranches: ['next']
 });
 
 const logParse = new LogParse();
@@ -24,7 +25,8 @@ describe('createUserLink', () => {
       repo: '',
       baseUrl: 'https://github.custom.com/',
       labels: defaultLabels,
-      baseBranch: 'master'
+      baseBranch: 'master',
+      prereleaseBranches: ['next']
     });
     changelog.loadDefaultHooks();
 
@@ -63,7 +65,8 @@ describe('createUserLink', () => {
       repo: '',
       baseUrl: 'https://github.custom.com/',
       labels: defaultLabels,
-      baseBranch: 'master'
+      baseBranch: 'master',
+      prereleaseBranches: ['next']
     });
     changelog.loadDefaultHooks();
 
@@ -421,6 +424,43 @@ describe('generateReleaseNotes', () => {
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('should omit changelog item for next branches', async () => {
+    const options = testOptions();
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '2',
+        files: [],
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+
+    expect(
+      await changelog.generateReleaseNotes([
+        {
+          ...commits[0],
+          hash: '1',
+          files: [],
+          authorName: 'Adam Dierkens',
+          authorEmail: 'adam@dierkens.com',
+          subject: 'V8\n\n',
+          labels: [''],
+          pullRequest: {
+            base: 'intuit/next',
+            number: 123,
+            body: '# Release Notes\n\nfoobar'
+          }
+        },
+        ...commits
+      ])
+    ).toMatchSnapshot();
   });
 
   test('should be able to customize titles', async () => {
