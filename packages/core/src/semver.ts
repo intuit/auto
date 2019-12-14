@@ -65,12 +65,15 @@ export function calculateSemVerBump(
       : labels[0].some(label => skipReleaseLabels.includes(label));
   }
 
-  // If the pr has only 1 `none` release label, skip the release
-  if (
-    labels.length > 0 &&
-    labels[0].length === 1 &&
-    noReleaseLabels.includes(labels[0][0])
-  ) {
+  // If PRs only have none or skip labels, skip the release
+  const onlyNoReleaseLabels = [...labelSet].reduce(
+    (condition, label) =>
+      condition &&
+      (noReleaseLabels.includes(label) || skipReleaseLabels.includes(label)),
+    true
+  );
+
+  if (labelSet.size > 0 && onlyNoReleaseLabels) {
     return SEMVER.noVersion;
   }
 
