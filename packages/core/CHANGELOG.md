@@ -1,3 +1,16 @@
+# v8.1.3 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- omit next branch PR Title from being in release notes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.2 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix

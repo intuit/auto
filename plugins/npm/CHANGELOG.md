@@ -1,3 +1,15 @@
+# v8.1.3 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- fix tests?  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.1 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix

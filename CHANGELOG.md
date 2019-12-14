@@ -1,3 +1,16 @@
+# v8.1.3 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`
+  - omit next branch PR Title from being in release notes [#796](https://github.com/intuit/auto/pull/796) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.2 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix
