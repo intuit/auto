@@ -1,3 +1,20 @@
+# v8.1.0 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- clean up docs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix message bugs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- write to correct file  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- correct paths  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add create user step  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add canaryScope option  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.0.0 (Wed Dec 11 2019)
 
 #### 🐛  Bug Fix

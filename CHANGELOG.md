@@ -1,3 +1,32 @@
+# v8.1.0 (Sat Dec 14 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/npm`
+  - add canaryScope option for more secure PR builds [#792](https://github.com/intuit/auto/pull/792) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix bug where merging a none would skip previously meged semver bump [#794](https://github.com/intuit/auto/pull/794) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- add context [#790](https://github.com/intuit/auto/pull/790) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/npm`
+  - V8.1 [#793](https://github.com/intuit/auto/pull/793) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- docs(publishing): add period after sentence [#788](https://github.com/intuit/auto/pull/788) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+---
+
 # v8.0.0 (Wed Dec 11 2019)
 
 ### Release Notes

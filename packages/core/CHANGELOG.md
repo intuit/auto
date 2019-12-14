@@ -1,3 +1,15 @@
+# v8.1.0 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- fix bug where merging a none would skip previously meged semver label, ex: merge next into master and next has a none label  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.0.0 (Wed Dec 11 2019)
 
 #### 🐛  Bug Fix
