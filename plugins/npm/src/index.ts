@@ -299,7 +299,7 @@ const addCanaryScope = (canaryScope: string, name: string) =>
 async function setCanaryScope(canaryScope: string, paths: string[]) {
   await Promise.all(
     paths.map(async p => {
-      const packageJson = await loadPackageJson(path.dirname(p));
+      const packageJson = await loadPackageJson(p);
       const newJson = { ...packageJson };
       const name = packageJson.name.match(/@\S+\/\S+/)
         ? packageJson.name.split('/')[1]
@@ -617,7 +617,7 @@ export default class NPMPlugin implements IPlugin {
       );
 
       if (this.canaryScope) {
-        await setCanaryScope(this.canaryScope, ['./package.json']);
+        await setCanaryScope(this.canaryScope, ['./']);
       }
 
       await execPromise('npm', [
