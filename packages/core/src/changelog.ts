@@ -19,6 +19,8 @@ export interface IGenerateReleaseNotesOptions {
   labels: ILabelDefinition[];
   /** The branch that is used as the base. defaults to master */
   baseBranch: string;
+  /** The branches that is used as prerelease branches. defaults to next */
+  prereleaseBranches: string[];
 }
 
 interface ICommitSplit {
@@ -360,6 +362,15 @@ export default class Changelog {
 
         await Promise.all(
           labelCommits.map(async commit => {
+            const base = commit.pullRequest?.base || '';
+            const branch = base.includes('/') ? base.split('/')[1] : base;
+
+            // We want to keep the release notes for a prerelease branch but
+            // omit the changelog item
+            if (branch && this.options.prereleaseBranches.includes(branch)) {
+              return true;
+            }
+
             const [, line] = await this.hooks.renderChangelogLine.promise([
               commit,
               await this.generateCommitNote(commit)

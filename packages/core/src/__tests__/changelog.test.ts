@@ -12,7 +12,8 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
   labels: defaultLabels,
-  baseBranch: 'master'
+  baseBranch: 'master',
+  prereleaseBranches: ['next']
 });
 
 const logParse = new LogParse();
@@ -24,7 +25,8 @@ describe('createUserLink', () => {
       repo: '',
       baseUrl: 'https://github.custom.com/',
       labels: defaultLabels,
-      baseBranch: 'master'
+      baseBranch: 'master',
+      prereleaseBranches: ['next']
     });
     changelog.loadDefaultHooks();
 
@@ -63,7 +65,8 @@ describe('createUserLink', () => {
       repo: '',
       baseUrl: 'https://github.custom.com/',
       labels: defaultLabels,
-      baseBranch: 'master'
+      baseBranch: 'master',
+      prereleaseBranches: ['next']
     });
     changelog.loadDefaultHooks();
 

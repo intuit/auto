@@ -303,7 +303,8 @@ export default class Release {
       repo: this.git.options.repo,
       baseUrl: project.html_url,
       labels: this.config.labels,
-      baseBranch: this.config.baseBranch
+      baseBranch: this.config.baseBranch,
+      prereleaseBranches: this.config.prereleaseBranches
     });
 
     this.hooks.onCreateChangelog.call(changelog, version);
