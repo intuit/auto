@@ -1,3 +1,16 @@
+# v8.1.2 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix `none` releases: they were not handling extra labels [#797](https://github.com/intuit/auto/pull/797) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.1 (Sat Dec 14 2019)
 
 #### 📝  Documentation

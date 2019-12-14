@@ -1,3 +1,17 @@
+# v8.1.2 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ignore unknown labels during bump calc + fix none type release skipping  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- let modify config actually do something  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.0 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix
