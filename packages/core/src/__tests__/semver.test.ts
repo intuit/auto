@@ -32,6 +32,10 @@ describe('calculateSemVerBump', () => {
     expect(calculateSemVerBump([['none', 'major']], semverMap)).toBe(
       SEMVER.major
     );
+
+    expect(
+      calculateSemVerBump([['none'], ['unknown'], ['documentation']], semverMap)
+    ).toBe(SEMVER.noVersion);
   });
 
   test('should not skip things before none', () => {
