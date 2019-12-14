@@ -86,3 +86,39 @@ You can disable this behavior by using the `subPackageChangelogs` option.
   ]
 }
 ```
+
+### canaryScope
+
+Publishing canary versions comes with some security risks.
+If your project is private you have nothing to worry about, but if your project is open source there are some security holes.
+
+#### Setup
+
+1. Create a test scope that you publish canaries under (ex: `@auto-canary` or `@auto-test`)
+2. Create a user that only has access to that scope
+3. Set the default `NPM_TOKEN` to a token that can publish to that scope (this is used for any pull request)
+4. Set up a `secure` token that is only accessible on the main fork (still named `NPM_TOKEN`)
+
+Step 3 might not be possible on your build platform.
+
+The following are the ways the `auto` team knows how to do it.
+If you do not see the method for you build platform, please make a pull request!
+
+**Platform Solutions:**
+
+- [CircleCI Context](https://circleci.com/docs/2.0/contexts/) - Contexts provide a mechanism for securing and sharing environment variables across projects. The environment variables are defined as name/value pairs and are injected at runtime.
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "canaryScope": "@auto-canary"
+      }
+    ]
+  ]
+}
+```
+
+> Tip: Every npm account is also a scope! So you can set `canaryScope` to your username. :tada:

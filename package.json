@@ -126,7 +126,12 @@
   },
   "auto": {
     "plugins": [
-      "npm",
+      [
+        "npm",
+        {
+          "canaryScope": "@auto-canary"
+        }
+      ],
       "released",
       "first-time-contributor",
       [
