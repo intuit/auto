@@ -77,7 +77,8 @@ test('should create sections for packages', async () => {
     repo: 'test',
     baseUrl: 'https://github.custom.com/',
     labels: defaultLabels,
-    baseBranch: 'master'
+    baseBranch: 'master',
+    prereleaseBranches: ['next']
   });
 
   plugin.apply({
@@ -125,7 +126,8 @@ test('should add versions for independent packages', async () => {
     repo: 'test',
     baseUrl: 'https://github.custom.com/',
     labels: defaultLabels,
-    baseBranch: 'master'
+    baseBranch: 'master',
+    prereleaseBranches: ['next']
   });
 
   plugin.apply({
@@ -171,7 +173,8 @@ test('should create extra change logs for sub-packages', async () => {
           repo: 'test',
           baseUrl: 'https://github.custom.com/',
           labels: defaultLabels,
-          baseBranch: 'master'
+          baseBranch: 'master',
+          prereleaseBranches: ['next']
         });
         t.hooks.renderChangelogTitle.tap('test', label => label);
         return t;
