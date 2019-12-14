@@ -1,3 +1,16 @@
+# v8.1.1 (Sat Dec 14 2019)
+
+#### 📝  Documentation
+
+- `@auto-it/npm`
+  - add diagrams [#795](https://github.com/intuit/auto/pull/795) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.0 (Sat Dec 14 2019)
 
 #### 🚀  Enhancement

@@ -1,3 +1,15 @@
+# v8.1.1 (Sat Dec 14 2019)
+
+#### 🐛  Bug Fix
+
+- remove docs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.0 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix
