@@ -89,7 +89,7 @@ You can disable this behavior by using the `subPackageChangelogs` option.
 
 ### canaryScope
 
-Publishing canary version comes with some security risks.
+Publishing canary versions comes with some security risks.
 If your project is private you have nothing to worry about, but if your project is open source there are some security holes.
 
 #### Setup
@@ -100,6 +100,7 @@ If your project is private you have nothing to worry about, but if your project 
 4. Set up a `secure` token that is only accessible on the main fork (still named `NPM_TOKEN`)
 
 Step 3 might not be possible on your build platform.
+
 The following are the ways the `auto` team knows how to do it.
 If you do not see the method for you build platform, please make a pull request!
 
