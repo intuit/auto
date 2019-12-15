@@ -1,4 +1,5 @@
 ---
+image: https://images.unsplash.com/photo-1566386087068-55645996b234?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1950
 title: 'npm: More Secure Canary Publishing'
 author:
   name: Andrew Lisowski
@@ -39,6 +40,10 @@ If you do not see the method for you build platform, please make a pull request!
 
 - [CircleCI Context](https://circleci.com/docs/2.0/contexts/) - Contexts provide a mechanism for securing and sharing environment variables across projects. The environment variables are defined as name/value pairs and are injected at runtime.
 
+## Usage
+
+To use this work flow in `auto`, supply the following configuration to the `npm` plugin.
+
 ```json
 {
   "plugins": [
@@ -52,4 +57,7 @@ If you do not see the method for you build platform, please make a pull request!
 }
 ```
 
-Now when people make pull requests to your repos it will get published under your `canaryScope` for un-trusted accounts.
+Now when people make pull requests to your repos:
+
+1. your CI can run `auto shipit`
+2. the canary versions will get published under your `canaryScope`
