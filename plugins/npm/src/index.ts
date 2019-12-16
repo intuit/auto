@@ -170,7 +170,7 @@ interface LernaPackage {
 }
 
 /** Get all of the packages in the lerna monorepo */
-async function getLernaPackages(): Promise<LernaPackage[]> {
+export async function getLernaPackages(): Promise<LernaPackage[]> {
   return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
     res.split('\n').map(packageInfo => {
       const [packagePath, name, version] = packageInfo.split(':');
@@ -285,15 +285,33 @@ const addCanaryScope = (canaryScope: string, name: string) =>
 
 /** Change the scope of all the packages to the canary scope */
 async function setCanaryScope(canaryScope: string, paths: string[]) {
+  const packages = await Promise.all(
+    paths.map(async p => [p, await loadPackageJson(p)] as const)
+  );
+  const names = packages.map(([, p]) => p.name);
+
   await Promise.all(
-    paths.map(async p => {
-      const packageJson = await loadPackageJson(p);
+    packages.map(async ([p, packageJson]) => {
       const newJson = { ...packageJson };
       const name = packageJson.name.match(/@\S+\/\S+/)
         ? packageJson.name.split('/')[1]
         : packageJson.name;
 
       newJson.name = addCanaryScope(canaryScope, name);
+
+      if (newJson.dependencies) {
+        Object.keys(newJson.dependencies).forEach(d => {
+          if (names.includes(d)) {
+            const depName = d.match(/@\S+\/\S+/) ? d.split('/')[1] : d;
+
+            newJson.dependencies![
+              addCanaryScope(canaryScope, depName)
+            ] = newJson.dependencies![d];
+            delete newJson.dependencies![d];
+          }
+        });
+      }
+
       await writeFile(
         path.join(p, 'package.json'),
         JSON.stringify(newJson, null, 2)

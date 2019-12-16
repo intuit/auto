@@ -90,7 +90,11 @@ You can disable this behavior by using the `subPackageChangelogs` option.
 ### canaryScope
 
 Publishing canary versions comes with some security risks.
-If your project is private you have nothing to worry about, but if your project is open source there are some security holes.
+If your project is private you have nothing to worry about and can skip these, but if your project is open source there are some security holes.
+
+::: message is-warning
+This feature works pretty easily/well for single packages. In a monorepo we have to deal with a lot more, and this options should be treated as experimental.
+:::
 
 #### Setup
 
@@ -98,6 +102,7 @@ If your project is private you have nothing to worry about, but if your project 
 2. Create a user that only has access to that scope
 3. Set the default `NPM_TOKEN` to a token that can publish to that scope (this is used for any pull request)
 4. Set up a `secure` token that is only accessible on the main fork (still named `NPM_TOKEN`)
+5. Set up alias (only monorepos)
 
 Step 3 might not be possible on your build platform.
 
@@ -120,3 +125,15 @@ If you do not see the method for you build platform, please make a pull request!
   ]
 }
 ```
+
+##### Set up alias
+
+If you are managing a non-monorepo you do not have to do anything for this step!
+If you manage a monorepo we still have to do handle our packages importing each other.
+Since we just changed the name of the package all imports to our packages are now broken!
+
+There are multiple ways to make this work and the solution might be different depending on your build target.
+
+- [module-alias](https://www.npmjs.com/package/module-alias) - Modifiy node's require for your canary deploys (This is what `auto` uses). Useful for node packages
+- [Webpack Aliases](https://webpack.js.org/configuration/resolve/) Modify scoped requires for webpack based projects.
+- [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) - A Babel plugin to add a new resolver for your modules when compiling your code using Babel.
