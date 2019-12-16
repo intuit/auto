@@ -1,3 +1,16 @@
+# v8.4.0 (Mon Dec 16 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - version: detect prerelease branch [#811](https://github.com/intuit/auto/pull/811) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.3.0 (Mon Dec 16 2019)
 
 #### 🚀  Enhancement
