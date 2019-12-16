@@ -733,4 +733,14 @@ export default class Git {
   async getLatestTagInBranch() {
     return execPromise('git', ['describe', '--tags', '--abbrev=0']);
   }
+
+  /** Get the tag before latest in the git tree */
+  async getPreviousTagInBranch() {
+    return execPromise('git', [
+      'describe',
+      '--tags',
+      '--abbrev=0',
+      '$(git describe --tags --abbrev=0)^1'
+    ]);
+  }
 }

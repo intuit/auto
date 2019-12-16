@@ -1,6 +1,5 @@
 import envCi from 'env-ci';
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
@@ -8,6 +7,7 @@ import { Memoize as memoize } from 'typescript-memoize';
 import {
   Auto,
   determineNextVersion,
+  getCurrentBranch,
   execPromise,
   ILogger,
   IPlugin,
@@ -21,18 +21,6 @@ import setTokenOnCI from './set-npm-token';
 import { loadPackageJson, readFile, writeFile } from './utils';
 
 const { isCi } = envCi();
-/** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
-let branch: string;
-
-try {
-  branch = execSync('git symbolic-ref --short HEAD', {
-    encoding: 'utf8',
-    stdio: 'ignore'
-  });
-} catch (error) {
-  branch = '';
-}
-
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 
 /** Check if the project is a monorepo */
@@ -364,11 +352,13 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === 'veryVerbose';
     const verboseArgs = isVerbose ? verbose : [];
     const prereleaseBranches = auto.config?.prereleaseBranches!;
+    const branch = getCurrentBranch();
     // if ran from master we publish the prerelease to the first
     // configured prerelease branch
-    const prereleaseBranch = prereleaseBranches.includes(branch)
-      ? branch
-      : prereleaseBranches[0];
+    const prereleaseBranch =
+      branch && prereleaseBranches.includes(branch)
+        ? branch
+        : prereleaseBranches[0];
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       if (!isCi) {

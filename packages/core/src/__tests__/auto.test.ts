@@ -851,7 +851,10 @@ describe('Auto', () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
       await auto.loadConfig();
-      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+
+      auto.git!.getPreviousTagInBranch = () => Promise.resolve('1.2.3');
+      auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.4');
+
       jest.spyOn(auto.git!, 'publish').mockImplementation();
       jest
         .spyOn(auto.release!, 'generateReleaseNotes')
