@@ -1,3 +1,32 @@
+# v8.3.0 (Mon Dec 16 2019)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
+  - release: detect prerelease branch + be smarter about commit range [#810](https://github.com/intuit/auto/pull/810) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/node from 12.12.15 to 12.12.18 [#808](https://github.com/intuit/auto/pull/808) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-prettier from 3.1.1 to 3.1.2 [#807](https://github.com/intuit/auto/pull/807) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.10.0 to 2.11.0 [#806](https://github.com/intuit/auto/pull/806) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.1 to 4.4.2 [#805](https://github.com/intuit/auto/pull/805) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.10.0 to 2.11.0 [#803](https://github.com/intuit/auto/pull/803) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump array.prototype.flatmap from 1.2.2 to 1.2.3 [#801](https://github.com/intuit/auto/pull/801) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.35.0 to 16.35.2 [#809](https://github.com/intuit/auto/pull/809) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/twitter`
+  - Bump semver from 6.3.0 to 7.0.0 [#804](https://github.com/intuit/auto/pull/804) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump https-proxy-agent from 3.0.1 to 4.0.0 [#802](https://github.com/intuit/auto/pull/802) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.2.0 (Sun Dec 15 2019)
 
 #### 🚀  Enhancement

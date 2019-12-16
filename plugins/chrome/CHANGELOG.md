@@ -1,3 +1,22 @@
+# v8.3.0 (Mon Dec 16 2019)
+
+#### 🐛  Bug Fix
+
+- Bump semver from 6.3.0 to 7.0.0
+
+Bumps [semver](https://github.com/npm/node-semver) from 6.3.0 to 7.0.0.
+- [Release notes](https://github.com/npm/node-semver/releases)
+- [Changelog](https://github.com/npm/node-semver/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/npm/node-semver/compare/v6.3.0...v7.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v8.0.0 (Wed Dec 11 2019)
 
 #### 🐛  Bug Fix

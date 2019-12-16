@@ -1,3 +1,38 @@
+# v8.3.0 (Mon Dec 16 2019)
+
+#### 🐛  Bug Fix
+
+- release: detect prerelease branch + be smarter about commit range  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/rest from 16.35.0 to 16.35.2
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.35.0 to 16.35.2.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.35.0...v16.35.2)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump https-proxy-agent from 3.0.1 to 4.0.0
+
+Bumps [https-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent) from 3.0.1 to 4.0.0.
+- [Release notes](https://github.com/TooTallNate/node-https-proxy-agent/releases)
+- [Commits](https://github.com/TooTallNate/node-https-proxy-agent/compare/3.0.1...4.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 6.3.0 to 7.0.0
+
+Bumps [semver](https://github.com/npm/node-semver) from 6.3.0 to 7.0.0.
+- [Release notes](https://github.com/npm/node-semver/releases)
+- [Changelog](https://github.com/npm/node-semver/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/npm/node-semver/compare/v6.3.0...v7.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.2.0 (Sun Dec 15 2019)
 
 #### 🐛  Bug Fix
