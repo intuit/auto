@@ -257,7 +257,7 @@ export default class Auto {
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
-    this.config = this.hooks.modifyConfig.call(config)
+    this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
     const repository = await this.getRepo(config);
@@ -1062,7 +1062,8 @@ export default class Auto {
   private async makeRelease({
     dryRun,
     from,
-    useVersion
+    useVersion,
+    prerelease = false
   }: IReleaseOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
@@ -1124,7 +1125,7 @@ export default class Auto {
       );
     } else {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-      release = await this.git.publish(releaseNotes, newVersion);
+      release = await this.git.publish(releaseNotes, newVersion, prerelease);
 
       await this.hooks.afterRelease.promise({
         lastRelease,

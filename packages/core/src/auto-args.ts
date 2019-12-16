@@ -91,6 +91,8 @@ export interface IReleaseOptions extends IAuthorOptions {
   from?: string;
   /** Override the version to release */
   useVersion?: string;
+  /** Create a prerelease */
+  prerelease?: boolean;
 }
 
 export interface ICommentOptions {

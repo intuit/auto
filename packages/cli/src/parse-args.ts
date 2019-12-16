@@ -404,7 +404,13 @@ export const commands: Command[] = [
         description:
           'Version number to publish as. Defaults to reading from the package definition for the platform.'
       },
-      baseBranch
+      baseBranch,
+      {
+        name: 'prerelease',
+        type: Boolean,
+        group: 'main',
+        description: 'Publish a prerelease.'
+      }
     ],
     examples: [
       '{green $} auto release',
