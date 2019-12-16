@@ -1,3 +1,25 @@
+# v8.2.0 (Sun Dec 15 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`
+  - release: add flag to publish prerelease [#800](https://github.com/intuit/auto/pull/800) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Slight improvements to label configuration docs [#799](https://github.com/intuit/auto/pull/799) ([@bnigh](https://github.com/bnigh))
+
+#### 📚 Blog Post
+
+- touch up blog post [#798](https://github.com/intuit/auto/pull/798) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@bnigh](https://github.com/bnigh)
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.1.3 (Sat Dec 14 2019)
 
 #### 🐛  Bug Fix

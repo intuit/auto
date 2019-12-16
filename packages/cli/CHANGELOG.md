@@ -1,3 +1,15 @@
+# v8.2.0 (Sun Dec 15 2019)
+
+#### 🐛  Bug Fix
+
+- release: add flag to publish prerelease  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.0.0 (Wed Dec 11 2019)
 
 #### 🐛  Bug Fix
