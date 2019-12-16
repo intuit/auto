@@ -40,7 +40,7 @@
     "@auto-it/core": "link:../../packages/core",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
-    "semver": "^6.0.0",
+    "semver": "^7.0.0",
     "tslib": "1.10.0",
     "xml2js-es6-promise": "^1.1.1"
   }

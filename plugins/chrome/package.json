@@ -39,7 +39,7 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "chrome-webstore-upload-cli": "^1.2.0",
-    "semver": "^6.0.0",
+    "semver": "^7.0.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
