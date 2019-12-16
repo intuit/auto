@@ -834,7 +834,47 @@ describe('Auto', () => {
         undefined,
         undefined
       );
-      expect(auto.git!.publish).toHaveBeenCalledWith('releaseNotes', 'v1.2.4');
+      expect(auto.git!.publish).toHaveBeenCalledWith(
+        'releaseNotes',
+        'v1.2.4',
+        false
+      );
+      expect(afterRelease).toHaveBeenCalledWith(
+        expect.objectContaining({
+          lastRelease: 'v1.2.3',
+          newVersion: 'v1.2.4'
+        })
+      );
+    });
+
+    test('should a prerelease', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest
+        .spyOn(auto.release!, 'generateReleaseNotes')
+        .mockImplementation(() => Promise.resolve('releaseNotes'));
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg('Test Commit')]);
+
+      auto.hooks.getPreviousVersion.tap('test', () => '1.2.4');
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap('test', afterRelease);
+      jest.spyOn(auto.release!, 'getCommits').mockImplementation();
+
+      await auto.runRelease({ prerelease: true });
+      expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
+        'v1.2.3',
+        undefined,
+        undefined
+      );
+      expect(auto.git!.publish).toHaveBeenCalledWith(
+        'releaseNotes',
+        'v1.2.4',
+        true
+      );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
           lastRelease: 'v1.2.3',
@@ -868,7 +908,11 @@ describe('Auto', () => {
         undefined,
         undefined
       );
-      expect(auto.git!.publish).toHaveBeenCalledWith('releaseNotes', 'v1.2.4');
+      expect(auto.git!.publish).toHaveBeenCalledWith(
+        'releaseNotes',
+        'v1.2.4',
+        false
+      );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
           lastRelease: 'v1.2.0',
@@ -902,7 +946,11 @@ describe('Auto', () => {
         undefined,
         undefined
       );
-      expect(auto.git!.publish).toHaveBeenCalledWith('releaseNotes', 'v1.3.0');
+      expect(auto.git!.publish).toHaveBeenCalledWith(
+        'releaseNotes',
+        'v1.3.0',
+        false
+      );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
           lastRelease: 'v1.2.3',
