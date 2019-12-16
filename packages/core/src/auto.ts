@@ -31,6 +31,7 @@ import {
   INextOptions
 } from './auto-args';
 import Changelog from './changelog';
+import { preVersionMap } from './semver';
 import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
 import init from './init';
@@ -1032,8 +1033,15 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const lastRelease = from || (await this.git.getLatestRelease());
-    const bump = await this.release.getSemverBump(lastRelease);
+    const isPrerelease = this.inPrereleaseBranch();
+    const lastRelease =
+      from ||
+      (isPrerelease && (await this.git.getLatestTagInBranch())) ||
+      (await this.git.getLatestRelease());
+    const calculatedBump = await this.release.getSemverBump(lastRelease);
+    const bump =
+      (isPrerelease && preVersionMap.get(calculatedBump)) || calculatedBump;
+
     this.versionBump = bump;
 
     return bump;

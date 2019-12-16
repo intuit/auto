@@ -10,6 +10,12 @@ enum SEMVER {
   noVersion = ''
 }
 
+export const preVersionMap = new Map([
+  [SEMVER.major, SEMVER.premajor],
+  [SEMVER.minor, SEMVER.preminor],
+  [SEMVER.patch, SEMVER.prepatch]
+]);
+
 export type IVersionLabels = Map<VersionLabel | 'none', string[]>;
 
 export default SEMVER;
