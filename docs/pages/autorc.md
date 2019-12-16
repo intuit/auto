@@ -101,8 +101,8 @@ You can customize everything about a label
 
 - `name` - The label text used for the label. If omitted defaults to the `key` value
 - `releaseType` - The type of release to trigger (major, minor, patch, skip, release, or none)
-- `overwrite` - Overwrite the default label associated with the `type`. (default: `false`)
-- `title` - The title to use in the changelog
+- `overwrite` - Overwrite the default label(s) associated with the `releaseType`. (default: `false`)
+- `changelogTitle` - The title to use in the changelog
 - `description` - The description to use when creating the label
 - `color` - The color of the label. Can be specified as a string in any of [these](https://github.com/bgrins/TinyColor#accepted-string-input) ways. If not specified the color is random
 
@@ -111,7 +111,7 @@ You can customize everything about a label
   "labels": [
     {
       "name": "Version: Major",
-      "title": "The API has changed:",
+      "changelogTitle": "The API has changed:",
       "description": "Add this label to a PR to create a major release",
       "color": "blue",
       "releaseType": "major"
@@ -137,14 +137,14 @@ To customize the title for the section in the changelog you can
   "labels": [
     {
       "name": "documentation",
-      "title": "Docz"
+      "changelogTitle": "Docz"
     }
   ]
 }
 ```
 
 If you want more sections in your changelog to further detail the change-set you can
-use the `labels` section to add more. Any label in the label section with a title
+use the `labels` section to add more. Any label in the label section with a changelogTitle
 will become a special section in your changelog.
 
 The following adds a `typescript` label to the project that we can use to denote changes
@@ -155,7 +155,24 @@ related to a TypeScript re-write.
   "labels": [
     {
       "name": "typescript",
-      "title": "TypeScript Rewrite"
+      "changelogTitle": "TypeScript Rewrite"
+    }
+  ]
+}
+```
+
+You can remove the existing default label sections by adding a custom overwrite label with the same `releaseType`.
+
+The following removes the default internal and documentation label sections:
+
+```json
+{
+  "labels": [
+    {
+      "name": "Custom Doc Label",
+      "changelogTitle": "Docz",
+      "releaseType": "none",
+      "overwrite": true
     }
   ]
 }

@@ -38,11 +38,11 @@ You can configure the title of this changelog entry by adding the `pushToBaseBra
 
 ```json
 {
-  "labels": {
-    "pushToBaseBranch": {
+  "labels": [
+    {
       "name": "pushToBaseBranch",
-      "title": "Emergency!!"
+      "changelogTitle": "Emergency!!"
     }
-  }
+  ]
 }
 ```
