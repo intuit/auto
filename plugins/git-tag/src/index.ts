@@ -2,13 +2,10 @@ import {
   Auto,
   determineNextVersion,
   execPromise,
-  IPlugin
+  IPlugin,
+  getCurrentBranch
 } from '@auto-it/core';
 import { inc, ReleaseType } from 'semver';
-import { execSync } from 'child_process';
-
-/** When the next hook is running branch is also the tag to publish under (ex: next, beta) */
-const branch = execSync('git symbolic-ref --short HEAD', { encoding: 'utf8' });
 
 /** Manage your projects version through just a git tag. */
 export default class GitTagPlugin implements IPlugin {
@@ -55,6 +52,7 @@ export default class GitTagPlugin implements IPlugin {
       }
 
       const prereleaseBranches = auto.config?.prereleaseBranches!;
+      const branch = getCurrentBranch() || '';
       const prereleaseBranch = prereleaseBranches.includes(branch)
         ? branch
         : prereleaseBranches[0];

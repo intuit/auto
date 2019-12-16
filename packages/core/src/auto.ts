@@ -46,6 +46,7 @@ import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 import { IAuthorOptions, IRepoOptions } from './auto-args';
+import { execSync } from 'child_process';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -180,6 +181,31 @@ export function determineNextVersion(
     : next;
 }
 
+/** Get the current branch the git repo is set to */
+export function getCurrentBranch() {
+  const isPR = 'isPr' in env && env.isPr;
+  let branch: string | undefined;
+  // env-ci sets branch to target branch (ex: master) in some CI services.
+  // so we should make sure we aren't in a PR just to be safe
+
+  if (isPR && 'prBranch' in env) {
+    branch = env.prBranch;
+  } else {
+    branch = env.branch;
+  }
+
+  if (!branch) {
+    try {
+      branch = execSync('git symbolic-ref --short HEAD', {
+        encoding: 'utf8',
+        stdio: 'ignore'
+      });
+    } catch (error) {}
+  }
+
+  return branch;
+}
+
 /**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
@@ -292,6 +318,14 @@ export default class Auto {
    */
   async init(options: IInitOptions = {}) {
     await init(options, this.logger);
+  }
+
+  /** Determine if the repo is currently in a prerelease branch */
+  inPrereleaseBranch(): boolean {
+    const branch = getCurrentBranch();
+    const prereleaseBranches = this.config?.prereleaseBranches!;
+
+    return Boolean(branch && prereleaseBranches.includes(branch));
   }
 
   /**
@@ -829,9 +863,7 @@ export default class Auto {
     const head = await this.release.getCommitsInRelease('HEAD^');
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
-    const currentBranch = isPR
-      ? 'prBranch' in env && env.prBranch
-      : 'branch' in env && env.branch;
+    const currentBranch = getCurrentBranch();
     const isBaseBrach = !isPR && currentBranch === this.baseBranch;
     const shouldGraduate =
       !options.onlyGraduateWithReleaseLabel ||
@@ -1069,7 +1101,11 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    let lastRelease = from || (await this.git.getLatestRelease());
+    const isPrerelease = prerelease || this.inPrereleaseBranch();
+    let lastRelease =
+      from ||
+      (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
+      (await this.git.getLatestRelease());
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -1091,10 +1127,12 @@ export default class Auto {
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
+    const latestTag = await this.git.getLatestTagInBranch();
     const rawVersion =
       useVersion ||
+      (isPrerelease && latestTag) ||
       (await this.getCurrentVersion(lastRelease)) ||
-      (await this.git.getLatestTagInBranch());
+      latestTag;
 
     if (!rawVersion) {
       this.logger.log.error('Could not calculate next version from last tag.');
@@ -1125,7 +1163,7 @@ export default class Auto {
       );
     } else {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-      release = await this.git.publish(releaseNotes, newVersion, prerelease);
+      release = await this.git.publish(releaseNotes, newVersion, isPrerelease);
 
       await this.hooks.afterRelease.promise({
         lastRelease,
