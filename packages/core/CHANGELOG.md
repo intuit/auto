@@ -1,3 +1,103 @@
+# v8.5.0 (Tue Dec 17 2019)
+
+#### 🐛  Bug Fix
+
+- Bump version to: v8.2.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add ability to manage version branches  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.3.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- version: detect prerelease branch  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: detect prerelease branch + be smarter about commit range  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.1 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- let modify config actually do something  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ignore unknown labels during bump calc + fix none type release skipping  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.4.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix and add tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: add flag to publish prerelease  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.3 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.2 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- omit next branch PR Title from being in release notes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump https-proxy-agent from 3.0.1 to 4.0.0
+
+Bumps [https-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent) from 3.0.1 to 4.0.0.
+- [Release notes](https://github.com/TooTallNate/node-https-proxy-agent/releases)
+- [Commits](https://github.com/TooTallNate/node-https-proxy-agent/compare/3.0.1...4.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/rest from 16.35.0 to 16.35.2
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.35.0 to 16.35.2.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.35.0...v16.35.2)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 6.3.0 to 7.0.0
+
+Bumps [semver](https://github.com/npm/node-semver) from 6.3.0 to 7.0.0.
+- [Release notes](https://github.com/npm/node-semver/releases)
+- [Changelog](https://github.com/npm/node-semver/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/npm/node-semver/compare/v6.3.0...v7.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.5.0 (Tue Dec 17 2019)
+
+#### 🐛  Bug Fix
+
+- Bump version to: v8.2.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add ability to manage version branches  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.3.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- version: detect prerelease branch  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: detect prerelease branch + be smarter about commit range  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.1 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- let modify config actually do something  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ignore unknown labels during bump calc + fix none type release skipping  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.4.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix and add tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: add flag to publish prerelease  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.3 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.2 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- omit next branch PR Title from being in release notes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump https-proxy-agent from 3.0.1 to 4.0.0
+
+Bumps [https-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent) from 3.0.1 to 4.0.0.
+- [Release notes](https://github.com/TooTallNate/node-https-proxy-agent/releases)
+- [Commits](https://github.com/TooTallNate/node-https-proxy-agent/compare/3.0.1...4.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/rest from 16.35.0 to 16.35.2
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.35.0 to 16.35.2.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.35.0...v16.35.2)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 6.3.0 to 7.0.0
+
+Bumps [semver](https://github.com/npm/node-semver) from 6.3.0 to 7.0.0.
+- [Release notes](https://github.com/npm/node-semver/releases)
+- [Changelog](https://github.com/npm/node-semver/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/npm/node-semver/compare/v6.3.0...v7.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.4.0 (Mon Dec 16 2019)
 
 #### 🐛  Bug Fix

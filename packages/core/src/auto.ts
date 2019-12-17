@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { eq, gt, lte, inc, parse, ReleaseType } from 'semver';
+import { eq, gt, lte, inc, parse, ReleaseType, major } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -207,6 +207,11 @@ export function getCurrentBranch() {
   return branch;
 }
 
+/** Escape a string for use in a Regex */
+function escapeRegExp(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 /**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
@@ -261,6 +266,22 @@ export default class Auto {
         this.hooks.onCreateLogParse.call(logParse);
       });
     });
+    this.hooks.beforeCommitChangelog.tapPromise(
+      'Old Version Branches',
+      async ({ bump }) => {
+        if (bump === SEMVER.major && this.config?.versionBranches) {
+          const branch = `${this.config.versionBranches}${major(
+            await this.hooks.getPreviousVersion.promise()
+          )}`;
+
+          await execPromise('git', [
+            'branch',
+            await this.git?.getLatestTagInBranch()
+          ]);
+          await execPromise('git', ['push', 'origin', branch]);
+        }
+      }
+    );
 
     loadEnv();
 
@@ -327,6 +348,20 @@ export default class Auto {
     const prereleaseBranches = this.config?.prereleaseBranches!;
 
     return Boolean(branch && prereleaseBranches.includes(branch));
+  }
+
+  /** Determine if the repo is currently in a old-version branch */
+  inOldVersionBranch(): boolean {
+    const branch = getCurrentBranch();
+    const prereleaseBranchPrefix = this.config?.versionBranches as
+      | string
+      | undefined;
+
+    return Boolean(
+      prereleaseBranchPrefix &&
+        branch &&
+        new RegExp(`^${escapeRegExp(prereleaseBranchPrefix)}`).test(branch)
+    );
   }
 
   /**
@@ -890,7 +925,9 @@ export default class Auto {
     });
     const publishInfo =
       isBaseBrach && shouldGraduate
-        ? await this.publishLatest(options)
+        ? await this.publishFullRelease(options)
+        : this.inOldVersionBranch()
+        ? await this.oldRelease(options)
         : publishPrerelease
         ? await this.next(options)
         : await this.canary(options);
@@ -935,20 +972,31 @@ export default class Auto {
     }
   }
 
+  /** Make a release to an old version */
+  private async oldRelease(options: IShipItOptions) {
+    const latestTag = await this.git?.getLatestTagInBranch();
+    return this.publishFullRelease({ ...options, from: latestTag });
+  }
+
   /** On master: publish a new latest version */
-  private async publishLatest(options: IShipItOptions) {
+  private async publishFullRelease(
+    options: IShipItOptions & {
+      /** Internal option to shipt from a certain tag or commit */
+      from?: string;
+    }
+  ) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
 
-    const version = await this.getVersion();
+    const version = await this.getVersion(options);
 
     if (version === '') {
       this.logger.log.info('No version published.');
       return;
     }
 
-    const lastRelease = await this.git.getLatestRelease();
+    const lastRelease = options.from || (await this.git.getLatestRelease());
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
     );

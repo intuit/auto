@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "8.4.1",
+  "version": "8.5.0",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
   "author": {

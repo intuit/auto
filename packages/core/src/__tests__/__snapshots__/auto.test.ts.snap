@@ -117,6 +117,7 @@ Object {
     "skip-release",
   ],
   "token": "XXXX",
+  "versionBranches": undefined,
 }
 `;
 
@@ -176,5 +177,6 @@ Object {
     "skip-release",
   ],
   "token": "XXXX",
+  "versionBranches": undefined,
 }
 `;

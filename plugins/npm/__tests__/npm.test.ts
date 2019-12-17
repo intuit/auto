@@ -13,6 +13,8 @@ const existsSync = jest.fn();
 const readFileSync = jest.fn();
 const writeSpy = jest.fn();
 
+jest.spyOn(Auto, 'getCurrentBranch').mockReturnValue('master');
+
 let readResult = '{}';
 readFileSync.mockReturnValue('{}');
 
@@ -164,6 +166,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -182,6 +185,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -207,6 +211,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -231,6 +236,7 @@ describe('getRepository', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -261,6 +267,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
     } as Auto.Auto);
@@ -282,6 +289,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
     } as Auto.Auto);
@@ -304,6 +312,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
     } as Auto.Auto);
@@ -336,6 +345,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
     } as Auto.Auto);
@@ -370,6 +380,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger
     } as Auto.Auto);
 
@@ -397,6 +408,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -422,6 +434,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -455,6 +468,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -488,6 +502,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -509,6 +524,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -537,6 +553,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -571,6 +588,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -591,6 +609,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
 
@@ -618,6 +637,7 @@ describe('canary', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: {
@@ -644,6 +664,7 @@ describe('canary', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       git: {
@@ -669,6 +690,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve('1.2.3'),
@@ -701,6 +723,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve('1.2.3'),
@@ -733,6 +756,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
@@ -770,6 +794,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve('@foo/lib:1.1.0'),
@@ -809,6 +834,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       prefixRelease: (v: string) => v,
@@ -852,6 +878,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
       prefixRelease: (v: string) => v,
@@ -885,6 +912,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: (v: string) => v,
       git: {
