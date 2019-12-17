@@ -103,7 +103,7 @@ export default class Config {
       skipReleaseLabels,
       prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
       versionBranches:
-        rawConfig.versionBranches === 'boolean'
+        typeof rawConfig.versionBranches === 'boolean'
           ? 'v'
           : rawConfig.versionBranches
     };

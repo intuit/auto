@@ -60,7 +60,7 @@ export type IAutoConfig = IAuthorOptions &
      * Manage old version branches.
      * Can be a true or a custom version branch prefix.
      *
-     * @default 'v'
+     * @default 'version-'
      */
     versionBranches?: true | string;
   };

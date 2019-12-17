@@ -350,10 +350,9 @@ export default class Auto {
   /** Determine if the repo is currently in a old-version branch */
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
-    const prereleaseBranchPrefix =
-      typeof this.config?.versionBranches === 'boolean'
-        ? 'v'
-        : this.config?.versionBranches;
+    const prereleaseBranchPrefix = this.config?.versionBranches as
+      | string
+      | undefined;
 
     return Boolean(
       prereleaseBranchPrefix &&
