@@ -33,6 +33,20 @@ Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-p
 
 ---
 
+# v8.4.1 (Mon Dec 16 2019)
+
+#### 🐛  Bug Fix
+
+- alias the canary scope
+
+use alias we define  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+----
+
 # v8.3.0 (Mon Dec 16 2019)
 
 #### 🐛  Bug Fix
