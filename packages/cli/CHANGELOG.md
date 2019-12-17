@@ -1,3 +1,48 @@
+# v8.5.0 (Tue Dec 17 2019)
+
+#### 🐛  Bug Fix
+
+- Bump version to: v8.4.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.3.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.2.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: add flag to publish prerelease  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.3 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.2 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.1 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- alias the canary scope
+
+use alias we define  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.5.0 (Tue Dec 17 2019)
+
+#### 🐛  Bug Fix
+
+- Bump version to: v8.4.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.3.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.2.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- release: add flag to publish prerelease  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.3 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.2 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump version to: v8.1.1 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- alias the canary scope
+
+use alias we define  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.2.0 (Sun Dec 15 2019)
 
 #### 🐛  Bug Fix
