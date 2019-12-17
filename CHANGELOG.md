@@ -1,3 +1,16 @@
+# v8.4.1 (Mon Dec 16 2019)
+
+#### 🐛  Bug Fix
+
+- `auto`, `@auto-it/npm`
+  - alias the canary scope [#813](https://github.com/intuit/auto/pull/813) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.4.0 (Mon Dec 16 2019)
 
 #### 🚀  Enhancement
