@@ -1,3 +1,18 @@
+# v8.6.0 (Tue Dec 17 2019)
+
+#### 🐛  Bug Fix
+
+- Bump version to: v8.5.0 [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md [skip ci]  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- publish to specific tag  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add ability to manage version branches  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.5.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

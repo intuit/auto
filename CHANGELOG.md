@@ -1,3 +1,16 @@
+# v8.5.0 (Tue Dec 17 2019)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Version branches [#814](https://github.com/intuit/auto/pull/814) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.4.1 (Mon Dec 16 2019)
 
 #### 🐛  Bug Fix
