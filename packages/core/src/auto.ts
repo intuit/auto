@@ -274,7 +274,10 @@ export default class Auto {
             await this.hooks.getPreviousVersion.promise()
           )}`;
 
-          await execPromise('git', ['branch', branch]);
+          await execPromise('git', [
+            'branch',
+            await this.git?.getLatestTagInBranch()
+          ]);
           await execPromise('git', ['push', 'origin', branch]);
         }
       }
