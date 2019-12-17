@@ -101,7 +101,11 @@ export default class Config {
       ...args,
       labels,
       skipReleaseLabels,
-      prereleaseBranches: rawConfig.prereleaseBranches || ['next']
+      prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
+      versionBranches:
+        rawConfig.versionBranches === 'boolean'
+          ? 'v'
+          : rawConfig.versionBranches
     };
   }
 

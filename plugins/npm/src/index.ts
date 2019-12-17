@@ -502,12 +502,15 @@ export default class NPMPlugin implements IPlugin {
     );
 
     auto.hooks.version.tapPromise(this.name, async version => {
+      const isBaseBranch = branch === auto.baseBranch;
+
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
         const isIndependent = getLernaJson().version === 'independent';
-        const monorepoBump = isIndependent
-          ? undefined
-          : await bumpLatest(getMonorepoPackage(), version);
+        const monorepoBump =
+          isIndependent || !isBaseBranch
+            ? undefined
+            : await bumpLatest(getMonorepoPackage(), version);
 
         await execPromise('npx', [
           'lerna',
@@ -525,7 +528,9 @@ export default class NPMPlugin implements IPlugin {
         return;
       }
 
-      const latestBump = await bumpLatest(await loadPackageJson(), version);
+      const latestBump = isBaseBranch
+        ? await bumpLatest(await loadPackageJson(), version)
+        : version;
 
       await execPromise('npm', [
         'version',
@@ -793,7 +798,7 @@ export default class NPMPlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        auto.baseBranch
+        branch || auto.baseBranch
       ]);
       auto.logger.verbose.info('Successfully published repo');
     });

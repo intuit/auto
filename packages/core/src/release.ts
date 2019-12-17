@@ -56,6 +56,13 @@ export type IAutoConfig = IAuthorOptions &
     plugins?: (string | [string, number | boolean | string | object])[];
     /** The labels configured by the user */
     labels: ILabelDefinition[];
+    /**
+     * Manage old version branches.
+     * Can be a true or a custom version branch prefix.
+     *
+     * @default 'v'
+     */
+    versionBranches?: true | string;
   };
 
 interface ISearchEdge {

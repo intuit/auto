@@ -31,6 +31,7 @@ export default class GitTagPlugin implements IPlugin {
 
       const lastTag = await auto.git.getLatestTagInBranch();
       const newTag = inc(lastTag, version as ReleaseType);
+      const branch = getCurrentBranch() || '';
 
       if (!newTag) {
         return;
@@ -42,7 +43,7 @@ export default class GitTagPlugin implements IPlugin {
         '--follow-tags',
         '--set-upstream',
         'origin',
-        auto.baseBranch
+        branch || auto.baseBranch
       ]);
     });
 
