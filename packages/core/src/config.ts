@@ -104,7 +104,7 @@ export default class Config {
       prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
       versionBranches:
         typeof rawConfig.versionBranches === 'boolean'
-          ? 'v'
+          ? 'version-'
           : rawConfig.versionBranches
     };
   }
