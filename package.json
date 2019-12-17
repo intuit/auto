@@ -125,6 +125,7 @@
     "favicon": "favicon.png"
   },
   "auto": {
+    "versionBranches": true,
     "plugins": [
       [
         "npm",

@@ -754,6 +754,13 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       const status = await execPromise('git', ['status', '--porcelain']);
+      const isBaseBranch = branch === auto.baseBranch;
+      // The only other time this hook is called is when creating a version
+      // branch. So when on one of those branches publish to a tag of the same
+      // name
+      const tag = isBaseBranch
+        ? []
+        : [isMonorepo() ? '--dist-tag' : '--tag', branch];
 
       if (isVerbose && status) {
         auto.logger.log.error('Changed Files:\n', status);
@@ -774,6 +781,7 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npx', [
           'lerna',
           'publish',
+          ...tag,
           '--yes',
           // Plugins can add as many commits as they want, lerna will still
           // publish the changed package versions. from-git broke when HEAD
@@ -788,8 +796,8 @@ export default class NPMPlugin implements IPlugin {
         await execPromise(
           'npm',
           !isPrivate && isScopedPackage
-            ? ['publish', '--access', 'public', ...verboseArgs]
-            : ['publish', ...verboseArgs]
+            ? ['publish', '--access', 'public', ...tag, ...verboseArgs]
+            : ['publish', ...tag, ...verboseArgs]
         );
       }
 
