@@ -758,6 +758,10 @@ export default class Auto {
         return;
       }
 
+      if (!result) {
+        return;
+      }
+
       newVersion = result;
       const message = options.message || 'Published PR with canary version: %v';
 
