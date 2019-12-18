@@ -27,6 +27,10 @@ module.exports = class {
     this.name = 'brew';
   }
 
+  /**
+   * Setup the plugin
+   * @param {import('@auto-it/core').default} auto
+   */
   apply(auto) {
     auto.hooks.afterVersion.tap('Update brew', () => {
       try {
