@@ -126,6 +126,7 @@ export interface IAutoHooks {
         /** Error when creating the canary release */
         error: string;
       }
+    | void
   >;
   /**
    * Used to publish a next release. In this hook you get the semver bump
@@ -754,6 +755,10 @@ export default class Auto {
 
       if (typeof result === 'object') {
         this.logger.log.warn(result.error);
+        return;
+      }
+
+      if (!result) {
         return;
       }
 

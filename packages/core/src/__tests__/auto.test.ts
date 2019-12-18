@@ -1004,6 +1004,7 @@ describe('Auto', () => {
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg('Test Commit')]);
       const canary = jest.fn();
+      canary.mockReturnValueOnce('1.2.3');
       auto.hooks.canary.tap('test', canary);
       jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
@@ -1032,6 +1033,7 @@ describe('Auto', () => {
         .mockImplementation()
         .mockReturnValue(Promise.resolve([makeCommitFromMsg('Test Commit')]));
       const canary = jest.fn();
+      canary.mockReturnValue('abcd');
       auto.hooks.canary.tap('test', canary);
       jest.spyOn(auto.release!, 'getCommits').mockImplementation();
 
