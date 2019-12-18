@@ -1,3 +1,20 @@
+# v8.6.1 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - canary hook can return void to not bail [#817](https://github.com/intuit/auto/pull/817) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- update docs to show JS plugins and how to use versionBranches [#816](https://github.com/intuit/auto/pull/816) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.5.0 (Tue Dec 17 2019)
 
 #### 🚀  Enhancement
