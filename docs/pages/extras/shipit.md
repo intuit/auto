@@ -9,6 +9,29 @@ The following shows how those flags can effect the workflow.
 
 ![The entire shipit workflow](../../images/complete-auto.png)
 
+## Managing Old Major Versions
+
+This command also has the ability to help you manage old major versions too!
+This feature is off by default, to enable set `versionBranches` to `true` in your [.autorc](../autorc.md#versionbranches).
+
+With this feature enabled `auto shipit` will:
+
+- Create a version branch when a `major` happens (prefixed with `version-`)
+- When ran from a `versionBranch` make a release to that version
+
+Now that you have a branch for an old major release, it is super easy to release patches to it!
+People can make PRs to the the `version-` branch and once merged create a new release of that version.
+
+### Customize Branch Prefix
+
+You can customize what the branch names will be by setting `versionBranches` to a string.
+
+```json
+{
+  "versionBranches": "Major-"
+}
+```
+
 ## Prereleases
 
 If you are interested in pre-releases (ex: `alpha`, `beta`, `next`) `auto` has the ability to publish pre-releases in various ways.
