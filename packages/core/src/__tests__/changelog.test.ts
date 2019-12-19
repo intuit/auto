@@ -200,6 +200,78 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
+  test('should prefer section with highest releaseType for PR with multiple labels', async () => {
+    const options = testOptions();
+    options.labels = [
+      {
+        name: 'Internal',
+        changelogTitle: 'Internal Section',
+        releaseType: 'none'
+      },
+      {
+        name: 'Version: Minor',
+        changelogTitle: 'Minor Section',
+        releaseType: SEMVER.minor
+      }
+    ];
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)', {
+        labels: ['Internal', 'Version: Minor']
+      })
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
+  test('should prefer section defined first in config for PR with multiple labels of same releaseType', async () => {
+    const options = testOptions();
+    options.labels = [
+      {
+        name: 'Internal',
+        changelogTitle: 'Internal Section',
+        releaseType: 'none'
+      },
+      {
+        name: 'Typescript',
+        changelogTitle: 'Typescript Section',
+        releaseType: 'none'
+      }
+    ];
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)', {
+        labels: ['Typescript', 'Internal']
+      })
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
+  test('should prefer section of default label for PR with multiple labels of same releaseType', async () => {
+    const options = testOptions();
+    options.labels = [
+      ...options.labels,
+      {
+        name: 'Minor2',
+        changelogTitle: 'Minor 2 Section',
+        releaseType: SEMVER.minor
+      }
+    ];
+
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+    const normalized = await logParse.normalizeCommits([
+      makeCommitFromMsg('Some Feature (#1234)', { labels: ['Minor2', 'minor'] })
+    ]);
+
+    expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
+  });
+
   test('should use username if present', async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();

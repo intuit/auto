@@ -270,6 +270,36 @@ exports[`generateReleaseNotes should order the section major, minor, patch, then
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should prefer section with highest releaseType for PR with multiple labels 1`] = `
+"#### Minor Section
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should prefer section defined first in config for PR with multiple labels of same releaseType 1`] = `
+"#### Internal Section
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should prefer section of default label for PR with multiple labels of same releaseType 1`] = `
+"#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
 "#### 🐛  Bug Fix
 
