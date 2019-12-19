@@ -231,9 +231,7 @@ Array [
       Object {
         "email": "adam@dierkens.com",
         "hash": "1a2b",
-        "login": "adam",
         "name": "Adam Dierkens",
-        "username": "adam",
       },
     ],
     "files": Array [],
@@ -276,9 +274,7 @@ Array [
       Object {
         "email": "adam@dierkens.com",
         "hash": "1a2b",
-        "login": "adam",
         "name": "Adam Dierkens",
-        "username": "adam",
       },
     ],
     "files": Array [],
@@ -433,9 +429,7 @@ Array [
       Object {
         "email": "adam@dierkens.com",
         "hash": "foo",
-        "login": "adam",
         "name": "Adam Dierkens",
-        "username": "adam",
       },
     ],
     "files": Array [],
