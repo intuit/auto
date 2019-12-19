@@ -44,7 +44,7 @@ import Release, {
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
-import createLog, { ILogger } from './utils/logger';
+import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
@@ -245,13 +245,14 @@ export default class Auto {
   constructor(options: ApiOptions = {}) {
     this.options = options;
     this.baseBranch = options.baseBranch || 'master';
-    this.logger = createLog(
+    setLogLevel(
       Array.isArray(options.verbose) && options.verbose.length > 1
         ? 'veryVerbose'
         : options.verbose
         ? 'verbose'
         : undefined
     );
+    this.logger = createLog();
     this.hooks = makeHooks();
 
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
