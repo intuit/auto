@@ -73,18 +73,12 @@ interface TestingToken {
 type ShipitContext = 'canary' | 'next' | 'latest' | 'old';
 
 interface ShipitInfo {
-  /**
-   *
-   */
-newVersion?: string;
-  /**
-   *
-   */
-commitsInRelease: IExtendedCommit[];
-  /**
-   *
-   */
-context: ShipitContext;
+  /** The Version published when shipit ran */
+  newVersion?: string;
+  /** The commits released during shipit */
+  commitsInRelease: IExtendedCommit[];
+  /** The type of release made */
+  context: ShipitContext;
 }
 
 export interface IAutoHooks {
@@ -100,10 +94,14 @@ export interface IAutoHooks {
   afterAddToChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<
-    [string | undefined, IExtendedCommit[], { /**
-                                               *
-                                               */
-context: ShipitContext }]
+    [
+      string | undefined,
+      IExtendedCommit[],
+      {
+        /** The type of release made by shipit */
+        context: ShipitContext;
+      }
+    ]
   >;
   /** Ran after the `release` command has run. */
   afterRelease: AsyncParallelHook<
