@@ -23,6 +23,7 @@ afterAll(() => {
 const constructor = jest.fn();
 const getGitLog = jest.fn();
 const graphql = jest.fn();
+const getUserByEmail = jest.fn();
 const getPr = jest.fn();
 const getPullRequest = jest.fn();
 const getLatestRelease = jest.fn();
@@ -84,6 +85,7 @@ jest.mock(
       getCommitDate = getCommitDate;
       getFirstCommit = getFirstCommit;
       getCommit = getCommit;
+      getUserByEmail = getUserByEmail;
     }
 );
 
@@ -244,6 +246,10 @@ describe('Release', () => {
             }
           }
         ])
+      );
+
+      getCommit.mockReturnValueOnce(
+        Promise.resolve({ data: { author: { login: 'adam' } } })
       );
 
       getCommit.mockReturnValueOnce(
