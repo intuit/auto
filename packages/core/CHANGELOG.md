@@ -1,3 +1,16 @@
+# v8.7.0 (Thu Dec 19 2019)
+
+#### 🐛  Bug Fix
+
+- fix lint  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add context of what type of release was made during shipit  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.3 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix
