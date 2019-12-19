@@ -1,3 +1,17 @@
+# v8.6.2 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- update snapshots  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- only access auto login if it all exists  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.1 (Wed Dec 18 2019)
 
 #### 🐛  Bug Fix

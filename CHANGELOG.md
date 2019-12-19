@@ -1,3 +1,16 @@
+# v8.6.2 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - only access auto login if it all exists [#819](https://github.com/intuit/auto/pull/819) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.1 (Wed Dec 18 2019)
 
 #### 🐛  Bug Fix
