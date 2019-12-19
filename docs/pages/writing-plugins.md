@@ -171,6 +171,20 @@ auto.hooks.afterRelease.tap(
 
 Ran after the `shipit` command has run.
 
+- `newVersion` - The new version that was release
+- `commits` - the commits in the release
+- `data`
+  - `context` - The type of release that was created (`latest`, `next`, `canary`, or `old`)
+
+```ts
+auto.hooks.afterShipIt.tap(
+  'MyPlugin',
+  async (newVersion, commits, { context }) => {
+    // do something
+  }
+);
+```
+
 #### getAuthor
 
 Get git author. Typically from a package distribution description file.
