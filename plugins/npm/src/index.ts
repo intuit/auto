@@ -667,8 +667,9 @@ export default class NPMPlugin implements IPlugin {
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
-      const latestTag = await (auto.git?.getLatestTagInBranch() ||
-        getPreviousVersion(auto, prereleaseBranch));
+      const latestTag =
+        (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+        (await getPreviousVersion(auto, prereleaseBranch));
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');

@@ -839,8 +839,8 @@ describe('next', () => {
       getCurrentVersion: () => '1.2.3',
       prefixRelease: (v: string) => v,
       git: {
-        getLatestRelease: () => '1.2.3',
-        getLatestTagInBranch: () => '1.2.3'
+        getLatestRelease: () => '1.0.0',
+        getLastTagNotInBaseBranch: () => '1.2.3'
       }
     } as unknown) as Auto.Auto);
 
@@ -883,8 +883,8 @@ describe('next', () => {
       getCurrentVersion: () => '1.2.3',
       prefixRelease: (v: string) => v,
       git: {
-        getLatestRelease: () => '1.2.3',
-        getLatestTagInBranch: () => '1.2.3'
+        getLatestRelease: () => '1.0.0',
+        getLastTagNotInBaseBranch: () => '1.2.3'
       }
     } as unknown) as Auto.Auto);
 
@@ -916,8 +916,8 @@ describe('next', () => {
       logger: dummyLog(),
       prefixRelease: (v: string) => v,
       git: {
-        getLatestRelease: () => '@foo/1@1.0.0-next.0',
-        getLatestTagInBranch: () => '@foo/1@1.0.0-next.0'
+        getLatestRelease: () => '@foo/1@0.1.0',
+        getLastTagNotInBaseBranch: () => '@foo/1@1.0.0-next.0'
       }
     } as unknown) as Auto.Auto);
 

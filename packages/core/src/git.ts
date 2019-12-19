@@ -30,6 +30,8 @@ export interface IGitOptions {
   repo: string;
   /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl?: string;
+  /** The main branch of the repo. Usually master */
+  baseBranch: string;
   /** The URL to the GitHub graphql API (public or enterprise) the project is using */
   graphqlBaseUrl?: string;
   /** A token to auth to GitHub with */
@@ -730,17 +732,31 @@ export default class Git {
   }
 
   /** Get the latest tag in the git tree */
-  async getLatestTagInBranch() {
-    return execPromise('git', ['describe', '--tags', '--abbrev=0']);
+  async getLatestTagInBranch(since?: string) {
+    return execPromise('git', ['describe', '--tags', '--abbrev=0', since]);
   }
 
   /** Get the tag before latest in the git tree */
   async getPreviousTagInBranch() {
-    return execPromise('git', [
-      'describe',
-      '--tags',
-      '--abbrev=0',
-      '$(git describe --tags --abbrev=0)^1'
-    ]);
+    const latest = await this.getLatestTagInBranch();
+    return this.getLatestTagInBranch(`${latest}^1`);
+  }
+
+  /** Get all the tags for a given branch. */
+  async getTags(branch: string) {
+    const tags = await execPromise('git', ['tag', '--merged', branch]);
+
+    return tags
+      .split('\n')
+      .map(tag => tag.trim())
+      .filter(Boolean);
+  }
+
+  /** Get the last tag that isn't in the base branch */
+  async getLastTagNotInBaseBranch(branch: string) {
+    const baseTags = await this.getTags(this.options.baseBranch);
+    const branchTags = await this.getTags(branch);
+
+    return branchTags.reverse().find(tag => !baseTags.includes(tag));
   }
 }

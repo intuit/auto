@@ -11,7 +11,7 @@ import {
 
 import ReleasedLabelPlugin from '../src';
 
-const git = new Git({ owner: '1', repo: '2' });
+const git = new Git({ owner: '1', repo: '2', baseBranch: 'master' });
 const log = new LogParse();
 
 const comment = jest.fn();
