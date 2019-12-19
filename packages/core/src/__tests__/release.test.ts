@@ -121,7 +121,8 @@ const logParse = new LogParse();
 const git = new Git({
   owner: 'Andrew',
   repo: 'test',
-  token: 'MY_TOKEN'
+  token: 'MY_TOKEN',
+  baseBranch: 'master'
 });
 
 describe('getVersionMap', () => {

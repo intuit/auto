@@ -1073,6 +1073,7 @@ export default class Auto {
         repo: gitOptions.repo,
         token: gitOptions.token,
         baseUrl: gitOptions.baseUrl,
+        baseBranch: this.baseBranch,
         graphqlBaseUrl: gitOptions.graphqlBaseUrl,
         agent: gitOptions.agent
       },
