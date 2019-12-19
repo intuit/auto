@@ -170,7 +170,6 @@ describe('generateReleaseNotes', () => {
   test('should create note for PR commits without labels with custom patch label', async () => {
     const options = testOptions();
     options.labels = [
-      ...options.labels,
       {
         name: 'Version: Patch',
         changelogTitle: '🐛  Bug Fix',
