@@ -776,7 +776,7 @@ export default class Release {
     } else {
       const [, response] = await on(this.git.getCommit(commit.hash));
 
-      if (response) {
+      if (response?.data?.author?.login) {
         const username = response.data.author.login;
         const author = await this.git.getUserByUsername(username);
 

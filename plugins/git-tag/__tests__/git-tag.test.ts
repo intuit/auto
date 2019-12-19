@@ -69,7 +69,10 @@ describe('Git Tag Plugin', () => {
     });
 
     test('should tag next version', async () => {
-      const hooks = setup({ getLatestRelease: () => 'v1.0.0' });
+      const hooks = setup({
+        getLatestRelease: () => 'v0.1.0',
+        getLastTagNotInBaseBranch: () => 'v1.0.0'
+      });
 
       await hooks.next.promise([], Auto.SEMVER.patch);
 

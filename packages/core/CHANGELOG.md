@@ -1,3 +1,44 @@
+# v8.6.3 (Thu Dec 19 2019)
+
+#### 🐛  Bug Fix
+
+- fix execpromise logs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- determine next version using by omitting tags from master  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.6.2 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- update snapshots  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- only access auto login if it all exists  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.6.1 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- fix tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- canary hook can return void to not bail  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,46 @@
+# v8.6.3 (Thu Dec 19 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/released`
+  - determine next version using by omitting tags from master [#820](https://github.com/intuit/auto/pull/820) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.6.2 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - only access auto login if it all exists [#819](https://github.com/intuit/auto/pull/819) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v8.6.1 (Wed Dec 18 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - canary hook can return void to not bail [#817](https://github.com/intuit/auto/pull/817) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- update docs to show JS plugins and how to use versionBranches [#816](https://github.com/intuit/auto/pull/816) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.5.0 (Tue Dec 17 2019)
 
 #### 🚀  Enhancement

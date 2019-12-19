@@ -89,7 +89,8 @@ jest.mock('@octokit/graphql', () => ({
 const options = {
   owner: 'Adam Dierkens',
   repo: 'test',
-  token: 'MyToken'
+  token: 'MyToken',
+  baseBranch: 'master'
 };
 
 describe('github', () => {
@@ -184,6 +185,29 @@ describe('github', () => {
     const gh = new Git(options);
 
     expect(await gh.getLatestTagInBranch()).toBeDefined();
+  });
+
+  test('getTags', async () => {
+    const gh = new Git(options);
+
+    expect(Array.isArray(await gh.getTags('master'))).toBe(true);
+  });
+
+  test('getLastTagNotInBaseBranch', async () => {
+    const getTags = jest.fn();
+    const gh = new Git(options);
+    gh.getTags = getTags;
+
+    getTags.mockReturnValueOnce(['0.1.0', '0.2.0', '0.3.0']);
+    getTags.mockReturnValueOnce([
+      '0.1.0',
+      '0.2.0',
+      '0.4.0-alpha.0',
+      '0.4.0-alpha.1',
+      '0.3.0'
+    ]);
+
+    expect(await gh.getLastTagNotInBaseBranch('alpha')).toBe('0.4.0-alpha.1');
   });
 
   test('getGitLog ', async () => {

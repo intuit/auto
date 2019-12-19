@@ -23,6 +23,24 @@ export default class TestPlugin implements IPlugin {
 }
 ```
 
+Or in JavaScript:
+
+```js
+module.exports = class TestPlugin {
+  constructor(config) {
+    this.config = config;
+  }
+
+  /**
+   * Setup the plugin
+   * @param {import('@auto-it/core').default} auto
+   */
+  apply(auto) {
+    // hook into auto
+  }
+};
+```
+
 ## Constructor
 
 In the constructor you have access to any plugin specific config provided in the `.autorc`. It might be useful to write a more type-safe interface for your config.

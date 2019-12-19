@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import createLog from './logger';
 
-const log = createLog('verbose');
+const log = createLog();
 
 /**
  * Wraps up running a command into a single promise,

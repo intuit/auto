@@ -22,6 +22,18 @@ auto init
 
 These options can be set exclusively in the `.autorc` and do not exist as CLI flags.
 
+### versionBranches
+
+Create and manage old major releases.
+
+```json
+{
+  "versionBranches": true,
+  // or customize the branch prefix
+  "versionBranches": "major-"
+}
+```
+
 ### Prerelease Branches
 
 You can configure what branches `auto` treats as prerelease branches.
