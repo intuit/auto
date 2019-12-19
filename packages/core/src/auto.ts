@@ -70,6 +70,17 @@ interface TestingToken {
   token?: string;
 }
 
+type ShipitContext = 'canary' | 'next' | 'latest' | 'old';
+
+interface ShipitInfo {
+  /** The Version published when shipit ran */
+  newVersion?: string;
+  /** The commits released during shipit */
+  commitsInRelease: IExtendedCommit[];
+  /** The type of release made */
+  context: ShipitContext;
+}
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
@@ -82,7 +93,16 @@ export interface IAutoHooks {
   /** Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`. */
   afterAddToChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `shipit` command has run. */
-  afterShipIt: AsyncParallelHook<[string | undefined, IExtendedCommit[]]>;
+  afterShipIt: AsyncParallelHook<
+    [
+      string | undefined,
+      IExtendedCommit[],
+      {
+        /** The type of release made by shipit */
+        context: ShipitContext;
+      }
+    ]
+  >;
   /** Ran after the `release` command has run. */
   afterRelease: AsyncParallelHook<
     [
@@ -690,7 +710,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
-  async canary(options: ICanaryOptions = {}) {
+  async canary(options: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -793,14 +813,14 @@ export default class Auto {
     }
 
     const commitsInRelease = await this.release.getCommits(latestTag);
-    return { newVersion, commitsInRelease };
+    return { newVersion, commitsInRelease, context: 'canary' };
   }
 
   /**
    * Create a next (or test) version of the project. If on master will
    * release to the default "next" branch.
    */
-  async next(options: INextOptions) {
+  async next(options: INextOptions): Promise<ShipitInfo | undefined> {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -833,7 +853,7 @@ export default class Auto {
         `Would have created prerelease version with: ${bump}`
       );
 
-      return { newVersion: '', commitsInRelease: commits };
+      return { newVersion: '', commitsInRelease: commits, context: 'next' };
     }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
@@ -882,7 +902,7 @@ export default class Auto {
       }
     }
 
-    return { newVersion, commitsInRelease: commits };
+    return { newVersion, commitsInRelease: commits, context: 'next' };
   }
 
   /**
@@ -942,8 +962,10 @@ export default class Auto {
       return;
     }
 
-    const { newVersion, commitsInRelease } = publishInfo;
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease);
+    const { newVersion, commitsInRelease, context } = publishInfo;
+    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease, {
+      context
+    });
   }
 
   /** Get the latest version number of the project */
@@ -979,9 +1001,20 @@ export default class Auto {
   }
 
   /** Make a release to an old version */
-  private async oldRelease(options: IShipItOptions) {
+  private async oldRelease(
+    options: IShipItOptions
+  ): Promise<ShipitInfo | undefined> {
     const latestTag = await this.git?.getLatestTagInBranch();
-    return this.publishFullRelease({ ...options, from: latestTag });
+    const result = await this.publishFullRelease({
+      ...options,
+      from: latestTag
+    });
+
+    if (result) {
+      result.context = 'old';
+    }
+
+    return result;
   }
 
   /** On master: publish a new latest version */
@@ -990,7 +1023,7 @@ export default class Auto {
       /** Internal option to shipt from a certain tag or commit */
       from?: string;
     }
-  ) {
+  ): Promise<ShipitInfo | undefined> {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1037,7 +1070,7 @@ export default class Auto {
       }
     }
 
-    return { newVersion, commitsInRelease };
+    return { newVersion, commitsInRelease, context: 'latest' };
   }
 
   /** Get a pr number from user input or the env */
