@@ -1,3 +1,15 @@
+# v8.7.1 (Thu Dec 19 2019)
+
+#### 🐛  Bug Fix
+
+- add debug info  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.7.0 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix

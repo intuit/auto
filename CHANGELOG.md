@@ -1,3 +1,16 @@
+# v8.7.1 (Thu Dec 19 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Add more logs for next release calculation [#824](https://github.com/intuit/auto/pull/824) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.7.0 (Thu Dec 19 2019)
 
 #### 🚀  Enhancement
