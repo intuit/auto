@@ -199,7 +199,10 @@ If paired with a SEMVER label, the release is not skipped.
 
 #### Changelog Titles
 
-Each PR included in the release will be matched to the first label defined in the config with a `changelogTitle` in priority order of the `releaseType` (major, minor, patch, then all others) and included as an entry within that section
+Each PR included in the release will be assigned to a label section based upon the matching label with the highest `releaseType` that has a `changelogTitle`.
+
+- Priority order of `releaseType` from highest to lowest is: major, minor, patch, and then all others
+- If a PR has multiple labels of the same `releaseType`, then the PR is assigned based upon the label that is assigned first in the config
 
 By default auto will create sections in the changelog for the following labels:
 
