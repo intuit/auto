@@ -756,7 +756,14 @@ export default class Git {
   async getLastTagNotInBaseBranch(branch: string) {
     const baseTags = await this.getTags(this.options.baseBranch);
     const branchTags = await this.getTags(branch);
+    const firstUnique = branchTags
+      .reverse()
+      .find(tag => !baseTags.includes(tag));
 
-    return branchTags.reverse().find(tag => !baseTags.includes(tag));
+    this.logger.verbose.info('Tags found in base branch:', branchTags);
+    this.logger.verbose.info('Tags found in branch:', baseTags);
+    this.logger.verbose.info('Latest tag in branch:', branchTags);
+
+    return firstUnique;
   }
 }
