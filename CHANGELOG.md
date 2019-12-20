@@ -1,3 +1,16 @@
+# v8.7.2 (Fri Dec 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - find the last greatest tag to help with botched releases [#826](https://github.com/intuit/auto/pull/826) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.7.1 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix
