@@ -15,6 +15,7 @@ import { Memoize as memoize } from 'typescript-memoize';
 import { ILabelDefinition } from './release';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
+import { gt } from 'semver';
 
 const gitlog = promisify(gitlogNode);
 
@@ -744,7 +745,12 @@ export default class Git {
 
   /** Get all the tags for a given branch. */
   async getTags(branch: string) {
-    const tags = await execPromise('git', ['tag', '--merged', branch]);
+    const tags = await execPromise('git', [
+      'tag',
+      "--sort='creatordate'",
+      '--merged',
+      `heads/${branch}`
+    ]);
 
     return tags
       .split('\n')
@@ -754,16 +760,20 @@ export default class Git {
 
   /** Get the last tag that isn't in the base branch */
   async getLastTagNotInBaseBranch(branch: string) {
-    const baseTags = await this.getTags(this.options.baseBranch);
-    const branchTags = await this.getTags(branch);
-    const firstUnique = branchTags
-      .reverse()
-      .find(tag => !baseTags.includes(tag));
+    const baseTags = (await this.getTags(this.options.baseBranch)).reverse();
+    const branchTags = (await this.getTags(branch)).reverse();
+    const firstGreatestUnique = branchTags.reduce((result, tag) => {
+      if (!baseTags.includes(tag) && (!result || gt(tag, result))) {
+        return tag;
+      }
 
-    this.logger.verbose.info('Tags found in base branch:', branchTags);
-    this.logger.verbose.info('Tags found in branch:', baseTags);
-    this.logger.verbose.info('Latest tag in branch:', branchTags);
+      return result;
+    });
 
-    return firstUnique;
+    this.logger.verbose.info('Tags found in base branch:', baseTags);
+    this.logger.verbose.info('Tags found in branch:', branchTags);
+    this.logger.verbose.info('Latest tag in branch:', firstGreatestUnique);
+
+    return firstGreatestUnique;
   }
 }
