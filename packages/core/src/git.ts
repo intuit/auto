@@ -749,7 +749,7 @@ export default class Git {
       'tag',
       "--sort='creatordate'",
       '--merged',
-      `heads/${branch}`
+      branch
     ]);
 
     return tags
@@ -760,8 +760,10 @@ export default class Git {
 
   /** Get the last tag that isn't in the base branch */
   async getLastTagNotInBaseBranch(branch: string) {
-    const baseTags = (await this.getTags(this.options.baseBranch)).reverse();
-    const branchTags = (await this.getTags(branch)).reverse();
+    const baseTags = (
+      await this.getTags(`origin/${this.options.baseBranch}`)
+    ).reverse();
+    const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
     const firstGreatestUnique = branchTags.reduce((result, tag) => {
       if (!baseTags.includes(tag) && (!result || gt(tag, result))) {
         return tag;
