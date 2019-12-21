@@ -1,3 +1,16 @@
+# v8.7.3 (Fri Dec 20 2019)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - next: check origin head instead of local branch for tags [#827](https://github.com/intuit/auto/pull/827) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.7.2 (Fri Dec 20 2019)
 
 #### 🐛  Bug Fix
