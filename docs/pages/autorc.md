@@ -107,6 +107,55 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 }
 ```
 
+<details><summary>Click here to see the default label configuration</summary>
+
+```json
+[
+  {
+    "name": "major",
+    "changelogTitle": "💥  Breaking Change",
+    "description": "Increment the major version when merged",
+    "releaseType": "major"
+  },
+  {
+    "name": "minor",
+    "changelogTitle": "🚀  Enhancement",
+    "description": "Increment the minor version when merged",
+    "releaseType": "minor"
+  },
+  {
+    "name": "patch",
+    "changelogTitle": "🐛  Bug Fix",
+    "description": "Increment the patch version when merged",
+    "releaseType": "patch"
+  },
+  {
+    "name": "skip-release",
+    "description": "Preserve the current version when merged",
+    "releaseType": "skip"
+  },
+  {
+    "name": "release",
+    "description": "Create a release when this pr is merged",
+    "releaseType": "release"
+  },
+  {
+    "name": "internal",
+    "changelogTitle": "🏠  Internal",
+    "description": "Changes only affect the internal API",
+    "releaseType": "none"
+  },
+  {
+    "name": "documentation",
+    "changelogTitle": "📝  Documentation",
+    "description": "Changes only affect the documentation",
+    "releaseType": "none"
+  }
+]
+```
+
+</details>
+
 #### Label Customization
 
 You can customize everything about a label
@@ -132,15 +181,43 @@ You can customize everything about a label
 }
 ```
 
+#### Release Type: `none`
+
+A label with the `none` release type will not create a release when merged.
+If paired with a SEMVER label, the release is not skipped.
+
+```json
+{
+  "labels": [
+    {
+      "name": "documentation",
+      "releaseType": "none"
+    }
+  ]
+}
+```
+
 #### Changelog Titles
 
-By default auto will create sections in the changelog for the following labels.
+Each PR included in the release will be assigned to a label section based upon the matching label with the highest `releaseType` that has a `changelogTitle`.
+
+- Priority order of `releaseType` from highest to lowest is: major, minor, patch, and then all others
+- If a PR has multiple labels of the same `releaseType`, then the PR is assigned based upon the label that is assigned first in the config
+
+By default auto will create sections in the changelog for the following labels:
 
 - major
 - minor
 - patch
 - internal
 - documentation
+
+For example:
+
+- Using the default config, if a given PR has the labels `minor` and `internal`, then it will be included in the `minor` label section
+- Using the default config, if a given PR has the labels `documentation` and `internal`, then it will be included in the `internal` label section
+
+##### Updating Default Label Changelog Titles
 
 To customize the title for the section in the changelog you can
 
@@ -154,6 +231,8 @@ To customize the title for the section in the changelog you can
   ]
 }
 ```
+
+##### Adding Additional Changelog Title Sections
 
 If you want more sections in your changelog to further detail the change-set you can
 use the `labels` section to add more. Any label in the label section with a changelogTitle
@@ -173,6 +252,8 @@ related to a TypeScript re-write.
 }
 ```
 
+##### Removing Default Label Changelog Title Sections
+
 You can remove the existing default label sections by adding a custom overwrite label with the same `releaseType`.
 
 The following removes the default internal and documentation label sections:
@@ -185,22 +266,6 @@ The following removes the default internal and documentation label sections:
       "changelogTitle": "Docz",
       "releaseType": "none",
       "overwrite": true
-    }
-  ]
-}
-```
-
-#### `none` Release
-
-A label with the `none` release type will not create a release when merged.
-If paired with a SEMVER label, the release is not skipped.
-
-```json
-{
-  "labels": [
-    {
-      "name": "documentation",
-      "releaseType": "none"
     }
   ]
 }
