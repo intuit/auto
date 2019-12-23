@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "8.3.0"
+  version "8.7.3"
   dependencies:
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "1.1.1"
@@ -36,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "8.3.0"
+  version "8.7.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^4.1.1"
@@ -51,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "8.3.0"
+  version "8.7.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -14807,9 +14807,9 @@ typescript-memoize@^1.0.0-alpha.3:
     core-js "2.4.1"
 
 typescript@~3.7.2:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
-  integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
+  integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
 
 typical@^2.6.1:
   version "2.6.1"
