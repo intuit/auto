@@ -3,6 +3,7 @@ import makeCommitFromMsg from '@auto-it/core/src/__tests__/make-commit-from-msg'
 import { dummyLog } from '@auto-it/core/src/utils/logger';
 import { makeHooks } from '@auto-it/core/src/utils/make-hooks';
 import { defaultLabels } from '@auto-it/core/dist/release';
+import { execSync } from 'child_process';
 
 import SlackPlugin from '../src';
 
@@ -15,6 +16,11 @@ jest.mock('node-fetch', () => (...args) => {
 beforeEach(() => {
   fetchSpy.mockClear();
 });
+
+// For the purpose of this test, we use the current branch as the "prerelease" branch to fake being on a "next" branch
+const nextBranch = execSync('git rev-parse --abbrev-ref HEAD', {
+  encoding: 'utf8'
+}).trim();
 
 const mockGit = {
   options: {
@@ -121,7 +127,10 @@ describe('postToSlack', () => {
       ...mockAuto,
       hooks,
       options: {},
-      config: { prereleaseBranches: ['next'], labels: defaultLabels }
+      config: {
+        prereleaseBranches: [nextBranch],
+        labels: defaultLabels
+      }
     } as Auto);
 
     await hooks.afterRelease.promise({
