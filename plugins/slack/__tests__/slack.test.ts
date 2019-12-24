@@ -107,6 +107,58 @@ describe('postToSlack', () => {
     ).rejects.toBeInstanceOf(Error);
   });
 
+  test("doesn't post when prelease branch setting is false", async () => {
+    // @ts-ignore
+    const plugin = new SlackPlugin({
+      url: 'https://custom-slack-url',
+      publishPreRelease: false
+    });
+    const hooks = makeHooks();
+
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
+    // @ts-ignore
+    plugin.apply({
+      ...mockAuto,
+      hooks,
+      options: {},
+      config: { prereleaseBranches: ['next'], labels: defaultLabels }
+    } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes'
+    });
+    expect(plugin.postToSlack).not.toHaveBeenCalled();
+  });
+
+  test('posts when prelease branch setting is true', async () => {
+    // @ts-ignore
+    const plugin = new SlackPlugin({
+      url: 'https://custom-slack-url',
+      publishPreRelease: true
+    });
+    const hooks = makeHooks();
+
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
+    // @ts-ignore
+    plugin.apply({
+      ...mockAuto,
+      hooks,
+      options: {},
+      config: { prereleaseBranches: ['next'], labels: defaultLabels }
+    } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes'
+    });
+    expect(plugin.postToSlack).toHaveBeenCalledTimes(1);
+  });
+
   test('should warn when no token', async () => {
     const plugin = new SlackPlugin('https://custom-slack-url');
     const logger = dummyLog();

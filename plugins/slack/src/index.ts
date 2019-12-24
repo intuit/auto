@@ -54,7 +54,16 @@ export default class SlackPlugin implements IPlugin {
       async ({ newVersion, commits, releaseNotes }) => {
         // Avoid publishing on prerelease branches by default, but allow folks to opt in if they care to
         const currentBranch = getCurrentBranch();
-        if ((currentBranch && auto.config?.prereleaseBranches?.includes(currentBranch)) && !this.options.publishPreRelease) {
+        console.log(this.options.publishPreRelease);
+        console.log(
+          currentBranch &&
+            auto.config?.prereleaseBranches?.includes(currentBranch)
+        );
+        if (
+          (currentBranch &&
+            auto.config?.prereleaseBranches?.includes(currentBranch)) ||
+          !this.options.publishPreRelease
+        ) {
           return;
         }
 
