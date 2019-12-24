@@ -42,7 +42,7 @@ export default class SlackPlugin implements IPlugin {
       this.options = {
         url: options.url ? options.url : '',
         atTarget: options.atTarget ? options.atTarget : 'channel',
-        publishPreRelease: options.publishPreRelease ? options.publishPreRelease : false
+        publishPreRelease: options.publishPreRelease
       };
     }
   }
@@ -54,7 +54,7 @@ export default class SlackPlugin implements IPlugin {
       async ({ newVersion, commits, releaseNotes }) => {
         // Avoid publishing on prerelease branches by default, but allow folks to opt in if they care to
         const currentBranch = getCurrentBranch();
-        if ((currentBranch && auto?.config?.prereleaseBranches?.includes(currentBranch)) && !this.options.publishPreRelease) {
+        if ((currentBranch && auto.config?.prereleaseBranches?.includes(currentBranch)) && !this.options.publishPreRelease) {
           return;
         }
 
