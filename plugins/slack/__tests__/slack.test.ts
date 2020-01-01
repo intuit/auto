@@ -113,6 +113,33 @@ describe('postToSlack', () => {
     ).rejects.toBeInstanceOf(Error);
   });
 
+  test("doesn't post when prelease branch and using default prereleasePublish setting", async () => {
+    // @ts-ignore
+    const plugin = new SlackPlugin({
+      url: 'https://custom-slack-url',
+    });
+    const hooks = makeHooks();
+
+    jest.spyOn(plugin, 'postToSlack').mockImplementation();
+    // @ts-ignore
+    plugin.apply({
+      ...mockAuto,
+      hooks,
+      options: {},
+      config: {
+        prereleaseBranches: [nextBranch],
+        labels: defaultLabels
+      }
+    } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: '1.0.0',
+      lastRelease: '0.1.0',
+      commits: [makeCommitFromMsg('a patch')],
+      releaseNotes: '# My Notes'
+    });
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
   test("doesn't post when prelease branch setting is false", async () => {
     // @ts-ignore
     const plugin = new SlackPlugin({
