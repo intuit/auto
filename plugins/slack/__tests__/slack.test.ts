@@ -139,7 +139,7 @@ describe('postToSlack', () => {
       commits: [makeCommitFromMsg('a patch')],
       releaseNotes: '# My Notes'
     });
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   test('posts when prelease branch setting is true', async () => {
