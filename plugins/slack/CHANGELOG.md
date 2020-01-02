@@ -1,3 +1,24 @@
+# v8.8.0 (Thu Jan 02 2020)
+
+#### 🐛  Bug Fix
+
+- test: added a test to assure prerelease branches don't trigger a slack  ([@Aghassi](https://github.com/Aghassi))
+- refactor: ensure the fetch call is never made  ([@Aghassi](https://github.com/Aghassi))
+- refactor: fixed incorrect logic for prerelease check  ([@Aghassi](https://github.com/Aghassi))
+- refactor: removed unecessary console logs  ([@Aghassi](https://github.com/Aghassi))
+- test: added tests for when publishPreRelease is set  ([@Aghassi](https://github.com/Aghassi))
+- docs: updated slack plugin docs on publishPreRelease usage  ([@Aghassi](https://github.com/Aghassi))
+- fix: prevent slack from default publishing on prerelease branches  ([@Aghassi](https://github.com/Aghassi))
+- refactor: removed ternary per @hipstersmoothie feedback
+
+Co-Authored-By: Andrew Lisowski <lisowski54@gmail.com>  ([@Aghassi](https://github.com/Aghassi))
+
+#### Authors: 1
+
+- David ([@Aghassi](https://github.com/Aghassi))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

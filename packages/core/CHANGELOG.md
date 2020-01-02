@@ -1,3 +1,16 @@
+# v8.8.0 (Thu Jan 02 2020)
+
+#### 🐛  Bug Fix
+
+- Update existing test so behavior matches name  ([@bnigh](https://github.com/bnigh))
+- Add tests to verify changelog section assignment behavior  ([@bnigh](https://github.com/bnigh))
+
+#### Authors: 1
+
+- [@bnigh](https://github.com/bnigh)
+
+---
+
 # v8.7.3 (Fri Dec 20 2019)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,37 @@
+# v8.8.0 (Thu Jan 02 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/slack`
+  - fix: prevent slack from default publishing on prerelease branches [#829](https://github.com/intuit/auto/pull/829) ([@Aghassi](https://github.com/Aghassi))
+
+#### 📝  Documentation
+
+- docs: fixed incorrect afterRelease hook object [#842](https://github.com/intuit/auto/pull/842) ([@Aghassi](https://github.com/Aghassi))
+- `@auto-it/core`
+  - Add documentation and tests for label changelog label section assignment behavior [#822](https://github.com/intuit/auto/pull/822) ([@bnigh](https://github.com/bnigh))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/jest from 24.0.23 to 24.0.24 [#838](https://github.com/intuit/auto/pull/838) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.11.0 to 2.12.0 [#839](https://github.com/intuit/auto/pull/839) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 18.4.3 to 18.4.4 [#840](https://github.com/intuit/auto/pull/840) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump handlebars from 4.1.2 to 4.5.3 [#843](https://github.com/intuit/auto/pull/843) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 12.12.18 to 12.12.21 [#836](https://github.com/intuit/auto/pull/836) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump env-ci from 4.5.1 to 4.5.2 [#835](https://github.com/intuit/auto/pull/835) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.11.0 to 2.12.0 [#834](https://github.com/intuit/auto/pull/834) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.7.3 to 3.7.4 [#833](https://github.com/intuit/auto/pull/833) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump change-case from 4.1.0 to 4.1.1 [#832](https://github.com/intuit/auto/pull/832) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 12.4.0 to 12.4.2 [#831](https://github.com/intuit/auto/pull/831) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@bnigh](https://github.com/bnigh)
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- David ([@Aghassi](https://github.com/Aghassi))
+
+---
+
 # v8.7.3 (Fri Dec 20 2019)
 
 #### 🐛  Bug Fix
