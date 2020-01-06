@@ -40,7 +40,7 @@
     "@octokit/plugin-enterprise-compatibility": "1.1.1",
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/plugin-throttling": "^2.6.0",
-    "@octokit/rest": "16.35.2",
+    "@octokit/rest": "16.36.0",
     "await-to-js": "^2.1.1",
     "cosmiconfig": "6.0.0",
     "deepmerge": "^4.0.0",
