@@ -690,9 +690,11 @@ export default class Release {
     }
 
     if (modifiedCommit.pullRequest) {
-      const info = await this.git.getPr(modifiedCommit.pullRequest.number);
+      const [err, info] = await on(
+        this.git.getPr(modifiedCommit.pullRequest.number)
+      );
 
-      if (!info || !info.data) {
+      if (err || !info || !info.data) {
         return modifiedCommit;
       }
 
