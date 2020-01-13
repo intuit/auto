@@ -581,27 +581,6 @@ describe('publish', () => {
     ]);
   });
 
-  test('should publish public scoped packages to public', async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    plugin.apply({
-      config: { prereleaseBranches: ['next'] },
-      hooks,
-      baseBranch: 'master',
-      logger: dummyLog()
-    } as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "@scope/test"
-      }
-    `;
-
-    await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith('npm', ['publish', '--access', 'public']);
-  });
-
   test('should publish private scoped packages to private', async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -655,32 +634,6 @@ describe('canary', () => {
     await hooks.canary.promise(Auto.SEMVER.patch, '.123.1');
     expect(exec.mock.calls[0]).toContain('npm');
     expect(exec.mock.calls[0][1]).toContain('1.2.4-canary.123.1.0');
-  });
-
-  test('publishes to public for scoped packages', async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    plugin.apply(({
-      config: { prereleaseBranches: ['next'] },
-      hooks,
-      baseBranch: 'master',
-      logger: dummyLog(),
-      getCurrentVersion: () => '1.2.3',
-      git: {
-        getLatestRelease: () => '1.2.3',
-        getLatestTagInBranch: () => '1.2.3'
-      }
-    } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "@scope/test"
-      }
-    `;
-
-    await hooks.canary.promise(Auto.SEMVER.patch, '');
-    expect(exec.mock.calls[1][1]).toContain('public');
   });
 
   test('use lerna for monorepo package', async () => {

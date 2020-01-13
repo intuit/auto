@@ -624,8 +624,6 @@ export default class NPMPlugin implements IPlugin {
       }
 
       auto.logger.verbose.info('Detected single npm package');
-      const { private: isPrivate, name } = await loadPackageJson();
-      const isScopedPackage = name.match(/@\S+\/\S+/);
       const current = await auto.getCurrentVersion(lastRelease);
       const canaryVersion = determineNextVersion(
         lastRelease,
@@ -644,13 +642,9 @@ export default class NPMPlugin implements IPlugin {
         '--no-git-tag-version',
         ...verboseArgs
       ]);
+
       const publishArgs = ['--tag', 'canary'];
-      await execPromise(
-        'npm',
-        !isPrivate && isScopedPackage
-          ? ['publish', '--access', 'public', ...publishArgs, ...verboseArgs]
-          : ['publish', ...publishArgs, ...verboseArgs]
-      );
+      await execPromise('npm', ['publish', ...publishArgs, ...verboseArgs]);
 
       if (this.canaryScope) {
         await gitReset();
@@ -800,15 +794,7 @@ export default class NPMPlugin implements IPlugin {
           ...verboseArgs
         ]);
       } else {
-        const { private: isPrivate, name } = await loadPackageJson();
-        const isScopedPackage = name.match(/@\S+\/\S+/);
-
-        await execPromise(
-          'npm',
-          !isPrivate && isScopedPackage
-            ? ['publish', '--access', 'public', ...tag, ...verboseArgs]
-            : ['publish', ...tag, ...verboseArgs]
-        );
+        await execPromise('npm', ['publish', ...tag, ...verboseArgs]);
       }
 
       await execPromise('git', [
