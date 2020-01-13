@@ -1,3 +1,15 @@
+# v9.0.1 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- handle PR numbers that don't exist in repo/fork  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.0 (Mon Jan 13 2020)
 
 #### 🐛  Bug Fix

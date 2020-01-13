@@ -1,3 +1,16 @@
+# v9.0.1 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - handle PR numbers that don't exist in repo/fork [#870](https://github.com/intuit/auto/pull/870) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.0 (Mon Jan 13 2020)
 
 #### 💥  Breaking Change
