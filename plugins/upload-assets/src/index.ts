@@ -1,6 +1,6 @@
 import { Auto, IPlugin } from '@auto-it/core';
 import endent from 'endent';
-import fileType from 'file-type';
+import FileType from 'file-type';
 import fs from 'fs';
 import glob from 'fast-glob';
 import path from 'path';
@@ -47,7 +47,7 @@ export default class UploadAssetsPlugin implements IPlugin {
 
           const file = await readFile(asset);
           const stats = await stat(asset);
-          const type = fileType(file);
+          const type = await FileType.fromBuffer(file);
 
           await auto.git.github.repos.uploadReleaseAsset({
             url: response.data.upload_url,
