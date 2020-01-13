@@ -1,3 +1,21 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- Bump all-contributors-cli from 6.11.2 to 6.12.0
+
+Bumps [all-contributors-cli](https://github.com/all-contributors/all-contributors-cli) from 6.11.2 to 6.12.0.
+- [Release notes](https://github.com/all-contributors/all-contributors-cli/releases)
+- [Commits](https://github.com/all-contributors/all-contributors-cli/compare/v6.11.2...v6.12.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

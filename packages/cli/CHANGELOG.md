@@ -1,3 +1,15 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- be explicit about supported node versions  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,23 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- match npm behavior for scoped packages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump env-ci from 4.5.2 to 5.0.1
+
+Bumps [env-ci](https://github.com/pvdlg/env-ci) from 4.5.2 to 5.0.1.
+- [Release notes](https://github.com/pvdlg/env-ci/releases)
+- [Commits](https://github.com/pvdlg/env-ci/compare/v4.5.2...v5.0.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.7.1 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix

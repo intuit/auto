@@ -1,3 +1,46 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 💥  Breaking Change
+
+- `auto`
+  - require Node.js >=10.x [#869](https://github.com/intuit/auto/pull/869) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - match npm behavior for scoped packages [#868](https://github.com/intuit/auto/pull/868) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-jsdoc from 20.0.0 to 20.3.0 [#865](https://github.com/intuit/auto/pull/865) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 7.0.0 to 7.1.1 [#837](https://github.com/intuit/auto/pull/837) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 3.1.0 to 4.0.7 [#862](https://github.com/intuit/auto/pull/862) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tapable from 2.0.0-beta.8 to 2.0.0-beta.9 [#847](https://github.com/intuit/auto/pull/847) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.12.0 to 2.15.0 [#860](https://github.com/intuit/auto/pull/860) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.1.1 to 23.6.0 [#861](https://github.com/intuit/auto/pull/861) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 24.2.0 to 24.3.0 [#863](https://github.com/intuit/auto/pull/863) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.7.0 to 6.9.0 [#849](https://github.com/intuit/auto/pull/849) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 6.7.2 to 6.8.0 [#851](https://github.com/intuit/auto/pull/851) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 18.4.4 to 20.0.0 [#856](https://github.com/intuit/auto/pull/856) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.19.0 to 3.20.2 [#854](https://github.com/intuit/auto/pull/854) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.24 to 24.0.25 [#852](https://github.com/intuit/auto/pull/852) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 2.7.0 to 2.7.1 [#846](https://github.com/intuit/auto/pull/846) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/upload-assets`
+  - Bump file-type from 12.4.2 to 13.0.3 [#859](https://github.com/intuit/auto/pull/859) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.35.2 to 16.36.0 [#850](https://github.com/intuit/auto/pull/850) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.11.2 to 6.12.0 [#866](https://github.com/intuit/auto/pull/866) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/crates`, `@auto-it/npm`
+  - Bump env-ci from 4.5.2 to 5.0.1 [#867](https://github.com/intuit/auto/pull/867) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.8.0 (Thu Jan 02 2020)
 
 #### 🚀  Enhancement

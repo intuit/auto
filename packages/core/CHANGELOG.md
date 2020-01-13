@@ -1,3 +1,28 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- Bump env-ci from 4.5.2 to 5.0.1
+
+Bumps [env-ci](https://github.com/pvdlg/env-ci) from 4.5.2 to 5.0.1.
+- [Release notes](https://github.com/pvdlg/env-ci/releases)
+- [Commits](https://github.com/pvdlg/env-ci/compare/v4.5.2...v5.0.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/rest from 16.35.2 to 16.36.0
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.35.2 to 16.36.0.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.35.2...v16.36.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v8.8.0 (Thu Jan 02 2020)
 
 #### 🐛  Bug Fix

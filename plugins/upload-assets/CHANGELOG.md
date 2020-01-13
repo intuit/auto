@@ -1,3 +1,22 @@
+# v9.0.0 (Mon Jan 13 2020)
+
+#### 🐛  Bug Fix
+
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump file-type from 12.4.2 to 13.0.3
+
+Bumps [file-type](https://github.com/sindresorhus/file-type) from 12.4.2 to 13.0.3.
+- [Release notes](https://github.com/sindresorhus/file-type/releases)
+- [Commits](https://github.com/sindresorhus/file-type/compare/v12.4.2...v13.0.3)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix
