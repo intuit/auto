@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "env-ci": "^4.1.1",
+    "env-ci": "^5.0.1",
     "get-monorepo-packages": "^1.1.0",
     "parse-author": "^2.0.0",
     "parse-github-url": "1.0.2",
