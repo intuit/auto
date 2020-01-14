@@ -74,7 +74,9 @@ describe('All Contributors Plugin', () => {
       ]
     });
 
-    expect(exec.mock.calls[0][0]).toBe('npx all-contributors add Jeff code');
+    expect(exec.mock.calls[0][0]).toBe(
+      'npx all-contributors-cli add Jeff code'
+    );
   });
 
   test('should find contributions from merge commit', async () => {
@@ -101,7 +103,9 @@ describe('All Contributors Plugin', () => {
       ]
     });
 
-    expect(exec.mock.calls[0][0]).toBe('npx all-contributors add Jeff code');
+    expect(exec.mock.calls[0][0]).toBe(
+      'npx all-contributors-cli add Jeff code'
+    );
   });
 
   test('should find a multiple contributions', async () => {
@@ -136,7 +140,7 @@ describe('All Contributors Plugin', () => {
     });
 
     expect(exec.mock.calls[0][0]).toBe(
-      'npx all-contributors add Jeff code,test'
+      'npx all-contributors-cli add Jeff code,test'
     );
   });
 
@@ -166,7 +170,7 @@ describe('All Contributors Plugin', () => {
     });
 
     expect(exec.mock.calls[0][0]).toBe(
-      'npx all-contributors add Jeff infra,code'
+      'npx all-contributors-cli add Jeff infra,code'
     );
   });
 

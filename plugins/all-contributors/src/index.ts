@@ -172,7 +172,7 @@ export default class AllContributorsPlugin implements IPlugin {
               auto.logger.log.info(`Adding "${username}"'s contributions...`);
 
               execSync(
-                `npx all-contributors add ${username} ${[
+                `npx all-contributors-cli add ${username} ${[
                   ...newContributions
                 ].join(',')}`,
                 { stdio: 'inherit' }
