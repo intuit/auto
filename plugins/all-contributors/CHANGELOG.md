@@ -1,3 +1,16 @@
+# v9.0.2 (Tue Jan 14 2020)
+
+#### 🐛  Bug Fix
+
+- modify tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix running cli  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.0 (Mon Jan 13 2020)
 
 #### 🐛  Bug Fix
