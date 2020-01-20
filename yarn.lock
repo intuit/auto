@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "8.8.0"
+  version "9.0.2"
   dependencies:
     "@octokit/graphql" "^4.0.0"
     "@octokit/plugin-enterprise-compatibility" "1.1.1"
@@ -36,7 +36,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "8.8.0"
+  version "9.0.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -51,7 +51,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "8.8.0"
+  version "9.0.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -6111,9 +6111,9 @@ eslint-plugin-jest@^23.0.1:
     micromatch "^4.0.2"
 
 eslint-plugin-jsdoc@^20.0.0:
-  version "20.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-20.3.0.tgz#1ec066b1719c22d336d06e98df41d4399dd6531c"
-  integrity sha512-7tBrLcN02smsQsl8hOKZZx6sGM9qlkN6AmAf7ggpZjsAD/Qi4RsPK+JFzQkA4RysyyDnPZfrJhV19vrQut2dLA==
+  version "20.3.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-20.3.1.tgz#919366d1ab3342f90321975249833db1ff751472"
+  integrity sha512-JQ25OXvseVm84pX2mcVvKtGwrZDeAxgFUkq11f/pJpbGJMANYcLaMAUuW7U3cGhapWh+Gj04At/enAt26dpOeg==
   dependencies:
     comment-parser "^0.7.2"
     debug "^4.1.1"
