@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildSearchQuery generates a valid query 1`] = `
+"{
+    hash_abc123: search(query: \\"repo:Andrew/test abc123\\", type: ISSUE, first: 1) {
+  edges {
+    node {
+      ... on PullRequest {
+        number
+        state
+        body
+        labels(first: 10) {
+          edges {
+            node {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 1) {
+  edges {
+    node {
+      ... on PullRequest {
+        number
+        state
+        body
+        labels(first: 10) {
+          edges {
+            node {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    rateLimit {
+      limit
+      cost
+      remaining
+      resetAt
+    }
+  }"
+`;

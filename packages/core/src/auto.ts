@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+
 import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
@@ -48,6 +50,7 @@ import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
 import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
+import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -726,20 +729,9 @@ export default class Auto {
       process.exit(1);
     }
 
-    await this.checkClean();
+    // await this.checkClean();
 
-    // SailEnv falls back to commit SHA
-    let pr: string | undefined;
-    let build: string | undefined;
-
-    if ('pr' in env && 'build' in env) {
-      ({ pr } = env);
-      ({ build } = env);
-    } else if ('pr' in env && 'commit' in env) {
-      ({ pr } = env);
-      build = env.commit;
-    }
-
+    let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
     build = options.build ? String(options.build) : build;
 
@@ -880,9 +872,10 @@ export default class Auto {
       `Published next version${result.length > 1 ? `s` : ''}: ${newVersion}`
     );
 
-    if ('isPr' in env && env.isPr) {
+    const { pr } = await this.getPrEnvInfo();
+
+    if (pr) {
       const message = options.message || 'Published prerelease version: %v';
-      const pr = 'pr' in env && env.pr;
 
       if (pr) {
         await this.prBody({
@@ -1390,6 +1383,44 @@ If a command fails manually run:
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);
       });
+  }
+
+  /** Get the branch and build number when in CI environment */
+  private async getPrEnvInfo() {
+    // SailEnv falls back to commit SHA
+    let pr: string | undefined;
+    let build: string | undefined;
+
+    if ('pr' in env && 'build' in env) {
+      ({ pr } = env);
+      ({ build } = env);
+    } else if ('pr' in env && 'commit' in env) {
+      ({ pr } = env);
+      build = env.commit;
+    }
+
+    // If we haven't detected the PR from the env vars try to match
+    // the commit to a PR
+    if (env.isCi && !pr && this.git?.options.owner && this.git?.options.repo) {
+      const commit = await this.git.getSha();
+      const query = buildSearchQuery(
+        this.git?.options.owner,
+        this.git?.options.repo,
+        [commit]
+      );
+
+      if (query) {
+        const result = await this.git.graphql(query);
+
+        if (result && result[`hash_${commit}`]) {
+          pr = String(
+            (result[`hash_${commit}`] as ISearchResult).edges[0]?.node?.number
+          );
+        }
+      }
+    }
+
+    return { pr, build };
   }
 }
 

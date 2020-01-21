@@ -1,7 +1,6 @@
 import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
 import GHub from '@octokit/rest';
 import on from 'await-to-js';
-import endent from 'endent';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
@@ -22,6 +21,11 @@ import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { makeReleaseHooks } from './utils/make-hooks';
 import { execSync } from 'child_process';
+import {
+  buildSearchQuery,
+  ISearchResult,
+  processQueryResult
+} from './match-sha-to-pr';
 
 export type VersionLabel =
   | SEMVER.major
@@ -64,36 +68,6 @@ export type IAutoConfig = IAuthorOptions &
      */
     versionBranches?: true | string;
   };
-
-interface ISearchEdge {
-  /** Graphql search node */
-  node: {
-    /** PR number */
-    number: number;
-    /** State of the PR */
-    state: 'MERGED' | 'CLOSED' | 'OPEN';
-    /** Body of the PR */
-    body: string;
-    /** Labels attached to the PR */
-    labels: {
-      /** Edges of the Query */
-      edges: [
-        {
-          /** Graphql search node */
-          node: {
-            /** Name of the label */
-            name: string;
-          };
-        }
-      ];
-    };
-  };
-}
-
-interface ISearchResult {
-  /** Results in the search */
-  edges: ISearchEdge[];
-}
 
 export interface ILabelDefinition {
   /** The label text */
@@ -174,98 +148,6 @@ export interface IReleaseHooks {
   createChangelogTitle: AsyncSeriesBailHook<[], string | void>;
   /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
   onCreateLogParse: SyncHook<[LogParse]>;
-}
-
-/**
- * Generate a GitHub graphql query to find all the commits related
- * to a PR.
- */
-export function buildSearchQuery(
-  owner: string,
-  project: string,
-  commits: IExtendedCommit[]
-) {
-  const repo = `${owner}/${project}`;
-  const query = commits.reduce((q, commit) => {
-    const subQuery = `repo:${repo} ${commit.hash}`;
-
-    return endent`
-      ${q}
-
-      hash_${commit.hash}: search(query: "${subQuery}", type: ISSUE, first: 1) {
-        edges {
-          node {
-            ... on PullRequest {
-              number
-              state
-              body
-              labels(first: 10) {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `;
-  }, '');
-
-  if (!query) {
-    return;
-  }
-
-  return `{
-    ${query}
-    rateLimit {
-      limit
-      cost
-      remaining
-      resetAt
-    }
-  }`;
-}
-
-/** Use the graphql query result to fill in more information about a commit */
-function processQueryResult(
-  key: string,
-  result: ISearchResult,
-  commitsWithoutPR: IExtendedCommit[]
-) {
-  const hash = key.split('hash_')[1];
-  const commit = commitsWithoutPR.find(
-    commitWithoutPR => commitWithoutPR.hash === hash
-  );
-
-  if (!commit) {
-    return;
-  }
-
-  if (result.edges.length > 0) {
-    if (result.edges[0].node.state === 'CLOSED') {
-      return;
-    }
-
-    const labels: {
-      /** The label */
-      name: string;
-    }[] = result.edges[0].node.labels
-      ? result.edges[0].node.labels.edges.map(edge => edge.node)
-      : [];
-    commit.pullRequest = {
-      number: result.edges[0].node.number,
-      body: result.edges[0].node.body
-    };
-    commit.labels = [...labels.map(label => label.name), ...commit.labels];
-  } else {
-    commit.labels = ['pushToBaseBranch', ...commit.labels];
-  }
-
-  commit.subject = commit.subject.split('\n')[0];
-
-  return commit;
 }
 
 /**
@@ -371,7 +253,11 @@ export default class Release {
     const queries = await Promise.all(
       batches
         .map(batch =>
-          buildSearchQuery(this.git.options.owner, this.git.options.repo, batch)
+          buildSearchQuery(
+            this.git.options.owner,
+            this.git.options.repo,
+            batch.map(c => c.hash)
+          )
         )
         .filter((q): q is string => Boolean(q))
         .map(q => this.git.graphql(q))

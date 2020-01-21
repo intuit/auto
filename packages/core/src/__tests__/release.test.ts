@@ -1,8 +1,6 @@
-import { parse } from 'graphql';
 import Git from '../git';
 import LogParse from '../log-parse';
 import Release, {
-  buildSearchQuery,
   defaultLabels,
   getVersionMap,
   ILabelDefinition
@@ -774,22 +772,6 @@ describe('Release', () => {
       await expect(
         gh.generateReleaseNotes('1234', '123')
       ).resolves.toBeDefined();
-    });
-  });
-
-  describe('buildSearchQuery', () => {
-    test('generates a valid query', () => {
-      const query = buildSearchQuery('Andrew', 'test', [
-        makeCommitFromMsg('first', { hash: 'abc123' }),
-        makeCommitFromMsg('second', { hash: '3def78' })
-      ]);
-      expect(() => parse(query!)).not.toThrow();
-      expect(query).toMatchSnapshot();
-    });
-
-    test("doesn't generate a query without commits", () => {
-      const query = buildSearchQuery('Andrew', 'test', []);
-      expect(query).toBeUndefined();
     });
   });
 
