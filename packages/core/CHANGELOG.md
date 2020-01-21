@@ -1,3 +1,31 @@
+# v9.1.0 (Tue Jan 21 2020)
+
+#### 🐛  Bug Fix
+
+- upgrade enquirer  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- canary: try to match commit to PR if not found in env  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @types/node from 12.12.21 to 13.1.8
+
+Bumps [@types/node](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/node) from 12.12.21 to 13.1.8.
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/node)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/rest from 16.36.0 to 16.37.0
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.36.0 to 16.37.0.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.36.0...v16.37.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.1 (Mon Jan 13 2020)
 
 #### 🐛  Bug Fix

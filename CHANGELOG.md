@@ -1,3 +1,33 @@
+# v9.1.0 (Tue Jan 21 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - canary: try to match commit to PR if not found in env [#812](https://github.com/intuit/auto/pull/812) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump file-type from 13.0.3 to 13.1.1 [#879](https://github.com/intuit/auto/pull/879) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.19.1 to 2.20.0 [#878](https://github.com/intuit/auto/pull/878) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump enquirer from 2.3.2 to 2.3.4 [#876](https://github.com/intuit/auto/pull/876) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.15.0 to 2.16.0 [#875](https://github.com/intuit/auto/pull/875) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 20.3.0 to 20.3.1 [#874](https://github.com/intuit/auto/pull/874) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.7.4 to 3.7.5 [#873](https://github.com/intuit/auto/pull/873) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.0.7 to 4.0.10 [#872](https://github.com/intuit/auto/pull/872) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @types/node from 12.12.21 to 13.1.8 [#881](https://github.com/intuit/auto/pull/881) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.12.0 to 6.13.0 [#880](https://github.com/intuit/auto/pull/880) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.36.0 to 16.37.0 [#877](https://github.com/intuit/auto/pull/877) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.2 (Tue Jan 14 2020)
 
 #### 🐛  Bug Fix
