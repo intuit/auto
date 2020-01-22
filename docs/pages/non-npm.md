@@ -28,6 +28,13 @@ brew install auto
 
 ## Configuration
 
+To configure `auto` to work with your project you will need to do two things
+
+1. Create and configure a [`GH_TOKEN`](https://github.com/settings/tokens) environment variable
+2. Create an `.autorc` for your project
+
+### Making an `.autorc`
+
 Using `auto` with any other package manager than [npm](https://npmjs.com) requires that you create an [`.autorc`](./autorc.md) at the root of your project.
 
 1. `.autorc` - No plugins, `shipit` doesn't work. Enables [advanced setup](https://intuit.github.io/auto/pages/getting-started.html#detailed-setup)

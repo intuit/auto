@@ -2,7 +2,7 @@
 
 ## Error: Can't find a GitHub token to use
 
-You must set a `GH_TOKEN` for `auto` to work. Make sure to add your `NPM_TOKEN` while you're at it.
+You must set a [`GH_TOKEN`](https://github.com/settings/tokens) for `auto` to work. If you publish to npm make sure to add your `NPM_TOKEN` while you're at it as well.
 
 ## npm ERR! Git working directory not clean
 

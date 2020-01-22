@@ -54,7 +54,7 @@ Initialize all options and configure label text. If this is not run then `auto` 
 
 You must configure some environment variables for publishing and releasing to work properly.
 
-- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release
+- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release ([create one here](https://github.com/settings/tokens))
 - `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
 
 #### Local `.env`
