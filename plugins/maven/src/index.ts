@@ -24,7 +24,7 @@ async function getPreviousVersion(auto: Auto): Promise<string> {
   }
 
   auto.logger.verbose.info(
-    'Maven: Got previous version from package.json',
+    'Maven: Got previous version from pom.xml',
     previousVersion
   );
 
