@@ -157,6 +157,38 @@ Array [
 ]
 `;
 
+exports[`Release getCommits should include PR opener in authors (in case of external rebase) 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+      Object {
+        "email": "renovate@automation.com",
+        "login": "renovate",
+        "name": "Renovate",
+        "username": "renovate",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [
+      "skip-release",
+      "minor",
+    ],
+    "pullRequest": Object {
+      "body": undefined,
+      "number": 124,
+    },
+    "subject": "Feature",
+  },
+]
+`;
+
 exports[`Release getCommits should match rebased commits to PRs 1`] = `
 Array [
   Object {

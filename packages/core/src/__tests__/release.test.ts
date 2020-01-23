@@ -384,6 +384,39 @@ describe('Release', () => {
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
+
+    test('should include PR opener in authors (in case of external rebase)', async () => {
+      const gh = new Release(git);
+
+      const info = {
+        data: {
+          number: 124,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+          user: {login: 'renovate'}
+        }
+      }
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16'
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 124 }] });
+      getPullRequest.mockReturnValueOnce(info);
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([
+          makeCommitFromMsg('Feature (#124)')
+        ])
+      );
+      getPr.mockReturnValueOnce(Promise.resolve(info))
+      getUserByUsername.mockReturnValueOnce({
+        name: 'Renovate',
+        email: 'renovate@automation.com',
+        login: 'renovate'
+      })
+      exec.mockReturnValueOnce('1');
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
   });
 
   describe('addToChangelog', () => {
