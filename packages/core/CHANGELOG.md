@@ -1,3 +1,15 @@
+# v9.1.2 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- fix omitting renovate release notes when a user manually rebases the renovate PR  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.1 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix
