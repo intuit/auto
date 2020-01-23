@@ -1,3 +1,15 @@
+# v9.1.1 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- Fix onlyPublishWithReleaseLabel w/o labels  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.0 (Tue Jan 21 2020)
 
 #### 🐛  Bug Fix

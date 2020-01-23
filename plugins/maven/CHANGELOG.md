@@ -1,3 +1,15 @@
+# v9.1.1 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- add clearer docs around creating GH_TOKEN  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

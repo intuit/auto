@@ -1,3 +1,21 @@
+# v9.1.1 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix onlyPublishWithReleaseLabel w/o labels [#883](https://github.com/intuit/auto/pull/883) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `@auto-it/chrome`, `@auto-it/maven`
+  - add clearer docs around creating GH_TOKEN [#882](https://github.com/intuit/auto/pull/882) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.0 (Tue Jan 21 2020)
 
 #### 🚀  Enhancement
