@@ -43,4 +43,12 @@ describe('calculateSemVerBump', () => {
       SEMVER.major
     );
   });
+
+  test('should respect onlyPublishWithReleaseLabel when no labels present', () => {
+    expect(
+      calculateSemVerBump([[]], semverMap, {
+        onlyPublishWithReleaseLabel: true
+      })
+    ).toBe(SEMVER.noVersion);
+  });
 });

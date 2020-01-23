@@ -65,7 +65,7 @@ export function calculateSemVerBump(
 
   let skipRelease = false;
 
-  if (labels.length > 0 && labels[0].length > 0) {
+  if (labels.length > 0) {
     const releaseLabels = labelMap.get('release') || [];
 
     skipRelease = onlyPublishWithReleaseLabel
