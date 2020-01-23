@@ -589,8 +589,13 @@ export default class Release {
         ...new Set([...labels, ...modifiedCommit.labels])
       ];
       modifiedCommit.pullRequest.body = info.data.body;
+      const hasPrOpener = modifiedCommit.authors.find(
+        author => author.username === info.data.user.login
+      );
 
-      if (!modifiedCommit.authors.find(author => Boolean(author.username))) {
+      // If we can't find the use who opened the PR in authors attempt
+      // to add that user.
+      if (!hasPrOpener) {
         const user = await this.git.getUserByUsername(info.data.user.login);
 
         if (user) {
