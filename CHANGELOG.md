@@ -1,3 +1,16 @@
+# v9.1.3 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - Fix commiting sub-package changelogs [#885](https://github.com/intuit/auto/pull/885) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.2 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix

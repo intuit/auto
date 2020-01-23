@@ -1,3 +1,15 @@
+# v9.1.3 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- ensure promises are executed sequentially  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.0.0 (Mon Jan 13 2020)
 
 #### 🐛  Bug Fix
