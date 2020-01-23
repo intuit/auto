@@ -5,7 +5,7 @@ Automatically add contributors as changelogs are produced.
 This plugin maps one of the [contribution type](vhttps://allcontributors.org/docs/en/emoji-key) to a glob or array of globs.
 Out of the box the plugin will only detect the following contribution types:
 
-- 📖 `doc` - Edits to any README, `['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*']``
+- 📖 `doc` - Edits to any README `['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*']`
 - 💡 `example` - Edits to `['**/*.stories*', '**/*.story.*']`
 - 🚇 `infra` - Edits to `['**/.circle/**/*', '**/.github/**/*', '**/travis.yml'],`
 - ⚠️ `test` - Edits to `['**/*.test.*']`
@@ -71,6 +71,36 @@ Useful for excluding bots from getting into your contributors.
       "all-contributors",
       {
         "exclude": ["dependabot", "ci-services"]
+      }
+    ]
+  ]
+}
+```
+
+### Sub-Package Contributors list
+
+Maintain contributors lists for sub-packages in a monorepo setup (`lerna`/`yarn`).
+
+You must initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package.
+
+```sh
+cd packages/your-package
+npx all-contributors init
+```
+
+::: message is-info
+ℹ️ Tip: If you only want 1 commit for new contributions set `commit` to false in all of your `.all-contributorsrc`. Otherwise a commit will be made for each package's contributor update.
+:::
+
+**`auto.rc`**
+
+```json
+{
+  "plugins": [
+    [
+      "all-contributors",
+      {
+        "subPackageContributors": true
       }
     ]
   ]

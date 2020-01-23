@@ -589,7 +589,7 @@ export default class Release {
         ...new Set([...labels, ...modifiedCommit.labels])
       ];
       modifiedCommit.pullRequest.body = info.data.body;
-      const hasPrOpener = modifiedCommit.authors.find(
+      const hasPrOpener = modifiedCommit.authors.some(
         author => author.username === info.data.user.login
       );
 

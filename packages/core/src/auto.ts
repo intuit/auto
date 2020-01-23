@@ -1277,7 +1277,7 @@ export default class Auto {
     this.logger.log.error('Changed Files:\n', status);
 
     throw new Error(
-      'Working direction is not clean, make sure all files are commited'
+      'Working direction is not clean, make sure all files are committed'
     );
   };
 
@@ -1432,4 +1432,6 @@ export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';
 export { default as SEMVER } from './semver';
 export { default as execPromise } from './utils/exec-promise';
+export { default as getLernaPackages } from './utils/get-lerna-packages';
+export { default as inFolder } from './utils/in-folder';
 export { VersionLabel } from './release';

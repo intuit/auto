@@ -8,6 +8,8 @@ import {
   Auto,
   determineNextVersion,
   getCurrentBranch,
+  getLernaPackages,
+  inFolder,
   execPromise,
   ILogger,
   IPlugin,
@@ -69,13 +71,6 @@ interface IMonorepoPackage {
   /** Version to the monorepo package */
   version: string;
 }
-
-/** Check if one path is within a parent path */
-const inFolder = (parent: string, child: string) => {
-  const relative = path.relative(parent, child);
-
-  return Boolean(!relative?.startsWith('..') && !path.isAbsolute(relative));
-};
 
 interface ChangedPackagesArgs {
   /** Commit hash to find changes for */
@@ -158,25 +153,6 @@ export function getMonorepoPackage() {
 
     return greatest;
   }, {} as IPackageJSON);
-}
-
-interface LernaPackage {
-  /** Path to package */
-  path: string;
-  /** Name of package */
-  name: string;
-  /** Version of package */
-  version: string;
-}
-
-/** Get all of the packages in the lerna monorepo */
-export async function getLernaPackages(): Promise<LernaPackage[]> {
-  return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
-    res.split('\n').map(packageInfo => {
-      const [packagePath, name, version] = packageInfo.split(':');
-      return { path: packagePath, name, version };
-    })
-  );
 }
 
 /** Get all of the packages+version in the lerna monorepo */

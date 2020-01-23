@@ -8,6 +8,7 @@ import NPMPlugin, {
 } from '../src';
 
 const exec = jest.fn();
+const getLernaPackages = jest.fn();
 const monorepoPackages = jest.fn();
 const existsSync = jest.fn();
 const readFileSync = jest.fn();
@@ -20,6 +21,7 @@ readFileSync.mockReturnValue('{}');
 
 // @ts-ignore
 jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
+jest.spyOn(Auto, 'getLernaPackages').mockImplementation(getLernaPackages);
 jest.mock('env-ci', () => () => ({ isCi: false }));
 jest.mock('get-monorepo-packages', () => () => monorepoPackages());
 jest.mock('fs', () => ({
@@ -658,14 +660,23 @@ describe('canary', () => {
       }
     `;
 
-    exec.mockReturnValue(
-      Promise.resolve(
-        `path/to/package:@foo/app:1.2.3-canary.0+abcd\npath/to/package:@foo/lib:1.2.3-canary.0+abcd`
-      )
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: 'path/to/package',
+          name: '@foobar/app',
+          version: '1.2.3-canary.0+abcd'
+        },
+        {
+          path: 'path/to/package',
+          name: '@foobar/lib',
+          version: '1.2.3-canary.0+abcd'
+        }
+      ])
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
-    expect(exec.mock.calls[1][1]).toContain('lerna');
+    expect(exec.mock.calls[0][1]).toContain('lerna');
     expect(value).toBe('1.2.3-canary.0');
   });
 
@@ -690,10 +701,20 @@ describe('canary', () => {
         "name": "test"
       }
     `;
-    exec.mockReturnValue(
-      Promise.resolve(
-        `path/to/package:@foo/app:1.2.3\npath/to/package:@foo/lib:1.2.3`
-      )
+
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: 'path/to/package',
+          name: '@foobar/app',
+          version: '1.2.3'
+        },
+        {
+          path: 'path/to/package',
+          name: '@foobar/lib',
+          version: '1.2.3'
+        }
+      ])
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
@@ -720,10 +741,20 @@ describe('canary', () => {
         "name": "test"
       }
     `;
-    exec.mockReturnValue(
-      Promise.resolve(
-        'path/to/package:@foo/app:1.2.4-canary.0\npath/to/package:@foo/lib:1.1.0-canary.0'
-      )
+
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: 'path/to/package',
+          name: '@foobar/app',
+          version: '1.2.4-canary.0'
+        },
+        {
+          path: 'path/to/package',
+          name: '@foobar/lib',
+          version: '1.1.0-canary.0'
+        }
+      ])
     );
 
     await hooks.version.promise(Auto.SEMVER.patch);
@@ -762,10 +793,20 @@ describe('canary', () => {
         "name": "test"
       }
     `;
-    exec.mockReturnValue(
-      Promise.resolve(
-        'path/to/package:@foo/app:1.2.4\npath/to/package:@foo/lib:1.1.0'
-      )
+
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: 'path/to/package',
+          name: '@foobar/app',
+          version: '1.2.4'
+        },
+        {
+          path: 'path/to/package',
+          name: '@foobar/lib',
+          version: '1.1.0'
+        }
+      ])
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
