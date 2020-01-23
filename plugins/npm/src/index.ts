@@ -473,7 +473,14 @@ export default class NPMPlugin implements IPlugin {
 
         this.renderMonorepoChangelog = false;
 
-        const promises = lernaPackages.map(async lernaPackage => {
+        // Cannot run git operations in parallel
+        await lernaPackages.reduce(async (last, lernaPackage) => {
+          await last;
+
+          auto.logger.verbose.info(
+            `Updating changelog for: ${lernaPackage.name}`
+          );
+
           const includedCommits = commits.filter(commit =>
             commit.files.some(file => inFolder(lernaPackage.path, file))
           );
@@ -489,13 +496,7 @@ export default class NPMPlugin implements IPlugin {
               path.join(lernaPackage.path, 'CHANGELOG.md')
             );
           }
-        });
-
-        // Cannot run git operations in parallel
-        await promises.reduce(
-          async (last, next) => last.then(() => next),
-          Promise.resolve()
-        );
+        }, Promise.resolve());
 
         this.renderMonorepoChangelog = true;
       }
