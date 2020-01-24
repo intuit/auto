@@ -1,3 +1,16 @@
+# v9.2.1 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fallback to 0.0.0 in git-tag plugin with no previous releases  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.3 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix
