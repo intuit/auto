@@ -81,7 +81,7 @@ Useful for excluding bots from getting into your contributors.
 
 Maintain contributors lists for sub-packages in a monorepo setup (`lerna`/`yarn`).
 
-You must initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package.
+All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package.
 
 ```sh
 cd packages/your-package
@@ -91,18 +91,3 @@ npx all-contributors init
 ::: message is-info
 ℹ️ Tip: If you only want 1 commit for new contributions set `commit` to false in all of your `.all-contributorsrc`. Otherwise a commit will be made for each package's contributor update.
 :::
-
-**`auto.rc`**
-
-```json
-{
-  "plugins": [
-    [
-      "all-contributors",
-      {
-        "subPackageContributors": true
-      }
-    ]
-  ]
-}
-```

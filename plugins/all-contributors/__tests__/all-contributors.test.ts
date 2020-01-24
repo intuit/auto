@@ -10,8 +10,11 @@ import AllContributors from '../src';
 const exec = jest.fn();
 const gitShow = jest.fn();
 const getLernaPackages = jest.fn();
+
+getLernaPackages.mockReturnValue(Promise.resolve([]));
 gitShow.mockReturnValue('');
 exec.mockReturnValue('');
+
 jest.mock('child_process');
 // @ts-ignore
 execSync.mockImplementation(exec);
@@ -148,7 +151,7 @@ describe('All Contributors Plugin', () => {
   });
 
   test('should update sub-packages', async () => {
-    const releasedLabel = new AllContributors({ subPackageContributors: true });
+    const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
 
     getLernaPackages.mockReturnValueOnce(

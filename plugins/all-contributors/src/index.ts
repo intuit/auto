@@ -59,8 +59,6 @@ type IAllContributorsPluginOptions = {
   exclude?: string[];
   /** Globs to detect change types by */
   types?: Partial<Record<Contribution, string | string[]>>;
-  /** Whether to generate contributors for packages in a monorepo */
-  subPackageContributors?: boolean;
 };
 
 interface Contributor {
@@ -106,7 +104,6 @@ export default class AllContributorsPlugin implements IPlugin {
   /** Initialize the plugin with it's options */
   constructor(options: IAllContributorsPluginOptions = {}) {
     this.options = {
-      subPackageContributors: Boolean(options.subPackageContributors),
       exclude: [...(defaultOptions.exclude || []), ...(options.exclude || [])],
       types: { ...defaultOptions.types, ...options.types }
     };
@@ -120,34 +117,32 @@ export default class AllContributorsPlugin implements IPlugin {
         await this.updateContributors(auto, commits);
         const rootDir = process.cwd();
 
-        if (this.options.subPackageContributors) {
-          const lernaPackages = await getLernaPackages();
+        const lernaPackages = await getLernaPackages();
 
-          // Cannot run git operations in parallel
-          await lernaPackages.reduce(async (last, lernaPackage) => {
-            await last;
+        // Cannot run git operations in parallel
+        await lernaPackages.reduce(async (last, lernaPackage) => {
+          await last;
 
-            auto.logger.verbose.info(
-              `Updating contributors for: ${lernaPackage.name}`
+          auto.logger.verbose.info(
+            `Updating contributors for: ${lernaPackage.name}`
+          );
+
+          const includedCommits = commits.filter(commit =>
+            commit.files.some(file => inFolder(lernaPackage.path, file))
+          );
+
+          if (includedCommits.length > 0) {
+            auto.logger.verbose.success(
+              `${lernaPackage.name} has ${includedCommits.length} new commits.`
+            );
+            auto.logger.veryVerbose.info(
+              `With commits: ${JSON.stringify(includedCommits, null, 2)}`
             );
 
-            const includedCommits = commits.filter(commit =>
-              commit.files.some(file => inFolder(lernaPackage.path, file))
-            );
-
-            if (includedCommits.length > 0) {
-              auto.logger.verbose.success(
-                `${lernaPackage.name} has ${includedCommits.length} new commits.`
-              );
-              auto.logger.veryVerbose.info(
-                `With commits: ${JSON.stringify(includedCommits, null, 2)}`
-              );
-
-              process.chdir(lernaPackage.path);
-              await this.updateContributors(auto, includedCommits);
-            }
-          }, Promise.resolve());
-        }
+            process.chdir(lernaPackage.path);
+            await this.updateContributors(auto, includedCommits);
+          }
+        }, Promise.resolve());
 
         process.chdir(rootDir);
         const changedFiles = await execPromise('git', [
