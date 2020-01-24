@@ -197,6 +197,20 @@ export default class Git {
     return result;
   }
 
+    /** Get the SHA of the latest commit */
+    async shaExists(sha?: string): Promise<boolean> {
+      try {
+        await execPromise('git', [
+          'rev-parse',
+          '--verify',
+          sha
+        ]);
+        return true
+      } catch (error) {
+        return false;
+      }
+    }
+
   /** Get the labels for a PR */
   @memoize()
   async getLabels(prNumber: number) {
