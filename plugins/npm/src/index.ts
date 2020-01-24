@@ -189,6 +189,8 @@ interface INpmConfig {
   forcePublish?: boolean;
   /** A scope to publish canary versions under */
   canaryScope?: string;
+  /** Publish a monorepo with the lerna --exact flag */
+  exact?: boolean;
 }
 
 /** Parse the lerna.json file. */
@@ -319,11 +321,14 @@ export default class NPMPlugin implements IPlugin {
   private readonly setRcToken: boolean;
   /** Whether to always publish all packages in a monorepo */
   private readonly forcePublish: boolean;
+  /** Publish a monorepo with the lerna --exact flag */
+  private readonly exact: boolean;
   /** A scope to publish canary versions under */
   private readonly canaryScope: string | undefined;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
+    this.exact = Boolean(config.exact);
     this.renderMonorepoChangelog = true;
     this.subPackageChangelogs = config.subPackageChangelogs || true;
     this.setRcToken =
@@ -499,6 +504,7 @@ export default class NPMPlugin implements IPlugin {
           '--no-push',
           '-m',
           VERSION_COMMIT_MESSAGE,
+          this.exact && '--exact',
           ...verboseArgs
         ]);
         auto.logger.verbose.info('Successfully versioned repo');
