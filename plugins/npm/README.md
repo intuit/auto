@@ -69,6 +69,23 @@ By default `auto` will force publish all packages for monorepos. To disable this
 }
 ```
 
+### exact
+
+To force all packages publish with [exact versions](https://github.com/lerna/lerna/blob/master/commands/version/README.md#--exact).
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "exact": true
+      }
+    ]
+  ]
+}
+```
+
 ### subPackageChangelogs
 
 `auto` will create a changelog for each sub-package in a monorepo.
