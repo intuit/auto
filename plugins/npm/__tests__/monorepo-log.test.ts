@@ -8,8 +8,10 @@ import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import NpmPlugin from '../src';
 
 const exec = jest.fn();
+const getLernaPackages = jest.fn();
 const readFileSync = jest.fn();
 
+jest.spyOn(Auto, 'getLernaPackages').mockImplementation(getLernaPackages);
 jest.spyOn(Auto, 'execPromise').mockImplementation(exec);
 jest.mock('fs', () => ({
   // @ts-ignore
@@ -46,13 +48,21 @@ const commitsPromise = logParse.normalizeCommits([
 test('should create sections for packages', async () => {
   let changed = 0;
 
-  exec.mockImplementation(async command => {
-    if (command === 'npx') {
-      return Promise.resolve(
-        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
-      );
-    }
-
+  getLernaPackages.mockImplementation(async () =>
+    Promise.resolve([
+      {
+        path: 'packages/@foobar/release',
+        name: '@foobar/release',
+        version: '1.0.0'
+      },
+      {
+        path: 'packages/@foobar/party',
+        name: '@foobar/party',
+        version: '1.0.0'
+      }
+    ])
+  );
+  exec.mockImplementation(async () => {
     changed++;
 
     if (changed === 3) {
@@ -95,13 +105,22 @@ test('should create sections for packages', async () => {
 
 test('should add versions for independent packages', async () => {
   let changed = 0;
-  exec.mockImplementation(async command => {
-    if (command === 'npx') {
-      return Promise.resolve(
-        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.2'
-      );
-    }
 
+  getLernaPackages.mockImplementation(async () =>
+    Promise.resolve([
+      {
+        path: 'packages/@foobar/release',
+        name: '@foobar/release',
+        version: '1.0.0'
+      },
+      {
+        path: 'packages/@foobar/party',
+        name: '@foobar/party',
+        version: '1.0.2'
+      }
+    ])
+  );
+  exec.mockImplementation(async () => {
     changed++;
 
     if (changed === 3) {
@@ -145,17 +164,26 @@ test('should add versions for independent packages', async () => {
 test('should create extra change logs for sub-packages', async () => {
   readFileSync.mockReturnValue('{ "version": "independent" }');
 
-  exec.mockImplementation(async command => {
-    if (command === 'npx') {
-      return Promise.resolve(
-        'packages/@foobar/release:@foobar/release:1.0.0\npackages/@foobar/party:@foobar/party:1.0.0'
-      );
-    }
+  getLernaPackages.mockImplementation(async () =>
+    Promise.resolve([
+      {
+        path: 'packages/@foobar/release',
+        name: '@foobar/release',
+        version: '1.0.0'
+      },
+      {
+        path: 'packages/@foobar/party',
+        name: '@foobar/party',
+        version: '1.0.0'
+      }
+    ])
+  );
 
-    return Promise.resolve(
+  exec.mockImplementation(async () =>
+    Promise.resolve(
       'packages/@foobar/release/README.md\npackages/@foobar/party/package.json'
-    );
-  });
+    )
+  );
 
   const plugin = new NpmPlugin();
   const hooks = makeHooks();

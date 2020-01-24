@@ -9,13 +9,19 @@ import AllContributors from '../src';
 
 const exec = jest.fn();
 const gitShow = jest.fn();
+const getLernaPackages = jest.fn();
+
+getLernaPackages.mockReturnValue(Promise.resolve([]));
 gitShow.mockReturnValue('');
 exec.mockReturnValue('');
+
 jest.mock('child_process');
 // @ts-ignore
 execSync.mockImplementation(exec);
 // @ts-ignore
 jest.spyOn(Auto, 'execPromise').mockImplementation(gitShow);
+jest.spyOn(Auto, 'getLernaPackages').mockImplementation(getLernaPackages);
+jest.spyOn(process, 'chdir').mockReturnValue();
 
 const mockRead = (result: string) =>
   jest
@@ -142,6 +148,62 @@ describe('All Contributors Plugin', () => {
     expect(exec.mock.calls[0][0]).toBe(
       'npx all-contributors-cli add Jeff code,test'
     );
+  });
+
+  test('should update sub-packages', async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+
+    getLernaPackages.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          path: 'packages/app',
+          name: '@foobar/app',
+          version: '1.2.3'
+        },
+        {
+          path: 'packages/lib',
+          name: '@foobar/lib',
+          version: '1.2.3'
+        }
+      ])
+    );
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: '0.0.0',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
+          files: ['packages/app/src/index.ts'],
+          authors: [{ username: 'Jeff', hash: '123' }]
+        },
+        {
+          subject: 'Do the docs',
+          hash: '124',
+          labels: [],
+          files: ['packages/lib/README.md'],
+          authors: [{ username: 'Jeff', hash: '124' }]
+        }
+      ]
+    });
+
+    // root contributors
+    expect(exec.mock.calls[0][0]).toBe(
+      'npx all-contributors-cli add Jeff code,doc'
+    );
+    // app contributors
+    expect(exec.mock.calls[1][0]).toBe(
+      'npx all-contributors-cli add Jeff code'
+    );
+    // lib contributors
+    expect(exec.mock.calls[2][0]).toBe('npx all-contributors-cli add Jeff doc');
   });
 
   test('should update old contributors', async () => {
