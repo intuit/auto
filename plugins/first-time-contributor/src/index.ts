@@ -34,14 +34,14 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                 }
 
                 const prs = await auto.git?.graphql(`
-                {
-                  search(first: 2, type: ISSUE, query: "user:${auto.git?.options.owner} repo:${auto.git?.options.repo} author:${author.username} state:closed") {
-                    issueCount
+                  {
+                    search(first: 2, type: ISSUE, query: "user:${auto.git?.options.owner} repo:${auto.git?.options.repo} author:${author.username} state:closed") {
+                      issueCount
+                    }
                   }
-                }
-              `);
+                `);
 
-                if (prs && prs.search.issueCount === 1) {
+                if (prs && prs.search.issueCount <= 1) {
                   return author;
                 }
               })
