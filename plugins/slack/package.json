@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "9.2.1",
+  "version": "9.2.2",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "author": {
