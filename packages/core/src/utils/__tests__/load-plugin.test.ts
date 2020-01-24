@@ -16,6 +16,15 @@ describe('loadPlugins', () => {
     );
   });
 
+  test('should require custom plugins -- surface errors', async () => {
+    expect(() =>
+      loadPlugin(
+        [path.join(__dirname, './test-plugin-malformed.js'), {}],
+        logger
+      )
+    ).toThrow();
+  });
+
   test('should load config', async () => {
     expect(
       loadPlugin(
