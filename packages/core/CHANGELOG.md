@@ -1,3 +1,16 @@
+# v9.3.1 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Surface plugin syntax errors to user  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.2.2 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

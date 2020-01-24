@@ -1,3 +1,16 @@
+# v9.3.1 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Surface plugin syntax errors to user [#892](https://github.com/intuit/auto/pull/892) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.0 (Fri Jan 24 2020)
 
 #### 🚀  Enhancement
