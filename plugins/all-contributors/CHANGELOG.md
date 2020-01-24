@@ -1,3 +1,16 @@
+# v9.2.0 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- remove config option, can be done just by checking for an rc file  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add ability to manage sub-package contributor lists  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.0 (Tue Jan 21 2020)
 
 #### 🐛  Bug Fix

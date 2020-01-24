@@ -1,3 +1,16 @@
+# v9.2.0 (Thu Jan 23 2020)
+
+#### 🐛  Bug Fix
+
+- fix lint warning  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add ability to manage sub-package contributor lists  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.2 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix

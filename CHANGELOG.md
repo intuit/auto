@@ -1,3 +1,16 @@
+# v9.2.0 (Thu Jan 23 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
+  - Add ability to manage sub-package contributor lists [#887](https://github.com/intuit/auto/pull/887) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.3 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix
