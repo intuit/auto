@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-
 import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
