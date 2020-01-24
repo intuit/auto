@@ -1,3 +1,15 @@
+# v9.2.2 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- Fix error on empty pr body  ([@reckter](https://github.com/reckter))
+
+#### Authors: 1
+
+- Hannes Güdelhöfer ([@reckter](https://github.com/reckter))
+
+---
+
 # v9.2.1 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,20 @@
+# v9.2.2 (Fri Jan 24 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all your work!
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix error on empty pr body [#889](https://github.com/intuit/auto/pull/889) ([@reckter](https://github.com/reckter))
+
+#### Authors: 1
+
+- Hannes Güdelhöfer ([@reckter](https://github.com/reckter))
+
+---
+
 # v9.2.1 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix
