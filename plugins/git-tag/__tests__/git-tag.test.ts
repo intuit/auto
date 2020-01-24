@@ -39,6 +39,16 @@ describe('Git Tag Plugin', () => {
       const previousVersion = await hooks.getPreviousVersion.promise();
       expect(previousVersion).toBe('v1.0.0');
     });
+
+    test('should default to 0.0.0 when no previous version', async () => {
+      const hooks = setup({
+        getLatestTagInBranch: () => {
+          throw new Error();
+        }
+      });
+      const previousVersion = await hooks.getPreviousVersion.promise();
+      expect(previousVersion).toBe('0.0.0');
+    });
   });
 
   describe('version', () => {
