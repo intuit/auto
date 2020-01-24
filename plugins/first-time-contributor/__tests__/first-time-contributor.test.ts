@@ -9,6 +9,7 @@ import {
 import FirstTimeContributor from '../src';
 import Octokit = require('@octokit/rest');
 
+const graphql = jest.fn();
 const exec = jest.fn();
 exec.mockReturnValue('');
 // @ts-ignore
@@ -24,6 +25,7 @@ const setup = (
   plugin.apply({
     hooks,
     git: {
+      graphql,
       options: { repo: 'repo', owner: 'test' },
       github: {
         repos: {
@@ -51,9 +53,16 @@ describe('First Time Contributor Plugin', () => {
   test('should include all authors with no past contributors', async () => {
     const hooks = setup();
     const commits = [
-      makeCommitFromMsg('foo', { name: 'Jeff' }),
-      makeCommitFromMsg('foo', { name: 'Andrew' })
+      makeCommitFromMsg('foo', { name: 'Jeff', username: 'Jeff' }),
+      makeCommitFromMsg('foo', { name: 'Andrew', username: 'Andrew' })
     ];
+
+    graphql.mockReturnValueOnce({
+      search: { issueCount: 0 }
+    });
+    graphql.mockReturnValueOnce({
+      search: { issueCount: 0 }
+    });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
@@ -61,10 +70,13 @@ describe('First Time Contributor Plugin', () => {
   test('should exclude a past contributor', async () => {
     const hooks = setup();
     const commits = [
-      makeCommitFromMsg('foo', { name: 'Jeff' }),
-      makeCommitFromMsg('foo', { name: 'Andrew' })
+      makeCommitFromMsg('foo', { name: 'Jeff', username: 'Jeff' }),
+      makeCommitFromMsg('foo', { name: 'Andrew', username: 'Andrew' })
     ];
-    exec.mockReturnValueOnce('Andrew');
+
+    graphql.mockReturnValueOnce({
+      search: { issueCount: 1 }
+    });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
@@ -72,9 +84,13 @@ describe('First Time Contributor Plugin', () => {
   test('should exclude a past contributor by username', async () => {
     const hooks = setup([{ login: 'Andrew420' }]);
     const commits = [
-      makeCommitFromMsg('foo', { name: 'Jeff123' }),
-      makeCommitFromMsg('foo', { name: 'Andrew420' })
+      makeCommitFromMsg('foo', { name: 'Jeff123', username: 'Jeff123' }),
+      makeCommitFromMsg('foo', { name: 'Andrew420', username: 'Andrew420' })
     ];
+
+    graphql.mockReturnValueOnce({
+      search: { issueCount: 1 }
+    });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
@@ -82,21 +98,13 @@ describe('First Time Contributor Plugin', () => {
   test('should not include past contributors', async () => {
     const hooks = setup();
     const commits = [
-      makeCommitFromMsg('foo', { name: 'Jeff' }),
-      makeCommitFromMsg('foo', { name: 'Andrew' })
+      makeCommitFromMsg('foo', { name: 'Jeff', username: 'Jeff' }),
+      makeCommitFromMsg('foo', { name: 'Andrew', username: 'Andrew' })
     ];
-    exec.mockReturnValueOnce('Jeff');
-    exec.mockReturnValueOnce('Andrew');
 
-    expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
-  });
-
-  test('should not include past contributors - email', async () => {
-    const hooks = setup();
-    const commits = [
-      makeCommitFromMsg('foo', { name: 'Jeff', email: 'Jeff@email.com' })
-    ];
-    exec.mockReturnValueOnce('Jeff@email.com');
+    graphql.mockReturnValue({
+      search: { issueCount: 2 }
+    });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
@@ -108,6 +116,10 @@ describe('First Time Contributor Plugin', () => {
       makeCommitFromMsg('foo', { name: 'Andrew', username: 'hipstersmoothie' })
     ];
 
+    graphql.mockReturnValue({
+      search: { issueCount: 1 }
+    });
+
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
 
@@ -116,6 +128,10 @@ describe('First Time Contributor Plugin', () => {
     const commits = [
       makeCommitFromMsg('foo', { username: 'jeff-the-snake', name: '' })
     ];
+
+    graphql.mockReturnValue({
+      search: { issueCount: 1 }
+    });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });

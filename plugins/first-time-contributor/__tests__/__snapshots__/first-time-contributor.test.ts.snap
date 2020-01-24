@@ -4,7 +4,7 @@ exports[`First Time Contributor Plugin should exclude a past contributor 1`] = `
 Array [
   ":tada: This release contains work from a new contributor! :tada:
 
-Thank you, Jeff, for all your work!",
+Thank you, Jeff ([@Jeff](https://github.com/Jeff)), for all your work!",
 ]
 `;
 
@@ -12,7 +12,7 @@ exports[`First Time Contributor Plugin should exclude a past contributor by user
 Array [
   ":tada: This release contains work from a new contributor! :tada:
 
-Thank you, Jeff123, for all your work!",
+Thank you, Jeff123 ([@Jeff123](https://github.com/Jeff123)), for all your work!",
 ]
 `;
 
@@ -34,9 +34,9 @@ Array [
 
 Thanks for all your work!
 
-:heart: Jeff
+:heart: Jeff ([@Jeff](https://github.com/Jeff))
 
-:heart: Andrew",
+:heart: Andrew ([@Andrew](https://github.com/Andrew))",
 ]
 `;
 
@@ -47,7 +47,5 @@ Array [
 Thank you, [@jeff-the-snake](https://github.com/jeff-the-snake), for all your work!",
 ]
 `;
-
-exports[`First Time Contributor Plugin should not include past contributors - email 1`] = `Array []`;
 
 exports[`First Time Contributor Plugin should not include past contributors 1`] = `Array []`;
