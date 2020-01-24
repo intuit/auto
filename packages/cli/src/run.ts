@@ -83,9 +83,7 @@ export default async function main(command: string, args: ApiOptions) {
   try {
     await run(command, args);
   } catch (error) {
-    if (error) {
-      console.log(error);
-      process.exit(1);
-    }
+    console.log(error);
+    process.exit(1);
   }
 }

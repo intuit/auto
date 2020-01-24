@@ -735,7 +735,8 @@ export default class Auto {
 
     this.logger.verbose.info('Canary info found:', { pr, build });
 
-    const head = await this.release.getCommitsInRelease('HEAD^');
+    const from = await this.git.shaExists('HEAD^') ? 'HEAD^' : 'HEAD';
+    const head = await this.release.getCommitsInRelease(from);
     const labels = head.map(commit => commit.labels);
     const version =
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
@@ -913,7 +914,8 @@ export default class Auto {
     this.hooks.beforeShipIt.call();
 
     const isPR = 'isPr' in env && env.isPr;
-    const head = await this.release.getCommitsInRelease('HEAD^');
+    const from = await this.git.shaExists('HEAD^') ? 'HEAD^' : 'HEAD';
+    const head = await this.release.getCommitsInRelease(from);
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const currentBranch = getCurrentBranch();

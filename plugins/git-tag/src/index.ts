@@ -14,6 +14,15 @@ export default class GitTagPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    /** Get the latest tag in the repo, if none then the first commit */
+    async function getTag() {
+      try {
+        return await auto.git!.getLatestTagInBranch();
+      } catch (error) {
+        return auto.prefixRelease('0.0.0')
+      }
+    }
+
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       if (!auto.git) {
         throw new Error(
@@ -21,7 +30,7 @@ export default class GitTagPlugin implements IPlugin {
         );
       }
 
-      return auto.git.getLatestTagInBranch();
+      return getTag();
     });
 
     auto.hooks.version.tapPromise(this.name, async version => {
@@ -29,7 +38,7 @@ export default class GitTagPlugin implements IPlugin {
         return;
       }
 
-      const lastTag = await auto.git.getLatestTagInBranch();
+      const lastTag = await getTag();
       const newTag = inc(lastTag, version as ReleaseType);
       const branch = getCurrentBranch() || '';
 
@@ -37,7 +46,7 @@ export default class GitTagPlugin implements IPlugin {
         return;
       }
 
-      await execPromise('git', ['tag', newTag]);
+      await execPromise('git', ['tag', auto.prefixRelease(newTag)]);
       await execPromise('git', [
         'push',
         '--follow-tags',
