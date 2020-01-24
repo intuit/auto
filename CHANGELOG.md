@@ -1,3 +1,16 @@
+# v9.3.0 (Fri Jan 24 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/npm`
+  - add ability to publish exact versions in monorepo [#891](https://github.com/intuit/auto/pull/891) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.2.3 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

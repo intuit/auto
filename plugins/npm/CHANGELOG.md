@@ -1,3 +1,16 @@
+# v9.3.0 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- add docs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add ability to publish exact versions in monorepo  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.2.0 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix
