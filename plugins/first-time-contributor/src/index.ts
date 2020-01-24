@@ -1,24 +1,9 @@
-import { Auto, IPlugin, execPromise } from '@auto-it/core';
+import { Auto, IPlugin } from '@auto-it/core';
 import { ICommitAuthor } from '@auto-it/core/dist/log-parse';
 import flatMap from 'array.prototype.flatmap';
 import endent from 'endent';
 import urlJoin from 'url-join';
 import { URL } from 'url';
-
-const JUST_NAME = '%aN' as const;
-const JUST_EMAIL = '%cE' as const;
-
-type Format = typeof JUST_NAME | typeof JUST_EMAIL;
-
-/** Get some of the contributors from the git history */
-const getContributors = async (format: Format) => {
-  const start = '$(git rev-list HEAD | tail -n 1)';
-  const lastRelease = '$(git describe --tags --abbrev=0)';
-
-  return execPromise(
-    `git log --format='${format}' ${start}..${lastRelease} | sort -u`
-  );
-};
 
 /**
  * Thank first time contributors for their work right in your release notes.
@@ -41,29 +26,27 @@ export default class FirstTimeContributorPlugin implements IPlugin {
       changelog.hooks.addToBody.tapPromise(
         this.name,
         async (notes, commits) => {
-          const authors = flatMap(commits, c => c.authors);
+          const newContributors = (
+            await Promise.all(
+              flatMap(commits, c => c.authors).map(async author => {
+                if (!author.username) {
+                  return;
+                }
 
-          const contributors = await Promise.all([
-            getContributors(JUST_NAME),
-            getContributors(JUST_EMAIL),
-            auto
-              .git!.github.repos.listContributors({
-                repo: auto.git!.options.repo,
-                owner: auto.git!.options.owner
+                const prs = await auto.git?.graphql(`
+                {
+                  search(first: 2, type: ISSUE, query: "user:${auto.git?.options.owner} repo:${auto.git?.options.repo} author:${author.username} state:closed") {
+                    issueCount
+                  }
+                }
+              `);
+
+                if (prs && prs.search.issueCount === 1) {
+                  return author;
+                }
               })
-              .then(response =>
-                response.data.map(collaborator => collaborator.login).join('\n')
-              )
-          ]).then(lists => lists.join('\n').split('\n'));
-
-          const newContributors = authors.filter(
-            ({ name = '', email = '', username = '' }) =>
-              !(
-                (name && contributors.includes(name)) ||
-                (email && contributors.includes(email)) ||
-                (username && contributors.includes(username))
-              )
-          );
+            )
+          ).filter((a): a is ICommitAuthor => Boolean(a));
 
           if (!newContributors.length) {
             return notes;
@@ -75,7 +58,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           if (lines.size > 1) {
             thankYou = endent`
               :tada: This release contains work from new contributors! :tada:
-            
+
               Thanks for all your work!\n\n${[...lines]
                 .map(line => `:heart: ${line}`)
                 .join('\n\n')}
@@ -83,7 +66,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           } else {
             thankYou = endent`
               :tada: This release contains work from a new contributor! :tada:
-            
+
               Thank you, ${[...lines][0]}, for all your work!
             `;
           }
