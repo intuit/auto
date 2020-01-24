@@ -459,7 +459,8 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %s [skip ci]"'
+      '"Bump version to: %s [skip ci]"',
+      false
     ]);
   });
 
@@ -493,7 +494,43 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %s [skip ci]"'
+      '"Bump version to: %s [skip ci]"',
+      false
+    ]);
+  });
+
+  test('monorepo - should be able to publish exact packages', async () => {
+    const plugin = new NPMPlugin({ exact: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      baseBranch: 'master',
+      logger: dummyLog()
+    } as Auto.Auto);
+
+    existsSync.mockReturnValueOnce(true);
+    monorepoPackages.mockReturnValueOnce([]);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.version.promise(Auto.SEMVER.patch);
+    expect(exec).toHaveBeenCalledWith('npx', [
+      'lerna',
+      'version',
+      'patch',
+      '--force-publish',
+      '--no-commit-hooks',
+      '--yes',
+      '--no-push',
+      '-m',
+      '"Bump version to: %s [skip ci]"',
+      '--exact'
     ]);
   });
 
@@ -579,7 +616,8 @@ describe('publish', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %s [skip ci]"'
+      '"Bump version to: %s [skip ci]"',
+      false
     ]);
   });
 
@@ -767,7 +805,8 @@ describe('canary', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %s [skip ci]"'
+      '"Bump version to: %s [skip ci]"',
+      false
     ]);
   });
 
