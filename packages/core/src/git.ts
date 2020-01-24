@@ -705,7 +705,9 @@ export default class Git {
     const regex = new RegExp(`(${id})\\s*([\\S\\s]*)\\s*(${id})`);
     let body = issue.data.body;
 
-    if (body.match(regex)) {
+    if (!body) {
+      body = message ? `\n${id}\n${message}\n${id}\n` : '';
+    } else if (body.match(regex)) {
       this.logger.verbose.info('Found previous message from same scope.');
       this.logger.verbose.info('Replacing pr body comment');
       body = body.replace(regex, message ? `$1\n${message}\n$3` : '');
