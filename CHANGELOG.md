@@ -1,3 +1,16 @@
+# v9.2.3 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - determine first time contributor by using PR count instead of git history [#890](https://github.com/intuit/auto/pull/890) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.2.2 (Fri Jan 24 2020)
 
 :tada: This release contains work from a new contributor! :tada:

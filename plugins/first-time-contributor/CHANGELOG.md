@@ -1,3 +1,16 @@
+# v9.2.3 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- add tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- determine first time contributor by using PR count instead of git history  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix
