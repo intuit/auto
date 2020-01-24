@@ -178,6 +178,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "reckter",
+      "name": "Hannes Güdelhöfer",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1771450?v=4",
+      "profile": "https://github.com/reckter",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
