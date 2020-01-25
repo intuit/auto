@@ -1,3 +1,16 @@
+# v9.3.4 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- fix test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add better messaging when pr number cannot be detected  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.3 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

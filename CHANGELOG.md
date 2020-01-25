@@ -1,3 +1,16 @@
+# v9.3.4 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - add better messaging when pr number cannot be detected [#896](https://github.com/intuit/auto/pull/896) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.3 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix
