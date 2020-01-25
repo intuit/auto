@@ -307,9 +307,16 @@ async function gitReset() {
   await execPromise('git', ['reset', '--hard', 'HEAD']);
 }
 
-/** Make a HTML detail */
-const makeDetail = (summary: string, body: string[]) =>
-  `<details><summary>${summary}</summary>\n${markdownList(body)}</details>`;
+/** Make install instructions for multiple repos */
+const makeMonorepoInstallList = (packageList: string[]) =>
+  [
+    'Test out this PR locally via:',
+    '```sh',
+    ...packageList.map(p => `npm install ${p}`),
+    '# or ',
+    ...packageList.map(p => `yarn add ${p}`),
+    '```'
+  ].join('\n');
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
@@ -589,7 +596,10 @@ export default class NPMPlugin implements IPlugin {
             return { error: 'No packages were changed. No canary published.' };
           }
 
-          return makeDetail('Canary Versions', packageList);
+          return {
+            newVersion: 'Canary Versions',
+            details: makeMonorepoInstallList(packageList)
+          };
         }
 
         const versioned = packages.find(p => p.version.includes('canary'));
@@ -600,14 +610,12 @@ export default class NPMPlugin implements IPlugin {
 
         const version = versioned.version.split('+')[0];
 
-        return this.canaryScope
-          ? makeDetail(
-              `Published under canary scope @${sanitizeScope(
-                this.canaryScope
-              )}`,
-              packageList
-            )
-          : version;
+        return {
+          newVersion: this.canaryScope
+            ? `Published under canary scope @${sanitizeScope(this.canaryScope)}`
+            : version,
+          details: makeMonorepoInstallList(packageList)
+        };
       }
 
       auto.logger.verbose.info('Detected single npm package');
@@ -637,8 +645,13 @@ export default class NPMPlugin implements IPlugin {
         await gitReset();
       }
 
+      const { name } = await loadPackageJson();
       auto.logger.verbose.info('Successfully published canary version');
-      return canaryVersion;
+
+      return {
+        newVersion: canaryVersion,
+        details: makeMonorepoInstallList([`${name}@${canaryVersion}`])
+      };
     });
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {

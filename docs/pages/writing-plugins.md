@@ -316,6 +316,11 @@ Ran after the package has been published.
 
 Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID.
 
+You can either return a string value of just the version or an object containing the following which will be rendered within and HTML details element.
+
+- `newVersion` - The version published in the canary release or a header for the details element.
+- `details` - The body of the details element
+
 ```ts
 auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
   const lastRelease = await auto.git!.getLatestRelease();
