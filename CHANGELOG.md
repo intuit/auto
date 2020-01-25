@@ -1,3 +1,20 @@
+# v9.4.1 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/released`
+  - Wrap version in code [#900](https://github.com/intuit/auto/pull/900) ([@ericclemmons](https://github.com/ericclemmons))
+
+#### 📝  Documentation
+
+- Updated GitHub Action [#899](https://github.com/intuit/auto/pull/899) ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 1
+
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v9.4.0 (Sat Jan 25 2020)
 
 #### 🚀  Enhancement

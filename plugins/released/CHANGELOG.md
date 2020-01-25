@@ -1,3 +1,15 @@
+# v9.4.1 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- Wrap version in code block  ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 1
+
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v8.6.3 (Thu Dec 19 2019)
 
 #### 🐛  Bug Fix
