@@ -1,3 +1,15 @@
+# v9.3.2 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- better logging in dry runs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.1 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,16 @@
+# v9.3.2 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Fix private package previous version calculation + Improve dry run messaging [#894](https://github.com/intuit/auto/pull/894) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.1 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix
