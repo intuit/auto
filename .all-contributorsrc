@@ -195,7 +195,8 @@
       "profile": "https://ericclemmons.com/",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "test"
       ]
     }
   ],
