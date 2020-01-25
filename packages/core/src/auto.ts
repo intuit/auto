@@ -82,6 +82,16 @@ interface ShipitInfo {
   context: ShipitContext;
 }
 
+/** Make a HTML detail */
+const makeDetail = (summary: string, body: string) => endent`
+  <details>
+    <summary>${summary}</summary>
+    <br />
+    
+    ${body}
+  </details>
+`;
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
@@ -143,6 +153,12 @@ export interface IAutoHooks {
   canary: AsyncSeriesBailHook<
     [SEMVER, string],
     | string
+    | {
+        /** A summary to use in a details html element */
+        newVersion: string;
+        /** The details to use in a details html element */
+        details: string;
+      }
     | {
         /** Error when creating the canary release */
         error: string;
@@ -742,6 +758,7 @@ export default class Auto {
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
     let canaryVersion = '';
+    let newVersion = '';
 
     if (pr) {
       canaryVersion = `${canaryVersion}.${pr}`;
@@ -755,8 +772,6 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
-    let newVersion = '';
-
     if (options.dryRun) {
       this.logger.log.warn(
         `Published canary identifier would be: "-canary${canaryVersion}"`
@@ -765,7 +780,7 @@ export default class Auto {
       this.logger.verbose.info('Calling canary hook');
       const result = await this.hooks.canary.promise(version, canaryVersion);
 
-      if (typeof result === 'object') {
+      if (typeof result === 'object' && 'error' in result) {
         this.logger.log.warn(result.error);
         return;
       }
@@ -774,20 +789,26 @@ export default class Auto {
         return;
       }
 
-      newVersion = result;
-      const message =
-        options.message || '📦 Published PR as canary version: %v';
+      newVersion = typeof result === 'string' ? result : result.newVersion;
+      const messageHeader = (
+        options.message || '📦 Published PR as canary version: %v'
+      ).replace(
+        '%v',
+        !newVersion || newVersion.includes('\n')
+          ? newVersion
+          : `<code>${newVersion}</code>`
+      );
 
-      if (message !== 'false' && pr) {
+      if (options.message !== 'false' && pr) {
+        const message =
+          typeof result === 'string'
+            ? messageHeader
+            : makeDetail(messageHeader, result.details);
+
         await this.prBody({
           pr: Number(pr),
           context: 'canary-version',
-          message: message.replace(
-            '%v',
-            !newVersion || newVersion.includes('\n')
-              ? newVersion
-              : `\`${newVersion}\``
-          )
+          message
         });
       }
 

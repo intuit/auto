@@ -715,7 +715,8 @@ describe('canary', () => {
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, '');
     expect(exec.mock.calls[0][1]).toContain('lerna');
-    expect(value).toBe('1.2.3-canary.0');
+    // @ts-ignore
+    expect(value.newVersion).toBe('1.2.3-canary.0');
   });
 
   test('error when no canary release found', async () => {
