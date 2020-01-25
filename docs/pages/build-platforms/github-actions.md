@@ -22,17 +22,22 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v1
+
       - name: Prepare repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout ${GITHUB_REF:11} --
           git remote rm origin
-          git remote add origin https://$<your-github-user>:GITHUB_TOKEN@github.com/<project-owner>/<project-repo>
+          git remote add origin "https://x-access-token:$GH_TOKEN@github.com/<owner>/<repo>.git"
           git fetch origin --tags
           git branch --set-upstream-to origin/${GITHUB_REF:11} ${GITHUB_REF:11}
+
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
       - name: Cache node modules
         uses: actions/cache@v1
         with:
@@ -40,13 +45,14 @@ jobs:
           key: yarn-deps-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             yarn-deps-${{ hashFiles('yarn.lock') }}
+
       - name: Create Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          yarn
-          yarn build 
+          yarn install --frozen-lockfile
+          yarn build
           npx auto shipit
 ```
 
