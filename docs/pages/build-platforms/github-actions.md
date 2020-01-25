@@ -45,8 +45,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          yarn
-          yarn build 
+          yarn install --frozen-lockfile
+          yarn build
           npx auto shipit
 ```
 
