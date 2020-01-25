@@ -83,8 +83,14 @@ interface ShipitInfo {
 }
 
 /** Make a HTML detail */
-const makeDetail = (summary: string, body: string) =>
-  `<details><summary>${summary}</summary>\n${body}\n</details>`;
+const makeDetail = (summary: string, body: string) => endent`
+  <details>
+    <summary>${summary}</summary>
+    <br />
+    
+    ${body}
+  </details>
+`;
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
@@ -790,7 +796,7 @@ export default class Auto {
         '%v',
         !newVersion || newVersion.includes('\n')
           ? newVersion
-          : `\`${newVersion}\``
+          : `<code>${newVersion}</code>`
       );
 
       if (options.message !== 'false' && pr) {
