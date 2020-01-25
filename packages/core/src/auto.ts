@@ -775,7 +775,8 @@ export default class Auto {
       }
 
       newVersion = result;
-      const message = options.message || 'Published PR with canary version: %v';
+      const message =
+        options.message || '📦 Published PR as canary version: %v';
 
       if (message !== 'false' && pr) {
         await this.prBody({
