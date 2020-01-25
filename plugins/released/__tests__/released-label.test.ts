@@ -203,7 +203,7 @@ describe('release label plugin', () => {
 
     expect(comment).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: ':rocket: PR was released in 1.0.0 :rocket:'
+        message: ':rocket: PR was released in `1.0.0` :rocket:'
       })
     );
   });
@@ -349,7 +349,7 @@ describe('release label plugin', () => {
     expect(comment).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
-        message: ':rocket: Issue was released in 1.0.0 :rocket:',
+        message: ':rocket: Issue was released in `1.0.0` :rocket:',
         pr: 420,
         context: 'released'
       })
