@@ -1078,9 +1078,15 @@ export default class Auto {
     const prNumber = getPrNumberFromEnv(pr);
 
     if (!prNumber) {
-      throw new Error(
-        `Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.`
+      this.logger.log.error(
+        endent`
+          Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.
+          
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+        `
       );
+
+      process.exit(1);
     }
 
     return prNumber;

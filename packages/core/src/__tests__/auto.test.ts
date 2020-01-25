@@ -355,14 +355,14 @@ describe('Auto', () => {
 
     test('should catch exceptions when status fails to post', async () => {
       const auto = new Auto(defaults);
+
+      process.exit = jest.fn() as any;
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
-      createStatus.mockRejectedValueOnce({ status: 400 });
 
-      await expect(
-        auto.prStatus({ ...required, sha: '1234' })
-      ).rejects.toBeInstanceOf(Error);
+      auto.prStatus({ ...required, sha: '1234' });
+      expect(process.exit).toHaveBeenCalled();
       expect(createStatus).toHaveBeenCalled();
     });
 
