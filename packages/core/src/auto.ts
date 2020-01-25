@@ -735,7 +735,7 @@ export default class Auto {
 
     this.logger.verbose.info('Canary info found:', { pr, build });
 
-    const from = await this.git.shaExists('HEAD^') ? 'HEAD^' : 'HEAD';
+    const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
     const labels = head.map(commit => commit.labels);
     const version =
@@ -914,7 +914,7 @@ export default class Auto {
     this.hooks.beforeShipIt.call();
 
     const isPR = 'isPr' in env && env.isPr;
-    const from = await this.git.shaExists('HEAD^') ? 'HEAD^' : 'HEAD';
+    const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
@@ -942,14 +942,24 @@ export default class Auto {
       isPrereleaseBranch,
       publishPrerelease
     });
-    const publishInfo =
-      isBaseBrach && shouldGraduate
-        ? await this.publishFullRelease(options)
-        : this.inOldVersionBranch()
-        ? await this.oldRelease(options)
-        : publishPrerelease
-        ? await this.next(options)
-        : await this.canary(options);
+    let publishInfo: ShipitInfo | undefined;
+
+    if (isBaseBrach && shouldGraduate) {
+      publishInfo = await this.publishFullRelease(options);
+    } else if (this.inOldVersionBranch()) {
+      publishInfo = await this.oldRelease(options);
+    } else if (publishPrerelease) {
+      publishInfo = await this.next(options);
+    } else {
+      publishInfo = await this.canary(options);
+
+      if (options.dryRun) {
+        this.logger.log.success(
+          'Below is what would happen upon merge of the current branch into master'
+        );
+        await this.publishFullRelease(options);
+      }
+    }
 
     if (!publishInfo) {
       return;
@@ -1050,10 +1060,6 @@ export default class Auto {
     const newVersion = await this.makeRelease(options);
 
     if (options.dryRun) {
-      this.logger.log.warn(
-        "The version reported in the line above hasn't been incremented during `dry-run`"
-      );
-
       const current = await this.getCurrentVersion(lastRelease);
 
       if (parse(current)) {
@@ -1149,12 +1155,13 @@ export default class Auto {
       this.versionBump
     );
 
-    this.logger.log.info('New Release Notes\n', releaseNotes);
-
     if (dryRun) {
+      this.logger.log.info('Potential Changelog Addition:\n', releaseNotes);
       this.logger.verbose.info('`changelog` dry run complete.');
       return;
     }
+
+    this.logger.log.info('New Release Notes\n', releaseNotes);
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
 
@@ -1203,7 +1210,7 @@ export default class Auto {
       lastRelease = this.prefixRelease(lastRelease);
     }
 
-    this.logger.log.info('Last used release:', lastRelease);
+    this.logger.log.info('Current "Latest Release" on Github:', lastRelease);
 
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
@@ -1247,8 +1254,16 @@ export default class Auto {
     let release: Response<ReposCreateReleaseResponse> | undefined;
 
     if (dryRun) {
+      const bump = await this.getVersion({ from });
+
       this.logger.log.info(
-        `Would have released (unless ran with "shipit"): ${newVersion}`
+        `Would have created a release on GitHub for version: ${inc(
+          newVersion,
+          bump as ReleaseType
+        )}`
+      );
+      this.logger.log.note(
+        'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
       );
     } else {
       this.logger.log.info(`Releasing ${newVersion} to GitHub.`);

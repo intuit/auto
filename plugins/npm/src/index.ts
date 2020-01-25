@@ -146,6 +146,10 @@ export function getMonorepoPackage() {
         return subPackage.package;
       }
 
+      if (subPackage.package.private) {
+        return greatest;
+      }
+
       return gt(greatest.version, subPackage.package.version)
         ? greatest
         : subPackage.package;
