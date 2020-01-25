@@ -612,7 +612,7 @@ export default class NPMPlugin implements IPlugin {
 
         return {
           newVersion: this.canaryScope
-            ? `Published under canary scope @${sanitizeScope(
+            ? `under canary scope @${sanitizeScope(
                 this.canaryScope
               )}@${version}`
             : version,
