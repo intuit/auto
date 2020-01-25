@@ -19,7 +19,7 @@ const defaultOptions = {
   label: 'released',
   prereleaseLabel: 'prerelease',
   lockIssues: false,
-  message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`
+  message: `:rocket: ${TYPE} was released in \`${VERSION}\` :rocket:`
 };
 
 const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
