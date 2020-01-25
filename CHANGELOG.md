@@ -1,3 +1,21 @@
+# v9.3.3 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Add 📦 emoji to canary PR message to make it more noticeable [#897](https://github.com/intuit/auto/pull/897) ([@ericclemmons](https://github.com/ericclemmons))
+
+#### 📝  Documentation
+
+- `@auto-it/all-contributors`
+  - Explicitly add npm & yarn step for all-contributors [#895](https://github.com/intuit/auto/pull/895) ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 1
+
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v9.3.2 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

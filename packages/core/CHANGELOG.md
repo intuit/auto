@@ -1,3 +1,15 @@
+# v9.3.3 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- Add :package: emoji to canary PR message to make it more noticeable  ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 1
+
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v9.3.2 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

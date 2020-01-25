@@ -1,3 +1,18 @@
+# v9.3.3 (Fri Jan 24 2020)
+
+#### 🐛  Bug Fix
+
+- Explicitly add npm & yarn step
+
+install-peerdeps wasn't installing anything after prompting to use yarn
+or not  ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 1
+
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v9.2.0 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix
