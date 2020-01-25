@@ -16,12 +16,12 @@ Out of the box the plugin will only detect the following contribution types:
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```sh
-npx install-peerdeps --dev @auto-it/all-contributors
+npm i --save-dev @auto-it/all-contributors all-contributors-cli
+# or
+yarn add -D @auto-it/all-contributors all-contributors-cli
 ```
 
 ## Prerequisites
-
-You must have already installed and initialized `all-contributors-cli`;
 
 ```sh
 npx all-contributors init
