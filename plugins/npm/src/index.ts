@@ -310,7 +310,7 @@ async function gitReset() {
 /** Make install instructions for multiple repos */
 const makeMonorepoInstallList = (packageList: string[]) =>
   [
-    'Test out this PR locally via:',
+    ':sparkles: Test out this PR locally via:\n',
     '```sh',
     ...packageList.map(p => `npm install ${p}`),
     '# or ',
