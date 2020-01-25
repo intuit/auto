@@ -1,3 +1,16 @@
+# v9.4.0 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- format detail a little better  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add html details option to canary hook + Use in npm plugin  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.4 (Sat Jan 25 2020)
 
 #### 🐛  Bug Fix

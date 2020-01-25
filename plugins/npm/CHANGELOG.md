@@ -1,3 +1,18 @@
+# v9.4.0 (Sat Jan 25 2020)
+
+#### 🐛  Bug Fix
+
+- clearer sentence  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- more emoji === better  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- include version for canary scope  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add html details option to canary hook + Use in npm plugin  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.2 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

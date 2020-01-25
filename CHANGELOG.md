@@ -1,3 +1,16 @@
+# v9.4.0 (Sat Jan 25 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Add html details option to canary hook + Use in npm plugin [#898](https://github.com/intuit/auto/pull/898) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.4 (Sat Jan 25 2020)
 
 #### 🐛  Bug Fix
