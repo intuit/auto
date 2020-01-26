@@ -44,6 +44,7 @@ interface GithubApis {
   githubGraphqlApi?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PluginConfig = [string, any] | string;
 
 export type AutoRc = Partial<

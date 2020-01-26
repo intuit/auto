@@ -67,6 +67,7 @@ export default class JiraPlugin implements IPlugin {
     this.options = typeof options === 'string' ? { url: options } : options;
   }
 
+  /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
     initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
       if (name === 'jira') {

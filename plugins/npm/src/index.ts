@@ -356,6 +356,7 @@ export default class NPMPlugin implements IPlugin {
     return getLernaPackages();
   }
 
+  /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
     initializer.hooks.createEnv.tap(this.name, vars => [
       ...vars,
@@ -398,6 +399,7 @@ export default class NPMPlugin implements IPlugin {
     initializer.hooks.writeRcFile.tapPromise(this.name, async rc => {
       const packageJson = await loadPackageJson();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((packageJson as any).auto) {
         initializer.logger.log.note(
           'Would have wrote configuration:\n',

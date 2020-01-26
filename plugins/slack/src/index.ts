@@ -55,6 +55,7 @@ export default class SlackPlugin implements IPlugin {
     }
   }
 
+  /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
     initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
       if (name === 'slack') {
