@@ -406,15 +406,15 @@ export default class NPMPlugin implements IPlugin {
         initializer.logger.log.warn(
           'Found auto configuration in package.json. Doing nothing.'
         );
-        process.exit();
+      } else {
+        await writeFile(
+          'package.json',
+          JSON.stringify({ ...packageJson, auto: rc }, null, 2)
+        );
+        initializer.logger.log.success('Wrote configuration to package.json');
       }
 
-      const filename = 'package.json';
-      await writeFile(
-        filename,
-        JSON.stringify({ ...packageJson, auto: rc }, null, 2)
-      );
-      return filename;
+      return true;
     });
   }
 

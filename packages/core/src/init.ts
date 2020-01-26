@@ -59,7 +59,7 @@ export type AutoRc = Partial<
 
 export interface InteractiveInitHooks {
   /** Override where/how the rc file is written */
-  writeRcFile: AsyncSeriesBailHook<[AutoRc], string | void>;
+  writeRcFile: AsyncSeriesBailHook<[AutoRc], true | void>;
   /** Get or verify the repo information */
   getRepo: AsyncSeriesBailHook<[], RepoInformation | true | void>;
   /** Get or verify the author information */
@@ -387,7 +387,7 @@ export default class InteractiveInit {
     this.hooks.writeRcFile.tap('Init Default', rc => {
       const filename = '.autorc';
       writeFileSync(filename, JSON.stringify(rc, null, 2));
-      return filename;
+      this.logger.log.success(`Wrote configuration to: ${filename}`);
     });
   }
 
@@ -471,7 +471,14 @@ export default class InteractiveInit {
       autoRc.labels = [...(autoRc.labels || []), ...newLabels];
     }
 
-    const file = await this.hooks.writeRcFile.promise(autoRc);
-    this.logger.log.success(`Wrote configuration to: ${file}`);
+    await this.hooks.writeRcFile.promise(autoRc);
+
+    this.logger.log.note(endent`
+      Next steps:
+      
+        - Run "auto create-labels" to create your labels on GitHub
+        - Add your environment variables to your CI builds
+        - Add "auto shipit" at the end of you build/release process\n
+    `);
   }
 }

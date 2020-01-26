@@ -532,6 +532,7 @@ class MyPlugin implements IPlugin {
 #### createEnv
 
 Add environment variables to get from the user
+
 ```ts
 class MyPlugin implements IPlugin {
   init(initializer: InteractiveInit) {
