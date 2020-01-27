@@ -48,7 +48,13 @@ Getting started with `auto` is super easy.
 
 ### 1. Initialize Options
 
-Initialize all options and configure label text. If this is not run then `auto` will use the default configuration. This command will produce and `.autorc`, this contains advanced configuration and might not be needed.
+Initialize the bare minimum options and a few other optional things.
+This will set you up locally but you will still have to configure environment variables in your CI. 
+
+- Override default labels
+- Add additional labels
+- Add plugins
+- Creates an .env file for local testing
 
 ### 2. Environment Variables
 

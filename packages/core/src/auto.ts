@@ -21,7 +21,6 @@ import {
   IChangelogOptions,
   ICommentOptions,
   ICreateLabelsOptions,
-  IInitOptions,
   ILabelOptions,
   IPRCheckOptions,
   IPRStatusOptions,
@@ -34,7 +33,7 @@ import Changelog from './changelog';
 import { preVersionMap } from './semver';
 import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
-import init from './init';
+import InteractiveInit from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
 import Release, {
   getVersionMap,
@@ -139,9 +138,15 @@ export interface IAutoHooks {
   getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
-  /** This is where you hook into the LogParse's hooks. This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
+  /**
+   * This is where you hook into the LogParse's hooks.
+   * This hook is exposed for convenience during `this.hooks.onCreateRelease` and at the root `this.hooks`
+   */
   onCreateLogParse: SyncHook<[LogParse]>;
-  /** This is where you hook into the changelog's hooks.  This hook is exposed for convenience on during `this.hooks.onCreateRelease` and at the root `this.hooks` */
+  /**
+   * This is where you hook into the changelog's hooks.
+   * This hook is exposed for convenience during `this.hooks.onCreateRelease` and at the root `this.hooks`
+   */
   onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<[SEMVER]>;
@@ -374,11 +379,10 @@ export default class Auto {
     this.hooks.onCreateRelease.call(this.release);
   }
 
-  /**
-   * Interactive prompt for initializing an .autorc
-   */
-  async init(options: IInitOptions = {}) {
-    await init(options, this.logger);
+  /** Interactive prompt for initializing an .autorc */ 
+  async init() {
+    const init = new InteractiveInit(this);
+    await init.run();
   }
 
   /** Determine if the repo is currently in a prerelease branch */
@@ -1470,6 +1474,7 @@ If a command fails manually run:
 // Plugin Utils
 
 export * from './auto-args';
+export { default as InteractiveInit } from './init';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';

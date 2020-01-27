@@ -13,6 +13,7 @@ import {
   execPromise,
   ILogger,
   IPlugin,
+  InteractiveInit,
   SEMVER
 } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
@@ -353,6 +354,70 @@ export default class NPMPlugin implements IPlugin {
   @memoize()
   private async getLernaPackages() {
     return getLernaPackages();
+  }
+
+  /** Custom initialization for this plugin */
+  init(initializer: InteractiveInit) {
+    initializer.hooks.createEnv.tap(this.name, vars => [
+      ...vars,
+      {
+        variable: 'NPM_TOKEN',
+        message: `Enter a npm token for publishing packages https://docs.npmjs.com/creating-and-viewing-authentication-tokens`
+      }
+    ]);
+
+    initializer.hooks.getAuthor.tapPromise(this.name, async () => {
+      const packageJson = await loadPackageJson();
+
+      if (packageJson.author) {
+        return true;
+      }
+
+      const author = await initializer.getAuthorInformation();
+      const newPackageJson = { ...packageJson };
+      newPackageJson.author = `${author.name} <${author.email}>`;
+      await writeFile('package.json', JSON.stringify(newPackageJson, null, 2));
+
+      return true;
+    });
+
+    initializer.hooks.getRepo.tapPromise(this.name, async () => {
+      const packageJson = await loadPackageJson();
+
+      if (packageJson.repository) {
+        return true;
+      }
+
+      const repository = await initializer.getRepoInformation();
+      const newPackageJson = { ...packageJson };
+      newPackageJson.repository = `${repository.owner}/${repository.repo}`;
+      await writeFile('package.json', JSON.stringify(newPackageJson, null, 2));
+
+      return true;
+    });
+
+    initializer.hooks.writeRcFile.tapPromise(this.name, async rc => {
+      const packageJson = await loadPackageJson();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((packageJson as any).auto) {
+        initializer.logger.log.note(
+          'Would have wrote configuration:\n',
+          JSON.stringify(rc, null, 2)
+        );
+        initializer.logger.log.warn(
+          'Found auto configuration in package.json. Doing nothing.'
+        );
+      } else {
+        await writeFile(
+          'package.json',
+          JSON.stringify({ ...packageJson, auto: rc }, null, 2)
+        );
+        initializer.logger.log.success('Wrote configuration to package.json');
+      }
+
+      return true;
+    });
   }
 
   /** Tap into auto plugin points. */

@@ -10,6 +10,7 @@ import { IAutoHooks } from '../auto';
 import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
 import { IReleaseHooks } from '../release';
+import { InteractiveInitHooks } from '../init';
 
 /** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({
@@ -45,6 +46,15 @@ export const makeReleaseHooks = (): IReleaseHooks => ({
 export const makeLogParseHooks = (): ILogParseHooks => ({
   parseCommit: new AsyncSeriesWaterfallHook(['commit']),
   omitCommit: new AsyncSeriesBailHook(['commit'])
+});
+
+/** Make the hooks for "InteractiveInit" */
+export const makeInteractiveInitHooks = (): InteractiveInitHooks => ({
+  writeRcFile: new AsyncSeriesBailHook(['rcFile']),
+  getRepo: new AsyncSeriesBailHook([]),
+  getAuthor: new AsyncSeriesBailHook([]),
+  createEnv: new AsyncSeriesWaterfallHook(['vars']),
+  configurePlugin: new AsyncSeriesBailHook(['pluginName'])
 });
 
 /** Make the hooks for "Changelog" */
