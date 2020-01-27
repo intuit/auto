@@ -2,7 +2,7 @@ import { graphql } from '@octokit/graphql';
 import { enterpriseCompatibility } from '@octokit/plugin-enterprise-compatibility';
 import path from 'path';
 import { retry } from '@octokit/plugin-retry';
-import throttling from '@octokit/plugin-throttling';
+import { throttling } from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
