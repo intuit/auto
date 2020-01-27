@@ -806,7 +806,7 @@ describe('canary', () => {
       '--yes',
       '--no-push',
       '-m',
-      '"Bump version to: %s [skip ci]"',
+      '"Bump independent versions [skip ci]"',
       false
     ]);
   });

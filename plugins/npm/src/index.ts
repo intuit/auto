@@ -579,7 +579,9 @@ export default class NPMPlugin implements IPlugin {
           '--yes',
           '--no-push',
           '-m',
-          VERSION_COMMIT_MESSAGE,
+          isIndependent
+            ? '"Bump independent versions [skip ci]"'
+            : VERSION_COMMIT_MESSAGE,
           this.exact && '--exact',
           ...verboseArgs
         ]);
