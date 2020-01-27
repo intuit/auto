@@ -91,13 +91,20 @@ const makeDetail = (summary: string, body: string) => endent`
   </details>
 `;
 
+type ShipitRelease = 'latest' | 'old' | 'next' | 'canary';
+
+interface BeforeShipitContext {
+  /** The type of release that will be made when shipit runs. */
+  releaseType: ShipitRelease;
+}
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
   beforeRun: SyncHook<[IAutoConfig]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
-  beforeShipIt: SyncHook<[]>;
+  beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
   beforeCommitChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`. */
@@ -379,7 +386,7 @@ export default class Auto {
     this.hooks.onCreateRelease.call(this.release);
   }
 
-  /** Interactive prompt for initializing an .autorc */ 
+  /** Interactive prompt for initializing an .autorc */
   async init() {
     const init = new InteractiveInit(this);
     await init.run();
@@ -937,7 +944,6 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'shipit'");
-    this.hooks.beforeShipIt.call();
 
     const isPR = 'isPr' in env && env.isPr;
     const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
@@ -970,11 +976,23 @@ export default class Auto {
     });
     let publishInfo: ShipitInfo | undefined;
 
+    let releaseType: ShipitRelease = 'canary';
+
     if (isBaseBrach && shouldGraduate) {
-      publishInfo = await this.publishFullRelease(options);
+      releaseType = 'latest';
     } else if (this.inOldVersionBranch()) {
-      publishInfo = await this.oldRelease(options);
+      releaseType = 'old';
     } else if (publishPrerelease) {
+      releaseType = 'next';
+    }
+
+    await this.hooks.beforeShipIt.promise({ releaseType });
+
+    if (releaseType === 'latest') {
+      publishInfo = await this.publishFullRelease(options);
+    } else if (releaseType === 'old') {
+      publishInfo = await this.oldRelease(options);
+    } else if (releaseType === 'next') {
       publishInfo = await this.next(options);
     } else {
       publishInfo = await this.canary(options);
@@ -1058,6 +1076,8 @@ export default class Auto {
     }
 
     const version = await this.getVersion(options);
+
+    this.logger.log.success(`Calculated version bump: ${version}`);
 
     if (version === '') {
       this.logger.log.info('No version published.');

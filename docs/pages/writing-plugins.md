@@ -101,8 +101,12 @@ auto.hooks.modifyConfig.tap('test', config => {
 
 Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present.
 
+Context Object:
+
+- `releaseType` (`latest` | `old` | `next` | `canary`) - The type of release `shipit` will attempt to make.
+
 ```ts
-auto.hooks.beforeRun.tapPromise('NPM', async config => {
+auto.hooks.beforeRun.tapPromise('NPM', async context => {
   if (!process.env.NPM_TOKEN) {
     throw new Error('NPM Token is needed for the NPM plugin!');
   }
@@ -542,7 +546,7 @@ class MyPlugin implements IPlugin {
         variable: 'MY_TOKEN',
         message: `This is a very important secret`
       }
-    ])
+    ]);
   }
 }
 ```
