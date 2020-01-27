@@ -483,6 +483,69 @@ auto.hooks.onCreateLogParse.tapPromise('Stars', changelog =>
 );
 ```
 
+### Init Hooks
+
+#### writeRcFile
+
+Override where/how the rc file is written.
+
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.writeRcFile.tapPromise('Example', async rc => {
+      // write the file somewhere other than .autorc
+      return filename;
+    });
+  }
+}
+```
+
+#### getRepo
+
+Get or verify the repo information.
+
+#### getAuthor - init
+
+Get or verify the author information.
+
+#### configurePlugin
+
+Run extra configuration for a plugin. Here is where to display prompts to the user.
+
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.configurePlugin.tapPromise('Example', async name => {
+      if (name === 'my-plugins') {
+        return [
+          name,
+          {
+            // extra config options
+          }
+        ];
+      }
+    });
+  }
+}
+```
+
+#### createEnv
+
+Add environment variables to get from the user
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.createEnv.tap('Example', vars => [
+      ...vars,
+      {
+        variable: 'MY_TOKEN',
+        message: `This is a very important secret`
+      }
+    ])
+  }
+}
+```
+
 ## Example Plugin - NPM (simple)
 
 To create a plugin simply make a class with an `apply` method and tap into the hooks you need.

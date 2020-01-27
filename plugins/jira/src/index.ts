@@ -1,11 +1,17 @@
 import join from 'url-join';
+import {prompt} from 'enquirer'
 
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, InteractiveInit } from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
 interface IJiraPluginOptions {
   /** Url to a hosted JIRA instance */
   url: string;
+}
+
+interface InputResponse<T = 'string'> {
+  /** he value of the input prompt */
+  value: T;
 }
 
 interface IJiraCommit extends IExtendedCommit {
@@ -59,6 +65,21 @@ export default class JiraPlugin implements IPlugin {
   /** Initialize the plugin with it's options */
   constructor(options: IJiraPluginOptions | string) {
     this.options = typeof options === 'string' ? { url: options } : options;
+  }
+
+  init(initializer: InteractiveInit) {
+    initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
+      if (name === 'jira') {
+        const url = await prompt<InputResponse>({
+          type: 'input',
+          name: 'value',
+          message: 'What is the root url of your Jira instance?',
+          required: true
+        });
+
+        return ['jira', url.value]
+      }
+    })
   }
 
   /** Tap into auto plugin points. */

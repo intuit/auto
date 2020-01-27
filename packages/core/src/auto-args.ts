@@ -17,13 +17,6 @@ export interface ILogOptions {
   verbose?: boolean | boolean[];
 }
 
-export interface IInitOptions {
-  /** Only show prompts for creating labels */
-  onlyLabels?: boolean;
-  /** Do not actually do anything */
-  dryRun?: boolean;
-}
-
 export interface ICreateLabelsOptions {
   /** Do not actually do anything */
   dryRun?: boolean;
@@ -156,7 +149,6 @@ export type GlobalOptions = {
 
 export type ApiOptions = GlobalOptions &
   (
-    | IInitOptions
     | ICreateLabelsOptions
     | ILabelOptions
     | IPRCheckOptions

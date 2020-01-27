@@ -4,6 +4,7 @@ import * as path from 'path';
 import Auto from '../auto';
 import { ILogger } from './logger';
 import tryRequire from './try-require';
+import InteractiveInit from '../init';
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -11,6 +12,8 @@ export type IPluginConstructor = new (options?: any) => IPlugin;
 export interface IPlugin {
   /** The name to identify the plugin by */
   name: string;
+  /** Called when running `auto init`. gives plugin ability to add custom init experience. */
+  init?(initializer: InteractiveInit): void;
   /** Called when registering the plugin with auto */
   apply(auto: Auto): void;
 }

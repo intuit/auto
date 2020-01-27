@@ -12,7 +12,6 @@ import {
   IChangelogOptions,
   ICommentOptions,
   ICreateLabelsOptions,
-  IInitOptions,
   ILabelOptions,
   IPRBodyOptions,
   IPRCheckOptions,
@@ -24,7 +23,6 @@ import {
 
 export type Flags =
   | keyof GlobalOptions
-  | keyof IInitOptions
   | keyof ICreateLabelsOptions
   | keyof ILabelOptions
   | keyof IPRCheckOptions
@@ -179,18 +177,8 @@ export const commands: Command[] = [
   {
     name: 'init',
     group: 'Setup Command',
-    description: 'Interactive setup for most configurable options',
-    examples: ['{green $} auto init'],
-    options: [
-      {
-        name: 'only-labels',
-        type: Boolean,
-        group: 'main',
-        description:
-          'Only run init for the labels. As most other options are for advanced users'
-      },
-      dryRun
-    ]
+    description: 'Interactive setup for minimum working configuration.',
+    examples: ['{green $} auto init']
   },
   {
     name: 'create-labels',

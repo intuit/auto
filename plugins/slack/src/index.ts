@@ -1,7 +1,13 @@
 import { githubToSlack } from '@atomist/slack-messages';
-import { Auto, IPlugin, getCurrentBranch } from '@auto-it/core';
+import { Auto, IPlugin, getCurrentBranch, InteractiveInit } from '@auto-it/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
+import {prompt} from 'enquirer'
+
+interface InputResponse<T = 'string'> {
+  /** he value of the input prompt */
+  value: T;
+}
 
 /** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
@@ -47,6 +53,21 @@ export default class SlackPlugin implements IPlugin {
           : false
       };
     }
+  }
+
+  init(initializer: InteractiveInit) {
+    initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
+      if (name === 'slack') {
+        const url = await prompt<InputResponse>({
+          type: 'input',
+          name: 'value',
+          message: 'What is the root url of your slack hook?',
+          required: true
+        });
+
+        return ['slack', url.value]
+      }
+    })
   }
 
   /** Tap into auto plugin points. */

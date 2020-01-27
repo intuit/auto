@@ -6,7 +6,6 @@ import Auto, {
   IChangelogOptions,
   ICommentOptions,
   ICreateLabelsOptions,
-  IInitOptions,
   ILabelOptions,
   IPRBodyOptions,
   IPRCheckOptions,
@@ -23,7 +22,7 @@ export async function run(command: string, args: ApiOptions) {
 
   switch (command) {
     case 'init':
-      await auto.init(args as IInitOptions);
+      await auto.init();
       break;
     case 'create-labels':
       await auto.loadConfig();
