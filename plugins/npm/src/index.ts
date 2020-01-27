@@ -435,7 +435,22 @@ export default class NPMPlugin implements IPlugin {
         ? branch
         : prereleaseBranches[0];
 
-    auto.hooks.beforeShipIt.tap(this.name, async () => {
+    auto.hooks.beforeShipIt.tap(this.name, async context => {
+      const isIndependent = getLernaJson().version === 'independent';
+
+      // In independent mode it's possible that no changes to packages have been
+      // made, so no release will be made.
+      if (isIndependent && context.releaseType === 'latest') {
+        try {
+          await execPromise('yarn', ['lerna', 'updated']);
+        } catch (error) {
+          auto.logger.log.warn(
+            'Lerna detected no changes in project. Aborting release since nothing would be published.'
+          );
+          process.exit(0);
+        }
+      }
+
       if (!isCi) {
         return;
       }
