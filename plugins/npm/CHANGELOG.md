@@ -1,3 +1,16 @@
+# v9.7.0 (Mon Jan 27 2020)
+
+#### 🐛  Bug Fix
+
+- use different version commit message for independent projects  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- abort release if lerna reports no unchanged packages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.5.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix

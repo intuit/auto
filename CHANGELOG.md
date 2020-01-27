@@ -1,3 +1,23 @@
+# v9.7.0 (Mon Jan 27 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/crates`
+  - enhance BeforeShipit hook to include the type of release that will be made [#913](https://github.com/intuit/auto/pull/913) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - abort release if lerna reports no unchanged packages [#914](https://github.com/intuit/auto/pull/914) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/npm`
+  - use different version commit message for independent projects [#915](https://github.com/intuit/auto/pull/915) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.6.0 (Mon Jan 27 2020)
 
 #### 🚀  Enhancement

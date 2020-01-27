@@ -1,3 +1,15 @@
+# v9.7.0 (Mon Jan 27 2020)
+
+#### 🐛  Bug Fix
+
+- enhance BeforeShipit hook to include the type of release that will be made  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.5.0 (Mon Jan 27 2020)
 
 :tada: This release contains work from a new contributor! :tada:
