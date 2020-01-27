@@ -1,13 +1,12 @@
 import { githubToSlack } from '@atomist/slack-messages';
-import { Auto, IPlugin, getCurrentBranch, InteractiveInit } from '@auto-it/core';
+import {
+  Auto,
+  IPlugin,
+  getCurrentBranch,
+  InteractiveInit
+} from '@auto-it/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
-import {prompt} from 'enquirer'
-
-interface InputResponse<T = 'string'> {
-  /** he value of the input prompt */
-  value: T;
-}
 
 /** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
@@ -25,7 +24,7 @@ const sanitizeMarkdown = (markdown: string) =>
 
 interface ISlackPluginOptions {
   /** URL of the slack to post to */
-  url: string;
+  url?: string;
   /** Who to bother when posting to the channel */
   atTarget?: string;
   /** Allow users to opt into having prereleases posted to slack */
@@ -41,12 +40,12 @@ export default class SlackPlugin implements IPlugin {
   readonly options: ISlackPluginOptions;
 
   /** Initialize the plugin with it's options */
-  constructor(options: ISlackPluginOptions | string) {
+  constructor(options: ISlackPluginOptions | string = {}) {
     if (typeof options === 'string') {
       this.options = { url: options, atTarget: 'channel' };
     } else {
       this.options = {
-        url: options.url ? options.url : '',
+        url: process.env.SLACK_WEBHOOK_URL || options.url || '',
         atTarget: options.atTarget ? options.atTarget : 'channel',
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
@@ -57,18 +56,13 @@ export default class SlackPlugin implements IPlugin {
 
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
-    initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
-      if (name === 'slack') {
-        const url = await prompt<InputResponse>({
-          type: 'input',
-          name: 'value',
-          message: 'What is the root url of your slack hook?',
-          required: true
-        });
-
-        return ['slack', url.value]
+    initializer.hooks.createEnv.tapPromise(this.name, async vars => [
+      ...vars,
+      {
+        variable: 'SLACK_WEBHOOK_URL',
+        message: 'What is the root url of your slack hook? ()'
       }
-    })
+    ]);
   }
 
   /** Tap into auto plugin points. */
