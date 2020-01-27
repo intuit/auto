@@ -139,6 +139,10 @@ export default class TwitterPlugin implements IPlugin {
           return;
         }
 
+        const url = Array.isArray(response)
+          ? response.map(r => `- ${r.data.html_url}`).join('\n')
+          : response.data.html_url;
+
         await this.tweet(
           makeTweet({
             releaseNotes,
@@ -146,7 +150,7 @@ export default class TwitterPlugin implements IPlugin {
             versionBump,
             newVersion,
             repo: auto.git.options.repo,
-            url: response.data.html_url
+            url
           })
         );
       }

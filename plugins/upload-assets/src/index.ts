@@ -49,15 +49,32 @@ export default class UploadAssetsPlugin implements IPlugin {
           const stats = await stat(asset);
           const type = await FileType.fromBuffer(file);
 
-          await auto.git.github.repos.uploadReleaseAsset({
-            url: response.data.upload_url,
+          const options = {
             file,
             name: path.basename(asset),
             headers: {
               'content-length': stats.size,
               'content-type': type ? type.mime : 'application/octet-stream'
             }
-          });
+          };
+
+          // Multiple releases were made
+          if (Array.isArray(response)) {
+            await Promise.all(
+              response.map(r =>
+                auto.git!.github.repos.uploadReleaseAsset({
+                  ...options,
+                  url: r.data.upload_url
+                })
+              )
+            );
+          } else {
+            await auto.git.github.repos.uploadReleaseAsset({
+              ...options,
+              url: response.data.upload_url
+            });
+          }
+
           auto.logger.log.success(`Uploaded asset: ${asset}`);
         })
       );
