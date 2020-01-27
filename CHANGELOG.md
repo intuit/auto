@@ -1,3 +1,16 @@
+# v9.6.0 (Mon Jan 27 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/slack`
+  - add ability to store slack hook url in environment variable [#912](https://github.com/intuit/auto/pull/912) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.5.0 (Mon Jan 27 2020)
 
 :tada: This release contains work from a new contributor! :tada:

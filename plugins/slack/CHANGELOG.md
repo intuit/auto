@@ -1,3 +1,15 @@
+# v9.6.0 (Mon Jan 27 2020)
+
+#### 🐛  Bug Fix
+
+- add ability to store slack hook url in environment variable  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.5.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix
