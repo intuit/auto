@@ -1,3 +1,17 @@
+# v9.5.0 (Mon Jan 27 2020)
+
+#### 🐛  Bug Fix
+
+- fix lint  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add next steps  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Overhaul "auto init" experience + make it pluggable  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.4.0 (Sat Jan 25 2020)
 
 #### 🐛  Bug Fix

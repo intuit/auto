@@ -1,3 +1,37 @@
+# v9.5.0 (Mon Jan 27 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/slack`
+  - Overhaul "auto init" experience + make it pluggable [#901](https://github.com/intuit/auto/pull/901) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 2.12.0 to 2.17.0 [#905](https://github.com/intuit/auto/pull/905) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest and ts-jest [#911](https://github.com/intuit/auto/pull/911) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.0.10 to 4.2.1 [#909](https://github.com/intuit/auto/pull/909) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 14.5.8 to 14.6.0 [#907](https://github.com/intuit/auto/pull/907) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump command-line-application from 0.9.5 to 0.9.6 [#906](https://github.com/intuit/auto/pull/906) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.16.0 to 2.17.0 [#904](https://github.com/intuit/auto/pull/904) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump endent from 1.3.0 to 1.4.0 [#903](https://github.com/intuit/auto/pull/903) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/plugin-throttling from 2.7.1 to 3.2.0 [#902](https://github.com/intuit/auto/pull/902) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/plugin-retry from 2.2.0 to 3.0.1 [#910](https://github.com/intuit/auto/pull/910) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/rest from 16.37.0 to 16.38.3 [#908](https://github.com/intuit/auto/pull/908) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.4.1 (Sat Jan 25 2020)
 
 #### 🐛  Bug Fix

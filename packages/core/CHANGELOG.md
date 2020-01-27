@@ -1,3 +1,45 @@
+# v9.5.0 (Mon Jan 27 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- fix lint  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add next steps  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Overhaul "auto init" experience + make it pluggable  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/plugin-throttling from 2.7.1 to 3.2.0
+
+Bumps [@octokit/plugin-throttling](https://github.com/octokit/plugin-throttling.js) from 2.7.1 to 3.2.0.
+- [Release notes](https://github.com/octokit/plugin-throttling.js/releases)
+- [Commits](https://github.com/octokit/plugin-throttling.js/compare/v2.7.1...v3.2.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/plugin-retry from 2.2.0 to 3.0.1
+
+Bumps [@octokit/plugin-retry](https://github.com/octokit/plugin-retry.js) from 2.2.0 to 3.0.1.
+- [Release notes](https://github.com/octokit/plugin-retry.js/releases)
+- [Commits](https://github.com/octokit/plugin-retry.js/compare/v2.2.0...v3.0.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/rest from 16.37.0 to 16.38.3
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.37.0 to 16.38.3.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.37.0...v16.38.3)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.4.0 (Sat Jan 25 2020)
 
 #### 🐛  Bug Fix
