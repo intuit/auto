@@ -151,9 +151,9 @@ describe('CratesPlugin', () => {
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
-        await expect(hooks.beforeShipIt.promise()).rejects.toThrow(
-          'Cargo token is needed for the Crates plugin'
-        );
+        await expect(
+          hooks.beforeShipIt.promise({ releaseType: 'canary' })
+        ).rejects.toThrow('Cargo token is needed for the Crates plugin');
       });
 
       test('does not throw error if Cargo creds', async () => {
@@ -162,7 +162,9 @@ describe('CratesPlugin', () => {
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
 
-        await expect(hooks.beforeShipIt.promise()).resolves.not.toThrow();
+        await expect(
+          hooks.beforeShipIt.promise({ releaseType: 'canary' })
+        ).resolves.not.toThrow();
       });
     });
 
