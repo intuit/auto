@@ -1,7 +1,7 @@
 import { graphql } from '@octokit/graphql';
-import enterpriseCompat from '@octokit/plugin-enterprise-compatibility';
+import { enterpriseCompatibility } from '@octokit/plugin-enterprise-compatibility';
 import path from 'path';
-import retry from '@octokit/plugin-retry';
+import { retry } from '@octokit/plugin-retry';
 import throttling from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
 import gitlogNode, { ICommit } from 'gitlog';
@@ -98,7 +98,7 @@ export default class Git {
     this.baseUrl = this.options.baseUrl || 'https://api.github.com';
     this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const GitHub = Octokit.plugin(enterpriseCompat)
+    const GitHub = Octokit.plugin(enterpriseCompatibility)
       .plugin(retry)
       .plugin(throttling);
     this.github = new GitHub({
@@ -197,19 +197,15 @@ export default class Git {
     return result;
   }
 
-    /** Get the SHA of the latest commit */
-    async shaExists(sha?: string): Promise<boolean> {
-      try {
-        await execPromise('git', [
-          'rev-parse',
-          '--verify',
-          sha
-        ]);
-        return true
-      } catch (error) {
-        return false;
-      }
+  /** Get the SHA of the latest commit */
+  async shaExists(sha?: string): Promise<boolean> {
+    try {
+      await execPromise('git', ['rev-parse', '--verify', sha]);
+      return true;
+    } catch (error) {
+      return false;
     }
+  }
 
   /** Get the labels for a PR */
   @memoize()
