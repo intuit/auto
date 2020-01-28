@@ -6,6 +6,7 @@ import NPMPlugin, {
   getMonorepoPackage,
   greaterRelease
 } from '../src';
+import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
 const exec = jest.fn();
 const getLernaPackages = jest.fn();
@@ -44,16 +45,10 @@ jest.mock('fs', () => ({
 }));
 
 const monorepoPackagesResult = [
-  {
-    package: { version: '0.1.1' }
-  },
-  { package: {} },
-  {
-    package: { version: '0.1.2' }
-  },
-  {
-    package: { version: '0.1.1' }
-  }
+  { path: 'packages/a', name: '@packages/a', package: { version: '0.1.1' } },
+  { path: 'packages/b', name: '@packages/b', package: {} },
+  { path: 'packages/c', name: '@packages/c', package: { version: '0.1.2' } },
+  { path: 'packages/d', name: '@packages/d', package: { version: '0.1.1' } }
 ];
 
 describe('changedPackages ', () => {
@@ -965,5 +960,69 @@ describe('next', () => {
       expect.arrayContaining(['lerna', 'publish', 'prerelease'])
     );
     expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+  });
+});
+
+describe('makeRelease', () => {
+  test('publish release for each package', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    exec.mockReturnValue('@packages/a\n@packages/b');
+    getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
+    readFileSync.mockReturnValue(
+      '{ "name": "test", "version": "independent" }'
+    );
+
+    const publish = jest.fn();
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      baseBranch: 'master',
+      logger: dummyLog(),
+      prefixRelease: str => str,
+      git: { publish } as any,
+      release: {
+        makeChangelog: () => ({
+          generateReleaseNotes: (commits: IExtendedCommit[]) =>
+            Promise.resolve(commits.map(c => c.subject).join('\n'))
+        })
+      } as any
+    } as Auto.Auto);
+
+    await hooks.makeRelease.promise({
+      newVersion: '0.1.2',
+      from: '',
+      isPrerelease: false,
+      fullReleaseNotes: '',
+      commits: [
+        {
+          subject: 'update package 1',
+          hash: '123',
+          labels: [],
+          files: ['packages/a/package.json'],
+          authors: [{ username: 'Jeff', hash: '123' }]
+        },
+        {
+          subject: 'update package 2',
+          hash: '124',
+          labels: [],
+          files: ['packages/b/package.json'],
+          authors: [{ username: 'Andrew', hash: '124' }]
+        }
+      ]
+    });
+
+    expect(publish).toHaveBeenCalledWith(
+      'update package 1',
+      '@packages/a',
+      false
+    );
+    expect(publish).toHaveBeenCalledWith(
+      'update package 2',
+      '@packages/b',
+      false
+    );
   });
 });
