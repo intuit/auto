@@ -103,6 +103,10 @@ interface PackageVersion {
   name: string;
   /** The version of the package that was released */
   version: string;
+  /**
+   *
+   */
+multi?: boolean;
 }
 
 export interface IAutoHooks {
@@ -1187,7 +1191,7 @@ export default class Auto {
           releases.map(async release =>
             execPromise('git', [
               'tag',
-              this.packages.length > 1
+              this.packages.length > 1 || release.multi
                 ? `${release.name}@${release.version}`
                 : this.prefixRelease(release.version)
             ])

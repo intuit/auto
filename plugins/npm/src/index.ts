@@ -611,7 +611,7 @@ export default class NPMPlugin implements IPlugin {
         return [
           ...releases,
           ...(isIndependent
-            ? packages
+            ? packages.map(p => ({ ...p, multi: true }))
             : [{ name: packageJson.name, version: packages[0].version }])
         ];
       }
