@@ -20,6 +20,7 @@ export const makeHooks = (): IAutoHooks => ({
   afterAddToChangelog: new AsyncSeriesHook(['context']),
   beforeCommitChangelog: new AsyncSeriesHook(['context']),
   afterShipIt: new AsyncParallelHook(['version', 'commits', 'context']),
+  makeRelease: new AsyncSeriesBailHook(['releaseInfo']),
   afterRelease: new AsyncParallelHook(['releaseInfo']),
   onCreateRelease: new SyncHook(['options']),
   onCreateChangelog: new SyncHook(['changelog', 'version']),

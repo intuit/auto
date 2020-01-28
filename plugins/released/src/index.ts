@@ -86,14 +86,13 @@ export default class ReleasedLabelPlugin implements IPlugin {
           return;
         }
 
+        const isPrerelease = Array.isArray(response)
+          ? response.some(r => r?.data.prerelease)
+          : response?.data.prerelease;
+
         await Promise.all(
           commits.map(async commit =>
-            this.addReleased(
-              auto,
-              commit,
-              newVersion,
-              response?.data.prerelease
-            )
+            this.addReleased(auto, commit, newVersion, isPrerelease)
           )
         );
       }

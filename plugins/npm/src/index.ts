@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
+import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 
 import {
   Auto,
@@ -889,6 +890,68 @@ export default class NPMPlugin implements IPlugin {
         branch || auto.baseBranch
       ]);
       auto.logger.verbose.info('Successfully published repo');
+    });
+
+    auto.hooks.makeRelease.tapPromise(this.name, async options => {
+      const isIndependent = getLernaJson().version === 'independent';
+
+      // Independent mode will create multiple releases on Github.
+      // Each release will only contain the release notes for the
+      // package + global changes.
+      if (!options.dryRun && isIndependent) {
+        auto.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
+
+        const changelog = await auto.release!.makeChangelog();
+        const lernaPackages = await getLernaPackages();
+        // Go through each new tag:
+        const newTags = (
+          await execPromise('git', ['tag', '--points-at', 'HEAD'])
+        ).split('\n');
+
+        this.renderMonorepoChangelog = false;
+
+        const packagePaths = lernaPackages.map(p => p.path);
+        const commitsAtRoot = options.commits.filter(
+          commit =>
+            !commit.files.some(file =>
+              packagePaths.some(p => inFolder(p, file))
+            )
+        );
+
+        const releases = await Promise.all(
+          newTags.map(async tag => {
+            const lernaPackage = lernaPackages.find(p => tag.includes(p.name));
+
+            if (!lernaPackage) {
+              return;
+            }
+
+            auto.logger.log.info(`Releasing ${tag}...`);
+
+            // 1. generate release notes for just the commits for the package
+            const includedCommits = options.commits.filter(commit =>
+              commit.files.some(file => inFolder(lernaPackage.path, file))
+            );
+            const releaseNotes = await changelog.generateReleaseNotes([
+              ...commitsAtRoot,
+              ...includedCommits
+            ]);
+
+            auto.logger.log.info(`Using release notes:\n${releaseNotes}`);
+
+            // 2. make a release for just that package
+            if (releaseNotes.trim()) {
+              return auto.git?.publish(releaseNotes, tag, options.isPrerelease);
+            }
+          })
+        );
+
+        this.renderMonorepoChangelog = false;
+
+        return releases.filter((release): release is Response<
+          ReposCreateReleaseResponse
+        > => Boolean(release));
+      }
     });
   }
 }

@@ -133,9 +133,33 @@ export interface IAutoHooks {
         /** The generated release notes for the commits */
         releaseNotes: string;
         /** The response from creating the new release. */
-        response?: Response<ReposCreateReleaseResponse>;
+        response?:
+          | Response<ReposCreateReleaseResponse>
+          | Response<ReposCreateReleaseResponse>[];
       }
     ]
+  >;
+  /** Override what happens when "releasing" code to a Github release */
+  makeRelease: AsyncSeriesBailHook<
+    [
+      {
+        /** Do not actually do anything */
+        dryRun?: boolean;
+        /** Commit to start calculating the version from */
+        from: string;
+        /** The version being released */
+        newVersion: string;
+        /** Whether the release being made is a prerelease */
+        isPrerelease?: boolean;
+        /** The generated release notes for the commits */
+        fullReleaseNotes: string;
+        /** The commits included in the release */
+        commits: IExtendedCommit[];
+      }
+    ],
+    | Response<ReposCreateReleaseResponse>
+    | Response<ReposCreateReleaseResponse>[]
+    | void
   >;
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
@@ -340,6 +364,36 @@ export default class Auto {
   }
 
   /**
+   * Load the default hook behaviors. Should run after loadPlugins so
+   * plugins take precedence.
+   */
+  private loadDefaultBehavior() {
+    this.hooks.makeRelease.tapPromise('Default', async options => {
+      if (options.dryRun) {
+        const bump = await this.getVersion({ from: options.from });
+
+        this.logger.log.info(
+          `Would have created a release on GitHub for version: ${inc(
+            options.newVersion,
+            bump as ReleaseType
+          )}`
+        );
+        this.logger.log.note(
+          'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
+        );
+      } else {
+        this.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
+
+        return this.git!.publish(
+          options.fullReleaseNotes,
+          options.newVersion,
+          options.isPrerelease
+        );
+      }
+    });
+  }
+
+  /**
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
@@ -356,6 +410,7 @@ export default class Auto {
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
+    this.loadDefaultBehavior();
     this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
@@ -1275,6 +1330,7 @@ export default class Auto {
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
+    // In a monorepo this just matches the last tag created during a publish
     const latestTag = await this.git.getLatestTagInBranch();
     const rawVersion =
       useVersion ||
@@ -1303,24 +1359,16 @@ export default class Auto {
       return;
     }
 
-    let release: Response<ReposCreateReleaseResponse> | undefined;
+    const release = await this.hooks.makeRelease.promise({
+      dryRun,
+      from: lastRelease,
+      isPrerelease,
+      newVersion,
+      fullReleaseNotes: releaseNotes,
+      commits: commitsInRelease
+    });
 
-    if (dryRun) {
-      const bump = await this.getVersion({ from });
-
-      this.logger.log.info(
-        `Would have created a release on GitHub for version: ${inc(
-          newVersion,
-          bump as ReleaseType
-        )}`
-      );
-      this.logger.log.note(
-        'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
-      );
-    } else {
-      this.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-      release = await this.git.publish(releaseNotes, newVersion, isPrerelease);
-
+    if (release) {
       await this.hooks.afterRelease.promise({
         lastRelease,
         newVersion,

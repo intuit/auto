@@ -816,7 +816,8 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      jest.spyOn(auto.git!, 'publish').mockImplementation();
+
+      jest.spyOn(auto.git!, 'publish').mockReturnValueOnce({} as any);
       jest
         .spyOn(auto.release!, 'generateReleaseNotes')
         .mockImplementation(() => Promise.resolve('releaseNotes'));
@@ -855,7 +856,7 @@ describe('Auto', () => {
       auto.git!.getPreviousTagInBranch = () => Promise.resolve('1.2.3');
       auto.git!.getLatestTagInBranch = () => Promise.resolve('1.2.4');
 
-      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest.spyOn(auto.git!, 'publish').mockReturnValueOnce({} as any);
       jest
         .spyOn(auto.release!, 'generateReleaseNotes')
         .mockImplementation(() => Promise.resolve('releaseNotes'));
@@ -891,7 +892,8 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      jest.spyOn(auto.git!, 'publish').mockImplementation();
+
+      jest.spyOn(auto.git!, 'publish').mockReturnValueOnce({} as any);
       jest
         .spyOn(auto.release!, 'generateReleaseNotes')
         .mockImplementation(() => Promise.resolve('releaseNotes'));
@@ -929,7 +931,8 @@ describe('Auto', () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
-      jest.spyOn(auto.git!, 'publish').mockImplementation();
+
+      jest.spyOn(auto.git!, 'publish').mockReturnValueOnce({} as any);
       jest
         .spyOn(auto.release!, 'generateReleaseNotes')
         .mockImplementation(() => Promise.resolve('releaseNotes'));
