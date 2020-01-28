@@ -153,6 +153,8 @@ export interface IAutoHooks {
         isPrerelease?: boolean;
         /** The generated release notes for the commits */
         fullReleaseNotes: string;
+        /** The commits included in the release */
+        commits: IExtendedCommit[];
       }
     ],
     | Response<ReposCreateReleaseResponse>
@@ -356,6 +358,16 @@ export default class Auto {
       }
     );
 
+    loadEnv();
+
+    this.logger.verbose.info('ENV:', env);
+  }
+
+  /**
+   * Load the default hook behaviors. Should run after loadPlugins so
+   * plugins take precedence.
+   */
+  private loadDefaultBehavior() {
     this.hooks.makeRelease.tapPromise('Default', async options => {
       if (options.dryRun) {
         const bump = await this.getVersion({ from: options.from });
@@ -379,10 +391,6 @@ export default class Auto {
         );
       }
     });
-
-    loadEnv();
-
-    this.logger.verbose.info('ENV:', env);
   }
 
   /**
@@ -402,6 +410,7 @@ export default class Auto {
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
     this.loadPlugins(config);
+    this.loadDefaultBehavior();
     this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
@@ -1355,7 +1364,8 @@ export default class Auto {
       from: lastRelease,
       isPrerelease,
       newVersion,
-      fullReleaseNotes: releaseNotes
+      fullReleaseNotes: releaseNotes,
+      commits: commitsInRelease
     });
 
     if (release) {
