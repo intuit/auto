@@ -1,3 +1,16 @@
+# v9.8.0 (Mon Jan 27 2020)
+
+#### 🐛  Bug Fix
+
+- add test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- make unique GitHub releases for each package published in lerna independent monorepo  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.7.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix

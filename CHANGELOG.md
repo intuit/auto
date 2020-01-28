@@ -1,3 +1,26 @@
+# v9.8.0 (Mon Jan 27 2020)
+
+### Release Notes
+
+_From #916_
+
+This PR adds a new hook for plugin developers.
+
+`makeRelease` - This hook is called when `auto shipit` or `auto release` tries to make a release. If untapped auto will run the default behavior. Otherwise it is up to the plugin tapping the hook to call `auto.git.publish` to make releases on GitHub.
+
+---
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Independent releases [#916](https://github.com/intuit/auto/pull/916) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.7.0 (Mon Jan 27 2020)
 
 #### 🚀  Enhancement
