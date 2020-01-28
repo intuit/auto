@@ -314,6 +314,9 @@ export default class Auto {
   /** The version bump being used during "shipit" */
   private versionBump?: SEMVER;
 
+  /** Whether the auto run is being run as a package in a multi-package project */
+  private isPackage = false;
+
   /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
     this.options = options;
@@ -781,7 +784,7 @@ export default class Auto {
    */
   async changelog(options?: IChangelogOptions) {
     this.logger.verbose.info("Using command: 'changelog'");
-    await this.makeChangelog(options);
+    await this.fullyIterate(this.makeChangelog(options));
   }
 
   /**
@@ -1144,7 +1147,7 @@ export default class Auto {
       lastRelease
     );
 
-    await this.makeChangelog(options);
+    await this.fullyIterate(this.makeChangelog(options));
 
     if (!options.dryRun) {
       await this.checkClean();
@@ -1242,7 +1245,7 @@ export default class Auto {
   }
 
   /** Make a changelog over a range of commits */
-  private async makeChangelog({
+  private async *makeChangelog({
     dryRun,
     from,
     to,
@@ -1287,8 +1290,14 @@ export default class Auto {
     };
 
     await this.hooks.beforeCommitChangelog.promise(options);
-    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
-    this.logger.verbose.info('Committed new changelog.');
+    yield;
+
+    if (this.isPackage) {
+      yield;
+    } else {
+      await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
+      this.logger.verbose.info('Committed new changelog.');
+    }
 
     await this.hooks.afterAddToChangelog.promise(options);
   }
@@ -1536,6 +1545,15 @@ If a command fails manually run:
     }
 
     return { pr, build };
+  }
+
+  /** Run an async generator until completion */
+  private async fullyIterate(iterable: AsyncGenerator) {
+    for await (const item of iterable) {
+      if (item) {
+        this.logger.verbose.info(item);
+      }
+    }
   }
 }
 
