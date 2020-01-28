@@ -1,6 +1,6 @@
 # Non-npm Usage
 
-`auto` by distributed through [npm](https://npmjs.com) but you can use it with a variety of package management platforms.
+`auto` is typically distributed through [npm](https://npmjs.com) but you can use it with a variety of package management platforms.
 
 ## Installation
 
