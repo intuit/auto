@@ -25,7 +25,6 @@ import setTokenOnCI from './set-npm-token';
 import { loadPackageJson, readFile, writeFile } from './utils';
 
 const { isCi } = envCi();
-const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 
 /** Check if the project is a monorepo */
 const isMonorepo = () => fs.existsSync('lerna.json');
@@ -200,7 +199,13 @@ interface INpmConfig {
 }
 
 /** Parse the lerna.json file. */
-const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+const getLernaJson = () => {
+  try {
+    return JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+  } catch (error) {
+    return {};
+  }
+};
 
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
@@ -575,11 +580,13 @@ export default class NPMPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       const isBaseBranch = branch === auto.baseBranch;
+      const packageJson = await loadPackageJson();
 
       if (isMonorepo()) {
         auto.logger.verbose.info('Detected monorepo, using lerna');
+
         const isIndependent = getLernaJson().version === 'independent';
         const monorepoBump =
           isIndependent || !isBaseBranch
@@ -591,32 +598,40 @@ export default class NPMPlugin implements IPlugin {
           'version',
           monorepoBump || version,
           !isIndependent && this.forcePublish && '--force-publish',
-          '--no-commit-hooks',
           '--yes',
           '--no-push',
-          '-m',
-          isIndependent
-            ? '"Bump independent versions [skip ci]"'
-            : VERSION_COMMIT_MESSAGE,
+          '--no-git-tag-version',
           this.exact && '--exact',
           ...verboseArgs
         ]);
+
         auto.logger.verbose.info('Successfully versioned repo');
-        return;
+        const packages = await getLernaPackages();
+
+        return [
+          ...releases,
+          ...(isIndependent
+            ? packages
+            : [{ name: packageJson.name, version: packages[0].version }])
+        ];
       }
 
       const latestBump = isBaseBranch
-        ? await bumpLatest(await loadPackageJson(), version)
+        ? await bumpLatest(packageJson, version)
         : version;
 
       await execPromise('npm', [
         'version',
         latestBump || version,
-        '-m',
-        VERSION_COMMIT_MESSAGE,
+        '--no-git-tag-version',
         ...verboseArgs
       ]);
       auto.logger.verbose.info('Successfully versioned repo');
+
+      return [
+        ...releases,
+        { name: packageJson.name, version: latestBump || version }
+      ];
     });
 
     auto.hooks.canary.tapPromise(this.name, async (bump, postFix) => {
@@ -882,13 +897,6 @@ export default class NPMPlugin implements IPlugin {
         await execPromise('npm', ['publish', ...tag, ...verboseArgs]);
       }
 
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        'origin',
-        branch || auto.baseBranch
-      ]);
       auto.logger.verbose.info('Successfully published repo');
     });
 

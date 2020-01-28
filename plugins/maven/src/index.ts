@@ -118,7 +118,7 @@ export default class MavenPlugin implements IPlugin {
       getPreviousVersion(auto)
     );
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       const previousVersion = await getPreviousVersion(auto);
       const newVersion =
         // After release we bump the version by a patch and add -SNAPSHOT
@@ -145,6 +145,8 @@ export default class MavenPlugin implements IPlugin {
       await execPromise('git', ['checkout', '-b', 'dev-snapshot']);
       await execPromise('git', ['checkout', 'master']);
       await execPromise('git', ['reset', '--hard', 'HEAD~1']);
+
+      return releases;
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {

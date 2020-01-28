@@ -85,35 +85,21 @@ export default class CratesPlugin implements IPlugin {
       return version;
     });
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       const versionNew = bumpVersion(version);
+
       auto.logger.log.info(`Bumped version to: ${versionNew}`);
       auto.logger.log.info('Building to update Cargo.lock');
+
       await execPromise('cargo', ['build']);
-      auto.logger.verbose.info('Committing files');
-      await execPromise('git', ['add', 'Cargo.toml', 'Cargo.lock']);
-      await execPromise('git', [
-        'commit',
-        '-m',
-        `'Bump version to: ${versionNew} [skip ci]'`,
-        '--no-verify'
-      ]);
-      auto.logger.log.info('Create git commit for new version');
+
+      return [...releases, { name: '', version: versionNew }];
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.log.info('Publishing via cargo');
       await execPromise('cargo', ['publish']);
       auto.logger.log.info('Publish complete');
-      auto.logger.log.info('Pushing local git changes to origin remote');
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        'origin',
-        auto.baseBranch
-      ]);
-      auto.logger.log.info('Push complete');
     });
   }
 }

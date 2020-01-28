@@ -19,7 +19,7 @@ export default class GitTagPlugin implements IPlugin {
       try {
         return await auto.git!.getLatestTagInBranch();
       } catch (error) {
-        return auto.prefixRelease('0.0.0')
+        return auto.prefixRelease('0.0.0');
       }
     }
 
@@ -33,27 +33,19 @@ export default class GitTagPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       if (!auto.git) {
-        return;
+        return releases;
       }
 
       const lastTag = await getTag();
       const newTag = inc(lastTag, version as ReleaseType);
-      const branch = getCurrentBranch() || '';
 
       if (!newTag) {
-        return;
+        return releases;
       }
 
-      await execPromise('git', ['tag', auto.prefixRelease(newTag)]);
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        'origin',
-        branch || auto.baseBranch
-      ]);
+      return [...releases, { name: __dirname, version: newTag }];
     });
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {

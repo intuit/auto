@@ -14,7 +14,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "noUnusedLocals": true
+    "experimentalDecorators": true
   }
 }

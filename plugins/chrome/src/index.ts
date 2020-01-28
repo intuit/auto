@@ -129,25 +129,20 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       // increment version
       const manifest = await getManifest(this.options.manifest);
       manifest.version = inc(manifest.version, version as ReleaseType);
+
       await writeFile(
         this.options.manifest,
         JSON.stringify(manifest, undefined, 2)
       );
 
-      // commit new version
-      await execPromise('git', ['add', this.options.manifest]);
-      await execPromise('git', [
-        'commit',
-        '-m',
-        `"Bump version to ${manifest.version} [skip ci]"`,
-        '--no-verify'
-      ]);
-
-      await execPromise('git', ['tag', manifest.version]);
+      return [
+        ...releases,
+        { name: manifest.name.replace(/ /g, '-'), version: manifest.version }
+      ];
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
@@ -159,15 +154,6 @@ export default class ChromeWebStorePlugin implements IPlugin {
         '--source',
         this.options.build,
         '--auto-publish'
-      ]);
-
-      // push to github
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        'origin',
-        auto.baseBranch
       ]);
     });
   }

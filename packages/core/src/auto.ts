@@ -98,6 +98,13 @@ interface BeforeShipitContext {
   releaseType: ShipitRelease;
 }
 
+interface PackageVersion {
+  /** The name of the package that was released */
+  name: string;
+  /** The version of the package that was released */
+  version: string;
+}
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
@@ -179,8 +186,8 @@ export interface IAutoHooks {
    * This hook is exposed for convenience during `this.hooks.onCreateRelease` and at the root `this.hooks`
    */
   onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
-  /** Version the package. This is a good opportunity to `git tag` the release also.  */
-  version: AsyncParallelHook<[SEMVER]>;
+  /** Version the package. Must return created versions.  */
+  version: AsyncSeriesWaterfallHook<[PackageVersion[], SEMVER]>;
   /** Ran after the package has been versioned. */
   afterVersion: AsyncParallelHook<[]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
@@ -316,6 +323,8 @@ export default class Auto {
 
   /** Whether the auto run is being run as a package in a multi-package project */
   private isPackage = false;
+  /** */
+  private packages: string[] = [];
 
   /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
@@ -1151,14 +1160,48 @@ export default class Auto {
 
     if (!options.dryRun) {
       await this.checkClean();
+
       this.logger.verbose.info('Calling version hook');
-      await this.hooks.version.promise(version);
+      const releases = await this.hooks.version.promise([], version);
       this.logger.verbose.info('Calling after version hook');
+
+      if (releases.length) {
+        await execPromise('git', ['add', '-u']);
+        await execPromise('git', [
+          'commit',
+          '-m',
+          releases.length > 1
+            ? '"Bump version [skip ci]"'
+            : `"Bump version to: ${releases[0].version} [skip ci]"`
+        ]);
+      }
+
       await this.hooks.afterVersion.promise();
       this.logger.verbose.info('Calling publish hook');
       await this.hooks.publish.promise(version);
       this.logger.verbose.info('Calling after publish hook');
       await this.hooks.afterPublish.promise();
+
+      if (releases.length) {
+        await Promise.all(
+          releases.map(async release =>
+            execPromise('git', [
+              'tag',
+              this.packages.length > 1
+                ? `${release.name}@${release.version}`
+                : this.prefixRelease(release.version)
+            ])
+          )
+        );
+
+        await execPromise('git', [
+          'push',
+          '--follow-tags',
+          '--set-upstream',
+          'origin',
+          getCurrentBranch() || this.baseBranch
+        ]);
+      }
     }
 
     const newVersion = await this.makeRelease(options);
