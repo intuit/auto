@@ -155,21 +155,46 @@ auto.hooks.afterAddToChangelog.tap(
 
 #### afterRelease
 
-Ran after the `release` command has run. This async hooks gets the following arguments:
+Ran after the `release` command has run. This async hook gets the following arguments:
 
-- lastVersion - the version that existed prior to the current release
-- nextVersion - version that was just released
-- commits - the commits in the release
-- releaseNotes - generated release notes for the release
-- response - the response returned from making the release
+- `lastVersion` - the version that existed prior to the current release
+- `nextVersion` - version that was just released
+- `commits` - the commits in the release
+- `releaseNotes` - generated release notes for the release
+- `response` - the response returned from making the release
 
 ```ts
-auto.hooks.afterRelease.tap(
+auto.hooks.afterRelease.tapPromise(
   'MyPlugin',
   async ({ lastVersion, nextVersion, commits, releaseNotes, response }) => {
     // do something
   }
 );
+```
+
+#### makeRelease
+
+Ran when trying to make a release during the `release` command has run. This async hook gets the following arguments:
+
+- `dryRun` - Whether this is a dry run
+- `from` - Commit to start calculating the version from
+- `newVersion` - The version being released
+- `isPrerelease` - Whether the release being made is a prerelease
+- `fullReleaseNotes` - The generated release notes for all of the commits
+- `commits` - The commits included in the release
+
+```ts
+auto.hooks.makeRelease.tapPromise('MyPlugin', async options => {
+  if (!options.dryRun) {
+    this.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
+
+    return this.git!.publish(
+      options.fullReleaseNotes,
+      options.newVersion,
+      options.isPrerelease
+    );
+  }
+});
 ```
 
 #### afterShipIt
