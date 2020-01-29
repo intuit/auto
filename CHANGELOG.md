@@ -1,3 +1,16 @@
+# v9.8.1 (Wed Jan 29 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - better error message running release in repo w/o tags [#919](https://github.com/intuit/auto/pull/919) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.0 (Mon Jan 27 2020)
 
 ### Release Notes

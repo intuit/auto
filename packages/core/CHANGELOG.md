@@ -1,3 +1,16 @@
+# v9.8.1 (Wed Jan 29 2020)
+
+#### 🐛  Bug Fix
+
+- more descriptive message  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- better error message running release in repo w/o tags  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix
