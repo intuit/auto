@@ -1315,7 +1315,7 @@ export default class Auto {
 
           The "release" command creates GitHub releases for tags that have already been created in your repo.
           
-          If there are no tags there is nothing to release.
+          If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
         `,
         '\n'
       );
