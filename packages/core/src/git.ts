@@ -306,8 +306,9 @@ export default class Git {
   @memoize()
   async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     try {
+      const repo = await execPromise('git', ['rev-parse', '--show-toplevel']);
       const log = await gitlog({
-        repo: process.cwd(),
+        repo,
         number: Number.MAX_SAFE_INTEGER,
         fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
         branch: `${start.trim()}..${end.trim()}`,
@@ -319,7 +320,7 @@ export default class Git {
         authorName: commit.authorName,
         authorEmail: commit.authorEmail,
         subject: commit.rawBody!,
-        files: (commit.files || []).map(file => path.resolve(file))
+        files: (commit.files || []).map(file => path.resolve(repo, file))
       }));
     } catch (error) {
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);

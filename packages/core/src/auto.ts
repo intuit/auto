@@ -13,6 +13,7 @@ import {
   AsyncSeriesWaterfallHook
 } from 'tapable';
 import endent from 'endent';
+import merge from 'deepmerge';
 
 import HttpsProxyAgent from 'https-proxy-agent';
 import {
@@ -47,7 +48,8 @@ import {
   RepoInformation,
   AuthorInformation,
   AutoRc,
-  LoadedAutoRc
+  LoadedAutoRc,
+  ReleasesPackage
 } from './types';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
@@ -333,9 +335,16 @@ export default class Auto {
   private hasMultiplePackages = false;
 
   /** Initialize auto and it's environment */
-  constructor(options: ApiOptions = {}) {
+  constructor(
+    options: ApiOptions & {
+      /** Whether the auto run is being run as a package in a multi-package project */
+      hasMultiplePackages?: boolean;
+    } = {}
+  ) {
     this.options = options;
+    this.hasMultiplePackages = Boolean(options.hasMultiplePackages);
     this.baseBranch = options.baseBranch || 'master';
+
     setLogLevel(
       Array.isArray(options.verbose) && options.verbose.length > 1
         ? 'veryVerbose'
@@ -415,26 +424,35 @@ export default class Auto {
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
-  async loadConfig() {
+  async loadConfig(subPackage?: ReleasesPackage) {
     const configLoader = new Config(this.logger);
     const config = {
       ...(await configLoader.loadConfig(this.options)),
       baseBranch: this.baseBranch
     };
+    const fullConfig: LoadedAutoRc = subPackage
+      ? merge(config, subPackage)
+      : config;
 
-    this.logger.verbose.success('Loaded `auto` with config:', config);
+    if (fullConfig.packages) {
+      fullConfig.packages.forEach(p => {
+        p.target = path.resolve(p.target);
+      });
+    }
 
-    this.config = config;
-    this.labels = config.labels;
-    this.semVerLabels = getVersionMap(config.labels);
+    this.logger.verbose.success('Loaded `auto` with config:', fullConfig);
 
-    this.loadPlugins(config);
+    this.config = fullConfig;
+    this.labels = fullConfig.labels;
+    this.semVerLabels = getVersionMap(fullConfig.labels);
+
+    this.loadPlugins(fullConfig);
     this.loadDefaultBehavior();
 
-    this.config = this.hooks.modifyConfig.call(config);
-    this.hooks.beforeRun.call(config);
+    this.config = this.hooks.modifyConfig.call(fullConfig);
+    this.hooks.beforeRun.call(fullConfig);
 
-    const repository = await this.getRepo(config);
+    const repository = await this.getRepo(fullConfig);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
 
     if (!token || token === 'undefined') {
@@ -445,18 +463,20 @@ export default class Auto {
     }
 
     const githubOptions = {
-      owner: config.owner,
-      repo: config.repo,
+      owner: fullConfig.owner,
+      repo: fullConfig.repo,
       ...repository,
       token,
       agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
-      baseUrl: config.githubApi || 'https://api.github.com',
+      baseUrl: fullConfig.githubApi || 'https://api.github.com',
       graphqlBaseUrl:
-        config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
+        fullConfig.githubGraphqlApi ||
+        fullConfig.githubApi ||
+        'https://api.github.com'
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
-    this.release = new Release(this.git, config, this.logger);
+    this.release = new Release(this.git, fullConfig, this.logger);
 
     this.hooks.onCreateRelease.call(this.release);
   }
@@ -801,7 +821,7 @@ export default class Auto {
    */
   async changelog(options?: IChangelogOptions) {
     this.logger.verbose.info("Using command: 'changelog'");
-    await this.fullyIterate(this.makeChangelog(options));
+    await this.makeChangelog(options);
   }
 
   /**
@@ -1164,7 +1184,7 @@ export default class Auto {
       lastRelease
     );
 
-    await this.fullyIterate(this.makeChangelog(options));
+    await this.makeChangelog(options);
 
     if (!options.dryRun) {
       await this.checkClean();
@@ -1296,12 +1316,7 @@ export default class Auto {
   }
 
   /** Make a changelog over a range of commits */
-  private async *makeChangelog({
-    dryRun,
-    from,
-    to,
-    message = 'Update CHANGELOG.md [skip ci]'
-  }: IChangelogOptions = {}) {
+  async makeChangelog({ dryRun, from, to, message }: IChangelogOptions = {}) {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -1315,6 +1330,10 @@ export default class Auto {
       to || undefined,
       this.versionBump
     );
+
+    if (!releaseNotes) {
+      return;
+    }
 
     if (dryRun) {
       this.logger.log.info('Potential Changelog Addition:\n', releaseNotes);
@@ -1341,16 +1360,19 @@ export default class Auto {
     };
 
     await this.hooks.beforeCommitChangelog.promise(options);
-    yield;
 
-    if (this.hasMultiplePackages) {
-      yield;
-    } else {
-      await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
-      this.logger.verbose.info('Committed new changelog.');
+    // This will be done all at the same time for multi packages
+    if (!this.hasMultiplePackages) {
+      await this.commitChangelog(message);
     }
 
     await this.hooks.afterAddToChangelog.promise(options);
+  }
+
+  /** Commit the changelog to git. */
+  async commitChangelog(message = 'Update CHANGELOG.md [skip ci]') {
+    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
+    this.logger.verbose.info('Committed new changelog.');
   }
 
   /** Make a release over a range of commits */
