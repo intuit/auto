@@ -1376,7 +1376,7 @@ export default class Auto {
   }
 
   /** Make a release over a range of commits */
-  private async makeRelease({
+  async makeRelease({
     dryRun,
     from,
     useVersion,
@@ -1621,13 +1621,13 @@ If a command fails manually run:
   }
 
   /** Run an async generator until completion */
-  private async fullyIterate(iterable: AsyncGenerator) {
-    for await (const item of iterable) {
-      if (item) {
-        this.logger.verbose.info(item);
-      }
-    }
-  }
+  // private async fullyIterate(iterable: AsyncGenerator) {
+  //   for await (const item of iterable) {
+  //     if (item) {
+  //       this.logger.verbose.info(item);
+  //     }
+  //   }
+  // }
 }
 
 // Plugin Utils

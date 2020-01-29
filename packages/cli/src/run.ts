@@ -103,9 +103,15 @@ async function multiPackageReleaseCommands(
 
       break;
     }
-    // case 'release':
-    //   await auto.runRelease(args as IReleaseOptions);
-    //   break;
+
+    case 'release':
+      await Promise.all(
+        auto.config.packages.map(async p => {
+          const subAuto = await createSubAuto(p, args);
+          await subAuto.makeRelease(args as IReleaseOptions);
+        })
+      );
+      break;
     // case 'canary':
     //   await auto.canary(args as ICanaryOptions);
     //   break;
