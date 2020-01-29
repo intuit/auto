@@ -1,21 +1,10 @@
-export interface IAuthorOptions {
-  /** Author's name */
-  name?: string;
-  /** Author's email */
-  email?: string;
-}
-
-export interface IRepoOptions {
-  /** Github repo owner (user) */
-  owner?: string;
-  /** GitHub project to operate on */
-  repo?: string;
-}
-
-export interface ILogOptions {
-  /** Show more logs */
-  verbose?: boolean | boolean[];
-}
+import {
+  AuthorInformation,
+  RepoInformation,
+  GithubInformation,
+  LogOptions,
+  ReleaseCalculationOptions
+} from './types';
 
 export interface ICreateLabelsOptions {
   /** Do not actually do anything */
@@ -55,14 +44,12 @@ export interface IPRStatusOptions {
   dryRun?: boolean;
 }
 
-export interface IVersionOptions {
-  /** Instead of publishing every PR only publish when "release" label is present */
-  onlyPublishWithReleaseLabel?: boolean;
+export type IVersionOptions = ReleaseCalculationOptions & {
   /** Commit to start calculating the version from */
   from?: string;
-}
+};
 
-export interface IChangelogOptions extends IAuthorOptions {
+export interface IChangelogOptions extends Partial<AuthorInformation> {
   /** Whether to prefix the version with a "v" */
   noVersionPrefix?: boolean;
   /** Do not actually do anything */
@@ -75,7 +62,7 @@ export interface IChangelogOptions extends IAuthorOptions {
   message?: string;
 }
 
-export interface IReleaseOptions extends IAuthorOptions {
+export interface IReleaseOptions extends Partial<RepoInformation> {
   /** Whether to prefix the version with a "v" */
   noVersionPrefix?: boolean;
   /** Do not actually do anything */
@@ -136,16 +123,10 @@ export interface INextOptions {
 }
 
 export type GlobalOptions = {
-  /** The GitHub api to communicate with through octokit */
-  githubApi?: string;
-  /** The branch that is used as the base. defaults to master */
-  baseBranch?: string;
-  /** The GitHub graphql api to communicate with through octokit */
-  githubGraphqlApi?: string;
   /** Plugins to initialize "auto" with */
   plugins?: string[];
-} & IRepoOptions &
-  ILogOptions;
+} & Partial<GithubInformation & RepoInformation> &
+  LogOptions;
 
 export type ApiOptions = GlobalOptions &
   (
