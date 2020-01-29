@@ -110,7 +110,7 @@ interface PackageVersion {
   multi?: boolean;
 }
 
-export interface IAutoHooks {
+export interface AutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
@@ -307,7 +307,7 @@ function escapeRegExp(str: string) {
  */
 export default class Auto {
   /** Plugin entry points */
-  hooks: IAutoHooks;
+  hooks: AutoHooks;
   /** A logger that uses log levels */
   logger: ILogger;
   /** Options auto was initialized with */

@@ -6,14 +6,14 @@ import {
   SyncWaterfallHook,
   AsyncSeriesHook
 } from 'tapable';
-import { IAutoHooks } from '../auto';
+import { AutoHooks } from '../auto';
 import { IChangelogHooks } from '../changelog';
 import { ILogParseHooks } from '../log-parse';
 import { IReleaseHooks } from '../release';
 import { InteractiveInitHooks } from '../init';
 
 /** Make the hooks for "auto" */
-export const makeHooks = (): IAutoHooks => ({
+export const makeHooks = (): AutoHooks => ({
   beforeRun: new SyncHook(['config']),
   modifyConfig: new SyncWaterfallHook(['config']),
   beforeShipIt: new AsyncSeriesHook(['context']),

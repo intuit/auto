@@ -12,7 +12,7 @@ const mockRead = (result: string) =>
     .mockImplementationOnce((a, b, cb) => cb(undefined, result));
 
 describe('maven', () => {
-  let hooks: Auto.IAutoHooks;
+  let hooks: Auto.AutoHooks;
 
   beforeEach(() => {
     const plugin = new MavenPlugin();

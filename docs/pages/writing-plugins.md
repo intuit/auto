@@ -584,7 +584,7 @@ To create a plugin simply make a class with an `apply` method and tap into the h
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { IAutoHooks, Auto, SEMVER, execPromise } from 'auto';
+import { AutoHooks, Auto, SEMVER, execPromise } from 'auto';
 import getConfigFromPackageJson from './package-config';
 
 const readFile = promisify(fs.readFile);
