@@ -441,28 +441,7 @@ export default class NPMPlugin implements IPlugin {
         ? branch
         : prereleaseBranches[0];
 
-    auto.hooks.beforeShipIt.tap(this.name, async context => {
-      const isIndependent = getLernaJson().version === 'independent';
-
-      // In independent mode it's possible that no changes to packages have been
-      // made, so no release will be made.
-      if (isIndependent && context.releaseType === 'latest') {
-        try {
-          await execPromise('yarn', ['lerna', 'updated']);
-        } catch (error) {
-          auto.logger.log.warn(
-            'Lerna detected no changes in project. Aborting release since nothing would be published.'
-          );
-          process.exit(0);
-        }
-      }
-
-      if (!isCi) {
-        return;
-      }
-
-      auto.checkEnv(this.name, 'NPM_TOKEN');
-    });
+    // Shared
 
     auto.hooks.getAuthor.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
@@ -494,91 +473,10 @@ export default class NPMPlugin implements IPlugin {
       return getConfigFromPackageJson();
     });
 
-    auto.hooks.onCreateRelease.tap(this.name, release => {
-      release.hooks.createChangelogTitle.tap(
-        `${this.name} - lerna independent`,
-        () => {
-          if (isMonorepo() && getLernaJson().version === 'independent') {
-            return '';
-          }
-        }
-      );
+    auto.hooks.getProjectName.tapPromise(this.name, async () => {
+      return (await loadPackageJson()).name
     });
 
-    auto.hooks.onCreateChangelog.tap(
-      this.name,
-      (changelog, version = SEMVER.patch) => {
-        changelog.hooks.renderChangelogLine.tapPromise(
-          'NPM - Monorepo',
-          async ([commit, line]) => {
-            if (!isMonorepo() || !this.renderMonorepoChangelog) {
-              return [commit, line];
-            }
-
-            const lernaPackages = await this.getLernaPackages();
-            const lernaJson = getLernaJson();
-            const packages = await changedPackages({
-              sha: commit.hash,
-              packages: lernaPackages,
-              lernaJson,
-              logger: auto.logger,
-              version
-            });
-
-            const section = packages?.length
-              ? packages.map(p => `\`${p}\``).join(', ')
-              : 'monorepo';
-
-            if (section === 'monorepo') {
-              return [commit, line];
-            }
-
-            return [commit, [`- ${section}`, `  ${line}`].join('\n')];
-          }
-        );
-      }
-    );
-
-    auto.hooks.beforeCommitChangelog.tapPromise(
-      this.name,
-      async ({ commits, bump }) => {
-        if (!isMonorepo() || !auto.release || !this.subPackageChangelogs) {
-          return;
-        }
-
-        const lernaPackages = await getLernaPackages();
-        const changelog = await auto.release.makeChangelog(bump);
-
-        this.renderMonorepoChangelog = false;
-
-        // Cannot run git operations in parallel
-        await lernaPackages.reduce(async (last, lernaPackage) => {
-          await last;
-
-          auto.logger.verbose.info(
-            `Updating changelog for: ${lernaPackage.name}`
-          );
-
-          const includedCommits = commits.filter(commit =>
-            commit.files.some(file => inFolder(lernaPackage.path, file))
-          );
-          const title = `v${inc(lernaPackage.version, bump as ReleaseType)}`;
-          const releaseNotes = await changelog.generateReleaseNotes(
-            includedCommits
-          );
-
-          if (releaseNotes.trim()) {
-            await auto.release!.updateChangelogFile(
-              title,
-              releaseNotes,
-              path.join(lernaPackage.path, 'CHANGELOG.md')
-            );
-          }
-        }, Promise.resolve());
-
-        this.renderMonorepoChangelog = true;
-      }
-    );
 
     auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       const isBaseBranch = branch === auto.baseBranch;
@@ -899,6 +797,117 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info('Successfully published repo');
     });
+
+    // Lerna
+
+    auto.hooks.beforeShipIt.tap(this.name, async context => {
+      const isIndependent = getLernaJson().version === 'independent';
+
+      // In independent mode it's possible that no changes to packages have been
+      // made, so no release will be made.
+      if (isIndependent && context.releaseType === 'latest') {
+        try {
+          await execPromise('yarn', ['lerna', 'updated']);
+        } catch (error) {
+          auto.logger.log.warn(
+            'Lerna detected no changes in project. Aborting release since nothing would be published.'
+          );
+          process.exit(0);
+        }
+      }
+
+      if (!isCi) {
+        return;
+      }
+
+      auto.checkEnv(this.name, 'NPM_TOKEN');
+    });
+
+    auto.hooks.onCreateRelease.tap(this.name, release => {
+      release.hooks.createChangelogTitle.tap(
+        `${this.name} - lerna independent`,
+        () => {
+          if (isMonorepo() && getLernaJson().version === 'independent') {
+            return '';
+          }
+        }
+      );
+    });
+
+    auto.hooks.onCreateChangelog.tap(
+      this.name,
+      (changelog, version = SEMVER.patch) => {
+        changelog.hooks.renderChangelogLine.tapPromise(
+          'NPM - Monorepo',
+          async ([commit, line]) => {
+            if (!isMonorepo() || !this.renderMonorepoChangelog) {
+              return [commit, line];
+            }
+
+            const lernaPackages = await this.getLernaPackages();
+            const lernaJson = getLernaJson();
+            const packages = await changedPackages({
+              sha: commit.hash,
+              packages: lernaPackages,
+              lernaJson,
+              logger: auto.logger,
+              version
+            });
+
+            const section = packages?.length
+              ? packages.map(p => `\`${p}\``).join(', ')
+              : 'monorepo';
+
+            if (section === 'monorepo') {
+              return [commit, line];
+            }
+
+            return [commit, [`- ${section}`, `  ${line}`].join('\n')];
+          }
+        );
+      }
+    );
+
+    auto.hooks.beforeCommitChangelog.tapPromise(
+      this.name,
+      async ({ commits, bump }) => {
+        if (!isMonorepo() || !auto.release || !this.subPackageChangelogs) {
+          return;
+        }
+
+        const lernaPackages = await getLernaPackages();
+        const changelog = await auto.release.makeChangelog(bump);
+
+        this.renderMonorepoChangelog = false;
+
+        // Cannot run git operations in parallel
+        await lernaPackages.reduce(async (last, lernaPackage) => {
+          await last;
+
+          auto.logger.verbose.info(
+            `Updating changelog for: ${lernaPackage.name}`
+          );
+
+          const includedCommits = commits.filter(commit =>
+            commit.files.some(file => inFolder(lernaPackage.path, file))
+          );
+          const title = `v${inc(lernaPackage.version, bump as ReleaseType)}`;
+          const releaseNotes = await changelog.generateReleaseNotes(
+            includedCommits
+          );
+
+          if (releaseNotes.trim()) {
+            await auto.release!.updateChangelogFile(
+              title,
+              releaseNotes,
+              path.join(lernaPackage.path, 'CHANGELOG.md')
+            );
+          }
+        }, Promise.resolve());
+
+        this.renderMonorepoChangelog = true;
+      }
+    );
 
     auto.hooks.makeRelease.tapPromise(this.name, async options => {
       const isIndependent = getLernaJson().version === 'independent';

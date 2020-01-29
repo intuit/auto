@@ -72,6 +72,20 @@ async function runInSerial<T, R>(data: T[], cb: (item: T) => Promise<R>) {
   }, Promise.resolve());
 }
 
+/** Run an operation on each package in their own directory */
+async function executeInEachPackage<R>(
+  data: ReleasesPackage[],
+  cb: (item: ReleasesPackage) => Promise<R>
+) {
+  const rootDir = process.cwd();
+
+  return runInSerial(data, async current => {
+    process.chdir(current.target);
+    await cb(current);
+    process.chdir(rootDir);
+  });
+}
+
 /** How to run auto for a single package repo */
 async function multiPackageReleaseCommands(
   auto: Auto,
@@ -82,28 +96,21 @@ async function multiPackageReleaseCommands(
     return;
   }
 
+  /** Run the command for each subpackage */
+  const runDefaults = () =>
+    executeInEachPackage(auto.config?.packages!, async p => {
+      const subAuto = await createSubAuto(p, args);
+      await singlePackageReleaseCommands(subAuto, command, args);
+    });
+
   switch (command) {
+    case 'release':
     case 'version':
-      await Promise.all(
-        auto.config.packages.map(async p => {
-          const subAuto = await createSubAuto(p, args);
-          await singlePackageReleaseCommands(subAuto, command, args);
-        })
-      );
+      await runDefaults();
       break;
 
     case 'changelog': {
-      const rootDir = process.cwd();
-
-      await auto.config.packages.reduce(async (last, p) => {
-        await last;
-
-        process.chdir(p.target);
-        const subAuto = await createSubAuto(p, args);
-        await subAuto.makeChangelog(args as IChangelogOptions);
-
-        process.chdir(rootDir);
-      }, Promise.resolve());
+      await runDefaults()
 
       if (!('dryRun' in args) || !args.dryRun) {
         await auto.commitChangelog();
@@ -112,12 +119,6 @@ async function multiPackageReleaseCommands(
       break;
     }
 
-    case 'release':
-      await runInSerial(auto.config.packages, async p => {
-        const subAuto = await createSubAuto(p, args);
-        await subAuto.makeRelease(args as IReleaseOptions);
-      });
-      break;
     // case 'canary':
     //   await auto.canary(args as ICanaryOptions);
     //   break;

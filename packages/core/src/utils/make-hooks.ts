@@ -28,6 +28,7 @@ export const makeHooks = (): AutoHooks => ({
   getAuthor: new AsyncSeriesBailHook(),
   getPreviousVersion: new AsyncSeriesBailHook(),
   getRepository: new AsyncSeriesBailHook(),
+  getProjectName: new AsyncSeriesBailHook(),
   version: new AsyncSeriesWaterfallHook(['releases', 'version']),
   afterVersion: new AsyncParallelHook(),
   publish: new AsyncParallelHook(['version']),

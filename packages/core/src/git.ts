@@ -746,14 +746,31 @@ export default class Git {
   }
 
   /** Get the latest tag in the git tree */
-  async getLatestTagInBranch(since?: string) {
-    return execPromise('git', ['describe', '--tags', '--abbrev=0', since]);
+  async getLatestTagInBranch(
+    options: {
+      /** Find tags since a commit */
+      since?: string;
+      /** Match a tag pattern */
+      match?: string;
+    } = {}
+  ) {
+    return execPromise('git', [
+      'describe',
+      '--tags',
+      ...(options.since ? ['--abbrev=0', options.since] : []),
+      ...(options.match ? ['--match', options.match]: [])
+    ]);
   }
 
   /** Get the tag before latest in the git tree */
-  async getPreviousTagInBranch() {
+  async getPreviousTagInBranch(
+    options: {
+      /** Match a tag pattern */
+      match?: string;
+    } = {}
+  ) {
     const latest = await this.getLatestTagInBranch();
-    return this.getLatestTagInBranch(`${latest}^1`);
+    return this.getLatestTagInBranch({ since: `${latest}^1`, ...options });
   }
 
   /** Get all the tags for a given branch. */

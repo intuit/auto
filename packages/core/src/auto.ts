@@ -176,6 +176,8 @@ export interface AutoHooks {
     | Response<ReposCreateReleaseResponse>[]
     | void
   >;
+  /** The name of the package. Only uses in multi package repos */
+  getProjectName: AsyncSeriesBailHook<[], string | void>;
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;
   /** Get the previous version. Typically from a package distribution description file. */
@@ -1387,8 +1389,13 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    // This will usually resolve to something on head
-    const [err, latestTag] = await on(this.git.getLatestTagInBranch());
+    const name = await this.hooks.getProjectName.promise();
+    const tagMatch = {
+      match: this.hasMultiplePackages ? `${name}*` : undefined
+    }
+    const [err, latestTag] = await on(
+      this.git.getLatestTagInBranch(tagMatch)
+    );
 
     if (err && err.message.includes('No names found')) {
       this.logger.log.error(
@@ -1408,7 +1415,8 @@ export default class Auto {
     const isPrerelease = prerelease || this.inPrereleaseBranch();
     let lastRelease =
       from ||
-      (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
+      ((isPrerelease || this.hasMultiplePackages) &&
+        (await this.git.getPreviousTagInBranch(tagMatch))) ||
       (await this.git.getLatestRelease());
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
@@ -1434,6 +1442,7 @@ export default class Auto {
     const rawVersion =
       useVersion ||
       (isPrerelease && latestTag) ||
+      (this.hasMultiplePackages && latestTag) ||
       (await this.getCurrentVersion(lastRelease)) ||
       latestTag;
 
