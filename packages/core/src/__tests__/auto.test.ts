@@ -793,6 +793,23 @@ describe('Auto', () => {
   });
 
   describe('release', () => {
+    test('should exit when no tags found', async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      const exit = jest.fn();
+
+      // @ts-ignore
+      process.exit = exit;
+
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getLatestRelease = () => Promise.resolve('');
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error('No names found, cannot describe anything.'));
+
+      await auto.runRelease();
+      expect(exit).toHaveBeenCalled();
+    });
+
     test("doesn't try to overwrite releases", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
