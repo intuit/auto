@@ -64,6 +64,14 @@ async function createSubAuto(p: ReleasesPackage, args: ApiOptions) {
   return subAuto;
 }
 
+/** Run an async operation on each data item in serial */
+async function runInSerial<T, R>(data: T[], cb: (item: T) => Promise<R>) {
+  return data.reduce(async (last, current) => {
+    await last;
+    await cb(current);
+  }, Promise.resolve());
+}
+
 /** How to run auto for a single package repo */
 async function multiPackageReleaseCommands(
   auto: Auto,
@@ -105,12 +113,10 @@ async function multiPackageReleaseCommands(
     }
 
     case 'release':
-      await Promise.all(
-        auto.config.packages.map(async p => {
-          const subAuto = await createSubAuto(p, args);
-          await subAuto.makeRelease(args as IReleaseOptions);
-        })
-      );
+      await runInSerial(auto.config.packages, async p => {
+        const subAuto = await createSubAuto(p, args);
+        await subAuto.makeRelease(args as IReleaseOptions);
+      });
       break;
     // case 'canary':
     //   await auto.canary(args as ICanaryOptions);
