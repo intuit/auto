@@ -13,6 +13,7 @@ import {
   AsyncSeriesWaterfallHook
 } from 'tapable';
 import endent from 'endent';
+import on from 'await-to-js';
 
 import HttpsProxyAgent from 'https-proxy-agent';
 import {
@@ -1304,6 +1305,24 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
+    // This will usually resolve to something on head
+    const [err, latestTag] = await on(this.git.getLatestTagInBranch());
+
+    if (err && err.message.includes('No names found')) {
+      this.logger.log.error(
+        endent`
+          Could not find any tags in the local repository. Exiting early.
+
+          The "release" command creates GitHub releases for tags that have already been created in your repo.
+          
+          If there are no tags there is nothing to release.
+        `,
+        '\n'
+      );
+      this.logger.verbose.error(err);
+      return process.exit(1);
+    }
+
     const isPrerelease = prerelease || this.inPrereleaseBranch();
     let lastRelease =
       from ||
@@ -1330,8 +1349,6 @@ export default class Auto {
 
     this.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
-    // In a monorepo this just matches the last tag created during a publish
-    const latestTag = await this.git.getLatestTagInBranch();
     const rawVersion =
       useVersion ||
       (isPrerelease && latestTag) ||
