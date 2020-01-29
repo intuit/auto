@@ -18,7 +18,7 @@ import Auto, {
 } from '@auto-it/core';
 import { ReleasesPackage } from '@auto-it/core/src/types';
 
-/** How to run auto for a single package repo */
+/** Run a command for a single package */
 async function singlePackageReleaseCommands(
   auto: Auto,
   command: string,
@@ -48,7 +48,7 @@ async function singlePackageReleaseCommands(
   }
 }
 
-/** Create an auto instance for a package */
+/** Create an auto instance for a sub-package */
 async function createSubAuto(p: ReleasesPackage, args: ApiOptions) {
   const subAuto = new Auto({ ...args, hasMultiplePackages: true });
 
@@ -104,13 +104,14 @@ async function multiPackageReleaseCommands(
     });
 
   switch (command) {
-    case 'release':
     case 'version':
+    case 'release':
+    case 'canary':
       await runDefaults();
       break;
 
     case 'changelog': {
-      await runDefaults()
+      await runDefaults();
 
       if (!('dryRun' in args) || !args.dryRun) {
         await auto.commitChangelog();
@@ -119,9 +120,6 @@ async function multiPackageReleaseCommands(
       break;
     }
 
-    // case 'canary':
-    //   await auto.canary(args as ICanaryOptions);
-    //   break;
     // case 'shipit':
     //   await auto.shipit(args as IShipItOptions);
     //   break;

@@ -310,7 +310,7 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
 }
 
 /** Reset the scope changes of all the packages  */
-async function gitReset() {
+async function gitPackageReset() {
   await execPromise('git', ['reset', '--hard', 'HEAD']);
 }
 
@@ -477,7 +477,6 @@ export default class NPMPlugin implements IPlugin {
       return (await loadPackageJson()).name
     });
 
-
     auto.hooks.version.tapPromise(this.name, async (releases, version) => {
       const isBaseBranch = branch === auto.baseBranch;
       const packageJson = await loadPackageJson();
@@ -539,7 +538,7 @@ export default class NPMPlugin implements IPlugin {
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
-      const latestTag = (await auto.git?.getLatestTagInBranch()) || lastRelease;
+      const latestTag = (await auto.getLatestTagInBranch()) || lastRelease;
       const inPrerelease = prereleaseBranches.some(b =>
         latestTag.includes(`-${b}.`)
       );
@@ -584,8 +583,9 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info('Successfully published canary version');
         const packages = await getLernaPackages();
         const packageList = await getPackageList();
+
         // Reset after we read the packages from the system!
-        await gitReset();
+        await gitPackageReset();
 
         if (isIndependent) {
           if (!packageList.some(p => p.includes('canary'))) {
@@ -637,11 +637,9 @@ export default class NPMPlugin implements IPlugin {
       ]);
 
       const publishArgs = ['--tag', 'canary'];
-      await execPromise('npm', ['publish', ...publishArgs, ...verboseArgs]);
 
-      if (this.canaryScope) {
-        await gitReset();
-      }
+      await execPromise('npm', ['publish', ...publishArgs, ...verboseArgs]);
+      await gitPackageReset();
 
       const { name } = await loadPackageJson();
       auto.logger.verbose.info('Successfully published canary version');

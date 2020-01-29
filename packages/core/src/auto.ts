@@ -1,9 +1,11 @@
+/* eslint-disable complexity */
+
 import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
-import { eq, gt, lte, inc, parse, ReleaseType, major } from 'semver';
+import { eq, gt, lte, inc, parse, ReleaseType, major, coerce } from 'semver';
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -268,12 +270,19 @@ export function determineNextVersion(
   bump: SEMVER,
   tag: string
 ) {
-  const next =
-    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+  const from = coerce(lastVersion)?.raw
 
-  return lte(next, currentVersion)
-    ? inc(currentVersion, 'prerelease', tag) || 'prerelease'
-    : next;
+  if (!from) {
+    return 'prerelease';
+  }
+
+  const next = inc(from, `pre${bump}` as ReleaseType, tag);
+
+  return (
+    (next && lte(next, currentVersion)
+      ? inc(currentVersion, 'prerelease', tag)
+      : next) || 'prerelease'
+  );
 }
 
 /** Get the current branch the git repo is set to */
@@ -381,7 +390,7 @@ export default class Auto {
 
           await execPromise('git', [
             'branch',
-            await this.git?.getLatestTagInBranch()
+            await this.getLatestTagInBranch()
           ]);
           await execPromise('git', ['push', 'origin', branch]);
         }
@@ -852,7 +861,7 @@ export default class Auto {
       process.exit(1);
     }
 
-    // await this.checkClean();
+    await this.checkClean();
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -862,6 +871,7 @@ export default class Auto {
 
     const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
+    console.log(head)
     const labels = head.map(commit => commit.labels);
     const version =
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
@@ -887,6 +897,7 @@ export default class Auto {
       );
     } else {
       this.logger.verbose.info('Calling canary hook');
+      const name = await this.hooks.getProjectName.promise();
       const result = await this.hooks.canary.promise(version, canaryVersion);
 
       if (typeof result === 'object' && 'error' in result) {
@@ -916,7 +927,7 @@ export default class Auto {
 
         await this.prBody({
           pr: Number(pr),
-          context: 'canary-version',
+          context: `${name}-canary-version`,
           message
         });
       }
@@ -929,7 +940,7 @@ export default class Auto {
     let latestTag: string;
 
     try {
-      latestTag = await this.git.getLatestTagInBranch();
+      latestTag = await this.getLatestTagInBranch();
     } catch (error) {
       latestTag = await this.git.getFirstCommit();
     }
@@ -962,7 +973,7 @@ export default class Auto {
     await this.setGitUser();
 
     const lastRelease = await this.git.getLatestRelease();
-    const lastTag = await this.git.getLatestTagInBranch();
+    const lastTag = await this.getLatestTagInBranch();
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map(commit => commit.labels);
@@ -1149,7 +1160,7 @@ export default class Auto {
   private async oldRelease(
     options: IShipItOptions
   ): Promise<ShipitInfo | undefined> {
-    const latestTag = await this.git?.getLatestTagInBranch();
+    const latestTag = await this.getLatestTagInBranch();
     const result = await this.publishFullRelease({
       ...options,
       from: latestTag
@@ -1307,7 +1318,7 @@ export default class Auto {
     const isPrerelease = this.inPrereleaseBranch();
     const lastRelease =
       from ||
-      (isPrerelease && (await this.git.getLatestTagInBranch())) ||
+      (isPrerelease && (await this.getLatestTagInBranch())) ||
       (await this.git.getLatestRelease());
     const calculatedBump = await this.release.getSemverBump(lastRelease);
     const bump =
@@ -1389,13 +1400,8 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const name = await this.hooks.getProjectName.promise();
-    const tagMatch = {
-      match: this.hasMultiplePackages ? `${name}*` : undefined
-    }
-    const [err, latestTag] = await on(
-      this.git.getLatestTagInBranch(tagMatch)
-    );
+
+    const [err, latestTag] = await on(this.getLatestTagInBranch());
 
     if (err && err.message.includes('No names found')) {
       this.logger.log.error(
@@ -1413,6 +1419,11 @@ export default class Auto {
     }
 
     const isPrerelease = prerelease || this.inPrereleaseBranch();
+    const name = await this.hooks.getProjectName.promise();
+    const tagMatch = {
+      match: this.hasMultiplePackages ? `${name}*` : undefined
+    };
+
     let lastRelease =
       from ||
       ((isPrerelease || this.hasMultiplePackages) &&
@@ -1514,6 +1525,16 @@ export default class Auto {
       ? release
       : `v${release}`;
   };
+
+  /** Get the latest tag in branch. Multi-package aware */
+  async getLatestTagInBranch() {
+    const name = await this.hooks.getProjectName.promise();
+    const tagMatch = {
+      match: this.hasMultiplePackages ? `${name}*` : undefined
+    };
+
+    return this.git!.getLatestTagInBranch(tagMatch);
+  }
 
   /** Create an auto initialization error */
   private createErrorMessage() {
