@@ -1,3 +1,16 @@
+# v9.8.2 (Thu Jan 30 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - add fallback to get lerna json [#920](https://github.com/intuit/auto/pull/920) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.1 (Wed Jan 29 2020)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,16 @@
+# v9.8.2 (Thu Jan 30 2020)
+
+#### 🐛  Bug Fix
+
+- fix test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add fallback to get lerna json  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix
