@@ -277,10 +277,11 @@ export function determineNextVersion(
   }
 
   const next = inc(from, `pre${bump}` as ReleaseType, tag);
+  const maybeCurrent = coerce(currentVersion)?.raw;
 
   return (
-    (next && lte(next, currentVersion)
-      ? inc(currentVersion, 'prerelease', tag)
+    (next && maybeCurrent && lte(next, maybeCurrent)
+      ? inc(maybeCurrent, 'prerelease', tag)
       : next) || 'prerelease'
   );
 }
@@ -1003,15 +1004,24 @@ export default class Auto {
 
         If you think your package manager has the ability to support "next" releases please file an issue or submit a pull request,
       `);
-      process.exit(1);
+      return
     }
 
     await this.checkClean();
     await this.setGitUser();
 
-    const lastRelease = await this.git.getLatestRelease();
+    const lastRelease = await this.getLatestTagInBranch('master');
     const lastTag = await this.getLatestTagInBranch();
+
+    console.log({lastTag})
     const commits = await this.release.getCommitsInRelease(lastTag);
+    const name = await this.hooks.getProjectName.promise();
+
+    if (!commits.length) {
+      this.logger.log.warn(`No changes found for ${name}. Not publishing a pre-release.`)
+      return;
+    }
+
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map(commit => commit.labels);
     const bump =
@@ -1065,13 +1075,15 @@ export default class Auto {
             ${message.replace('%v', result.map(r => `\`${r}\``).join('\n'))}
 
             <details>
-              <summary>Changelog</summary>
+              <summary>Changelog for ${name}</summary>
               ${await this.release.generateReleaseNotes(lastRelease)}
             </details>
           `
         });
       }
     }
+
+    await execPromise('git', ['reset', '--hard', 'HEAD']);
 
     return { newVersion, commitsInRelease: commits, context: 'next' };
   }
@@ -1563,9 +1575,10 @@ export default class Auto {
   };
 
   /** Get the latest tag in branch. Multi-package aware */
-  async getLatestTagInBranch() {
+  async getLatestTagInBranch(branch?: string) {
     const name = await this.hooks.getProjectName.promise();
     const tagMatch = {
+      since: branch,
       match: this.hasMultiplePackages ? `${name}*` : undefined
     };
 

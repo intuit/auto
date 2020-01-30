@@ -107,6 +107,7 @@ async function multiPackageReleaseCommands(
     case 'version':
     case 'release':
     case 'canary':
+    case 'next':
       await runDefaults();
       break;
 
@@ -122,9 +123,6 @@ async function multiPackageReleaseCommands(
 
     // case 'shipit':
     //   await auto.shipit(args as IShipItOptions);
-    //   break;
-    // case 'next':
-    //   await auto.next(args as INextOptions);
     //   break;
 
     default:

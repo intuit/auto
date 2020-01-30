@@ -757,8 +757,9 @@ export default class Git {
     return execPromise('git', [
       'describe',
       '--tags',
-      ...(options.since ? ['--abbrev=0', options.since] : []),
-      ...(options.match ? ['--match', options.match] : [])
+      '--abbrev=0',
+      ...(options.match ? ['--match', options.match] : []),
+      options.since
     ]);
   }
 
