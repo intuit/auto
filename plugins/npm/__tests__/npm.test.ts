@@ -314,12 +314,12 @@ describe('getPreviousVersion', () => {
       prefixRelease: str => str
     } as Auto.Auto);
 
-    readResult = `
+    readFileSync.mockReturnValueOnce(`
       {
         "name": "test",
         "version": "2.0.0"
       }
-    `;
+    `);
     expect(await hooks.getPreviousVersion.promise()).toBe('2.0.0');
   });
 
@@ -330,12 +330,12 @@ describe('getPreviousVersion', () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
-    readResult = `
+    readFileSync.mockReturnValueOnce(`
       {
         "name": "test",
         "version": "0.0.1"
       }
-    `;
+    `);
     // published version of test package
     exec.mockReturnValueOnce('0.1.2');
 
