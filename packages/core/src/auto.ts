@@ -36,7 +36,7 @@ import {
 import Changelog from './changelog';
 import { preVersionMap } from './semver';
 import Config from './config';
-import Git, { IGitOptions, IPRInfo } from './git';
+import Git, { IGitOptions, IPRInfo, makeIdentifier } from './git';
 import InteractiveInit from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
 import Release, { getVersionMap, ILabelDefinition } from './release';
@@ -270,7 +270,7 @@ export function determineNextVersion(
   bump: SEMVER,
   tag: string
 ) {
-  const from = coerce(lastVersion)?.raw
+  const from = coerce(lastVersion)?.raw;
 
   if (!from) {
     return 'prerelease';
@@ -858,7 +858,8 @@ export default class Auto {
         
         If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
       `);
-      process.exit(1);
+
+      return;
     }
 
     await this.checkClean();
@@ -867,11 +868,45 @@ export default class Auto {
     pr = options.pr ? String(options.pr) : pr;
     build = options.build ? String(options.build) : build;
 
-    this.logger.verbose.info('Canary info found:', { pr, build });
+    const sha = await this.git.getSha(true);
+    const name = await this.hooks.getProjectName.promise();
+    const context = `${name}-canary-version`;
 
-    const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
+    let previousCanarySha: string;
+
+    try {
+      const { body } = (await this.git.getPullRequest(Number(pr))).data;
+      const foundContext = new RegExp(`${name}-previous-canary: \\((\\S+)\\)`);
+      const match = body.match(foundContext);
+
+      if (match) {
+        previousCanarySha = match[1];
+      } else {
+        previousCanarySha = '';
+      }
+    } catch (error) {
+      previousCanarySha = '';
+    }
+
+    this.logger.verbose.info('Canary info found:', {
+      pr,
+      build,
+      previousCanarySha
+    });
+    const from = previousCanarySha
+      ? previousCanarySha
+      : (await this.git.shaExists('HEAD^'))
+      ? 'HEAD^'
+      : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
-    console.log(head)
+
+    if (head.length === 0) {
+      this.logger.log.warn(
+        `No commits found for: ${name}. No canary released.`
+      );
+      return;
+    }
+
     const labels = head.map(commit => commit.labels);
     const version =
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
@@ -888,7 +923,7 @@ export default class Auto {
     }
 
     if (!pr || !build) {
-      canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
+      canaryVersion = `${canaryVersion}.${sha}`;
     }
 
     if (options.dryRun) {
@@ -897,7 +932,6 @@ export default class Auto {
       );
     } else {
       this.logger.verbose.info('Calling canary hook');
-      const name = await this.hooks.getProjectName.promise();
       const result = await this.hooks.canary.promise(version, canaryVersion);
 
       if (typeof result === 'object' && 'error' in result) {
@@ -927,8 +961,11 @@ export default class Auto {
 
         await this.prBody({
           pr: Number(pr),
-          context: `${name}-canary-version`,
-          message
+          context,
+          message: `${makeIdentifier(
+            `${name}-previous-canary`,
+            `(${sha})`
+          )}\n${message}`
         });
       }
 
@@ -1083,8 +1120,8 @@ export default class Auto {
       isPrereleaseBranch,
       publishPrerelease
     });
-    let publishInfo: ShipitInfo | undefined;
 
+    let publishInfo: ShipitInfo | undefined;
     let releaseType: ShipitRelease = 'canary';
 
     if (isBaseBrach && shouldGraduate) {
@@ -1399,7 +1436,6 @@ export default class Auto {
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
-
 
     const [err, latestTag] = await on(this.getLatestTagInBranch());
 
