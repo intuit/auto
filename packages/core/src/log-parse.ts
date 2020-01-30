@@ -1,4 +1,3 @@
-import { ICommit } from 'gitlog';
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { makeLogParseHooks } from './utils/make-hooks';
 
@@ -20,6 +19,37 @@ export interface IPullRequest {
   base?: string;
   /** The body of the PR (opening comment) */
   body?: string;
+}
+
+export interface ICommit {
+  /**
+   *
+   */
+hash: string;
+  /**
+   *
+   */
+authorName?: string;
+  /**
+   *
+   */
+authorEmail?: string;
+  /**
+   *
+   */
+subject: string;
+  /**
+   *
+   */
+rawBody?: string;
+  /**
+   *
+   */
+labels?: string[];
+  /**
+   *
+   */
+files: string[];
 }
 
 export type IExtendedCommit = ICommit & {
