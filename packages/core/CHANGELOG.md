@@ -1,3 +1,15 @@
+# v9.8.3 (Thu Jan 30 2020)
+
+#### 🐛  Bug Fix
+
+- move ICommit to "core" to fix external plugin TS build errors  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.1 (Wed Jan 29 2020)
 
 #### 🐛  Bug Fix

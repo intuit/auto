@@ -1,3 +1,16 @@
+# v9.8.3 (Thu Jan 30 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - move ICommit to "core" to fix external plugin TS build errors [#921](https://github.com/intuit/auto/pull/921) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.2 (Thu Jan 30 2020)
 
 #### 🐛  Bug Fix
