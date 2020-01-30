@@ -22,7 +22,7 @@ import { gt, gte, inc, ReleaseType } from 'semver';
 
 import getConfigFromPackageJson from './package-config';
 import setTokenOnCI from './set-npm-token';
-import { loadPackageJson, readFile, writeFile } from './utils';
+import { loadPackageJson, writeFile } from './utils';
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -200,7 +200,13 @@ interface INpmConfig {
 }
 
 /** Parse the lerna.json file. */
-const getLernaJson = () => JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+const getLernaJson = () => {
+  try {
+    return JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+  } catch (error) {
+    return {};
+  }
+};
 
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
@@ -214,8 +220,7 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
     auto.logger.veryVerbose.info(
       'Using monorepo to calculate previous release'
     );
-    const monorepoVersion = JSON.parse(await readFile('lerna.json', 'utf-8'))
-      .version;
+    const monorepoVersion = getLernaJson().version;
 
     if (monorepoVersion === 'independent') {
       previousVersion =
