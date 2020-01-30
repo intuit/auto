@@ -16,6 +16,7 @@ You must use some sort of step that implements `skip ci` functionality. Otherwis
 pipeline {
   environment {
     NPM_TOKEN = credentials('NPM_TOKEN')
+    GH_USER = credentials('GH_TOKEN')
     GH_TOKEN = credentials('GH_TOKEN')
   }
   stages {
@@ -34,7 +35,7 @@ pipeline {
     stage('Auth') {
       steps {
         sh '''
-          echo "https://${GITHUB_TOKEN}@github.com" >> /tmp/gitcredfile
+          echo "https://${GH_USER}:${GH_TOKEN}@github.com" >> /tmp/gitcredfile
           git config --global user.name "Andrew Lisowski"
           git config --global user.email "lisowski54@gmail.com"
           git config --global credential.helper "store --file=/tmp/gitcredfile"
