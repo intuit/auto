@@ -4,7 +4,7 @@ import path from 'path';
 import { retry } from '@octokit/plugin-retry';
 import { throttling } from '@octokit/plugin-throttling';
 import Octokit from '@octokit/rest';
-import gitlogNode, { ICommit } from 'gitlog';
+import gitlogNode from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
@@ -16,6 +16,7 @@ import { ILabelDefinition } from './release';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { gt } from 'semver';
+import { ICommit } from './log-parse';
 
 const gitlog = promisify(gitlogNode);
 
@@ -306,7 +307,7 @@ export default class Git {
   @memoize()
   async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
     try {
-      const log = await gitlog({
+      const log = await gitlog<ICommit>({
         repo: process.cwd(),
         number: Number.MAX_SAFE_INTEGER,
         fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
