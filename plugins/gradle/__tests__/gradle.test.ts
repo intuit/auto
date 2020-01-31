@@ -11,7 +11,7 @@ const mockRead = (result: string) =>
     // @ts-ignore
     .mockReturnValueOnce(result);
 
-describe('Gradle Release Plugin Plugin', () => {
+describe('Gradle Plugin', () => {
   let hooks: Auto.IAutoHooks;
   const options: IGradleReleasePluginPluginOptions = {};
 
@@ -107,7 +107,7 @@ describe('Gradle Release Plugin Plugin', () => {
   });
 });
 
-describe('Gradle Release Plugin Plugin - Custom Command', () => {
+describe('Gradle Plugin - Custom Command', () => {
   let hooks: Auto.IAutoHooks;
   const options: IGradleReleasePluginPluginOptions = {
     gradleCommand: './gradlew',
