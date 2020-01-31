@@ -97,7 +97,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
 
       // coerce
-      const gradleCommand: string = this.options.gradleCommand || '';
+      const gradleCommand: string = this.options.gradleCommand || ''
+      const gradleOptions = this.options.gradleOptions || []
 
       await execPromise(gradleCommand, [
         'release',
@@ -106,7 +107,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         `-Prelease.newVersion=${this.newVersion}`,
         '-x createReleaseTag',
         '-x preTagCommit',
-        '-x commitNewVersion'
+        '-x commitNewVersion',
+        ...gradleOptions
       ]);
 
       await execPromise('git', ['add', 'gradle.properties']);

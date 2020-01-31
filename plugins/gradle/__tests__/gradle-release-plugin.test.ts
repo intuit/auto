@@ -106,3 +106,41 @@ describe('Gradle Release Plugin Plugin', () => {
     });
   });
 });
+
+describe('Gradle Release Plugin Plugin - Custom Command', () => {
+  let hooks: Auto.IAutoHooks;
+  const options: IGradleReleasePluginPluginOptions = {
+    gradleCommand: './gradlew',
+    gradleOptions: ['-P prop=val']
+  };
+
+  beforeEach(() => {
+    const plugin = new GradleReleasePlugin(options);
+    hooks = makeHooks();
+    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+  });
+
+  describe('version', () => {
+    test('should version release - patch version - with custom gradle command', async () => {
+      mockRead('version=1.0.0');
+      const spy = jest.fn();
+      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+
+      await hooks.version.promise(Auto.SEMVER.patch);
+
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringMatching('gradlew'),
+        [
+          'release',
+          '-Prelease.useAutomaticVersion=true',
+          '-Prelease.releaseVersion=1.0.0',
+          '-Prelease.newVersion=1.0.1',
+          '-x createReleaseTag',
+          '-x preTagCommit',
+          '-x commitNewVersion',
+          '-P prop=val'
+        ]
+      );
+    });
+  });
+});

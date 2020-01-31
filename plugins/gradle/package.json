@@ -4,8 +4,8 @@
   "main": "dist/index.js",
   "description": "A pluging that calls gradle-release-plugin with versioning information.",
   "author": {
-    "name": "Andrew Lisowski",
-    "email": "lisowski54@gmail.com"
+    "name": "Brandon Miller",
+    "email": "unknownerror404@gmail.com"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
