@@ -1,3 +1,24 @@
+# v9.8.4 (Fri Jan 31 2020)
+
+#### 🐛  Bug Fix
+
+- fix GH_USER in jenkins documentation [#925](https://github.com/intuit/auto/pull/925) (navjot_cheema@intuit.com [@ncheema](https://github.com/ncheema))
+- `@auto-it/maven`
+  - fix maven release creation [#927](https://github.com/intuit/auto/pull/927) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `@auto-it/maven`
+  - Update maven and jenkins documentation (resolves #922) [#923](https://github.com/intuit/auto/pull/923) (navjot_cheema@intuit.com [@ncheema](https://github.com/ncheema))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Navjot Cheema ([@ncheema](https://github.com/ncheema))
+- ncheema (navjot_cheema@intuit.com)
+
+---
+
 # v9.8.3 (Thu Jan 30 2020)
 
 #### 🐛  Bug Fix

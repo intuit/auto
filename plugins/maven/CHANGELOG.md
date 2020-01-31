@@ -1,3 +1,19 @@
+# v9.8.4 (Fri Jan 31 2020)
+
+#### 🐛  Bug Fix
+
+- fix maven release creation  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- resolves #922
+
+update maven & jenkins documentation  (navjot_cheema@intuit.com)
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ncheema (navjot_cheema@intuit.com)
+
+---
+
 # v9.1.1 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix
