@@ -20,7 +20,7 @@ describe('maven', () => {
     plugin.apply({
       hooks,
       logger: dummyLog(),
-      prefixRelease: r => r
+      prefixRelease: r => `v${r}`
     } as Auto.Auto);
   });
 
@@ -169,7 +169,7 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getPreviousVersion.promise()).toBe('1.0.0');
+      expect(await hooks.getPreviousVersion.promise()).toBe('v1.0.0');
     });
 
     test('should throw when no version in pom.xml', async () => {

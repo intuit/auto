@@ -114,8 +114,8 @@ export default class MavenPlugin implements IPlugin {
       return developer;
     });
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, () =>
-      getPreviousVersion(auto)
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () =>
+      auto.prefixRelease(await getPreviousVersion(auto))
     );
 
     auto.hooks.version.tapPromise(this.name, async version => {
@@ -138,7 +138,7 @@ export default class MavenPlugin implements IPlugin {
       await execPromise('mvn', [
         '-B',
         'release:prepare',
-        `-Dtag=v${newVersion}`,
+        `-Dtag=${auto.prefixRelease(newVersion)}`,
         `-DreleaseVersion=${newVersion}`,
         '-DpushChanges=false'
       ]);
