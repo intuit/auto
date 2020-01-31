@@ -33,7 +33,7 @@ yarn add -D @auto-it/gradle
 }
 ```
 
-## Maven Project Configuration
+## Gradle Project Configuration
 
 Your project must be using the gradle release plugin. Make sure the the latest `gradle-release-plugin` is in your `build.gradle`.
 
