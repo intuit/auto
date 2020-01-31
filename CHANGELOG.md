@@ -1,3 +1,21 @@
+# v9.9.0 (Fri Jan 31 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404)), for all your work!
+
+#### 🚀  Enhancement
+
+- `@auto-it/gradle`
+  - Gradle Release Plugin [#924](https://github.com/intuit/auto/pull/924) (brandon_miller3@intuit.com [@unknownerror404](https://github.com/unknownerror404))
+
+#### Authors: 2
+
+- Brandon Miller ([@unknownerror404](https://github.com/unknownerror404))
+- svc-mobile (brandon_miller3@intuit.com)
+
+---
+
 # v9.8.4 (Fri Jan 31 2020)
 
 #### 🐛  Bug Fix
