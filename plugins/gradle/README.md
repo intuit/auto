@@ -22,6 +22,11 @@ yarn add -D @auto-it/gradle
         // An optional gradle binary cmd/path relative to your project
         // @default /usr/bin/gradle
         "gradleCommand": "./gradlew",
+
+        // An optional properties file where the gradle release plugin will read/write versions from.to.
+        // @default ./gradle.properties
+        "versionFile": "./gradle.properties",
+
         // An optional gradle argument list -- IE any gradle option allowed for the version
         // of gradle you're using
         // @default []
@@ -60,7 +65,7 @@ release {
 
 You will also need all of the following configuration blocks for all parts of `auto` to function:
 
-1. Version
+1. Version defined inside `versionFile`
 
 ```java-properties
 version=1.0.0

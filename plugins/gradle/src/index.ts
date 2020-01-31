@@ -1,5 +1,5 @@
 import { Auto, IPlugin, execPromise } from '@auto-it/core';
-import { IExtendedCommit } from '@auto-it/core/src/log-parse';
+import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
 import path from 'path';
 import fs from 'fs-extra';
@@ -13,14 +13,14 @@ export interface IGradleReleasePluginPluginOptions {
   /** The file that contains the version string in it. */
   versionFile?: string;
 
-  /** The command to build the project with */
+  /** The gradle binary to release the project with */
   gradleCommand?: string;
 
   /** A list of gradle command customizations to pass to gradle */
   gradleOptions?: Array<string>;
 }
 
-/** getPre does this */
+/** Retrieves a previous version from gradle.properties */
 async function getPreviousVersion(path: string): Promise<string> {
   try {
     const data = await fs.readFile(path, 'utf-8');
@@ -34,22 +34,16 @@ async function getPreviousVersion(path: string): Promise<string> {
   throw new Error('No version was found inside version-file.');
 }
 
-/**  */
+/** A plugin to release java projects with gradle */
 export default class GradleReleasePluginPlugin implements IPlugin {
   /** The name of the plugin */
   name = 'Gradle Release Plugin';
 
   /** The options of the plugin */
-  readonly options: IGradleReleasePluginPluginOptions;
-
-  /** Previous Version */
-  previousVersion = '';
-
-  /** Version to Release */
-  newVersion = '';
+  readonly options: Required<IGradleReleasePluginPluginOptions>;
 
   /** Initialize the plugin with it's options */
-  constructor(options: IGradleReleasePluginPluginOptions) {
+  constructor(options: IGradleReleasePluginPluginOptions = {}) {
     this.options = {
       versionFile: options?.versionFile
         ? path.join(process.cwd(), options.versionFile)
@@ -57,7 +51,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       gradleCommand: options?.gradleCommand
         ? path.join(process.cwd(), options.gradleCommand)
         : '/usr/bin/gradle',
-      gradleOptions: options?.gradleOptions || []
+      gradleOptions: options.gradleOptions || [] 
     };
   }
 
@@ -66,10 +60,11 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     auto.hooks.beforeRun.tap(this.name, () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
       // validation
-      if (!fs.existsSync(this.options.versionFile || '')) {
-        auto.logger.log.warn(
+      if (!fs.existsSync(this.options.versionFile)) {
+        auto.logger.log.error(
           `${logPrefix} The version-file does not exist on disk.`
         );
+        process.exit(1)
       }
     });
 
@@ -82,40 +77,36 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, () => {
-      return getPreviousVersion(this.options.versionFile || '');
+      return getPreviousVersion(this.options.versionFile);
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      this.previousVersion = await getPreviousVersion(
-        this.options.versionFile || ''
+      const previousVersion = await getPreviousVersion(
+        this.options.versionFile
       );
-      this.newVersion = inc(this.previousVersion, version as ReleaseType) || '';
-      if (!this.newVersion) {
+      const newVersion = inc(previousVersion, version as ReleaseType) || '';
+      if (!newVersion) {
         throw new Error(
-          `Could not increment previous version: ${this.previousVersion}`
+          `Could not increment previous version: ${previousVersion}`
         );
       }
 
-      // coerce
-      const gradleCommand: string = this.options.gradleCommand || ''
-      const gradleOptions = this.options.gradleOptions || []
-
-      await execPromise(gradleCommand, [
+      await execPromise(this.options.gradleCommand, [
         'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.releaseVersion=${this.previousVersion}`,
-        `-Prelease.newVersion=${this.newVersion}`,
+        `-Prelease.releaseVersion=${previousVersion}`,
+        `-Prelease.newVersion=${newVersion}`,
         '-x createReleaseTag',
         '-x preTagCommit',
         '-x commitNewVersion',
-        ...gradleOptions
+        ...this.options.gradleOptions
       ]);
 
       await execPromise('git', ['add', 'gradle.properties']);
       await execPromise('git', [
         'commit',
         '-m',
-        `"Bump version to: ${this.newVersion} [skip ci]"`,
+        `"Bump version to: ${newVersion} [skip ci]"`,
         '--no-verify'
       ]);
 
