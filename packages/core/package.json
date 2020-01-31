@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "9.8.4",
+  "version": "9.9.0",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "author": {
