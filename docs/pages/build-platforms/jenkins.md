@@ -16,7 +16,7 @@ You must use some sort of step that implements `skip ci` functionality. Otherwis
 pipeline {
   environment {
     NPM_TOKEN = credentials('NPM_TOKEN')
-    GH_USER = credentials('GH_TOKEN')
+    GH_USER = credentials('GH_USER')
     GH_TOKEN = credentials('GH_TOKEN')
   }
   stages {
