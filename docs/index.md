@@ -42,6 +42,7 @@ Package Manager Plugins
 - [Chrome Web Store](../plugins/chrome/README.md)
 - [Crates](../plugins/crates/README.md)
 - [Git Tag](../plugins/git-tag/README.md)
+- [Gradle](../plugins/gradle/README.md)
 - [NPM](../plugins/npm/README.md)
 - [Maven](../plugins/maven/README.md)
 
