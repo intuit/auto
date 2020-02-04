@@ -617,6 +617,7 @@ export default class NPMPlugin implements IPlugin {
       await execPromise('npm', [
         'version',
         latestBump || version,
+        '--no-commit-hooks',
         '-m',
         VERSION_COMMIT_MESSAGE,
         ...verboseArgs

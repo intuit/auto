@@ -391,6 +391,7 @@ describe('publish', () => {
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       Auto.SEMVER.patch,
+      '--no-commit-hooks',
       '-m',
       '"Bump version to: %s [skip ci]"',
       '--loglevel',
@@ -419,6 +420,7 @@ describe('publish', () => {
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       Auto.SEMVER.patch,
+      '--no-commit-hooks',
       '-m',
       '"Bump version to: %s [skip ci]"'
     ]);
@@ -575,6 +577,7 @@ describe('publish', () => {
     expect(exec).toHaveBeenCalledWith('npm', [
       'version',
       '1.0.1',
+      '--no-commit-hooks',
       '-m',
       '"Bump version to: %s [skip ci]"'
     ]);
