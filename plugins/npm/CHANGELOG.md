@@ -1,3 +1,15 @@
+# v9.9.1 (Tue Feb 04 2020)
+
+#### 🐛  Bug Fix
+
+- dont run git hooks when commiting the version for a single npm package  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.2 (Thu Jan 30 2020)
 
 #### 🐛  Bug Fix

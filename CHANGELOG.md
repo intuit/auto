@@ -1,3 +1,20 @@
+# v9.9.1 (Tue Feb 04 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - dont run git hooks when commiting the version for a single npm package [#929](https://github.com/intuit/auto/pull/929) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Add gradle plugin to docs website [#928](https://github.com/intuit/auto/pull/928) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.9.0 (Fri Jan 31 2020)
 
 :tada: This release contains work from a new contributor! :tada:
