@@ -21,6 +21,7 @@
 - [Setup](pages/generated/init.md)
   - [auto init](pages/generated/init.md#init)
   - [auto create-labels](pages/generated/init.md#create-labels)
+  - [auto info](pages/generated/info.md)
 - [Publishing](pages/publishing.md)
   - [auto version](pages/generated/version.md)
   - [auto changelog](pages/generated/changelog.md)

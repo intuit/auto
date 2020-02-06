@@ -24,6 +24,10 @@ export async function run(command: string, args: ApiOptions) {
     case 'init':
       await auto.init();
       break;
+    case 'info':
+      await auto.loadConfig();
+      await auto.info();
+      break;
     case 'create-labels':
       await auto.loadConfig();
       await auto.createLabels(args as ICreateLabelsOptions);
