@@ -1,3 +1,16 @@
+# v9.10.3 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- add user login  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add info about token permission  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.2 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix
