@@ -521,7 +521,6 @@ export default class Auto {
       "auto" version: v${getAutoVersion()}
       "node" version: ${execSync('node --version', { encoding: 'utf8' }).trim()}
       ${access['x-github-enterprise-version'] ? `GHE version:    v${access['x-github-enterprise-version']}\n`: '\n'}
-
       ${chalk.underline.white('Project Information:')}
 
       ${logSuccess(noProject)} Repository:      ${repoLink}
