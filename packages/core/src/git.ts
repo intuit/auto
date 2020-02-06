@@ -361,6 +361,25 @@ export default class Git {
     }
   }
 
+  /** Get collaborator permission level to the repo. */
+  @memoize()
+  async getTokenPermissionLevel() {
+    try {
+      const user = await this.github.users.getAuthenticated();
+      const permission = (
+        await this.github.repos.getCollaboratorPermissionLevel({
+          owner: this.options.owner,
+          repo: this.options.repo,
+          username: user.data.login
+        })
+      ).data;
+
+      return permission;
+    } catch (error) {
+      this.logger.log.error(`Could not get permissions for token`);
+    }
+  }
+
   /** Get the GitHub user for a username */
   @memoize()
   async getUserByUsername(username: string) {

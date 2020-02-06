@@ -500,7 +500,8 @@ export default class Auto {
 
       return acc && projectLabels.includes(label.name);
     }, true);
-    const { permission } = (await this.git.getTokenPermissionLevel()) || {};
+    const { permission, user } =
+      (await this.git.getTokenPermissionLevel()) || {};
 
     let hasError = false;
 
@@ -536,6 +537,7 @@ export default class Auto {
 
       ${logSuccess(!token)} Token:            ${`[Token starting with ${token.substring(0, 4)}]`}
       ${logSuccess(!(permission === 'admin' || permission === 'write'))} Repo Permission:  ${permission}
+      ${logSuccess(!user?.login)} User:             ${user?.login}
       ${logSuccess()} API:              ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
       ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
