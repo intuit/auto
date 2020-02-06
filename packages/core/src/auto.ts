@@ -500,6 +500,8 @@ export default class Auto {
 
       return acc && projectLabels.includes(label.name);
     }, true);
+    const { permission, user } =
+      (await this.git.getTokenPermissionLevel()) || {};
 
     let hasError = false;
 
@@ -528,14 +530,17 @@ export default class Auto {
       ${logSuccess(!author.email)} Author Email:    ${author.email}
       ${logSuccess(!version)} Current Version: ${this.prefixRelease(version)}
       ${logSuccess(err)} Latest Release:  ${latestReleaseLink}
+
       ${logSuccess(!hasLabels)} Labels configured on GitHub project ${hasLabels ? '' :  '(Try running "auto create-labels")'}
 
       ${chalk.underline.white('GitHub Token Information:')}
 
-      ${logSuccess(!token)} Token:           ${`[Token starting with ${token.substring(0, 4)}]`}
-      ${logSuccess()} API:             ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
-      ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:  ${access['x-oauth-scopes']}
-      ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:      ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
+      ${logSuccess(!token)} Token:            ${`[Token starting with ${token.substring(0, 4)}]`}
+      ${logSuccess(!(permission === 'admin' || permission === 'write'))} Repo Permission:  ${permission}
+      ${logSuccess(!user?.login)} User:             ${user?.login}
+      ${logSuccess()} API:              ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
+      ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
+      ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
     console.log('');
 
