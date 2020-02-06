@@ -46,7 +46,7 @@ export default class MavenPlugin implements IPlugin {
       });
     });
 
-    auto.hooks.beforeShipIt.tap(this.name, async () => {
+    auto.hooks.beforeRun.tap(this.name, async () => {
       const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS } = process.env;
 
       if (!MAVEN_PASSWORD && !MAVEN_SETTINGS) {

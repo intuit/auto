@@ -1,6 +1,4 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
+import { getAutoVersion } from '@auto-it/core';
 import chalk from 'chalk';
 import { app, Command, Option } from 'command-line-application';
 import endent from 'endent';
@@ -179,6 +177,13 @@ export const commands: Command[] = [
     group: 'Setup Command',
     description: 'Interactive setup for minimum working configuration.',
     examples: ['{green $} auto init']
+  },
+  {
+    name: 'info',
+    group: 'Setup Command',
+    description:
+      'Determine the environment and check if auto is set up correctly',
+    examples: ['{green $} auto info']
   },
   {
     name: 'create-labels',
@@ -489,13 +494,6 @@ export const commands: Command[] = [
   }
 ];
 
-/** Print the current version of "auto" */
-function printVersion() {
-  const packagePath = path.join(__dirname, '../package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-  console.log(`v${packageJson.version}`);
-}
-
 /** Parse the CLI args and return command + options provided. */
 export default function parseArgs(testArgs?: string[]) {
   const mainOptions = app(
@@ -518,7 +516,7 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (!mainOptions._command) {
     if (mainOptions.version) {
-      printVersion();
+      console.log(`v${getAutoVersion()}`);
     }
 
     return [];

@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
 import path from 'path';
+import link from 'terminal-link';
+import icons from 'log-symbols';
+import chalk from 'chalk';
 import { eq, gt, lte, inc, parse, ReleaseType, major } from 'semver';
 import {
   AsyncParallelHook,
@@ -282,6 +285,13 @@ export function getCurrentBranch() {
   return branch;
 }
 
+/** Print the current version of "auto" */
+export function getAutoVersion() {
+  const packagePath = path.join(__dirname, '../package.json');
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+  return packageJson.version;
+}
+
 /** Escape a string for use in a Regex */
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -446,6 +456,93 @@ export default class Auto {
   async init() {
     const init = new InteractiveInit(this);
     await init.run();
+  }
+
+  /** Check if auto is set up correctly */
+  async info() {
+    if (!this.git) {
+      return;
+    }
+
+    const [noProject, project] = await on(this.git.getProject());
+    const repo = (await this.getRepo(this.config!)) || {};
+    const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
+    const author = (await this.getGitUser()) || ({} as IAuthor);
+    const version = await this.hooks.getPreviousVersion.promise();
+    const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
+    const latestReleaseLink = latestRelease
+      ? link(latestRelease.tag_name, latestRelease.html_url)
+      : '';
+    const { headers } = await this.git.github.request('HEAD /');
+    const access = headers as Record<string, string>;
+    const rateLimitRefresh = new Date(
+      Number(access['x-ratelimit-reset']) * 1000
+    );
+    const token = this.git.options.token || '';
+    const tokenRefresh = `${rateLimitRefresh.toLocaleTimeString()} ${rateLimitRefresh.toLocaleDateString(
+      'en-us'
+    )}`;
+    const projectLabels = await this.git.getProjectLabels();
+    const hasLabels = this.config?.labels.reduce((acc, label) => {
+      if (
+        label.name === 'release' &&
+        !this.config?.onlyPublishWithReleaseLabel
+      ) {
+        return acc;
+      }
+
+      if (
+        label.name === 'skip-release' &&
+        this.config?.onlyPublishWithReleaseLabel
+      ) {
+        return acc;
+      }
+
+      return acc && projectLabels.includes(label.name);
+    }, true);
+
+    let hasError = false;
+
+    /** Log if a configuration is correct. */
+    const logSuccess = <T>(err?: T) => {
+      if (err) {
+        hasError = true;
+        return icons.error;
+      }
+
+      return icons.success;
+    };
+
+    console.log('');
+    // prettier-ignore
+    console.log(endent`
+      ${chalk.underline.white('Environment Information:')}
+
+      "auto" version: v${getAutoVersion()}
+      "node" version: ${execSync('node --version', { encoding: 'utf8' }).trim()}
+      ${access['x-github-enterprise-version'] ? `GHE version:    v${access['x-github-enterprise-version']}\n`: '\n'}
+
+      ${chalk.underline.white('Project Information:')}
+
+      ${logSuccess(noProject)} Repository:      ${repoLink}
+      ${logSuccess(!author.name)} Author Name:     ${author.name}
+      ${logSuccess(!author.email)} Author Email:    ${author.email}
+      ${logSuccess(!version)} Current Version: ${this.prefixRelease(version)}
+      ${logSuccess(err)} Latest Release:  ${latestReleaseLink}
+      ${logSuccess(!hasLabels)} Labels configured on GitHub project ${hasLabels ? '' :  '(Try running "auto create-labels")'}
+
+      ${chalk.underline.white('GitHub Token Information:')}
+
+      ${logSuccess(!token)} Token:           ${`[Token starting with ${token.substring(0, 4)}]`}
+      ${logSuccess()} API:             ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
+      ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:  ${access['x-oauth-scopes']}
+      ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:      ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
+    `);
+    console.log('');
+
+    if (hasError) {
+      process.exit(1);
+    }
   }
 
   /** Determine if the repo is currently in a prerelease branch */
@@ -1431,30 +1528,19 @@ export default class Auto {
     );
   }
 
-  /**
-   * Set the git user to make releases and commit with.
-   */
-  private async setGitUser() {
+  /** Get the current git user */
+  private async getGitUser() {
     try {
-      // If these values are not set git config will exit with an error
-      await execPromise('git', ['config', 'user.email']);
-      await execPromise('git', ['config', 'user.name']);
+      return {
+        /** The git user is already set in the current env */
+        system: true,
+        email: await execPromise('git', ['config', 'user.email']),
+        name: await execPromise('git', ['config', 'user.name'])
+      };
     } catch (error) {
       this.logger.verbose.warn(
-        'Could not find git user or email configured in environment'
+        'Could not find git user or email configured in git config'
       );
-
-      if (!env.isCi) {
-        this.logger.log.note(
-          `Detected local environment, will not set git user. This happens automatically in a CI environment.
-
-If a command fails manually run:
-
-  - git config user.email your@email.com
-  - git config user.name "Your Name"`
-        );
-        return;
-      }
 
       if (!this.release) {
         return;
@@ -1465,21 +1551,43 @@ If a command fails manually run:
         `Got author from options: email: ${email}, name ${name}`
       );
       const packageAuthor = await this.hooks.getAuthor.promise();
-      this.logger.verbose.warn(
-        `Got author: ${JSON.stringify(packageAuthor, undefined, 2)}`
-      );
 
       email = !email && packageAuthor ? packageAuthor.email : email;
       name = !name && packageAuthor ? packageAuthor.name : name;
 
-      if (email) {
-        await execPromise('git', ['config', 'user.email', `"${email}"`]);
-        this.logger.verbose.warn(`Set git email to ${email}`);
+      this.logger.verbose.warn(`Using author: ${name} <${email}>`);
+
+      return { email, name };
+    }
+  }
+
+  /**
+   * Set the git user to make releases and commit with.
+   */
+  private async setGitUser() {
+    const user = await this.getGitUser();
+
+    if (user && !user.system) {
+      if (!env.isCi) {
+        this.logger.log.note(endent`
+          Detected local environment, will not set git user. This happens automatically in a CI environment.
+
+          If a command fails manually run:
+
+            - git config user.email your@email.com
+            - git config user.name "Your Name"
+        `);
+        return;
       }
 
-      if (name) {
-        await execPromise('git', ['config', 'user.name', `"${name}"`]);
-        this.logger.verbose.warn(`Set git name to ${name}`);
+      if (user.email) {
+        await execPromise('git', ['config', 'user.email', `"${user.email}"`]);
+        this.logger.verbose.warn(`Set git email to ${user.email}`);
+      }
+
+      if (user.name) {
+        await execPromise('git', ['config', 'user.name', `"${user.name}"`]);
+        this.logger.verbose.warn(`Set git name to ${user.name}`);
       }
     }
   }
