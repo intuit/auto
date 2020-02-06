@@ -290,14 +290,17 @@ export default class Git {
     };
 
     try {
-      const labels = await this.github.issues.listLabelsForRepo(args);
+      const labels: Octokit.IssuesListLabelsForRepoResponse = await this.github.paginate(
+        this.github.issues.listLabelsForRepo.endpoint(args)
+      );
+
       this.logger.veryVerbose.info(
         'Got response for "getProjectLabels":\n',
         labels
       );
-      this.logger.verbose.info('Found labels on project:\n', labels.data);
+      this.logger.verbose.info('Found labels on project:\n', labels);
 
-      return labels.data.map(l => l.name);
+      return labels.map(l => l.name);
     } catch (e) {
       throw new GitAPIError('getProjectLabels', args, e);
     }

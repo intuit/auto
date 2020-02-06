@@ -46,7 +46,7 @@ jest.mock('@octokit/rest', () => {
       updateComment,
       listComments,
       deleteComment,
-      listLabelsForRepo,
+      listLabelsForRepo: { endpoint: listLabelsForRepo },
       createLabel,
       updateLabel,
       addLabels,
@@ -581,9 +581,9 @@ describe('github', () => {
     test('return labels', async () => {
       const gh = new Git(options);
 
-      listLabelsForRepo.mockReturnValueOnce({
-        data: [{ name: 'first label' }, { name: 'second label' }]
-      });
+      paginate.mockReturnValueOnce(
+        Promise.resolve([{ name: 'first label' }, { name: 'second label' }])
+      );
 
       expect(await gh.getProjectLabels()).toStrictEqual([
         'first label',
