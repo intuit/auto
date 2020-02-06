@@ -88,7 +88,12 @@ export default class GitTagPlugin implements IPlugin {
         prereleaseBranch
       );
 
-      await execPromise('git', ['tag', prerelease]);
+      await execPromise('git', [
+        'tag',
+        prerelease,
+        '-m',
+        `"Tag pre-release: ${prerelease}"`
+      ]);
       await execPromise('git', ['push', '--tags']);
 
       return preReleaseVersions;

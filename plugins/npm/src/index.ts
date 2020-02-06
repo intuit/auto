@@ -830,7 +830,12 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         const { version } = await loadPackageJson();
-        await execPromise('git', ['tag', auto.prefixRelease(version!)]);
+        await execPromise('git', [
+          'tag',
+          auto.prefixRelease(version!),
+          '-m',
+          `"Update version to ${version}"`
+        ]);
 
         await execPromise('npm', [
           'publish',

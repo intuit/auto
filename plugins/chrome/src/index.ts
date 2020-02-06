@@ -147,7 +147,12 @@ export default class ChromeWebStorePlugin implements IPlugin {
         '--no-verify'
       ]);
 
-      await execPromise('git', ['tag', manifest.version]);
+      await execPromise('git', [
+        'tag',
+        manifest.version,
+        '-m',
+        `"Update version to ${manifest.version}"`
+      ]);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
