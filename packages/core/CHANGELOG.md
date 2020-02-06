@@ -1,3 +1,15 @@
+# v9.10.2 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- handle repos with large amounts of labels  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.0 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix
