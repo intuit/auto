@@ -1,5 +1,6 @@
 import * as Auto from '@auto-it/core';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
 
 import GitTag from '../src';
 
@@ -13,6 +14,7 @@ const setup = (mockGit?: any) => {
   plugin.apply(({
     hooks,
     git: mockGit,
+    logger: dummyLog(),
     prefixRelease: (r: string) => r,
     config: { prereleaseBranches: ['next'] },
     getCurrentVersion: () => 'v1.0.0'
@@ -67,7 +69,12 @@ describe('Git Tag Plugin', () => {
     test('should tag next version', async () => {
       const hooks = setup({ getLatestTagInBranch: () => 'v1.0.0' });
       await hooks.version.promise(Auto.SEMVER.patch);
-      expect(exec).toHaveBeenCalledWith('git', ['tag', '1.0.1']);
+      expect(exec).toHaveBeenCalledWith('git', [
+        'tag',
+        '1.0.1',
+        '-m',
+        '"Update version to 1.0.1"'
+      ]);
     });
   });
 
@@ -86,7 +93,12 @@ describe('Git Tag Plugin', () => {
 
       await hooks.next.promise([], Auto.SEMVER.patch);
 
-      expect(exec).toHaveBeenCalledWith('git', ['tag', '1.0.1-next.0']);
+      expect(exec).toHaveBeenCalledWith('git', [
+        'tag',
+        '1.0.1-next.0',
+        '-m',
+        '"Tag pre-release: 1.0.1-next.0"'
+      ]);
       expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
     });
   });

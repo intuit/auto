@@ -19,7 +19,7 @@ export default class GitTagPlugin implements IPlugin {
       try {
         return await auto.git!.getLatestTagInBranch();
       } catch (error) {
-        return auto.prefixRelease('0.0.0')
+        return auto.prefixRelease('0.0.0');
       }
     }
 
@@ -43,10 +43,21 @@ export default class GitTagPlugin implements IPlugin {
       const branch = getCurrentBranch() || '';
 
       if (!newTag) {
+        auto.logger.log.info('No release found, doing nothing');
         return;
       }
 
-      await execPromise('git', ['tag', auto.prefixRelease(newTag)]);
+      const prefixedTag = auto.prefixRelease(newTag);
+
+      auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
+      await execPromise('git', [
+        'tag',
+        prefixedTag,
+        '-m',
+        `"Update version to ${prefixedTag}"`
+      ]);
+
+      auto.logger.log.info(`Pushing new tag to GitHub: ${prefixedTag}`);
       await execPromise('git', [
         'push',
         '--follow-tags',
@@ -77,7 +88,12 @@ export default class GitTagPlugin implements IPlugin {
         prereleaseBranch
       );
 
-      await execPromise('git', ['tag', prerelease]);
+      await execPromise('git', [
+        'tag',
+        prerelease,
+        '-m',
+        `"Tag pre-release: ${prerelease}"`
+      ]);
       await execPromise('git', ['push', '--tags']);
 
       return preReleaseVersions;

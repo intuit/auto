@@ -892,7 +892,12 @@ describe('next', () => {
       '1.2.4-next.0',
       '--no-git-tag-version'
     ]);
-    expect(exec).toHaveBeenCalledWith('git', ['tag', '1.2.4-next.0']);
+    expect(exec).toHaveBeenCalledWith('git', [
+      'tag',
+      '1.2.4-next.0',
+      '-m',
+      '"Update version to 1.2.4-next.0"'
+    ]);
     expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
     expect(exec).toHaveBeenCalledWith('npm', ['publish', '--tag', 'next']);
   });
