@@ -1,9 +1,12 @@
 import main, { run } from '../src/run';
 
 test('throws error for unknown args', async () => {
-  await expect(run('foo', {})).rejects.toStrictEqual(
-    new Error("idk what i'm doing.")
-  );
+  process.exit = jest.fn() as any;
+  console.log = jest.fn() as any;
+
+  await run('foo', {});
+
+  expect(process.exit).toHaveBeenCalledWith(1);
 });
 
 test('throws exits for caught error', async () => {

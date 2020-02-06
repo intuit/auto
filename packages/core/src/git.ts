@@ -364,9 +364,10 @@ export default class Git {
   /** Get collaborator permission level to the repo. */
   @memoize()
   async getTokenPermissionLevel() {
+    const user = await this.github.users.getAuthenticated();
+
     try {
-      const user = await this.github.users.getAuthenticated();
-      const permission = (
+      const { permission } = (
         await this.github.repos.getCollaboratorPermissionLevel({
           owner: this.options.owner,
           repo: this.options.repo,
@@ -374,9 +375,10 @@ export default class Git {
         })
       ).data;
 
-      return permission;
+      return { permission, user: user.data };
     } catch (error) {
-      this.logger.log.error(`Could not get permissions for token`);
+      this.logger.verbose.error(`Could not get permissions for token`);
+      return { permission: 'read', user: user.data };
     }
   }
 
