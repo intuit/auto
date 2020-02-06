@@ -1,3 +1,15 @@
+# v9.10.4 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- dont exit process when calling info in core  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.3 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,16 @@
+# v9.10.4 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- `auto`, `@auto-it/core`
+  - Run `auto info` when any command is run with --verbose [#934](https://github.com/intuit/auto/pull/934) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.3 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix
