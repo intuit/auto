@@ -20,60 +20,56 @@ import Auto, {
 export async function run(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
+  if (command === 'init') {
+    await auto.init();
+    return;
+  }
+
+  await auto.loadConfig();
+
+  if (args.verbose || command === 'info') {
+    await auto.info();
+  }
+
+  if (command === 'info') {
+    return;
+  }
+
   switch (command) {
-    case 'init':
-      await auto.init();
-      break;
-    case 'info':
-      await auto.loadConfig();
-      await auto.info();
-      break;
     case 'create-labels':
-      await auto.loadConfig();
       await auto.createLabels(args as ICreateLabelsOptions);
       break;
     case 'label':
-      await auto.loadConfig();
       await auto.label(args as ILabelOptions);
       break;
     case 'pr-check':
-      await auto.loadConfig();
       await auto.prCheck(args as IPRCheckOptions);
       break;
     case 'pr-status':
-      await auto.loadConfig();
       await auto.prStatus(args as IPRStatusOptions);
       break;
     case 'comment':
-      await auto.loadConfig();
       await auto.comment(args as ICommentOptions);
       break;
     case 'pr-body':
-      await auto.loadConfig();
       await auto.prBody(args as IPRBodyOptions);
       break;
     case 'version':
-      await auto.loadConfig();
       await auto.version(args as IVersionOptions);
       break;
     case 'changelog':
-      await auto.loadConfig();
       await auto.changelog(args as IChangelogOptions);
       break;
     case 'release':
-      await auto.loadConfig();
       await auto.runRelease(args as IReleaseOptions);
       break;
     case 'shipit':
-      await auto.loadConfig();
       await auto.shipit(args as IShipItOptions);
       break;
     case 'canary':
-      await auto.loadConfig();
       await auto.canary(args as ICanaryOptions);
       break;
     case 'next':
-      await auto.loadConfig();
       await auto.next(args as INextOptions);
       break;
     default:
