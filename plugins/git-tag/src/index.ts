@@ -50,7 +50,12 @@ export default class GitTagPlugin implements IPlugin {
       const prefixedTag = auto.prefixRelease(newTag);
 
       auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
-      await execPromise('git', ['tag', prefixedTag]);
+      await execPromise('git', [
+        'tag',
+        prefixedTag,
+        '-m',
+        `"Update version to ${prefixedTag}"`
+      ]);
 
       auto.logger.log.info(`Pushing new tag to GitHub: ${prefixedTag}`);
       await execPromise('git', [
