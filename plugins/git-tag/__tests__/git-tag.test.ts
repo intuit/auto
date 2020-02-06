@@ -69,7 +69,12 @@ describe('Git Tag Plugin', () => {
     test('should tag next version', async () => {
       const hooks = setup({ getLatestTagInBranch: () => 'v1.0.0' });
       await hooks.version.promise(Auto.SEMVER.patch);
-      expect(exec).toHaveBeenCalledWith('git', ['tag', '1.0.1']);
+      expect(exec).toHaveBeenCalledWith('git', [
+        'tag',
+        '1.0.1',
+        '-m',
+        '"Update version to 1.0.1"'
+      ]);
     });
   });
 
@@ -88,7 +93,12 @@ describe('Git Tag Plugin', () => {
 
       await hooks.next.promise([], Auto.SEMVER.patch);
 
-      expect(exec).toHaveBeenCalledWith('git', ['tag', '1.0.1-next.0']);
+      expect(exec).toHaveBeenCalledWith('git', [
+        'tag',
+        '1.0.1-next.0',
+        '-m',
+        '"Tag pre-release: 1.0.1-next.0"'
+      ]);
       expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
     });
   });
