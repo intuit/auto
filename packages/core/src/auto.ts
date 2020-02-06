@@ -461,7 +461,7 @@ export default class Auto {
   /** Check if auto is set up correctly */
   async info() {
     if (!this.git) {
-      return;
+      return { hasError: false };
     }
 
     const [noProject, project] = await on(this.git.getProject());
@@ -544,9 +544,7 @@ export default class Auto {
     `);
     console.log('');
 
-    if (hasError) {
-      process.exit(1);
-    }
+    return { hasError };
   }
 
   /** Determine if the repo is currently in a prerelease branch */
