@@ -1,5 +1,6 @@
 import * as Auto from '@auto-it/core';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import { dummyLog } from '@auto-it/core/dist/utils/logger';
 
 import GitTag from '../src';
 
@@ -13,6 +14,7 @@ const setup = (mockGit?: any) => {
   plugin.apply(({
     hooks,
     git: mockGit,
+    logger: dummyLog(),
     prefixRelease: (r: string) => r,
     config: { prereleaseBranches: ['next'] },
     getCurrentVersion: () => 'v1.0.0'
