@@ -1,3 +1,16 @@
+# v9.10.0 (Thu Feb 06 2020)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/maven`
+  - add "info" command [#931](https://github.com/intuit/auto/pull/931) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.9.1 (Tue Feb 04 2020)
 
 #### 🐛  Bug Fix

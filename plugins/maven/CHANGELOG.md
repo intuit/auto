@@ -1,3 +1,15 @@
+# v9.10.0 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- add "info" command  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.4 (Fri Jan 31 2020)
 
 #### 🐛  Bug Fix

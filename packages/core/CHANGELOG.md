@@ -1,3 +1,16 @@
+# v9.10.0 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- remove space  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add "info" command  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.3 (Thu Jan 30 2020)
 
 #### 🐛  Bug Fix
