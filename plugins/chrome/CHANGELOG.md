@@ -1,3 +1,15 @@
+# v9.10.1 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- must create an annotated tag for it to be pushed with --follow-tags  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.1.1 (Thu Jan 23 2020)
 
 #### 🐛  Bug Fix

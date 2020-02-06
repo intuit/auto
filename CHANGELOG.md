@@ -1,3 +1,16 @@
+# v9.10.1 (Thu Feb 06 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/chrome`, `@auto-it/git-tag`, `@auto-it/npm`
+  - Fix manual git tagging [#930](https://github.com/intuit/auto/pull/930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.0 (Thu Feb 06 2020)
 
 #### 🚀  Enhancement
