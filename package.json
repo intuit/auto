@@ -58,7 +58,7 @@
     "jest": "~25.1.0",
     "jest-serializer-path": "^0.1.15",
     "lerna": "^3.13.4",
-    "lint-staged": "^9.4.0",
+    "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
