@@ -2472,9 +2472,9 @@
   integrity sha512-/+CRPXpBDpo2RK9C68N3b2cOvO0Cf5B9aPijHsoDQTHivnGSObdOF2BRQOYjojWTDy6nQvMjmqRXIxH55VjxxA==
 
 "@types/array.prototype.flatmap@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/array.prototype.flatmap/-/array.prototype.flatmap-1.2.0.tgz#e11283ae3bf9b432173756764064f2d8a7a377b1"
-  integrity sha512-sMRMigmTCA1EVX46F0jPhSFo51uFNo83GkeYlp7r4xKkXwfjkDpTm13vB9Tba4Ey+0rUXX3QjSWHAIwSb3qzrA==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/array.prototype.flatmap/-/array.prototype.flatmap-1.2.1.tgz#3f6cf350077c26f7acafc28cb404cf1814e6b8ae"
+  integrity sha512-AtzC715z/5InlwWFzlxzdoV3Wovzbd3+60uWgDHdI0N+S6XiHU+syXHMhJQIYH1sv/xrrGVsLvMTSEBxmm6qlA==
 
 "@types/babel__core@^7.1.0":
   version "7.1.1"
