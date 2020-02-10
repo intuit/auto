@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@octokit/core" "2.2.0"
     "@octokit/graphql" "4.3.1"
@@ -17,6 +17,7 @@
     "@octokit/plugin-throttling" "^3.2.0"
     "@octokit/rest" "16.38.3"
     await-to-js "^2.1.1"
+    chalk "^3.0.0"
     cosmiconfig "6.0.0"
     deepmerge "^4.0.0"
     dotenv "^8.0.0"
@@ -27,17 +28,19 @@
     https-proxy-agent "^4.0.0"
     import-cwd "^3.0.0"
     lodash.chunk "^4.2.0"
+    log-symbols "^3.0.0"
     node-fetch "2.6.0"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
+    terminal-link "^2.1.1"
     tinycolor2 "^1.4.1"
     tslib "1.10.0"
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -52,7 +55,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2767,13 +2770,22 @@
     regexpp "^3.0.0"
     tsutils "^3.17.1"
 
-"@typescript-eslint/experimental-utils@2.17.0", "@typescript-eslint/experimental-utils@^2.5.0":
+"@typescript-eslint/experimental-utils@2.17.0":
   version "2.17.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-2.17.0.tgz#12ed4a5d656e02ff47a93efc7d1ce1b8f1242351"
   integrity sha512-2bNf+mZ/3mj5/3CP56v+ldRK3vFy9jOvmCPs/Gr2DeSJh+asPZrhFniv4QmQsHWQFPJFWhFHgkGgJeRmK4m8iQ==
   dependencies:
     "@types/json-schema" "^7.0.3"
     "@typescript-eslint/typescript-estree" "2.17.0"
+    eslint-scope "^5.0.0"
+
+"@typescript-eslint/experimental-utils@2.19.0", "@typescript-eslint/experimental-utils@^2.5.0":
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-2.19.0.tgz#d5ca732f22c009e515ba09fcceb5f2127d841568"
+  integrity sha512-zwpg6zEOPbhB3+GaQfufzlMUOO6GXCNZq6skk+b2ZkZAIoBhVoanWK255BS1g5x9bMwHpLhX0Rpn5Fc3NdCZdg==
+  dependencies:
+    "@types/json-schema" "^7.0.3"
+    "@typescript-eslint/typescript-estree" "2.19.0"
     eslint-scope "^5.0.0"
 
 "@typescript-eslint/experimental-utils@^1.13.0":
@@ -2786,13 +2798,13 @@
     eslint-scope "^4.0.0"
 
 "@typescript-eslint/parser@^2.7.0":
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-2.17.0.tgz#627f79586d868edbab55f46a6b183cdc341aea1d"
-  integrity sha512-k1g3gRQ4fwfJoIfgUpz78AovicSWKFANmvTfkAHP24MgJHjWfZI6ya7tsQZt1sLczvP4G9BE5G5MgADHdmJB/w==
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-2.19.0.tgz#912160d9425395d09857dcd5382352bc98be11ae"
+  integrity sha512-s0jZoxAWjHnuidbbN7aA+BFVXn4TCcxEVGPV8lWMxZglSs3NRnFFAlL+aIENNmzB2/1jUJuySi6GiM6uACPmpg==
   dependencies:
     "@types/eslint-visitor-keys" "^1.0.0"
-    "@typescript-eslint/experimental-utils" "2.17.0"
-    "@typescript-eslint/typescript-estree" "2.17.0"
+    "@typescript-eslint/experimental-utils" "2.19.0"
+    "@typescript-eslint/typescript-estree" "2.19.0"
     eslint-visitor-keys "^1.1.0"
 
 "@typescript-eslint/typescript-estree@1.13.0":
@@ -2807,6 +2819,19 @@
   version "2.17.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-2.17.0.tgz#2ce1531ec0925ef8d22d7026235917c2638a82af"
   integrity sha512-g0eVRULGnEEUakxRfJO0s0Hr1LLQqsI6OrkiCLpdHtdJJek+wyd8mb00vedqAoWldeDcOcP8plqw8/jx9Gr3Lw==
+  dependencies:
+    debug "^4.1.1"
+    eslint-visitor-keys "^1.1.0"
+    glob "^7.1.6"
+    is-glob "^4.0.1"
+    lodash "^4.17.15"
+    semver "^6.3.0"
+    tsutils "^3.17.1"
+
+"@typescript-eslint/typescript-estree@2.19.0":
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-2.19.0.tgz#6bd7310b9827e04756fe712909f26956aac4b196"
+  integrity sha512-n6/Xa37k0jQdwpUszffi19AlNbVCR0sdvCs3DmSKMD7wBttKY31lhD2fug5kMD91B2qW4mQldaTEc1PEzvGu8w==
   dependencies:
     debug "^4.1.1"
     eslint-visitor-keys "^1.1.0"
