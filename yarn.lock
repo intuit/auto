@@ -8,7 +8,7 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/core@link:packages/core":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@octokit/core" "2.2.0"
     "@octokit/graphql" "4.3.1"
@@ -17,6 +17,7 @@
     "@octokit/plugin-throttling" "^3.2.0"
     "@octokit/rest" "16.38.3"
     await-to-js "^2.1.1"
+    chalk "^3.0.0"
     cosmiconfig "6.0.0"
     deepmerge "^4.0.0"
     dotenv "^8.0.0"
@@ -27,17 +28,19 @@
     https-proxy-agent "^4.0.0"
     import-cwd "^3.0.0"
     lodash.chunk "^4.2.0"
+    log-symbols "^3.0.0"
     node-fetch "2.6.0"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
+    terminal-link "^2.1.1"
     tinycolor2 "^1.4.1"
     tslib "1.10.0"
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -52,7 +55,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.9.1"
+  version "9.10.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -6268,9 +6271,9 @@ eslint-config-kentcdodds@^14.3.2:
     webpack "^4.33.0"
 
 eslint-config-prettier@^6.0.0, eslint-config-prettier@^6.4.0:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-6.9.0.tgz#430d24822e82f7deb1e22a435bfa3999fae4ad64"
-  integrity sha512-k4E14HBtcLv0uqThaI6I/n1LEqROp8XaPu6SO9Z32u5NlGRC07Enu1Bh2KEFw4FNHbekH8yzbIU9kUGxbiGmCA==
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-6.10.0.tgz#7b15e303bf9c956875c948f6b21500e48ded6a7f"
+  integrity sha512-AtndijGte1rPILInUdHjvKEGbIV06NuvPrqlIEaEaWtbtvJh464mDeyGMdZEQMsGvC0ZVkiex1fSNcC4HAbRGg==
   dependencies:
     get-stdin "^6.0.0"
 
