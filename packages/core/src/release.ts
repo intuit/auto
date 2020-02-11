@@ -1,5 +1,5 @@
 import { GraphQlQueryResponse } from '@octokit/graphql/dist-types/types';
-import GHub from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import on from 'await-to-js';
 import * as fs from 'fs';
 import chunk from 'lodash.chunk';
@@ -614,7 +614,7 @@ export default class Release {
    */
   private getPRForRebasedCommits(
     commit: IExtendedCommit,
-    pullRequests: GHub.PullsGetResponse[]
+    pullRequests: Octokit.PullsGetResponse[]
   ) {
     const matchPr = pullRequests.find(
       pr => pr.merge_commit_sha === commit.hash
@@ -639,7 +639,7 @@ export default class Release {
           /** The GitHub user name of the git committer */
           login?: string;
         })
-      | Partial<GHub.UsersGetByUsernameResponse>
+      | Partial<Octokit.UsersGetByUsernameResponse>
     )[] = [];
 
     // If there is a pull request we will attempt to get the authors

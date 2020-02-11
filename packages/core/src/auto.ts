@@ -1,4 +1,4 @@
-import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import dotenv from 'dotenv';
 import envCi from 'env-ci';
 import fs from 'fs';
@@ -138,8 +138,8 @@ export interface IAutoHooks {
         releaseNotes: string;
         /** The response from creating the new release. */
         response?:
-          | Response<ReposCreateReleaseResponse>
-          | Response<ReposCreateReleaseResponse>[];
+          | Octokit.Response<Octokit.ReposCreateReleaseResponse>
+          | Octokit.Response<Octokit.ReposCreateReleaseResponse>[];
       }
     ]
   >;
@@ -161,8 +161,8 @@ export interface IAutoHooks {
         commits: IExtendedCommit[];
       }
     ],
-    | Response<ReposCreateReleaseResponse>
-    | Response<ReposCreateReleaseResponse>[]
+    | Octokit.Response<Octokit.ReposCreateReleaseResponse>
+    | Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
     | void
   >;
   /** Get git author. Typically from a package distribution description file. */

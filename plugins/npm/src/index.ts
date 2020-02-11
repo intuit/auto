@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
-import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 
 import {
   Auto,
@@ -959,8 +959,8 @@ export default class NPMPlugin implements IPlugin {
 
         this.renderMonorepoChangelog = false;
 
-        return releases.filter((release): release is Response<
-          ReposCreateReleaseResponse
+        return releases.filter((release): release is Octokit.Response<
+          Octokit.ReposCreateReleaseResponse
         > => Boolean(release));
       }
     });
