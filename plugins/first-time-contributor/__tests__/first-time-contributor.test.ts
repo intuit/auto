@@ -1,13 +1,13 @@
 import * as Auto from '@auto-it/core';
 import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
 import Changelog from '@auto-it/core/dist/changelog';
+import { Octokit } from '@octokit/rest';
 import {
   makeChangelogHooks,
   makeHooks
 } from '@auto-it/core/dist/utils/make-hooks';
 
 import FirstTimeContributor from '../src';
-import Octokit = require('@octokit/rest');
 
 const graphql = jest.fn();
 const exec = jest.fn();

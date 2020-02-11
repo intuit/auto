@@ -28,8 +28,8 @@ const update = jest.fn();
 const paginate = jest.fn();
 
 jest.mock('@octokit/rest', () => {
-  const instance = class MockOctokit {
-    static plugin = () => instance;
+  const Octokit = class MockOctokit {
+    static plugin = () => Octokit;
 
     authenticate = authenticate;
     paginate = paginate;
@@ -77,7 +77,7 @@ jest.mock('@octokit/rest', () => {
     };
   };
 
-  return instance;
+  return { Octokit };
 });
 
 jest.mock('@octokit/graphql', () => ({
@@ -659,7 +659,7 @@ describe('github', () => {
 
   describe('error hook', () => {
     test('strip authorization headers from error', () => {
-      type HookError = import('@octokit/rest').HookError;
+      type HookError = import('@octokit/rest').Octokit.HookError;
       const error = (headers = {}): HookError => ({
         name: 'Request failed',
         message: 'The request has failed',

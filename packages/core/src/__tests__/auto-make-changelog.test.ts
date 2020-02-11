@@ -27,8 +27,8 @@ jest.mock('cosmiconfig', () => ({
 }));
 
 jest.mock('@octokit/rest', () => {
-  const instance = class MockOctokit {
-    static plugin = () => instance;
+  const Octokit = class MockOctokit {
+    static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
@@ -41,7 +41,7 @@ jest.mock('@octokit/rest', () => {
     };
   };
 
-  return instance;
+  return { Octokit };
 });
 
 // @ts-ignore

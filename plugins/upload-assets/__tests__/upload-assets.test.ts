@@ -1,6 +1,6 @@
 import Auto from '@auto-it/core';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
-import { ReposCreateReleaseResponse, Response } from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import path from 'path';
 
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
@@ -50,7 +50,7 @@ describe('Upload Assets Plugin', () => {
       releaseNotes: '',
       response: {
         data: { upload_url: 'https://foo.com' }
-      } as Response<ReposCreateReleaseResponse>
+      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledWith(
@@ -88,7 +88,7 @@ describe('Upload Assets Plugin', () => {
       releaseNotes: '',
       response: {
         data: { upload_url: 'https://foo.com' }
-      } as Response<ReposCreateReleaseResponse>
+      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);
@@ -114,7 +114,7 @@ describe('Upload Assets Plugin', () => {
       releaseNotes: '',
       response: {
         data: { upload_url: 'https://foo.com' }
-      } as Response<ReposCreateReleaseResponse>
+      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);

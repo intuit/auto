@@ -37,8 +37,8 @@ jest.mock('cosmiconfig', () => ({
 }));
 
 jest.mock('@octokit/rest', () => {
-  const instance = class MockOctokit {
-    static plugin = () => instance;
+  const Octokit = class MockOctokit {
+    static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
@@ -51,7 +51,7 @@ jest.mock('@octokit/rest', () => {
     };
   };
 
-  return instance;
+  return { Octokit };
 });
 
 // @ts-ignore
@@ -804,7 +804,8 @@ describe('Auto', () => {
       await auto.loadConfig();
 
       auto.git!.getLatestRelease = () => Promise.resolve('');
-      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error('No names found, cannot describe anything.'));
+      auto.git!.getLatestTagInBranch = () =>
+        Promise.reject(new Error('No names found, cannot describe anything.'));
 
       await auto.runRelease();
       expect(exit).toHaveBeenCalled();

@@ -3,7 +3,7 @@ import { enterpriseCompatibility } from '@octokit/plugin-enterprise-compatibilit
 import path from 'path';
 import { retry } from '@octokit/plugin-retry';
 import { throttling } from '@octokit/plugin-throttling';
-import Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import gitlogNode from 'gitlog';
 import HttpsProxyAgent from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
