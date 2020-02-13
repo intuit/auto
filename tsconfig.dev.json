@@ -24,6 +24,9 @@
       "path": "plugins/jira"
     },
     {
+      "path": "plugins/gradle"
+    },
+    {
       "path": "plugins/maven"
     },
     {
