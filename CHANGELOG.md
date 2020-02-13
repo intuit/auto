@@ -1,3 +1,37 @@
+# v9.10.5 (Thu Feb 13 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- Add gradle to tsconfig. [#946](https://github.com/intuit/auto/pull/946) (brandon_miller3@intuit.com [@unknownerror404](https://github.com/unknownerror404))
+
+#### 🔩 Dependency Updates
+
+- Bump lint-staged from 9.5.0 to 10.0.7 [#944](https://github.com/intuit/auto/pull/944) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump rimraf from 3.0.0 to 3.0.2 [#943](https://github.com/intuit/auto/pull/943) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.20.0 to 2.20.1 [#942](https://github.com/intuit/auto/pull/942) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.6.0 to 23.7.0 [#941](https://github.com/intuit/auto/pull/941) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 25.0.0 to 25.2.0 [#940](https://github.com/intuit/auto/pull/940) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/array.prototype.flatmap from 1.2.0 to 1.2.1 [#939](https://github.com/intuit/auto/pull/939) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.9.0 to 6.10.0 [#938](https://github.com/intuit/auto/pull/938) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.17.0 to 2.19.0 [#936](https://github.com/intuit/auto/pull/936) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/first-time-contributor`, `@auto-it/npm`, `@auto-it/upload-assets`
+  - Bump @octokit/rest from 16.38.3 to 16.43.1 [#935](https://github.com/intuit/auto/pull/935) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/upload-assets`
+  - Bump file-type from 13.1.1 to 14.1.1 [#937](https://github.com/intuit/auto/pull/937) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 4
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brandon Miller ([@unknownerror404](https://github.com/unknownerror404))
+- svc-mobile (brandon_miller3@intuit.com)
+
+---
+
 # v9.10.4 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix

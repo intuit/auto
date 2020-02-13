@@ -1,3 +1,27 @@
+# v9.10.5 (Thu Feb 13 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/rest from 16.38.3 to 16.43.1
+
+Bumps [@octokit/rest](https://github.com/octokit/rest.js) from 16.38.3 to 16.43.1.
+- [Release notes](https://github.com/octokit/rest.js/releases)
+- [Commits](https://github.com/octokit/rest.js/compare/v16.38.3...v16.43.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.4 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix

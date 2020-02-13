@@ -1,3 +1,27 @@
+# v9.10.5 (Thu Feb 13 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump file-type from 13.1.1 to 14.1.1
+
+Bumps [file-type](https://github.com/sindresorhus/file-type) from 13.1.1 to 14.1.1.
+- [Release notes](https://github.com/sindresorhus/file-type/releases)
+- [Commits](https://github.com/sindresorhus/file-type/compare/v13.1.1...v14.1.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.8.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix

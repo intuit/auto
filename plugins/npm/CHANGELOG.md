@@ -1,3 +1,15 @@
+# v9.10.5 (Thu Feb 13 2020)
+
+#### 🐛  Bug Fix
+
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.1 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix
