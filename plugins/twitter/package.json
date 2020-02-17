@@ -46,6 +46,6 @@
     "twitter-text": "^3.0.0"
   },
   "devDependencies": {
-    "@types/semver": "^6.0.0"
+    "@types/semver": "^7.1.0"
   }
 }
