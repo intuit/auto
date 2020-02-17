@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@octokit/core": "2.2.0",
+    "@octokit/core": "2.4.0",
     "@octokit/graphql": "4.3.1",
     "@octokit/plugin-enterprise-compatibility": "1.2.1",
     "@octokit/plugin-retry": "3.0.1",
