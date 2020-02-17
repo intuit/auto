@@ -10,7 +10,7 @@
 "@auto-it/core@link:packages/core":
   version "9.10.5"
   dependencies:
-    "@octokit/core" "2.2.0"
+    "@octokit/core" "2.4.0"
     "@octokit/graphql" "4.3.1"
     "@octokit/plugin-enterprise-compatibility" "1.2.1"
     "@octokit/plugin-retry" "3.0.1"
@@ -2261,10 +2261,10 @@
   dependencies:
     "@octokit/types" "^2.0.0"
 
-"@octokit/core@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-2.2.0.tgz#285a89f5df5757e861bc4bd61a911777ea5802fe"
-  integrity sha512-RoT3CIjYnamARpMkT5vqc+tV7p46ThItEZfWVXnskqKIoeBZMZLwAQGK0nudN3NocCvIIBSzII5r/ep7lr/0Qg==
+"@octokit/core@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-2.4.0.tgz#6a55366dd7cd366827e5804be8021002dbd6cd7b"
+  integrity sha512-MNwnsDBBxlJWFd1JOhXaCZ9xm8nciWb4lVloGJUSSRxqM0BrvqguWMk4vj1L5dB4juuh1LPuL6/DxSLC4SAfZQ==
   dependencies:
     "@octokit/auth-token" "^2.4.0"
     "@octokit/graphql" "^4.3.1"
