@@ -75,13 +75,11 @@
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
-      "prettier --write ",
-      "git add"
+      "prettier --write"
     ],
     "*.{ts,tsx}": [
-      "prettier --parser typescript --write  ",
-      "yarn lint --fix",
-      "git add"
+      "prettier --parser typescript --write",
+      "yarn lint --fix"
     ]
   },
   "jest": {
