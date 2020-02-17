@@ -5,7 +5,7 @@ import { retry } from '@octokit/plugin-retry';
 import { throttling } from '@octokit/plugin-throttling';
 import { Octokit } from '@octokit/rest';
 import gitlogNode from 'gitlog';
-import HttpsProxyAgent from 'https-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 import endent from 'endent';

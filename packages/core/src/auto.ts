@@ -18,7 +18,7 @@ import {
 import endent from 'endent';
 import on from 'await-to-js';
 
-import HttpsProxyAgent from 'https-proxy-agent';
+import createHttpsProxyAgent from 'https-proxy-agent';
 import {
   ApiOptions,
   ICanaryOptions,
@@ -440,7 +440,7 @@ export default class Auto {
       repo: config.repo,
       ...repository,
       token,
-      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
+      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi || 'https://api.github.com',
       graphqlBaseUrl:
         config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
