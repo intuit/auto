@@ -1,3 +1,7 @@
+::: message is-warning
+Make sure you give the `GH_TOKEN` `repo` permission or `release` will fail!
+:::
+
 ## Usage
 
 ```json

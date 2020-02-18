@@ -49,7 +49,7 @@ Getting started with `auto` is super easy.
 ### 1. Initialize Options
 
 Initialize the bare minimum options and a few other optional things.
-This will set you up locally but you will still have to configure environment variables in your CI. 
+This will set you up locally but you will still have to configure environment variables in your CI.
 
 - Override default labels
 - Add additional labels
@@ -60,8 +60,12 @@ This will set you up locally but you will still have to configure environment va
 
 You must configure some environment variables for publishing and releasing to work properly.
 
-- `GH_TOKEN` - Used for updating the changelog and publishing the GitHub release ([create one here](https://github.com/settings/tokens))
+- `GH_TOKEN` - Used for publishing the GitHub release and creating labels ([create one here](https://github.com/settings/tokens)) (needs `repo` permission)
 - `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
+
+::: message is-warning
+Make sure you give the `GH_TOKEN` `repo` permission or `shipit` will fail!
+:::
 
 #### Local `.env`
 
