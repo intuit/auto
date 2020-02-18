@@ -25,7 +25,7 @@ jobs:
 
       - name: Prepare repository
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git checkout ${GITHUB_REF:11} --
           git remote rm origin
@@ -48,7 +48,7 @@ jobs:
 
       - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn install --frozen-lockfile
@@ -61,6 +61,7 @@ jobs:
 If you are having problems make sure you have done the following:
 
 - Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+- Make sure you give the `GH_TOKEN` `repo` permission or `shipit` will fail!
 - Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
 
 To add a secret for actions go to `https://github.com/<owner>/<repo>/settings/secrets/new`
