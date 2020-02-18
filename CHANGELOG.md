@@ -1,3 +1,41 @@
+# v9.10.6 (Mon Feb 17 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - get node version in crash friendly way [#960](https://github.com/intuit/auto/pull/960) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- add clearer docs around github token permissions [#958](https://github.com/intuit/auto/pull/958) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add gradle to root readme [#957](https://github.com/intuit/auto/pull/957) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/parser from 2.19.0 to 2.19.2 [#956](https://github.com/intuit/auto/pull/956) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.1.8 to 13.7.1 [#953](https://github.com/intuit/auto/pull/953) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.2.1 to 4.2.3 [#955](https://github.com/intuit/auto/pull/955) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.17.0 to 2.19.2 [#954](https://github.com/intuit/auto/pull/954) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.2 to 4.4.3 [#948](https://github.com/intuit/auto/pull/948) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.1.1 to 14.1.2 [#949](https://github.com/intuit/auto/pull/949) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 7.1.1 to 7.1.3 [#950](https://github.com/intuit/auto/pull/950) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.2.0 to 7.1.0 [#947](https://github.com/intuit/auto/pull/947) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump https-proxy-agent from 4.0.0 to 5.0.0 [#952](https://github.com/intuit/auto/pull/952) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump @octokit/core from 2.2.0 to 2.4.0 [#951](https://github.com/intuit/auto/pull/951) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.5 (Thu Feb 13 2020)
 
 :tada: This release contains work from a new contributor! :tada:

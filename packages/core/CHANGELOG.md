@@ -1,3 +1,42 @@
+# v9.10.6 (Mon Feb 17 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
+
+#### 🐛  Bug Fix
+
+- get node version in crash friendly way  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump https-proxy-agent from 4.0.0 to 5.0.0
+
+Bumps [https-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent) from 4.0.0 to 5.0.0.
+- [Release notes](https://github.com/TooTallNate/node-https-proxy-agent/releases)
+- [Commits](https://github.com/TooTallNate/node-https-proxy-agent/compare/4.0.0...5.0.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/core from 2.2.0 to 2.4.0
+
+Bumps [@octokit/core](https://github.com/octokit/core.js) from 2.2.0 to 2.4.0.
+- [Release notes](https://github.com/octokit/core.js/releases)
+- [Commits](https://github.com/octokit/core.js/compare/v2.2.0...v2.4.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 6.2.0 to 7.1.0
+
+Bumps [@types/semver](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/semver) from 6.2.0 to 7.1.0.
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/semver)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.5 (Thu Feb 13 2020)
 
 :tada: This release contains work from a new contributor! :tada:
