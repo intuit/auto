@@ -10,6 +10,8 @@ export interface ICommitAuthor {
   username?: string;
   /** The commit this author created */
   hash?: string;
+  /** The type of user */
+  type?: 'Bot' | 'User' | string;
 }
 
 export interface IPullRequest {
@@ -25,31 +27,31 @@ export interface ICommit {
   /**
    *
    */
-hash: string;
+  hash: string;
   /**
    *
    */
-authorName?: string;
+  authorName?: string;
   /**
    *
    */
-authorEmail?: string;
+  authorEmail?: string;
   /**
    *
    */
-subject: string;
+  subject: string;
   /**
    *
    */
-rawBody?: string;
+  rawBody?: string;
   /**
    *
    */
-labels?: string[];
+  labels?: string[];
   /**
    *
    */
-files: string[];
+  files: string[];
 }
 
 export type IExtendedCommit = ICommit & {
