@@ -16,6 +16,8 @@ const makeCommitFromMsg = (
     username?: string;
     /** Packages effected by the commit */
     packages?: string[];
+    /** The type of user */
+    type?: 'Bot' | 'User';
     /** PR info for the commit */
     pullRequest?: {
       /** PR number attached to commit */
@@ -35,6 +37,7 @@ const makeCommitFromMsg = (
   files: options.files || [],
   authors: [
     {
+      type: options.type,
       name:
         options.name !== undefined && options.name !== null
           ? options.name

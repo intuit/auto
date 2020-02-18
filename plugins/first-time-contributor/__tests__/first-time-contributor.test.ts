@@ -135,4 +135,21 @@ describe('First Time Contributor Plugin', () => {
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
   });
+
+  test('should exclude bots', async () => {
+    const hooks = setup();
+    const commits = [
+      makeCommitFromMsg('foo', {
+        username: 'jeff-the-snake',
+        name: 'jeff',
+        type: 'Bot'
+      })
+    ];
+
+    graphql.mockReturnValue({
+      search: { issueCount: 1 }
+    });
+
+    expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
+  });
 });

@@ -16,6 +16,8 @@ Thank you, Jeff123 ([@Jeff123](https://github.com/Jeff123)), for all your work!"
 ]
 `;
 
+exports[`First Time Contributor Plugin should exclude bots 1`] = `Array []`;
+
 exports[`First Time Contributor Plugin should include a username if it exists 1`] = `
 Array [
   ":tada: This release contains work from new contributors! :tada:

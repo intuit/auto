@@ -29,13 +29,14 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           const newContributors = (
             await Promise.all(
               flatMap(commits, c => c.authors).map(async author => {
-                if (!author.username) {
+                if (!author.username || author.type === 'Bot') {
                   return;
                 }
 
+                // prettier-ignore
                 const prs = await auto.git?.graphql(`
                   {
-                    search(first: 2, type: ISSUE, query: "user:${auto.git?.options.owner} repo:${auto.git?.options.repo} author:${author.username} state:closed") {
+                    search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${author.username}") {
                       issueCount
                     }
                   }
