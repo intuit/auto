@@ -1,3 +1,16 @@
+# v9.10.7 (Tue Feb 18 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/first-time-contributor`
+  - filter out bots in first-time contributor plugins [#961](https://github.com/intuit/auto/pull/961) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.6 (Mon Feb 17 2020)
 
 :tada: This release contains work from a new contributor! :tada:
