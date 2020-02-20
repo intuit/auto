@@ -438,6 +438,7 @@ export default class Git {
 
     const data = await graphql(query, {
       baseUrl: this.graphqlBaseUrl,
+      agent: this.options.agent,
       headers: {
         authorization: `token ${this.options.token}`
       }
