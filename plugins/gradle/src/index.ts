@@ -11,11 +11,11 @@ const logPrefix = '[Gradle-Release-Plugin]';
 const defaultSnapshotSuffix = '-SNAPSHOT';
 
 export interface IGradleReleasePluginPluginOptions {
-  /** The file that contains the version string in it. */
-  versionFile?: string;
-
-  /** The file that contains gradle release config options in it. */
+  /** The file that contains gradle release properties in it. */
   gradlePropertiesFile?: string;
+
+  /** The file that contains the version in it. */
+  versionFile?: string;
 
   /** The gradle binary to release the project with */
   gradleCommand?: string;
@@ -38,20 +38,18 @@ export interface IGradleProperties {
  * @param path
  * @returns
  */
-export async function readPropertiesFile(
-  path: string
-): Promise<IGradleProperties> {
+export async function getProperties(path: string): Promise<IGradleProperties> {
   try {
     const data = await fs.readFile(path, 'utf-8');
     return parse(data);
   } catch (error) {}
 
-  throw new Error(`Config file not found.`);
+  throw new Error(`Properties-file not found.`);
 }
 
 /** Retrieves a previous version from gradle.properties */
 async function getPreviousVersion(path: string): Promise<string> {
-  const { version } = await readPropertiesFile(path);
+  const { version } = await getProperties(path);
 
   if (version) {
     return version;
@@ -70,13 +68,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
+    const gradlePropertiesFile = options?.gradlePropertiesFile
+      ? path.join(process.cwd(), options.gradlePropertiesFile)
+      : path.join(process.cwd(), './gradle.properties');
     this.options = {
+      gradlePropertiesFile,
       versionFile: options?.versionFile
         ? path.join(process.cwd(), options.versionFile)
-        : path.join(process.cwd(), './gradle.properties'),
-      gradlePropertiesFile: options?.gradlePropertiesFile
-        ? path.join(process.cwd(), options.gradlePropertiesFile)
-        : path.join(process.cwd(), './gradle.properties'),
+        : gradlePropertiesFile,
       gradleCommand: options?.gradleCommand
         ? path.join(process.cwd(), options.gradleCommand)
         : '/usr/bin/gradle',
@@ -110,20 +109,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      // Attempt to pull snapshotSuffix and version from properties file
       let {
         snapshotSuffix = '',
         version: previousVersion
-      } = await readPropertiesFile(
-        this.options.gradlePropertiesFile ?? this.options.versionFile
-      );
-
-      // Attempt to pull version from version file if not defined
+      } = await getProperties(this.options.gradlePropertiesFile);
       if (!previousVersion) {
         previousVersion = await getPreviousVersion(this.options.versionFile);
       }
 
-      // Check for default snapshot
       if (!snapshotSuffix && previousVersion.endsWith(defaultSnapshotSuffix)) {
         snapshotSuffix = defaultSnapshotSuffix;
       }
