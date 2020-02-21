@@ -14,7 +14,7 @@ yarn add -D @auto-it/gradle
 
 ## Usage
 
-```json
+```jsonc
 {
   "plugins": [
     [
