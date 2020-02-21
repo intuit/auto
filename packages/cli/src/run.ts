@@ -74,6 +74,9 @@ export async function run(command: string, args: ApiOptions) {
       case 'shipit':
         await auto.shipit(args as IShipItOptions);
         break;
+      case 'latest':
+        await auto.latest(args as IShipItOptions);
+        break;
       case 'canary':
         await auto.canary(args as ICanaryOptions);
         break;
