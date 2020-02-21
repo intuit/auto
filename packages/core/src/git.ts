@@ -104,9 +104,9 @@ export default class Git {
       .plugin(throttling);
     this.github = new GitHub({
       baseUrl: this.baseUrl,
-      agent: this.options.agent,
       auth: this.options.token,
       previews: ['symmetra-preview'],
+      request: { agent: this.options.agent },
       throttle: {
         onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.warn(
@@ -438,6 +438,7 @@ export default class Git {
 
     const data = await graphql(query, {
       baseUrl: this.graphqlBaseUrl,
+      request: { agent: this.options.agent },
       headers: {
         authorization: `token ${this.options.token}`
       }
