@@ -414,7 +414,7 @@ export const commands: Command[] = [
     name: 'shipit',
     group: 'Release Commands',
     description: endent`
-      Run the full \`auto\` release pipeline. Detects if in a lerna project.
+      Context aware publishing.
 
       1. call from base branch -> latest version released (LATEST)
       2. call from prerelease branch -> prerelease version released (NEXT)
@@ -434,6 +434,15 @@ export const commands: Command[] = [
           'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.'
       }
     ]
+  },
+  {
+    name: 'latest',
+    group: 'Release Commands',
+    description: endent`
+      Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
+    `,
+    examples: ['{green $} auto latest'],
+    options: [baseBranch, dryRun]
   },
   {
     name: 'canary',

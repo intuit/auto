@@ -1087,6 +1087,11 @@ export default class Auto {
     return { newVersion, commitsInRelease: commits, context: 'next' };
   }
 
+  /** Force a release to latest and bypass `shipit` safeguards. */
+  async latest(options: IShipItOptions = {}) {
+    await this.publishFullRelease(options)
+  }
+
   /**
    * Run the full workflow.
    *
@@ -1221,7 +1226,7 @@ export default class Auto {
     return result;
   }
 
-  /** On master: publish a new latest version */
+  /** Publish a new version with changelog, publish, and release */
   private async publishFullRelease(
     options: IShipItOptions & {
       /** Internal option to shipt from a certain tag or commit */
