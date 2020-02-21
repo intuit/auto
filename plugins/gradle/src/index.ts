@@ -8,10 +8,14 @@ import { parse } from 'dot-properties';
 
 /** Global functions for usage in module */
 const logPrefix = '[Gradle-Release-Plugin]';
+const defaultSnapshotSuffix = '-SNAPSHOT';
 
 export interface IGradleReleasePluginPluginOptions {
   /** The file that contains the version string in it. */
   versionFile?: string;
+
+  /** The file that contains gradle release config options in it. */
+  gradlePropertiesFile?: string;
 
   /** The gradle binary to release the project with */
   gradleCommand?: string;
@@ -20,16 +24,38 @@ export interface IGradleReleasePluginPluginOptions {
   gradleOptions?: Array<string>;
 }
 
-/** Retrieves a previous version from gradle.properties */
-async function getPreviousVersion(path: string): Promise<string> {
+export interface IGradleProperties {
+  /** version */
+  version?: string;
+
+  /** snapshotSuffix */
+  snapshotSuffix?: string;
+}
+
+/**
+ * Reads config object from file
+ *
+ * @param path
+ * @returns
+ */
+export async function readPropertiesFile(
+  path: string
+): Promise<IGradleProperties> {
   try {
     const data = await fs.readFile(path, 'utf-8');
-    const { version } = parse(data);
-
-    if (version) {
-      return version;
-    }
+    return parse(data);
   } catch (error) {}
+
+  throw new Error(`Config file not found.`);
+}
+
+/** Retrieves a previous version from gradle.properties */
+async function getPreviousVersion(path: string): Promise<string> {
+  const { version } = await readPropertiesFile(path);
+
+  if (version) {
+    return version;
+  }
 
   throw new Error('No version was found inside version-file.');
 }
@@ -48,10 +74,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       versionFile: options?.versionFile
         ? path.join(process.cwd(), options.versionFile)
         : path.join(process.cwd(), './gradle.properties'),
+      gradlePropertiesFile: options?.gradlePropertiesFile
+        ? path.join(process.cwd(), options.gradlePropertiesFile)
+        : path.join(process.cwd(), './gradle.properties'),
       gradleCommand: options?.gradleCommand
         ? path.join(process.cwd(), options.gradleCommand)
         : '/usr/bin/gradle',
-      gradleOptions: options.gradleOptions || [] 
+      gradleOptions: options.gradleOptions || []
     };
   }
 
@@ -64,7 +93,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         auto.logger.log.error(
           `${logPrefix} The version-file does not exist on disk.`
         );
-        process.exit(1)
+        process.exit(1);
       }
     });
 
@@ -81,10 +110,27 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      const previousVersion = await getPreviousVersion(
-        this.options.versionFile
+      // Attempt to pull snapshotSuffix and version from properties file
+      let {
+        snapshotSuffix = '',
+        version: previousVersion
+      } = await readPropertiesFile(
+        this.options.gradlePropertiesFile ?? this.options.versionFile
       );
-      const newVersion = inc(previousVersion, version as ReleaseType) || '';
+
+      // Attempt to pull version from version file if not defined
+      if (!previousVersion) {
+        previousVersion = await getPreviousVersion(this.options.versionFile);
+      }
+
+      // Check for default snapshot
+      if (!snapshotSuffix && previousVersion.endsWith(defaultSnapshotSuffix)) {
+        snapshotSuffix = defaultSnapshotSuffix;
+      }
+
+      const releaseVersion = previousVersion.replace(snapshotSuffix, '');
+      const newVersion =
+        `${inc(releaseVersion, version as ReleaseType)}${snapshotSuffix}` || '';
       if (!newVersion) {
         throw new Error(
           `Could not increment previous version: ${previousVersion}`
@@ -94,7 +140,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       await execPromise(this.options.gradleCommand, [
         'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.releaseVersion=${previousVersion}`,
+        `-Prelease.releaseVersion=${releaseVersion}`,
         `-Prelease.newVersion=${newVersion}`,
         '-x createReleaseTag',
         '-x preTagCommit',
