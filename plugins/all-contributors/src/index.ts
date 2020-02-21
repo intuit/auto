@@ -8,6 +8,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import match from 'anymatch';
+import on from 'await-to-js';
 import { execSync } from 'child_process';
 import { IExtendedCommit } from '@auto-it/core/src/log-parse';
 
@@ -153,8 +154,8 @@ export default class AllContributorsPlugin implements IPlugin {
         if (changedFiles) {
           await execPromise('git', ['add', 'README.md']);
           await execPromise('git', ['add', '.all-contributorsrc']);
-          await execPromise('git', ['add', '**/README.md']);
-          await execPromise('git', ['add', '**/.all-contributorsrc']);
+          await on(execPromise('git', ['add', '**/README.md']));
+          await on(execPromise('git', ['add', '**/.all-contributorsrc']));
           await execPromise('git', [
             'commit',
             '--no-verify',
@@ -234,7 +235,8 @@ export default class AllContributorsPlugin implements IPlugin {
     Object.entries(authorContributions).forEach(([username, contributions]) => {
       const { contributions: old = [] } =
         config.contributors.find(
-          contributor => contributor.login === username
+          contributor =>
+            contributor.login.toLowerCase() === username.toLowerCase()
         ) || {};
       const hasNew = [...contributions].find(
         contribution => !old.includes(contribution)
