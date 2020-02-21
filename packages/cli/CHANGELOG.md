@@ -1,3 +1,15 @@
+# v9.11.0 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- Add new command 'latest' for easier testing and more flexibility  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.4 (Thu Feb 06 2020)
 
 #### 🐛  Bug Fix

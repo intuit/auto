@@ -1,3 +1,16 @@
+# v9.11.0 (Fri Feb 21 2020)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add new command 'latest' for easier testing and more flexibility [#968](https://github.com/intuit/auto/pull/968) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.8 (Fri Feb 21 2020)
 
 :tada: This release contains work from a new contributor! :tada:
