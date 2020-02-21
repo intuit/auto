@@ -198,6 +198,15 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "sugarmanz",
+      "name": "Jeremiah Zucker",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9255651?v=4",
+      "profile": "http://www.jeremiahzucker.com",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
