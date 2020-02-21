@@ -1,3 +1,17 @@
+# v9.10.8 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- configure agent on request  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Adding proxyagent to graphql  ([@YogiKhan](https://github.com/YogiKhan))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- yogesh khandelwal ([@YogiKhan](https://github.com/YogiKhan))
+
+---
+
 # v9.10.7 (Tue Feb 18 2020)
 
 #### 🐛  Bug Fix

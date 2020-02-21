@@ -1,3 +1,29 @@
+# v9.10.8 (Fri Feb 21 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz)), for all your work!
+
+#### 🐛  Bug Fix
+
+- `@auto-it/all-contributors`
+  - fix case sensitive username bug and handle git errors [#967](https://github.com/intuit/auto/pull/967) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Adding proxyagent to graphql [#963](https://github.com/intuit/auto/pull/963) ([@YogiKhan](https://github.com/YogiKhan) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- `@auto-it/gradle`
+  - fix: gradle readme use jsonc syntax highlighting [#965](https://github.com/intuit/auto/pull/965) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- yogesh khandelwal ([@YogiKhan](https://github.com/YogiKhan))
+
+---
+
 # v9.10.7 (Tue Feb 18 2020)
 
 #### 🐛  Bug Fix

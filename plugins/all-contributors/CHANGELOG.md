@@ -1,3 +1,15 @@
+# v9.10.8 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- fix case sensitive username bug and handle error  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.3.3 (Fri Jan 24 2020)
 
 #### 🐛  Bug Fix

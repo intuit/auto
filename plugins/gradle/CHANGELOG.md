@@ -1,3 +1,21 @@
+# v9.10.8 (Fri Feb 21 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz)), for all your work!
+
+#### 🐛  Bug Fix
+
+- fix: gradle readme use jsonc syntax highlighting
+
+allows comments  ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v7.17.0 (Fri Jan 31 2020)
 
 #### 🐛  Bug Fix
