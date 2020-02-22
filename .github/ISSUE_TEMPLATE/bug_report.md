@@ -23,11 +23,12 @@ assignees: ''
 
 <!-- If applicable, add screenshots to help explain your problem. -->
 
-**Desktop (please complete the following information):**
+**Environment information:**
 
-- OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
+<!-- Please run `npx auto info` and put the results in the section below -->
+
+```txt
+```
 
 **Additional context**
 
