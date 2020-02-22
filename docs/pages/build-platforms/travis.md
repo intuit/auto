@@ -5,7 +5,7 @@ The following config declares the `deploy` job that run on all branches. The job
 - a new `latest` version from `master`
 - a `canary` build from a pull request (if your package manager plugin implements them)
 
-**`.circleci/config.yml`**
+**`.travis.yml`**
 
 ```yaml
 language: node_js
