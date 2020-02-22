@@ -8,12 +8,14 @@ import GradleReleasePlugin, {
   getProperties
 } from '../src';
 
-const mockRead = (result: string) =>
+const mockRead = (version: string) =>
   jest
     .spyOn(fs, 'readFile')
     // @ts-ignore
-    .mockReturnValueOnce(result);
+    .mockReturnValueOnce(version);
 
+const mockVersionProperties = (version: string, properties = '') =>
+  mockRead(version).mockReturnValueOnce(properties);
 describe('Gradle Plugin', () => {
   let hooks: Auto.IAutoHooks;
   const options: IGradleReleasePluginPluginOptions = {};
@@ -46,25 +48,7 @@ describe('Gradle Plugin', () => {
 
   describe('version', () => {
     test('should version release - patch version', async () => {
-      mockRead('version=1.0.0');
-      const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
-
-      await hooks.version.promise(Auto.SEMVER.patch);
-
-      expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
-        '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
-      ]);
-    });
-
-    test('should version release - version not found in properties', async () => {
-      mockRead('').mockReturnValueOnce('version=1.0.0');
+      mockVersionProperties('version=1.0.0');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -82,7 +66,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - major version', async () => {
-      mockRead('version=1.0.0');
+      mockVersionProperties('version=1.0.0');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -100,7 +84,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - minor version', async () => {
-      mockRead('version=1.1.0');
+      mockVersionProperties('version=1.1.0');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -118,7 +102,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - patch w/ default snapshot', async () => {
-      mockRead('version=1.0.0-SNAPSHOT');
+      mockVersionProperties('version=1.0.0-SNAPSHOT');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -136,10 +120,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - patch w/ custom snapshot', async () => {
-      mockRead(`
-        version=1.0.0.SNAP
-        snapshotSuffix=.SNAP
-      `);
+      mockVersionProperties('version=1.0.0.SNAP', 'snapshotSuffix=.SNAP');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -157,9 +138,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - patch w/ custom snapshot in seperate files', async () => {
-      mockRead('snapshotSuffix=.SNAP').mockReturnValueOnce(
-        'version=1.0.0.SNAP'
-      );
+      mockVersionProperties('version=1.0.0.SNAP', 'snapshotSuffix=.SNAP');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -177,10 +156,7 @@ describe('Gradle Plugin', () => {
     });
 
     test('should version release - patch w/ custom snapshot regardless', async () => {
-      mockRead(`
-        version=1.0.0
-        snapshotSuffix=.SNAP
-      `);
+      mockVersionProperties('version=1.0.0', 'snapshotSuffix=.SNAP');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 
@@ -214,7 +190,7 @@ describe('Gradle Plugin - Custom Command', () => {
 
   describe('version', () => {
     test('should version release - patch version - with custom gradle command', async () => {
-      mockRead('version=1.0.0');
+      mockVersionProperties('version=1.0.0');
       const spy = jest.fn();
       jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
 

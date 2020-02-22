@@ -70,7 +70,7 @@ release {
 
 You will also need all of the following configuration blocks for all parts of `auto` to function:
 
-1. Version defined inside `gradlePropertiesFile` or `versionFile`
+1. Version defined inside `versionFile`
 
 ```java-properties
 version=1.0.0
