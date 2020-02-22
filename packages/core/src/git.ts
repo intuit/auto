@@ -135,6 +135,19 @@ export default class Git {
     });
   }
 
+  /** Verify the write access authorization to remote repository with push dry-run. */
+  async verifyAuth(url: string) {
+    try {
+      await execPromise(
+        'git',
+        ['push', '--dry-run', '--no-verify', url, `HEAD:${this.options.baseBranch}`, '-q']
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   /** Get the "Latest Release" from GitHub */
   @memoize()
   async getLatestReleaseInfo() {

@@ -23,16 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Prepare repository
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          git checkout ${GITHUB_REF:11} --
-          git remote rm origin
-          git remote add origin "https://x-access-token:$GH_TOKEN@github.com/<owner>/<repo>.git"
-          git fetch origin --tags
-          git branch --set-upstream-to origin/${GITHUB_REF:11} ${GITHUB_REF:11}
-
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:

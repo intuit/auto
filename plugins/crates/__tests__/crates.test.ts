@@ -221,6 +221,7 @@ describe('CratesPlugin', () => {
         plugin.apply({
           hooks,
           logger: dummyLog(),
+          remote: 'origin',
           baseBranch: 'master'
         } as Auto.Auto);
         await hooks.publish.promise(Auto.SEMVER.patch);

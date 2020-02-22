@@ -5,7 +5,7 @@ The following config declares the `deploy` job that run on all branches. The job
 - a new `latest` version from `master`
 - a `canary` build from a pull request (if your package manager plugin implements them)
 
-**`.circleci/config.yml`**
+**`.travis.yml`**
 
 ```yaml
 language: node_js
@@ -20,14 +20,6 @@ script:
   - yarn test
   - yarn build
 
-before_deploy:
-  - git config --local user.name "${GIT_NAME}"
-  - git config --local user.email "${GIT_EMAIL}"
-  - git remote rm origin
-  - git remote add origin https://${GH_TOKEN}@github.com/hipstersmoothie/my-test-project
-  - git fetch origin --tags
-  - git checkout master
-  - git branch --set-upstream-to origin/master master
 deploy:
   skip_cleanup: true
   provider: script

@@ -32,16 +32,6 @@ pipeline {
         }
       }
     }
-    stage('Auth') {
-      steps {
-        sh '''
-          echo "https://${GH_USER}:${GH_TOKEN}@github.com" >> /tmp/gitcredfile
-          git config --global user.name "Andrew Lisowski"
-          git config --global user.email "lisowski54@gmail.com"
-          git config --global credential.helper "store --file=/tmp/gitcredfile"
-        '''
-      }
-    }
     stage('Install') {
       steps {
         sh 'yarn install --frozen-lockfile'

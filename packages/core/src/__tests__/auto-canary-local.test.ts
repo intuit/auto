@@ -12,6 +12,24 @@ const defaults = {
   token: 'XXXX'
 };
 
+jest.mock('@octokit/rest', () => {
+  const Octokit = class MockOctokit {
+    static plugin = () => Octokit;
+
+    authenticate = () => undefined;
+
+    repos = {
+      get: jest.fn().mockReturnValue({})
+    }
+
+    hook = {
+      error: () => undefined
+    };
+  };
+
+  return { Octokit };
+});
+
 test('shipit should publish canary in locally when not on master', async () => {
   const auto = new Auto({ ...defaults, plugins: [] });
   auto.logger = dummyLog();

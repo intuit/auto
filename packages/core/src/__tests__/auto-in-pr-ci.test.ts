@@ -18,6 +18,24 @@ const defaults = {
   token: 'XXXX'
 };
 
+jest.mock('@octokit/rest', () => {
+  const Octokit = class MockOctokit {
+    static plugin = () => Octokit;
+
+    authenticate = () => undefined;
+
+    repos = {
+      get: jest.fn().mockReturnValue({})
+    }
+
+    hook = {
+      error: () => undefined
+    };
+  };
+
+  return { Octokit };
+});
+
 describe('canary in ci', () => {
   test('calls the canary hook with the canary version', async () => {
     const auto = new Auto({ ...defaults, plugins: [] });

@@ -848,7 +848,7 @@ export default class NPMPlugin implements IPlugin {
         preReleaseVersions.push(auto.prefixRelease(version!));
       }
 
-      await execPromise('git', ['push', '--tags']);
+      await execPromise('git', ['push', auto.remote, '--tags']);
       return preReleaseVersions;
     });
 
@@ -897,7 +897,7 @@ export default class NPMPlugin implements IPlugin {
         'push',
         '--follow-tags',
         '--set-upstream',
-        'origin',
+        auto.remote,
         branch || auto.baseBranch
       ]);
       auto.logger.verbose.info('Successfully published repo');

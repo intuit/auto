@@ -163,6 +163,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -182,6 +183,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -208,6 +210,7 @@ describe('getAuthor', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -233,6 +236,7 @@ describe('getRepository', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -264,6 +268,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
@@ -286,6 +291,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
@@ -309,6 +315,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
@@ -342,6 +349,7 @@ describe('getPreviousVersion', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str
@@ -377,6 +385,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger
     } as Auto.Auto);
@@ -406,6 +415,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -433,6 +443,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -468,6 +479,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -503,6 +515,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -538,6 +551,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -560,6 +574,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -590,6 +605,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -626,6 +642,7 @@ describe('publish', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -654,6 +671,7 @@ describe('canary', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -681,6 +699,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       git: {
@@ -724,6 +743,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       git: {
@@ -767,6 +787,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog()
     } as Auto.Auto);
@@ -816,6 +837,7 @@ describe('canary', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       git: {
@@ -866,6 +888,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -898,7 +921,7 @@ describe('next', () => {
       '-m',
       '"Update version to 1.2.4-next.0"'
     ]);
-    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+    expect(exec).toHaveBeenCalledWith('git', ['push', 'origin', '--tags']);
     expect(exec).toHaveBeenCalledWith('npm', ['publish', '--tag', 'next']);
   });
 
@@ -915,6 +938,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       getCurrentVersion: () => '1.2.3',
@@ -933,7 +957,7 @@ describe('next', () => {
       'npx',
       expect.arrayContaining(['lerna', 'publish', '1.2.4-next.0'])
     );
-    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+    expect(exec).toHaveBeenCalledWith('git', ['push', 'origin', '--tags']);
   });
 
   test('works in monorepo - independent', async () => {
@@ -949,6 +973,7 @@ describe('next', () => {
     plugin.apply(({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: (v: string) => v,
@@ -967,7 +992,7 @@ describe('next', () => {
       'npx',
       expect.arrayContaining(['lerna', 'publish', 'prerelease'])
     );
-    expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+    expect(exec).toHaveBeenCalledWith('git', ['push', 'origin', '--tags']);
   });
 });
 
@@ -987,6 +1012,7 @@ describe('makeRelease', () => {
     plugin.apply({
       config: { prereleaseBranches: ['next'] },
       hooks,
+      remote: 'origin',
       baseBranch: 'master',
       logger: dummyLog(),
       prefixRelease: str => str,

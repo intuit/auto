@@ -11,7 +11,7 @@ jest
 const importMock = jest.fn();
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
-jest.mock('../utils/exec-promise', () => () => '');
+jest.mock('../utils/exec-promise', () => () => Promise.resolve(''));
 
 const defaults = {
   owner: 'foo',
@@ -35,6 +35,10 @@ jest.mock('@octokit/rest', () => {
     search = {
       issuesAndPullRequests: () => ({ data: { items: [] } })
     };
+
+    repos = {
+      get: jest.fn().mockReturnValue(Promise.resolve({}))
+    }
 
     hook = {
       error: () => undefined
