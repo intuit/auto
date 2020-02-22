@@ -1,3 +1,15 @@
+# v9.12.1 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- add warning about using npm plugin with noVersionPrefix  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.12.0 (Fri Feb 21 2020)
 
 #### 🐛  Bug Fix

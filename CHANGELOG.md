@@ -1,3 +1,18 @@
+# v9.12.1 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- `auto`, `@auto-it/npm`
+  - add warning about using npm plugin with noVersionPrefix [#972](https://github.com/intuit/auto/pull/972) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/all-contributors`
+  - Make all-contributors plugin work for non-lerna packages again [#971](https://github.com/intuit/auto/pull/971) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.12.0 (Fri Feb 21 2020)
 
 #### 🚀  Enhancement

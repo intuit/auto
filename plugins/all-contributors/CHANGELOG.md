@@ -1,3 +1,17 @@
+# v9.12.1 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- remove test skip  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ad test  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix all-contributors plugin for non-lerna packages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.10.8 (Fri Feb 21 2020)
 
 #### 🐛  Bug Fix
