@@ -1,3 +1,15 @@
+# v9.12.0 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- ensure remote can be pushed to  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.7.0 (Mon Jan 27 2020)
 
 #### 🐛  Bug Fix

@@ -1,3 +1,16 @@
+# v9.12.0 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- add tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ensure remote can be pushed to  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.11.0 (Fri Feb 21 2020)
 
 #### 🐛  Bug Fix

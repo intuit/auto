@@ -1,3 +1,16 @@
+# v9.12.0 (Fri Feb 21 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`, `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`
+  - ensure remote can be pushed to [#969](https://github.com/intuit/auto/pull/969) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.11.0 (Fri Feb 21 2020)
 
 #### 🚀  Enhancement
