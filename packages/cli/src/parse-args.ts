@@ -131,7 +131,7 @@ const url: Option = {
 const noVersionPrefix: Option = {
   name: 'no-version-prefix',
   type: Boolean,
-  description: "Use the version as the tag without the 'v' prefix",
+  description: "Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm)",
   group: 'main'
 };
 
