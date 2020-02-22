@@ -29,6 +29,9 @@ yarn add -D @auto-it/npm
 }
 ```
 
+> If you're using the `noVersionPrefix` option you will also need to add `tag-version-prefix=""` to your `.npmrc`.
+> Otherwise when npm versions your code the tag it creates will have the `v` and `auto` will get confused.
+
 ## Monorepo Usage
 
 The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode. `auto` works on a repo basis and should be run from the root of the repo, not on each sub-package. No additional setup is required.
