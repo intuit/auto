@@ -156,7 +156,7 @@ export default class MavenPlugin implements IPlugin {
         'push',
         '--follow-tags',
         '--set-upstream',
-        'origin',
+        auto.remote,
         auto.baseBranch
       ]);
 
@@ -174,7 +174,7 @@ export default class MavenPlugin implements IPlugin {
       // prepare for next development iteration
       await execPromise('git', ['reset', '--hard', 'dev-snapshot']);
       await execPromise('git', ['branch', '-d', 'dev-snapshot']);
-      await execPromise('git', ['push', 'origin', auto.baseBranch]);
+      await execPromise('git', ['push', auto.remote, auto.baseBranch]);
     });
   }
 }
