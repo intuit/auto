@@ -85,7 +85,7 @@ describe('All Contributors Plugin', () => {
     );
   });
 
-  test.only('should work for single package', async () => {
+  test('should work for single package', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
     
