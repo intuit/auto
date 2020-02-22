@@ -20,14 +20,6 @@ script:
   - yarn test
   - yarn build
 
-before_deploy:
-  - git config --local user.name "${GIT_NAME}"
-  - git config --local user.email "${GIT_EMAIL}"
-  - git remote rm origin
-  - git remote add origin https://${GH_TOKEN}@github.com/hipstersmoothie/my-test-project
-  - git fetch origin --tags
-  - git checkout master
-  - git branch --set-upstream-to origin/master master
 deploy:
   skip_cleanup: true
   provider: script
