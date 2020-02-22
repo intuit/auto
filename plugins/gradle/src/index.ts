@@ -109,14 +109,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      let {
-        snapshotSuffix = '',
-        version: previousVersion
-      } = await getProperties(this.options.gradlePropertiesFile);
-      if (!previousVersion) {
-        previousVersion = await getPreviousVersion(this.options.versionFile);
-      }
+      const previousVersion = await getPreviousVersion(
+        this.options.versionFile
+      );
 
+      let { snapshotSuffix = '' } = await getProperties(
+        this.options.gradlePropertiesFile
+      );
       if (!snapshotSuffix && previousVersion.endsWith(defaultSnapshotSuffix)) {
         snapshotSuffix = defaultSnapshotSuffix;
       }
