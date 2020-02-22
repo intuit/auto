@@ -16,6 +16,7 @@ const mockRead = (version: string) =>
 
 const mockVersionProperties = (version: string, properties = '') =>
   mockRead(version).mockReturnValueOnce(properties);
+
 describe('Gradle Plugin', () => {
   let hooks: Auto.IAutoHooks;
   const options: IGradleReleasePluginPluginOptions = {};
