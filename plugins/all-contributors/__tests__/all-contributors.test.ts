@@ -85,6 +85,36 @@ describe('All Contributors Plugin', () => {
     );
   });
 
+  test.only('should work for single package', async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+    
+    mockRead('{ "contributors": [] }');
+    getLernaPackages.mockRejectedValueOnce(Promise.reject(new Error('test')));
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: '0.0.0',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
+          files: ['src/index.ts'],
+          authors: [{ username: 'Jeff', hash: '123' }]
+        }
+      ]
+    });
+
+    expect(exec.mock.calls[0][0]).toBe(
+      'npx all-contributors-cli add Jeff code'
+    );
+  });
+
   test('should find contributions from merge commit', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
