@@ -118,29 +118,38 @@ export default class AllContributorsPlugin implements IPlugin {
         await this.updateContributors(auto, commits);
         const rootDir = process.cwd();
 
-        const lernaPackages = await getLernaPackages();
+        let packages: {
+          /** name of the package to manage contributors in */
+          name: string;
+          /** path to the package */
+          path: string;
+        }[];
+
+        try {
+          packages = await getLernaPackages();
+        } catch (error) {
+          packages = [{ path: rootDir, name: 'single-package' }];
+        }
 
         // Cannot run git operations in parallel
-        await lernaPackages.reduce(async (last, lernaPackage) => {
+        await packages.reduce(async (last, { name, path }) => {
           await last;
 
-          auto.logger.verbose.info(
-            `Updating contributors for: ${lernaPackage.name}`
-          );
+          auto.logger.verbose.info(`Updating contributors for: ${name}`);
 
           const includedCommits = commits.filter(commit =>
-            commit.files.some(file => inFolder(lernaPackage.path, file))
+            commit.files.some(file => inFolder(path, file))
           );
 
           if (includedCommits.length > 0) {
             auto.logger.verbose.success(
-              `${lernaPackage.name} has ${includedCommits.length} new commits.`
+              `${name} has ${includedCommits.length} new commits.`
             );
             auto.logger.veryVerbose.info(
               `With commits: ${JSON.stringify(includedCommits, null, 2)}`
             );
 
-            process.chdir(lernaPackage.path);
+            process.chdir(path);
             await this.updateContributors(auto, includedCommits);
           }
         }, Promise.resolve());
