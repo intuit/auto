@@ -66,6 +66,11 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   /** The options of the plugin */
   readonly options: Required<IGradleReleasePluginPluginOptions>;
 
+  /**  */
+  private previousVersion = '';
+  /**  */
+  private snapshotSuffix = '';
+
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
     const gradlePropertiesFile = options?.gradlePropertiesFile
@@ -85,7 +90,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.beforeRun.tap(this.name, () => {
+    auto.hooks.beforeRun.tap(this.name, async () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
       // validation
       if (!fs.existsSync(this.options.versionFile)) {
@@ -93,6 +98,18 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           `${logPrefix} The version-file does not exist on disk.`
         );
         process.exit(1);
+      }
+
+      this.previousVersion = await getPreviousVersion(this.options.versionFile);
+      const { snapshotSuffix = '' } = await getProperties(
+        this.options.gradlePropertiesFile
+      );
+      this.snapshotSuffix = snapshotSuffix;
+      if (
+        !snapshotSuffix &&
+        this.previousVersion.endsWith(defaultSnapshotSuffix)
+      ) {
+        this.snapshotSuffix = defaultSnapshotSuffix;
       }
     });
 
@@ -104,49 +121,65 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       });
     });
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, () => {
-      return getPreviousVersion(this.options.versionFile);
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
+      return this.previousVersion;
     });
 
+    // 1. gradle version to release
+    // 2. commit and push tags
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      const previousVersion = await getPreviousVersion(
-        this.options.versionFile
-      );
-
-      let { snapshotSuffix = '' } = await getProperties(
-        this.options.gradlePropertiesFile
-      );
-      if (!snapshotSuffix && previousVersion.endsWith(defaultSnapshotSuffix)) {
-        snapshotSuffix = defaultSnapshotSuffix;
-      }
-
-      const releaseVersion = previousVersion.replace(snapshotSuffix, '');
-      const newVersion =
-        `${inc(releaseVersion, version as ReleaseType)}${snapshotSuffix}` || '';
-      if (!newVersion) {
+      const releaseVersion =
+        version === 'patch'
+          ? this.previousVersion.replace(this.snapshotSuffix, '')
+          : `${inc(
+              this.previousVersion.replace(this.snapshotSuffix, ''),
+              version as ReleaseType
+            )}` || '';
+      if (!releaseVersion) {
         throw new Error(
-          `Could not increment previous version: ${previousVersion}`
+          `Could not increment previous version: ${this.previousVersion}`
         );
       }
 
       await execPromise(this.options.gradleCommand, [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.releaseVersion=${releaseVersion}`,
-        `-Prelease.newVersion=${newVersion}`,
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion',
-        ...this.options.gradleOptions
+        `-Prelease.newVersion=${releaseVersion}`
       ]);
 
-      await execPromise('git', ['add', 'gradle.properties']);
+      await execPromise('git', ['add', this.options.versionFile]);
       await execPromise('git', [
         'commit',
         '-m',
-        `"Bump version to: ${newVersion} [skip ci]"`,
+        `"release version: ${releaseVersion} [skip ci]"`,
         '--no-verify'
       ]);
+
+      await execPromise('git', ['tag', releaseVersion]);
+
+      await execPromise(this.options.gradleCommand, ['artifactoryPublish']);
+
+      // snapshots precede releases, so if we had a minor/major release,
+      // then we need to set up snapshots on the next version
+      if (version === 'patch' || this.snapshotSuffix) {
+        const newVersion = `${inc(releaseVersion, 'patch')}${
+          this.snapshotSuffix
+        }`;
+
+        await execPromise(this.options.gradleCommand, [
+          'updateVersion',
+          '-Prelease.useAutomaticVersion=true',
+          `-Prelease.newVersion=${newVersion}`
+        ]);
+
+        await execPromise('git', ['add', this.options.versionFile]);
+        await execPromise('git', [
+          'commit',
+          '-m',
+          `"prepare snapshot: ${newVersion} [skip ci]"`,
+          '--no-verify'
+        ]);
+      }
 
       await execPromise('git', [
         'push',
@@ -156,5 +189,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         auto.baseBranch
       ]);
     });
+
+    // publish
+    // auto.hooks.publish.tapPromise(this.name, async () => {
+    // });
+
+    // 1. update to snapshot version
+    // 2. commit and push tags
+    // auto.hooks.afterPublish.tapPromise(this.name, async () => {
   }
 }
