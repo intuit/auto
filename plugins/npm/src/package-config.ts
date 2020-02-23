@@ -9,11 +9,13 @@ export interface IRepoConfig {
 }
 
 /** Try to the the owner/repo from the package.json */
-export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
+export default async function getConfigFromPackageJson(): Promise<
+  IRepoConfig | undefined
+> {
   const { repository } = await loadPackageJson();
 
   if (!repository) {
-    throw new Error('Cannot read repo info from package.json');
+    return;
   }
 
   const { owner, name } =
@@ -22,9 +24,7 @@ export default async function getConfigFromPackageJson(): Promise<IRepoConfig> {
     ) || {};
 
   if (!owner || !name) {
-    throw new Error(
-      'Cannot read owner and package name from GitHub URL in package.json'
-    );
+    return;
   }
 
   return {

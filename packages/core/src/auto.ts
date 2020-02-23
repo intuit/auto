@@ -53,6 +53,7 @@ import { makeHooks } from './utils/make-hooks';
 import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
+import getRepository from './utils/get-repository';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -342,6 +343,10 @@ export default class Auto {
     this.logger = createLog();
     this.hooks = makeHooks();
 
+    this.hooks.getRepository.tapPromise(
+      'Get repo info from origin',
+      getRepository
+    );
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
       release.hooks.onCreateChangelog.tap(
         'Link onCreateChangelog',
@@ -453,18 +458,19 @@ export default class Auto {
     this.release = new Release(this.git, config, this.logger);
     this.remote = await this.getRemote();
     this.logger.verbose.info(
-      `Using remote: ${this.remote.replace(token, `****${token.substring(0, 4)}`)}`
+      `Using remote: ${this.remote.replace(
+        token,
+        `****${token.substring(0, 4)}`
+      )}`
     );
     this.hooks.onCreateRelease.call(this.release);
   }
 
   /** Determine the remote we have auth to push to. */
   private async getRemote(): Promise<string> {
-    const [, configuredRemote = 'origin'] = await on(execPromise('git', [
-      'remote',
-      'get-url',
-      'origin'
-    ]));
+    const [, configuredRemote = 'origin'] = await on(
+      execPromise('git', ['remote', 'get-url', 'origin'])
+    );
 
     if (!this.git) {
       return configuredRemote;
@@ -1658,7 +1664,24 @@ export default class Auto {
       return config as IRepoOptions & TestingToken;
     }
 
-    return this.hooks.getRepository.promise();
+    const author = await this.hooks.getRepository.promise();
+
+    if (!author || !author.owner || !author.repo) {
+      this.logger.log.error(
+        endent`
+          Cannot find project owner and repository name!
+
+          You must do one of the following: 
+
+          - configure the repo for your package manager (ex: set "repository" in package.json)
+          - configure your git remote 'origin' to point to your project on GitHub.
+        `,
+        ''
+      );
+      process.exit(1);
+    }
+
+    return author;
   }
 
   /**
