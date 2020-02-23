@@ -169,7 +169,7 @@ Global Options
   --repo string         The repo to set the status on. Defaults to looking in the package definition
                         for the platform
   --owner string        The owner of the GitHub repo. Defaults to reading from the package definition
-                        for the platform
+                        for the platform or the remote "origin"
   --github-api string   GitHub API to use
   --plugins string[]    Plugins to load auto with. (defaults to just npm)
   -h, --help            Display the help output

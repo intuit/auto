@@ -491,7 +491,11 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info(
         'NPM: getting repo information from package.json'
       );
-      return getConfigFromPackageJson();
+      const repo = await getConfigFromPackageJson();
+
+      if (repo) {
+        return repo;
+      }
     });
 
     auto.hooks.onCreateRelease.tap(this.name, release => {

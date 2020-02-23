@@ -41,8 +41,6 @@ Using `auto` with any other package manager than [npm](https://npmjs.com) requir
 
    ```json
    {
-     "repo": "my-project",
-     "owner": "hipstersmoothie",
      "name": "Andrew Lisowski",
      "email": "lisowski54@gmail.com",
      "plugins": []
@@ -53,8 +51,6 @@ Using `auto` with any other package manager than [npm](https://npmjs.com) requir
 
    ```json
    {
-     "repo": "my-project",
-     "owner": "hipstersmoothie",
      "name": "Andrew Lisowski",
      "email": "lisowski54@gmail.com",
      "plugins": ["git-tag"]

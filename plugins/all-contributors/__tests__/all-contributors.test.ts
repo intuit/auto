@@ -88,9 +88,9 @@ describe('All Contributors Plugin', () => {
   test('should work for single package', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
-    
+
     mockRead('{ "contributors": [] }');
-    getLernaPackages.mockRejectedValueOnce(Promise.reject(new Error('test')));
+    getLernaPackages.mockRejectedValueOnce(new Error('test'));
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
