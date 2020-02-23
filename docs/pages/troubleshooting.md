@@ -45,21 +45,6 @@ mkdir ~/.ssh/ && echo -e "Host github.YOUR_COMPANY.com\n\tStrictHostKeyChecking 
 
 If you've encountered any of these errors you'll probably run into this problem. If the whole release process doesn't complete you can end up in a state when `auto` published the new version, but doesn't push that back to github. To fix this just bump the version number to the "previously published version".
 
-## Cannot read owner and package name from GitHub URL in package.json
-
-This means that you do not have a repository set in your package.json. Add something along the line of:
-
-```json
-{
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/intuit/auto"
-  },
-  // or simply
-  "repository": "intuit/auto"
-}
-```
-
 ## How do I auto a fork of another repo?
 
 If auto doesn't find a last release it will default to the first commit for version calculation (and a log of other things). If you have forked a repo, you fork all the merge commit messages as well. This confuses `auto` since it will look for those pull requests in your fork and not the main one.
