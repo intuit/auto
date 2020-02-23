@@ -515,6 +515,7 @@ export default class Auto {
       return { hasError: false };
     }
 
+    const [, gitVersion = ''] = await on(execPromise('git', ['--version']))
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
@@ -572,6 +573,7 @@ export default class Auto {
       ${chalk.underline.white('Environment Information:')}
 
       "auto" version: v${getAutoVersion()}
+      "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
         access['x-github-enterprise-version'] 
           ? `GHE version:    v${access['x-github-enterprise-version']}\n`
