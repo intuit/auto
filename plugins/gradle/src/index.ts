@@ -2,21 +2,13 @@ import { Auto, IPlugin, execPromise } from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
 import path from 'path';
-import fs from 'fs-extra';
 import { inc, ReleaseType } from 'semver';
-import { parse } from 'dot-properties';
 
 /** Global functions for usage in module */
 const logPrefix = '[Gradle-Release-Plugin]';
 const defaultSnapshotSuffix = '-SNAPSHOT';
 
 export interface IGradleReleasePluginPluginOptions {
-  /** The file that contains gradle release properties in it. */
-  gradlePropertiesFile?: string;
-
-  /** The file that contains the version in it. */
-  versionFile?: string;
-
   /** The gradle binary to release the project with */
   gradleCommand?: string;
 
@@ -33,23 +25,26 @@ export interface IGradleProperties {
 }
 
 /**
- * Reads config object from file
+ * Builds properties object from gradle properties command
  *
- * @param path
- * @returns
+ * @param gradleCommand - base gradle command
+ * @returns IGradleProperties
  */
-export async function getProperties(path: string): Promise<IGradleProperties> {
-  try {
-    const data = await fs.readFile(path, 'utf-8');
-    return parse(data);
-  } catch (error) {}
+export async function getProperties(
+  gradleCommand = 'gradle'
+): Promise<IGradleProperties> {
+  const properties = (await execPromise(gradleCommand, ['properties', '-q']))
+    .split('\n')
+    .map(line => /([^:]+):\s?(.+)/.exec(line) || [])
+    .map(([, key, value]) => key && value && { [key]: value })
+    .filter(el => el);
 
-  throw new Error(`Properties-file not found.`);
+  return Object.assign({}, ...properties);
 }
 
 /** Retrieves a previous version from gradle.properties */
-async function getPreviousVersion(path: string): Promise<string> {
-  const { version } = await getProperties(path);
+async function getPreviousVersion(): Promise<string> {
+  const { version } = await getProperties();
 
   if (version) {
     return version;
@@ -73,14 +68,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
-    const gradlePropertiesFile = options?.gradlePropertiesFile
-      ? path.join(process.cwd(), options.gradlePropertiesFile)
-      : path.join(process.cwd(), './gradle.properties');
     this.options = {
-      gradlePropertiesFile,
-      versionFile: options?.versionFile
-        ? path.join(process.cwd(), options.versionFile)
-        : gradlePropertiesFile,
       gradleCommand: options?.gradleCommand
         ? path.join(process.cwd(), options.gradleCommand)
         : '/usr/bin/gradle',
@@ -92,21 +80,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.beforeRun.tap(this.name, async () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
-      // validation
-      if (!fs.existsSync(this.options.versionFile)) {
-        auto.logger.log.error(
-          `${logPrefix} The version-file does not exist on disk.`
-        );
-        process.exit(1);
-      }
 
-      this.previousVersion = await getPreviousVersion(this.options.versionFile);
-      const { snapshotSuffix = '' } = await getProperties(
-        this.options.gradlePropertiesFile
-      );
-      this.snapshotSuffix = snapshotSuffix;
+      this.previousVersion = await getPreviousVersion();
+      // const { snapshotSuffix = '' } = await getProperties(
+      //   this.options.gradlePropertiesFile
+      // );
+      // this.snapshotSuffix = snapshotSuffix;
       if (
-        !snapshotSuffix &&
+        // !snapshotSuffix &&
         this.previousVersion.endsWith(defaultSnapshotSuffix)
       ) {
         this.snapshotSuffix = defaultSnapshotSuffix;
@@ -147,10 +128,10 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         `-Prelease.newVersion=${releaseVersion}`
       ]);
 
-      await execPromise('git', ['add', this.options.versionFile]);
+      // await execPromise('git', ['add', this.options.versionFile]);
       await execPromise('git', [
         'commit',
-        '-m',
+        '-am',
         `"release version: ${releaseVersion} [skip ci]"`,
         '--no-verify'
       ]);
@@ -172,10 +153,10 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           `-Prelease.newVersion=${newVersion}`
         ]);
 
-        await execPromise('git', ['add', this.options.versionFile]);
+        // await execPromise('git', ['add', this.options.versionFile]);
         await execPromise('git', [
           'commit',
-          '-m',
+          '-am',
           `"prepare snapshot: ${newVersion} [skip ci]"`,
           '--no-verify'
         ]);
