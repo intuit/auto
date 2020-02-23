@@ -1,3 +1,18 @@
+# v9.13.0 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- When parsing owner/repo fallback to parsing 'origin'  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add git version to 'auto info' output
+
+!  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.12.0 (Fri Feb 21 2020)
 
 #### 🐛  Bug Fix

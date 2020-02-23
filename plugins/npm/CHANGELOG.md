@@ -1,3 +1,15 @@
+# v9.13.0 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- When parsing owner/repo fallback to parsing 'origin'  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.12.1 (Sat Feb 22 2020)
 
 #### 🐛  Bug Fix

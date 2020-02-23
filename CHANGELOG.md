@@ -1,3 +1,25 @@
+# v9.13.0 (Sat Feb 22 2020)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
+  - When parsing owner/repo fallback to parsing 'origin' [#975](https://github.com/intuit/auto/pull/975) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - add git version to 'auto info' output [#977](https://github.com/intuit/auto/pull/977) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Update bug_report.md [#974](https://github.com/intuit/auto/pull/974) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.12.1 (Sat Feb 22 2020)
 
 #### 🐛  Bug Fix
