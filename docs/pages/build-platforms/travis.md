@@ -35,6 +35,21 @@ If you are having problems make sure you have done the following:
 - `GH_TOKEN` is set
 - Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
 
+### Detached Head (Monorepo)
+
+Some plugins might use tools that require you to be on a branch.
+The default setup for travis leaves you in a "Detached Head" state, meaning the git HEAD pointer is not on a branch.
+To fix this add the following lines to your `.travis.yml`
+
+```yml
+before_deploy:
+  - if [ "$TRAVIS_BRANCH" == "master" ];then
+      git checkout master;
+    fi;
+```
+
+This code will ensure that your git HEAD is on master when creating a new release.
+
 ## Examples
 
 - [`relay-compiler-language-typescript`](https://github.com/relay-tools/relay-compiler-language-typescript/blob/master/.travis.yml)
