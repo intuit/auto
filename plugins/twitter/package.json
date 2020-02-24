@@ -41,7 +41,7 @@
     "@types/twitter-text": "^2.0.0",
     "endent": "^1.3.0",
     "semver": "^7.0.0",
-    "tslib": "1.10.0",
+    "tslib": "1.11.0",
     "tweet-tweet": "^1.0.4",
     "twitter-text": "^3.0.0"
   },
