@@ -21,11 +21,11 @@ script:
   - yarn build
 
 deploy:
-  skip_cleanup: true
-  provider: script
-  script: npx auto shipit
-  on:
-    all_branches: true
+  - provider: script
+    script: if [ "$GH_TOKEN" != "false" ];then npx auto shipit; fi;
+    skip-cleanup: true
+    on:
+      all_branches: true
 ```
 
 ## Troubleshooting
@@ -49,6 +49,15 @@ before_deploy:
 ```
 
 This code will ensure that your git HEAD is on master when creating a new release.
+
+### Canary Deploy Failing on Forks
+
+By default Travis will not pass secrets to forks.
+Because of this canaries releases will fail.
+You can either:
+
+- Pass secrets to forks (insecure)
+- Only run shipit if secrets are available (recommended, in above config)
 
 ## Examples
 
