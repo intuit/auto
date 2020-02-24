@@ -21,11 +21,11 @@ script:
   - yarn build
 
 deploy:
-  skip_cleanup: true
-  provider: script
-  script: npx auto shipit
-  on:
-    all_branches: true
+  - provider: script
+    script: if [ "$GH_TOKEN" != "false" ];then npx auto shipit; fi;
+    skip-cleanup: true
+    on:
+      all_branches: true
 ```
 
 ## Troubleshooting
@@ -34,6 +34,30 @@ If you are having problems make sure you have done the following:
 
 - `GH_TOKEN` is set
 - Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+
+### Detached Head (Monorepo)
+
+Some plugins might use tools that require you to be on a branch.
+The default setup for travis leaves you in a "Detached Head" state, meaning the git HEAD pointer is not on a branch.
+To fix this add the following lines to your `.travis.yml`
+
+```yml
+before_deploy:
+  - if [ "$TRAVIS_BRANCH" == "master" ];then
+      git checkout master;
+    fi;
+```
+
+This code will ensure that your git HEAD is on master when creating a new release.
+
+### Canary Deploy Failing on Forks
+
+By default Travis will not pass secrets to forks.
+Because of this canaries releases will fail.
+You can either:
+
+- Pass secrets to forks (insecure)
+- Only run shipit if secrets are available (recommended, in above config)
 
 ## Examples
 
