@@ -1,3 +1,35 @@
+# v9.13.1 (Mon Feb 24 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - add fallback for when --is-ancestor fails [#989](https://github.com/intuit/auto/pull/989) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Better Travis Docs [#990](https://github.com/intuit/auto/pull/990) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump ts-jest from 25.2.0 to 25.2.1 [#987](https://github.com/intuit/auto/pull/987) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fast-glob from 3.1.1 to 3.2.2 [#984](https://github.com/intuit/auto/pull/984) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.7.0 to 23.8.0 [#986](https://github.com/intuit/auto/pull/986) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.19.2 to 2.20.0 [#985](https://github.com/intuit/auto/pull/985) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.19.2 to 2.20.0 [#983](https://github.com/intuit/auto/pull/983) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.7.1 to 13.7.4 [#982](https://github.com/intuit/auto/pull/982) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 20.3.1 to 21.0.0 [#981](https://github.com/intuit/auto/pull/981) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump endent from 1.4.0 to 1.4.1 [#980](https://github.com/intuit/auto/pull/980) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-xo from 0.27.2 to 0.29.1 [#978](https://github.com/intuit/auto/pull/978) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Bump tslib from 1.10.0 to 1.11.0 [#979](https://github.com/intuit/auto/pull/979) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.0 (Sat Feb 22 2020)
 
 #### 🚀  Enhancement

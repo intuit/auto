@@ -1,3 +1,23 @@
+# v9.13.1 (Mon Feb 24 2020)
+
+#### 🐛  Bug Fix
+
+- add fallback for when --is-ancestor fails  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.10.0 to 1.11.0
+
+Bumps [tslib](https://github.com/Microsoft/tslib) from 1.10.0 to 1.11.0.
+- [Release notes](https://github.com/Microsoft/tslib/releases)
+- [Commits](https://github.com/Microsoft/tslib/compare/1.10.0...1.11.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.0 (Sat Feb 22 2020)
 
 #### 🐛  Bug Fix
