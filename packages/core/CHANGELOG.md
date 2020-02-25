@@ -1,3 +1,15 @@
+# v9.14.0 (Tue Feb 25 2020)
+
+#### 🐛  Bug Fix
+
+- add scoped plugin support  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.1 (Mon Feb 24 2020)
 
 #### 🐛  Bug Fix

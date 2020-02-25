@@ -1,3 +1,16 @@
+# v9.14.0 (Tue Feb 25 2020)
+
+#### 🚀  Enhancement
+
+- `@auto-it/core`
+  - add scoped plugin support [#992](https://github.com/intuit/auto/pull/992) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.1 (Mon Feb 24 2020)
 
 #### 🐛  Bug Fix
