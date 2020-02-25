@@ -41,9 +41,14 @@ Unofficial plugins pulled from NPM should be named in the format `auto-plugin-PL
 
 That name is provided to auto to use that particular plugin.
 
-```json
+```jsonc
 {
-  "plugins": ["auto-plugin-my-cool-plugin", "some-package"]
+  "plugins": [
+    "auto-plugin-my-cool-plugin",
+    // or
+    "@my-scope/auto-plugin-my-cool-plugin",
+    "some-package"
+  ]
 }
 ```
 

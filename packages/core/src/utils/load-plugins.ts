@@ -79,6 +79,11 @@ export default function loadPlugin(
     plugin = requirePlugin(path.join('@auto-it', pluginPath), logger);
   }
 
+  // Try requiring a package
+  if (!plugin && pluginPath.includes('auto-plugin-')) {
+    plugin = requirePlugin(pluginPath, logger);
+  }
+
   if (!plugin) {
     logger.log.warn(`Could not find plugin: ${pluginPath}`);
     return;
