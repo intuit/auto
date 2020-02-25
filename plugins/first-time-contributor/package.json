@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/first-time-contributor",
-  "version": "9.13.1",
+  "version": "9.14.0",
   "main": "dist/index.js",
   "description": "Thank first time contributors for their work right in your release notes.",
   "author": {
