@@ -76,8 +76,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private properties: IGradleProperties = {};
   /** should this release be a snapshot release */
   private snapshotRelease = false;
-  /** cached previous version */
-  private previousVersion = '';
 
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
@@ -111,7 +109,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     auto.hooks.beforeRun.tap(this.name, async () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
 
-      this.previousVersion = await getVersion(this.options.gradleCommand);
       this.properties = await getProperties(this.options.gradleCommand);
       const {
         version = '',
@@ -131,11 +128,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
-      return auto.prefixRelease(
-        this.snapshotRelease
-          ? this.previousVersion
-          : await getVersion(this.options.gradleCommand)
-      );
+      return auto.prefixRelease(await getVersion(this.options.gradleCommand));
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
@@ -169,8 +162,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         'origin',
         auto.baseBranch
       ]);
-
-      this.previousVersion = await getVersion(this.options.gradleCommand);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
