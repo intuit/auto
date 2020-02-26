@@ -38,7 +38,7 @@ export async function getProperties(
 ): Promise<IGradleProperties> {
   const properties = (await execPromise(gradleCommand, ['properties', '-q']))
     .split('\n')
-    .map(line => /([^:]+):\s?(.+)/.exec(line) || [])
+    .map(line => /([^:\s]+):\s?(.+)/.exec(line) || [])
     .map(([, key, value]) => key && value && { [key]: value })
     .filter(el => el);
 

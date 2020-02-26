@@ -1,5 +1,3 @@
-import fs from 'fs-extra';
-
 import * as Auto from '@auto-it/core';
 import { dummyLog } from '@auto-it/core/dist/utils/logger';
 import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
@@ -7,170 +5,131 @@ import GradleReleasePlugin, {
   IGradleReleasePluginPluginOptions,
   getProperties
 } from '../src';
+import { IAutoConfig } from '@auto-it/core/dist/release';
 
-const mockRead = (version: string) =>
+const mockProperties = (properties: string) =>
   jest
-    .spyOn(fs, 'readFile')
-    // @ts-ignore
-    .mockReturnValueOnce(version);
-
-const mockVersionProperties = (version: string, properties = '') =>
-  mockRead(version).mockReturnValueOnce(properties);
+    .spyOn(Auto, 'execPromise')
+    .mockReturnValueOnce(Promise.resolve(properties));
 
 describe('Gradle Plugin', () => {
   let hooks: Auto.IAutoHooks;
+  const prefixRelease: (a: string) => string = jest.fn(
+    version => `v${version}`
+  );
   const options: IGradleReleasePluginPluginOptions = {};
 
   beforeEach(() => {
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
   });
 
   describe('getPreviousVersion', () => {
-    test('should get previous version from version.json', async () => {
-      mockRead('version=1.0.0');
-      expect(await hooks.getPreviousVersion.promise()).toBe('1.0.0');
+    test('should get previous version from gradle properties', async () => {
+      mockProperties('version: 1.0.0');
+      expect(await hooks.getPreviousVersion.promise()).toBe('v1.0.0');
     });
 
-    test('should throw when no in version.json', async () => {
-      mockRead('');
-      await expect(hooks.getPreviousVersion.promise()).rejects.toThrowError(
-        'No version was found inside version-file.'
-      );
+    test('should get previous version snapshot from gradle properties', async () => {
+      mockProperties('version: 1.0.0-SNAPSHOT');
+      expect(await hooks.getPreviousVersion.promise()).toBe('v1.0.0');
     });
 
-    test('should throw when no version.json', async () => {
+    test('should throw when no version', async () => {
+      mockProperties('');
       await expect(hooks.getPreviousVersion.promise()).rejects.toThrowError(
-        'Properties-file not found.'
+        'No version was found in gradle properties.'
       );
     });
   });
 
-  describe('version', () => {
+  describe('beforeRun & version', () => {
     test('should version release - patch version', async () => {
-      mockVersionProperties('version=1.0.0');
+      const properties = 'version: 1.0.0';
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as IAutoConfig);
+
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
+        `-Prelease.newVersion=1.0.1`
       ]);
     });
 
     test('should version release - major version', async () => {
-      mockVersionProperties('version=1.0.0');
+      const properties = 'version: 1.0.0';
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as IAutoConfig);
+
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.major);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=2.0.0',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
+        `-Prelease.newVersion=2.0.0`
       ]);
     });
 
     test('should version release - minor version', async () => {
-      mockVersionProperties('version=1.1.0');
+      const properties = 'version: 1.1.0';
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as IAutoConfig);
+
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.minor);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.1.0',
-        '-Prelease.newVersion=1.2.0',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
+        `-Prelease.newVersion=1.2.0`
       ]);
     });
 
     test('should version release - patch w/ default snapshot', async () => {
-      mockVersionProperties('version=1.0.0-SNAPSHOT');
+      const properties = 'version: 1.0.0-SNAPSHOT';
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as IAutoConfig);
+
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1-SNAPSHOT',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
+        `-Prelease.newVersion=1.0.0`
       ]);
     });
 
     test('should version release - patch w/ custom snapshot', async () => {
-      mockVersionProperties('version=1.0.0.SNAP', 'snapshotSuffix=.SNAP');
+      const properties = `
+      version: 1.0.0.SNAP
+      snapshotSuffix: .SNAP
+    `;
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as IAutoConfig);
+
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1.SNAP',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
-      ]);
-    });
-
-    test('should version release - patch w/ custom snapshot in seperate files', async () => {
-      mockVersionProperties('version=1.0.0.SNAP', 'snapshotSuffix=.SNAP');
-      const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
-
-      await hooks.version.promise(Auto.SEMVER.patch);
-
-      expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
-        '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1.SNAP',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
-      ]);
-    });
-
-    test('should version release - patch w/ custom snapshot regardless', async () => {
-      mockVersionProperties('version=1.0.0', 'snapshotSuffix=.SNAP');
-      const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
-
-      await hooks.version.promise(Auto.SEMVER.patch);
-
-      expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'release',
-        '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1.SNAP',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion'
+        `-Prelease.newVersion=1.0.0`
       ]);
     });
   });
@@ -178,6 +137,9 @@ describe('Gradle Plugin', () => {
 
 describe('Gradle Plugin - Custom Command', () => {
   let hooks: Auto.IAutoHooks;
+  const prefixRelease: (a: string) => string = jest.fn(
+    version => `v${version}`
+  );
   const options: IGradleReleasePluginPluginOptions = {
     gradleCommand: './gradlew',
     gradleOptions: ['-P prop=val']
@@ -186,25 +148,20 @@ describe('Gradle Plugin - Custom Command', () => {
   beforeEach(() => {
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
   });
 
   describe('version', () => {
     test('should version release - patch version - with custom gradle command', async () => {
-      mockVersionProperties('version=1.0.0');
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      mockProperties('version: 1.0.0').mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradlew'), [
-        'release',
+        'updateVersion',
         '-Prelease.useAutomaticVersion=true',
-        '-Prelease.releaseVersion=1.0.0',
-        '-Prelease.newVersion=1.0.1',
-        '-x createReleaseTag',
-        '-x preTagCommit',
-        '-x commitNewVersion',
+        `-Prelease.newVersion=1.0.1`,
         '-P prop=val'
       ]);
     });
@@ -213,24 +170,18 @@ describe('Gradle Plugin - Custom Command', () => {
 
 describe('getProperties', () => {
   test('should read properties from file', async () => {
-    mockRead(`
-      version=1.0.0
-      snapshotSuffix=-SNAPSHOT
+    mockProperties(`
+      version: 1.0.0
+      snapshotSuffix: :SNAPSHOT
     `);
     expect(await getProperties('')).toStrictEqual({
       version: '1.0.0',
-      snapshotSuffix: '-SNAPSHOT'
+      snapshotSuffix: ':SNAPSHOT'
     });
   });
 
   test('should read nothing from empty file', async () => {
-    mockRead('');
+    mockProperties('');
     expect(await getProperties('')).toStrictEqual({});
-  });
-
-  test('should throw when no gradle.properties', async () => {
-    await expect(getProperties('')).rejects.toThrowError(
-      'Properties-file not found.'
-    );
   });
 });
