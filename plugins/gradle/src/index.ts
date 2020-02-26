@@ -169,6 +169,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         'origin',
         auto.baseBranch
       ]);
+
+      this.previousVersion = await getVersion(this.options.gradleCommand);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
