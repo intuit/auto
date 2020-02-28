@@ -10,6 +10,12 @@ import SEMVER from './semver';
 import loadPlugin from './utils/load-plugins';
 import { ILogger } from './utils/logger';
 import { readFileSync, writeFileSync } from 'fs';
+import {
+  AutoRc,
+  RepoInformation,
+  AuthorInformation,
+  PluginConfig
+} from './types';
 
 // const writeFile = promisify(fs.writeFile);
 
@@ -22,41 +28,6 @@ interface InputResponse<T = 'string'> {
   /** he value of the input prompt */
   value: T;
 }
-
-interface RepoInformation {
-  /** The repo of to publish, might be set in package manager file. */
-  repo: string;
-  /** The owner of the repo to publish, might be set in package manager file. */
-  owner: string;
-}
-
-interface AuthorInformation {
-  /** The name of the author to make commits with */
-  name: string;
-  /** The email of the author to make commits with */
-  email: string;
-}
-
-interface GithubApis {
-  /** The github api to interact with */
-  githubApi?: string;
-  /** The github graphql api to interact with */
-  githubGraphqlApi?: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PluginConfig = [string, any] | string;
-
-export type AutoRc = Partial<
-  RepoInformation & GithubApis & AuthorInformation
-> & {
-  /** Only bump version if `release` label is on pull request */
-  onlyPublishWithReleaseLabel?: boolean;
-  /** Labels that power auto */
-  labels?: ILabelDefinition[];
-  /** Configured auto plugins */
-  plugins?: PluginConfig[];
-};
 
 export interface InteractiveInitHooks {
   /** Override where/how the rc file is written */

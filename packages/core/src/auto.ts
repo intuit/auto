@@ -40,20 +40,21 @@ import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
 import InteractiveInit from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
-import Release, {
-  getVersionMap,
-  IAutoConfig,
-  ILabelDefinition
-} from './release';
+import Release, { getVersionMap, ILabelDefinition } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
-import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 import getRepository from './utils/get-repository';
+import {
+  RepoInformation,
+  AuthorInformation,
+  AutoRc,
+  LoadedAutoRc
+} from './types';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -106,9 +107,9 @@ interface BeforeShipitContext {
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
-  modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
+  modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
-  beforeRun: SyncHook<[IAutoConfig]>;
+  beforeRun: SyncHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -168,11 +169,14 @@ export interface IAutoHooks {
     | void
   >;
   /** Get git author. Typically from a package distribution description file. */
-  getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
+  getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;
   /** Get the previous version. Typically from a package distribution description file. */
   getPreviousVersion: AsyncSeriesBailHook<[], string>;
   /** Get owner and repository. Typically from a package distribution description file. */
-  getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
+  getRepository: AsyncSeriesBailHook<
+    [],
+    (RepoInformation & TestingToken) | void
+  >;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
   /**
@@ -315,7 +319,7 @@ export default class Auto {
   /** The remote git to push changes to */
   remote!: string;
   /** The user configuration of auto (.autorc) */
-  config?: IAutoConfig;
+  config?: LoadedAutoRc;
 
   /** A class that handles creating releases */
   release?: Release;
@@ -428,8 +432,10 @@ export default class Auto {
     this.config = config;
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
+
     this.loadPlugins(config);
     this.loadDefaultBehavior();
+
     this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
@@ -1661,9 +1667,9 @@ export default class Auto {
   }
 
   /** Get the repo to interact with */
-  private async getRepo(config: IAutoConfig) {
+  private async getRepo(config: LoadedAutoRc) {
     if (config.owner && config.repo) {
-      return config as IRepoOptions & TestingToken;
+      return config as RepoInformation & TestingToken;
     }
 
     const author = await this.hooks.getRepository.promise();
@@ -1689,7 +1695,7 @@ export default class Auto {
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IAutoConfig) {
+  private loadPlugins(config: AutoRc) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
     const pluginsPaths = [

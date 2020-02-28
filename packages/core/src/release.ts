@@ -8,11 +8,7 @@ import { promisify } from 'util';
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import { Memoize as memoize } from 'typescript-memoize';
-import {
-  ICreateLabelsOptions,
-  IAuthorOptions,
-  GlobalOptions
-} from './auto-args';
+import { ICreateLabelsOptions } from './auto-args';
 import Changelog from './changelog';
 import Git from './git';
 import LogParse, { ICommitAuthor, IExtendedCommit } from './log-parse';
@@ -26,6 +22,7 @@ import {
   ISearchResult,
   processQueryResult
 } from './match-sha-to-pr';
+import { LoadedAutoRc } from './types';
 
 export type VersionLabel =
   | SEMVER.major
@@ -45,29 +42,6 @@ export const releaseLabels: VersionLabel[] = [
 /** Determine if a label is a label used for versioning */
 export const isVersionLabel = (label: string): label is VersionLabel =>
   releaseLabels.includes(label as VersionLabel);
-
-export type IAutoConfig = IAuthorOptions &
-  GlobalOptions & {
-    /** The branch that is used as the base. defaults to master */
-    baseBranch: string;
-    /** Branches to create prereleases from */
-    prereleaseBranches: string[];
-    /** Instead of publishing every PR only publish when "release" label is present */
-    onlyPublishWithReleaseLabel?: boolean;
-    /** Whether to prefix the version with a "v" */
-    noVersionPrefix?: boolean;
-    /** Plugins to initialize "auto" with */
-    plugins?: (string | [string, number | boolean | string | object])[];
-    /** The labels configured by the user */
-    labels: ILabelDefinition[];
-    /**
-     * Manage old version branches.
-     * Can be a true or a custom version branch prefix.
-     *
-     * @default 'version-'
-     */
-    versionBranches?: true | string;
-  };
 
 export interface ILabelDefinition {
   /** The label text */
@@ -157,7 +131,7 @@ export default class Release {
   /** Plugin entry points */
   readonly hooks: IReleaseHooks;
   /** Options Release was initialized with */
-  readonly config: IAutoConfig;
+  readonly config: LoadedAutoRc;
 
   /** A class that handles interacting with git and GitHub */
   private readonly git: Git;
@@ -169,7 +143,7 @@ export default class Release {
   /** Initialize the release manager */
   constructor(
     git: Git,
-    config: IAutoConfig = {
+    config: LoadedAutoRc = {
       baseBranch: 'master',
       prereleaseBranches: ['next'],
       labels: defaultLabels
