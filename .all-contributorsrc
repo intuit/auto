@@ -207,6 +207,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "unknownerror404",
+      "name": "Brandon Miller",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13172697?v=4",
+      "profile": "https://www.unconfinedsoftware.com/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
