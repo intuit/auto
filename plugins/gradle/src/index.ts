@@ -175,27 +175,29 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.afterShipIt.tapPromise(this.name, async () => {
-      if (this.snapshotRelease) {
-        const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
-        const releaseVersion = await getVersion(this.options.gradleCommand);
-
-        // snapshots precede releases, so if we had a minor/major release,
-        // then we need to set up snapshots on the next version
-        const newVersion = `${inc(releaseVersion, 'patch')}${snapshotSuffix}`;
-
-        await this.updateGradleVersion(
-          newVersion,
-          `prepare snapshot version: ${newVersion} [skip ci]`
-        );
-
-        await execPromise('git', [
-          'push',
-          '--follow-tags',
-          '--set-upstream',
-          'origin',
-          auto.baseBranch
-        ]);
+      if (!this.snapshotRelease) {
+        return;
       }
+
+      const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
+      const releaseVersion = await getVersion(this.options.gradleCommand);
+
+      // snapshots precede releases, so if we had a minor/major release,
+      // then we need to set up snapshots on the next version
+      const newVersion = `${inc(releaseVersion, 'patch')}${snapshotSuffix}`;
+
+      await this.updateGradleVersion(
+        newVersion,
+        `prepare snapshot version: ${newVersion} [skip ci]`
+      );
+
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        auto.remote,
+        auto.baseBranch
+      ]);
     });
   }
 }
