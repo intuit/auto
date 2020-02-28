@@ -5,7 +5,7 @@ The following config declares the `deploy` job that run on all branches. The job
 - a new `latest` version from `master`
 - a `canary` build from a pull request (if your package manager plugin implements them)
 
-**`.circleci/config.yml`**
+**`.travis.yml`**
 
 ```yaml
 language: node_js
@@ -20,20 +20,12 @@ script:
   - yarn test
   - yarn build
 
-before_deploy:
-  - git config --local user.name "${GIT_NAME}"
-  - git config --local user.email "${GIT_EMAIL}"
-  - git remote rm origin
-  - git remote add origin https://${GH_TOKEN}@github.com/hipstersmoothie/my-test-project
-  - git fetch origin --tags
-  - git checkout master
-  - git branch --set-upstream-to origin/master master
 deploy:
-  skip_cleanup: true
-  provider: script
-  script: npx auto shipit
-  on:
-    all_branches: true
+  - provider: script
+    script: if [ "$GH_TOKEN" != "false" ];then npx auto shipit; fi;
+    skip-cleanup: true
+    on:
+      all_branches: true
 ```
 
 ## Troubleshooting
@@ -42,6 +34,30 @@ If you are having problems make sure you have done the following:
 
 - `GH_TOKEN` is set
 - Any other secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
+
+### Detached Head (Monorepo)
+
+Some plugins might use tools that require you to be on a branch.
+The default setup for travis leaves you in a "Detached Head" state, meaning the git HEAD pointer is not on a branch.
+To fix this add the following lines to your `.travis.yml`
+
+```yml
+before_deploy:
+  - if [ "$TRAVIS_BRANCH" == "master" ];then
+      git checkout master;
+    fi;
+```
+
+This code will ensure that your git HEAD is on master when creating a new release.
+
+### Canary Deploy Failing on Forks
+
+By default Travis will not pass secrets to forks.
+Because of this canaries releases will fail.
+You can either:
+
+- Pass secrets to forks (insecure)
+- Only run shipit if secrets are available (recommended, in above config)
 
 ## Examples
 

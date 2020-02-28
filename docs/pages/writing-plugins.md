@@ -329,7 +329,7 @@ auto.hooks.publish.tapPromise('NPM', async (version: SEMVER) => {
     'push',
     '--follow-tags',
     '--set-upstream',
-    'origin',
+    auto.remote,
     '$branch'
   ]);
 });
@@ -632,7 +632,7 @@ export default class NPMPlugin {
         'push',
         '--follow-tags',
         '--set-upstream',
-        'origin',
+        auto.remote,
         '$branch'
       ]);
     });

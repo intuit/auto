@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/chrome",
-  "version": "9.11.0",
+  "version": "9.14.0",
   "main": "dist/index.js",
   "description": "Chrome publishing plugin for auto",
   "author": {
@@ -40,7 +40,7 @@
     "@auto-it/core": "link:../../packages/core",
     "chrome-webstore-upload-cli": "^1.2.0",
     "semver": "^7.0.0",
-    "tslib": "1.10.0"
+    "tslib": "1.11.0"
   },
   "devDependencies": {
     "@types/semver": "^7.1.0"

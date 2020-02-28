@@ -159,7 +159,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         'push',
         '--follow-tags',
         '--set-upstream',
-        'origin',
+        auto.remote,
         auto.baseBranch
       ]);
     });

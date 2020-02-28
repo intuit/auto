@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/conventional-commits",
-  "version": "9.11.0",
+  "version": "9.14.0",
   "main": "dist/index.js",
   "description": "Conventional commit plugin for auto",
   "author": {
@@ -38,6 +38,6 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "parse-commit-message": "4.0.0",
-    "tslib": "1.10.0"
+    "tslib": "1.11.0"
   }
 }

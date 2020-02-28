@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "9.11.0",
+  "version": "9.14.0",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
   "author": {
@@ -39,7 +39,7 @@
     "@auto-it/core": "link:../../packages/core",
     "anymatch": "^3.1.1",
     "await-to-js": "^2.1.1",
-    "tslib": "1.10.0"
+    "tslib": "1.11.0"
   },
   "devDependencies": {
     "all-contributors-cli": "6.13.0"

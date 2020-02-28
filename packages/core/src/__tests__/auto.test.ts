@@ -46,6 +46,10 @@ jest.mock('@octokit/rest', () => {
       issuesAndPullRequests: () => ({ data: { items: [] } })
     };
 
+    repos = {
+      get: jest.fn().mockReturnValue({})
+    };
+
     hook = {
       error: () => undefined
     };

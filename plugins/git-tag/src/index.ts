@@ -62,7 +62,7 @@ export default class GitTagPlugin implements IPlugin {
         'push',
         '--follow-tags',
         '--set-upstream',
-        'origin',
+        auto.remote,
         branch || auto.baseBranch
       ]);
     });
@@ -94,7 +94,7 @@ export default class GitTagPlugin implements IPlugin {
         '-m',
         `"Tag pre-release: ${prerelease}"`
       ]);
-      await execPromise('git', ['push', '--tags']);
+      await execPromise('git', ['push', auto.remote, '--tags']);
 
       return preReleaseVersions;
     });

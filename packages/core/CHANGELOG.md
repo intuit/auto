@@ -1,3 +1,63 @@
+# v9.14.0 (Tue Feb 25 2020)
+
+#### 🐛  Bug Fix
+
+- add scoped plugin support  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.13.1 (Mon Feb 24 2020)
+
+#### 🐛  Bug Fix
+
+- add fallback for when --is-ancestor fails  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.10.0 to 1.11.0
+
+Bumps [tslib](https://github.com/Microsoft/tslib) from 1.10.0 to 1.11.0.
+- [Release notes](https://github.com/Microsoft/tslib/releases)
+- [Commits](https://github.com/Microsoft/tslib/compare/1.10.0...1.11.0)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.13.0 (Sat Feb 22 2020)
+
+#### 🐛  Bug Fix
+
+- When parsing owner/repo fallback to parsing 'origin'  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add git version to 'auto info' output
+
+!  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.12.0 (Fri Feb 21 2020)
+
+#### 🐛  Bug Fix
+
+- add tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ensure remote can be pushed to  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.11.0 (Fri Feb 21 2020)
 
 #### 🐛  Bug Fix

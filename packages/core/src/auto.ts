@@ -16,6 +16,7 @@ import {
   AsyncSeriesWaterfallHook
 } from 'tapable';
 import endent from 'endent';
+import { parse as parseUrl, format } from 'url';
 import on from 'await-to-js';
 
 import createHttpsProxyAgent from 'https-proxy-agent';
@@ -52,6 +53,7 @@ import { makeHooks } from './utils/make-hooks';
 import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
+import getRepository from './utils/get-repository';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -310,6 +312,8 @@ export default class Auto {
   options: ApiOptions;
   /** The branch auto uses as master. */
   baseBranch: string;
+  /** The remote git to push changes to */
+  remote!: string;
   /** The user configuration of auto (.autorc) */
   config?: IAutoConfig;
 
@@ -339,6 +343,10 @@ export default class Auto {
     this.logger = createLog();
     this.hooks = makeHooks();
 
+    this.hooks.getRepository.tapPromise(
+      'Get repo info from origin',
+      getRepository
+    );
     this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
       release.hooks.onCreateChangelog.tap(
         'Link onCreateChangelog',
@@ -364,7 +372,7 @@ export default class Auto {
             'branch',
             await this.git?.getLatestTagInBranch()
           ]);
-          await execPromise('git', ['push', 'origin', branch]);
+          await execPromise('git', ['push', this.remote, branch]);
         }
       }
     );
@@ -448,8 +456,57 @@ export default class Auto {
 
     this.git = this.startGit(githubOptions as IGitOptions);
     this.release = new Release(this.git, config, this.logger);
-
+    this.remote = await this.getRemote();
+    this.logger.verbose.info(
+      `Using remote: ${this.remote.replace(
+        token,
+        `****${token.substring(0, 4)}`
+      )}`
+    );
     this.hooks.onCreateRelease.call(this.release);
+  }
+
+  /** Determine the remote we have auth to push to. */
+  private async getRemote(): Promise<string> {
+    const [, configuredRemote = 'origin'] = await on(
+      execPromise('git', ['remote', 'get-url', 'origin'])
+    );
+
+    if (!this.git) {
+      return configuredRemote;
+    }
+
+    const { html_url } = (await this.git.getProject()) || { html_url: '' };
+
+    if (html_url && (await this.git.verifyAuth(html_url))) {
+      return html_url;
+    }
+
+    const GIT_TOKENS: Record<string, string | undefined> = {
+      // GitHub Actions require the "x-access-token:" prefix for git access
+      // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
+      GITHUB_TOKEN: process.env.GITHUB_ACTION ? 'x-access-token:' : undefined
+    };
+    const envVar = Object.keys(GIT_TOKENS).find(v => process.env[v]) || '';
+    const gitCredentials = GIT_TOKENS[envVar]
+      ? `${GIT_TOKENS[envVar] || ''}${process.env[envVar] || ''}`
+      : process.env.GH_TOKEN;
+
+    if (gitCredentials) {
+      const { port, hostname, ...parsed } = parseUrl(html_url);
+
+      const urlWithAuth = format({
+        ...parsed,
+        auth: gitCredentials,
+        host: `${hostname}${port ? `:${port}` : ''}`
+      });
+
+      if (await this.git.verifyAuth(urlWithAuth)) {
+        return urlWithAuth;
+      }
+    }
+
+    return configuredRemote;
   }
 
   /** Interactive prompt for initializing an .autorc */
@@ -464,6 +521,7 @@ export default class Auto {
       return { hasError: false };
     }
 
+    const [, gitVersion = ''] = await on(execPromise('git', ['--version']))
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
@@ -521,6 +579,7 @@ export default class Auto {
       ${chalk.underline.white('Environment Information:')}
 
       "auto" version: v${getAutoVersion()}
+      "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
         access['x-github-enterprise-version'] 
           ? `GHE version:    v${access['x-github-enterprise-version']}\n`
@@ -1089,7 +1148,7 @@ export default class Auto {
 
   /** Force a release to latest and bypass `shipit` safeguards. */
   async latest(options: IShipItOptions = {}) {
-    await this.publishFullRelease(options)
+    await this.publishFullRelease(options);
   }
 
   /**
@@ -1607,7 +1666,24 @@ export default class Auto {
       return config as IRepoOptions & TestingToken;
     }
 
-    return this.hooks.getRepository.promise();
+    const author = await this.hooks.getRepository.promise();
+
+    if (!author || !author.owner || !author.repo) {
+      this.logger.log.error(
+        endent`
+          Cannot find project owner and repository name!
+
+          You must do one of the following: 
+
+          - configure the repo for your package manager (ex: set "repository" in package.json)
+          - configure your git remote 'origin' to point to your project on GitHub.
+        `,
+        ''
+      );
+      process.exit(1);
+    }
+
+    return author;
   }
 
   /**

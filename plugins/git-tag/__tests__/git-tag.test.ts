@@ -14,6 +14,7 @@ const setup = (mockGit?: any) => {
   plugin.apply(({
     hooks,
     git: mockGit,
+    remote: 'origin',
     logger: dummyLog(),
     prefixRelease: (r: string) => r,
     config: { prereleaseBranches: ['next'] },
@@ -99,7 +100,7 @@ describe('Git Tag Plugin', () => {
         '-m',
         '"Tag pre-release: 1.0.1-next.0"'
       ]);
-      expect(exec).toHaveBeenCalledWith('git', ['push', '--tags']);
+      expect(exec).toHaveBeenCalledWith('git', ['push', 'origin', '--tags']);
     });
   });
 });
