@@ -180,7 +180,10 @@ function makeExactType(
       shouldRecurse.includes(propType._tag) ? makeExactType(propType) : propType
     );
 
-    strictConfigDeclaration = t.intersection(exactInterfaces as [t.Any, t.Any]);
+    strictConfigDeclaration =
+      configDeceleration._tag === 'IntersectionType'
+        ? t.intersection(exactInterfaces as [t.Any, t.Any])
+        : t.union(exactInterfaces as [t.Any, t.Any]);
   } else if ('type' in configDeceleration) {
     strictConfigDeclaration = t.array(makeExactType(configDeceleration.type));
   }

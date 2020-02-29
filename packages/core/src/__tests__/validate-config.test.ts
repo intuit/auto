@@ -109,6 +109,35 @@ describe('validateConfig', () => {
     ]);
   });
 
+  test('should not fail w/plugin configuration', async () => {
+    expect(
+      await validateAutoRc({
+        "plugins": [
+          [
+            "npm",
+            {
+              "canaryScope": "@auto-canary"
+            }
+          ]
+        ],
+        "labels": [
+          {
+            "name": "dependencies",
+            "changelogTitle": "🔩 Dependency Updates",
+            "releasepe": "none"
+          },
+          {
+            "name": "blog-post",
+            "changelogTitle": "📚 Blog Post",
+            "releaseType": "none"
+          }
+        ]
+      })
+    ).toStrictEqual([
+      'Found unknown configuration keys in .autorc: labels.0.releasepe'
+    ]);
+  });
+
   test('should not go too deep', async () => {
     expect(
       await validateAutoRc({
