@@ -1,6 +1,6 @@
 # Writing Plugins
 
-If you've ever written a webpack plugin it's a lot like that.
+If you've ever written a `webpack` plugin it's a lot like that.
 
 A plugin definition is:
 
@@ -94,6 +94,52 @@ auto.hooks.modifyConfig.tap('test', config => {
   };
 
   return config;
+});
+```
+
+#### validateConfig
+
+Validate how your plugin is configured.
+
+```ts
+auto.hooks.validateConfig.tapPromise('test', (name, options) => {
+  if (name === this.name) {
+    return; // your validation error. Can either be strings for { path, expectedType, value }
+  }
+});
+```
+
+`auto` and it's plugins use [io-ts](https://github.com/gcanti/io-ts) to validate the options for a plugin.
+If you're using typescript this is a great way to define the options for your plugin.
+
+```ts
+// Types in TypeScript
+interface Options {
+  level?: string;
+  user?: string;
+}
+
+// The equivalent io-ts code
+import * as t from 'io-ts';
+
+const pluginOptions = t.partial({
+  level: t.string,
+  user: t.string
+});
+
+export type Options = t.TypeOf<typeof pluginOptions>;
+```
+
+Since your type information will now be available at runtime (in `pluginOptions`) you can use this to validate the configuration!
+To do this `auto` exposes a helper function to validate you plugins with the `io-ts` types.
+
+```ts
+import { validatePluginConfiguration } from '@auto-it/core';
+
+auto.hooks.validateConfig.tapPromise('test', (name, options) => {
+  if (name === this.name) {
+    return validatePluginConfiguration(this.name, pluginOptions, options);
+  }
 });
 ```
 
