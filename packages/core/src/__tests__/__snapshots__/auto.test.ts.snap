@@ -113,9 +113,6 @@ Object {
     "next",
   ],
   "repo": "bar",
-  "skipReleaseLabels": Array [
-    "skip-release",
-  ],
   "token": "XXXX",
   "versionBranches": undefined,
 }
@@ -173,9 +170,6 @@ Object {
     "next",
   ],
   "repo": "bar",
-  "skipReleaseLabels": Array [
-    "skip-release",
-  ],
   "token": "XXXX",
   "versionBranches": undefined,
 }

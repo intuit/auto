@@ -90,17 +90,10 @@ export default class Config {
 
     this.logger.verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
-    const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
-
-    if (!skipReleaseLabels.includes(semVerLabels.get('skip')!)) {
-      (semVerLabels.get('skip') || []).map(l => skipReleaseLabels.push(l));
-    }
-
     return {
       ...rawConfig,
       ...args,
       labels,
-      skipReleaseLabels,
       prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
       versionBranches:
         typeof rawConfig.versionBranches === 'boolean'
