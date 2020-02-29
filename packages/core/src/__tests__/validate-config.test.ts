@@ -105,6 +105,19 @@ describe('validateConfig', () => {
     ]);
   });
 
+  test('should not go too deep', async () => {
+    expect(
+      await validateConfiguration(dummyHook, {
+        name: 'Andrew',
+        labelz: [
+          {
+            name: 'Version: Minor'
+          }
+        ]
+      })
+    ).toStrictEqual(['Found unknown configuration keys in .autorc: labelz']);
+  });
+
   test('should error on invalid plugin config', async () => {
     expect(
       await validateConfiguration(dummyHook, {

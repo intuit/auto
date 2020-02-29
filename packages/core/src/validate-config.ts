@@ -5,6 +5,7 @@ import { isRight } from 'fp-ts/lib/Either';
 import { labelDefinition } from './release';
 import { autoRc, AutoRc } from './types';
 import { AsyncSeriesBailHook } from 'tapable';
+import { omit } from './utils/omit';
 
 const ignoreTypes = ['PartialType', 'IntersectionType'];
 
@@ -149,9 +150,13 @@ export async function validateConfiguration(
   }
 
   const correctKeys = flatKeys(exactRc.right);
-  const unknownKeys = flatKeys(looseRc.right).filter(
-    k => !correctKeys.includes(k)
+  const unknownTopKeys = Object.keys(looseRc.right).filter(
+    k => !exactRc.right[k as keyof typeof exactRc.right]
   );
+  const unknownDeepKeys = flatKeys(
+    omit(looseRc.right, unknownTopKeys as any)
+  ).filter(k => !correctKeys.includes(k));
+  const unknownKeys = [...unknownTopKeys, ...unknownDeepKeys];
 
   if (unknownKeys.length === 0) {
     return allErrors;
