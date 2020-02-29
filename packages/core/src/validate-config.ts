@@ -6,7 +6,7 @@ import { autoRc, AutoRc } from './types';
 import { AsyncSeriesBailHook } from 'tapable';
 import { omit } from './utils/omit';
 
-const ignoreTypes = ['PartialType', 'IntersectionType'];
+const ignoreTypes = ['PartialType', 'IntersectionType', 'ExactType'];
 
 interface ConfigOptionError {
   /** Key path in config to misconfigured option */
@@ -140,33 +140,49 @@ export async function validatePlugins(
   return errors;
 }
 
-const shouldRecurse = ['PartialType', 'IntersectionType'];
+const shouldRecurse = [
+  'PartialType',
+  'IntersectionType',
+  'ArrayType',
+  'InterfaceType'
+];
 
 /**
  * Recurse through a io-ts type and make all objects exact.
  * This helps us check for additional properties.
  */
-function makeExactType(configDeceleration: t.Any | t.HasProps) {
+function makeExactType(
+  configDeceleration: t.Any | t.HasProps
+): t.Any | t.HasProps {
   let strictConfigDeclaration = configDeceleration;
 
-  if ('props' in configDeceleration) {
-    const strict = configDeceleration;
+  if (
+    'props' in configDeceleration &&
+    configDeceleration._tag !== 'StrictType'
+  ) {
+    const props: Record<string, t.Any> = {};
 
     Object.entries(configDeceleration.props).forEach(
       ([propName, propType]: [string, any]) => {
-        strict.props[propName] = shouldRecurse.includes(propType._tag)
+        props[propName] = shouldRecurse.includes(propType._tag)
           ? makeExactType(propType)
           : propType;
       }
     );
 
-    strictConfigDeclaration = t.exact(strict as t.HasProps);
+    strictConfigDeclaration = t.exact(
+      configDeceleration._tag === 'InterfaceType'
+        ? t.interface({ ...props })
+        : t.partial({ ...props })
+    );
   } else if ('types' in configDeceleration) {
     const exactInterfaces: t.Any[] = configDeceleration.types.map(propType =>
       shouldRecurse.includes(propType._tag) ? makeExactType(propType) : propType
     );
 
     strictConfigDeclaration = t.intersection(exactInterfaces as [t.Any, t.Any]);
+  } else if ('type' in configDeceleration) {
+    strictConfigDeclaration = t.array(makeExactType(configDeceleration.type));
   }
 
   return strictConfigDeclaration;

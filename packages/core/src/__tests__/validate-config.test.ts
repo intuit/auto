@@ -237,15 +237,16 @@ describe('validateConfig', () => {
       })
     ).toStrictEqual([]);
   });
+});
 
-  test('should validate plugin configuration - io-ts', async () => {
+describe('validatePlugin', () => {
+  test('should validate plugin configuration - nested objects', async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
       'name',
       'options'
     ]);
 
     const pluginOptions = t.partial({
-      exclude: t.array(t.string),
       types: t.partial({
         docs: t.string
       })
@@ -263,7 +264,6 @@ describe('validateConfig', () => {
 
     expect(
       await validatePlugins(hook, {
-        name: 'Andrew',
         plugins: [
           [
             'test-plugin',
@@ -277,6 +277,46 @@ describe('validateConfig', () => {
       })
     ).toStrictEqual([
       'Found unknown configuration keys in test-plugin: types.doc'
+    ]);
+  });
+
+  test('should validate plugin configuration - array of objects', async () => {
+    const hook: ValidatePluginHook = new AsyncSeriesBailHook([
+      'name',
+      'options'
+    ]);
+
+    const pluginOptions = t.partial({
+      exclude: t.array(
+        t.partial({
+          name: t.string
+        })
+      )
+    });
+
+    hook.tapPromise('test', async (name, options) => {
+      if (name === 'test-plugin') {
+        return validatePluginConfiguration(
+          'test-plugin',
+          pluginOptions,
+          options
+        );
+      }
+    });
+
+    expect(
+      await validatePlugins(hook, {
+        plugins: [
+          [
+            'test-plugin',
+            {
+              exclude: [{ name: 'foo' }, { name: 'bar', extra: true }]
+            }
+          ]
+        ]
+      })
+    ).toStrictEqual([
+      'Found unknown configuration keys in test-plugin: exclude.1.extra'
     ]);
   });
 });
