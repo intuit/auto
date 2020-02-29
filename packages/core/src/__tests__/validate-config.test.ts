@@ -2,9 +2,11 @@ import {
   validateAutoRc,
   validatePlugins,
   ValidatePluginHook,
-  formatError
+  formatError,
+  validatePluginConfiguration
 } from '../validate-config';
 import { AsyncSeriesBailHook } from 'tapable';
+import * as t from 'io-ts';
 
 describe('validateConfig', () => {
   test('should not return errors when there are none', async () => {
@@ -27,7 +29,11 @@ describe('validateConfig', () => {
     expect(await validateAutoRc({ versionBranches: true })).toStrictEqual([]);
     expect(await validateAutoRc({ versionBranches: 'foo-' })).toStrictEqual([]);
     expect(await validateAutoRc({ versionBranches: 123 })).toStrictEqual([
-      'Expecting type "boolean" or "string" for "versionBranches" but instead got: 123'
+      {
+        expectedType: '"boolean" or "string"',
+        path: 'versionBranches',
+        value: 123
+      }
     ]);
   });
 
@@ -38,8 +44,16 @@ describe('validateConfig', () => {
         owner: 456
       })
     ).toStrictEqual([
-      'Expecting type "string" for "owner" but instead got: 456',
-      'Expecting type "string" for "name" but instead got: 123'
+      {
+        expectedType: '"string"',
+        path: 'owner',
+        value: 456
+      },
+      {
+        expectedType: '"string"',
+        path: 'name',
+        value: 123
+      }
     ]);
   });
 
@@ -87,7 +101,11 @@ describe('validateConfig', () => {
         ]
       })
     ).toStrictEqual([
-      'Expecting type "string" for "labels.1.changelogTitle" but instead got: 123'
+      {
+        expectedType: '"string"',
+        path: 'labels.1.changelogTitle',
+        value: 123
+      }
     ]);
   });
 
@@ -111,8 +129,16 @@ describe('validateConfig', () => {
         plugins: [123, true]
       })
     ).toStrictEqual([
-      'Expecting type "string" or "[string, any]" for "plugins.0" but instead got: 123',
-      'Expecting type "string" or "[string, any]" for "plugins.1" but instead got: true'
+      {
+        expectedType: '"string" or "[string, any]"',
+        path: 'plugins.0',
+        value: 123
+      },
+      {
+        expectedType: '"string" or "[string, any]"',
+        path: 'plugins.1',
+        value: true
+      }
     ]);
   });
 
@@ -210,5 +236,47 @@ describe('validateConfig', () => {
         ]
       })
     ).toStrictEqual([]);
+  });
+
+  test('should validate plugin configuration - io-ts', async () => {
+    const hook: ValidatePluginHook = new AsyncSeriesBailHook([
+      'name',
+      'options'
+    ]);
+
+    const pluginOptions = t.partial({
+      exclude: t.array(t.string),
+      types: t.partial({
+        docs: t.string
+      })
+    });
+
+    hook.tapPromise('test', async (name, options) => {
+      if (name === 'test-plugin') {
+        return validatePluginConfiguration(
+          'test-plugin',
+          pluginOptions,
+          options
+        );
+      }
+    });
+
+    expect(
+      await validatePlugins(hook, {
+        name: 'Andrew',
+        plugins: [
+          [
+            'test-plugin',
+            {
+              types: {
+                doc: 'foo'
+              }
+            }
+          ]
+        ]
+      })
+    ).toStrictEqual([
+      'Found unknown configuration keys in test-plugin: types.doc'
+    ]);
   });
 });

@@ -2,7 +2,6 @@
 
 import * as t from 'io-ts';
 import { isRight } from 'fp-ts/lib/Either';
-import { labelDefinition } from './release';
 import { autoRc, AutoRc } from './types';
 import { AsyncSeriesBailHook } from 'tapable';
 import { omit } from './utils/omit';
@@ -141,10 +140,42 @@ export async function validatePlugins(
   return errors;
 }
 
+const shouldRecurse = ['PartialType', 'IntersectionType'];
+
+/**
+ * Recurse through a io-ts type and make all objects exact.
+ * This helps us check for additional properties.
+ */
+function makeExactType(configDeceleration: t.Any | t.HasProps) {
+  let strictConfigDeclaration = configDeceleration;
+
+  if ('props' in configDeceleration) {
+    const strict = configDeceleration;
+
+    Object.entries(configDeceleration.props).forEach(
+      ([propName, propType]: [string, any]) => {
+        strict.props[propName] = shouldRecurse.includes(propType._tag)
+          ? makeExactType(propType)
+          : propType;
+      }
+    );
+
+    strictConfigDeclaration = t.exact(strict as t.HasProps);
+  } else if ('types' in configDeceleration) {
+    const exactInterfaces: t.Any[] = configDeceleration.types.map(propType =>
+      shouldRecurse.includes(propType._tag) ? makeExactType(propType) : propType
+    );
+
+    strictConfigDeclaration = t.intersection(exactInterfaces as [t.Any, t.Any]);
+  }
+
+  return strictConfigDeclaration;
+}
+
 /** Create a function to validation a configuration based on the configDeceleration  */
 export const validateIoConfiguration = (
   name: string,
-  configDeceleration: t.HasProps
+  configDeceleration: t.Any | t.HasProps
 ) =>
   /** A function the will validate a configuration based on the configDeceleration */
   async (rc: unknown): Promise<(ConfigError | string)[]> => {
@@ -155,12 +186,7 @@ export const validateIoConfiguration = (
       return errors;
     }
 
-    const exactRc = t
-      .intersection([
-        t.exact(t.partial({ labels: t.array(t.exact(labelDefinition)) })),
-        t.exact(configDeceleration)
-      ])
-      .decode(rc);
+    const exactRc = makeExactType(configDeceleration).decode(rc);
 
     if (!isRight(looseRc) || !isRight(exactRc)) {
       return [];
@@ -184,7 +210,7 @@ export const validateIoConfiguration = (
     ];
   };
 
-export const validateAutoRc = validateIoConfiguration('.autoRc', autoRc);
+export const validateAutoRc = validateIoConfiguration('.autorc', autoRc);
 
 /** Validate a plugin's configuration. */
 export async function validatePluginConfiguration(
