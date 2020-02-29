@@ -9,7 +9,7 @@ import { omit } from './utils/omit';
 
 const ignoreTypes = ['PartialType', 'IntersectionType'];
 
-export interface ConfigError {
+interface ConfigOptionError {
   /** Key path in config to misconfigured option */
   path: string;
   /** The expected type */
@@ -18,8 +18,15 @@ export interface ConfigError {
   value: any;
 }
 
+export type ConfigError = string | ConfigOptionError;
+
 /** Format and error as a string */
-export function formatError({ path, expectedType, value }: ConfigError) {
+export function formatError(error: ConfigError) {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  const { path, expectedType, value } = error;
   return `Expecting type ${expectedType} for "${path}" but instead got: ${value}`;
 }
 
@@ -55,28 +62,37 @@ function reporter<T>(validation: t.Validation<T>) {
     };
   });
 
+  const otherErrors: string[] = [];
   const grouped = errors.reduce((acc, item) => {
+    if (typeof item === 'string') {
+      otherErrors.push(item);
+      return acc;
+    }
+
     if (!acc[item.path]) {
       acc[item.path] = [];
     }
 
     acc[item.path].push(item);
     return acc;
-  }, {} as Record<string, ConfigError[]>);
+  }, {} as Record<string, ConfigOptionError[]>);
 
-  return Object.entries(grouped).map(([path, group]) => {
-    const expectedType = group
-      .map(g => g.expectedType)
-      .map(t => `"${t}"`)
-      .join(' or ');
-    const value = group[0].value;
+  return [
+    ...otherErrors,
+    ...Object.entries(grouped).map(([path, group]) => {
+      const expectedType = group
+        .map(g => g.expectedType)
+        .map(t => `"${t}"`)
+        .join(' or ');
+      const value = group[0].value;
 
-    return formatError({
-      expectedType,
-      path,
-      value
-    });
-  });
+      return {
+        expectedType,
+        path,
+        value
+      };
+    })
+  ];
 }
 
 /** Convert nested object to array of flat key paths */
@@ -94,15 +110,15 @@ function flatKeys(obj: Record<string, any>): string[] {
 
 export type ValidatePluginHook = AsyncSeriesBailHook<
   [string, any],
-  void | string[]
+  void | ConfigError[]
 >;
 
 /** Ensure plugins validation is correct. */
 export async function validatePlugins(
   validatePlugin: ValidatePluginHook,
   rc: AutoRc
-): Promise<string[]> {
-  const errors: string[] = [];
+): Promise<ConfigError[]> {
+  const errors: ConfigError[] = [];
 
   if (!rc.plugins) {
     return [];
@@ -125,44 +141,68 @@ export async function validatePlugins(
   return errors;
 }
 
-/** Validate a configuration */
-export const validateIoConfiguration = (configDeceleration: t.HasProps) => async (
-  rc: unknown
-): Promise<string[]> => {
-  const looseRc = configDeceleration.decode(rc);
-  const errors = reporter(looseRc);
+/** Create a function to validation a configuration based on the configDeceleration  */
+export const validateIoConfiguration = (
+  name: string,
+  configDeceleration: t.HasProps
+) =>
+  /** A function the will validate a configuration based on the configDeceleration */
+  async (rc: unknown): Promise<(ConfigError | string)[]> => {
+    const looseRc = configDeceleration.decode(rc);
+    const errors = reporter(looseRc);
 
-  if (errors) {
-    return errors;
-  }
+    if (errors) {
+      return errors;
+    }
 
-  const exactRc = t
-    .intersection([
-      t.exact(t.partial({ labels: t.array(t.exact(labelDefinition)) })),
-      t.exact(configDeceleration)
-    ])
-    .decode(rc);
+    const exactRc = t
+      .intersection([
+        t.exact(t.partial({ labels: t.array(t.exact(labelDefinition)) })),
+        t.exact(configDeceleration)
+      ])
+      .decode(rc);
 
-  if (!isRight(looseRc) || !isRight(exactRc)) {
-    return [];
-  }
+    if (!isRight(looseRc) || !isRight(exactRc)) {
+      return [];
+    }
 
-  const correctKeys = flatKeys(exactRc.right);
-  const unknownTopKeys = Object.keys(looseRc.right).filter(
-    k => !exactRc.right[k as keyof typeof exactRc.right]
-  );
-  const unknownDeepKeys = flatKeys(
-    omit(looseRc.right, unknownTopKeys as any)
-  ).filter(k => !correctKeys.includes(k));
-  const unknownKeys = [...unknownTopKeys, ...unknownDeepKeys];
+    const correctKeys = flatKeys(exactRc.right);
+    const unknownTopKeys = Object.keys(looseRc.right).filter(
+      k => !((k as keyof typeof exactRc.right) in exactRc.right)
+    );
+    const unknownDeepKeys = flatKeys(
+      omit(looseRc.right, unknownTopKeys as any)
+    ).filter(k => !correctKeys.includes(k));
+    const unknownKeys = [...unknownTopKeys, ...unknownDeepKeys];
 
-  if (unknownKeys.length === 0) {
-    return [];
-  }
+    if (unknownKeys.length === 0) {
+      return [];
+    }
 
-  return [
-    `Found unknown configuration keys in .autorc: ${unknownKeys.join(', ')}`
-  ];
-};
+    return [
+      `Found unknown configuration keys in ${name}: ${unknownKeys.join(', ')}`
+    ];
+  };
 
-export const validateAutoRc = validateIoConfiguration(autoRc);
+export const validateAutoRc = validateIoConfiguration('.autoRc', autoRc);
+
+/** Validate a plugin's configuration. */
+export async function validatePluginConfiguration(
+  name: string,
+  pluginDefinition: t.HasProps,
+  providedOptions: unknown
+) {
+  const validateConfig = validateIoConfiguration(name, pluginDefinition);
+  const errors = await validateConfig(providedOptions);
+
+  return errors.map(error => {
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    return {
+      ...error,
+      path: error.path ? `${name}.${error.path}` : name
+    };
+  });
+}

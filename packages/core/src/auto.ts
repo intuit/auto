@@ -58,7 +58,8 @@ import {
 import {
   validateAutoRc,
   validatePlugins,
-  ValidatePluginHook
+  ValidatePluginHook,
+  formatError
 } from './validate-config';
 import { omit } from './utils/omit';
 
@@ -457,10 +458,10 @@ export default class Auto {
     if (errors.length) {
       this.logger.log.error(
         endent`
-        Found configuration errors:
-        
-        ${errors.join('\n')}
-      `,
+          Found configuration errors:
+          
+          ${errors.map(formatError).join('\n')}
+        `,
         '\n'
       );
       process.exit(1);
@@ -1786,7 +1787,7 @@ export default class Auto {
 
 export * from './auto-args';
 export { default as InteractiveInit } from './init';
-export { validateIoConfiguration } from './validate-config';
+export { validatePluginConfiguration } from './validate-config';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';
