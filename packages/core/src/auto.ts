@@ -431,15 +431,12 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = {
-      ...(await configLoader.loadConfig(
-        omit(this.options, ['_command', '_all', 'main'] as any)
-      )),
-      baseBranch: this.baseBranch
-    };
+    const { rawConfig, config } = await configLoader.loadConfig(
+      omit(this.options, ['_command', '_all', 'main'] as any)
+    )
 
+    config.baseBranch = this.baseBranch;
     this.logger.verbose.success('Loaded `auto` with config:', config);
-
     this.config = config;
     this.labels = config.labels;
     this.semVerLabels = getVersionMap(config.labels);
@@ -451,7 +448,7 @@ export default class Auto {
     this.hooks.beforeRun.call(config);
 
     const errors = [
-      ...(await validateAutoRc(this.config)),
+      ...(await validateAutoRc(rawConfig)),
       ...(await validatePlugins(this.hooks.validateConfig, this.config))
     ];
 
