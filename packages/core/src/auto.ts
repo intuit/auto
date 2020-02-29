@@ -432,6 +432,7 @@ export default class Auto {
   async loadConfig() {
     const configLoader = new Config(this.logger);
     const { rawConfig, config } = await configLoader.loadConfig(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       omit(this.options, ['_command', '_all', 'main'] as any)
     )
 
