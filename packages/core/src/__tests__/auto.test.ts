@@ -143,6 +143,15 @@ describe('Auto', () => {
     expect(auto.release!.config).toMatchSnapshot();
   });
 
+  test('should exit with errors in config', async () => {
+    search.mockReturnValueOnce({ config: {name: 123} });
+    process.exit = jest.fn() as any;
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(process.exit).toHaveBeenCalled();
+  });
+
   test('should extend local config', async () => {
     const orig = process.cwd;
     process.cwd = () => '/foo/';
