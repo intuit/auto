@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "module": "commonjs", // Resolve modules the node way
-    "lib": ["es2019"], // Use newest ecma script features
+    "lib": ["es2017"], // Use newest ecma script features
     /* Outputs: */
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "target": "es2019", // Target Node 10.x
+    "target": "es2017", // Target Node 10.x
     "importHelpers": true, // Use tslib for helper code
     /* Syntax: */
     "strict": true,
