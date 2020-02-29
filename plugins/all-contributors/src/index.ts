@@ -3,7 +3,8 @@ import {
   IPlugin,
   execPromise,
   getLernaPackages,
-  inFolder
+  inFolder,
+  validatePluginConfiguration
 } from '@auto-it/core';
 import fs from 'fs';
 import path from 'path';
@@ -11,6 +12,7 @@ import match from 'anymatch';
 import on from 'await-to-js';
 import { execSync } from 'child_process';
 import { IExtendedCommit } from '@auto-it/core/src/log-parse';
+import * as t from 'io-ts';
 
 const contributionTypes = [
   'blog',
@@ -39,7 +41,7 @@ const contributionTypes = [
   'translation',
   'tutorial',
   'userTesting',
-  'video;'
+  'video'
 ] as const;
 type Contribution = typeof contributionTypes[number];
 
@@ -55,12 +57,20 @@ function getRcFile() {
   } catch (error) {}
 }
 
-type IAllContributorsPluginOptions = {
+const pattern = t.union([t.string, t.array(t.string)]);
+const pluginOptions = t.partial({
   /** Usernames to exclude from the contributors */
-  exclude?: string[];
+  exclude: t.array(t.string),
   /** Globs to detect change types by */
-  types?: Partial<Record<Contribution, string | string[]>>;
-};
+  types: t.partial(
+    Object.fromEntries(contributionTypes.map(c => [c, pattern])) as Record<
+      Contribution,
+      typeof pattern
+    >
+  )
+});
+
+export type IAllContributorsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 interface Contributor {
   /** GitHub username */
@@ -97,7 +107,7 @@ const defaultOptions: IAllContributorsPluginOptions = {
 /** Automatically add contributors as changelogs are produced. */
 export default class AllContributorsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'All Contributors';
+  name = 'all-contributors';
 
   /** The options of the plugin */
   readonly options: Required<IAllContributorsPluginOptions>;
@@ -112,6 +122,12 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.afterAddToChangelog.tapPromise(
       this.name,
       async ({ commits }) => {

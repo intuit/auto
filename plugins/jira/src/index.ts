@@ -1,13 +1,21 @@
 import join from 'url-join';
-import {prompt} from 'enquirer'
+import { prompt } from 'enquirer';
+import * as t from 'io-ts';
 
-import { Auto, IPlugin, InteractiveInit } from '@auto-it/core';
+import {
+  Auto,
+  IPlugin,
+  InteractiveInit,
+  validatePluginConfiguration
+} from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
-interface IJiraPluginOptions {
+const pluginOptions = t.interface({
   /** Url to a hosted JIRA instance */
-  url: string;
-}
+  url: t.string
+});
+
+export type IJiraPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 interface InputResponse<T = 'string'> {
   /** he value of the input prompt */
@@ -54,22 +62,26 @@ export function parseJira(commit: IExtendedCommit): IJiraCommit {
   };
 }
 
+/** Convert shorthand options to noraml shape */
+const normalizeOptions = (options: IJiraPluginOptions | string) =>
+  typeof options === 'string' ? { url: options } : options;
+
 /** Include Jira story information in your changelogs */
 export default class JiraPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Jira';
+  name = 'jira';
 
   /** The options of the plugin */
   readonly options: IJiraPluginOptions;
 
   /** Initialize the plugin with it's options */
   constructor(options: IJiraPluginOptions | string) {
-    this.options = typeof options === 'string' ? { url: options } : options;
+    this.options = normalizeOptions(options);
   }
 
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
-    initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
+    initializer.hooks.configurePlugin.tapPromise(this.name, async name => {
       if (name === 'jira') {
         const url = await prompt<InputResponse>({
           type: 'input',
@@ -78,13 +90,23 @@ export default class JiraPlugin implements IPlugin {
           required: true
         });
 
-        return ['jira', url.value]
+        return ['jira', url.value];
       }
-    })
+    });
   }
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name) {
+        return validatePluginConfiguration(
+          this.name,
+          pluginOptions,
+          normalizeOptions(options)
+        );
+      }
+    });
+
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
       changelog.hooks.renderChangelogLine.tap(
         this.name,

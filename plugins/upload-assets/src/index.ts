@@ -1,34 +1,51 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
 import endent from 'endent';
 import FileType from 'file-type';
 import fs from 'fs';
 import glob from 'fast-glob';
 import path from 'path';
 import { promisify } from 'util';
+import * as t from 'io-ts';
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 
-interface IUploadAssetsPluginOptions {
+const pluginOptions = t.interface({
   /** Paths to assets to upload */
-  assets: string[];
-}
+  assets: t.array(t.string)
+});
+
+/** Convert shorthand options to noraml shape */
+const normalizeOptions = (options: IUploadAssetsPluginOptions | string[]) =>
+  Array.isArray(options) ? { assets: options } : options;
+
+export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** Attach extra assets to a GitHub Release */
 export default class UploadAssetsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Upload Assets';
+  name = 'upload-assets';
 
   /** The options of the plugin */
   readonly options: IUploadAssetsPluginOptions;
 
   /** Initialize the plugin with it's options */
   constructor(options: IUploadAssetsPluginOptions | string[]) {
-    this.options = Array.isArray(options) ? { assets: options } : options;
+    this.options = normalizeOptions(options);
   }
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name) {
+        return validatePluginConfiguration(
+          this.name,
+          pluginOptions,
+          normalizeOptions(options)
+        );
+      }
+    });
+
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
       const assets = await glob(this.options.assets);
 

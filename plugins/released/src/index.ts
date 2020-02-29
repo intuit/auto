@@ -1,21 +1,24 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 import merge from 'deepmerge';
+import * as t from 'io-ts';
 
-interface IReleasedLabelPluginOptions {
+const pluginOptions = t.partial({
   /** Message to use when posting on issues and pull requests */
-  message: string;
+  message: t.string,
   /** The label to add to issues and pull requests */
-  label: string;
+  label: t.string,
   /** The label to add to issues and pull requests that are in a prerelease */
-  prereleaseLabel: string;
+  prereleaseLabel: t.string,
   /** Whether to lock the issue once the pull request has been released */
-  lockIssues: boolean;
-}
+  lockIssues: t.boolean
+});
+
+export type IReleasedLabelPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 const TYPE = '%TYPE';
 const VERSION = '%VERSION';
-const defaultOptions = {
+const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   label: 'released',
   prereleaseLabel: 'prerelease',
   lockIssues: false,
@@ -30,14 +33,16 @@ const isCanary = (version: string) => version.match('canary');
 /** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Released Label';
+  name = 'released';
 
   /** The options of the plugin */
-  readonly options: IReleasedLabelPluginOptions;
+  readonly options: Required<IReleasedLabelPluginOptions>;
 
   /** Initialize the plugin with it's options */
   constructor(options: Partial<IReleasedLabelPluginOptions> = {}) {
-    this.options = merge(defaultOptions, options);
+    this.options = merge(defaultOptions, options) as Required<
+      IReleasedLabelPluginOptions
+    >;
   }
 
   /** Tap into auto plugin points. */
@@ -60,6 +65,12 @@ export default class ReleasedLabelPlugin implements IPlugin {
       }
 
       return config;
+    });
+
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
     });
 
     auto.hooks.afterRelease.tapPromise(
