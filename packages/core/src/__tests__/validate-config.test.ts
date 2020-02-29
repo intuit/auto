@@ -1,19 +1,15 @@
 import {
-  validateConfiguration,
+  validateAutoRc,
+  validatePlugins,
   ValidatePluginHook,
-  ConfigError
+  formatError
 } from '../validate-config';
 import { AsyncSeriesBailHook } from 'tapable';
-
-const dummyHook: ValidatePluginHook = new AsyncSeriesBailHook([
-  'name',
-  'options'
-]);
 
 describe('validateConfig', () => {
   test('should not return errors when there are none', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         email: 'andrew@lisowski.com',
         owner: 'bar',
@@ -23,31 +19,21 @@ describe('validateConfig', () => {
   });
 
   test('should not return errors when there are none - more complex', async () => {
-    expect(
-      await validateConfiguration(dummyHook, { verbose: true })
-    ).toStrictEqual([]);
-    expect(
-      await validateConfiguration(dummyHook, { verbose: [true, true] })
-    ).toStrictEqual([]);
+    expect(await validateAutoRc({ verbose: true })).toStrictEqual([]);
+    expect(await validateAutoRc({ verbose: [true, true] })).toStrictEqual([]);
   });
 
   test('should not return errors when there are none - multiple type', async () => {
-    expect(
-      await validateConfiguration(dummyHook, { versionBranches: true })
-    ).toStrictEqual([]);
-    expect(
-      await validateConfiguration(dummyHook, { versionBranches: 'foo-' })
-    ).toStrictEqual([]);
-    expect(
-      await validateConfiguration(dummyHook, { versionBranches: 123 })
-    ).toStrictEqual([
+    expect(await validateAutoRc({ versionBranches: true })).toStrictEqual([]);
+    expect(await validateAutoRc({ versionBranches: 'foo-' })).toStrictEqual([]);
+    expect(await validateAutoRc({ versionBranches: 123 })).toStrictEqual([
       'Expecting type "boolean" or "string" for "versionBranches" but instead got: 123'
     ]);
   });
 
   test('should catch misconfigured options', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 123,
         owner: 456
       })
@@ -59,7 +45,7 @@ describe('validateConfig', () => {
 
   test('should catch unknown options', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         foo: 456
       })
@@ -68,7 +54,7 @@ describe('validateConfig', () => {
 
   test('should validate labels', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         labels: [
           {
@@ -88,7 +74,7 @@ describe('validateConfig', () => {
 
   test('should catch errors in labels', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         labels: [
           {
@@ -107,7 +93,7 @@ describe('validateConfig', () => {
 
   test('should not go too deep', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         labelz: [
           {
@@ -120,7 +106,7 @@ describe('validateConfig', () => {
 
   test('should error on invalid plugin config', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         plugins: [123, true]
       })
@@ -132,7 +118,7 @@ describe('validateConfig', () => {
 
   test('should handle basic plugin config', async () => {
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         plugins: ['npm', 'release']
       })
@@ -143,7 +129,7 @@ describe('validateConfig', () => {
     // NOTE: since these plugins aren't loaded they do not get their
     // options validated
     expect(
-      await validateConfiguration(dummyHook, {
+      await validateAutoRc({
         name: 'Andrew',
         plugins: [
           ['npm', { forcePublish: true }],
@@ -166,22 +152,26 @@ describe('validateConfig', () => {
 
     hook.tap('test', (name, options) => {
       if (name === 'test-plugin') {
-        const errors: ConfigError[] = [];
+        const errors: string[] = [];
 
         if (options.label && typeof options.label !== 'string') {
-          errors.push({
-            path: 'npm.label',
-            expectedType: 'string',
-            value: options.label
-          });
+          errors.push(
+            formatError({
+              path: 'npm.label',
+              expectedType: 'string',
+              value: options.label
+            })
+          );
         }
 
         if (options.other && typeof options.other !== 'number') {
-          errors.push({
-            path: 'npm.other',
-            expectedType: 'number',
-            value: options.other
-          });
+          errors.push(
+            formatError({
+              path: 'npm.other',
+              expectedType: 'number',
+              value: options.other
+            })
+          );
         }
 
         if (errors.length) {
@@ -191,7 +181,7 @@ describe('validateConfig', () => {
     });
 
     expect(
-      await validateConfiguration(hook, {
+      await validatePlugins(hook, {
         name: 'Andrew',
         plugins: [
           [
@@ -207,7 +197,7 @@ describe('validateConfig', () => {
     ]);
 
     expect(
-      await validateConfiguration(hook, {
+      await validatePlugins(hook, {
         name: 'Andrew',
         plugins: [
           [

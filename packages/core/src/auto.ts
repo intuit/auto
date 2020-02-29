@@ -55,7 +55,12 @@ import {
   AutoRc,
   LoadedAutoRc
 } from './types';
-import { validateConfiguration, ValidatePluginHook } from './validate-config';
+import {
+  validateAutoRc,
+  validatePlugins,
+  ValidatePluginHook
+} from './validate-config';
+import { omit } from './utils/omit';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -426,7 +431,9 @@ export default class Auto {
   async loadConfig() {
     const configLoader = new Config(this.logger);
     const config = {
-      ...(await configLoader.loadConfig(this.options)),
+      ...(await configLoader.loadConfig(
+        omit(this.options, ['_command', '_all', 'main'] as any)
+      )),
       baseBranch: this.baseBranch
     };
 
@@ -442,7 +449,22 @@ export default class Auto {
     this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
-    await validateConfiguration(this.hooks.validateConfig, this.config)
+    const errors = [
+      ...(await validateAutoRc(this.config)),
+      ...(await validatePlugins(this.hooks.validateConfig, this.config))
+    ];
+
+    if (errors.length) {
+      this.logger.log.error(
+        endent`
+        Found configuration errors:
+        
+        ${errors.join('\n')}
+      `,
+        '\n'
+      );
+      process.exit(1);
+    }
 
     const repository = await this.getRepo(config);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
@@ -1764,6 +1786,7 @@ export default class Auto {
 
 export * from './auto-args';
 export { default as InteractiveInit } from './init';
+export { validateIoConfiguration } from './validate-config';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';

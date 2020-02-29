@@ -19,7 +19,7 @@ export interface ConfigError {
 }
 
 /** Format and error as a string */
-function formatError({ path, expectedType, value }: ConfigError) {
+export function formatError({ path, expectedType, value }: ConfigError) {
   return `Expecting type ${expectedType} for "${path}" but instead got: ${value}`;
 }
 
@@ -94,15 +94,15 @@ function flatKeys(obj: Record<string, any>): string[] {
 
 export type ValidatePluginHook = AsyncSeriesBailHook<
   [string, any],
-  void | ConfigError[]
+  void | string[]
 >;
 
 /** Ensure plugins validation is correct. */
-async function validatePlugins(
+export async function validatePlugins(
   validatePlugin: ValidatePluginHook,
   rc: AutoRc
 ): Promise<string[]> {
-  const errors: ConfigError[] = [];
+  const errors: string[] = [];
 
   if (!rc.plugins) {
     return [];
@@ -122,31 +122,29 @@ async function validatePlugins(
     })
   );
 
-  return errors.map(formatError);
+  return errors;
 }
 
 /** Validate a configuration */
-export async function validateConfiguration(
-  validatePlugin: ValidatePluginHook,
-  rc: Parameters<typeof autoRc.decode>[0]
-): Promise<string[]> {
-  const looseRc = autoRc.decode(rc);
+export const validateIoConfiguration = (configDeceleration: t.HasProps) => async (
+  rc: unknown
+): Promise<string[]> => {
+  const looseRc = configDeceleration.decode(rc);
   const errors = reporter(looseRc);
-  const allErrors = [...(await validatePlugins(validatePlugin, rc as any))];
 
   if (errors) {
-    return [...errors, ...allErrors];
+    return errors;
   }
 
   const exactRc = t
     .intersection([
       t.exact(t.partial({ labels: t.array(t.exact(labelDefinition)) })),
-      t.exact(autoRc)
+      t.exact(configDeceleration)
     ])
     .decode(rc);
 
   if (!isRight(looseRc) || !isRight(exactRc)) {
-    return allErrors;
+    return [];
   }
 
   const correctKeys = flatKeys(exactRc.right);
@@ -159,11 +157,12 @@ export async function validateConfiguration(
   const unknownKeys = [...unknownTopKeys, ...unknownDeepKeys];
 
   if (unknownKeys.length === 0) {
-    return allErrors;
+    return [];
   }
 
   return [
-    `Found unknown configuration keys in .autorc: ${unknownKeys.join(', ')}`,
-    ...allErrors
+    `Found unknown configuration keys in .autorc: ${unknownKeys.join(', ')}`
   ];
-}
+};
+
+export const validateAutoRc = validateIoConfiguration(autoRc);
