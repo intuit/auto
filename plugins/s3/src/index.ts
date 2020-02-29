@@ -17,7 +17,7 @@ const pluginOptions = t.intersection([
   })
 ]);
 
-type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 const configOptions = t.union([pluginOptions, t.array(pluginOptions)]);
 export type ConfigOptions = t.TypeOf<typeof configOptions>;

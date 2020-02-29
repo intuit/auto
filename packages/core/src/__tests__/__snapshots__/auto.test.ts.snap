@@ -113,14 +113,12 @@ Object {
     "next",
   ],
   "repo": "bar",
-  "token": "XXXX",
   "versionBranches": undefined,
 }
 `;
 
 exports[`Auto should extend local config 1`] = `
 Object {
-  "bar": "foo",
   "baseBranch": "master",
   "extends": "./fake.json",
   "labels": Array [
@@ -165,12 +163,12 @@ Object {
       "releaseType": "none",
     },
   ],
+  "noVersionPrefix": true,
   "owner": "foo",
   "prereleaseBranches": Array [
     "next",
   ],
   "repo": "bar",
-  "token": "XXXX",
   "versionBranches": undefined,
 }
 `;

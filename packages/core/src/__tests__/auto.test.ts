@@ -19,9 +19,10 @@ jest
 
 const defaults = {
   owner: 'foo',
-  repo: 'bar',
-  token: 'XXXX'
+  repo: 'bar'
 };
+
+process.env.GH_TOKEN = 'XXXX';
 
 const labels = [
   { name: 'Version: Major', releaseType: SEMVER.major, overwrite: true },
@@ -149,7 +150,7 @@ describe('Auto', () => {
       config: { ...defaults, extends: './fake.json' }
     });
     importMock.mockImplementation(path =>
-      path === '/foo/fake.json' ? { bar: 'foo' } : undefined
+      path === '/foo/fake.json' ? { noVersionPrefix: true } : undefined
     );
 
     const auto = new Auto();
