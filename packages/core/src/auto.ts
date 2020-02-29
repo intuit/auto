@@ -55,6 +55,7 @@ import {
   AutoRc,
   LoadedAutoRc
 } from './types';
+import { validateConfiguration, ValidatePluginHook } from './validate-config';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -108,6 +109,8 @@ interface BeforeShipitContext {
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
+  /** Validate what is in the config. You must return the config in this hook. */
+  validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
   beforeRun: SyncHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
@@ -439,6 +442,8 @@ export default class Auto {
     this.config = this.hooks.modifyConfig.call(config);
     this.hooks.beforeRun.call(config);
 
+    await validateConfiguration(this.hooks.validateConfig, this.config)
+
     const repository = await this.getRepo(config);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
 
@@ -527,7 +532,7 @@ export default class Auto {
       return { hasError: false };
     }
 
-    const [, gitVersion = ''] = await on(execPromise('git', ['--version']))
+    const [, gitVersion = ''] = await on(execPromise('git', ['--version']));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);

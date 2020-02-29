@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import chunk from 'lodash.chunk';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
+import * as t from 'io-ts';
 
 import { AsyncSeriesBailHook, SyncHook } from 'tapable';
 import { Memoize as memoize } from 'typescript-memoize';
@@ -43,20 +44,33 @@ export const releaseLabels: VersionLabel[] = [
 export const isVersionLabel = (label: string): label is VersionLabel =>
   releaseLabels.includes(label as VersionLabel);
 
-export interface ILabelDefinition {
+const labelDefinitionRequired = t.type({
   /** The label text */
-  name: string;
+  name: t.string
+});
+
+const labelDefinitionOptional = t.partial({
   /** A title to put in the changelog for the label */
-  changelogTitle?: string;
+  changelogTitle: t.string,
   /** The color of the label */
-  color?: string;
+  color: t.string,
   /** The description of the label */
-  description?: string;
+  description: t.string,
   /** What type of release this label signifies */
-  releaseType: VersionLabel | 'none';
+  releaseType: t.union([
+    t.literal('none'),
+    t.literal('skip'),
+    ...releaseLabels.map(l => t.literal(l))
+  ]),
   /** Whether to overwrite the base label */
-  overwrite?: boolean;
-}
+  overwrite: t.boolean
+});
+
+export const labelDefinition = t.intersection([
+  labelDefinitionOptional,
+  labelDefinitionRequired
+]);
+export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
 
 export const defaultLabels: ILabelDefinition[] = [
   {
@@ -375,7 +389,7 @@ export default class Release {
 
         return !released;
       } catch (error) {
-        this.logger.verbose.warn(error)
+        this.logger.verbose.warn(error);
         // If an error happens include the commit to be safe.
         return true;
       }
