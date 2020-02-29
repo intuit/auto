@@ -13,6 +13,7 @@ import on from 'await-to-js';
 import { execSync } from 'child_process';
 import { IExtendedCommit } from '@auto-it/core/src/log-parse';
 import * as t from 'io-ts';
+import fromEntries from 'fromentries';
 
 const contributionTypes = [
   'blog',
@@ -63,7 +64,7 @@ const pluginOptions = t.partial({
   exclude: t.array(t.string),
   /** Globs to detect change types by */
   types: t.partial(
-    Object.fromEntries(contributionTypes.map(c => [c, pattern])) as Record<
+    fromEntries(contributionTypes.map(c => [c, pattern])) as Record<
       Contribution,
       typeof pattern
     >

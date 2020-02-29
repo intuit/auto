@@ -40,6 +40,7 @@
     "anymatch": "^3.1.1",
     "await-to-js": "^2.1.1",
     "fp-ts": "^2.5.3",
+    "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
     "tslib": "1.11.0"
   },
