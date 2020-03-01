@@ -10,7 +10,7 @@ import endent from 'endent';
 
 const ignoreTypes = ['PartialType', 'IntersectionType', 'ExactType'];
 const unexpectedValue = chalk.redBright.bold;
-const errorPath = chalk.yellow.underline.bold;
+const errorPath = chalk.underline.bold;
 
 interface ConfigOptionError {
   /** Key path in config to misconfigured option */
@@ -37,13 +37,12 @@ export function formatError(error: ConfigError) {
           ${value.join(',\n')}
         ]
       `) ||
-    (typeof value === 'object' &&
-      JSON.stringify(value, null, 2)) ||
+    (typeof value === 'object' && JSON.stringify(value, null, 2)) ||
     value;
 
-  return `Expected ${chalk.greenBright.bold(expectedType)} for ${errorPath(
-    `"${path}"`
-  )} but got: ${unexpectedValue(formattedValue)}`;
+  return `${errorPath(`"${path}"`)}\n\nExpected ${chalk.greenBright.bold(
+    expectedType
+  )} but got: ${unexpectedValue(formattedValue)}\n`;
 }
 
 /** Report configuration errors */
@@ -141,7 +140,7 @@ export async function validatePlugins(
 ): Promise<ConfigError[]> {
   const errors: ConfigError[] = [];
 
-  if (!rc.plugins) {
+  if (!Array.isArray(rc.plugins)) {
     return [];
   }
 
@@ -247,9 +246,11 @@ export const validateIoConfiguration = (
     }
 
     return [
-      `Found unknown configuration keys in ${errorPath(
+      `${errorPath(
         `"${name}"`
-      )}: ${unexpectedValue(unknownKeys.join(', '))}`
+      )}\n\nFound unknown configuration keys: ${unexpectedValue(
+        unknownKeys.join(', ')
+      )}\n`
     ];
   };
 

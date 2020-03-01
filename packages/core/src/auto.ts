@@ -1736,7 +1736,7 @@ export default class Auto {
     const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
     const pluginsPaths = [
       require.resolve('./plugins/filter-non-pull-request'),
-      ...(config.plugins || defaultPlugins)
+      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
 
     pluginsPaths
