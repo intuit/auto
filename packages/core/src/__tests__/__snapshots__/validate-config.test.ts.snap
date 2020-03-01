@@ -1,89 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`formatError should format errors 0 1`] = `
-"[4m[1m\\"test\\"[22m[24m
+"\\"test\\"
 
-Expected [92m[1mnumber[22m[39m but got: [91m[1m123[22m[39m
+Expected number but got: 123
 "
 `;
 
 exports[`formatError should format errors 1 1`] = `
-"[4m[1m\\"test\\"[22m[24m
+"\\"test\\"
 
-Expected [92m[1mstring[22m[39m but got: [91m[1m123[22m[39m
+Expected string but got: 123
 "
 `;
 
 exports[`formatError should format errors 2 1`] = `
-"[4m[1m\\"test\\"[22m[24m
+"\\"test\\"
 
-Expected [92m[1mstring[22m[39m but got: [91m[1m[[22m[39m
-[91m[1m  123,[22m[39m
-[91m[1m  2,[22m[39m
-[91m[1m  true[22m[39m
-[91m[1m][22m[39m
+Expected string but got: [
+  123,
+  2,
+  true
+]
 "
 `;
 
 exports[`formatError should format errors 3 1`] = `
-"[4m[1m\\"test\\"[22m[24m
+"\\"test\\"
 
-Expected [92m[1mnumber[22m[39m but got: [91m[1m{[22m[39m
-[91m[1m  \\"foo\\": \\"bar\\"[22m[39m
-[91m[1m}[22m[39m
+Expected number but got: {
+  \\"foo\\": \\"bar\\"
+}
 "
 `;
 
 exports[`validateConfig should catch unknown options 1`] = `
 Array [
-  "[4m[1m\\".autorc\\"[22m[24m
+  "\\".autorc\\"
 
-Found unknown configuration keys: [91m[1mfoo[22m[39m
+Found unknown configuration keys: foo
 ",
 ]
 `;
 
 exports[`validateConfig should not fail w/plugin configuration 1`] = `
 Array [
-  "[4m[1m\\".autorc\\"[22m[24m
+  "\\".autorc\\"
 
-Found unknown configuration keys: [91m[1mlabels.0.releasepe[22m[39m
+Found unknown configuration keys: labels.0.releasepe
 ",
 ]
 `;
 
 exports[`validateConfig should not go too deep 1`] = `
 Array [
-  "[4m[1m\\".autorc\\"[22m[24m
+  "\\".autorc\\"
 
-Found unknown configuration keys: [91m[1mlabelz[22m[39m
+Found unknown configuration keys: labelz
 ",
 ]
 `;
 
 exports[`validateConfig should validate plugin configuration 1`] = `
 Array [
-  "[4m[1m\\"npm.label\\"[22m[24m
+  "\\"npm.label\\"
 
-Expected [92m[1mstring[22m[39m but got: [91m[1m123[22m[39m
+Expected string but got: 123
 ",
 ]
 `;
 
 exports[`validatePlugin should validate plugin configuration - array of objects 1`] = `
 Array [
-  "[4m[1m\\"test-plugin\\"[22m[24m
+  "\\"test-plugin\\"
 
-Found unknown configuration keys: [91m[1mexclude.1.extra[22m[39m
+Found unknown configuration keys: exclude.1.extra
 ",
 ]
 `;
 
 exports[`validatePlugin should validate plugin configuration - nested objects 1`] = `
 Array [
-  "[4m[1m\\"test-plugin\\"[22m[24m
+  "\\"test-plugin\\"
 
-Found unknown configuration keys: [91m[1mtypes.doc[22m[39m
+Found unknown configuration keys: types.doc
 ",
 ]
 `;

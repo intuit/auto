@@ -25,6 +25,7 @@
     enquirer "^2.3.4"
     env-ci "^5.0.1"
     fp-ts "^2.5.3"
+    fromentries "^1.2.0"
     gitlog "^3.1.2"
     https-proxy-agent "^5.0.0"
     import-cwd "^3.0.0"
@@ -7735,6 +7736,13 @@ has-ansi@^2.0.0:
   dependencies:
     ansi-regex "^2.0.0"
 
+has-ansi@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-3.0.0.tgz#36077ef1d15f333484aa7fa77a28606f1c655b37"
+  integrity sha1-Ngd+8dFfMzSEqn+neihgbxxlWzc=
+  dependencies:
+    ansi-regex "^3.0.0"
+
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
@@ -9306,6 +9314,14 @@ jest-serializer@^25.1.0:
   version "25.1.0"
   resolved "https://registry.yarnpkg.com/jest-serializer/-/jest-serializer-25.1.0.tgz#73096ba90e07d19dec4a0c1dd89c355e2f129e5d"
   integrity sha512-20Wkq5j7o84kssBwvyuJ7Xhn7hdPeTXndnwIblKDR2/sy1SUm6rWWiG9kSCgJPIfkDScJCIsTtOKdlzfIHOfKA==
+
+jest-snapshot-serializer-ansi@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/jest-snapshot-serializer-ansi/-/jest-snapshot-serializer-ansi-1.0.0.tgz#7daeefe7bfa81aed44e153fd3451320b61dc2a67"
+  integrity sha512-nZjYxP1NZkM+Nn0Mox11ZjlEUr4zWuIDxBdQcBZUXQ9XLa9GrZKibRp4Om/NZ+xT0wiLD/oxomGZwcSONGmUUQ==
+  dependencies:
+    has-ansi "^3.0.0"
+    strip-ansi "^4.0.0"
 
 jest-snapshot@^25.1.0:
   version "25.1.0"
