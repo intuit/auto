@@ -8,6 +8,17 @@ import {
 import { AsyncSeriesBailHook } from 'tapable';
 import * as t from 'io-ts';
 
+describe('formatError', () => {
+  test.each([
+    { path: 'test', expectedType: 'number', value: '123' },
+    { path: 'test', expectedType: 'string', value: 123 },
+    { path: 'test', expectedType: 'string', value: ['123', 2, true] },
+    { path: 'test', expectedType: 'number', value: { foo: 'bar' } }
+  ])('should format errors %#', configError => {
+    expect(formatError(configError)).toMatchSnapshot();
+  });
+});
+
 describe('validateConfig', () => {
   test('should not return errors when there are none', async () => {
     expect(

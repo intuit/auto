@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`formatError should format errors 0 1`] = `"Expected [92m[1mnumber[22m[39m for [33m[4m[1m\\"test\\"[22m[24m[39m but got: [91m[1m123[22m[39m"`;
+
+exports[`formatError should format errors 1 1`] = `"Expected [92m[1mstring[22m[39m for [33m[4m[1m\\"test\\"[22m[24m[39m but got: [91m[1m123[22m[39m"`;
+
+exports[`formatError should format errors 2 1`] = `
+"Expected [92m[1mstring[22m[39m for [33m[4m[1m\\"test\\"[22m[24m[39m but got: [91m[1m[[22m[39m
+[91m[1m  123,[22m[39m
+[91m[1m  2,[22m[39m
+[91m[1m  true[22m[39m
+[91m[1m][22m[39m"
+`;
+
+exports[`formatError should format errors 3 1`] = `
+"Expected [92m[1mnumber[22m[39m for [33m[4m[1m\\"test\\"[22m[24m[39m but got: [91m[1m{[22m[39m
+[91m[1m  \\"foo\\": \\"bar\\"[22m[39m
+[91m[1m}[22m[39m"
+`;
+
 exports[`validateConfig should catch unknown options 1`] = `
 Array [
   "Found unknown configuration keys in [33m[4m[1m\\".autorc\\"[22m[24m[39m: [91m[1mfoo[22m[39m",
@@ -20,8 +38,7 @@ Array [
 
 exports[`validateConfig should validate plugin configuration 1`] = `
 Array [
-  "Expecting type [92m[1mstring[22m[39m for [33m[4m[1m\\"npm.label\\"[22m[24m[39m but instead got: [91m[1m123[22m[39m
-",
+  "Expected [92m[1mstring[22m[39m for [33m[4m[1m\\"npm.label\\"[22m[24m[39m but got: [91m[1m123[22m[39m",
 ]
 `;
 

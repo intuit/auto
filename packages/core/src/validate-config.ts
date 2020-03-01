@@ -30,13 +30,16 @@ export function formatError(error: ConfigError) {
   }
 
   const { path, expectedType, value } = error;
-  const formattedValue = Array.isArray(value)
-    ? endent`
+  const formattedValue =
+    (Array.isArray(value) &&
+      endent`
         [
           ${value.join(',\n')}
         ]
-      `
-    : value;
+      `) ||
+    (typeof value === 'object' &&
+      JSON.stringify(value, null, 2)) ||
+    value;
 
   return `Expected ${chalk.greenBright.bold(expectedType)} for ${errorPath(
     `"${path}"`
