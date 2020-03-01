@@ -90,7 +90,7 @@ export default class Config {
 
     this.logger.verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
-    const config = {
+    return {
       ...rawConfig,
       ...args,
       labels,
@@ -100,8 +100,6 @@ export default class Config {
           ? 'version-'
           : rawConfig.versionBranches
     };
-
-    return { rawConfig, config };
   }
 
   /**

@@ -431,10 +431,10 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const { rawConfig, config } = await configLoader.loadConfig(
+    const config = await configLoader.loadConfig(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       omit(this.options, ['_command', '_all', 'main'] as any)
-    )
+    );
 
     config.baseBranch = this.baseBranch;
     this.logger.verbose.success('Loaded `auto` with config:', config);
@@ -449,7 +449,7 @@ export default class Auto {
     this.hooks.beforeRun.call(config);
 
     const errors = [
-      ...(await validateAutoRc(rawConfig)),
+      ...(await validateAutoRc(this.config)),
       ...(await validatePlugins(this.hooks.validateConfig, this.config))
     ];
 
@@ -462,6 +462,16 @@ export default class Auto {
         `,
         '\n'
       );
+      this.logger.log.warn(
+        'This errors are for the fully loaded configuration (this is why some paths might seem off).'
+      );
+
+      if (this.config.extends) {
+        this.logger.log.warn(
+          'Some errors might originate from an extend config.'
+        );
+      }
+
       process.exit(1);
     }
 
