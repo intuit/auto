@@ -1,3 +1,16 @@
+# v9.15.1 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- `auto`, `@auto-it/core`
+  - Default Config When running shipit [#1000](https://github.com/intuit/auto/pull/1000) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 ### Release Notes

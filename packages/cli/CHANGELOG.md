@@ -1,3 +1,15 @@
+# v9.15.1 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- only get default config in command that allow it, enables shipit to easily use sub-commands configs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix
