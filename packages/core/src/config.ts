@@ -17,11 +17,15 @@ export function normalizeLabel(
   label: Partial<ILabelDefinition>
 ): Partial<ILabelDefinition> {
   const baseLabel =
-    defaultLabels.find(
-      l =>
-        (label.releaseType && l.releaseType === label.releaseType) ||
-        (label.name && l.name === label.name)
-    ) || {};
+    defaultLabels.find(l => {
+      let isBase = false;
+
+      if (label.releaseType !== 'none') {
+        isBase = l.releaseType === label.releaseType;
+      }
+
+      return isBase || (label.name && l.name === label.name);
+    }) || {};
   return { ...baseLabel, ...label };
 }
 
