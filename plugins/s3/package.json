@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/s3",
-  "version": "9.14.0",
+  "version": "9.15.0",
   "main": "dist/index.js",
   "description": "Post your built artifacts to s3",
   "author": {
@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "aws-cli-js": "^2.0.6",
     "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
-    "aws-cli-js": "^2.0.6"
+    "io-ts": "^2.1.2"
   }
 }
