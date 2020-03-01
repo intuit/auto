@@ -331,7 +331,7 @@ If you are using enterprise github and your company hosts the graphql at some ot
 
 ### name
 
-Git name to commit and release with. Used in `auto changelog` and `auto release`
+Name to use with git.
 
 ```json
 {
@@ -341,7 +341,7 @@ Git name to commit and release with. Used in `auto changelog` and `auto release`
 
 ### email
 
-Git email to commit and release with. Used in `auto changelog` and `auto release`
+Email to use with git.
 
 ```json
 {
