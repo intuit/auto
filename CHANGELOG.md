@@ -1,3 +1,52 @@
+# v9.15.0 (Sun Mar 01 2020)
+
+### Release Notes
+
+_From #998_
+
+Configs are now fully validated including plugins 🎉 
+
+<img width="1171" alt="Screen Shot 2020-02-29 at 10 19 01 PM" src="https://user-images.githubusercontent.com/1192452/75620907-b8864d80-5b42-11ea-84e0-15292696185d.png">
+
+###  🚀 Command Configuration  🚀 
+
+With the inclusion of configuration validation we decided to restrict valid root level keys to only options that are shared between commands. All of these options are called out in the [`.autorc` docs](https://intuit.github.io/auto/pages/autorc.html). 
+
+But for some commands it still makes sense to configure flag permanently in the `.autorc`. For those commands you can now supply defaults for flags using the following format.
+
+**Example:** Adding the following to you `.autorc` will make `auto` only release pre-releases to GitHub.
+
+```json
+{
+  "release": {
+    "prerelease": true
+  }
+}
+```
+
+Please refer to each command's documentation to see which options are configurable.
+
+### New Hook
+
+For plugins configuration validation a new hook `validateConfiguration` was added for plugins to tap into and report configuration errors.  [Read more](https://intuit.github.io/auto/pages/writing-plugins.html#validateconfig)
+
+---
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Config Validation + Command Defaults [#998](https://github.com/intuit/auto/pull/998) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝  Documentation
+
+- Add @unknownerror404 as a contributor [#997](https://github.com/intuit/auto/pull/997) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.14.0 (Tue Feb 25 2020)
 
 #### 🚀  Enhancement

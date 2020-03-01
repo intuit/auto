@@ -1,3 +1,18 @@
+# v9.15.0 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- update plugin and autorc docs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use fromEntries ponyfill until node 10 EOL  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add fp and io-ts as deps  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add plugin configuration validation  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.1 (Mon Feb 24 2020)
 
 #### 🐛  Bug Fix

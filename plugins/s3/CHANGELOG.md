@@ -1,3 +1,18 @@
+# v9.15.0 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- update plugin and autorc docs  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add fp and io-ts as deps  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix old tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add plugin configuration validation  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v8.6.0 (Tue Dec 17 2019)
 
 #### 🐛  Bug Fix

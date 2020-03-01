@@ -1,3 +1,16 @@
+# v9.15.0 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- enable autorc configuration for some command flags  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.13.1 (Mon Feb 24 2020)
 
 #### 🐛  Bug Fix

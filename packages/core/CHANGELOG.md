@@ -1,3 +1,41 @@
+# v9.15.0 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- use fromEntries ponyfill until node 10 EOL  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't valide config with flag overrides  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- enable autorc configuration for some command flags  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- dont include intersections in valdation error path  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- dont match none labels. this fixes bug where releaseType none labels would get the internal label's description  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix label ordering for validation error paths  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- strip ansi codes from snapshots  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- layout validaiton erros with more space  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- validate fully loaded configuration  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- print objects better  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- print arrays better  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- dont report redundant errors  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add test to ensure command configuration doesn't throw errors  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix lint  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add test to make sure auto exits with configuration errors  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix old tests  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- validate raw config  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix union type overriding  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- get array of objects working  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- recursively convert type to exact  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- make plugin configuration helper util  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- exit on invalid config  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- when validating stop at unknown top level keys  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- remove dead code, was never used anywher  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- validate autorc configuration + add validateConfig hook for plugins  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- refactor autorc type  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.14.0 (Tue Feb 25 2020)
 
 #### 🐛  Bug Fix
