@@ -45,7 +45,6 @@ commands.map(command => {
   const extra = path.join(__dirname, `./pages/extras/${command.name}.md`);
 
   if (configOptions.length) {
-    console.log(command.name, configOptions);
     lines.push(endent`
       ## Configurable Options
 
