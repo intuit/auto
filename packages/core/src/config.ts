@@ -3,7 +3,6 @@ import merge from 'deepmerge';
 import fetch from 'node-fetch';
 import * as path from 'path';
 
-import { ApiOptions } from './auto-args';
 import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
@@ -63,7 +62,7 @@ export default class Config {
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
-  async loadConfig(args: ApiOptions) {
+  async loadConfig() {
     const explorer = cosmiconfig('auto', {
       searchPlaces: [
         `.autorc`,
@@ -96,7 +95,6 @@ export default class Config {
 
     return {
       ...rawConfig,
-      ...args,
       labels,
       prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
       versionBranches:

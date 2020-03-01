@@ -98,7 +98,7 @@ Email to use with git.
 
 For some commands you can supply defaults for some options.
 
-**Example:** Adding the following to you `.autorc` will make auto only release pre-release to GitHub.
+**Example:** Adding the following to you `.autorc` will make `auto` only release pre-releases to GitHub.
 
 ```json
 {

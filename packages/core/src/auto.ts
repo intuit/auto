@@ -431,22 +431,18 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
-    const config = await configLoader.loadConfig(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      omit(this.options, ['_command', '_all', 'main'] as any)
-    );
+    const userConfig = await configLoader.loadConfig();
 
-    config.baseBranch = this.baseBranch;
-    this.logger.verbose.success('Loaded `auto` with config:', config);
-    this.config = config;
-    this.labels = config.labels;
-    this.semVerLabels = getVersionMap(config.labels);
-
-    this.loadPlugins(config);
+    this.logger.verbose.success('Loaded `auto` with config:', userConfig);
+    
+    // Allow plugins to be overriden for testing
+    this.config = {...userConfig, plugins: this.options.plugins || userConfig.plugins};
+    this.loadPlugins(this.config!);
     this.loadDefaultBehavior();
-
-    this.config = this.hooks.modifyConfig.call(config);
-    this.hooks.beforeRun.call(config);
+    this.config = this.hooks.modifyConfig.call(this.config!);
+    this.labels = this.config.labels;
+    this.semVerLabels = getVersionMap(this.config.labels);
+    this.hooks.beforeRun.call(this.config);
 
     const errors = [
       ...(await validateAutoRc(this.config)),
@@ -475,6 +471,13 @@ export default class Auto {
       process.exit(1);
     }
 
+    const config = {
+      ...userConfig,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...omit(this.options, ['_command', '_all', 'main'] as any),
+      baseBranch: this.baseBranch
+    };
+    this.config = config;
     const repository = await this.getRepo(config);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
 
@@ -506,8 +509,8 @@ export default class Auto {
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
-
-    return this.config;
+        
+    return config;
   }
 
   /** Determine the remote we have auth to push to. */
