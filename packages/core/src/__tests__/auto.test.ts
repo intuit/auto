@@ -127,6 +127,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     process.env.GH_TOKEN = undefined;
     await expect(auto.loadConfig()).rejects.toBeInstanceOf(Error);
+    process.env.GH_TOKEN = 'XXXX';
   });
 
   test('should extend config', async () => {
