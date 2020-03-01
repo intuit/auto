@@ -6,6 +6,7 @@ import { autoRc, AutoRc } from './types';
 import { AsyncSeriesBailHook } from 'tapable';
 import { omit } from './utils/omit';
 import chalk from 'chalk';
+import endent from 'endent';
 
 const ignoreTypes = ['PartialType', 'IntersectionType', 'ExactType'];
 const unexpectedValue = chalk.redBright.bold;
@@ -29,12 +30,17 @@ export function formatError(error: ConfigError) {
   }
 
   const { path, expectedType, value } = error;
+  const formattedValue = Array.isArray(value)
+    ? endent`
+        [
+          ${value.join(',\n')}
+        ]
+      `
+    : value;
 
-  return `Expecting type ${chalk.greenBright.bold(
-    expectedType
-  )} for ${errorPath(`"${path}"`)} but instead got: ${unexpectedValue(
-    value
-  )}\n`;
+  return `Expected ${chalk.greenBright.bold(expectedType)} for ${errorPath(
+    `"${path}"`
+  )} but got: ${unexpectedValue(formattedValue)}`;
 }
 
 /** Report configuration errors */
@@ -87,21 +93,23 @@ function reporter<T>(validation: t.Validation<T>) {
 
   return [
     ...otherErrors,
-    ...Object.entries(grouped).filter(([path]) => {
-      return !paths.some((p) => p.includes(path) && p !== path)
-    }).map(([path, group]) => {
-      const expectedType = group
-        .map(g => g.expectedType)
-        .map(t => `"${t}"`)
-        .join(' or ');
-      const value = group[0].value;
+    ...Object.entries(grouped)
+      .filter(([path]) => {
+        return !paths.some(p => p.includes(path) && p !== path);
+      })
+      .map(([path, group]) => {
+        const expectedType = group
+          .map(g => g.expectedType)
+          .map(t => `"${t}"`)
+          .join(' or ');
+        const value = group[0].value;
 
-      return {
-        expectedType,
-        path,
-        value
-      };
-    })
+        return {
+          expectedType,
+          path,
+          value
+        };
+      })
   ];
 }
 
