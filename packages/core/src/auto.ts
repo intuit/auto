@@ -506,6 +506,8 @@ export default class Auto {
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
+
+    return this.config;
   }
 
   /** Determine the remote we have auth to push to. */

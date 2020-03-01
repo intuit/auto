@@ -90,7 +90,7 @@ export interface ICommentOptions {
   edit?: boolean;
 }
 
-export type IPRBodyOptions = ICommentOptions;
+export type IPRBodyOptions = Omit<ICommentOptions, 'edit' | 'delete'>;
 
 export interface IShipItOptions {
   /** Do not actually do anything */

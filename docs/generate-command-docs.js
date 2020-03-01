@@ -41,7 +41,48 @@ fs.writeFileSync(
 
 commands.map(command => {
   const lines = [docs(command).replace(/{green \$} /g, '')];
+  const configOptions = (command.options || []).filter(option => option.config);
   const extra = path.join(__dirname, `./pages/extras/${command.name}.md`);
+
+  if (configOptions.length) {
+    console.log(command.name, configOptions);
+    lines.push(endent`
+      ## Configurable Options
+
+      You can configure some of the options for the \`${
+        command.name
+      }\` command in the \`.autorc\`.
+
+      ${configOptions.map(o => `- \`${o.name}\``).join('\n')}
+
+      **Example \`.autorc\`:**
+
+      \`\`\`json
+      {
+        "${command.name}": {
+          ${configOptions
+            .map(o => {
+              let value;
+
+              if (o.defaultValue) {
+                value =
+                  (o.type === String && `"${o.defaultValue}"`) ||
+                  o.defaultValue;
+              } else {
+                value =
+                  (o.type === String && '"string"') ||
+                  (o.type === Boolean && true) ||
+                  (o.type === Number && 123);
+              }
+
+              return `"${o.name}": ${value}`;
+            })
+            .join(',\n')}
+        }
+      }
+      \`\`\`
+    `);
+  }
 
   if (command.name === 'init' || command.name === 'create-labels') {
     return;

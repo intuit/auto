@@ -66,7 +66,32 @@ const globalOptions = t.partial({
    *
    * @default 'version-'
    */
-  versionBranches: t.union([t.boolean, t.string])
+  versionBranches: t.union([t.boolean, t.string]),
+  /** Options to pass to "auto comment" */
+  comment: t.partial({
+    delete: t.boolean,
+    edit: t.boolean
+  }),
+  /** Options to pass to "auto changelog" */
+  changelog: t.partial({
+    message: t.string
+  }),
+  /** Options to pass to "auto release" */
+  release: t.partial({
+    prerelease: t.boolean
+  }),
+  /** Options to pass to "auto shipit" */
+  shipit: t.partial({
+    onlyGraduateWithReleaseLabel: t.boolean
+  }),
+  /** Options to pass to "auto canary" */
+  canary: t.partial({
+    message: t.union([t.literal(false), t.string])
+  }),
+  /** Options to pass to "auto next" */
+  next: t.partial({
+    message: t.string
+  })
 });
 
 export type GlobalOptions = t.TypeOf<typeof globalOptions>;
