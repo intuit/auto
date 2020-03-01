@@ -29,7 +29,7 @@ export async function run(command: string, args: ApiOptions) {
       return;
     }
 
-    const config = await auto.loadConfig();
+    await auto.loadConfig();
 
     if (args.verbose || command === 'info') {
       const { hasError } = await auto.info();
@@ -43,51 +43,45 @@ export async function run(command: string, args: ApiOptions) {
       }
     }
 
-    const commandConfig = config[command as keyof typeof config];
-    const allArgs = {
-      ...(typeof commandConfig === 'object' ? commandConfig : {}),
-      ...args
-    };
-
     switch (command) {
       case 'create-labels':
-        await auto.createLabels(allArgs as ICreateLabelsOptions);
+        await auto.createLabels(args as ICreateLabelsOptions);
         break;
       case 'label':
-        await auto.label(allArgs as ILabelOptions);
+        await auto.label(args as ILabelOptions);
         break;
       case 'pr-check':
-        await auto.prCheck(allArgs as IPRCheckOptions);
+        await auto.prCheck(args as IPRCheckOptions);
         break;
       case 'pr-status':
-        await auto.prStatus(allArgs as IPRStatusOptions);
+        await auto.prStatus(args as IPRStatusOptions);
         break;
       case 'comment':
-        await auto.comment(allArgs as ICommentOptions);
+        await auto.comment(args as ICommentOptions);
         break;
       case 'pr-body':
-        await auto.prBody(allArgs as IPRBodyOptions);
+        await auto.prBody(args as IPRBodyOptions);
         break;
       case 'version':
-        await auto.version(allArgs as IVersionOptions);
+        await auto.version(args as IVersionOptions);
         break;
       case 'changelog':
-        await auto.changelog(allArgs as IChangelogOptions);
+        await auto.changelog(args as IChangelogOptions);
         break;
       case 'release':
-        await auto.runRelease(allArgs as IReleaseOptions);
+        await auto.runRelease(args as IReleaseOptions);
         break;
       case 'shipit':
-        await auto.shipit(allArgs as IShipItOptions);
+        await auto.shipit(args as IShipItOptions);
         break;
       case 'latest':
-        await auto.latest(allArgs as IShipItOptions);
+        await auto.latest(args as IShipItOptions);
         break;
       case 'canary':
-        await auto.canary(allArgs as ICanaryOptions);
+        await auto.canary(args as ICanaryOptions);
         break;
       case 'next':
-        await auto.next(allArgs as INextOptions);
+        await auto.next(args as INextOptions);
         break;
       default:
         throw new Error(`idk what i'm doing.`);

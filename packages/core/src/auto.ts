@@ -434,9 +434,12 @@ export default class Auto {
     const userConfig = await configLoader.loadConfig();
 
     this.logger.verbose.success('Loaded `auto` with config:', userConfig);
-    
+
     // Allow plugins to be overriden for testing
-    this.config = {...userConfig, plugins: this.options.plugins || userConfig.plugins};
+    this.config = {
+      ...userConfig,
+      plugins: this.options.plugins || userConfig.plugins
+    };
     this.loadPlugins(this.config!);
     this.loadDefaultBehavior();
     this.config = this.hooks.modifyConfig.call(this.config!);
@@ -473,6 +476,7 @@ export default class Auto {
 
     const config = {
       ...userConfig,
+      // This Line overrides config with args
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...omit(this.options, ['_command', '_all', 'main'] as any),
       baseBranch: this.baseBranch
@@ -509,7 +513,7 @@ export default class Auto {
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
-        
+
     return config;
   }
 
@@ -879,7 +883,8 @@ export default class Auto {
    *
    * @param options - Options for the comment functionality
    */
-  async comment(options: ICommentOptions) {
+  async comment(args: ICommentOptions) {
+    const options = { ...this.getCommandDefault('comment'), ...args };
     const {
       message,
       pr,
@@ -888,6 +893,7 @@ export default class Auto {
       delete: deleteFlag,
       edit: editFlag
     } = options;
+
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -1001,7 +1007,9 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
-  async canary(options: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
+  async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
+    const options = { ...this.getCommandDefault('canary'), ...args };
+    
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1107,7 +1115,9 @@ export default class Auto {
    * Create a next (or test) version of the project. If on master will
    * release to the default "next" branch.
    */
-  async next(options: INextOptions): Promise<ShipitInfo | undefined> {
+  async next(args: INextOptions): Promise<ShipitInfo | undefined> {
+    const options = { ...this.getCommandDefault('next'), ...args };
+    
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1206,7 +1216,9 @@ export default class Auto {
    * 3. Publish code
    * 4. Create a release
    */
-  async shipit(options: IShipItOptions = {}) {
+  async shipit(args: IShipItOptions = {}) {
+    const options: IShipItOptions = { ...this.getCommandDefault('shipit'), ...args };
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1455,12 +1467,15 @@ export default class Auto {
   }
 
   /** Make a changelog over a range of commits */
-  private async makeChangelog({
-    dryRun,
-    from,
-    to,
-    message = 'Update CHANGELOG.md [skip ci]'
-  }: IChangelogOptions = {}) {
+  private async makeChangelog(args: IChangelogOptions = {}) {
+    const options = { ...this.getCommandDefault('changelog'), ...args };
+    const {
+      dryRun,
+      from,
+      to,
+      message = 'Update CHANGELOG.md [skip ci]'
+    } = options;
+
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -1491,7 +1506,7 @@ export default class Auto {
       currentVersion
     );
 
-    const options = {
+    const context = {
       bump,
       commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
@@ -1499,20 +1514,23 @@ export default class Auto {
       currentVersion
     };
 
-    await this.hooks.beforeCommitChangelog.promise(options);
+    await this.hooks.beforeCommitChangelog.promise(context);
     await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
     this.logger.verbose.info('Committed new changelog.');
 
-    await this.hooks.afterAddToChangelog.promise(options);
+    await this.hooks.afterAddToChangelog.promise(context);
   }
 
   /** Make a release over a range of commits */
-  private async makeRelease({
-    dryRun,
-    from,
-    useVersion,
-    prerelease = false
-  }: IReleaseOptions = {}) {
+  private async makeRelease(args: IReleaseOptions = {}) {
+    const options = { ...this.getCommandDefault('release'), ...args };
+    const {
+      dryRun,
+      from,
+      useVersion,
+      prerelease = false
+    } = options;
+
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -1793,6 +1811,16 @@ export default class Auto {
     }
 
     return { pr, build };
+  }
+
+  /** Get the default for a command from the config */
+  private getCommandDefault(name: string) {
+    if (!this.config) {
+      return {};
+    }
+
+    const commandConfig = this.config[name as keyof AutoRc];
+    return typeof commandConfig === 'object' ? commandConfig : {};
   }
 }
 
