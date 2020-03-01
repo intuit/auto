@@ -39,7 +39,7 @@ export function normalizeLabels(config: ConfigObject) {
         )
     );
 
-    return [...baseLabels, ...userLabels];
+    return [...userLabels, ...baseLabels];
   }
 
   return defaultLabels;

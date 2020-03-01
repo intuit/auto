@@ -179,12 +179,12 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
-      ['skip-release'],
-      ['release'],
-      ['internal', 'documentation'],
       ['Version: Major'],
       ['Version: Patch'],
-      ['Version: Minor']
+      ['Version: Minor'],
+      ['skip-release'],
+      ['release'],
+      ['internal', 'documentation']
     ]);
   });
 
