@@ -98,7 +98,7 @@ export default class JiraPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
-      if (name === this.name) {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(
           this.name,
           pluginOptions,

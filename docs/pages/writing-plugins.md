@@ -5,12 +5,15 @@ If you've ever written a `webpack` plugin it's a lot like that.
 A plugin definition is:
 
 - a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
+- a name for the plugin, should match the [name of the package](./plugins.md#plugin-declaration) (REQUIRED)
 - a constructor where you can load plugin specific config
 
 ```ts
 import { Auto, IPlugin } from 'auto';
 
 export default class TestPlugin implements IPlugin {
+  name = 'test';
+
   private readonly config: any;
 
   constructor(config: any) {
@@ -29,6 +32,7 @@ Or in JavaScript:
 module.exports = class TestPlugin {
   constructor(config) {
     this.config = config;
+    this.name = 'test';
   }
 
   /**
@@ -54,6 +58,8 @@ interface ITestPluginConfig {
 }
 
 export default class TestPlugin implements IPlugin {
+  name = 'test';
+
   private readonly config: ITestPluginConfig;
 
   constructor(config: ITestPluginConfig) {
@@ -100,10 +106,11 @@ auto.hooks.modifyConfig.tap('test', config => {
 #### validateConfig
 
 Validate how your plugin is configured.
+Make sure to account for the [different ways you plugin can be included](./plugins.md#plugin-declaration) in an `.autorc`.
 
 ```ts
 auto.hooks.validateConfig.tapPromise('test', (name, options) => {
-  if (name === this.name) {
+  if (name === this.name || name === `@auto-it/${this.name}`) {
     return; // your validation error. Can either be strings for { path, expectedType, value }
   }
 });
@@ -137,7 +144,7 @@ To do this `auto` exposes a helper function to validate you plugins with the `io
 import { validatePluginConfiguration } from '@auto-it/core';
 
 auto.hooks.validateConfig.tapPromise('test', (name, options) => {
-  if (name === this.name) {
+  if (name === this.name || name === `@auto-it/${this.name}`) {
     return validatePluginConfiguration(this.name, pluginOptions, options);
   }
 });

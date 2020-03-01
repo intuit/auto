@@ -49,7 +49,7 @@ export default class S3Plugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
-      if (name === this.name) {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
         if (Array.isArray(options)) {
           const errors = await Promise.all(
             options.map(o =>

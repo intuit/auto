@@ -68,7 +68,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     });
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
-      if (name === this.name) {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
       }
     });
