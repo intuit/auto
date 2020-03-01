@@ -63,7 +63,7 @@ describe('validateConfig', () => {
         name: 'Andrew',
         foo: 456
       })
-    ).toStrictEqual(['Found unknown configuration keys in .autorc: foo']);
+    ).toMatchSnapshot();
   });
 
   test('should validate labels', async () => {
@@ -112,30 +112,28 @@ describe('validateConfig', () => {
   test('should not fail w/plugin configuration', async () => {
     expect(
       await validateAutoRc({
-        "plugins": [
+        plugins: [
           [
-            "npm",
+            'npm',
             {
-              "canaryScope": "@auto-canary"
+              canaryScope: '@auto-canary'
             }
           ]
         ],
-        "labels": [
+        labels: [
           {
-            "name": "dependencies",
-            "changelogTitle": "🔩 Dependency Updates",
-            "releasepe": "none"
+            name: 'dependencies',
+            changelogTitle: '🔩 Dependency Updates',
+            releasepe: 'none'
           },
           {
-            "name": "blog-post",
-            "changelogTitle": "📚 Blog Post",
-            "releaseType": "none"
+            name: 'blog-post',
+            changelogTitle: '📚 Blog Post',
+            releaseType: 'none'
           }
         ]
       })
-    ).toStrictEqual([
-      'Found unknown configuration keys in .autorc: labels.0.releasepe'
-    ]);
+    ).toMatchSnapshot();
   });
 
   test('should not go too deep', async () => {
@@ -148,7 +146,7 @@ describe('validateConfig', () => {
           }
         ]
       })
-    ).toStrictEqual(['Found unknown configuration keys in .autorc: labelz']);
+    ).toMatchSnapshot();
   });
 
   test('should error on invalid plugin config', async () => {
@@ -247,9 +245,7 @@ describe('validateConfig', () => {
           ]
         ]
       })
-    ).toStrictEqual([
-      'Expecting type string for "npm.label" but instead got: 123'
-    ]);
+    ).toMatchSnapshot();
 
     expect(
       await validatePlugins(hook, {
@@ -304,8 +300,46 @@ describe('validatePlugin', () => {
           ]
         ]
       })
+    ).toMatchSnapshot();
+  });
+
+  test('should not include redundant errors', async () => {
+    const hook: ValidatePluginHook = new AsyncSeriesBailHook([
+      'name',
+      'options'
+    ]);
+
+    const pluginOptions = t.partial({
+      types: t.union([t.string, t.array(t.string)])
+    });
+
+    hook.tapPromise('test', async (name, options) => {
+      if (name === 'test-plugin') {
+        return validatePluginConfiguration(
+          'test-plugin',
+          pluginOptions,
+          options
+        );
+      }
+    });
+
+    expect(
+      await validatePlugins(hook, {
+        plugins: [
+          [
+            'test-plugin',
+            {
+              types: ['foo', 'bar', true]
+            }
+          ]
+        ]
+      })
     ).toStrictEqual([
-      'Found unknown configuration keys in test-plugin: types.doc'
+      {
+        expectedType: '"string"',
+        path: 'test-plugin.types.2',
+        value: true
+      }
     ]);
   });
 
@@ -344,8 +378,6 @@ describe('validatePlugin', () => {
           ]
         ]
       })
-    ).toStrictEqual([
-      'Found unknown configuration keys in test-plugin: exclude.1.extra'
-    ]);
+    ).toMatchSnapshot();
   });
 });

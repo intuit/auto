@@ -5,8 +5,11 @@ import { isRight } from 'fp-ts/lib/Either';
 import { autoRc, AutoRc } from './types';
 import { AsyncSeriesBailHook } from 'tapable';
 import { omit } from './utils/omit';
+import chalk from 'chalk';
 
 const ignoreTypes = ['PartialType', 'IntersectionType', 'ExactType'];
+const unexpectedValue = chalk.redBright.bold;
+const errorPath = chalk.yellow.underline.bold;
 
 interface ConfigOptionError {
   /** Key path in config to misconfigured option */
@@ -26,7 +29,12 @@ export function formatError(error: ConfigError) {
   }
 
   const { path, expectedType, value } = error;
-  return `Expecting type ${expectedType} for "${path}" but instead got: ${value}`;
+
+  return `Expecting type ${chalk.greenBright.bold(
+    expectedType
+  )} for ${errorPath(`"${path}"`)} but instead got: ${unexpectedValue(
+    value
+  )}\n`;
 }
 
 /** Report configuration errors */
@@ -75,10 +83,13 @@ function reporter<T>(validation: t.Validation<T>) {
     acc[item.path].push(item);
     return acc;
   }, {} as Record<string, ConfigOptionError[]>);
+  const paths = Object.keys(grouped);
 
   return [
     ...otherErrors,
-    ...Object.entries(grouped).map(([path, group]) => {
+    ...Object.entries(grouped).filter(([path]) => {
+      return !paths.some((p) => p.includes(path) && p !== path)
+    }).map(([path, group]) => {
       const expectedType = group
         .map(g => g.expectedType)
         .map(t => `"${t}"`)
@@ -225,7 +236,9 @@ export const validateIoConfiguration = (
     }
 
     return [
-      `Found unknown configuration keys in ${name}: ${unknownKeys.join(', ')}`
+      `Found unknown configuration keys in ${errorPath(
+        `"${name}"`
+      )}: ${unexpectedValue(unknownKeys.join(', '))}`
     ];
   };
 
