@@ -189,6 +189,21 @@ describe('validateConfig', () => {
     ).toStrictEqual([]);
   });
 
+  test('should warn about required props', async () => {
+    expect(
+      await validateAutoRc({
+        name: 'Andrew',
+        labels: [{}]
+      })
+    ).toStrictEqual([
+      {
+        expectedType: '"string"',
+        path: 'labels.0.name',
+        value: undefined
+      }
+    ]);
+  });
+
   test('should handle complex plugin config', async () => {
     // NOTE: since these plugins aren't loaded they do not get their
     // options validated

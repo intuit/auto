@@ -62,7 +62,9 @@ function reporter<T>(validation: t.Validation<T>) {
         const tag = (c.type as any)._tag;
         const include =
           parentType === 'ArrayType' ||
-          (!ignoreTypes.includes(tag) && parentType !== 'UnionType');
+          (!ignoreTypes.includes(tag) &&
+            parentType !== 'UnionType' &&
+            parentType !== 'IntersectionType');
 
         parentType = tag;
         return include;
