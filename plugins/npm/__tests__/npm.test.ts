@@ -365,7 +365,7 @@ test('should use string semver if no published package', async () => {
   expect(plugin).toStrictEqual(
     expect.objectContaining({
       forcePublish: true,
-      name: 'NPM',
+      name: 'npm',
       setRcToken: false
     })
   );

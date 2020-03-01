@@ -39,6 +39,8 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "env-ci": "^5.0.1",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
     "get-monorepo-packages": "^1.1.0",
     "parse-author": "^2.0.0",
     "parse-github-url": "1.0.2",

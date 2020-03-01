@@ -157,3 +157,22 @@ There are multiple ways to make this work and the solution might be different de
 - [module-alias](https://www.npmjs.com/package/module-alias) - Modifiy node's require for your canary deploys (This is what `auto` uses). Useful for node packages
 - [Webpack Aliases](https://webpack.js.org/configuration/resolve/) Modify scoped requires for webpack based projects.
 - [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) - A Babel plugin to add a new resolver for your modules when compiling your code using Babel.
+
+## Troubleshooting
+
+## npm ERR! need auth auth required for publishing
+
+This error will occur when you do not have a `NPM_TOKEN` set.
+
+### Still getting errors?!
+
+Make sure that `npm` is trying to publish to the correct registry. Force `npm`/`lerna` to use the public registry by adding the following to your package.json:
+
+```json
+{
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  }
+}
+```

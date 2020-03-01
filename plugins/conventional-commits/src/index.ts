@@ -8,7 +8,7 @@ import { Auto, IPlugin, VersionLabel } from '@auto-it/core';
  */
 export default class ConventionalCommitsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Conventional Commits Parser';
+  name = 'conventional-commits';
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {

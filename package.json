@@ -57,6 +57,7 @@
     "ignite": "^1.10.9",
     "jest": "~25.1.0",
     "jest-serializer-path": "^0.1.15",
+    "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
@@ -96,7 +97,8 @@
       "!**/scripts/template-plugin/**/*"
     ],
     "snapshotSerializers": [
-      "jest-serializer-path"
+      "jest-serializer-path",
+      "jest-snapshot-serializer-ansi"
     ],
     "coverageDirectory": "./coverage",
     "collectCoverageFrom": [

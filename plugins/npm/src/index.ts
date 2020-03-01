@@ -4,6 +4,7 @@ import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
 import { Octokit } from '@octokit/rest';
+import * as t from 'io-ts';
 
 import {
   Auto,
@@ -15,7 +16,8 @@ import {
   ILogger,
   IPlugin,
   InteractiveInit,
-  SEMVER
+  SEMVER,
+  validatePluginConfiguration
 } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, gte, inc, ReleaseType } from 'semver';
@@ -186,18 +188,20 @@ async function bumpLatest(
 
 const verbose = ['--loglevel', 'silly'];
 
-interface INpmConfig {
+const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
-  subPackageChangelogs?: boolean;
+  subPackageChangelogs: t.boolean,
   /** Whether to set the npm token on CI */
-  setRcToken?: boolean;
+  setRcToken: t.boolean,
   /** Whether to force publish all the packages in a monorepo */
-  forcePublish?: boolean;
+  forcePublish: t.boolean,
   /** A scope to publish canary versions under */
-  canaryScope?: string;
+  canaryScope: t.string,
   /** Publish a monorepo with the lerna --exact flag */
-  exact?: boolean;
-}
+  exact: t.boolean
+});
+
+export type INpmConfig = t.TypeOf<typeof pluginOptions>;
 
 /** Parse the lerna.json file. */
 const getLernaJson = () => {
@@ -328,7 +332,7 @@ const makeMonorepoInstallList = (packageList: string[]) =>
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'NPM';
+  name = 'npm';
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
@@ -440,6 +444,12 @@ export default class NPMPlugin implements IPlugin {
       branch && prereleaseBranches.includes(branch)
         ? branch
         : prereleaseBranches[0];
+
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
 
     auto.hooks.beforeShipIt.tap(this.name, async context => {
       const isIndependent = getLernaJson().version === 'independent';

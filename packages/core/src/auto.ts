@@ -40,20 +40,28 @@ import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
 import InteractiveInit from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
-import Release, {
-  getVersionMap,
-  IAutoConfig,
-  ILabelDefinition
-} from './release';
+import Release, { getVersionMap, ILabelDefinition } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
-import { IAuthorOptions, IRepoOptions } from './auto-args';
 import { execSync } from 'child_process';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 import getRepository from './utils/get-repository';
+import {
+  RepoInformation,
+  AuthorInformation,
+  AutoRc,
+  LoadedAutoRc
+} from './types';
+import {
+  validateAutoRc,
+  validatePlugins,
+  ValidatePluginHook,
+  formatError
+} from './validate-config';
+import { omit } from './utils/omit';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -106,9 +114,11 @@ interface BeforeShipitContext {
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
-  modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
+  modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
+  /** Validate what is in the config. You must return the config in this hook. */
+  validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
-  beforeRun: SyncHook<[IAutoConfig]>;
+  beforeRun: SyncHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -168,11 +178,14 @@ export interface IAutoHooks {
     | void
   >;
   /** Get git author. Typically from a package distribution description file. */
-  getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
+  getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;
   /** Get the previous version. Typically from a package distribution description file. */
   getPreviousVersion: AsyncSeriesBailHook<[], string>;
   /** Get owner and repository. Typically from a package distribution description file. */
-  getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
+  getRepository: AsyncSeriesBailHook<
+    [],
+    (RepoInformation & TestingToken) | void
+  >;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
   /**
@@ -315,7 +328,7 @@ export default class Auto {
   /** The remote git to push changes to */
   remote!: string;
   /** The user configuration of auto (.autorc) */
-  config?: IAutoConfig;
+  config?: LoadedAutoRc;
 
   /** A class that handles creating releases */
   release?: Release;
@@ -418,21 +431,53 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
+    const userConfig = await configLoader.loadConfig();
+
+    this.logger.verbose.success('Loaded `auto` with config:', userConfig);
+    
+    // Allow plugins to be overriden for testing
+    this.config = {...userConfig, plugins: this.options.plugins || userConfig.plugins};
+    this.loadPlugins(this.config!);
+    this.loadDefaultBehavior();
+    this.config = this.hooks.modifyConfig.call(this.config!);
+    this.labels = this.config.labels;
+    this.semVerLabels = getVersionMap(this.config.labels);
+    this.hooks.beforeRun.call(this.config);
+
+    const errors = [
+      ...(await validateAutoRc(this.config)),
+      ...(await validatePlugins(this.hooks.validateConfig, this.config))
+    ];
+
+    if (errors.length) {
+      this.logger.log.error(
+        endent`
+          Found configuration errors:
+          
+          ${errors.map(formatError).join('\n')}
+        `,
+        '\n'
+      );
+      this.logger.log.warn(
+        'This errors are for the fully loaded configuration (this is why some paths might seem off).'
+      );
+
+      if (this.config.extends) {
+        this.logger.log.warn(
+          'Some errors might originate from an extend config.'
+        );
+      }
+
+      process.exit(1);
+    }
+
     const config = {
-      ...(await configLoader.loadConfig(this.options)),
+      ...userConfig,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...omit(this.options, ['_command', '_all', 'main'] as any),
       baseBranch: this.baseBranch
     };
-
-    this.logger.verbose.success('Loaded `auto` with config:', config);
-
     this.config = config;
-    this.labels = config.labels;
-    this.semVerLabels = getVersionMap(config.labels);
-    this.loadPlugins(config);
-    this.loadDefaultBehavior();
-    this.config = this.hooks.modifyConfig.call(config);
-    this.hooks.beforeRun.call(config);
-
     const repository = await this.getRepo(config);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
 
@@ -464,6 +509,8 @@ export default class Auto {
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
+        
+    return config;
   }
 
   /** Determine the remote we have auth to push to. */
@@ -521,7 +568,7 @@ export default class Auto {
       return { hasError: false };
     }
 
-    const [, gitVersion = ''] = await on(execPromise('git', ['--version']))
+    const [, gitVersion = ''] = await on(execPromise('git', ['--version']));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
@@ -1661,9 +1708,9 @@ export default class Auto {
   }
 
   /** Get the repo to interact with */
-  private async getRepo(config: IAutoConfig) {
+  private async getRepo(config: LoadedAutoRc) {
     if (config.owner && config.repo) {
-      return config as IRepoOptions & TestingToken;
+      return config as RepoInformation & TestingToken;
     }
 
     const author = await this.hooks.getRepository.promise();
@@ -1689,12 +1736,12 @@ export default class Auto {
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IAutoConfig) {
+  private loadPlugins(config: AutoRc) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
     const pluginsPaths = [
       require.resolve('./plugins/filter-non-pull-request'),
-      ...(config.plugins || defaultPlugins)
+      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
 
     pluginsPaths
@@ -1753,6 +1800,7 @@ export default class Auto {
 
 export * from './auto-args';
 export { default as InteractiveInit } from './init';
+export { validatePluginConfiguration } from './validate-config';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';

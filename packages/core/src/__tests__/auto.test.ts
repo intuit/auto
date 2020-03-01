@@ -19,9 +19,10 @@ jest
 
 const defaults = {
   owner: 'foo',
-  repo: 'bar',
-  token: 'XXXX'
+  repo: 'bar'
 };
+
+process.env.GH_TOKEN = 'XXXX';
 
 const labels = [
   { name: 'Version: Major', releaseType: SEMVER.major, overwrite: true },
@@ -126,6 +127,7 @@ describe('Auto', () => {
     auto.logger = dummyLog();
     process.env.GH_TOKEN = undefined;
     await expect(auto.loadConfig()).rejects.toBeInstanceOf(Error);
+    process.env.GH_TOKEN = 'XXXX';
   });
 
   test('should extend config', async () => {
@@ -142,6 +144,15 @@ describe('Auto', () => {
     expect(auto.release!.config).toMatchSnapshot();
   });
 
+  test('should exit with errors in config', async () => {
+    search.mockReturnValueOnce({ config: {name: 123} });
+    process.exit = jest.fn() as any;
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(process.exit).toHaveBeenCalled();
+  });
+
   test('should extend local config', async () => {
     const orig = process.cwd;
     process.cwd = () => '/foo/';
@@ -149,7 +160,7 @@ describe('Auto', () => {
       config: { ...defaults, extends: './fake.json' }
     });
     importMock.mockImplementation(path =>
-      path === '/foo/fake.json' ? { bar: 'foo' } : undefined
+      path === '/foo/fake.json' ? { noVersionPrefix: true } : undefined
     );
 
     const auto = new Auto();
@@ -168,12 +179,12 @@ describe('Auto', () => {
     await auto.loadConfig();
 
     expect([...auto.semVerLabels!.values()]).toStrictEqual([
-      ['skip-release'],
-      ['release'],
-      ['internal', 'documentation'],
       ['Version: Major'],
       ['Version: Patch'],
-      ['Version: Minor']
+      ['Version: Minor'],
+      ['skip-release'],
+      ['release'],
+      ['internal', 'documentation']
     ]);
   });
 

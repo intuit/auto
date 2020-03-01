@@ -10,7 +10,7 @@ import { inc, ReleaseType } from 'semver';
 /** Manage your projects version through just a git tag. */
 export default class GitTagPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Git Tag';
+  name = 'git-tag';
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {

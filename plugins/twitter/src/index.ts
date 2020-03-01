@@ -1,18 +1,30 @@
-import { Auto, IPlugin, SEMVER } from '@auto-it/core';
+import {
+  Auto,
+  IPlugin,
+  SEMVER,
+  validatePluginConfiguration
+} from '@auto-it/core';
 import endent from 'endent';
 import { diff, ReleaseType } from 'semver';
 import twitter from 'tweet-tweet';
 import tweetValidation from 'twitter-text';
 import { promisify } from 'util';
+import * as t from 'io-ts';
 
-interface ITwitterPluginOptions {
+const pluginOptions = t.partial({
   /** The message template to use to post to Twitter */
-  message: string;
+  message: t.string,
   /** A threshold the semver has to pass to be posted to Twitter */
-  threshold: SEMVER;
-}
+  threshold: t.keyof({
+    patch: null,
+    minor: null,
+    major: null
+  })
+});
 
-const defaults: ITwitterPluginOptions = {
+export type ITwitterPluginOptions = t.TypeOf<typeof pluginOptions>;
+
+const defaults: Required<ITwitterPluginOptions> = {
   threshold: SEMVER.minor,
   message: endent`
     A new %release version of %package was released!
@@ -91,10 +103,10 @@ const makeTweet = ({
 /** Post your release notes to twitter during `auto release` */
 export default class TwitterPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Twitter';
+  name = 'twitter';
 
   /** The options of the plugin */
-  readonly options: ITwitterPluginOptions;
+  readonly options: Required<ITwitterPluginOptions>;
 
   /** Send a tweet */
   private readonly tweet: (message: string) => Promise<void>;
@@ -126,6 +138,12 @@ export default class TwitterPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.afterRelease.tapPromise(
       this.name,
       async ({ newVersion, lastRelease, response, releaseNotes }) => {

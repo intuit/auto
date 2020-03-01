@@ -1,15 +1,19 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
+import * as t from 'io-ts';
 
-export interface IReleaseNotesPluginOptions {
+const pattern = t.union([t.string, t.array(t.string)]);
+const pluginOptions = t.partial({
   /** Usernames to omit */
-  username?: string | string[];
+  username: pattern,
   /** Emails to omit */
-  email?: string | string[];
+  email: pattern,
   /** Names to omit */
-  name?: string | string[];
+  name: pattern,
   /** Labels to omit */
-  labels?: string | string[];
-}
+  labels: pattern
+});
+
+export type IReleaseNotesPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** Ensure a value is an array */
 const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
@@ -17,7 +21,7 @@ const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 /** Filter PRs with release notes that shouldn't make it into a release. */
 export default class ReleaseNotesPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Omit Release Notes';
+  name = 'omit-release-notes';
 
   /** The options of the plugin */
   readonly options: {
@@ -43,6 +47,12 @@ export default class ReleaseNotesPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.onCreateChangelog.tap(this.name, changelog => {
       changelog.hooks.omitReleaseNotes.tap(this.name, commit => {
         if (
