@@ -26,7 +26,26 @@ describe('validateConfig', () => {
         name: 'Andrew',
         email: 'andrew@lisowski.com',
         owner: 'bar',
-        repo: 'foo'
+        repo: 'foo',
+        comment: {
+          delete: true,
+          edit: true
+        },
+        changelog: {
+          message: 'foo'
+        },
+        canary: {
+          message: 'foo'
+        },
+        next: {
+          message: 'foo'
+        },
+        release: {
+          prerelease: true
+        },
+        shipit: {
+          onlyGraduateWithReleaseLabel: true
+        }
       })
     ).toStrictEqual([]);
   });
