@@ -881,7 +881,7 @@ export default class Auto {
    * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
    * You can use the "context" option to multiple comments on a PR.
    *
-   * @param options - Options for the comment functionality
+   * @param args - Options for the comment functionality
    */
   async comment(args: ICommentOptions) {
     const options = { ...this.getCommandDefault('comment'), ...args };

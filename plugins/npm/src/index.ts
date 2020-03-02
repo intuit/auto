@@ -451,12 +451,12 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.beforeShipIt.tap(this.name, async context => {
+    auto.hooks.beforeShipIt.tap(this.name, async () => {
       const isIndependent = getLernaJson().version === 'independent';
 
       // In independent mode it's possible that no changes to packages have been
       // made, so no release will be made.
-      if (isIndependent && context.releaseType === 'latest') {
+      if (isIndependent) {
         try {
           await execPromise('yarn', ['lerna', 'updated']);
         } catch (error) {
@@ -679,7 +679,7 @@ export default class NPMPlugin implements IPlugin {
           next,
           '--dist-tag',
           'canary',
-          '--force-publish', // you always want a canary version to publish
+          !isIndependent && '--force-publish',
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
           '--no-git-tag-version', // no need to tag and commit,
@@ -701,7 +701,7 @@ export default class NPMPlugin implements IPlugin {
 
           return {
             newVersion: 'Canary Versions',
-            details: makeMonorepoInstallList(packageList)
+            details: makeMonorepoInstallList(packageList.filter(p => p.includes('canary')))
           };
         }
 
@@ -802,7 +802,7 @@ export default class NPMPlugin implements IPlugin {
           prereleaseBranch,
           '--no-push',
           // you always want a next version to publish
-          '--force-publish',
+          !isIndependent && '--force-publish',
           // skip prompts
           '--yes',
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
