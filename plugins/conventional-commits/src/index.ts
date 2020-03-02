@@ -1,6 +1,6 @@
 import { applyPlugins, mappers, parse } from 'parse-commit-message';
 
-import { Auto, IPlugin, VersionLabel } from '@auto-it/core';
+import { Auto, IPlugin, VersionLabel, SEMVER } from '@auto-it/core';
 
 /**
  * Parse conventional commit messages and use them to
@@ -26,8 +26,20 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           const incrementLabel = auto.semVerLabels.get(
             conventionalCommit.increment as VersionLabel
           );
+          const allSemVerLabels = [
+            auto.semVerLabels.get(SEMVER.major),
+            auto.semVerLabels.get(SEMVER.minor),
+            auto.semVerLabels.get(SEMVER.patch)
+          ].reduce<string[]>(
+            (acc, labels) => (labels ? [...acc, ...labels] : acc),
+            []
+          );
 
-          if (conventionalCommit.header && incrementLabel) {
+          if (
+            conventionalCommit.header &&
+            incrementLabel &&
+            !commit.labels.some(l => allSemVerLabels.includes(l))
+          ) {
             commit.labels = [...commit.labels, ...incrementLabel];
           }
         } catch (error) {

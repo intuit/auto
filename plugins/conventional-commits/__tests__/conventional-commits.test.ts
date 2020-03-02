@@ -109,7 +109,7 @@ test('should not include label-less head commit if any other commit in PR has co
   expect(result).toBeUndefined();
 });
 
-test('should not include labeled head commit', async () => {
+test('should include labeled head commit', async () => {
   const commit = makeCommitFromMsg('Merge pull request #123 from some-pr\n\n', {
     labels: ['major']
   });
@@ -143,5 +143,71 @@ test('should not include labeled head commit', async () => {
   autoHooks.onCreateLogParse.call(logParse);
 
   const result = await logParse.normalizeCommit(commit);
-  expect(result).toBeDefined();
+  expect(result?.hash).toBe('foo');
+});
+
+test('should respect PR label if SEMVER', async () => {
+  const commit = makeCommitFromMsg('fix: a test', {
+    labels: ['major']
+  });
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const logParse = new LogParse();
+  const autoHooks = makeHooks();
+  const mockGit = ({
+    getUserByEmail: jest.fn(),
+    searchRepo: jest.fn(),
+    getCommitDate: jest.fn(),
+    getFirstCommit: jest.fn(),
+    getPr: jest.fn(),
+    getLatestRelease: () => Promise.resolve('1.2.3'),
+    getGitLog: () => Promise.resolve([commit]),
+    getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
+  } as unknown) as Git;
+  
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: mockGit,
+    release: new Release(mockGit)
+  } as Auto);
+
+  autoHooks.onCreateLogParse.call(logParse);
+
+  const result = await logParse.normalizeCommit(commit);
+  expect(result?.labels).toStrictEqual(['major']);
+});
+
+test('should add conventional commit label if none/skip', async () => {
+  const commit = makeCommitFromMsg('fix: a test', {
+    labels: ['skip-release', 'internal']
+  });
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const logParse = new LogParse();
+  const autoHooks = makeHooks();
+  const mockGit = ({
+    getUserByEmail: jest.fn(),
+    searchRepo: jest.fn(),
+    getCommitDate: jest.fn(),
+    getFirstCommit: jest.fn(),
+    getPr: jest.fn(),
+    getLatestRelease: () => Promise.resolve('1.2.3'),
+    getGitLog: () => Promise.resolve([commit]),
+    getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
+  } as unknown) as Git;
+  
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: mockGit,
+    release: new Release(mockGit)
+  } as Auto);
+
+  autoHooks.onCreateLogParse.call(logParse);
+
+  const result = await logParse.normalizeCommit(commit);
+  expect(result?.labels).toStrictEqual(['skip-release', 'internal', 'patch']);
 });
