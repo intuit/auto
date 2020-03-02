@@ -42,7 +42,7 @@
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
-    "tslib": "1.11.0"
+    "tslib": "1.11.1"
   },
   "devDependencies": {
     "all-contributors-cli": "6.13.0"
