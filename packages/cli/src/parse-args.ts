@@ -469,6 +469,7 @@ export const commands: AutoCommand[] = [
     `,
     examples: [
       '{green $} auto canary',
+      '{green $} auto canary --force',
       '{green $} auto canary --pr 123 --build 5',
       '{green $} auto canary --message "Install PR version: `yarn add -D my-project@%v`"',
       '{green $} auto canary --message false'
@@ -492,6 +493,13 @@ export const commands: AutoCommand[] = [
         description:
           "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment",
         config: true
+      },
+      {
+        name: 'force',
+        type: Boolean,
+        group: 'main',
+        description:
+          'Force a canary release, even if the PR is marked to skip the release'
       }
     ]
   },
