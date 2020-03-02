@@ -1,3 +1,24 @@
+# v9.15.3 (Mon Mar 02 2020)
+
+#### 🐛  Bug Fix
+
+- add test and don't display non-canary packages in comment  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't force publish canary/next for independent lerna projects  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.11.0 to 1.11.1
+
+Bumps [tslib](https://github.com/Microsoft/tslib) from 1.11.0 to 1.11.1.
+- [Release notes](https://github.com/Microsoft/tslib/releases)
+- [Commits](https://github.com/Microsoft/tslib/compare/1.11.0...1.11.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix

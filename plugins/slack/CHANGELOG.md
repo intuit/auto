@@ -1,3 +1,28 @@
+# v9.15.3 (Mon Mar 02 2020)
+
+#### 🐛  Bug Fix
+
+- Bump @types/node-fetch from 2.5.4 to 2.5.5
+
+Bumps [@types/node-fetch](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/HEAD/types/node-fetch) from 2.5.4 to 2.5.5.
+- [Release notes](https://github.com/DefinitelyTyped/DefinitelyTyped/releases)
+- [Commits](https://github.com/DefinitelyTyped/DefinitelyTyped/commits/HEAD/types/node-fetch)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 1.11.0 to 1.11.1
+
+Bumps [tslib](https://github.com/Microsoft/tslib) from 1.11.0 to 1.11.1.
+- [Release notes](https://github.com/Microsoft/tslib/releases)
+- [Commits](https://github.com/Microsoft/tslib/compare/1.11.0...1.11.1)
+
+Signed-off-by: dependabot-preview[bot] <support@dependabot.com>  ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix

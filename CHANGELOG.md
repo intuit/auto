@@ -1,3 +1,31 @@
+# v9.15.3 (Mon Mar 02 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - don't force publish canary/next for independent lerna projects [#1012](https://github.com/intuit/auto/pull/1012) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-jest from 23.8.0 to 23.8.1 [#1011](https://github.com/intuit/auto/pull/1011) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.20.0 to 2.21.0 [#1008](https://github.com/intuit/auto/pull/1008) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.7.4 to 13.7.7 [#1007](https://github.com/intuit/auto/pull/1007) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/fs-extra from 8.0.1 to 8.1.0 [#1006](https://github.com/intuit/auto/pull/1006) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.3 to 4.4.4 [#1005](https://github.com/intuit/auto/pull/1005) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 21.0.0 to 22.0.0 [#1004](https://github.com/intuit/auto/pull/1004) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.1.2 to 14.1.3 [#1002](https://github.com/intuit/auto/pull/1002) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump @types/node-fetch from 2.5.4 to 2.5.5 [#1010](https://github.com/intuit/auto/pull/1010) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Bump tslib from 1.11.0 to 1.11.1 [#1009](https://github.com/intuit/auto/pull/1009) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.2 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix
