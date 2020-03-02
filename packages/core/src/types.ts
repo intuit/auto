@@ -86,6 +86,7 @@ const globalOptions = t.partial({
   }),
   /** Options to pass to "auto canary" */
   canary: t.partial({
+    force: t.boolean,
     message: t.union([t.literal(false), t.string])
   }),
   /** Options to pass to "auto next" */

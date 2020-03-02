@@ -499,7 +499,8 @@ export const commands: AutoCommand[] = [
         type: Boolean,
         group: 'main',
         description:
-          'Force a canary release, even if the PR is marked to skip the release'
+          'Force a canary release, even if the PR is marked to skip the release',
+        config: true
       }
     ]
   },
