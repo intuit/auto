@@ -1135,7 +1135,7 @@ describe('Auto', () => {
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
     });
 
-    test('works when PR has "skip-release" label', async () => {
+    test('should not publish when is present "skip-release" label', async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       // @ts-ignore
       auto.checkClean = () => Promise.resolve(true);
@@ -1154,7 +1154,7 @@ describe('Auto', () => {
       auto.hooks.canary.tap('test', canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, '.abcd');
+      expect(canary).not.toHaveBeenCalled();
     });
   });
 
