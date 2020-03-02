@@ -701,7 +701,7 @@ export default class NPMPlugin implements IPlugin {
 
           return {
             newVersion: 'Canary Versions',
-            details: makeMonorepoInstallList(packageList)
+            details: makeMonorepoInstallList(packageList.filter(p => p.includes('canary')))
           };
         }
 
