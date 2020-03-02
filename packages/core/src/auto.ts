@@ -1007,6 +1007,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
+  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault('canary'), ...args };
     
@@ -1025,7 +1026,7 @@ export default class Auto {
       process.exit(1);
     }
 
-    // await this.checkClean();
+    await this.checkClean();
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
