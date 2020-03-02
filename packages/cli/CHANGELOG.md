@@ -1,3 +1,16 @@
+# v9.15.4 (Mon Mar 02 2020)
+
+#### 🐛  Bug Fix
+
+- make --force configurable in the .autorc  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Don't release canary on skip-release by default, add force flag  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.3 (Mon Mar 02 2020)
 
 #### 🐛  Bug Fix

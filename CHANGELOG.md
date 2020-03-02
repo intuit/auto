@@ -1,3 +1,17 @@
+# v9.15.4 (Mon Mar 02 2020)
+
+#### 🐛  Bug Fix
+
+- `auto`, `@auto-it/core`
+  - Don't release canary on skip-release by default, add force flag [#993](https://github.com/intuit/auto/pull/993) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@zephraph](https://github.com/zephraph))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v9.15.3 (Mon Mar 02 2020)
 
 #### 🐛  Bug Fix
