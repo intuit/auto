@@ -1,3 +1,15 @@
+# v9.15.2 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- Respect PR label when conventional commit message is present  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix

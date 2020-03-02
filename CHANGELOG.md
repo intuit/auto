@@ -1,3 +1,16 @@
+# v9.15.2 (Sun Mar 01 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/conventional-commits`
+  - Respect PR label when conventional commit message is present [#1001](https://github.com/intuit/auto/pull/1001) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.1 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix
