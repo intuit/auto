@@ -1007,6 +1007,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
+  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault('canary'), ...args };
     
@@ -1025,7 +1026,7 @@ export default class Auto {
       process.exit(1);
     }
 
-    // await this.checkClean();
+    await this.checkClean();
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -1036,9 +1037,19 @@ export default class Auto {
     const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
     const labels = head.map(commit => commit.labels);
-    const version =
-      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
-      SEMVER.patch;
+    const version = calculateSemVerBump(
+      labels,
+      this.semVerLabels!,
+      this.config
+    );
+
+    if (version === SEMVER.noVersion && !options.force) {
+      this.logger.log.info(
+        'Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting'
+      );
+      return;
+    }
+
     let canaryVersion = '';
     let newVersion = '';
 

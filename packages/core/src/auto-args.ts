@@ -113,6 +113,8 @@ export interface ICanaryOptions {
   build?: number;
   /** The message used when attaching the canary version to a PR */
   message?: string | 'false';
+  /** Always deploy a canary, even if the PR is marked as skip release */
+  force?: boolean;
 }
 
 export interface INextOptions {
