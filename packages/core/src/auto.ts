@@ -552,7 +552,9 @@ export default class Auto {
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
     const author = (await this.getGitUser()) || ({} as IAuthor);
-    const version = await this.hooks.getPreviousVersion.promise();
+    const version = await this.getCurrentVersion(
+      await this.git.getLatestRelease()
+    );
     const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
     const latestReleaseLink = latestRelease
       ? link(latestRelease.tag_name, latestRelease.html_url)
@@ -985,7 +987,7 @@ export default class Auto {
   // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault('canary'), ...args };
-    
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1103,7 +1105,7 @@ export default class Auto {
    */
   async next(args: INextOptions): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault('next'), ...args };
-    
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1203,7 +1205,10 @@ export default class Auto {
    * 4. Create a release
    */
   async shipit(args: IShipItOptions = {}) {
-    const options: IShipItOptions = { ...this.getCommandDefault('shipit'), ...args };
+    const options: IShipItOptions = {
+      ...this.getCommandDefault('shipit'),
+      ...args
+    };
 
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -1510,12 +1515,7 @@ export default class Auto {
   /** Make a release over a range of commits */
   private async makeRelease(args: IReleaseOptions = {}) {
     const options = { ...this.getCommandDefault('release'), ...args };
-    const {
-      dryRun,
-      from,
-      useVersion,
-      prerelease = false
-    } = options;
+    const { dryRun, from, useVersion, prerelease = false } = options;
 
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
