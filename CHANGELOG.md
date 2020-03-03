@@ -1,3 +1,16 @@
+# v9.15.6 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - info: handle when there is no previous version [#1015](https://github.com/intuit/auto/pull/1015) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.5 (Tue Mar 03 2020)
 
 #### 🐛  Bug Fix
