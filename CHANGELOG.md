@@ -1,3 +1,16 @@
+# v9.15.5 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix "Push to master" on next branch [#1013](https://github.com/intuit/auto/pull/1013) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.4 (Mon Mar 02 2020)
 
 #### 🐛  Bug Fix
