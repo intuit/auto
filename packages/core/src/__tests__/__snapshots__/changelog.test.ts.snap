@@ -71,6 +71,20 @@ exports[`generateReleaseNotes doesn't add additional release notes when there ar
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should add "Push to Next" 1`] = `
+"#### 🚀  Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### ⚠️  Pushed to \`next\`
+
+- I was a push to master  (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should add additional release notes 1`] = `
 "### Release Notes
 
@@ -169,7 +183,7 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to master
+#### ⚠️  Pushed to \`master\`
 
 - I was a push to master  (adam@dierkens.com)
 
@@ -270,16 +284,6 @@ exports[`generateReleaseNotes should order the section major, minor, patch, then
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`generateReleaseNotes should prefer section with highest releaseType for PR with multiple labels 1`] = `
-"#### Minor Section
-
-- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
-`;
-
 exports[`generateReleaseNotes should prefer section defined first in config for PR with multiple labels of same releaseType 1`] = `
 "#### Internal Section
 
@@ -292,6 +296,16 @@ exports[`generateReleaseNotes should prefer section defined first in config for 
 
 exports[`generateReleaseNotes should prefer section of default label for PR with multiple labels of same releaseType 1`] = `
 "#### 🚀  Enhancement
+
+- Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should prefer section with highest releaseType for PR with multiple labels 1`] = `
+"#### Minor Section
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 

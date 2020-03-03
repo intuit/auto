@@ -46,7 +46,7 @@ import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
-import { execSync } from 'child_process';
+import { getCurrentBranch } from './utils/get-current-branch';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 import getRepository from './utils/get-repository';
 import {
@@ -273,31 +273,6 @@ export function determineNextVersion(
   return lte(next, currentVersion)
     ? inc(currentVersion, 'prerelease', tag) || 'prerelease'
     : next;
-}
-
-/** Get the current branch the git repo is set to */
-export function getCurrentBranch() {
-  const isPR = 'isPr' in env && env.isPr;
-  let branch: string | undefined;
-  // env-ci sets branch to target branch (ex: master) in some CI services.
-  // so we should make sure we aren't in a PR just to be safe
-
-  if (isPR && 'prBranch' in env) {
-    branch = env.prBranch;
-  } else {
-    branch = env.branch;
-  }
-
-  if (!branch) {
-    try {
-      branch = execSync('git symbolic-ref --short HEAD', {
-        encoding: 'utf8',
-        stdio: 'ignore'
-      });
-    } catch (error) {}
-  }
-
-  return branch;
 }
 
 /** Print the current version of "auto" */
@@ -1839,6 +1814,7 @@ export default class Auto {
 
 export * from './auto-args';
 export { default as InteractiveInit } from './init';
+export { getCurrentBranch } from './utils/get-current-branch';
 export { validatePluginConfiguration } from './validate-config';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
