@@ -1,3 +1,15 @@
+# v9.15.8 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- set license on CLI  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.7 (Tue Mar 03 2020)
 
 #### 🐛  Bug Fix

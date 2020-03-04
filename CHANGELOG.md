@@ -1,3 +1,16 @@
+# v9.15.8 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- `auto`
+  - set license on CLI [#1017](https://github.com/intuit/auto/pull/1017) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.7 (Tue Mar 03 2020)
 
 #### 🐛  Bug Fix
