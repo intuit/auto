@@ -382,7 +382,6 @@ export default class Auto {
         ]);
         const [, remoteHead] = heads.match(/^(\w+)?/) || [];
 
-        console.log({remoteHead})
         if (remoteHead) {
           // This will throw if the branch is ahead of the current branch
           execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`);
