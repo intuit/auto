@@ -366,6 +366,40 @@ export default class Auto {
       }
     );
 
+    /** 
+     * Determine if repo is behind HEAD of current branch. We do this in
+     * the "afterVersion" hook so the check happens as late as possible.
+     */
+    this.hooks.afterVersion.tapPromise('Check remote for commits', async () => {
+      // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
+      // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
+      try {
+        const heads = await execPromise('git', [
+          'ls-remote',
+          '--heads',
+          this.remote,
+          getCurrentBranch()
+        ]);
+        const [, remoteHead] = heads.match(/^(\w+)?/) || [];
+
+        console.log({remoteHead})
+        if (remoteHead) {
+          // This will throw if the branch is ahead of the current branch
+          execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`);
+        }
+
+        this.logger.verbose.info(
+          'Current branch is up to date, proceeding with release'
+        );
+      } catch (error) {
+        // If we are behind or there is no match, exit and skip the release
+        this.logger.log.warn(
+          'Current commit is behind, skipping the release to avoid collisions.'
+        );
+        process.exit(0);
+      }
+    });
+
     loadEnv();
 
     this.logger.verbose.info('ENV:', env);
@@ -397,39 +431,6 @@ export default class Auto {
           options.newVersion,
           options.isPrerelease
         );
-      }
-    });
-
-    /** 
-     * Determine if repo is behind HEAD of current branch. We do this in
-     * the "afterVersion" hook so the check happens as late as possible.
-     */
-    this.hooks.afterVersion.tapPromise('Check remote for commits', async () => {
-      // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
-      // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
-      try {
-        const heads = await execPromise('git', [
-          'ls-remote',
-          '--heads',
-          this.remote,
-          getCurrentBranch()
-        ]);
-        const [, remoteHead] = heads.match(/^(\w+)?/) || [];
-
-        if (remoteHead) {
-          // This will throw if the branch is ahead of the current branch
-          execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`);
-        }
-
-        this.logger.verbose.info(
-          'Current branch is up to date, proceeding with release'
-        );
-      } catch (error) {
-        // If we are behind or there is no match, exit and skip the release
-        this.logger.log.warn(
-          'Current commit is behind, skipping the release to avoid collisions.'
-        );
-        process.exit(0);
       }
     });
   }
