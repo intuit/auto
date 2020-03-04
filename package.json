@@ -1,11 +1,11 @@
 {
   "name": "auto-monorepo",
   "private": true,
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
-  "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
