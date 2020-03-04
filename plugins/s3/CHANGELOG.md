@@ -1,3 +1,15 @@
+# v9.15.7 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- add license to all sub-packages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.0 (Sun Mar 01 2020)
 
 #### 🐛  Bug Fix

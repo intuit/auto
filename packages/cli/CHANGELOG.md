@@ -1,3 +1,15 @@
+# v9.15.7 (Tue Mar 03 2020)
+
+#### 🐛  Bug Fix
+
+- update --help output in cli readme  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.4 (Mon Mar 02 2020)
 
 #### 🐛  Bug Fix
