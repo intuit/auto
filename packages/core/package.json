@@ -3,6 +3,7 @@
   "version": "9.15.6",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"

@@ -3,6 +3,7 @@
   "version": "9.15.6",
   "main": "dist/index.js",
   "description": "A plugin that calls gradle-release-plugin with versioning information.",
+  "license": "MIT",
   "author": {
     "name": "Brandon Miller",
     "email": "unknownerror404@gmail.com"
