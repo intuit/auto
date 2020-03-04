@@ -370,12 +370,10 @@ export default class Auto {
      * Determine if repo is behind HEAD of current branch. We do this in
      * the "afterVersion" hook so the check happens as late as possible.
      */
-    console.log(this.remote)
     this.hooks.afterVersion.tapPromise('Check remote for commits', async () => {
       // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
       // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
       try {
-        console.log(this.remote)
         const heads = await execPromise('git', [
           'ls-remote',
           '--heads',

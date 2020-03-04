@@ -1247,6 +1247,7 @@ describe('Auto', () => {
       auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
+      auto.remote = 'https://github.com/intuit/auto'
 
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
