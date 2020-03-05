@@ -1,3 +1,16 @@
+# v9.16.1 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - npm: respect subPackageChangelogs false [#1025](https://github.com/intuit/auto/pull/1025) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.16.0 (Thu Mar 05 2020)
 
 #### 🚀  Enhancement
