@@ -34,6 +34,11 @@ export default function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger
 ): IPlugin | undefined {
+  const isLocal =
+    pluginPath.startsWith('.') ||
+    pluginPath.startsWith('/') ||
+    pluginPath.match(/^[A-Z]:\\/); // Support for windows paths
+
   let plugin:
     | IPluginConstructor
     | {
@@ -43,12 +48,12 @@ export default function loadPlugin(
     | undefined;
 
   // Try requiring a path
-  if (pluginPath.startsWith('.') || pluginPath.startsWith('/')) {
+  if (isLocal) {
     plugin = requirePlugin(pluginPath, logger);
   }
 
   // Try requiring a path from cwd
-  if (!plugin && (pluginPath.startsWith('.') || pluginPath.startsWith('/'))) {
+  if (!plugin && isLocal) {
     const localPath = path.join(process.cwd(), pluginPath);
     plugin = requirePlugin(localPath, logger);
 
