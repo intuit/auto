@@ -156,12 +156,20 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         `release version: ${releaseVersion} [skip ci]`
       );
 
+      const newVersion = auto.prefixRelease(releaseVersion);
+
       // Ensure tag is on this commit, changelog will be added automatically
-      await execPromise('git', ['tag', auto.prefixRelease(releaseVersion)]);
+      await execPromise('git', [
+        'tag',
+        newVersion,
+        '-m',
+        `"Update version to ${newVersion}"`
+      ]);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       const { publish } = this.properties;
+
       if (publish) {
         await execPromise(this.options.gradleCommand, [
           'publish',
