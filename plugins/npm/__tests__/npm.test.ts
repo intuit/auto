@@ -4,7 +4,8 @@ import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
 import NPMPlugin, {
   changedPackages,
   getMonorepoPackage,
-  greaterRelease
+  greaterRelease,
+  INpmConfig
 } from '../src';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
@@ -869,7 +870,7 @@ describe('canary', () => {
       ])
     );
 
-    expect(await hooks.canary.promise(Auto.SEMVER.patch, '')).toMatchSnapshot()
+    expect(await hooks.canary.promise(Auto.SEMVER.patch, '')).toMatchSnapshot();
   });
 
   test('error when no canary release found - independent', async () => {
@@ -1100,5 +1101,69 @@ describe('makeRelease', () => {
       '@packages/b',
       false
     );
+  });
+});
+
+describe('beforeCommitChangelog', () => {
+  let updateChangelogFile: jest.Mock;
+
+  async function subPackageChangelogTest(options: INpmConfig = {}) {
+    const plugin = new NPMPlugin(options);
+    const hooks = makeHooks();
+
+    // isMonorepo
+    exec.mockReturnValue('@packages/a\n@packages/b');
+    existsSync.mockReturnValueOnce(true);
+    getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
+
+    updateChangelogFile = jest.fn();
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      remote: 'origin',
+      baseBranch: 'master',
+      logger: dummyLog(),
+      prefixRelease: str => str,
+      release: {
+        updateChangelogFile,
+        makeChangelog: () => ({
+          generateReleaseNotes: (commits: IExtendedCommit[]) =>
+            Promise.resolve(commits.map(c => c.subject).join('\n'))
+        })
+      } as any
+    } as Auto.Auto);
+
+    await hooks.beforeCommitChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: '0.0.1',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        {
+          subject: 'update package 1',
+          hash: '123',
+          labels: [],
+          files: ['packages/a/package.json'],
+          authors: [{ username: 'Jeff', hash: '123' }]
+        },
+        {
+          subject: 'update package 2',
+          hash: '124',
+          labels: [],
+          files: ['packages/b/package.json'],
+          authors: [{ username: 'Andrew', hash: '124' }]
+        }
+      ]
+    });
+  }
+
+  test('should create sub-package changelogs ', async () => {
+    await subPackageChangelogTest();
+    expect(updateChangelogFile).toHaveBeenCalled();
+  });
+
+  test('should not create sub-package changelogs ', async () => {
+    await subPackageChangelogTest({ subPackageChangelogs: false });
+    expect(updateChangelogFile).not.toHaveBeenCalled();
   });
 });
