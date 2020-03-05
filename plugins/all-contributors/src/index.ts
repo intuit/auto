@@ -6,6 +6,7 @@ import {
   inFolder,
   validatePluginConfiguration
 } from '@auto-it/core';
+import botList from '@auto-it/bot-list';
 import fs from 'fs';
 import path from 'path';
 import match from 'anymatch';
@@ -86,16 +87,7 @@ interface AllContributorsRc {
 }
 
 const defaultOptions: IAllContributorsPluginOptions = {
-  exclude: [
-    'dependabot-preview[bot]',
-    'greenkeeper[bot]',
-    'dependabot[bot]',
-    'fossabot',
-    'renovate',
-    'renovate-bot',
-    'renovate[bot]',
-    'renovate-approve'
-  ],
+  exclude: botList,
   types: {
     doc: ['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*'],
     example: ['**/*.stories*', '**/*.story.*'],

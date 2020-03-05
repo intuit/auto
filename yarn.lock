@@ -7,6 +7,9 @@
   resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.1.1.tgz#9de42932e89065fb4fe4842978ca2d1ed3424cea"
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
+"@auto-it/bot-list@link:packages/bot-list":
+  version "9.15.8"
+
 "@auto-it/core@link:packages/core":
   version "9.15.2"
   dependencies:
