@@ -79,6 +79,11 @@ export default function loadPlugin(
     plugin = requirePlugin(path.join('@auto-it', pluginPath), logger);
   }
 
+  // Try importing canary version of plugin
+  if (!plugin) {
+    plugin = requirePlugin(path.join('@auto-canary', pluginPath), logger);
+  }
+
   // Try requiring a package
   if (
     !plugin &&
