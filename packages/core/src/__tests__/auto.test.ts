@@ -57,10 +57,12 @@ jest.mock('@octokit/rest', () => {
 jest.mock('gitlog', () => (a, cb) => {
   cb(undefined, [
     {
-      rawBody: 'foo'
+      rawBody: 'foo',
+      hash: '123'
     },
     {
-      rawBody: 'foo'
+      rawBody: 'foo',
+      hash: '456'
     }
   ]);
 });
