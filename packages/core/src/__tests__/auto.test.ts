@@ -1263,7 +1263,7 @@ describe('Auto', () => {
       expect(afterShipIt).toHaveBeenCalled();
     });
 
-    test('should not publish when no behind remote', async () => {
+    test('should not publish when behind remote', async () => {
       jest.spyOn(child, 'execSync').mockImplementation(command => {
         if (command.startsWith('git')) {
           throw new Error();
