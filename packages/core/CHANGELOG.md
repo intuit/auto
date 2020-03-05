@@ -1,3 +1,15 @@
+# v9.15.10 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- Fix loading canary versions of offical plugins  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.9 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix

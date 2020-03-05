@@ -1,3 +1,16 @@
+# v9.15.10 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - Fix loading canary versions of official plugins [#1021](https://github.com/intuit/auto/pull/1021) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.9 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix
