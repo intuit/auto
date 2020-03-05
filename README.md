@@ -80,6 +80,20 @@ In watch mode:
 yarn start
 ```
 
+### Installing the binary
+
+Install the bundled binary onto your system. This requires the project to be built or in watch mode.
+
+```sh
+yarn install-mac
+```
+
+If running this for the first time you may also have to run the following command.
+
+```sh
+chmod +x /usr/local/bin/auto
+```
+
 ### Cleaning
 
 ```sh

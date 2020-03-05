@@ -36,7 +36,8 @@
     "docs:build": "./docs/generate-command-docs.js",
     "docs:watch": "yarn docs --watch",
     "docs:publish": "./scripts/publish-docs.sh",
-    "create:plugin": "./scripts/create-plugin.js"
+    "create:plugin": "./scripts/create-plugin.js",
+    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.7.0",
