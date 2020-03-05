@@ -271,7 +271,12 @@ export default class Changelog {
 
   /** Transform a commit into a line in the changelog */
   private async generateCommitNote(commit: IExtendedCommit) {
-    const subject = commit.subject ? commit.subject.split('\n')[0].trim() : '';
+    const subject = commit.subject
+      ? commit.subject
+          .split('\n')[0]
+          .trim()
+          .replace('[skip ci]', '\\[skip ci\\]')
+      : '';
 
     let pr = '';
 
