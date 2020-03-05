@@ -371,8 +371,8 @@ export default class Release {
         let released: boolean;
 
         try {
-          // 0 exit code means that "from" is an ancestor of the commit
-          // and should be released
+          // This determines:         Is this commit an ancestor of this commit
+          //                                       ↓                ↓	
           execSync(`git merge-base --is-ancestor ${from} ${commit.hash}`, {
             encoding: 'utf8'
           });
