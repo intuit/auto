@@ -5,7 +5,6 @@ import GradleReleasePlugin, {
   IGradleReleasePluginPluginOptions,
   getProperties
 } from '../src';
-import { IAutoConfig } from '@auto-it/core/dist/release';
 
 const mockProperties = (properties: string) =>
   jest
@@ -48,7 +47,7 @@ describe('Gradle Plugin', () => {
     test('should version release - patch version', async () => {
       const properties = 'version: 1.0.0';
       mockProperties(properties);
-      await hooks.beforeRun.promise({} as IAutoConfig);
+      await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
       mockProperties(properties).mockImplementation(spy);
@@ -65,7 +64,7 @@ describe('Gradle Plugin', () => {
     test('should version release - major version', async () => {
       const properties = 'version: 1.0.0';
       mockProperties(properties);
-      await hooks.beforeRun.promise({} as IAutoConfig);
+      await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
       mockProperties(properties).mockImplementation(spy);
@@ -82,7 +81,7 @@ describe('Gradle Plugin', () => {
     test('should version release - minor version', async () => {
       const properties = 'version: 1.1.0';
       mockProperties(properties);
-      await hooks.beforeRun.promise({} as IAutoConfig);
+      await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
       mockProperties(properties).mockImplementation(spy);
@@ -99,7 +98,7 @@ describe('Gradle Plugin', () => {
     test('should version release - patch w/ default snapshot', async () => {
       const properties = 'version: 1.0.0-SNAPSHOT';
       mockProperties(properties);
-      await hooks.beforeRun.promise({} as IAutoConfig);
+      await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
       mockProperties(properties).mockImplementation(spy);
@@ -119,7 +118,7 @@ describe('Gradle Plugin', () => {
       snapshotSuffix: .SNAP
     `;
       mockProperties(properties);
-      await hooks.beforeRun.promise({} as IAutoConfig);
+      await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
       mockProperties(properties).mockImplementation(spy);
