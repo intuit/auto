@@ -378,14 +378,14 @@ export default class Release {
         released = false;
       } catch (error) {
         // --is-ancestor returned false so the commit is **before** "from"
-        // so do no release this commit again
+        // so do not release this commit again
         released = true;
       }
 
       if (released) {
         const shortHash = commit.hash.slice(0, 8);
         this.logger.verbose.warn(
-          `Commit already released omitting: "${shortHash}": "${commit.subject}"`
+          `Commit already released, omitting: ${shortHash}: "${commit.subject}"`
         );
       }
 
