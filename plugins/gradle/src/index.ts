@@ -1,6 +1,7 @@
 import { Auto, IPlugin, execPromise } from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
+import * as t from 'io-ts';
 import path from 'path';
 import { inc, ReleaseType } from 'semver';
 
@@ -8,13 +9,15 @@ import { inc, ReleaseType } from 'semver';
 const logPrefix = '[Gradle-Release-Plugin]';
 const defaultSnapshotSuffix = '-SNAPSHOT';
 
-export interface IGradleReleasePluginPluginOptions {
+const pluginOptions = t.partial({
   /** The gradle binary to release the project with */
-  gradleCommand?: string;
+  gradleCommand: t.string,
 
   /** A list of gradle command customizations to pass to gradle */
-  gradleOptions?: Array<string>;
-}
+  gradleOptions: t.array(t.string)
+});
+
+export type IGradleReleasePluginPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 export interface IGradleProperties {
   /** version */
