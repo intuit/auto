@@ -1,6 +1,7 @@
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
 import { URL } from 'url';
 import join from 'url-join';
+import botList from '@auto-it/bot-list';
 
 import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinition } from './release';
@@ -121,15 +122,12 @@ export default class Changelog {
       'Default',
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
-    this.hooks.omitReleaseNotes.tap('Renovate', commit => {
-      const names = ['renovate-pro[bot]', 'renovate-bot'];
-
+    this.hooks.omitReleaseNotes.tap('Bots', commit => {
       if (
-        commit.authors.find(author =>
-          Boolean(
-            (author.name && names.includes(author.name)) ||
-              (author.username && names.includes(author.username))
-          )
+        commit.authors.some(
+          author =>
+            (author.name && botList.includes(author.name)) ||
+            (author.username && botList.includes(author.username))
         )
       ) {
         return true;
