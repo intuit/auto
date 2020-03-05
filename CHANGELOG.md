@@ -1,3 +1,21 @@
+# v9.16.0 (Thu Mar 05 2020)
+
+#### 🚀  Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/git-tag`
+  - determine if branch behind remote and exit before trying to publish [#1018](https://github.com/intuit/auto/pull/1018) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠  Internal
+
+- `@auto-it/core`
+  - fix tests [#1024](https://github.com/intuit/auto/pull/1024) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.11 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix
