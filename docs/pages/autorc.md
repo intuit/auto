@@ -162,19 +162,19 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 [
   {
     name: 'major',
-    changelogTitle: '💥  Breaking Change',
+    changelogTitle: '💥 Breaking Change',
     description: 'Increment the major version when merged',
     releaseType: 'major'
   },
   {
     name: 'minor',
-    changelogTitle: '🚀  Enhancement',
+    changelogTitle: '🚀 Enhancement',
     description: 'Increment the minor version when merged',
     releaseType: 'minor'
   },
   {
     name: 'patch',
-    changelogTitle: '🐛  Bug Fix',
+    changelogTitle: '🐛 Bug Fix',
     description: 'Increment the patch version when merged',
     releaseType: 'patch'
   },
@@ -190,13 +190,13 @@ To customize your project's labels use the `labels` section in your `.autorc`.
   },
   {
     name: 'internal',
-    changelogTitle: '🏠  Internal',
+    changelogTitle: '🏠 Internal',
     description: 'Changes only affect the internal API',
     releaseType: 'none'
   },
   {
     name: 'documentation',
-    changelogTitle: '📝  Documentation',
+    changelogTitle: '📝 Documentation',
     description: 'Changes only affect the documentation',
     releaseType: 'none'
   }
