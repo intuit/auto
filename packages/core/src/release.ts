@@ -368,15 +368,20 @@ export default class Release {
     const logParse = await this.createLogParse();
     const commits = (await logParse.normalizeCommits(gitlog)).filter(commit => {
       try {
-        // 0 exit code means that the commit is an ancestor of "from"
-        // and should not be released
-        const released =
-          execSync(
-            `git merge-base --is-ancestor ${commit.hash} ${from}; echo $?`,
-            {
-              encoding: 'utf8'
-            }
-          ).trim() === '0';
+        let released: boolean;
+
+        try {
+          // 0 exit code means that "from" is an ancestor of the commit
+          // and should be released
+          execSync(`git merge-base --is-ancestor ${from} ${commit.hash}`, {
+            encoding: 'utf8'
+          });
+          released = false;
+        } catch (error) {
+          // --is-ancestor returned false so the commit is **before** "from"
+          // so do no release this commit again
+          released = true;
+        }
 
         if (released) {
           this.logger.verbose.warn(
