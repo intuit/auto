@@ -1,3 +1,16 @@
+# v9.16.2 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/bot-list`, `@auto-it/core`, `@auto-it/all-contributors`
+  - move botlist to package and use it in release notes exclusion [#1027](https://github.com/intuit/auto/pull/1027) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.16.1 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix
