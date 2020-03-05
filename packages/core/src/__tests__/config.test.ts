@@ -27,7 +27,7 @@ describe('normalizeLabel', () => {
     expect(normalizeLabel(label)).toStrictEqual({
       description: 'Increment the major version when merged',
       name: 'foo',
-      changelogTitle: '💥  Breaking Change',
+      changelogTitle: '💥 Breaking Change',
       releaseType: SEMVER.major
     });
   });
@@ -38,7 +38,7 @@ describe('normalizeLabels', () => {
     expect(normalizeLabels({}).find(l => l.name === 'minor')).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'minor',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
 
@@ -49,7 +49,7 @@ describe('normalizeLabels', () => {
     ).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'foo',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
   });

@@ -344,7 +344,7 @@ describe('generateReleaseNotes', () => {
         files: [],
         authorName: 'Adam Dierkens',
         authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master\n\n',
+        subject: 'I was a push to master\n\nfoo bar',
         labels: ['pushToBaseBranch']
       },
       {

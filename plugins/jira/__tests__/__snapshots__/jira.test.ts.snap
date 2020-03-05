@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should create note for JIRA commits 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
 - [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052): Some Feature [#12345](https://github.custom.com/foobar/auto/pull/12345) (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- Third  (adam@dierkens.com)
+- Third (adam@dierkens.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
@@ -19,7 +19,7 @@ exports[`should create note for JIRA commits 1`] = `
 `;
 
 exports[`should create note for jira commits without PR title 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - [PLAYA-5052](https://jira.custom.com/browse/PLAYA-5052) (adam@dierkens.com)
 
