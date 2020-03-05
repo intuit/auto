@@ -284,7 +284,7 @@ export default class Changelog {
     }
 
     const user = await this.createUserLinkList(commit);
-    return `- ${subject} ${pr}${user ? ` (${user})` : ''}`;
+    return `- ${subject} ${pr ? ` ${pr}` : ''}${user ? ` (${user})` : ''}`;
   }
 
   /** Get all the authors in the provided commits */
