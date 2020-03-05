@@ -1,3 +1,16 @@
+# v9.15.9 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - test for ancestor in windows friendly way [#1019](https://github.com/intuit/auto/pull/1019) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.8 (Tue Mar 03 2020)
 
 #### 🐛  Bug Fix

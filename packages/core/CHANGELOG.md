@@ -1,3 +1,18 @@
+# v9.15.9 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- fix typo  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- no need for 2 try/catches  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- better comment  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- test for ancestor in windows freindly way  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.7 (Tue Mar 03 2020)
 
 #### 🐛  Bug Fix
