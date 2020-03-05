@@ -3,7 +3,6 @@ import merge from 'deepmerge';
 import fetch from 'node-fetch';
 import * as path from 'path';
 
-import { ApiOptions } from './auto-args';
 import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import tryRequire from './utils/try-require';
@@ -17,11 +16,15 @@ export function normalizeLabel(
   label: Partial<ILabelDefinition>
 ): Partial<ILabelDefinition> {
   const baseLabel =
-    defaultLabels.find(
-      l =>
-        (label.releaseType && l.releaseType === label.releaseType) ||
-        (label.name && l.name === label.name)
-    ) || {};
+    defaultLabels.find(l => {
+      let isBase = false;
+
+      if (label.releaseType !== 'none') {
+        isBase = l.releaseType === label.releaseType;
+      }
+
+      return isBase || (label.name && l.name === label.name);
+    }) || {};
   return { ...baseLabel, ...label };
 }
 
@@ -39,7 +42,7 @@ export function normalizeLabels(config: ConfigObject) {
         )
     );
 
-    return [...baseLabels, ...userLabels];
+    return [...userLabels, ...baseLabels];
   }
 
   return defaultLabels;
@@ -59,7 +62,7 @@ export default class Config {
    * Load the .autorc from the file system, set up defaults, combine with CLI args
    * load the extends property, load the plugins and start the git remote interface.
    */
-  async loadConfig(args: ApiOptions) {
+  async loadConfig() {
     const explorer = cosmiconfig('auto', {
       searchPlaces: [
         `.autorc`,
@@ -90,17 +93,9 @@ export default class Config {
 
     this.logger.verbose.success('Using SEMVER labels:', '\n', semVerLabels);
 
-    const skipReleaseLabels = rawConfig.skipReleaseLabels || [];
-
-    if (!skipReleaseLabels.includes(semVerLabels.get('skip')!)) {
-      (semVerLabels.get('skip') || []).map(l => skipReleaseLabels.push(l));
-    }
-
     return {
       ...rawConfig,
-      ...args,
       labels,
-      skipReleaseLabels,
       prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
       versionBranches:
         typeof rawConfig.versionBranches === 'boolean'

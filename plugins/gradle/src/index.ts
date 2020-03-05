@@ -67,7 +67,7 @@ async function getVersion(gradleCommand: string): Promise<string> {
 /** A plugin to release java projects with gradle */
 export default class GradleReleasePluginPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Gradle Release Plugin';
+  name = 'gradle';
 
   /** The options of the plugin */
   readonly options: Required<IGradleReleasePluginPluginOptions>;

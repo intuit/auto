@@ -1,19 +1,27 @@
-import { Auto, execPromise, IPlugin } from '@auto-it/core';
+import {
+  Auto,
+  execPromise,
+  IPlugin,
+  validatePluginConfiguration
+} from '@auto-it/core';
 import * as fs from 'fs';
 import { inc, ReleaseType } from 'semver';
 import { promisify } from 'util';
+import * as t from 'io-ts';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-interface IChromeWebStoreConfig {
+const pluginOptions = t.partial({
   /** The id of the chrome extension */
-  id?: string;
+  id: t.string,
   /** The path to the manifest of the chrome extension */
-  manifest?: string;
+  manifest: t.string,
   /** A path to the packaged extension */
-  build: string;
-}
+  build: t.string
+});
+
+export type IChromeWebStoreConfig = t.TypeOf<typeof pluginOptions>;
 
 /** Get the chrome plugin manifest. */
 async function getManifest(path: string) {
@@ -23,7 +31,7 @@ async function getManifest(path: string) {
 /** This plugin allows you to automate the publishing of chrome extensions */
 export default class ChromeWebStorePlugin implements IPlugin {
   /** The name of the plugin */
-  readonly name = 'Chrome Web Store';
+  readonly name = 'chrome';
 
   /** The options of the plugin */
   private readonly options: Required<IChromeWebStoreConfig>;
@@ -44,6 +52,12 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.beforeRun.tap(this.name, () => {
       if (!this.options.id) {
         this.reportWarning(

@@ -1,11 +1,11 @@
 {
   "name": "auto-monorepo",
   "private": true,
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
   },
-  "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -50,13 +50,14 @@
     "eslint-config-xo": "^0.29.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^23.0.1",
-    "eslint-plugin-jsdoc": "^21.0.0",
+    "eslint-plugin-jsdoc": "^22.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "graphql": "^14.2.1",
     "husky": "^4.0.7",
     "ignite": "^1.10.9",
     "jest": "~25.1.0",
     "jest-serializer-path": "^0.1.15",
+    "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
@@ -96,7 +97,8 @@
       "!**/scripts/template-plugin/**/*"
     ],
     "snapshotSerializers": [
-      "jest-serializer-path"
+      "jest-serializer-path",
+      "jest-snapshot-serializer-ansi"
     ],
     "coverageDirectory": "./coverage",
     "collectCoverageFrom": [

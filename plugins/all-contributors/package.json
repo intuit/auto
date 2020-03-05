@@ -1,8 +1,9 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "9.14.0",
+  "version": "9.15.8",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -39,7 +40,10 @@
     "@auto-it/core": "link:../../packages/core",
     "anymatch": "^3.1.1",
     "await-to-js": "^2.1.1",
-    "tslib": "1.11.0"
+    "fp-ts": "^2.5.3",
+    "fromentries": "^1.2.0",
+    "io-ts": "^2.1.2",
+    "tslib": "1.11.1"
   },
   "devDependencies": {
     "all-contributors-cli": "6.13.0"

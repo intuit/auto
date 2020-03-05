@@ -40,20 +40,28 @@ import Config from './config';
 import Git, { IGitOptions, IPRInfo } from './git';
 import InteractiveInit from './init';
 import LogParse, { IExtendedCommit } from './log-parse';
-import Release, {
-  getVersionMap,
-  IAutoConfig,
-  ILabelDefinition
-} from './release';
+import Release, { getVersionMap, ILabelDefinition } from './release';
 import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
 import execPromise from './utils/exec-promise';
 import loadPlugin, { IPlugin } from './utils/load-plugins';
 import createLog, { ILogger, setLogLevel } from './utils/logger';
 import { makeHooks } from './utils/make-hooks';
-import { IAuthorOptions, IRepoOptions } from './auto-args';
-import { execSync } from 'child_process';
+import { getCurrentBranch } from './utils/get-current-branch';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 import getRepository from './utils/get-repository';
+import {
+  RepoInformation,
+  AuthorInformation,
+  AutoRc,
+  LoadedAutoRc
+} from './types';
+import {
+  validateAutoRc,
+  validatePlugins,
+  ValidatePluginHook,
+  formatError
+} from './validate-config';
+import { omit } from './utils/omit';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -106,9 +114,11 @@ interface BeforeShipitContext {
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
-  modifyConfig: SyncWaterfallHook<[IAutoConfig]>;
+  modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
+  /** Validate what is in the config. You must return the config in this hook. */
+  validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
-  beforeRun: SyncHook<[IAutoConfig]>;
+  beforeRun: SyncHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -168,11 +178,14 @@ export interface IAutoHooks {
     | void
   >;
   /** Get git author. Typically from a package distribution description file. */
-  getAuthor: AsyncSeriesBailHook<[], IAuthorOptions | void>;
+  getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;
   /** Get the previous version. Typically from a package distribution description file. */
   getPreviousVersion: AsyncSeriesBailHook<[], string>;
   /** Get owner and repository. Typically from a package distribution description file. */
-  getRepository: AsyncSeriesBailHook<[], (IRepoOptions & TestingToken) | void>;
+  getRepository: AsyncSeriesBailHook<
+    [],
+    (RepoInformation & TestingToken) | void
+  >;
   /** Tap into the things the Release class makes. This isn't the same as `auto release`, but the main class that does most of the work. */
   onCreateRelease: SyncHook<[Release]>;
   /**
@@ -262,31 +275,6 @@ export function determineNextVersion(
     : next;
 }
 
-/** Get the current branch the git repo is set to */
-export function getCurrentBranch() {
-  const isPR = 'isPr' in env && env.isPr;
-  let branch: string | undefined;
-  // env-ci sets branch to target branch (ex: master) in some CI services.
-  // so we should make sure we aren't in a PR just to be safe
-
-  if (isPR && 'prBranch' in env) {
-    branch = env.prBranch;
-  } else {
-    branch = env.branch;
-  }
-
-  if (!branch) {
-    try {
-      branch = execSync('git symbolic-ref --short HEAD', {
-        encoding: 'utf8',
-        stdio: 'ignore'
-      });
-    } catch (error) {}
-  }
-
-  return branch;
-}
-
 /** Print the current version of "auto" */
 export function getAutoVersion() {
   const packagePath = path.join(__dirname, '../package.json');
@@ -315,7 +303,7 @@ export default class Auto {
   /** The remote git to push changes to */
   remote!: string;
   /** The user configuration of auto (.autorc) */
-  config?: IAutoConfig;
+  config?: LoadedAutoRc;
 
   /** A class that handles creating releases */
   release?: Release;
@@ -418,21 +406,57 @@ export default class Auto {
    */
   async loadConfig() {
     const configLoader = new Config(this.logger);
+    const userConfig = await configLoader.loadConfig();
+
+    this.logger.verbose.success('Loaded `auto` with config:', userConfig);
+
+    // Allow plugins to be overriden for testing
+    this.config = {
+      ...userConfig,
+      plugins: this.options.plugins || userConfig.plugins
+    };
+    this.loadPlugins(this.config!);
+    this.loadDefaultBehavior();
+    this.config = this.hooks.modifyConfig.call(this.config!);
+    this.labels = this.config.labels;
+    this.semVerLabels = getVersionMap(this.config.labels);
+    this.hooks.beforeRun.call(this.config);
+
+    const errors = [
+      ...(await validateAutoRc(this.config)),
+      ...(await validatePlugins(this.hooks.validateConfig, this.config))
+    ];
+
+    if (errors.length) {
+      this.logger.log.error(
+        endent`
+          Found configuration errors:
+          
+          ${errors.map(formatError).join('\n')}
+        `,
+        '\n'
+      );
+      this.logger.log.warn(
+        'This errors are for the fully loaded configuration (this is why some paths might seem off).'
+      );
+
+      if (this.config.extends) {
+        this.logger.log.warn(
+          'Some errors might originate from an extend config.'
+        );
+      }
+
+      process.exit(1);
+    }
+
     const config = {
-      ...(await configLoader.loadConfig(this.options)),
+      ...userConfig,
+      // This Line overrides config with args
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...omit(this.options, ['_command', '_all', 'main'] as any),
       baseBranch: this.baseBranch
     };
-
-    this.logger.verbose.success('Loaded `auto` with config:', config);
-
     this.config = config;
-    this.labels = config.labels;
-    this.semVerLabels = getVersionMap(config.labels);
-    this.loadPlugins(config);
-    this.loadDefaultBehavior();
-    this.config = this.hooks.modifyConfig.call(config);
-    this.hooks.beforeRun.call(config);
-
     const repository = await this.getRepo(config);
     const token = (repository && repository.token) || process.env.GH_TOKEN;
 
@@ -464,6 +488,8 @@ export default class Auto {
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
+
+    return config;
   }
 
   /** Determine the remote we have auth to push to. */
@@ -521,12 +547,14 @@ export default class Auto {
       return { hasError: false };
     }
 
-    const [, gitVersion = ''] = await on(execPromise('git', ['--version']))
+    const [, gitVersion = ''] = await on(execPromise('git', ['--version']));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
     const author = (await this.getGitUser()) || ({} as IAuthor);
-    const version = await this.hooks.getPreviousVersion.promise();
+    const version = await this.getCurrentVersion(
+      await this.git.getLatestRelease()
+    );
     const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
     const latestReleaseLink = latestRelease
       ? link(latestRelease.tag_name, latestRelease.html_url)
@@ -830,9 +858,10 @@ export default class Auto {
    * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
    * You can use the "context" option to multiple comments on a PR.
    *
-   * @param options - Options for the comment functionality
+   * @param args - Options for the comment functionality
    */
-  async comment(options: ICommentOptions) {
+  async comment(args: ICommentOptions) {
+    const options = { ...this.getCommandDefault('comment'), ...args };
     const {
       message,
       pr,
@@ -841,6 +870,7 @@ export default class Auto {
       delete: deleteFlag,
       edit: editFlag
     } = options;
+
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -954,7 +984,10 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
-  async canary(options: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
+  // eslint-disable-next-line complexity
+  async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
+    const options = { ...this.getCommandDefault('canary'), ...args };
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -970,7 +1003,7 @@ export default class Auto {
       process.exit(1);
     }
 
-    // await this.checkClean();
+    await this.checkClean();
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -981,9 +1014,19 @@ export default class Auto {
     const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
     const head = await this.release.getCommitsInRelease(from);
     const labels = head.map(commit => commit.labels);
-    const version =
-      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
-      SEMVER.patch;
+    const version = calculateSemVerBump(
+      labels,
+      this.semVerLabels!,
+      this.config
+    );
+
+    if (version === SEMVER.noVersion && !options.force) {
+      this.logger.log.info(
+        'Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting'
+      );
+      return;
+    }
+
     let canaryVersion = '';
     let newVersion = '';
 
@@ -1060,7 +1103,9 @@ export default class Auto {
    * Create a next (or test) version of the project. If on master will
    * release to the default "next" branch.
    */
-  async next(options: INextOptions): Promise<ShipitInfo | undefined> {
+  async next(args: INextOptions): Promise<ShipitInfo | undefined> {
+    const options = { ...this.getCommandDefault('next'), ...args };
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1159,7 +1204,12 @@ export default class Auto {
    * 3. Publish code
    * 4. Create a release
    */
-  async shipit(options: IShipItOptions = {}) {
+  async shipit(args: IShipItOptions = {}) {
+    const options: IShipItOptions = {
+      ...this.getCommandDefault('shipit'),
+      ...args
+    };
+
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1408,12 +1458,15 @@ export default class Auto {
   }
 
   /** Make a changelog over a range of commits */
-  private async makeChangelog({
-    dryRun,
-    from,
-    to,
-    message = 'Update CHANGELOG.md [skip ci]'
-  }: IChangelogOptions = {}) {
+  private async makeChangelog(args: IChangelogOptions = {}) {
+    const options = { ...this.getCommandDefault('changelog'), ...args };
+    const {
+      dryRun,
+      from,
+      to,
+      message = 'Update CHANGELOG.md [skip ci]'
+    } = options;
+
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -1444,7 +1497,7 @@ export default class Auto {
       currentVersion
     );
 
-    const options = {
+    const context = {
       bump,
       commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
@@ -1452,20 +1505,18 @@ export default class Auto {
       currentVersion
     };
 
-    await this.hooks.beforeCommitChangelog.promise(options);
+    await this.hooks.beforeCommitChangelog.promise(context);
     await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
     this.logger.verbose.info('Committed new changelog.');
 
-    await this.hooks.afterAddToChangelog.promise(options);
+    await this.hooks.afterAddToChangelog.promise(context);
   }
 
   /** Make a release over a range of commits */
-  private async makeRelease({
-    dryRun,
-    from,
-    useVersion,
-    prerelease = false
-  }: IReleaseOptions = {}) {
+  private async makeRelease(args: IReleaseOptions = {}) {
+    const options = { ...this.getCommandDefault('release'), ...args };
+    const { dryRun, from, useVersion, prerelease = false } = options;
+
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
     }
@@ -1661,9 +1712,9 @@ export default class Auto {
   }
 
   /** Get the repo to interact with */
-  private async getRepo(config: IAutoConfig) {
+  private async getRepo(config: LoadedAutoRc) {
     if (config.owner && config.repo) {
-      return config as IRepoOptions & TestingToken;
+      return config as RepoInformation & TestingToken;
     }
 
     const author = await this.hooks.getRepository.promise();
@@ -1689,12 +1740,12 @@ export default class Auto {
   /**
    * Apply all of the plugins in the config.
    */
-  private loadPlugins(config: IAutoConfig) {
+  private loadPlugins(config: AutoRc) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
     const pluginsPaths = [
       require.resolve('./plugins/filter-non-pull-request'),
-      ...(config.plugins || defaultPlugins)
+      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
 
     pluginsPaths
@@ -1747,12 +1798,24 @@ export default class Auto {
 
     return { pr, build };
   }
+
+  /** Get the default for a command from the config */
+  private getCommandDefault(name: string) {
+    if (!this.config) {
+      return {};
+    }
+
+    const commandConfig = this.config[name as keyof AutoRc];
+    return typeof commandConfig === 'object' ? commandConfig : {};
+  }
 }
 
 // Plugin Utils
 
 export * from './auto-args';
 export { default as InteractiveInit } from './init';
+export { getCurrentBranch } from './utils/get-current-branch';
+export { validatePluginConfiguration } from './validate-config';
 export { ILogger } from './utils/logger';
 export { IPlugin } from './utils/load-plugins';
 export { default as Auto } from './auto';

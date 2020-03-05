@@ -6,7 +6,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "target": "es2017", // Target Node 8.x
+    "target": "es2017", // Target Node 10.x
     "importHelpers": true, // Use tslib for helper code
     /* Syntax: */
     "strict": true,

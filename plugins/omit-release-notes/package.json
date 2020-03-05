@@ -1,8 +1,9 @@
 {
   "name": "@auto-it/omit-release-notes",
-  "version": "9.14.0",
+  "version": "9.15.8",
   "main": "dist/index.js",
   "description": "Omit release notes plugin for auto",
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -38,6 +39,8 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "tslib": "1.11.0"
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
+    "tslib": "1.11.1"
   }
 }

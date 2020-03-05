@@ -4,42 +4,9 @@
 
 You must set a [`GH_TOKEN`](https://github.com/settings/tokens) for `auto` to work. If you publish to npm make sure to add your `NPM_TOKEN` while you're at it as well.
 
-## npm ERR! Git working directory not clean
+## Working directory not clean
 
 To version and publish you cannot have any changes in the git repo during publish. This means that if you build some files before release that aren't git-ignored `auto` will fail to continue. To fix this either add those `dist` files to your `.gitignore` or commit them somehow before the release.
-
-## npm ERR! need auth auth required for publishing
-
-This error will occur when you do not have a `NPM_TOKEN` set.
-
-### Still getting errors?!
-
-Make sure that `npm` is trying to publish to the correct registry. Force `npm`/`lerna` to use the public registry by adding the following to your package.json:
-
-```json
-{
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  }
-}
-```
-
-## Hangs on: Are you sure you want to continue connecting (yes/no)?
-
-This mean your environment does not trust github. To change this add this command somewhere before `auto`
-
-public:
-
-```sh
-mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-```
-
-enterprise:
-
-```sh
-mkdir ~/.ssh/ && echo -e "Host github.YOUR_COMPANY.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-```
 
 ## You cannot publish over the previously published versions
 

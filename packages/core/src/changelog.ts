@@ -6,6 +6,7 @@ import { ICommitAuthor, IExtendedCommit } from './log-parse';
 import { ILabelDefinition } from './release';
 import { ILogger } from './utils/logger';
 import { makeChangelogHooks } from './utils/make-hooks';
+import { getCurrentBranch } from './utils/get-current-branch';
 import SEMVER from './semver';
 
 export interface IGenerateReleaseNotesOptions {
@@ -83,14 +84,23 @@ export default class Changelog {
     this.logger = logger;
     this.options = options;
     this.hooks = makeChangelogHooks();
+    const currentBranch = getCurrentBranch();
 
-    if (!this.options.labels.find(l => l.name === 'pushToBaseBranch'))
+    if (!this.options.labels.find(l => l.name === 'pushToBaseBranch')) {
+      // Either put the name of a prerelease branch or the base-branch in the changelog
+      const branch =
+        (currentBranch &&
+          options.prereleaseBranches.includes(currentBranch) &&
+          currentBranch) ||
+        options.baseBranch;
+
       this.options.labels.push({
         name: 'pushToBaseBranch',
-        changelogTitle: `⚠️  Pushed to ${options.baseBranch}`,
+        changelogTitle: `⚠️  Pushed to \`${branch}\``,
         description: 'N/A',
         releaseType: SEMVER.patch
       });
+    }
   }
 
   /** Load the default configuration */

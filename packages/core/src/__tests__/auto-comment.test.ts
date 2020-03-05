@@ -5,9 +5,10 @@ jest.mock('env-ci', () => () => ({ pr: 123 }));
 
 const defaults = {
   owner: 'foo',
-  repo: 'bar',
-  token: 'XXXX'
+  repo: 'bar'
 };
+
+process.env.GH_TOKEN = 'XXXX';
 
 jest.mock('@octokit/rest', () => {
   const Octokit = class MockOctokit {
@@ -17,7 +18,7 @@ jest.mock('@octokit/rest', () => {
 
     repos = {
       get: jest.fn().mockReturnValue({})
-    }
+    };
 
     hook = {
       error: () => undefined

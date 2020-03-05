@@ -1,8 +1,9 @@
 {
   "name": "@auto-it/slack",
-  "version": "9.14.0",
+  "version": "9.15.8",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -38,12 +39,14 @@
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
     "@auto-it/core": "link:../../packages/core",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
     "node-fetch": "2.6.0",
-    "tslib": "1.11.0",
+    "tslib": "1.11.1",
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "2.5.4",
+    "@types/node-fetch": "2.5.5",
     "@types/url-join": "^4.0.0"
   }
 }

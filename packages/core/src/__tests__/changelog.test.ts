@@ -6,12 +6,16 @@ import { dummyLog } from '../utils/logger';
 
 import makeCommitFromMsg from './make-commit-from-msg';
 import SEMVER from '../semver';
+import { getCurrentBranch } from '../utils/get-current-branch';
+
+const currentBranchSpy = getCurrentBranch as jest.Mock;
+jest.mock('../utils/get-current-branch');
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
   owner: 'foobar',
   repo: 'auto',
   baseUrl: 'https://github.custom.com/foobar/auto',
-  labels: defaultLabels,
+  labels: [...defaultLabels],
   baseBranch: 'master',
   prereleaseBranches: ['next']
 });
@@ -24,7 +28,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabels,
+      labels: [...defaultLabels],
       baseBranch: 'master',
       prereleaseBranches: ['next']
     });
@@ -64,7 +68,7 @@ describe('createUserLink', () => {
       owner: '',
       repo: '',
       baseUrl: 'https://github.custom.com/',
-      labels: defaultLabels,
+      labels: [...defaultLabels],
       baseBranch: 'master',
       prereleaseBranches: ['next']
     });
@@ -331,6 +335,33 @@ describe('generateReleaseNotes', () => {
   });
 
   test('should include PR-less commits as patches', async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: '1',
+        files: [],
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'I was a push to master\n\n',
+        labels: ['pushToBaseBranch']
+      },
+      {
+        hash: '2',
+        files: [],
+        authorName: 'Adam Dierkens',
+        authorEmail: 'adam@dierkens.com',
+        subject: 'First Feature (#1235)',
+        labels: ['minor']
+      }
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test('should add "Push to Next"', async () => {
+    currentBranchSpy.mockReturnValueOnce('next');
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 

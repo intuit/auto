@@ -365,7 +365,7 @@ test('should use string semver if no published package', async () => {
   expect(plugin).toStrictEqual(
     expect.objectContaining({
       forcePublish: true,
-      name: 'NPM',
+      name: 'npm',
       setRcToken: false
     })
   );
@@ -828,6 +828,48 @@ describe('canary', () => {
       '"Bump independent versions [skip ci]"',
       false
     ]);
+  });
+
+  test('dont force publish canaries', async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ['next'] },
+      hooks,
+      remote: 'origin',
+      baseBranch: 'master',
+      logger: dummyLog(),
+      git: {
+        getLatestRelease: () => Promise.resolve('@foo/lib:1.1.0'),
+        getLatestTagInBranch: () => '1.2.3'
+      }
+    } as any);
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: 'path/to/package',
+          name: '@foobar/app',
+          version: '1.2.4'
+        },
+        {
+          path: 'path/to/package',
+          name: '@foobar/lib',
+          version: '1.1.0.canary'
+        }
+      ])
+    );
+
+    expect(await hooks.canary.promise(Auto.SEMVER.patch, '')).toMatchSnapshot();
   });
 
   test('error when no canary release found - independent', async () => {

@@ -4,6 +4,7 @@ import parseAuthor from 'parse-author';
 import path from 'path';
 import { Memoize as memoize } from 'typescript-memoize';
 import { Octokit } from '@octokit/rest';
+import * as t from 'io-ts';
 
 import {
   Auto,
@@ -15,7 +16,8 @@ import {
   ILogger,
   IPlugin,
   InteractiveInit,
-  SEMVER
+  SEMVER,
+  validatePluginConfiguration
 } from '@auto-it/core';
 import getPackages from 'get-monorepo-packages';
 import { gt, gte, inc, ReleaseType } from 'semver';
@@ -186,18 +188,20 @@ async function bumpLatest(
 
 const verbose = ['--loglevel', 'silly'];
 
-interface INpmConfig {
+const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
-  subPackageChangelogs?: boolean;
+  subPackageChangelogs: t.boolean,
   /** Whether to set the npm token on CI */
-  setRcToken?: boolean;
+  setRcToken: t.boolean,
   /** Whether to force publish all the packages in a monorepo */
-  forcePublish?: boolean;
+  forcePublish: t.boolean,
   /** A scope to publish canary versions under */
-  canaryScope?: string;
+  canaryScope: t.string,
   /** Publish a monorepo with the lerna --exact flag */
-  exact?: boolean;
-}
+  exact: t.boolean
+});
+
+export type INpmConfig = t.TypeOf<typeof pluginOptions>;
 
 /** Parse the lerna.json file. */
 const getLernaJson = () => {
@@ -328,7 +332,7 @@ const makeMonorepoInstallList = (packageList: string[]) =>
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'NPM';
+  name = 'npm';
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
@@ -441,12 +445,18 @@ export default class NPMPlugin implements IPlugin {
         ? branch
         : prereleaseBranches[0];
 
-    auto.hooks.beforeShipIt.tap(this.name, async context => {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
+    auto.hooks.beforeShipIt.tap(this.name, async () => {
       const isIndependent = getLernaJson().version === 'independent';
 
       // In independent mode it's possible that no changes to packages have been
       // made, so no release will be made.
-      if (isIndependent && context.releaseType === 'latest') {
+      if (isIndependent) {
         try {
           await execPromise('yarn', ['lerna', 'updated']);
         } catch (error) {
@@ -669,7 +679,7 @@ export default class NPMPlugin implements IPlugin {
           next,
           '--dist-tag',
           'canary',
-          '--force-publish', // you always want a canary version to publish
+          !isIndependent && '--force-publish',
           '--yes', // skip prompts,
           '--no-git-reset', // so we can get the version that just published
           '--no-git-tag-version', // no need to tag and commit,
@@ -691,7 +701,9 @@ export default class NPMPlugin implements IPlugin {
 
           return {
             newVersion: 'Canary Versions',
-            details: makeMonorepoInstallList(packageList)
+            details: makeMonorepoInstallList(
+              packageList.filter(p => p.includes('canary'))
+            )
           };
         }
 
@@ -792,7 +804,7 @@ export default class NPMPlugin implements IPlugin {
           prereleaseBranch,
           '--no-push',
           // you always want a next version to publish
-          '--force-publish',
+          !isIndependent && '--force-publish',
           // skip prompts
           '--yes',
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version

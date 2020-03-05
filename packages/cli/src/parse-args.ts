@@ -52,7 +52,12 @@ const logo = `
       ${g('▔▔▔▔▔▔▔▔▔ ')}
 `.replace(/\\/g, '\\\\');
 
-const version = {
+interface AutoOption extends Option {
+  /** This option is configurable via .autorc */
+  config?: boolean;
+}
+
+const version: AutoOption = {
   name: 'version',
   alias: 'V',
   type: Boolean,
@@ -60,7 +65,7 @@ const version = {
   group: 'global'
 };
 
-const defaultOptions = [
+const defaultOptions: AutoOption[] = [
   {
     name: 'verbose',
     alias: 'v',
@@ -98,14 +103,14 @@ const defaultOptions = [
   }
 ];
 
-const baseBranch: Option = {
+const baseBranch: AutoOption = {
   name: 'base-branch',
   type: String,
   description: 'Branch to treat as the "master" branch',
   group: 'global'
 };
 
-const pr: Option = {
+const pr: AutoOption = {
   name: 'pr',
   type: Number,
   description:
@@ -113,7 +118,7 @@ const pr: Option = {
   group: 'main'
 };
 
-const dryRun: Option = {
+const dryRun: AutoOption = {
   name: 'dry-run',
   alias: 'd',
   type: Boolean,
@@ -121,29 +126,30 @@ const dryRun: Option = {
   group: 'main'
 };
 
-const url: Option = {
+const url: AutoOption = {
   name: 'url',
   type: String,
   description: 'URL to associate with this status',
   group: 'main'
 };
 
-const noVersionPrefix: Option = {
+const noVersionPrefix: AutoOption = {
   name: 'no-version-prefix',
   type: Boolean,
-  description: "Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm)",
+  description:
+    "Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm)",
   group: 'main'
 };
 
-const name: Option = {
+const name: AutoOption = {
   name: 'name',
   type: String,
   description:
-    'Git name to commit and release with. Defaults to package definition for the platform',
+    'Git name to commit  with. Defaults to package definition for the platform',
   group: 'main'
 };
 
-const email: Option = {
+const email: AutoOption = {
   name: 'email',
   type: String,
   description:
@@ -151,27 +157,26 @@ const email: Option = {
   group: 'main'
 };
 
-const context: Option = {
+const context: AutoOption = {
   name: 'context',
   type: String,
   description: 'A string label to differentiate this status from others',
   group: 'main'
 };
 
-const message: Option = {
+const message: AutoOption = {
   name: 'message',
   group: 'main',
   type: String,
   alias: 'm'
 };
 
-const deleteFlag: Option = {
-  name: 'delete',
-  type: Boolean,
-  group: 'main'
-};
+interface AutoCommand extends Command {
+  /** Options for the command */
+  options?: AutoOption[];
+}
 
-export const commands: Command[] = [
+export const commands: AutoCommand[] = [
   {
     name: 'init',
     group: 'Setup Command',
@@ -217,9 +222,16 @@ export const commands: Command[] = [
         type: Boolean,
         alias: 'e',
         group: 'main',
-        description: 'Edit old comment'
+        description: 'Edit old comment',
+        config: true
       },
-      { ...deleteFlag, description: 'Delete old comment' },
+      {
+        name: 'delete',
+        type: Boolean,
+        group: 'main',
+        description: 'Delete old comment',
+        config: true
+      },
       { ...message, description: 'Message to post to comment' },
       dryRun
     ],
@@ -293,11 +305,10 @@ export const commands: Command[] = [
     group: 'Pull Request Interaction Commands',
     description:
       'Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.',
-    require: [['message', 'delete']],
+    require: ['message'],
     options: [
       pr,
       context,
-      { ...deleteFlag, description: 'Delete old PR body update' },
       { ...message, description: 'Message to post to PR body' },
       dryRun
     ],
@@ -359,7 +370,8 @@ export const commands: Command[] = [
       {
         ...message,
         description:
-          "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
+          "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'",
+        config: true
       },
       baseBranch
     ],
@@ -402,7 +414,8 @@ export const commands: Command[] = [
         name: 'prerelease',
         type: Boolean,
         group: 'main',
-        description: 'Publish a prerelease.'
+        description: 'Publish a prerelease.',
+        config: true
       }
     ],
     examples: [
@@ -431,7 +444,8 @@ export const commands: Command[] = [
         defaultValue: false,
         group: 'main',
         description:
-          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.'
+          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.',
+        config: true
       }
     ]
   },
@@ -455,6 +469,7 @@ export const commands: Command[] = [
     `,
     examples: [
       '{green $} auto canary',
+      '{green $} auto canary --force',
       '{green $} auto canary --pr 123 --build 5',
       '{green $} auto canary --message "Install PR version: `yarn add -D my-project@%v`"',
       '{green $} auto canary --message false'
@@ -476,7 +491,16 @@ export const commands: Command[] = [
       {
         ...message,
         description:
-          "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
+          "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment",
+        config: true
+      },
+      {
+        name: 'force',
+        type: Boolean,
+        group: 'main',
+        description:
+          'Force a canary release, even if the PR is marked to skip the release',
+        config: true
       }
     ]
   },
@@ -497,7 +521,8 @@ export const commands: Command[] = [
       {
         ...message,
         description:
-          'The message used when attaching the prerelease version to a PR'
+          'The message used when attaching the prerelease version to a PR',
+        config: true
       }
     ]
   }

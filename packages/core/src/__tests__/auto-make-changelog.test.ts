@@ -15,9 +15,10 @@ jest.mock('../utils/exec-promise', () => () => Promise.resolve(''));
 
 const defaults = {
   owner: 'foo',
-  repo: 'bar',
-  token: 'XXXX'
+  repo: 'bar'
 };
+
+process.env.GH_TOKEN = 'XXXX';
 
 const search = jest.fn();
 jest.mock('cosmiconfig', () => ({
@@ -38,7 +39,7 @@ jest.mock('@octokit/rest', () => {
 
     repos = {
       get: jest.fn().mockReturnValue(Promise.resolve({}))
-    }
+    };
 
     hook = {
       error: () => undefined

@@ -45,23 +45,10 @@ export function bumpVersion(bumpBy: SEMVER) {
   return versionNew;
 }
 
-interface ICratesPluginOptions {
-  /** Do not actually do anything. Log what would be done. */
-  dryRun?: boolean;
-}
-
 /** Deploy Rust crates */
 export default class CratesPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Crates';
-
-  /** The options of the plugin */
-  readonly options: ICratesPluginOptions;
-
-  /** Initialize the plugin with it's options */
-  constructor(options: ICratesPluginOptions = {}) {
-    this.options = options;
-  }
+  name = 'crates';
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {

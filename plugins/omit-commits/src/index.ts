@@ -1,17 +1,21 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
+import * as t from 'io-ts';
 
-export interface IOmitCommitsPluginOptions {
+const pattern = t.union([t.string, t.array(t.string)]);
+const pluginOptions = t.partial({
   /** Usernames to omit */
-  username?: string | string[];
+  username: pattern,
   /** Emails to omit */
-  email?: string | string[];
+  email: pattern,
   /** Names to omit */
-  name?: string | string[];
+  name: pattern,
   /** Commit messages to omit */
-  subject?: string | string[];
+  subject: pattern,
   /** Labels to omit */
-  labels?: string | string[];
-}
+  labels: pattern
+});
+
+export type IOmitCommitsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** Ensure a value is an array */
 const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
@@ -19,7 +23,7 @@ const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 /** Filter certain commits out of the changelog and version calculation. */
 export default class OmitCommitsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Omit Commits';
+  name = 'omit-commits';
 
   /** The options of the plugin */
   readonly options: {
@@ -48,6 +52,12 @@ export default class OmitCommitsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.onCreateLogParse.tap(this.name, logParse => {
       logParse.hooks.omitCommit.tap(this.name, commit => {
         if (

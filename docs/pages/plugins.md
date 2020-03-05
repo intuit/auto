@@ -1,10 +1,14 @@
 # Plugins
 
-`auto` uses the package [tapable](https://github.com/webpack/tapable) to expose a plugin system.
+`auto` uses the package [tapable](https://github.com/webpack/tapable) to expose a plugin system. Go [here](./writing-plugins.md) to learn how to write one!
 
 ## Using Plugins
 
-To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins). Specifying a plugin overrides the defaults.
+To use a plugin you can either supply the plugin via a CLI arg or in your [.autorc](./autorc.md#plugins).
+
+::: message is-warning
+:warning: Specifying a plugin overrides the defaults.
+:::
 
 ### Defaults
 
@@ -17,56 +21,69 @@ If you don't configure plugins in your `.autorc` configuration file `auto` will 
 
 If you don't want to include the default plugins, you can supply an empty array in the `.autorc` configuration file like the following:
 
-```json
+```js
 {
   "plugins": []
 }
 ```
 
-There are three ways to load a plugin.
+## Plugin Declaration
 
-### 1. Official Plugins
+There are three ways to name and use a plugin.
+
+### Official Plugins
 
 To use an official plugin all you have to do is supply the name.
 
-```json
-{
-  "plugins": ["npm"]
-}
-```
-
-### 2. `npm` package
-
-Unofficial plugins pulled from NPM should be named in the format `auto-plugin-PLUGIN_NAME` where `PLUGIN_NAME` is the name of the plugin.
-
-That name is provided to auto to use that particular plugin.
-
-```jsonc
+```js
 {
   "plugins": [
-    "auto-plugin-my-cool-plugin",
-    // or
-    "@my-scope/auto-plugin-my-cool-plugin",
-    "some-package"
+    "npm",
+    // or the full name
+    "@auto-it/npm"
   ]
 }
 ```
 
-### 3. Path
+### `npm` package
+
+Unofficial plugins pulled from NPM should be named in one of the following formats:
+
+- `auto-plugin-PLUGIN_NAME`
+- `@my-scope/auto-plugin-PLUGIN_NAME`
+
+You use them in your `.autorc` by:
+
+- provide the full package name
+- when named like `auto-plugin-PLUGIN_NAME` just the `PLUGIN_NAME`.
+
+```js
+{
+  "plugins": [
+    "my-cool-plugin",
+    // or
+    "auto-plugin-my-cool-plugin",
+    // on a scope
+    "@my-scope/auto-plugin-my-cool-plugin",
+  ]
+}
+```
+
+### Local Plugin
 
 Or if you have a plugin locally supply the path.
 
-```json
+```js
 {
   "plugins": ["../path/to/plugin.js"]
 }
 ```
 
-### Plugin Configuration
+## Plugin Configuration
 
 To provide plugin specific config change the following:
 
-```json
+```js
 {
   "plugins": ["chrome"]
 }
@@ -74,7 +91,7 @@ To provide plugin specific config change the following:
 
 To this:
 
-```json
+```js
 {
   "plugins": [
     ["chrome", { "extensionId": "1234", "build": "my-compiled-extension.zip" }]

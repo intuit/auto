@@ -1,8 +1,9 @@
 {
   "name": "@auto-it/first-time-contributor",
-  "version": "9.14.0",
+  "version": "9.15.8",
   "main": "dist/index.js",
   "description": "Thank first time contributors for their work right in your release notes.",
+  "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
@@ -37,7 +38,7 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "array.prototype.flatmap": "^1.2.2",
-    "tslib": "1.11.0"
+    "tslib": "1.11.1"
   },
   "devDependencies": {
     "@types/array.prototype.flatmap": "^1.2.0"

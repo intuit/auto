@@ -1,14 +1,12 @@
 # `auto` RC File
 
-All options for the CLI tools can also be configured via the `.autorc`. As CLI options you supply them in snake-case (`--foo-bar`), but as `.autorc` options you supply them in camelCase (`fooBar`),
-
-We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config. This means you can define this file a variety of ways. Our `cosmiconfig` setup is a little custom and will start at the root of your project and start to search up the directory tree for the following:
+`auto` uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config. This means you can define this file a variety of ways. Our `cosmiconfig` setup is custom and will start at the root of your project and start to search up the directory tree for the following:
 
 - a JSON or YAML, extension-less "rc file"
 - an "rc file" with the extensions `.json`, `.yaml`, or `.yml`
 - a package.json property
 
-We do not support writing configuration files in JavaScript.
+`auto` does not support writing configuration files in JavaScript.
 
 ## Initialization
 
@@ -18,15 +16,111 @@ To interactively create an `.autorc` use the `init` command. You can configure m
 auto init
 ```
 
-## Exclusive
+## Options
 
-These options can be set exclusively in the `.autorc` and do not exist as CLI flags.
+The following are all of the top level configuration options for `auto`.
+While some of the following options also exist as flags to certain comments,
+it is recommended to set them in an `.autorc` so your commands are terser and experience consistent.
+
+### Only Publish With Release Label
+
+Configure the default release behavior.
+
+```js
+{
+  "onlyPublishWithReleaseLabel": true
+}
+```
+
+### Base Branch
+
+Configure what your repo considers the "master" branch.
+
+```js
+{
+  "baseBranch": "trunk"
+}
+```
+
+### Plugins
+
+It is useful to specify your plugins in the rc file rather than in all the commands.
+
+```js
+{
+  "plugins": ["npm", "../path/to/plugin.js", "NPM_PACKAGE_NAME"]
+}
+```
+
+### githubApi
+
+If you are using enterprise github, `auto` lets you configure the github API URL that it uses.
+
+```js
+{
+  "githubApi": "https://github.mine.com/api/v3"
+}
+```
+
+### githubGraphqlApi
+
+This is used for doing some searches in `auto`.
+
+If you are using enterprise github and your company hosts the graphql at some other URL than the `githubApi`, you can use `githubGraphqlApi` to set the base path for `auto`. The `githubGraphqlApi` get merged with `/graphql` to build the final URL.
+
+```js
+{
+  "githubGraphqlApi": "https://github.mine.com/api/"
+}
+```
+
+### name
+
+Name to use with git.
+
+```js
+{
+  "name": "Joe Schmo"
+}
+```
+
+### email
+
+Email to use with git.
+
+```js
+{
+  "email": "joe@schmo.com"
+}
+```
+
+### Command Defaults
+
+For some commands you can supply defaults for some options.
+
+**Example:** Adding the following to you `.autorc` will make `auto` only release pre-releases to GitHub.
+
+```json
+{
+  "release": {
+    "prerelease": true
+  }
+}
+```
+
+Please refer to each command's documentation to see which options are configurable.
+
+---
+
+### Exclusive Options
+
+The following options can be set exclusively in the `.autorc` and do not exist as CLI flags.
 
 ### versionBranches
 
 Create and manage old major releases.
 
-```json
+```js
 {
   "versionBranches": true,
   // or customize the branch prefix
@@ -40,54 +134,9 @@ You can configure what branches `auto` treats as prerelease branches.
 By default only `next` is treated as a prerelease branch.
 If you configure `prereleaseBranches` it will override the default.
 
-```json
+```js
 {
   "prereleaseBranches": ["next", "beta"]
-}
-```
-
-### Extending
-
-If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
-
-Auto can load `extends` configs in the following ways:
-
-- from a path `./path/to/config` (this file must be in JSON format)
-- from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
-- from a package `auto-config-YOUR_NAME`
-- from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
-
-```json
-{
-  "extends": "@YOUR_SCOPE"
-}
-```
-
-Will use the package `@YOUR_SCOPE/auto-config`
-
-```json
-{
-  "extends": "joe"
-}
-```
-
-Will use the package `auto-config-joe`
-
-::: message is-warning
-If extending from a config package make sure it's a dependency of your project
-:::
-
-If you're extending from a local file it can be any file in JSON format or a `package.json` file.
-
-```json
-{
-  "extends": "./path/to/config.json"
-}
-```
-
-```json
-{
-  "extends": "./path/to/other/package.json"
 }
 ```
 
@@ -95,7 +144,7 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 
 To customize your project's labels use the `labels` section in your `.autorc`.
 
-```json
+```js
 {
   "labels": [
     { "releaseType": "major", "name": "Version: Major" },
@@ -109,49 +158,49 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 
 <details><summary>Click here to see the default label configuration</summary>
 
-```json
+```js
 [
   {
-    "name": "major",
-    "changelogTitle": "💥  Breaking Change",
-    "description": "Increment the major version when merged",
-    "releaseType": "major"
+    name: 'major',
+    changelogTitle: '💥  Breaking Change',
+    description: 'Increment the major version when merged',
+    releaseType: 'major'
   },
   {
-    "name": "minor",
-    "changelogTitle": "🚀  Enhancement",
-    "description": "Increment the minor version when merged",
-    "releaseType": "minor"
+    name: 'minor',
+    changelogTitle: '🚀  Enhancement',
+    description: 'Increment the minor version when merged',
+    releaseType: 'minor'
   },
   {
-    "name": "patch",
-    "changelogTitle": "🐛  Bug Fix",
-    "description": "Increment the patch version when merged",
-    "releaseType": "patch"
+    name: 'patch',
+    changelogTitle: '🐛  Bug Fix',
+    description: 'Increment the patch version when merged',
+    releaseType: 'patch'
   },
   {
-    "name": "skip-release",
-    "description": "Preserve the current version when merged",
-    "releaseType": "skip"
+    name: 'skip-release',
+    description: 'Preserve the current version when merged',
+    releaseType: 'skip'
   },
   {
-    "name": "release",
-    "description": "Create a release when this pr is merged",
-    "releaseType": "release"
+    name: 'release',
+    description: 'Create a release when this pr is merged',
+    releaseType: 'release'
   },
   {
-    "name": "internal",
-    "changelogTitle": "🏠  Internal",
-    "description": "Changes only affect the internal API",
-    "releaseType": "none"
+    name: 'internal',
+    changelogTitle: '🏠  Internal',
+    description: 'Changes only affect the internal API',
+    releaseType: 'none'
   },
   {
-    "name": "documentation",
-    "changelogTitle": "📝  Documentation",
-    "description": "Changes only affect the documentation",
-    "releaseType": "none"
+    name: 'documentation',
+    changelogTitle: '📝  Documentation',
+    description: 'Changes only affect the documentation',
+    releaseType: 'none'
   }
-]
+];
 ```
 
 </details>
@@ -167,7 +216,7 @@ You can customize everything about a label
 - `description` - The description to use when creating the label
 - `color` - The color of the label. Can be specified as a string in any of [these](https://github.com/bgrins/TinyColor#accepted-string-input) ways. If not specified the color is random
 
-```json
+```js
 {
   "labels": [
     {
@@ -186,7 +235,7 @@ You can customize everything about a label
 A label with the `none` release type will not create a release when merged.
 If paired with a SEMVER label, the release is not skipped.
 
-```json
+```js
 {
   "labels": [
     {
@@ -206,11 +255,11 @@ Each PR included in the release will be assigned to a label section based upon t
 
 By default auto will create sections in the changelog for the following labels:
 
-- major
-- minor
-- patch
-- internal
-- documentation
+- `major`
+- `minor`
+- `patch`
+- `internal`
+- `documentation`
 
 For example:
 
@@ -221,7 +270,7 @@ For example:
 
 To customize the title for the section in the changelog you can
 
-```json
+```js
 {
   "labels": [
     {
@@ -241,7 +290,7 @@ will become a special section in your changelog.
 The following adds a `typescript` label to the project that we can use to denote changes
 related to a TypeScript re-write.
 
-```json
+```js
 {
   "labels": [
     {
@@ -252,13 +301,13 @@ related to a TypeScript re-write.
 }
 ```
 
-##### Removing Default Label Changelog Title Sections
+#### Removing Default Label Changelog Title Sections
 
 You can remove the existing default label sections by adding a custom overwrite label with the same `releaseType`.
 
 The following removes the default internal and documentation label sections:
 
-```json
+```js
 {
   "labels": [
     {
@@ -271,80 +320,47 @@ The following removes the default internal and documentation label sections:
 }
 ```
 
-## CLI args
+## Extending
 
-You can set any CLI option in the `.autorc` these options will get overridden by the CLI flags.
+If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
 
-The following are options that might be more useful to set in the `.autorc` rather than with a flag.
+Auto can load `extends` configs in the following ways:
 
-### Base Branch
+- from a path `./path/to/config` (this file must be in JSON format)
+- from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
+- from a package `auto-config-YOUR_NAME`
+- from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
 
-Configure what your repo considers the "master" branch.
-
-```json
+```js
 {
-  "baseBranch": "trunk"
+  "extends": "@YOUR_SCOPE"
 }
 ```
 
-### Only Publish With Release Label
+Will use the package `@YOUR_SCOPE/auto-config`
 
-Configure the default release behavior.
-
-```json
+```js
 {
-  "onlyPublishWithReleaseLabel": true
+  "extends": "joe"
 }
 ```
 
-### Plugins
+Will use the package `auto-config-joe`
 
-It is useful to specify your plugins in the rc file rather than in all the commands.
+::: message is-warning
+If extending from a config package make sure it's a dependency of your project
+:::
 
-```json
+If you're extending from a local file it can be any file in JSON format or a `package.json` file.
+
+```js
 {
-  "plugins": ["npm", "../path/to/plugin.js", "NPM_PACKAGE_NAME"]
+  "extends": "./path/to/config.json"
 }
 ```
 
-### githubApi
-
-If you are using enterprise github, `auto` lets you configure the github API URL that it uses.
-
-```json
+```js
 {
-  "githubApi": "https://github.mine.com/api/v3"
-}
-```
-
-### githubGraphqlApi
-
-This is used for doing some searches in `auto`.
-
-If you are using enterprise github and your company hosts the graphql at some other URL than the `githubApi`, you can use `githubGraphqlApi` to set the base path for `auto`. The `githubGraphqlApi` get merged with `/graphql` to build the final URL.
-
-```json
-{
-  "githubGraphqlApi": "https://github.mine.com/api/"
-}
-```
-
-### name
-
-Git name to commit and release with. Used in `auto changelog` and `auto release`
-
-```json
-{
-  "name": "Joe Schmo"
-}
-```
-
-### email
-
-Git email to commit and release with. Used in `auto changelog` and `auto release`
-
-```json
-{
-  "email": "joe@schmo.com"
+  "extends": "./path/to/other/package.json"
 }
 ```

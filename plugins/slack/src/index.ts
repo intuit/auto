@@ -3,10 +3,12 @@ import {
   Auto,
   IPlugin,
   getCurrentBranch,
-  InteractiveInit
+  InteractiveInit,
+  validatePluginConfiguration
 } from '@auto-it/core';
 import fetch from 'node-fetch';
 import join from 'url-join';
+import * as t from 'io-ts';
 
 /** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
@@ -22,19 +24,21 @@ const sanitizeMarkdown = (markdown: string) =>
     })
     .join('\n');
 
-interface ISlackPluginOptions {
+const pluginOptions = t.partial({
   /** URL of the slack to post to */
-  url?: string;
+  url: t.string,
   /** Who to bother when posting to the channel */
-  atTarget?: string;
+  atTarget: t.string,
   /** Allow users to opt into having prereleases posted to slack */
-  publishPreRelease?: boolean;
-}
+  publishPreRelease: t.boolean
+});
+
+export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** Post your release notes to Slack during `auto release` */
 export default class SlackPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'Slack';
+  name = 'slack';
 
   /** The options of the plugin */
   readonly options: ISlackPluginOptions;
@@ -67,6 +71,13 @@ export default class SlackPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      // If it's a string thats valid config
+      if (name === this.name && typeof options !== 'string') {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.afterRelease.tapPromise(
       this.name,
       async ({ newVersion, commits, releaseNotes }) => {
