@@ -158,13 +158,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
       // Ensure tag is on this commit, changelog will be added automatically
       await execPromise('git', ['tag', auto.prefixRelease(releaseVersion)]);
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        auto.remote,
-        auto.baseBranch
-      ]);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
@@ -175,6 +168,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           ...this.options.gradleOptions
         ]);
       }
+
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        auto.remote,
+        auto.baseBranch
+      ]);
     });
 
     auto.hooks.afterShipIt.tapPromise(this.name, async () => {
