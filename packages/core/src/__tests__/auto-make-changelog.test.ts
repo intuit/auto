@@ -15,7 +15,7 @@ jest.mock('../utils/exec-promise', () => () => Promise.resolve(''));
 
 const defaults = {
   owner: 'foo',
-  repo: 'bar',
+  repo: 'bar'
 };
 
 process.env.GH_TOKEN = 'XXXX';
@@ -39,7 +39,7 @@ jest.mock('@octokit/rest', () => {
 
     repos = {
       get: jest.fn().mockReturnValue(Promise.resolve({}))
-    }
+    };
 
     hook = {
       error: () => undefined
@@ -50,7 +50,7 @@ jest.mock('@octokit/rest', () => {
 });
 
 // @ts-ignore
-jest.mock('gitlog', () => (a, cb) => {
+jest.mock('gitlogplus', () => (a, cb) => {
   cb(undefined, [
     {
       rawBody: 'foo'
