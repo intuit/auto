@@ -1,3 +1,16 @@
+# v9.15.11 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/core`
+  - fix plugin loading from absolute windows paths [#1022](https://github.com/intuit/auto/pull/1022) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.10 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix
