@@ -11,12 +11,6 @@ jest.mock('../utils/load-plugins.ts');
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
 
-jest
-  .spyOn(child, 'execSync')
-  .mockImplementation()
-  // @ts-ignore
-  .mockReturnValue('');
-
 const defaults = {
   owner: 'foo',
   repo: 'bar'
@@ -75,6 +69,12 @@ describe('Auto', () => {
   beforeEach(() => {
     // @ts-ignore
     loadPlugin.mockClear();
+
+    jest
+      .spyOn(child, 'execSync')
+      .mockImplementation()
+      // @ts-ignore
+      .mockReturnValue('');
   });
 
   test('should use args', async () => {
@@ -145,7 +145,7 @@ describe('Auto', () => {
   });
 
   test('should exit with errors in config', async () => {
-    search.mockReturnValueOnce({ config: {name: 123} });
+    search.mockReturnValueOnce({ config: { name: 123 } });
     process.exit = jest.fn() as any;
     const auto = new Auto();
     auto.logger = dummyLog();
@@ -1247,7 +1247,7 @@ describe('Auto', () => {
       auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
-      auto.remote = 'https://github.com/intuit/auto'
+      auto.remote = 'https://github.com/intuit/auto';
 
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
@@ -1261,6 +1261,40 @@ describe('Auto', () => {
 
       await auto.shipit();
       expect(afterShipIt).toHaveBeenCalled();
+    });
+
+    test('should not publish when no behind remote', async () => {
+      jest.spyOn(child, 'execSync').mockImplementation(command => {
+        if (command.startsWith('git')) {
+          throw new Error();
+        }
+
+        return Buffer.from('');
+      });
+
+      const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      // @ts-ignore
+      // eslint-disable-next-line jest/prefer-spy-on
+      process.exit = jest.fn();
+      await auto.loadConfig();
+      auto.remote = 'https://github.com/intuit/auto';
+
+      // @ts-ignore
+      auto.logger = dummyLog();
+      // @ts-ignore
+      auto.makeChangelog = () => Promise.resolve();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
+      jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
+      const afterShipIt = jest.fn();
+      auto.hooks.afterShipIt.tap('test', afterShipIt);
+
+      await auto.shipit();
+      expect(process.exit).toHaveBeenCalled();
     });
 
     test('should skip publish in dry run', async () => {
@@ -1286,6 +1320,14 @@ describe('Auto', () => {
 });
 
 describe('hooks', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(child, 'execSync')
+      .mockImplementation()
+      // @ts-ignore
+      .mockReturnValue('');
+  });
+
   test('should be able to modifyConfig', async () => {
     const auto = new Auto(defaults);
     auto.logger = dummyLog();
