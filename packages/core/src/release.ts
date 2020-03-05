@@ -75,19 +75,19 @@ export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
 export const defaultLabels: ILabelDefinition[] = [
   {
     name: 'major',
-    changelogTitle: '💥  Breaking Change',
+    changelogTitle: '💥 Breaking Change',
     description: 'Increment the major version when merged',
     releaseType: SEMVER.major
   },
   {
     name: 'minor',
-    changelogTitle: '🚀  Enhancement',
+    changelogTitle: '🚀 Enhancement',
     description: 'Increment the minor version when merged',
     releaseType: SEMVER.minor
   },
   {
     name: 'patch',
-    changelogTitle: '🐛  Bug Fix',
+    changelogTitle: '🐛 Bug Fix',
     description: 'Increment the patch version when merged',
     releaseType: SEMVER.patch
   },
@@ -103,13 +103,13 @@ export const defaultLabels: ILabelDefinition[] = [
   },
   {
     name: 'internal',
-    changelogTitle: '🏠  Internal',
+    changelogTitle: '🏠 Internal',
     description: 'Changes only affect the internal API',
     releaseType: 'none'
   },
   {
     name: 'documentation',
-    changelogTitle: '📝  Documentation',
+    changelogTitle: '📝 Documentation',
     description: 'Changes only affect the documentation',
     releaseType: 'none'
   }

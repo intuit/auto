@@ -210,7 +210,7 @@ describe('Auto', () => {
     expect(auto.config!.labels.find(l => l.name === 'feature')).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'feature',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
   });
@@ -231,7 +231,7 @@ describe('Auto', () => {
     ).toStrictEqual({
       description: 'This is a test',
       name: 'minor',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
   });

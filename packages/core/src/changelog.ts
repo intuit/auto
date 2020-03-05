@@ -269,7 +269,13 @@ export default class Changelog {
 
   /** Transform a commit into a line in the changelog */
   private async generateCommitNote(commit: IExtendedCommit) {
-    const subject = commit.subject ? commit.subject.trim() : '';
+    const subject = commit.subject
+      ? commit.subject
+          .split('\n')[0]
+          .trim()
+          .replace('[skip ci]', '\\[skip ci\\]')
+      : '';
+
     let pr = '';
 
     if (commit.pullRequest?.number) {
@@ -282,7 +288,7 @@ export default class Changelog {
     }
 
     const user = await this.createUserLinkList(commit);
-    return `- ${subject} ${pr}${user ? ` (${user})` : ''}`;
+    return `- ${subject}${pr ? ` ${pr}` : ''}${user ? ` (${user})` : ''}`;
   }
 
   /** Get all the authors in the provided commits */

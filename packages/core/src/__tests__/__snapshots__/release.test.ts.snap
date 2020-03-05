@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Release generateReleaseNotes should allow user to configure section headings 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
 - First [#1234](https://github.com/web/site/pull/1234) (adam@dierkens.com)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Second [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Fourth [#1237](https://github.com/web/site/pull/1237) (adam@dierkens.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Third [#1236](https://github.com/web/site/pull/1236) (adam@dierkens.com)
 
@@ -23,10 +23,10 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 `;
 
 exports[`Release generateReleaseNotes should find ignore closed prs 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
-- Doom Patrol enabled  (adam@dierkens.com)
-- Autobots roll out!  (adam@dierkens.com)
+- Doom Patrol enabled (adam@dierkens.com)
+- Autobots roll out! (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -34,13 +34,13 @@ exports[`Release generateReleaseNotes should find ignore closed prs 1`] = `
 `;
 
 exports[`Release generateReleaseNotes should find matching PRs for shas through search 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
-- Doom Patrol enabled  (adam@dierkens.com)
+- Doom Patrol enabled (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- Autobots roll out!  (adam@dierkens.com)
+- Autobots roll out! (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -48,7 +48,7 @@ exports[`Release generateReleaseNotes should find matching PRs for shas through 
 `;
 
 exports[`Release generateReleaseNotes should get extra user data for login 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - I have a login attached [#1235](https://github.com/web/site/pull/1235) ([@adierkens](https://github.com/adierkens))
 
@@ -58,13 +58,13 @@ exports[`Release generateReleaseNotes should get extra user data for login 1`] =
 `;
 
 exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
 
 #### ⚠️  Pushed to \`master\`
 
-- I should be included  (adam@dierkens.com)
+- I should be included (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -72,7 +72,7 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 `;
 
 exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Doom [#12343](https://github.com/web/site/pull/12343) (adam@dierkens.com)
 - Dino [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
@@ -83,13 +83,13 @@ exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`]
 `;
 
 exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- I am a commit with a related PR  (adam@dierkens.com)
+- I am a commit with a related PR (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -97,14 +97,14 @@ exports[`Release generateReleaseNotes should match commits with related PRs 1`] 
 `;
 
 exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
 - I was rebased [#123](https://github.com/web/site/pull/123) (adam@dierkens.com)
 
 #### ⚠️  Pushed to \`master\`
 
-- I am a commit to master  (adam@dierkens.com)
+- I am a commit to master (adam@dierkens.com)
 
 #### Authors: 1
 

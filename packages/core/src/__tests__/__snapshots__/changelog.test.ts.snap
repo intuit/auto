@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Hooks author 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (:heart: Adam Dierkens/adam@dierkens.com :heart:)
 
@@ -11,7 +11,7 @@ exports[`Hooks author 1`] = `
 `;
 
 exports[`Hooks title 1`] = `
-":heart: 🐛  Bug Fix :heart:
+":heart: 🐛 Bug Fix :heart:
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
 #### Authors: 1
@@ -32,7 +32,7 @@ Bam!?
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
@@ -42,7 +42,7 @@ Bam!?
 `;
 
 exports[`generateReleaseNotes additional release notes should have tappable omit 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
@@ -52,7 +52,7 @@ exports[`generateReleaseNotes additional release notes should have tappable omit
 `;
 
 exports[`generateReleaseNotes additional release notes should omit renovate prs 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) ([@renovate-bot](https://github.custom.com/renovate-bot))
 
@@ -62,7 +62,7 @@ exports[`generateReleaseNotes additional release notes should omit renovate prs 
 `;
 
 exports[`generateReleaseNotes doesn't add additional release notes when there are none 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
@@ -72,13 +72,13 @@ exports[`generateReleaseNotes doesn't add additional release notes when there ar
 `;
 
 exports[`generateReleaseNotes should add "Push to Next" 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### ⚠️  Pushed to \`next\`
 
-- I was a push to master  (adam@dierkens.com)
+- I was a push to master (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -94,7 +94,7 @@ Here is how you upgrade
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
@@ -104,13 +104,13 @@ Here is how you upgrade
 `;
 
 exports[`generateReleaseNotes should be able to customize pushToBaseBranch title 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Custom Title
 
-- I was a push to master  (adam@dierkens.com)
+- I was a push to master (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -128,10 +128,10 @@ exports[`generateReleaseNotes should be able to customize titles 1`] = `
 `;
 
 exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- Third  (adam@dierkens.com)
+- Third (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -139,7 +139,7 @@ exports[`generateReleaseNotes should combine pr w/no label and labelled pr 1`] =
 `;
 
 exports[`generateReleaseNotes should create note for PR commits 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
@@ -149,7 +149,7 @@ exports[`generateReleaseNotes should create note for PR commits 1`] = `
 `;
 
 exports[`generateReleaseNotes should create note for PR commits with only non config labels 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
@@ -159,7 +159,7 @@ exports[`generateReleaseNotes should create note for PR commits with only non co
 `;
 
 exports[`generateReleaseNotes should create note for PR commits without labels 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
@@ -179,13 +179,13 @@ exports[`generateReleaseNotes should create note for PR commits without labels w
 `;
 
 exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### ⚠️  Pushed to \`master\`
 
-- I was a push to master  (adam@dierkens.com)
+- I was a push to master (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -193,10 +193,10 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 `;
 
 exports[`generateReleaseNotes should include prs with released label 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
-- Third  (adam@dierkens.com)
+- Third (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -204,14 +204,14 @@ exports[`generateReleaseNotes should include prs with released label 1`] = `
 `;
 
 exports[`generateReleaseNotes should match authors correctly 1`] = `
-"#### 🏠  Internal
+"#### 🏠 Internal
 
-- something  (andrew@email.com)
+- something (andrew@email.com)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
-- docs  (kendall@email.com)
-- another  ([@rdubzz](https://github.custom.com/rdubzz))
+- docs (kendall@email.com)
+- another ([@rdubzz](https://github.custom.com/rdubzz))
 
 #### Authors: 3
 
@@ -232,7 +232,7 @@ exports[`generateReleaseNotes should merge sections with same changelog title 1`
 `;
 
 exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234)"
 `;
@@ -246,11 +246,11 @@ foobar
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 
 #### Authors: 1
@@ -259,25 +259,25 @@ foobar
 `;
 
 exports[`generateReleaseNotes should order the section major, minor, patch, then the rest 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- I was a push to master  (adam@dierkens.com)
+- I was a push to master (adam@dierkens.com)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
-- docs  (adam@dierkens.com)
+- docs (adam@dierkens.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
-- something  (adam@dierkens.com)
+- something (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -295,7 +295,7 @@ exports[`generateReleaseNotes should prefer section defined first in config for 
 `;
 
 exports[`generateReleaseNotes should prefer section of default label for PR with multiple labels of same releaseType 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 
@@ -315,7 +315,7 @@ exports[`generateReleaseNotes should prefer section with highest releaseType for
 `;
 
 exports[`generateReleaseNotes should use only email if author name doesn't exist 1`] = `
-"#### 🐛  Bug Fix
+"#### 🐛 Bug Fix
 
 - Another Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) (adam@dierkens.com)
 - One Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
@@ -326,7 +326,7 @@ exports[`generateReleaseNotes should use only email if author name doesn't exist
 `;
 
 exports[`generateReleaseNotes should use username if present 1`] = `
-"#### 🚀  Enhancement
+"#### 🚀 Enhancement
 
 - Some Feature [#1234](https://github.custom.com/foobar/auto/pull/1234) ([@adam](https://github.custom.com/adam))
 
