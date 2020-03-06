@@ -1,3 +1,15 @@
+# v9.16.5 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- add bot-list dep to core ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.16.4 (Thu Mar 05 2020)
 
 #### 🐛 Bug Fix
