@@ -366,7 +366,7 @@ export default class Auto {
       }
     );
 
-    /** 
+    /**
      * Determine if repo is behind HEAD of current branch. We do this in
      * the "afterVersion" hook so the check happens as late as possible.
      */
@@ -1472,7 +1472,7 @@ export default class Auto {
   }
 
   /** Calculate a version from a tag using labels */
-  private async getVersion({ from }: IVersionOptions = {}) {
+  async getVersion({ from }: IVersionOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }

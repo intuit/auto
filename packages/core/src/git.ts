@@ -17,6 +17,7 @@ import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { gt } from 'semver';
 import { ICommit } from './log-parse';
+import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 
 const gitlog = promisify(gitlogNode);
 
@@ -832,5 +833,32 @@ export default class Git {
     this.logger.verbose.info('Latest tag in branch:', firstGreatestUnique);
 
     return firstGreatestUnique;
+  }
+
+  /** Determine the pull request for a commit hash */
+  async matchCommitToPr(sha: string) {
+    const query = buildSearchQuery(this.options.owner, this.options.repo, [
+      sha
+    ]);
+
+    if (!query) {
+      return;
+    }
+
+    const result = (await this.graphql(query)) as ISearchResult;
+
+    if (!result) {
+      return;
+    }
+
+    const labels = result.edges[0].node.labels
+      ? result.edges[0].node.labels.edges.map(edge => edge.node.name)
+      : [];
+
+    return {
+      number: result.edges[0].node.number,
+      body: result.edges[0].node.body,
+      labels
+    };
   }
 }
