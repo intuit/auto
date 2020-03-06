@@ -18,6 +18,7 @@ import { dummyLog, ILogger } from './utils/logger';
 import { gt } from 'semver';
 import { ICommit } from './log-parse';
 import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
+import { spawn } from 'child_process';
 
 const gitlog = promisify(gitlogNode);
 
@@ -138,19 +139,31 @@ export default class Git {
 
   /** Verify the write access authorization to remote repository with push dry-run. */
   async verifyAuth(url: string) {
-    try {
-      await execPromise('git', [
-        'push',
-        '--dry-run',
-        '--no-verify',
-        url,
-        `HEAD:${this.options.baseBranch}`,
-        '-q'
-      ]);
-      return true;
-    } catch (error) {
-      return false;
-    }
+    return new Promise<boolean>(resolve => {
+      try {
+        const child = spawn(
+          `git push --dry-run --no-verify ${url} HEAD:${this.options.baseBranch} -q`,
+          {
+            cwd: process.cwd(),
+            env: process.env,
+            detached: true,
+            shell: true
+          }
+        );
+
+        let err = '';
+
+        child.stderr.on('data', data => {
+          err += data.toString();
+        });
+
+        child.on('exit', () => {
+          resolve(!err.startsWith('fatal: could not read Username'));
+        });
+      } catch (error) {
+        resolve(false);
+      }
+    });
   }
 
   /** Get the "Latest Release" from GitHub */
@@ -848,7 +861,7 @@ export default class Git {
     const key = `hash_${sha}`;
     const result = (await this.graphql(query)) as Record<string, ISearchResult>;
 
-    if (!result || !result[key]) {
+    if (!result || !result[key] || !result[key].edges[0]) {
       return;
     }
 

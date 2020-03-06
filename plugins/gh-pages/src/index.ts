@@ -120,6 +120,6 @@ export default class GhPagesPlugin implements IPlugin {
       throw error;
     }
 
-    auto.logger.log.success('Successfully deployed to GitHub Pages!')
+    auto.logger.log.success('Successfully deployed to GitHub Pages!');
   }
 }
