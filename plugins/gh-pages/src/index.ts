@@ -79,7 +79,7 @@ export default class GhPagesPlugin implements IPlugin {
 
       // If: skip-release + w/documentation label then we will push to gh-pages
       await auto.setGitUser();
-      await this.releaseGhPages();
+      await this.releaseGhPages(auto.remote);
     });
 
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
@@ -94,12 +94,12 @@ export default class GhPagesPlugin implements IPlugin {
         return;
       }
 
-      await this.releaseGhPages();
+      await this.releaseGhPages(auto.remote);
     });
   }
 
   /** Release to gh-pages */
-  private async releaseGhPages() {
+  private async releaseGhPages(remote: string) {
     if (this.options.buildCommand) {
       execSync(this.options.buildCommand);
     }
@@ -107,6 +107,7 @@ export default class GhPagesPlugin implements IPlugin {
     await execPromise('npx', [
       'push-dir',
       '--cleanup',
+      `--remote=${remote}`,
       `--dir=${this.options.dir}`,
       `--branch=${this.options.branch}`,
       '--message="Update docs [skip ci]"'
