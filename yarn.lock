@@ -8,11 +8,12 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.15.8"
+  version "9.16.6"
 
 "@auto-it/core@link:packages/core":
-  version "9.16.0"
+  version "9.16.6"
   dependencies:
+    "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.0"
     "@octokit/graphql" "4.3.1"
     "@octokit/plugin-enterprise-compatibility" "1.2.1"
@@ -36,6 +37,7 @@
     lodash.chunk "^4.2.0"
     log-symbols "^3.0.0"
     node-fetch "2.6.0"
+    parse-github-url "1.0.2"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
@@ -46,7 +48,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.16.0"
+  version "9.16.6"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -63,7 +65,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.16.0"
+  version "9.16.6"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -14816,6 +14818,13 @@ tinycolor2@^1.1.2, tinycolor2@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
+
+title-case@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/title-case/-/title-case-3.0.2.tgz#9f926a0a42071366f85470572f312c4b647773ab"
+  integrity sha512-1P5hyjEhJ9Ab0AT8Xbm0z1avwPSgRR6XtFSNCdfo6B7111TTTja+456UZ2ZPkbTbzqBwIpQxp/tazh5UvpJ+fA==
+  dependencies:
+    tslib "^1.10.0"
 
 tmp@^0.0.33:
   version "0.0.33"
