@@ -845,20 +845,18 @@ export default class Git {
       return;
     }
 
-    const result = (await this.graphql(query)) as ISearchResult;
+    const key = `hash_${sha}`;
+    const result = (await this.graphql(query)) as Record<string, ISearchResult>;
 
-    if (!result) {
+    if (!result || !result[key]) {
       return;
     }
 
-    const labels = result.edges[0].node.labels
-      ? result.edges[0].node.labels.edges.map(edge => edge.node.name)
-      : [];
+    const pr = result[key].edges[0].node;
 
     return {
-      number: result.edges[0].node.number,
-      body: result.edges[0].node.body,
-      labels
+      ...pr,
+      labels: pr.labels ? pr.labels.edges.map(edge => edge.node.name) : []
     };
   }
 }
