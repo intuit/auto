@@ -45,8 +45,8 @@ Package Manager Plugins
 - [Crates](../plugins/crates/README.md)
 - [Git Tag](../plugins/git-tag/README.md)
 - [Gradle](../plugins/gradle/README.md)
-- [NPM](../plugins/npm/README.md)
 - [Maven](../plugins/maven/README.md)
+- [NPM](../plugins/npm/README.md)
 
 Functionality Plugins
 
@@ -54,6 +54,7 @@ Functionality Plugins
 - [Amazon S3](../plugins/s3/README.md)
 - [Conventional Commits](../plugins/conventional-commits/README.md)
 - [First Time Contributor](../plugins/first-time-contributor/README.md)
+- [GitHub Pages](../plugins/gh-pages/README.md)
 - [Jira](../plugins/jira/README.md)
 - [Omit Commits](../plugins/omit-commits/README.md)
 - [Omit Release Notes](../plugins/omit-release-notes/README.md)

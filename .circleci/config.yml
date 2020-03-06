@@ -86,20 +86,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/auto
-      - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run:
           name: Release
           command: yarn auto shipit -vv
-
-  publishDocs:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/auto
-      - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-      - run:
-          name: Publish Docs
-          command: yarn docs:publish
 
 workflows:
   version: 2
@@ -124,11 +113,3 @@ workflows:
           requires:
             - test
             - lint
-
-      - publishDocs:
-          requires:
-            - release
-          filters:
-            branches:
-              only:
-                - master
