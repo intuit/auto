@@ -1,3 +1,16 @@
+# v9.16.7 (Fri Mar 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - "version" would be wrong with label-less PRs + 'none' release types [#1032](https://github.com/intuit/auto/pull/1032) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.16.6 (Thu Mar 05 2020)
 
 #### ⚠️  Pushed to `master`
