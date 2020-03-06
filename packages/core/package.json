@@ -57,6 +57,7 @@
     "gitlogplus": "^3.1.2",
     "https-proxy-agent": "^5.0.0",
     "import-cwd": "^3.0.0",
+    "import-from": "^3.0.0",
     "io-ts": "^2.1.2",
     "lodash.chunk": "^4.2.0",
     "log-symbols": "^3.0.0",

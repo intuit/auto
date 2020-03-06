@@ -1,7 +1,8 @@
 import importCwd from 'import-cwd';
+import importFrom from 'import-from';
 
 /** Try to require something either from the CWD or the regular way */
-export default function tryRequire(tryPath: string) {
+export default function tryRequire(tryPath: string, from?: string) {
   try {
     // Require from CWD
     return importCwd(tryPath);
@@ -21,5 +22,11 @@ export default function tryRequire(tryPath: string) {
       // Require from __dirname. Needed for npx and global installs
       return require(tryPath);
     } catch (error) {}
+
+    if (from) {
+      try {
+        return importFrom(from, tryPath);
+      } catch (error) {}
+    }
   }
 }

@@ -19,8 +19,12 @@ export interface IPlugin {
 }
 
 /** Require a plugin and log where it was found. */
-function requirePlugin(pluginPath: string, logger: ILogger) {
-  const plugin = tryRequire(pluginPath);
+function requirePlugin(
+  pluginPath: string,
+  logger: ILogger,
+  extendedLocation?: string
+) {
+  const plugin = tryRequire(pluginPath, extendedLocation);
 
   if (plugin) {
     logger.verbose.info(`Found plugin using: ${pluginPath}`);
@@ -32,12 +36,16 @@ function requirePlugin(pluginPath: string, logger: ILogger) {
 /** Try to load a plugin in various ways */
 export default function loadPlugin(
   [pluginPath, options]: [string, any],
-  logger: ILogger
+  logger: ILogger,
+  extendedLocation?: string
 ): IPlugin | undefined {
   const isLocal =
     pluginPath.startsWith('.') ||
     pluginPath.startsWith('/') ||
     pluginPath.match(/^[A-Z]:\\/); // Support for windows paths
+
+  /** Attempt to require a plugin */
+  const attempt = (p: string) => requirePlugin(p, logger, extendedLocation);
 
   let plugin:
     | IPluginConstructor
@@ -49,13 +57,13 @@ export default function loadPlugin(
 
   // Try requiring a path
   if (isLocal) {
-    plugin = requirePlugin(pluginPath, logger);
+    plugin = attempt(pluginPath);
   }
 
   // Try requiring a path from cwd
   if (!plugin && isLocal) {
     const localPath = path.join(process.cwd(), pluginPath);
-    plugin = requirePlugin(localPath, logger);
+    plugin = attempt(localPath);
 
     if (!plugin) {
       logger.log.warn(`Could not find plugin from path: ${localPath}`);
@@ -71,22 +79,22 @@ export default function loadPlugin(
       pluginPath,
       'dist/index.js'
     );
-    plugin = requirePlugin(pkgPath, logger);
+    plugin = attempt(pkgPath);
   }
 
   // For a user created plugin
   if (!plugin) {
-    plugin = requirePlugin(`auto-plugin-${pluginPath}`, logger);
+    plugin = attempt(`auto-plugin-${pluginPath}`);
   }
 
   // Try importing official plugin
   if (!plugin) {
-    plugin = requirePlugin(path.join('@auto-it', pluginPath), logger);
+    plugin = attempt(path.join('@auto-it', pluginPath));
   }
 
   // Try importing canary version of plugin
   if (!plugin) {
-    plugin = requirePlugin(path.join('@auto-canary', pluginPath), logger);
+    plugin = attempt(path.join('@auto-canary', pluginPath));
   }
 
   // Try requiring a package
@@ -96,7 +104,7 @@ export default function loadPlugin(
       pluginPath.startsWith('auto-plugin-') ||
       pluginPath.startsWith('@auto-it'))
   ) {
-    plugin = requirePlugin(pluginPath, logger);
+    plugin = attempt(pluginPath);
   }
 
   if (!plugin) {

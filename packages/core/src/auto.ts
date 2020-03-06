@@ -1781,13 +1781,16 @@ export default class Auto {
       require.resolve('./plugins/filter-non-pull-request'),
       ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
+    const extendedLocation = config.extends
+      ? require.resolve(config.extends)
+      : undefined;
 
     pluginsPaths
       .map(plugin =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
       )
-      .map(plugin => loadPlugin(plugin, this.logger))
+      .map(plugin => loadPlugin(plugin, this.logger, extendedLocation))
       .filter((plugin): plugin is IPlugin => Boolean(plugin))
       .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
