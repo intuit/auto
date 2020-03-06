@@ -51,7 +51,12 @@ export function calculateSemVerBump(
   const labelSet = new Set<string>();
   const skipReleaseLabels = labelMap.get('skip') || [];
 
-  labels.forEach(pr => {
+  labels.forEach((pr, index) => {
+    // If the head pr has no labels we default to a patch
+    if (pr.length === 0 && index === 0) {
+      labelSet.add(SEMVER.patch);
+    }
+
     pr.forEach(label => {
       const userLabel = [...labelMap.entries()].find(pair =>
         pair[1].includes(label)
