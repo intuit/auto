@@ -7,7 +7,9 @@ import loadPlugin from '../utils/load-plugins';
 import child from 'child_process';
 
 const importMock = jest.fn();
+
 jest.mock('../utils/load-plugins.ts');
+jest.mock('../utils/verify-auth.ts', () => () => true);
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
 
