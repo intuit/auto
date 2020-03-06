@@ -1,5 +1,8 @@
 import importCwd from 'import-cwd';
 import importFrom from 'import-from';
+import createLog from './logger';
+
+const logger = createLog();
 
 /** Try to require something either from the CWD or the regular way */
 export default function tryRequire(tryPath: string, from?: string) {
@@ -25,8 +28,11 @@ export default function tryRequire(tryPath: string, from?: string) {
 
     if (from) {
       try {
+        // For loading plugins specified in a configuration (yarn 2)
         return importFrom(from, tryPath);
-      } catch (error) {}
+      } catch (error) {
+        logger.veryVerbose.warn({ from, tryPath, error });
+      }
     }
   }
 }
