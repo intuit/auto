@@ -1717,7 +1717,7 @@ export default class Auto {
   /**
    * Set the git user to make releases and commit with.
    */
-  private async setGitUser() {
+  async setGitUser() {
     const user = await this.getGitUser();
 
     if (user && !user.system) {

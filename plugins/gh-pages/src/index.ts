@@ -78,6 +78,7 @@ export default class GhPagesPlugin implements IPlugin {
       }
 
       // If: skip-release + w/documentation label then we will push to gh-pages
+      await auto.setGitUser();
       await this.releaseGhPages();
     });
 
