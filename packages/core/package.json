@@ -37,6 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
+    "@auto-it/bot-list": "link:../../packages/bot-list",
     "@octokit/core": "2.4.0",
     "@octokit/graphql": "4.3.1",
     "@octokit/plugin-enterprise-compatibility": "1.2.1",
