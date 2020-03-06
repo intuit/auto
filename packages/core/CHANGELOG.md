@@ -1,3 +1,15 @@
+# v9.16.6 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- add dep for parse-github-url ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.16.5 (Thu Mar 05 2020)
 
 #### 🐛 Bug Fix
