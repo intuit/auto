@@ -8,6 +8,10 @@ yarn add -D auto
 
 If you are using `auto` in a non-javascript project, you can install `auto` and all it's official plugins via the [releases](https://github.com/intuit/auto/releases) page. Here you will find a build of `auto` for all major OSes. This build has `node` bundled so you don't need it installed!
 
+::: message is-warning
+:warning: If you use `yarn@2` none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
+:::
+
 ## Help
 
 To get detailed help for any command use the `--help` flag.
