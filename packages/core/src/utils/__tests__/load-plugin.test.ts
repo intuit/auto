@@ -48,9 +48,9 @@ describe('loadPlugins', () => {
   });
 
   test('should load scoped plugins', () => {
-    expect(
-      loadPlugin(['@my-scope/auto-plugin-bar', {}], logger)?.name
-    ).toBe('bar');
+    expect(loadPlugin(['@my-scope/auto-plugin-bar', {}], logger)?.name).toBe(
+      'bar'
+    );
   });
 
   test('should require custom plugins -- fallback to cwd', () => {

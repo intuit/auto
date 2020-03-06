@@ -13,7 +13,7 @@ export default function tryRequire(tryPath: string) {
     }
 
     // If a plugin has any errors we want to inform the user
-    if (!error.message.includes('Cannot find module')) {
+    if (error.code !== 'MODULE_NOT_FOUND') {
       throw error;
     }
 
