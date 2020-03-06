@@ -79,7 +79,7 @@ export default class GhPagesPlugin implements IPlugin {
 
       // If: skip-release + w/documentation label then we will push to gh-pages
       await auto.setGitUser();
-      await this.releaseGhPages(auto.remote);
+      await this.releaseGhPages(auto);
     });
 
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
@@ -94,23 +94,32 @@ export default class GhPagesPlugin implements IPlugin {
         return;
       }
 
-      await this.releaseGhPages(auto.remote);
+      await this.releaseGhPages(auto);
     });
   }
 
   /** Release to gh-pages */
-  private async releaseGhPages(remote: string) {
+  private async releaseGhPages(auto: Auto) {
     if (this.options.buildCommand) {
       execSync(this.options.buildCommand);
     }
 
-    await execPromise('npx', [
-      'push-dir',
-      '--cleanup',
-      `--remote=${remote}`,
-      `--dir=${this.options.dir}`,
-      `--branch=${this.options.branch}`,
-      '--message="Update docs [skip ci]"'
-    ]);
+    try {
+      await execPromise('npx', [
+        'push-dir',
+        '--cleanup',
+        `--remote=${auto.remote}`,
+        `--dir=${this.options.dir}`,
+        `--branch=${this.options.branch}`,
+        '--message="Update docs [skip ci]"'
+      ]);
+    } catch (error) {
+      auto.logger.log.error(
+        'Oh no! It looks like there was trouble publishing to GitHub Pages 😢'
+      );
+      throw error;
+    }
+
+    auto.logger.log.success('Successfully deployed to GitHub Pages!')
   }
 }
