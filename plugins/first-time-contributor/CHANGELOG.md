@@ -1,3 +1,15 @@
+# v9.17.1 (Fri Mar 06 2020)
+
+#### 🐛 Bug Fix
+
+- 📦 🐈 Yarn 2 Compatibility [#1029](https://github.com/intuit/auto/pull/1029) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.15.7 (Tue Mar 03 2020)
 
 #### 🐛 Bug Fix

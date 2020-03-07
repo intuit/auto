@@ -1,3 +1,16 @@
+# v9.17.1 (Fri Mar 06 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/core`, `@auto-it/first-time-contributor`
+  - 📦 🐈 Yarn 2 Compatibility [#1029](https://github.com/intuit/auto/pull/1029) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.17.0 (Fri Mar 06 2020)
 
 #### 🚀 Enhancement
