@@ -107,10 +107,10 @@ const tapHook = (name: string, hook: any, command: string) => {
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = execSync(command, {
-        stdio: ['pipe', 'inherit'],
+        stdio: ['ignore', 'pipe', 'inherit'],
         encoding: 'utf8',
         env: createEnv(args)
-      });
+      }).trim();
 
       if (name !== 'canary') {
         return JSON.parse(value);
@@ -126,10 +126,10 @@ const tapHook = (name: string, hook: any, command: string) => {
   } else if (name === 'omitCommit' || name === 'omitReleaseNotes') {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = execSync(command, {
-        stdio: ['pipe', 'inherit'],
+        stdio: ['ignore', 'pipe', 'inherit'],
         encoding: 'utf8',
         env: createEnv(args)
-      });
+      }).trim();
 
       if (value === 'true') {
         return true;
@@ -148,7 +148,7 @@ const tapHook = (name: string, hook: any, command: string) => {
         env: createEnv(args),
         stdio:
           name === 'createChangelogTitle' || name === 'getPreviousVersion'
-            ? ['pipe', 'inherit']
+            ? ['ignore', 'pipe', 'inherit']
             : 'inherit'
       }).trim()
     );
