@@ -1,4 +1,5 @@
-/* eslint-disable no-lonely-if */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Auto, IPlugin } from '@auto-it/core';
 import {
   makeHooks,
@@ -87,7 +88,7 @@ export default class ExecPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    Object.entries(this.options).map(([key, command]) => {
+    Object.entries(this.options).forEach(([key, command]) => {
       const name = key as keyof IExecPluginOptions;
 
       /** Tap a hook if possible */
@@ -96,6 +97,7 @@ export default class ExecPlugin implements IPlugin {
 
         if (
           name === 'SyncWaterfallHook' ||
+          name === 'AsyncSeriesBailHook' ||
           name === 'AsyncSeriesWaterfallHook'
         ) {
           auto.logger.log.error(
@@ -108,24 +110,8 @@ export default class ExecPlugin implements IPlugin {
           name === 'AsyncParallelHook'
         ) {
           hook.tap(this.name, (...args: any[]) => {
-            return execSync(command, {
+            execSync(command, {
               stdio: 'inherit',
-              env: {
-                ...process.env,
-                ...fromEntries(
-                  args.map((arg, index) => [
-                    `ARG_${index}`,
-                    JSON.stringify(arg)
-                  ])
-                )
-              }
-            });
-          });
-        } else if (
-          name === 'AsyncSeriesBailHook' 
-        ) {
-          hook.tap(this.name, (...args: any[]) => {
-            return execSync(command, {
               env: {
                 ...process.env,
                 ...fromEntries(
