@@ -53,4 +53,4 @@ This plugin will also call the `publish` task with the release version, if confi
 
 ### Configure `snapshotSuffix`
 
-This plugins will use the `snapshotSuffix` in `build.gradle` if configured.
+This plugins will use the `snapshotSuffix` in `gradle.properties` or `build.gradle` if configured.
