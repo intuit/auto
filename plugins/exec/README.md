@@ -1,11 +1,14 @@
 # Exec Plugin
 
-Tap into select hooks and run a command on the terminal.
+Tap into hooks and run commands on the terminal.
 
-Tapable hooks, in call order:
+Main hooks, in call order:
 
 - beforeRun
+- getRepository
+- getAuthor
 - beforeShipIt
+- getPreviousVersion
 - afterAddToChangelog
 - beforeCommitChangelog
 - version
@@ -15,7 +18,23 @@ Tapable hooks, in call order:
 - afterRelease
 - afterShipIt
 
-Don't see the hook you want? Try making a pull request if you can figure out how to make that type of hook to work!
+Other hooks:
+
+- canary
+- next
+- modifyConfig
+- makeRelease
+- onCreateLogParse
+  - parseCommit
+  - omitCommit
+- onCreateChangelog
+  - renderChangelogLine
+  - renderChangelogTitle
+  - renderChangelogAuthor
+  - renderChangelogAuthorLine
+  - omitReleaseNotes
+- onCreateRelease
+  - createChangelogTitle
 
 ## Installation
 
@@ -31,7 +50,7 @@ yarn add -D @auto-it/exec
 
 Here is an example of replacing the `npm` plugins with a light-weight version.
 
-All args to a hook are exposed on the process in enviroment variables.
+All args to a hook are exposed on the process in environment variables.
 The format looks like `$ARG_0`, `$ARG_1`, and so on.
 Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.md) for more detail on what's available.
 
@@ -49,3 +68,7 @@ Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.m
   ]
 }
 ```
+
+::: message is-warning
+:warning: If you are tapping into a waterfall or bail hook you will need to return some value (ex: JSON or a boolean). Please refer to the documentation and return the right thing!
+:::

@@ -12,22 +12,22 @@ import fromEntries from 'fromentries';
 import { execSync } from 'child_process';
 
 type CommandMap = Record<string, string | undefined>;
-type ChangelogHooks = keyof ReturnType<typeof makeChangelogHooks>;
-const changelogHooks = Object.keys(makeChangelogHooks()) as ChangelogHooks[];
+type ChangelogHook = keyof ReturnType<typeof makeChangelogHooks>;
+const changelogHooks = Object.keys(makeChangelogHooks()) as ChangelogHook[];
 
 const onCreateChangelog = t.partial(
   fromEntries(changelogHooks.map(name => [name, t.string] as const)) as Record<
-    ChangelogHooks,
+    ChangelogHook,
     t.StringC
   >
 );
 
-type LogParseHooks = keyof ReturnType<typeof makeLogParseHooks>;
-const logParseHooks = Object.keys(makeLogParseHooks()) as LogParseHooks[];
+type LogParseHook = keyof ReturnType<typeof makeLogParseHooks>;
+const logParseHooks = Object.keys(makeLogParseHooks()) as LogParseHook[];
 
 const onCreateLogParse = t.partial(
   fromEntries(logParseHooks.map(name => [name, t.string] as const)) as Record<
-    LogParseHooks,
+    LogParseHook,
     t.StringC
   >
 );
@@ -57,7 +57,8 @@ const rootHooks = Object.keys(makeHooks()) as RootHook[];
 const complextRootOptions = [
   'onCreateRelease',
   'onCreateChangelog',
-  'onCreateLogParse'
+  'onCreateLogParse',
+  'validateConfig'
 ] as const;
 const rootOptions = t.partial(
   fromEntries(
@@ -74,35 +75,76 @@ const pluginOptions = t.intersection([
 
 export type IExecPluginOptions = t.TypeOf<typeof pluginOptions>;
 
+/** Put args in envirnment */
+const createEnv = (args: any[]) => ({
+  ...process.env,
+  ...fromEntries(
+    args.map((arg, index) => [`ARG_${index}`, JSON.stringify(arg)])
+  )
+});
+
 /** Tap a hook if possible */
-const tapHook = (auto: Auto, hook: any, command: string) => {
+const tapHook = (hook: any, command: string) => {
   const name = hook.constructor.name;
 
   if (
-    name === 'SyncWaterfallHook' ||
-    name === 'AsyncSeriesBailHook' ||
-    name === 'AsyncSeriesWaterfallHook'
+    name === 'getRepository' ||
+    name === 'getAuthor' ||
+    name === 'makeRelease' ||
+    name === 'modifyConfig' ||
+    name === 'next' ||
+    name === 'canary' ||
+    name === 'parseCommit' ||
+    name === 'addToBody' ||
+    name === 'renderChangelogLine' ||
+    name === 'renderChangelogTitle' ||
+    name === 'renderChangelogAuthor' ||
+    name === 'renderChangelogAuthorLine'
   ) {
-    auto.logger.log.error(
-      `"${name}" cannot easily be used from the "exec" plugin. Please consider writing your own plugin in JavaScript or TypeScript.`
-    );
-    process.exit(1);
+    hook.tap(`exec ${name}`, (...args: any[]) => {
+      const value = execSync(command, {
+        stdio: 'inherit',
+        encoding: 'utf8',
+        env: createEnv(args)
+      });
+
+      if (name !== 'canary') {
+        return JSON.parse(value);
+      }
+
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        // canary hook can just return a string
+        return value;
+      }
+    });
+  } else if (name === 'omitCommit' || name === 'omitReleaseNotes') {
+    hook.tap(`exec ${name}`, (...args: any[]) => {
+      const value = execSync(command, {
+        stdio: 'inherit',
+        encoding: 'utf8',
+        env: createEnv(args)
+      });
+
+      if (value === 'true') {
+        return true;
+      }
+    });
   } else if (
     name === 'SyncHook' ||
     name === 'AsyncSeriesHook' ||
-    name === 'AsyncParallelHook'
+    name === 'AsyncParallelHook' ||
+    name === 'createChangelogTitle' ||
+    name === 'getPreviousVersion'
   ) {
-    hook.tap(`exec ${name}`, (...args: any[]) => {
+    hook.tap(`exec ${name}`, (...args: any[]) =>
       execSync(command, {
         stdio: 'inherit',
-        env: {
-          ...process.env,
-          ...fromEntries(
-            args.map((arg, index) => [`ARG_${index}`, JSON.stringify(arg)])
-          )
-        }
-      });
-    });
+        encoding: 'utf8',
+        env: createEnv(args)
+      }).trim()
+    );
   }
 };
 
@@ -135,11 +177,7 @@ export default class ExecPlugin implements IPlugin {
         Object.entries(command as CommandMap).map(
           ([key, command]) =>
             command &&
-            tapHook(
-              auto,
-              release.hooks[key as keyof typeof release.hooks],
-              command
-            )
+            tapHook(release.hooks[key as keyof typeof release.hooks], command)
         );
       });
     } else if (name === 'onCreateChangelog') {
@@ -148,7 +186,6 @@ export default class ExecPlugin implements IPlugin {
           ([key, command]) =>
             command &&
             tapHook(
-              auto,
               changelog.hooks[key as keyof typeof changelog.hooks],
               command
             )
@@ -159,15 +196,11 @@ export default class ExecPlugin implements IPlugin {
         Object.entries(command as CommandMap).map(
           ([key, command]) =>
             command &&
-            tapHook(
-              auto,
-              logParse.hooks[key as keyof typeof logParse.hooks],
-              command
-            )
+            tapHook(logParse.hooks[key as keyof typeof logParse.hooks], command)
         );
       });
     } else {
-      tapHook(auto, auto.hooks[name], command as string);
+      tapHook(auto.hooks[name], command as string);
     }
   }
 }
