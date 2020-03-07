@@ -1,4 +1,9 @@
-import { Auto, IPlugin, execPromise } from '@auto-it/core';
+import {
+  Auto,
+  IPlugin,
+  execPromise,
+  validatePluginConfiguration
+} from '@auto-it/core';
 import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
 
 import * as t from 'io-ts';
@@ -109,6 +114,12 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.beforeRun.tap(this.name, async () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
 
