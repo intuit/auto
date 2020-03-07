@@ -38,6 +38,12 @@ describe('calculateSemVerBump', () => {
     ).toBe(SEMVER.noVersion);
   });
 
+  test('should release a patch for unlabeled pr merged along with none releases', () => {
+    expect(calculateSemVerBump([[], ['documentation']], semverMap)).toBe(
+      SEMVER.patch
+    );
+  });
+
   test('should not skip things before none', () => {
     expect(calculateSemVerBump([['none'], ['major']], semverMap)).toBe(
       SEMVER.major

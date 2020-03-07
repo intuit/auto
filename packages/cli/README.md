@@ -192,13 +192,12 @@ Global Options
 
 ## Merging Quickly
 
-One major caveat of `auto` is that you need to be mindful of merging multiple PRs at once. You must not merge two PRs at once or you will botch one of the releases.
+One caveat of `auto` is that you need to be mindful of merging multiple PRs at once. You **must not** merge a PR while another is publishing (ex: `lerna publish`). While this window is small, it exists and you should know about it.
 
-`auto` works by looking at the `git` tree to calculate the version bump then makes commits for the `CHANGELOG.md` and the new version. If you merge two PRs at once:
+`auto` works by looking at the `git` tree to calculate the version bump then makes commits for the `CHANGELOG.md` and the new version. If you merge a PR while another is publishing:
 
-1. one might pick up the others changes
-2. they might try to publish the same version number
-3. one will try to push over the other's changes and fail
+- they might try to publish the same version number
+- one will try to push over the other's changes and fail
 
 The one [exception](https://intuit.github.io/auto/pages/quick-merge.html#with-skip-release) to this rule with when merging a bunch of PRs with `skip-release` labels.
 

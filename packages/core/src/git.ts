@@ -4,7 +4,7 @@ import path from 'path';
 import { retry } from '@octokit/plugin-retry';
 import { throttling } from '@octokit/plugin-throttling';
 import { Octokit } from '@octokit/rest';
-import gitlogNode from 'gitlog';
+import gitlogNode from 'gitlogplus';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
@@ -13,10 +13,12 @@ import endent from 'endent';
 import { Memoize as memoize } from 'typescript-memoize';
 
 import { ILabelDefinition } from './release';
+import verifyAuth from './utils/verify-auth';
 import execPromise from './utils/exec-promise';
 import { dummyLog, ILogger } from './utils/logger';
 import { gt } from 'semver';
 import { ICommit } from './log-parse';
+import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
 
 const gitlog = promisify(gitlogNode);
 
@@ -137,15 +139,7 @@ export default class Git {
 
   /** Verify the write access authorization to remote repository with push dry-run. */
   async verifyAuth(url: string) {
-    try {
-      await execPromise(
-        'git',
-        ['push', '--dry-run', '--no-verify', url, `HEAD:${this.options.baseBranch}`, '-q']
-      );
-      return true;
-    } catch (error) {
-      return false;
-    }
+    return verifyAuth(url, this.options.baseBranch);
   }
 
   /** Get the "Latest Release" from GitHub */
@@ -828,5 +822,30 @@ export default class Git {
     this.logger.verbose.info('Latest tag in branch:', firstGreatestUnique);
 
     return firstGreatestUnique;
+  }
+
+  /** Determine the pull request for a commit hash */
+  async matchCommitToPr(sha: string) {
+    const query = buildSearchQuery(this.options.owner, this.options.repo, [
+      sha
+    ]);
+
+    if (!query) {
+      return;
+    }
+
+    const key = `hash_${sha}`;
+    const result = (await this.graphql(query)) as Record<string, ISearchResult>;
+
+    if (!result || !result[key] || !result[key].edges[0]) {
+      return;
+    }
+
+    const pr = result[key].edges[0].node;
+
+    return {
+      ...pr,
+      labels: pr.labels ? pr.labels.edges.map(edge => edge.node.name) : []
+    };
   }
 }

@@ -379,9 +379,11 @@ describe('Release', () => {
           })
         ])
       );
-      exec.mockReturnValueOnce('1');
       exec.mockReturnValueOnce('0');
-
+      exec.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
 

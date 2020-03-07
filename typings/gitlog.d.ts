@@ -1,29 +1,29 @@
-declare module 'gitlog' {
+declare module 'gitlogplus' {
   interface IGitlogOptions {
     /**
      *
      */
-repo: string;
+    repo: string;
     /**
      *
      */
-fields: string[];
+    fields: string[];
     /**
      *
      */
-branch: string;
+    branch: string;
     /**
      *
      */
-number: number;
+    number: number;
     /**
      *
      */
-execOptions: {
+    execOptions: {
       /**
        *
        */
-maxBuffer: number;
+      maxBuffer: number;
     };
   }
 

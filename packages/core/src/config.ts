@@ -141,8 +141,7 @@ export default class Config {
 
       this.logger.verbose.note(`${extend} found: ${config}`);
     } else {
-      config = tryRequire(`${extend}/package.json`);
-      config = config?.auto;
+      config = tryRequire(`${extend}/package.json`)?.auto;
       this.logger.verbose.note(`${extend} found: ${config}`);
     }
 
@@ -151,6 +150,10 @@ export default class Config {
       config = tryRequire(scope);
       config = config?.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
+
+      if (config) {
+        config.extends = scope;
+      }
     }
 
     if (!config) {
@@ -158,10 +161,19 @@ export default class Config {
       config = tryRequire(scope);
       config = config?.auto;
       this.logger.verbose.note(`${scope} found: ${config}`);
+
+      if (config) {
+        config.extends = scope;
+      }
     }
 
     if (!config) {
-      config = tryRequire(path.join(process.cwd(), extend));
+      const localPath = path.join(process.cwd(), extend);
+      config = tryRequire(localPath);
+
+      if (config) {
+        config.extends = localPath;
+      }
     }
 
     if (!config) {

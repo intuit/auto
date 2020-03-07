@@ -7,15 +7,11 @@ import loadPlugin from '../utils/load-plugins';
 import child from 'child_process';
 
 const importMock = jest.fn();
+
 jest.mock('../utils/load-plugins.ts');
+jest.mock('../utils/verify-auth.ts', () => () => true);
 jest.mock('import-cwd', () => (path: string) => importMock(path));
 jest.mock('env-ci', () => () => ({ isCi: false, branch: 'master' }));
-
-jest
-  .spyOn(child, 'execSync')
-  .mockImplementation()
-  // @ts-ignore
-  .mockReturnValue('');
 
 const defaults = {
   owner: 'foo',
@@ -60,13 +56,15 @@ jest.mock('@octokit/rest', () => {
 });
 
 // @ts-ignore
-jest.mock('gitlog', () => (a, cb) => {
+jest.mock('gitlogplus', () => (a, cb) => {
   cb(undefined, [
     {
-      rawBody: 'foo'
+      rawBody: 'foo',
+      hash: '123'
     },
     {
-      rawBody: 'foo'
+      rawBody: 'foo',
+      hash: '456'
     }
   ]);
 });
@@ -75,6 +73,12 @@ describe('Auto', () => {
   beforeEach(() => {
     // @ts-ignore
     loadPlugin.mockClear();
+
+    jest
+      .spyOn(child, 'execSync')
+      .mockImplementation()
+      // @ts-ignore
+      .mockReturnValue('');
   });
 
   test('should use args', async () => {
@@ -208,7 +212,7 @@ describe('Auto', () => {
     expect(auto.config!.labels.find(l => l.name === 'feature')).toStrictEqual({
       description: 'Increment the minor version when merged',
       name: 'feature',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
   });
@@ -229,7 +233,7 @@ describe('Auto', () => {
     ).toStrictEqual({
       description: 'This is a test',
       name: 'minor',
-      changelogTitle: '🚀  Enhancement',
+      changelogTitle: '🚀 Enhancement',
       releaseType: SEMVER.minor
     });
   });
@@ -1247,6 +1251,7 @@ describe('Auto', () => {
       auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
+      auto.remote = 'https://github.com/intuit/auto';
 
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
@@ -1260,6 +1265,40 @@ describe('Auto', () => {
 
       await auto.shipit();
       expect(afterShipIt).toHaveBeenCalled();
+    });
+
+    test('should not publish when behind remote', async () => {
+      jest.spyOn(child, 'execSync').mockImplementation(command => {
+        if (command.startsWith('git')) {
+          throw new Error();
+        }
+
+        return Buffer.from('');
+      });
+
+      const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      // @ts-ignore
+      // eslint-disable-next-line jest/prefer-spy-on
+      process.exit = jest.fn();
+      await auto.loadConfig();
+      auto.remote = 'https://github.com/intuit/auto';
+
+      // @ts-ignore
+      auto.logger = dummyLog();
+      // @ts-ignore
+      auto.makeChangelog = () => Promise.resolve();
+      auto.git!.getLatestRelease = () => Promise.resolve('1.2.3');
+      jest.spyOn(auto.git!, 'publish').mockImplementation();
+      jest.spyOn(auto.release!, 'getCommitsInRelease').mockImplementation();
+      jest.spyOn(auto.release!, 'generateReleaseNotes').mockImplementation();
+      jest.spyOn(auto.release!, 'addToChangelog').mockImplementation();
+      const afterShipIt = jest.fn();
+      auto.hooks.afterShipIt.tap('test', afterShipIt);
+
+      await auto.shipit();
+      expect(process.exit).toHaveBeenCalled();
     });
 
     test('should skip publish in dry run', async () => {
@@ -1285,6 +1324,14 @@ describe('Auto', () => {
 });
 
 describe('hooks', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(child, 'execSync')
+      .mockImplementation()
+      // @ts-ignore
+      .mockReturnValue('');
+  });
+
   test('should be able to modifyConfig', async () => {
     const auto = new Auto(defaults);
     auto.logger = dummyLog();

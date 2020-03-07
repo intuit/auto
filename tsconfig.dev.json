@@ -52,6 +52,12 @@
     },
     {
       "path": "plugins/all-contributors"
+    },
+    {
+      "path": "plugins/gh-pages"
+    },
+    {
+      "path": "plugins/exec"
     }
   ]
 }

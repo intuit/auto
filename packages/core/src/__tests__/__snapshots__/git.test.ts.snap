@@ -14,3 +14,21 @@ Array [
   },
 ]
 `;
+
+exports[`github getGitLog - merge commits 1`] = `
+Object {
+  "authorEmail": "lisowski54@gmail.com",
+  "authorName": "Andrew Lisowski",
+  "files": Array [
+    "<PROJECT_ROOT>/docs/pages/quick-merge.md",
+    "<PROJECT_ROOT>/packages/cli/README.md",
+    "<PROJECT_ROOT>/packages/core/src/__tests__/auto.test.ts",
+    "<PROJECT_ROOT>/packages/core/src/auto.ts",
+    "<PROJECT_ROOT>/plugins/git-tag/src/index.ts",
+  ],
+  "hash": "024c66aa21cff5947957ed3bdfb4a616aa3f0046",
+  "subject": "Merge pull request #1018 from intuit/exit
+
+determine if branch behind remote and exit before trying to publish",
+}
+`;

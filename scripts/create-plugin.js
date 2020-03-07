@@ -5,6 +5,7 @@ const path = require('path');
 const log = require('signale');
 const fs = require('fs');
 const changeCase = require('change-case');
+const { titleCase } = require('title-case');
 const [, , name, description] = process.argv;
 
 const { version } = JSON.parse(
@@ -20,7 +21,7 @@ fs.mkdirSync(outDir);
 const vars = {
   description,
   version,
-  title: changeCase.titleCase(name),
+  title: titleCase(name),
   kebab,
   pascal: changeCase.pascalCase(name)
 };

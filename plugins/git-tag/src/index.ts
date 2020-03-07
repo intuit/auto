@@ -40,7 +40,6 @@ export default class GitTagPlugin implements IPlugin {
 
       const lastTag = await getTag();
       const newTag = inc(lastTag, version as ReleaseType);
-      const branch = getCurrentBranch() || '';
 
       if (!newTag) {
         auto.logger.log.info('No release found, doing nothing');
@@ -55,15 +54,6 @@ export default class GitTagPlugin implements IPlugin {
         prefixedTag,
         '-m',
         `"Update version to ${prefixedTag}"`
-      ]);
-
-      auto.logger.log.info(`Pushing new tag to GitHub: ${prefixedTag}`);
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
-        auto.remote,
-        branch || auto.baseBranch
       ]);
     });
 
@@ -98,5 +88,17 @@ export default class GitTagPlugin implements IPlugin {
 
       return preReleaseVersions;
     });
+
+    auto.hooks.publish.tapPromise(this.name, async () => {
+      auto.logger.log.info('Pushing new tag to GitHub');
+
+      await execPromise('git', [
+        'push',
+        '--follow-tags',
+        '--set-upstream',
+        auto.remote,
+        getCurrentBranch() || auto.baseBranch
+      ]);
+    })
   }
 }

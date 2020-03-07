@@ -16,7 +16,7 @@ yarn add -D @auto-it/omit-commits
 
 Yarn can omit by most any field available on a commit. Each options accepts either a string or an array of strings.
 
-```json
+```jsonc
 {
   "plugins": [
     [

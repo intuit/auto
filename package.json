@@ -40,6 +40,7 @@
     "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
   "devDependencies": {
+    "@types/parse-github-url": "1.0.0",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.7.0",
     "all-contributors-cli": "^6.4.0",
@@ -64,6 +65,7 @@
     "prettier": "^1.19.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
+    "title-case": "^3.0.2",
     "ts-jest": "^25.0.0",
     "typescript": "~3.7.2"
   },
@@ -156,6 +158,13 @@
           "./packages/cli/binary/auto-macos.gz",
           "./packages/cli/binary/auto-win.exe.gz"
         ]
+      ],
+      [
+        "gh-pages",
+        {
+          "buildCommand": "yarn docs",
+          "dir": "_ignite/auto"
+        }
       ]
     ],
     "labels": [

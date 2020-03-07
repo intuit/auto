@@ -1,6 +1,233 @@
-# v9.15.8 (Tue Mar 03 2020)
+# v9.18.0 (Sat Mar 07 2020)
+
+### Release Notes
+
+_From #1033_
+
+Install `@auto-it/exec` to easily run bash scripts during the `auto` release pipeline! Right now it doesn't handle every hook in `auto` but it exposes enough to quickly write plugins.
+
+```jsonc
+{
+  "plugins": [
+    [
+      "exec",
+      {
+        "afterShipIt": "echo 'Do something cool'"
+      }
+    ]
+    // other plugins
+  ]
+}
+```
+
+Here is an example of a super light weight version of the `npm` and `gh-pages` plugins (Note: This misses out on a lot of features that are in the official plugins)
+
+```jsonc
+{
+  "plugins": [
+    [
+      "exec",
+      {
+        "version": "npm version $ARG_0",
+        "publish": "npm publish && git push --tags",
+        "afterRelease": "yarn docs && push-dir --dir=docs --branch=gh-pages"
+      }
+    ]
+    // other plugins
+  ]
+}
+```
+
+---
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/exec`, `@auto-it/omit-commits`
+  - Add Exec Plugin [#1033](https://github.com/intuit/auto/pull/1033) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.17.1 (Fri Mar 06 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/core`, `@auto-it/first-time-contributor`
+  - 📦 🐈 Yarn 2 Compatibility [#1029](https://github.com/intuit/auto/pull/1029) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.17.0 (Fri Mar 06 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/gh-pages`
+  - Add GitHub Pages Plugin [#1031](https://github.com/intuit/auto/pull/1031) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.7 (Fri Mar 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - "version" would be wrong with label-less PRs + 'none' release types [#1032](https://github.com/intuit/auto/pull/1032) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.6 (Thu Mar 05 2020)
+
+#### ⚠️  Pushed to `master`
+
+- `@auto-it/core`
+  - add dep for parse-github-url ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.5 (Thu Mar 05 2020)
+
+#### ⚠️  Pushed to `master`
+
+- `@auto-it/core`
+  - add bot-list dep to core ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.4 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Make gitlog include merge commit files [#1028](https://github.com/intuit/auto/pull/1028) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.3 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Changelog formatting [#1026](https://github.com/intuit/auto/pull/1026) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.2 (Thu Mar 05 2020)
 
 #### 🐛  Bug Fix
+
+- `@auto-it/bot-list`, `@auto-it/core`, `@auto-it/all-contributors`
+  - move botlist to package and use it in release notes exclusion [#1027](https://github.com/intuit/auto/pull/1027) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.1 (Thu Mar 05 2020)
+
+#### 🐛  Bug Fix
+
+- `@auto-it/npm`
+  - npm: respect subPackageChangelogs false [#1025](https://github.com/intuit/auto/pull/1025) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.16.0 (Thu Mar 05 2020)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/git-tag`
+  - determine if branch behind remote and exit before trying to publish [#1018](https://github.com/intuit/auto/pull/1018) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- `@auto-it/core`
+  - fix tests [#1024](https://github.com/intuit/auto/pull/1024) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.15.11 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix plugin loading from absolute windows paths [#1022](https://github.com/intuit/auto/pull/1022) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.15.10 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix loading canary versions of official plugins [#1021](https://github.com/intuit/auto/pull/1021) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.15.9 (Thu Mar 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - test for ancestor in windows friendly way [#1019](https://github.com/intuit/auto/pull/1019) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.15.8 (Tue Mar 03 2020)
+
+#### 🐛 Bug Fix
 
 - `auto`
   - set license on CLI [#1017](https://github.com/intuit/auto/pull/1017) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -13,7 +240,7 @@
 
 # v9.15.7 (Tue Mar 03 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - add license to all sub-packages [#1016](https://github.com/intuit/auto/pull/1016) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -26,7 +253,7 @@
 
 # v9.15.6 (Tue Mar 03 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - info: handle when there is no previous version [#1015](https://github.com/intuit/auto/pull/1015) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -39,7 +266,7 @@
 
 # v9.15.5 (Tue Mar 03 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix "Push to master" on next branch [#1013](https://github.com/intuit/auto/pull/1013) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -52,7 +279,7 @@
 
 # v9.15.4 (Mon Mar 02 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/core`
   - Don't release canary on skip-release by default, add force flag [#993](https://github.com/intuit/auto/pull/993) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@zephraph](https://github.com/zephraph))
@@ -66,7 +293,7 @@
 
 # v9.15.3 (Mon Mar 02 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/npm`
   - don't force publish canary/next for independent lerna projects [#1012](https://github.com/intuit/auto/pull/1012) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -94,7 +321,7 @@
 
 # v9.15.2 (Sun Mar 01 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/conventional-commits`
   - Respect PR label when conventional commit message is present [#1001](https://github.com/intuit/auto/pull/1001) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -107,7 +334,7 @@
 
 # v9.15.1 (Sun Mar 01 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/core`
   - Default Config When running shipit [#1000](https://github.com/intuit/auto/pull/1000) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -124,13 +351,13 @@
 
 _From #998_
 
-Configs are now fully validated including plugins 🎉 
+Configs are now fully validated including plugins 🎉
 
 <img width="1171" alt="Screen Shot 2020-02-29 at 10 19 01 PM" src="https://user-images.githubusercontent.com/1192452/75620907-b8864d80-5b42-11ea-84e0-15292696185d.png">
 
-###  🚀 Command Configuration  🚀 
+### 🚀 Command Configuration 🚀
 
-With the inclusion of configuration validation we decided to restrict valid root level keys to only options that are shared between commands. All of these options are called out in the [`.autorc` docs](https://intuit.github.io/auto/pages/autorc.html). 
+With the inclusion of configuration validation we decided to restrict valid root level keys to only options that are shared between commands. All of these options are called out in the [`.autorc` docs](https://intuit.github.io/auto/pages/autorc.html).
 
 But for some commands it still makes sense to configure flag permanently in the `.autorc`. For those commands you can now supply defaults for flags using the following format.
 
@@ -148,16 +375,16 @@ Please refer to each command's documentation to see which options are configurab
 
 ### New Hook
 
-For plugins configuration validation a new hook `validateConfiguration` was added for plugins to tap into and report configuration errors.  [Read more](https://intuit.github.io/auto/pages/writing-plugins.html#validateconfig)
+For plugins configuration validation a new hook `validateConfiguration` was added for plugins to tap into and report configuration errors. [Read more](https://intuit.github.io/auto/pages/writing-plugins.html#validateconfig)
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Config Validation + Command Defaults [#998](https://github.com/intuit/auto/pull/998) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Add @unknownerror404 as a contributor [#997](https://github.com/intuit/auto/pull/997) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -169,7 +396,7 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.14.0 (Tue Feb 25 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - add scoped plugin support [#992](https://github.com/intuit/auto/pull/992) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -182,12 +409,12 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.13.1 (Mon Feb 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add fallback for when --is-ancestor fails [#989](https://github.com/intuit/auto/pull/989) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Better Travis Docs [#990](https://github.com/intuit/auto/pull/990) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -214,17 +441,17 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.13.0 (Sat Feb 22 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
   - When parsing owner/repo fallback to parsing 'origin' [#975](https://github.com/intuit/auto/pull/975) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add git version to 'auto info' output [#977](https://github.com/intuit/auto/pull/977) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Update bug_report.md [#974](https://github.com/intuit/auto/pull/974) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -236,7 +463,7 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.12.1 (Sat Feb 22 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/npm`
   - add warning about using npm plugin with noVersionPrefix [#972](https://github.com/intuit/auto/pull/972) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -251,7 +478,7 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.12.0 (Fri Feb 21 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`
   - ensure remote can be pushed to [#969](https://github.com/intuit/auto/pull/969) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -264,7 +491,7 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 # v9.11.0 (Fri Feb 21 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`
   - Add new command 'latest' for easier testing and more flexibility [#968](https://github.com/intuit/auto/pull/968) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -281,14 +508,14 @@ For plugins configuration validation a new hook `validateConfiguration` was adde
 
 Thank you, Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz)), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/all-contributors`
   - fix case sensitive username bug and handle git errors [#967](https://github.com/intuit/auto/pull/967) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`
   - Adding proxyagent to graphql [#963](https://github.com/intuit/auto/pull/963) ([@YogiKhan](https://github.com/YogiKhan) [@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/gradle`
   - fix: gradle readme use jsonc syntax highlighting [#965](https://github.com/intuit/auto/pull/965) ([@sugarmanz](https://github.com/sugarmanz))
@@ -303,7 +530,7 @@ Thank you, Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz)), for all
 
 # v9.10.7 (Tue Feb 18 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/first-time-contributor`
   - filter out bots in first-time contributor plugins [#961](https://github.com/intuit/auto/pull/961) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -320,12 +547,12 @@ Thank you, Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz)), for all
 
 Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - get node version in crash friendly way [#960](https://github.com/intuit/auto/pull/960) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - add clearer docs around github token permissions [#958](https://github.com/intuit/auto/pull/958) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Add gradle to root readme [#957](https://github.com/intuit/auto/pull/957) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -358,7 +585,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Add gradle to tsconfig. [#946](https://github.com/intuit/auto/pull/946) (brandon_miller3@intuit.com [@unknownerror404](https://github.com/unknownerror404))
 
@@ -388,7 +615,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.10.4 (Thu Feb 06 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/core`
   - Run `auto info` when any command is run with --verbose [#934](https://github.com/intuit/auto/pull/934) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -401,7 +628,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.10.3 (Thu Feb 06 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add info about token permission [#933](https://github.com/intuit/auto/pull/933) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -414,7 +641,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.10.2 (Thu Feb 06 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - create-labels: handle repos with large amounts of labels [#932](https://github.com/intuit/auto/pull/932) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -427,7 +654,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.10.1 (Thu Feb 06 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/chrome`, `@auto-it/git-tag`, `@auto-it/npm`
   - Fix manual git tagging [#930](https://github.com/intuit/auto/pull/930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -440,7 +667,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.10.0 (Thu Feb 06 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/maven`
   - add "info" command [#931](https://github.com/intuit/auto/pull/931) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -453,12 +680,12 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.9.1 (Tue Feb 04 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - dont run git hooks when commiting the version for a single npm package [#929](https://github.com/intuit/auto/pull/929) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Add gradle plugin to docs website [#928](https://github.com/intuit/auto/pull/928) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -474,7 +701,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404)), for all your work!
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/gradle`
   - Gradle Release Plugin [#924](https://github.com/intuit/auto/pull/924) (brandon_miller3@intuit.com [@unknownerror404](https://github.com/unknownerror404))
@@ -488,13 +715,13 @@ Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404
 
 # v9.8.4 (Fri Jan 31 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - fix GH_USER in jenkins documentation [#925](https://github.com/intuit/auto/pull/925) (navjot_cheema@intuit.com [@ncheema](https://github.com/ncheema))
 - `@auto-it/maven`
   - fix maven release creation [#927](https://github.com/intuit/auto/pull/927) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/maven`
   - Update maven and jenkins documentation (resolves #922) [#923](https://github.com/intuit/auto/pull/923) (navjot_cheema@intuit.com [@ncheema](https://github.com/ncheema))
@@ -509,7 +736,7 @@ Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404
 
 # v9.8.3 (Thu Jan 30 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - move ICommit to "core" to fix external plugin TS build errors [#921](https://github.com/intuit/auto/pull/921) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -522,7 +749,7 @@ Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404
 
 # v9.8.2 (Thu Jan 30 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - add fallback to get lerna json [#920](https://github.com/intuit/auto/pull/920) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -535,7 +762,7 @@ Thank you, Brandon Miller ([@unknownerror404](https://github.com/unknownerror404
 
 # v9.8.1 (Wed Jan 29 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - better error message running release in repo w/o tags [#919](https://github.com/intuit/auto/pull/919) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -558,7 +785,7 @@ This PR adds a new hook for plugin developers.
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Independent releases [#916](https://github.com/intuit/auto/pull/916) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -571,12 +798,12 @@ This PR adds a new hook for plugin developers.
 
 # v9.7.0 (Mon Jan 27 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/crates`
   - enhance BeforeShipit hook to include the type of release that will be made [#913](https://github.com/intuit/auto/pull/913) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - abort release if lerna reports no unchanged packages [#914](https://github.com/intuit/auto/pull/914) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -591,7 +818,7 @@ This PR adds a new hook for plugin developers.
 
 # v9.6.0 (Mon Jan 27 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/slack`
   - add ability to store slack hook url in environment variable [#912](https://github.com/intuit/auto/pull/912) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -608,7 +835,7 @@ This PR adds a new hook for plugin developers.
 
 Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]), for all your work!
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/slack`
   - Overhaul "auto init" experience + make it pluggable [#901](https://github.com/intuit/auto/pull/901) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -638,12 +865,12 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.4.1 (Sat Jan 25 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/released`
   - Wrap version in code [#900](https://github.com/intuit/auto/pull/900) ([@ericclemmons](https://github.com/ericclemmons))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Updated GitHub Action [#899](https://github.com/intuit/auto/pull/899) ([@ericclemmons](https://github.com/ericclemmons))
 
@@ -655,7 +882,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.4.0 (Sat Jan 25 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/npm`
   - Add html details option to canary hook + Use in npm plugin [#898](https://github.com/intuit/auto/pull/898) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -668,7 +895,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.3.4 (Sat Jan 25 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add better messaging when pr number cannot be detected [#896](https://github.com/intuit/auto/pull/896) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -681,12 +908,12 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.3.3 (Fri Jan 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Add 📦 emoji to canary PR message to make it more noticeable [#897](https://github.com/intuit/auto/pull/897) ([@ericclemmons](https://github.com/ericclemmons))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/all-contributors`
   - Explicitly add npm & yarn step for all-contributors [#895](https://github.com/intuit/auto/pull/895) ([@ericclemmons](https://github.com/ericclemmons))
@@ -699,7 +926,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.3.2 (Fri Jan 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/npm`
   - Fix private package previous version calculation + Improve dry run messaging [#894](https://github.com/intuit/auto/pull/894) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -712,7 +939,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.3.1 (Fri Jan 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Surface plugin syntax errors to user [#892](https://github.com/intuit/auto/pull/892) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -725,7 +952,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.3.0 (Fri Jan 24 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/npm`
   - add ability to publish exact versions in monorepo [#891](https://github.com/intuit/auto/pull/891) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -738,7 +965,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 # v9.2.3 (Fri Jan 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/first-time-contributor`
   - determine first time contributor by using PR count instead of git history [#890](https://github.com/intuit/auto/pull/890) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -755,7 +982,7 @@ Thank you, null[@dependabot-preview[bot]](https://github.com/dependabot-preview[
 
 Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix error on empty pr body [#889](https://github.com/intuit/auto/pull/889) ([@reckter](https://github.com/reckter))
@@ -768,7 +995,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.2.1 (Fri Jan 24 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/core`, `@auto-it/git-tag`
   - fallback to 0.0.0 in git-tag plugin with no previous releases [#888](https://github.com/intuit/auto/pull/888) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -781,7 +1008,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.2.0 (Thu Jan 23 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
   - Add ability to manage sub-package contributor lists [#887](https://github.com/intuit/auto/pull/887) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -794,7 +1021,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.1.3 (Thu Jan 23 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - Fix commiting sub-package changelogs [#885](https://github.com/intuit/auto/pull/885) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -807,7 +1034,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.1.2 (Thu Jan 23 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix omitting renovate release notes when a user manually rebases the renovate PR [#884](https://github.com/intuit/auto/pull/884) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -820,12 +1047,12 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.1.1 (Thu Jan 23 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix onlyPublishWithReleaseLabel w/o labels [#883](https://github.com/intuit/auto/pull/883) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/chrome`, `@auto-it/maven`
   - add clearer docs around creating GH_TOKEN [#882](https://github.com/intuit/auto/pull/882) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -838,7 +1065,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.1.0 (Tue Jan 21 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - canary: try to match commit to PR if not found in env [#812](https://github.com/intuit/auto/pull/812) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -868,7 +1095,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.0.2 (Tue Jan 14 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/all-contributors`
   - Fix running all-contributors when not installed [#871](https://github.com/intuit/auto/pull/871) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -881,7 +1108,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.0.1 (Mon Jan 13 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - handle PR numbers that don't exist in repo/fork [#870](https://github.com/intuit/auto/pull/870) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -894,12 +1121,12 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v9.0.0 (Mon Jan 13 2020)
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - `auto`
   - require Node.js >=10.x [#869](https://github.com/intuit/auto/pull/869) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - match npm behavior for scoped packages [#868](https://github.com/intuit/auto/pull/868) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -937,12 +1164,12 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.8.0 (Thu Jan 02 2020)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/slack`
   - fix: prevent slack from default publishing on prerelease branches [#829](https://github.com/intuit/auto/pull/829) ([@Aghassi](https://github.com/Aghassi))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - docs: fixed incorrect afterRelease hook object [#842](https://github.com/intuit/auto/pull/842) ([@Aghassi](https://github.com/Aghassi))
 - `@auto-it/core`
@@ -971,7 +1198,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.7.3 (Fri Dec 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - next: check origin head instead of local branch for tags [#827](https://github.com/intuit/auto/pull/827) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -984,7 +1211,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.7.2 (Fri Dec 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - find the last greatest tag to help with botched releases [#826](https://github.com/intuit/auto/pull/826) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -997,7 +1224,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.7.1 (Thu Dec 19 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/npm`
   - Add more logs for next release calculation [#824](https://github.com/intuit/auto/pull/824) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1010,7 +1237,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.7.0 (Thu Dec 19 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - add context of what type of release was made during shipit [#821](https://github.com/intuit/auto/pull/821) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1023,7 +1250,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.6.3 (Thu Dec 19 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/released`
   - determine next version using by omitting tags from master [#820](https://github.com/intuit/auto/pull/820) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1036,7 +1263,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.6.2 (Wed Dec 18 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - only access auto login if it all exists [#819](https://github.com/intuit/auto/pull/819) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1049,12 +1276,12 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.6.1 (Wed Dec 18 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - canary hook can return void to not bail [#817](https://github.com/intuit/auto/pull/817) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - update docs to show JS plugins and how to use versionBranches [#816](https://github.com/intuit/auto/pull/816) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -1066,7 +1293,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.5.0 (Tue Dec 17 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Version branches [#814](https://github.com/intuit/auto/pull/814) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1079,7 +1306,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.4.1 (Mon Dec 16 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `auto`, `@auto-it/npm`
   - alias the canary scope [#813](https://github.com/intuit/auto/pull/813) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1092,7 +1319,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.4.0 (Mon Dec 16 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - version: detect prerelease branch [#811](https://github.com/intuit/auto/pull/811) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1105,7 +1332,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.3.0 (Mon Dec 16 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
   - release: detect prerelease branch + be smarter about commit range [#810](https://github.com/intuit/auto/pull/810) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1134,12 +1361,12 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.2.0 (Sun Dec 15 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`
   - release: add flag to publish prerelease [#800](https://github.com/intuit/auto/pull/800) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Slight improvements to label configuration docs [#799](https://github.com/intuit/auto/pull/799) ([@bnigh](https://github.com/bnigh))
 
@@ -1156,7 +1383,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.1.3 (Sat Dec 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`
   - omit next branch PR Title from being in release notes [#796](https://github.com/intuit/auto/pull/796) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1169,7 +1396,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.1.2 (Sat Dec 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix `none` releases: they were not handling extra labels [#797](https://github.com/intuit/auto/pull/797) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1182,7 +1409,7 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.1.1 (Sat Dec 14 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/npm`
   - add diagrams [#795](https://github.com/intuit/auto/pull/795) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1195,23 +1422,23 @@ Thank you, Hannes Güdelhöfer ([@reckter](https://github.com/reckter)), for all
 
 # v8.1.0 (Sat Dec 14 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/npm`
   - add canaryScope option for more secure PR builds [#792](https://github.com/intuit/auto/pull/792) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix bug where merging a none would skip previously meged semver bump [#794](https://github.com/intuit/auto/pull/794) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - add context [#790](https://github.com/intuit/auto/pull/790) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/npm`
   - V8.1 [#793](https://github.com/intuit/auto/pull/793) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - docs(publishing): add period after sentence [#788](https://github.com/intuit/auto/pull/788) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
 
@@ -1234,7 +1461,7 @@ _From #758_
 
 _From #751_
 
-Label configuration just got a whole lot simpler 🎉 
+Label configuration just got a whole lot simpler 🎉
 
 1. Labels can now only be supplied as an array of label objects.
 
@@ -1243,7 +1470,7 @@ Label configuration just got a whole lot simpler 🎉
   "labels": [
     { "releaseType": "major", "name": "Version: Major" },
     { "releaseType": "minor", "name": "Version: Minor" },
-    { "releaseType": "patch", "name": "Version: Patch" },
+    { "releaseType": "patch", "name": "Version: Patch" }
   ]
 }
 ```
@@ -1252,9 +1479,7 @@ Label configuration just got a whole lot simpler 🎉
 
 ```json
 {
-  "labels": [
-    { "releaseType": "skip", "name": "NO!" }
-  ]
+  "labels": [{ "releaseType": "skip", "name": "NO!" }]
 }
 ```
 
@@ -1263,7 +1488,7 @@ Label configuration just got a whole lot simpler 🎉
 ```json
 {
   "labels": [
-    { "releaseType": "major", "name": "Version: Major", "overwrite": true },
+    { "releaseType": "major", "name": "Version: Major", "overwrite": true }
   ]
 }
 ```
@@ -1272,9 +1497,7 @@ Label configuration just got a whole lot simpler 🎉
 
 ```json
 {
-  "labels": [
-    { "releaseType": "none", "name": "documentation" },
-  ]
+  "labels": [{ "releaseType": "none", "name": "documentation" }]
 }
 ```
 
@@ -1282,15 +1505,13 @@ Label configuration just got a whole lot simpler 🎉
 
 ```json
 {
-  "labels": [
-    { "changelogTitle": "New Docs Yo!", "name": "documentation" },
-  ]
+  "labels": [{ "changelogTitle": "New Docs Yo!", "name": "documentation" }]
 }
 ```
 
 ---
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Release v8 [#758](https://github.com/intuit/auto/pull/758) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@adierkens](https://github.com/adierkens))
@@ -1305,7 +1526,7 @@ Label configuration just got a whole lot simpler 🎉
 - `@auto-it/core`, `@auto-it/released`
   - remove old use of prerelease label + add prerelease label to released plugin [#729](https://github.com/intuit/auto/pull/729) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - add release notes to prerelease PRs [#777](https://github.com/intuit/auto/pull/777) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1326,7 +1547,7 @@ Label configuration just got a whole lot simpler 🎉
 - `auto`, `@auto-it/core`, `@auto-it/npm`
   - Add ability for "next" branch publishing [#726](https://github.com/intuit/auto/pull/726) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
   - only grant contributions for work in commit [#786](https://github.com/intuit/auto/pull/786) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1349,7 +1570,7 @@ Label configuration just got a whole lot simpler 🎉
 - `@auto-it/core`
   - must set git user before publishing so we know we can commit [#727](https://github.com/intuit/auto/pull/727) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - reset monorepo version for next branch [#769](https://github.com/intuit/auto/pull/769) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/s3`
@@ -1357,7 +1578,7 @@ Label configuration just got a whole lot simpler 🎉
 - `@auto-it/upload-assets`
   - More resilient test case [#772](https://github.com/intuit/auto/pull/772) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/conventional-commits`
   - Update README to include required npm plugin [#776](https://github.com/intuit/auto/pull/776) ([@sarah-vanderlaan](https://github.com/sarah-vanderlaan))
@@ -1392,12 +1613,12 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.17.0 (Fri Dec 06 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/all-contributors`
   - add more defaults to all-contributors plugin [#756](https://github.com/intuit/auto/pull/756) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - docs(introduction): fix typo [#755](https://github.com/intuit/auto/pull/755) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
 - fix docs build issue [#753](https://github.com/intuit/auto/pull/753) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1446,12 +1667,12 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.16.3 (Mon Nov 18 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - `@auto-it/core`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/released`
   - Upgrade to Typescript 3.7 [#711](https://github.com/intuit/auto/pull/711) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - force docs publish [#700](https://github.com/intuit/auto/pull/700) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `auto`
@@ -1481,7 +1702,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.16.2 (Thu Nov 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - More flexible monorepo publishing [#698](https://github.com/intuit/auto/pull/698) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1494,7 +1715,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.16.1 (Thu Nov 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - match behavior between lerna and npm when pushing git tags [#697](https://github.com/intuit/auto/pull/697) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1507,11 +1728,11 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.16.0 (Thu Nov 14 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - automatically update brew formula [#694](https://github.com/intuit/auto/pull/694) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - correct grammar [#696](https://github.com/intuit/auto/pull/696) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - correct docs [#695](https://github.com/intuit/auto/pull/695) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1524,7 +1745,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.15.2 (Thu Nov 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - Fixed string interpolation on Lerna version bump [#693](https://github.com/intuit/auto/pull/693) ([@jrnail23](https://github.com/jrnail23))
@@ -1537,12 +1758,12 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.15.1 (Wed Nov 13 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add logs for where plugins were found [#691](https://github.com/intuit/auto/pull/691) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - add non-npm docs [#679](https://github.com/intuit/auto/pull/679) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - add jenkins usage [#690](https://github.com/intuit/auto/pull/690) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1559,7 +1780,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.15.0 (Tue Nov 12 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
   - Default to `git-tag` plugin when run from binary [#684](https://github.com/intuit/auto/pull/684) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1572,7 +1793,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.14.1 (Tue Nov 12 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/all-contributors`
   - Fix bug where 'all-contributors' plugin wasn't picking up changes [#683](https://github.com/intuit/auto/pull/683) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1585,12 +1806,12 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.14.0 (Tue Nov 12 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
-  - detect PR number when running  "auto label" without "--pr" [#682](https://github.com/intuit/auto/pull/682) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - detect PR number when running "auto label" without "--pr" [#682](https://github.com/intuit/auto/pull/682) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `auto`
   - Rewrite README Issue #666 [#680](https://github.com/intuit/auto/pull/680) ([@karenclo](https://github.com/karenclo) [@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1604,12 +1825,12 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.13.3 (Tue Nov 12 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - warn when canary not implemented [#678](https://github.com/intuit/auto/pull/678) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - must trust github for docs to publish [#667](https://github.com/intuit/auto/pull/667) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -1636,16 +1857,16 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.13.2 (Sun Nov 10 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - clarify plugin docs [#664](https://github.com/intuit/auto/pull/664) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Add JSDoc comment to most everything [#665](https://github.com/intuit/auto/pull/665) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### ⚠️  Pushed to master
+#### ⚠️ Pushed to master
 
-- skip ci when updating gh-pages  ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- set git user  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- skip ci when updating gh-pages ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- set git user ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
 
@@ -1655,7 +1876,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.13.1 (Thu Nov 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - Fix GitHub Release's release notes for monorepo during shipit [#663](https://github.com/intuit/auto/pull/663) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1668,7 +1889,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.13.0 (Thu Nov 07 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
   - NPM: manage a changelog for each sub-package in monorepo [#658](https://github.com/intuit/auto/pull/658) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1681,7 +1902,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.12.9 (Thu Nov 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix wrong author in changelog [#661](https://github.com/intuit/auto/pull/661) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1694,7 +1915,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.12.8 (Thu Nov 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/first-time-contributor`
   - Fix multiple first-time-contributor thank you [#660](https://github.com/intuit/auto/pull/660) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1707,7 +1928,7 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.12.7 (Thu Nov 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/released`
   - Fix creating old changelogs [#659](https://github.com/intuit/auto/pull/659) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1738,18 +1959,18 @@ Label configuration just got a whole lot simpler 🎉
 
 # v7.12.5 (Tue Nov 05 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix issue with latest enterprise compat plugin [#655](https://github.com/intuit/auto/pull/655) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`
   - Update changelog to include prs without labels when using custom patch label [#640](https://github.com/intuit/auto/pull/640) ([@bnigh](https://github.com/bnigh))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - more reliable docs publish [#642](https://github.com/intuit/auto/pull/642) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Adds documentation for using auto with no plugins [#641](https://github.com/intuit/auto/pull/641) ([@athityakumar](https://github.com/athityakumar))
 
@@ -1767,12 +1988,12 @@ Label configuration just got a whole lot simpler 🎉
 
 Thank you, Athitya Kumar ([@athityakumar](https://github.com/athityakumar)), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Update changelog to include prs without labels when using custom patch label [#640](https://github.com/intuit/auto/pull/640) ([@bnigh](https://github.com/bnigh))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Adds documentation for using auto with no plugins [#641](https://github.com/intuit/auto/pull/641) ([@athityakumar](https://github.com/athityakumar))
 
@@ -1785,7 +2006,7 @@ Thank you, Athitya Kumar ([@athityakumar](https://github.com/athityakumar)), for
 
 # v7.12.4 (Tue Oct 29 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/released`
   - Update released plugin message creation to replace all tokens [#638](https://github.com/intuit/auto/pull/638) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
@@ -1813,7 +2034,7 @@ Thank you, Athitya Kumar ([@athityakumar](https://github.com/athityakumar)), for
 
 # v7.12.3 (Thu Oct 24 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/first-time-contributor`
   - better error messaging when tags aren't present [#626](https://github.com/intuit/auto/pull/626) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1830,7 +2051,7 @@ Thank you, Athitya Kumar ([@athityakumar](https://github.com/athityakumar)), for
 
 Thank you, Rocio Montes ([@roxiomontes](https://github.com/roxiomontes)), for all your work!
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - adding Auto svg logo [#625](https://github.com/intuit/auto/pull/625) ([@roxiomontes](https://github.com/roxiomontes))
 
@@ -1842,7 +2063,7 @@ Thank you, Rocio Montes ([@roxiomontes](https://github.com/roxiomontes)), for al
 
 # v7.12.1 (Wed Oct 23 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/chrome`, `@auto-it/crates`, `@auto-it/git-tag`, `@auto-it/maven`, `@auto-it/npm`
   - Fix windows git refspec problem [#613](https://github.com/intuit/auto/pull/613) ([@adierkens](https://github.com/adierkens))
@@ -1869,12 +2090,12 @@ A new hook is available to plugin developers. the `afterAddToChangelog` enables 
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/all-contributors`
   - New Plugin: All contributors [#612](https://github.com/intuit/auto/pull/612) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Move git-tag to "Package Manager Plugins" [#611](https://github.com/intuit/auto/pull/611) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -1900,7 +2121,7 @@ A new hook is available to plugin developers. the `afterAddToChangelog` enables 
 
 # v7.11.0 (Fri Oct 18 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/chrome`, `@auto-it/git-tag`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/s3`, `@auto-it/twitter`
   - New Plugin: Amazon S3 [#466](https://github.com/intuit/auto/pull/466) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1938,15 +2159,15 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 ---
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/crates`, `@auto-it/first-time-contributor`
   - New Plugin: "first-time-contributor" [#610](https://github.com/intuit/auto/pull/610) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### ⚠️  Pushed to master
+#### ⚠️ Pushed to master
 
 - `@auto-it/first-time-contributor`
-  - fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - fix build ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
 
@@ -1956,7 +2177,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.9.2 (Thu Oct 17 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - `auto`
   - Switch to command-line-application and command-line-docs [#585](https://github.com/intuit/auto/pull/585) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1969,12 +2190,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.9.1 (Thu Oct 17 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - only add hash to canary version if no pr or build detected [#609](https://github.com/intuit/auto/pull/609) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - `@auto-it/crates`, `@auto-it/maven`
   - fix install names in readmes [#608](https://github.com/intuit/auto/pull/608) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1987,12 +2208,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.9.0 (Wed Oct 16 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/crates`
   - Crates (Rust language) plugin [#587](https://github.com/intuit/auto/pull/587) ([@Celeo](https://github.com/Celeo) [@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - update plugin template [#606](https://github.com/intuit/auto/pull/606) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
@@ -2000,7 +2221,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 - `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Update Tooling [#605](https://github.com/intuit/auto/pull/605) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - update README.md [#586](https://github.com/intuit/auto/pull/586) ([@Celeo](https://github.com/Celeo))
 
@@ -2034,7 +2255,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.8.0 (Fri Oct 04 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`
   - proxy support in auto [#584](https://github.com/intuit/auto/pull/584) (ykhandelwal@intuit.com [@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2048,7 +2269,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.7.0 (Thu Oct 03 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`
   - Ability to edit comments [#583](https://github.com/intuit/auto/pull/583) (alex_sutedja@intuit.com [@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2074,7 +2295,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.6.2 (Mon Sep 30 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - `@auto-it/core`
   - Update Octokit [#574](https://github.com/intuit/auto/pull/574) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2088,7 +2309,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.6.1 (Fri Sep 27 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/jira`
   - Fix jira plugin regex [#572](https://github.com/intuit/auto/pull/572) (velu_ganapathy@intuit.com [@vganapat](https://github.com/vganapat))
@@ -2113,7 +2334,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.6.0 (Thu Sep 12 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`
   - Add 'from' option for version command [#561](https://github.com/intuit/auto/pull/561) ([@bnigh](https://github.com/bnigh))
@@ -2126,7 +2347,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.5.0 (Thu Sep 12 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/core`
   - Add 'from' option for release command [#552](https://github.com/intuit/auto/pull/552) ([@bnigh](https://github.com/bnigh))
@@ -2139,7 +2360,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.5 (Mon Sep 09 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Canary: fallback to first commit if now tags exist [#560](https://github.com/intuit/auto/pull/560) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2161,7 +2382,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.4 (Tue Sep 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - Fix setting npm token with a URL that doesn't end in / [#551](https://github.com/intuit/auto/pull/551) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2184,7 +2405,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.3 (Mon Sep 02 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - set-token: handle when no name in root package.json [#549](https://github.com/intuit/auto/pull/549) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2197,7 +2418,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.2 (Mon Sep 02 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - label creation is case insensitive [#548](https://github.com/intuit/auto/pull/548) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2210,7 +2431,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.1 (Sun Sep 01 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix create-labels bug [#542](https://github.com/intuit/auto/pull/542) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2223,7 +2444,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.4.0 (Sat Aug 31 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/conventional-commits`
   - add ability for configured labels to be an array [#540](https://github.com/intuit/auto/pull/540) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2236,7 +2457,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.6 (Wed Aug 28 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/released`
   - omit commit+prs that: aren't found in repo, are issues, or have the "released" label [#538](https://github.com/intuit/auto/pull/538) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2254,7 +2475,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.5 (Wed Aug 28 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Ensure the release doesn't fail if a PR doesn't exist [#537](https://github.com/intuit/auto/pull/537) ([@zephraph](https://github.com/zephraph))
@@ -2267,7 +2488,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.4 (Mon Aug 26 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Fix PRs with non-configured labels being omitted from changelogs [#533](https://github.com/intuit/auto/pull/533) ([@bnigh](https://github.com/bnigh))
@@ -2280,7 +2501,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.3 (Mon Aug 26 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Improve Author Reporting [#531](https://github.com/intuit/auto/pull/531) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2315,7 +2536,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.2 (Sat Aug 17 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - attach sha to canary version if no (pr || build) [#519](https://github.com/intuit/auto/pull/519) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2328,7 +2549,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.1 (Fri Aug 16 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - add extra logs [#517](https://github.com/intuit/auto/pull/517) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2351,7 +2572,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.3.0 (Thu Aug 15 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `auto`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
   - Add Maven Plugin [#510](https://github.com/intuit/auto/pull/510) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2379,16 +2600,16 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.2.3 (Mon Jul 29 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix logging error in pr-check [#497](https://github.com/intuit/auto/pull/497) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - change to dependabot [#495](https://github.com/intuit/auto/pull/495) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - fix docs [#496](https://github.com/intuit/auto/pull/496) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2409,11 +2630,11 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.2.2 (Wed Jul 24 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Remove pr semver check [#479](https://github.com/intuit/auto/pull/479) ([@zephraph](https://github.com/zephraph))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Fix links in docs [#486](https://github.com/intuit/auto/pull/486) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update README.md [#485](https://github.com/intuit/auto/pull/485) ([@RichieRunner](https://github.com/RichieRunner))
@@ -2428,7 +2649,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.2.1 (Tue Jul 09 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Rework plugin importing logic [#480](https://github.com/intuit/auto/pull/480) ([@zephraph](https://github.com/zephraph))
@@ -2443,7 +2664,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.2.0 (Thu Jul 04 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/slack`
   - feat(slack): add custom slack at targets [#475](https://github.com/intuit/auto/pull/475) ([@hello-woof](https://github.com/hello-woof))
@@ -2456,7 +2677,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.1.4 (Wed Jul 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Add a little extra error handling around plugin loading [#474](https://github.com/intuit/auto/pull/474) ([@zephraph](https://github.com/zephraph))
@@ -2469,7 +2690,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.1.3 (Sat Jun 29 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/git-tag`
   - Fix wording on Git tag plugin [#469](https://github.com/intuit/auto/pull/469) ([@zephraph](https://github.com/zephraph))
@@ -2482,7 +2703,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.1.2 (Tue Jun 18 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/slack`
   - Slack Plugin: fix tag link [#464](https://github.com/intuit/auto/pull/464) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2495,7 +2716,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.1.1 (Mon Jun 17 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/conventional-commits`
   - Conventional Commits Plugin: fix looping issue [#461](https://github.com/intuit/auto/pull/461) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2508,7 +2729,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.1.0 (Fri Jun 14 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/git-tag`
   - Git tag Plugin [#460](https://github.com/intuit/auto/pull/460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2521,7 +2742,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.13 (Mon Jun 10 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - `@auto-it/core`, `@auto-it/upload-assets`
   - update octokit [#459](https://github.com/intuit/auto/pull/459) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2534,7 +2755,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.12 (Sat Jun 08 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Update AutoChangeLog with Typo Fixes [#457](https://github.com/intuit/auto/pull/457) ([@jdfalko](https://github.com/jdfalko))
 
@@ -2546,7 +2767,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.11 (Thu Jun 06 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Bump handlebars from 4.1.0 to 4.1.2 [#453](https://github.com/intuit/auto/pull/453) ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
@@ -2558,7 +2779,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.10 (Thu Jun 06 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - NPM Plugin: fix canary versions [#456](https://github.com/intuit/auto/pull/456) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2571,7 +2792,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.9 (Thu Jun 06 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Bump js-yaml from 3.12.0 to 3.13.1 [#454](https://github.com/intuit/auto/pull/454) ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
@@ -2583,7 +2804,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.8 (Thu Jun 06 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/npm`
   - Independant Canary version reporting + Whitespace in pr-body [#455](https://github.com/intuit/auto/pull/455) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2596,7 +2817,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.7 (Thu May 30 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Changelog bugs [#452](https://github.com/intuit/auto/pull/452) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2609,7 +2830,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.6 (Thu May 30 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-release-notes`
   - Lerna independent mode bugs [#451](https://github.com/intuit/auto/pull/451) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2622,12 +2843,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.5 (Thu May 30 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Respect author in config [#450](https://github.com/intuit/auto/pull/450) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Get docs publishing [#448](https://github.com/intuit/auto/pull/448) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2644,12 +2865,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.4 (Mon May 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - stop using --canary flag in npm package [#446](https://github.com/intuit/auto/pull/446) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Update README.md [#445](https://github.com/intuit/auto/pull/445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2661,7 +2882,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.3 (Mon May 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fall back to normal require for npx and global usage [#444](https://github.com/intuit/auto/pull/444) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2674,12 +2895,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.2 (Sun May 19 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - Remove bin entry from core [#441](https://github.com/intuit/auto/pull/441) ([@zephraph](https://github.com/zephraph))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Fix conventional commits link [#439](https://github.com/intuit/auto/pull/439) ([@zephraph](https://github.com/zephraph))
 
@@ -2691,12 +2912,12 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 # v7.0.1 (Sat May 18 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/core`
   - fix changelog indentation [#438](https://github.com/intuit/auto/pull/438) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - `auto`
   - fix bundle step, must gzip correct folder [#437](https://github.com/intuit/auto/pull/437) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2716,12 +2937,15 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
     old `afterRelease`
 
 ```js
-auto.hooks.afterRelease.tap('MyPlugin', async (version, commits, releaseNotes) => {
-// do something
-});
+auto.hooks.afterRelease.tap(
+  'MyPlugin',
+  async (version, commits, releaseNotes) => {
+    // do something
+  }
+);
 ```
 
-new  `afterRelease`
+new `afterRelease`
 
 ```js
 auto.hooks.afterRelease.tap( 'MyPlugin', async ({ version, commits, releaseNotes, response }) => {
@@ -2735,7 +2959,7 @@ _From #408_
 
 ```json
 {
-"jira": "https://url-to-jira"
+  "jira": "https://url-to-jira"
 }
 ```
 
@@ -2743,11 +2967,11 @@ this should be changed to:
 
 ```json
 {
-"plugins": [
-["jira", { "url": "https://url-to-jira" }],
-// or
-["jira", "https://url-to-jira"]
-]
+  "plugins": [
+    ["jira", { "url": "https://url-to-jira" }],
+    // or
+    ["jira", "https://url-to-jira"]
+  ]
 }
 ```
 
@@ -2787,7 +3011,7 @@ _From #407_
 
 ```json
 {
-"slack": "https://url-to-slack"
+  "slack": "https://url-to-slack"
 }
 ```
 
@@ -2795,17 +3019,17 @@ this should be changed to:
 
 ```json
 {
-"plugins": [
-["slack", { "url": "https://url-to-your-slack-hook.com" }],
-// or
-["slack", "https://url-to-your-slack-hook.com"]
-]
+  "plugins": [
+    ["slack", { "url": "https://url-to-your-slack-hook.com" }],
+    // or
+    ["slack", "https://url-to-your-slack-hook.com"]
+  ]
 }
 ```
 
 ---
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - Factor out filter accounts plugin [#409](https://github.com/intuit/auto/pull/409) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Move jira functionality to plugin [#408](https://github.com/intuit/auto/pull/408) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2825,7 +3049,7 @@ this should be changed to:
 - `auto`, `@auto-it/core`, `@auto-it/chrome`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
   - Restructure to Monorepo [#410](https://github.com/intuit/auto/pull/410) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`
   - new hook: omit prs from release notes + add omit-release-notes plugin [#427](https://github.com/intuit/auto/pull/427) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -2836,28 +3060,28 @@ this should be changed to:
 - `auto`, `@auto-it/core`
   - Bundle `auto` for all major platforms [#418](https://github.com/intuit/auto/pull/418) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
-- add docs about omitReleaseNotes  ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- run the correct command  ([@hipstersmoothie](https://github.com/hipstersmoothie))
-- start  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add docs about omitReleaseNotes ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- run the correct command ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- start ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `auto`, `@auto-it/core`
   - fix bundling plugin issue [#435](https://github.com/intuit/auto/pull/435) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`, `@auto-it/npm`
   - Various Bug Fixes [#434](https://github.com/intuit/auto/pull/434) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`, `@auto-it/upload-assets`
-  - rename ghub to github  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - rename ghub to github ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/omit-commits`
-  - fix build  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - fix build ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/core`
   - fix problem where pr-body would only match after two were rendered [#431](https://github.com/intuit/auto/pull/431) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `@auto-it/npm`
   - Parse monorepo packages outside of `packages` directory [#411](https://github.com/intuit/auto/pull/411) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update docs/pages/plugins.md
 
-Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https://github.com/hipstersmoothie))
+Co-Authored-By: Justin Bennett <zephraph@gmail.com> ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Add monorepo plugin create command [#430](https://github.com/intuit/auto/pull/430) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - `auto`, `@auto-it/core`, `@auto-it/released`
@@ -2878,7 +3102,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.5.1 (Mon May 13 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - typo [#405](https://github.com/intuit/auto/pull/405) ([@zephraph](https://github.com/zephraph))
 
@@ -2890,7 +3114,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.5.0 (Fri May 10 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Add --delete to `comment` and `pr-body` [#403](https://github.com/intuit/auto/pull/403) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2902,11 +3126,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.4.1 (Fri May 10 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - fix jira PR titles without additional subject [#404](https://github.com/intuit/auto/pull/404) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - update docs for canary [#402](https://github.com/intuit/auto/pull/402) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2918,7 +3142,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.4.0 (Thu May 09 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - update canary to update pr body when there is a pr [#401](https://github.com/intuit/auto/pull/401) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2935,7 +3159,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.3.5 (Thu May 09 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - lerna no-force-publish release conflict [#399](https://github.com/intuit/auto/pull/399) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2947,7 +3171,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.3.4 (Thu May 09 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - conventional-commit plugin: should omit PR merge commits when a commit in the PR has CC commit message [#395](https://github.com/intuit/auto/pull/395) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2963,7 +3187,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.3.3 (Thu May 09 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Fix grammar in getting started documentation [#396](https://github.com/intuit/auto/pull/396) ([@djpowers](https://github.com/djpowers))
 
@@ -2975,11 +3199,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.3.1 (Wed May 08 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - ensure major minor and patch get to changelog in that order [#392](https://github.com/intuit/auto/pull/392) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - add page for conventional-commits plugin [#393](https://github.com/intuit/auto/pull/393) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -2991,7 +3215,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.3.0 (Wed May 08 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Release notes [#380](https://github.com/intuit/auto/pull/380) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3003,9 +3227,9 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.6 (Wed May 08 2019)
 
-#### ⚠️  Pushed to master
+#### ⚠️ Pushed to master
 
-- add better logs when setting git user  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- add better logs when setting git user ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
 
 #### Authors: 1
 
@@ -3015,7 +3239,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.5 (Wed May 08 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Fix typo in introduction documentation [#391](https://github.com/intuit/auto/pull/391) ([@djpowers](https://github.com/djpowers))
 
@@ -3027,7 +3251,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.4 (Wed May 08 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - remove getGitHubToken function [#386](https://github.com/intuit/auto/pull/386) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3039,7 +3263,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.3 (Wed May 08 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - use correct variable in pr-body success message [#389](https://github.com/intuit/auto/pull/389) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3051,7 +3275,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.2 (Tue May 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - must await posting to the PR body [#388](https://github.com/intuit/auto/pull/388) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3063,7 +3287,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.1 (Tue May 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - split off useless hash from version [#387](https://github.com/intuit/auto/pull/387) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3079,7 +3303,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.2.0 (Tue May 07 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Error on uncommited files when before running canary + version [#384](https://github.com/intuit/auto/pull/384) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3091,7 +3315,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.1.1 (Tue May 07 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Correct reported lerna independent version [#383](https://github.com/intuit/auto/pull/383) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3103,7 +3327,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.1.0 (Tue May 07 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - add `auto pr-body` to add info to pr bodies + canary posts to body instead of comment [#379](https://github.com/intuit/auto/pull/379) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3115,7 +3339,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.0.2 (Mon May 06 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - report back correct versions when running canary [#378](https://github.com/intuit/auto/pull/378) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3127,7 +3351,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.0.1 (Mon May 06 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Better get by username/email error handling [#377](https://github.com/intuit/auto/pull/377) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3139,11 +3363,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v6.0.0 (Mon May 06 2019)
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - Restrict config type [#374](https://github.com/intuit/auto/pull/374) ([@zephraph](https://github.com/zephraph))
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Support Lerna Independent mode [#373](https://github.com/intuit/auto/pull/373) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3160,7 +3384,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v5.0.1 (Sat May 04 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - shipit will publish a canary locally when not on master [#371](https://github.com/intuit/auto/pull/371) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3172,16 +3396,16 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v5.0.0 (Sat May 04 2019)
 
-#### 💥  Breaking Change
+#### 💥 Breaking Change
 
 - Calling `shipit` in PR in CI creates canary release [#351](https://github.com/intuit/auto/pull/351) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Configure base-branch + pushToMaster => pushToBaseBranch [#357](https://github.com/intuit/auto/pull/357) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - skip releases for greenkeeper + make special changelog section [#366](https://github.com/intuit/auto/pull/366) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - add blog [#368](https://github.com/intuit/auto/pull/368) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3193,7 +3417,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.5 (Fri May 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - fix bug when tying to publish canary for PR with skip-release label [#367](https://github.com/intuit/auto/pull/367) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3205,7 +3429,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.4 (Fri May 03 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - remove accidental log [#365](https://github.com/intuit/auto/pull/365) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update @types/node to the latest version 🚀 [#364](https://github.com/intuit/auto/pull/364) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3219,7 +3443,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.3 (Fri May 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Override any env var set in the .env [#362](https://github.com/intuit/auto/pull/362) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3231,7 +3455,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.2 (Fri May 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - make logLevel available on the logger [#363](https://github.com/intuit/auto/pull/363) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3243,7 +3467,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.1 (Fri May 03 2019)
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - update docs [#361](https://github.com/intuit/auto/pull/361) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3255,7 +3479,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.15.0 (Fri May 03 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - when canary is run locally it uses the commits SHA instead of PR + Build [#360](https://github.com/intuit/auto/pull/360) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3267,7 +3491,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.14.1 (Fri May 03 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - changelog includes any commit that has a PR parsed from the commit message [#359](https://github.com/intuit/auto/pull/359) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3279,7 +3503,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.14.0 (Thu May 02 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - enable loglevel silly for npm/lerna when in verbose or veryVerbose mode [#356](https://github.com/intuit/auto/pull/356) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3291,7 +3515,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.13.2 (Thu May 02 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - increase buffer for situations when user has a LOT of unpublished work [#354](https://github.com/intuit/auto/pull/354) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3303,13 +3527,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.13.1 (Thu May 02 2019)
 
-
-
 ---
 
 # v4.13.0 (Thu May 02 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - add forcePublish config option to npm plugin [#352](https://github.com/intuit/auto/pull/352) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3321,7 +3543,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.12.0 (Wed May 01 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - canary command [#349](https://github.com/intuit/auto/pull/349) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3333,11 +3555,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.11.0 (Wed May 01 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Graphql url config [#350](https://github.com/intuit/auto/pull/350) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update node-fetch to the latest version 🚀 [#347](https://github.com/intuit/auto/pull/347) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
@@ -3350,7 +3572,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.10.0 (Wed May 01 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - comment, pr, and pr-check detect PR number in CI [#348](https://github.com/intuit/auto/pull/348) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3362,7 +3584,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.9.4 (Sat Apr 27 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Throw an error if extended config fails to load [#344](https://github.com/intuit/auto/pull/344) ([@zephraph](https://github.com/zephraph))
 
@@ -3374,11 +3596,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.9.3 (Sat Apr 27 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - fix bug when no labels exist [#343](https://github.com/intuit/auto/pull/343) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update import-cwd to the latest version 🚀 [#342](https://github.com/intuit/auto/pull/342) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
@@ -3391,11 +3613,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.9.2 (Sat Apr 27 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - use graphql to get around search rate limits [#340](https://github.com/intuit/auto/pull/340) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update node-fetch to the latest version 🚀 [#339](https://github.com/intuit/auto/pull/339) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 - Update @types/node-fetch to the latest version 🚀 [#336](https://github.com/intuit/auto/pull/336) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3409,7 +3631,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.9.1 (Fri Apr 26 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Adjust rate limiting retries from 3 to 5 [#338](https://github.com/intuit/auto/pull/338) ([@zephraph](https://github.com/zephraph))
 
@@ -3421,11 +3643,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.9.0 (Thu Apr 25 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Add throttling, retry octokit plugins [#335](https://github.com/intuit/auto/pull/335) ([@zephraph](https://github.com/zephraph))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update @hutson/set-npm-auth-token-for-ci to the latest version 🚀 [#330](https://github.com/intuit/auto/pull/330) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 - Update husky to the latest version 🚀 [#333](https://github.com/intuit/auto/pull/333) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3439,7 +3661,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.17 (Mon Apr 15 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - use old addLabels praram because of bug in new one [#329](https://github.com/intuit/auto/pull/329) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3451,12 +3673,12 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.15 (Mon Apr 15 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - update command line args [#328](https://github.com/intuit/auto/pull/328) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Octokit [#325](https://github.com/intuit/auto/pull/325) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - update node types [#326](https://github.com/intuit/auto/pull/326) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - update ts-jest [#327](https://github.com/intuit/auto/pull/327) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -3471,7 +3693,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.14 (Fri Apr 05 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update registry-url to the latest version 🚀 [#323](https://github.com/intuit/auto/pull/323) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 - Update @types/semver to the latest version 🚀 [#321](https://github.com/intuit/auto/pull/321) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3482,7 +3704,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 - Update @types/node-fetch to the latest version 🚀 [#309](https://github.com/intuit/auto/pull/309) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 - Update tslint-xo to the latest version 🚀 [#312](https://github.com/intuit/auto/pull/312) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Fix issue with warning wrapping section [#322](https://github.com/intuit/auto/pull/322) ([@zephraph](https://github.com/zephraph))
 
@@ -3495,7 +3717,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.13 (Wed Mar 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - only add users once to changelog [#311](https://github.com/intuit/auto/pull/311) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3507,11 +3729,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.12 (Wed Mar 20 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - last ditch search for related PRs [#310](https://github.com/intuit/auto/pull/310) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - fix typo in docs [#307](https://github.com/intuit/auto/pull/307) ([@solon](https://github.com/solon))
 
@@ -3524,7 +3746,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.11 (Thu Mar 14 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Remove auth in error responses if it's present [#297](https://github.com/intuit/auto/pull/297) ([@zephraph](https://github.com/zephraph))
 
@@ -3536,12 +3758,12 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.10 (Wed Mar 13 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - update deps [#306](https://github.com/intuit/auto/pull/306) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update @types/node to the latest version 🚀 [#303](https://github.com/intuit/auto/pull/303) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - fixing a typo [#302](https://github.com/intuit/auto/pull/302) ([@GGonryun](https://github.com/GGonryun))
 
@@ -3555,7 +3777,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.9 (Mon Mar 04 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - update deps [#300](https://github.com/intuit/auto/pull/300) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update tslint-xo to the latest version 🚀 [#298](https://github.com/intuit/auto/pull/298) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3571,7 +3793,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.8 (Fri Feb 15 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Fix the formatting for slack messages [#292](https://github.com/intuit/auto/pull/292) ([@adierkens](https://github.com/adierkens))
 
@@ -3583,7 +3805,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.7 (Fri Feb 15 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Fix Promise issue when creating changelog [#293](https://github.com/intuit/auto/pull/293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3595,7 +3817,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.6 (Wed Feb 13 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - check if released label has already been added [#290](https://github.com/intuit/auto/pull/290) (hipstersmoothie@users.noreply.github.com)
 
@@ -3607,7 +3829,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.5 (Wed Feb 13 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - released plugin respects dry run flag [#289](https://github.com/intuit/auto/pull/289) (hipstersmoothie@users.noreply.github.com)
 
@@ -3619,11 +3841,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.4 (Wed Feb 13 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - ShipIt - Get Slack URL from config [#288](https://github.com/intuit/auto/pull/288) (hipstersmoothie@users.noreply.github.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update @types/node to the latest version 🚀 [#287](https://github.com/intuit/auto/pull/287) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
 - Update @types/node-fetch to the latest version 🚀 [#286](https://github.com/intuit/auto/pull/286) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
@@ -3640,7 +3862,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.3 (Wed Feb 06 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - Update all-contributors-cli to the latest version 🚀 [#284](https://github.com/intuit/auto/pull/284) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
@@ -3652,7 +3874,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.2 (Wed Feb 06 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Update @types/jest to the latest version 🚀 [#282](https://github.com/intuit/auto/pull/282) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]))
 
@@ -3664,7 +3886,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.1 (Thu Jan 31 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - ensure that setRcToken is respected [#279](https://github.com/intuit/auto/pull/279) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3676,7 +3898,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.8.0 (Thu Jan 31 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - NPM Plugin: Allow user to turn off setting RC token [#278](https://github.com/intuit/auto/pull/278) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3688,7 +3910,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.5 (Wed Jan 30 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - run git status in verbose mode for lerna [#277](https://github.com/intuit/auto/pull/277) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3700,7 +3922,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.4 (Wed Jan 30 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - add more logging for lerna debugging [#276](https://github.com/intuit/auto/pull/276) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3712,7 +3934,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.3 (Tue Jan 29 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - don't run commmit hooks. match npm version bahvior [#275](https://github.com/intuit/auto/pull/275) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3724,7 +3946,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.2 (Mon Jan 28 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - can't warn here or else `version` will fail [#274](https://github.com/intuit/auto/pull/274) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3736,7 +3958,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.1 (Sat Jan 26 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Update dependencies to enable Greenkeeper 🌴 [#273](https://github.com/intuit/auto/pull/273) ([@greenkeeper[bot]](https://github.com/greenkeeper[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3749,7 +3971,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.7.0 (Fri Jan 25 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - `create-labels` update labels when the exist [#272](https://github.com/intuit/auto/pull/272) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3761,7 +3983,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.6.0 (Fri Jan 25 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - modifyConfig hook [#270](https://github.com/intuit/auto/pull/270) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3773,7 +3995,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.5.3 (Fri Jan 25 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Custom labels still resolve changelog titles [#269](https://github.com/intuit/auto/pull/269) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3785,7 +4007,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.5.2 (Fri Jan 25 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - pushes to master should only include title in changelog [#267](https://github.com/intuit/auto/pull/267) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3797,7 +4019,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.5.1 (Fri Jan 25 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - add addLabel enterprise compat [#265](https://github.com/intuit/auto/pull/265) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3809,7 +4031,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.5.0 (Fri Jan 25 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - afterRelease hook [#264](https://github.com/intuit/auto/pull/264) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3821,7 +4043,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.4.4 (Fri Jan 25 2019)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - remove .only [#261](https://github.com/intuit/auto/pull/261) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3833,7 +4055,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.4.3 (Fri Jan 25 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - load extends config from path [#260](https://github.com/intuit/auto/pull/260) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3845,7 +4067,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.4.2 (Fri Jan 25 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - release plugin: do nothing when skip-release present [#259](https://github.com/intuit/auto/pull/259) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3857,11 +4079,11 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.4.1 (Thu Jan 24 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Better config debug [#257](https://github.com/intuit/auto/pull/257) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
-#### 📝  Documentation
+#### 📝 Documentation
 
 - Add clarity to a few of the docs [#255](https://github.com/intuit/auto/pull/255) ([@zephraph](https://github.com/zephraph))
 
@@ -3874,7 +4096,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.4.0 (Thu Jan 24 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Released plugin: add released label to issue too [#253](https://github.com/intuit/auto/pull/253) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3886,7 +4108,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.3.0 (Thu Jan 24 2019)
 
-#### 🚀  Enhancement
+#### 🚀 Enhancement
 
 - Released Plugin: lock merged issues [#252](https://github.com/intuit/auto/pull/252) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3898,7 +4120,7 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.2.2 (Thu Jan 24 2019)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - Released Plugin: add context to comments so they don't override other comments [#251](https://github.com/intuit/auto/pull/251) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -3910,9 +4132,9 @@ Co-Authored-By: Justin Bennett <zephraph@gmail.com>  ([@hipstersmoothie](https:/
 
 # v4.2.1 (Thu Jan 24 2019)
 
-#### ⚠️  Pushed to master
+#### ⚠️ Pushed to master
 
-- quick rename  ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
+- quick rename ([@lisowski54@gmail.com](https://github.com/lisowski54@gmail.com))
 
 #### Authors: 1
 

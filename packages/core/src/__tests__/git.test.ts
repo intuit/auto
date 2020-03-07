@@ -221,6 +221,19 @@ describe('github', () => {
     ).toMatchSnapshot();
   });
 
+  test('getGitLog - merge commits', async () => {
+    const gh = new Git(options);
+
+    expect(
+      (
+        await gh.getGitLog(
+          'fb857b8939fa2c95a3202613d36a12aa3341d109',
+          '024c66aa21cff5947957ed3bdfb4a616aa3f0046'
+        )
+      )[0]
+    ).toMatchSnapshot();
+  });
+
   test('getUser', async () => {
     const gh = new Git(options);
 

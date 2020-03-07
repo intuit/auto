@@ -6,21 +6,21 @@ exports[`Auto createLabels should create the labels 1`] = `
     Array [
       Array [
         Object {
-          "changelogTitle": "💥  Breaking Change",
+          "changelogTitle": "💥 Breaking Change",
           "description": "Increment the major version when merged",
           "name": "Version: Major",
           "overwrite": true,
           "releaseType": "major",
         },
         Object {
-          "changelogTitle": "🐛  Bug Fix",
+          "changelogTitle": "🐛 Bug Fix",
           "description": "Increment the patch version when merged",
           "name": "Version: Patch",
           "overwrite": true,
           "releaseType": "patch",
         },
         Object {
-          "changelogTitle": "🚀  Enhancement",
+          "changelogTitle": "🚀 Enhancement",
           "description": "Increment the minor version when merged",
           "name": "Version: Minor",
           "overwrite": true,
@@ -37,13 +37,13 @@ exports[`Auto createLabels should create the labels 1`] = `
           "releaseType": "release",
         },
         Object {
-          "changelogTitle": "🏠  Internal",
+          "changelogTitle": "🏠 Internal",
           "description": "Changes only affect the internal API",
           "name": "internal",
           "releaseType": "none",
         },
         Object {
-          "changelogTitle": "📝  Documentation",
+          "changelogTitle": "📝 Documentation",
           "description": "Changes only affect the documentation",
           "name": "documentation",
           "releaseType": "none",
@@ -64,22 +64,22 @@ exports[`Auto createLabels should create the labels 1`] = `
 exports[`Auto should extend config 1`] = `
 Object {
   "baseBranch": "master",
-  "extends": "@artsy",
+  "extends": "@artsy/auto-config/package.json",
   "labels": Array [
     Object {
-      "changelogTitle": "💥  Breaking Change",
+      "changelogTitle": "💥 Breaking Change",
       "description": "Increment the major version when merged",
       "name": "major",
       "releaseType": "major",
     },
     Object {
-      "changelogTitle": "🚀  Enhancement",
+      "changelogTitle": "🚀 Enhancement",
       "description": "Increment the minor version when merged",
       "name": "minor",
       "releaseType": "minor",
     },
     Object {
-      "changelogTitle": "🐛  Bug Fix",
+      "changelogTitle": "🐛 Bug Fix",
       "description": "Increment the patch version when merged",
       "name": "patch",
       "releaseType": "patch",
@@ -95,13 +95,13 @@ Object {
       "releaseType": "release",
     },
     Object {
-      "changelogTitle": "🏠  Internal",
+      "changelogTitle": "🏠 Internal",
       "description": "Changes only affect the internal API",
       "name": "internal",
       "releaseType": "none",
     },
     Object {
-      "changelogTitle": "📝  Documentation",
+      "changelogTitle": "📝 Documentation",
       "description": "Changes only affect the documentation",
       "name": "documentation",
       "releaseType": "none",
@@ -120,22 +120,22 @@ Object {
 exports[`Auto should extend local config 1`] = `
 Object {
   "baseBranch": "master",
-  "extends": "./fake.json",
+  "extends": "<PROJECT_ROOT>fake.json",
   "labels": Array [
     Object {
-      "changelogTitle": "💥  Breaking Change",
+      "changelogTitle": "💥 Breaking Change",
       "description": "Increment the major version when merged",
       "name": "major",
       "releaseType": "major",
     },
     Object {
-      "changelogTitle": "🚀  Enhancement",
+      "changelogTitle": "🚀 Enhancement",
       "description": "Increment the minor version when merged",
       "name": "minor",
       "releaseType": "minor",
     },
     Object {
-      "changelogTitle": "🐛  Bug Fix",
+      "changelogTitle": "🐛 Bug Fix",
       "description": "Increment the patch version when merged",
       "name": "patch",
       "releaseType": "patch",
@@ -151,13 +151,13 @@ Object {
       "releaseType": "release",
     },
     Object {
-      "changelogTitle": "🏠  Internal",
+      "changelogTitle": "🏠 Internal",
       "description": "Changes only affect the internal API",
       "name": "internal",
       "releaseType": "none",
     },
     Object {
-      "changelogTitle": "📝  Documentation",
+      "changelogTitle": "📝 Documentation",
       "description": "Changes only affect the documentation",
       "name": "documentation",
       "releaseType": "none",

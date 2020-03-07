@@ -50,7 +50,7 @@ jest.mock('@octokit/rest', () => {
 });
 
 // @ts-ignore
-jest.mock('gitlog', () => (a, cb) => {
+jest.mock('gitlogplus', () => (a, cb) => {
   cb(undefined, [
     {
       rawBody: 'foo'

@@ -1,3 +1,4 @@
+import path from 'path';
 import tryRequire from '../try-require';
 
 jest.mock('test', () => 'success', {
@@ -19,5 +20,11 @@ describe('try require', () => {
 
   test('should return nothing if not found', async () => {
     expect(tryRequire('foobar')).toBeUndefined();
+  });
+
+  test('should require from a directory', async () => {
+    expect(
+      tryRequire('./__tests__/test', path.resolve(path.join(__dirname, '..')))
+    ).toBe('success');
   });
 });

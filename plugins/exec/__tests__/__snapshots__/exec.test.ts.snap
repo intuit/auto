@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Exec Plugin should warn about invalid config 1`] = `
+Array [
+  "\\"exec\\"
+
+Found unknown configuration keys: notAHook
+",
+]
+`;

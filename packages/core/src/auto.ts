@@ -62,6 +62,7 @@ import {
   formatError
 } from './validate-config';
 import { omit } from './utils/omit';
+import { execSync } from 'child_process';
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -365,6 +366,39 @@ export default class Auto {
       }
     );
 
+    /**
+     * Determine if repo is behind HEAD of current branch. We do this in
+     * the "afterVersion" hook so the check happens as late as possible.
+     */
+    this.hooks.afterVersion.tapPromise('Check remote for commits', async () => {
+      // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
+      // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
+      try {
+        const heads = await execPromise('git', [
+          'ls-remote',
+          '--heads',
+          this.remote,
+          getCurrentBranch()
+        ]);
+        const [, remoteHead] = heads.match(/^(\w+)?/) || [];
+
+        if (remoteHead) {
+          // This will throw if the branch is ahead of the current branch
+          execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`);
+        }
+
+        this.logger.verbose.info(
+          'Current branch is up to date, proceeding with release'
+        );
+      } catch (error) {
+        // If we are behind or there is no match, exit and skip the release
+        this.logger.log.warn(
+          'Current commit is behind, skipping the release to avoid collisions.'
+        );
+        process.exit(0);
+      }
+    });
+
     loadEnv();
 
     this.logger.verbose.info('ENV:', env);
@@ -437,7 +471,7 @@ export default class Auto {
         '\n'
       );
       this.logger.log.warn(
-        'This errors are for the fully loaded configuration (this is why some paths might seem off).'
+        'These errors are for the fully loaded configuration (this is why some paths might seem off).'
       );
 
       if (this.config.extends) {
@@ -1438,7 +1472,7 @@ export default class Auto {
   }
 
   /** Calculate a version from a tag using labels */
-  private async getVersion({ from }: IVersionOptions = {}) {
+  async getVersion({ from }: IVersionOptions = {}) {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
     }
@@ -1683,7 +1717,7 @@ export default class Auto {
   /**
    * Set the git user to make releases and commit with.
    */
-  private async setGitUser() {
+  async setGitUser() {
     const user = await this.getGitUser();
 
     if (user && !user.system) {
@@ -1747,13 +1781,22 @@ export default class Auto {
       require.resolve('./plugins/filter-non-pull-request'),
       ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
+    let extendedLocation: string | undefined;
+
+    try {
+      if (config.extends) {
+        extendedLocation = require.resolve(config.extends);
+      }
+    } catch (error) {
+      this.logger.veryVerbose.error();
+    }
 
     pluginsPaths
       .map(plugin =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
       )
-      .map(plugin => loadPlugin(plugin, this.logger))
+      .map(plugin => loadPlugin(plugin, this.logger, extendedLocation))
       .filter((plugin): plugin is IPlugin => Boolean(plugin))
       .forEach(plugin => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);

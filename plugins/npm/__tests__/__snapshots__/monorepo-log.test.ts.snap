@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should add versions for independent packages 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
 - woot [#12343](https://github.custom.com/pull/12343) (adam@dierkens.com)
 - \`@foobar/release@1.0.1\`, \`@foobar/party@1.0.3\`
@@ -9,7 +9,7 @@ exports[`should add versions for independent packages 1`] = `
 - \`@foobar/release@1.0.1\`, \`@foobar/party@1.0.3\`
   - [PLAYA-5052] - Some Feature - Revert [#12345](https://github.custom.com/pull/12345) (adam@dierkens.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - \`@foobar/release@1.0.1\`
   - Another Feature [#1234](https://github.custom.com/pull/1234) (adam@dierkens.com)
@@ -20,7 +20,7 @@ exports[`should add versions for independent packages 1`] = `
 `;
 
 exports[`should create sections for packages 1`] = `
-"#### 💥  Breaking Change
+"#### 💥 Breaking Change
 
 - woot [#12343](https://github.custom.com/pull/12343) (adam@dierkens.com)
 - \`@foobar/release\`, \`@foobar/party\`
@@ -28,7 +28,7 @@ exports[`should create sections for packages 1`] = `
 - \`@foobar/release\`, \`@foobar/party\`
   - [PLAYA-5052] - Some Feature - Revert [#12345](https://github.custom.com/pull/12345) (adam@dierkens.com)
 
-#### 🏠  Internal
+#### 🏠 Internal
 
 - \`@foobar/release\`
   - Another Feature [#1234](https://github.custom.com/pull/1234) (adam@dierkens.com)

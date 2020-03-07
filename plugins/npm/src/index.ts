@@ -352,7 +352,10 @@ export default class NPMPlugin implements IPlugin {
   constructor(config: INpmConfig = {}) {
     this.exact = Boolean(config.exact);
     this.renderMonorepoChangelog = true;
-    this.subPackageChangelogs = config.subPackageChangelogs || true;
+    this.subPackageChangelogs =
+      typeof config.subPackageChangelogs === 'boolean'
+        ? config.subPackageChangelogs
+        : true;
     this.setRcToken =
       typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
     this.forcePublish =
