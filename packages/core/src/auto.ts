@@ -1781,9 +1781,15 @@ export default class Auto {
       require.resolve('./plugins/filter-non-pull-request'),
       ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
     ];
-    const extendedLocation = config.extends
-      ? require.resolve(config.extends)
-      : undefined;
+    let extendedLocation: string | undefined;
+
+    try {
+      if (config.extends) {
+        extendedLocation = require.resolve(config.extends);
+      }
+    } catch (error) {
+      this.logger.veryVerbose.error();
+    }
 
     pluginsPaths
       .map(plugin =>

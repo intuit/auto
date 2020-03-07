@@ -128,6 +128,7 @@ describe('loadExtendConfig', () => {
     );
 
     expect(await config.loadExtendConfig('@artsy')).toStrictEqual({
+      extends: '@artsy/auto-config/package.json',
       onlyPublishWithReleaseLabel: true
     });
   });
@@ -142,6 +143,7 @@ describe('loadExtendConfig', () => {
     );
 
     expect(await config.loadExtendConfig('fuego')).toStrictEqual({
+      extends: 'auto-config-fuego/package.json',
       noVersionPrefix: true
     });
   });
