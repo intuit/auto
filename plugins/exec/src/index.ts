@@ -12,61 +12,36 @@ import fromEntries from 'fromentries';
 import { execSync } from 'child_process';
 
 type CommandMap = Record<string, string | undefined>;
-type ChangelogHook = keyof ReturnType<typeof makeChangelogHooks>;
-const changelogHooks = Object.keys(makeChangelogHooks()) as ChangelogHook[];
 
-const onCreateChangelog = t.partial(
-  fromEntries(changelogHooks.map(name => [name, t.string] as const)) as Record<
-    ChangelogHook,
-    t.StringC
-  >
-);
+/** Convert a "makeHooks" function into an io-ts interface */
+function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
+  hookCreatorFn: () => HookObject,
+  exclude: ExcludedHook[]
+) {
+  type HookType = keyof HookObject;
+  const hooks = Object.keys(hookCreatorFn()) as HookType[];
 
-type LogParseHook = keyof ReturnType<typeof makeLogParseHooks>;
-const logParseHooks = Object.keys(makeLogParseHooks()) as LogParseHook[];
+  return t.partial(
+    fromEntries(
+      hooks
+        .map(name => [name, t.string] as const)
+        .filter(([hook]) => !exclude.includes(hook as any))
+    ) as Record<Exclude<HookType, typeof exclude[number]>, t.StringC>
+  );
+}
 
-const onCreateLogParse = t.partial(
-  fromEntries(logParseHooks.map(name => [name, t.string] as const)) as Record<
-    LogParseHook,
-    t.StringC
-  >
-);
-
-type ReleaseHook = keyof ReturnType<typeof makeReleaseHooks>;
-const releaseHooks = Object.keys(makeReleaseHooks()) as ReleaseHook[];
-
-const onCreateReleaseOptions = [
+const onCreateChangelog = makeHooksType(makeChangelogHooks, []);
+const onCreateLogParse = makeHooksType(makeLogParseHooks, []);
+const onCreateRelease = makeHooksType(makeReleaseHooks, [
   'onCreateChangelog',
   'onCreateLogParse'
-] as const;
-
-const onCreateRelease = t.partial(
-  fromEntries(
-    releaseHooks
-      .map(name => [name, t.string] as const)
-      .filter(([hook]) => !onCreateReleaseOptions.includes(hook as any))
-  ) as Record<
-    Exclude<ReleaseHook, typeof onCreateReleaseOptions[number]>,
-    t.StringC
-  >
-);
-
-type RootHook = keyof ReturnType<typeof makeHooks>;
-const rootHooks = Object.keys(makeHooks()) as RootHook[];
-
-const complextRootOptions = [
+]);
+const rootOptions = makeHooksType(makeHooks, [
   'onCreateRelease',
   'onCreateChangelog',
   'onCreateLogParse',
   'validateConfig'
-] as const;
-const rootOptions = t.partial(
-  fromEntries(
-    rootHooks
-      .map(name => [name, t.string] as const)
-      .filter(([hook]) => !complextRootOptions.includes(hook as any))
-  ) as Record<Exclude<RootHook, typeof complextRootOptions[number]>, t.StringC>
-);
+]);
 
 const pluginOptions = t.intersection([
   rootOptions,

@@ -104,7 +104,7 @@ describe('Exec Plugin', () => {
       });
       const hooks = makeHooks();
 
-      execSpy.mockReturnValueOnce(canaryVersion);
+      execSpy.mockReturnValueOnce(JSON.stringify(canaryVersion));
       plugins.apply({ hooks } as Auto);
 
       expect(await hooks.canary.promise(SEMVER.patch, '-canary')).toStrictEqual(
