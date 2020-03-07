@@ -55,6 +55,9 @@
     },
     {
       "path": "plugins/gh-pages"
+    },
+    {
+      "path": "plugins/exec"
     }
   ]
 }
