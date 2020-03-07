@@ -2,6 +2,8 @@
 
 Release a Java project using [gradle](https://gradle.org/).
 
+- supports both `-snapshot` and `-snapshot`-less versioning
+
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
@@ -45,4 +47,10 @@ plugins {
 }
 ```
 
-It will also call the `publish` task with the release version, if configured in your project.
+### Publish
+
+This plugin will also call the `publish` task with the release version, if configured in your project.
+
+### Configure `snapshotSuffix`
+
+This plugins will use the `snapshotSuffix` in `build.gradle` if configured.
