@@ -11,6 +11,7 @@ import * as t from 'io-ts';
 import fromEntries from 'fromentries';
 import { execSync } from 'child_process';
 
+type CommandMap = Record<string, string | undefined>;
 type ChangelogHooks = keyof ReturnType<typeof makeChangelogHooks>;
 const changelogHooks = Object.keys(makeChangelogHooks()) as ChangelogHooks[];
 
@@ -73,6 +74,38 @@ const pluginOptions = t.intersection([
 
 export type IExecPluginOptions = t.TypeOf<typeof pluginOptions>;
 
+/** Tap a hook if possible */
+const tapHook = (auto: Auto, hook: any, command: string) => {
+  const name = hook.constructor.name;
+
+  if (
+    name === 'SyncWaterfallHook' ||
+    name === 'AsyncSeriesBailHook' ||
+    name === 'AsyncSeriesWaterfallHook'
+  ) {
+    auto.logger.log.error(
+      `"${name}" cannot easily be used from the "exec" plugin. Please consider writing your own plugin in JavaScript or TypeScript.`
+    );
+    process.exit(1);
+  } else if (
+    name === 'SyncHook' ||
+    name === 'AsyncSeriesHook' ||
+    name === 'AsyncParallelHook'
+  ) {
+    hook.tap(`exec ${name}`, (...args: any[]) => {
+      execSync(command, {
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          ...fromEntries(
+            args.map((arg, index) => [`ARG_${index}`, JSON.stringify(arg)])
+          )
+        }
+      });
+    });
+  }
+};
+
 /** Tap into select hooks and run a command on the terminal */
 export default class ExecPlugin implements IPlugin {
   /** The name of the plugin */
@@ -88,74 +121,53 @@ export default class ExecPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    Object.entries(this.options).forEach(([key, command]) => {
-      const name = key as keyof IExecPluginOptions;
+    Object.entries(this.options).forEach(
+      ([name, command]) => command && this.applyHook(auto, name, command)
+    );
+  }
 
-      /** Tap a hook if possible */
-      const tapHook = (hook: any, command: string) => {
-        const name = hook.constructor.name;
+  /** Apply a hook to auto */
+  private applyHook(auto: Auto, key: string, command: string | CommandMap) {
+    const name = key as keyof IExecPluginOptions;
 
-        if (
-          name === 'SyncWaterfallHook' ||
-          name === 'AsyncSeriesBailHook' ||
-          name === 'AsyncSeriesWaterfallHook'
-        ) {
-          auto.logger.log.error(
-            `"${name}" cannot easily be used from the "exec" plugin. Please consider writing your own plugin in JavaScript or TypeScript.`
-          );
-          process.exit(1);
-        } else if (
-          name === 'SyncHook' ||
-          name === 'AsyncSeriesHook' ||
-          name === 'AsyncParallelHook'
-        ) {
-          hook.tap(this.name, (...args: any[]) => {
-            execSync(command, {
-              stdio: 'inherit',
-              env: {
-                ...process.env,
-                ...fromEntries(
-                  args.map((arg, index) => [
-                    `ARG_${index}`,
-                    JSON.stringify(arg)
-                  ])
-                )
-              }
-            });
-          });
-        }
-      };
-
-      if (name === 'onCreateRelease') {
-        auto.hooks.onCreateRelease.tap(this.name, release => {
-          Object.entries(
-            command as Record<string, string>
-          ).map(([key, command]) =>
-            tapHook(release.hooks[key as keyof typeof release.hooks], command)
-          );
-        });
-      } else if (name === 'onCreateChangelog') {
-        auto.hooks.onCreateChangelog.tap(this.name, changelog => {
-          Object.entries(
-            command as Record<string, string>
-          ).map(([key, command]) =>
+    if (name === 'onCreateRelease') {
+      auto.hooks.onCreateRelease.tap(this.name, release => {
+        Object.entries(command as CommandMap).map(
+          ([key, command]) =>
+            command &&
             tapHook(
+              auto,
+              release.hooks[key as keyof typeof release.hooks],
+              command
+            )
+        );
+      });
+    } else if (name === 'onCreateChangelog') {
+      auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+        Object.entries(command as CommandMap).map(
+          ([key, command]) =>
+            command &&
+            tapHook(
+              auto,
               changelog.hooks[key as keyof typeof changelog.hooks],
               command
             )
-          );
-        });
-      } else if (name === 'onCreateLogParse') {
-        auto.hooks.onCreateLogParse.tap(this.name, logParse => {
-          Object.entries(
-            command as Record<string, string>
-          ).map(([key, command]) =>
-            tapHook(logParse.hooks[key as keyof typeof logParse.hooks], command)
-          );
-        });
-      } else {
-        tapHook(auto.hooks[name], command as string);
-      }
-    });
+        );
+      });
+    } else if (name === 'onCreateLogParse') {
+      auto.hooks.onCreateLogParse.tap(this.name, logParse => {
+        Object.entries(command as CommandMap).map(
+          ([key, command]) =>
+            command &&
+            tapHook(
+              auto,
+              logParse.hooks[key as keyof typeof logParse.hooks],
+              command
+            )
+        );
+      });
+    } else {
+      tapHook(auto, auto.hooks[name], command as string);
+    }
   }
 }
