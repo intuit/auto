@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
 import {
   makeHooks,
   makeReleaseHooks,
@@ -84,8 +84,12 @@ const createEnv = (args: any[]) => ({
 });
 
 /** Tap a hook if possible */
-const tapHook = (hook: any, command: string) => {
-  const name = hook.constructor.name;
+const tapHook = (name: string, hook: any, command: string) => {
+  if (!hook) {
+    return;
+  }
+
+  const hookType = hook.constructor.name;
 
   if (
     name === 'getRepository' ||
@@ -103,7 +107,7 @@ const tapHook = (hook: any, command: string) => {
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = execSync(command, {
-        stdio: 'inherit',
+        stdio: ['pipe', 'inherit'],
         encoding: 'utf8',
         env: createEnv(args)
       });
@@ -122,7 +126,7 @@ const tapHook = (hook: any, command: string) => {
   } else if (name === 'omitCommit' || name === 'omitReleaseNotes') {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = execSync(command, {
-        stdio: 'inherit',
+        stdio: ['pipe', 'inherit'],
         encoding: 'utf8',
         env: createEnv(args)
       });
@@ -132,17 +136,20 @@ const tapHook = (hook: any, command: string) => {
       }
     });
   } else if (
-    name === 'SyncHook' ||
-    name === 'AsyncSeriesHook' ||
-    name === 'AsyncParallelHook' ||
+    hookType === 'SyncHook' ||
+    hookType === 'AsyncSeriesHook' ||
+    hookType === 'AsyncParallelHook' ||
     name === 'createChangelogTitle' ||
     name === 'getPreviousVersion'
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) =>
       execSync(command, {
-        stdio: 'inherit',
         encoding: 'utf8',
-        env: createEnv(args)
+        env: createEnv(args),
+        stdio:
+          name === 'createChangelogTitle' || name === 'getPreviousVersion'
+            ? ['pipe', 'inherit']
+            : 'inherit'
       }).trim()
     );
   }
@@ -163,8 +170,15 @@ export default class ExecPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     Object.entries(this.options).forEach(
-      ([name, command]) => command && this.applyHook(auto, name, command)
+      ([name, command]) =>
+        command && this.applyHook(auto, name, command as string | CommandMap)
     );
   }
 
@@ -177,7 +191,11 @@ export default class ExecPlugin implements IPlugin {
         Object.entries(command as CommandMap).map(
           ([key, command]) =>
             command &&
-            tapHook(release.hooks[key as keyof typeof release.hooks], command)
+            tapHook(
+              key,
+              release.hooks[key as keyof typeof release.hooks],
+              command
+            )
         );
       });
     } else if (name === 'onCreateChangelog') {
@@ -186,6 +204,7 @@ export default class ExecPlugin implements IPlugin {
           ([key, command]) =>
             command &&
             tapHook(
+              key,
               changelog.hooks[key as keyof typeof changelog.hooks],
               command
             )
@@ -196,11 +215,15 @@ export default class ExecPlugin implements IPlugin {
         Object.entries(command as CommandMap).map(
           ([key, command]) =>
             command &&
-            tapHook(logParse.hooks[key as keyof typeof logParse.hooks], command)
+            tapHook(
+              key,
+              logParse.hooks[key as keyof typeof logParse.hooks],
+              command
+            )
         );
       });
     } else {
-      tapHook(auto.hooks[name], command as string);
+      tapHook(name, auto.hooks[name], command as string);
     }
   }
 }

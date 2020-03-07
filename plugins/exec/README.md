@@ -61,7 +61,8 @@ Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.m
       "exec",
       {
         "version": "npm version $ARG_0",
-        "publish": "npm publish && git push --tags"
+        "publish": "npm publish && git push --tags",
+        "afterRelease": "yarn docs && push-dir --dir=docs --branch=gh-pages"
       }
     ]
     // other plugins
