@@ -471,7 +471,7 @@ export default class Auto {
         '\n'
       );
       this.logger.log.warn(
-        'This errors are for the fully loaded configuration (this is why some paths might seem off).'
+        'These errors are for the fully loaded configuration (this is why some paths might seem off).'
       );
 
       if (this.config.extends) {

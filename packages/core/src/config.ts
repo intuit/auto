@@ -141,8 +141,7 @@ export default class Config {
 
       this.logger.verbose.note(`${extend} found: ${config}`);
     } else {
-      config = tryRequire(`${extend}/package.json`);
-      config = config?.auto;
+      config = tryRequire(`${extend}/package.json`)?.auto;
       this.logger.verbose.note(`${extend} found: ${config}`);
     }
 
