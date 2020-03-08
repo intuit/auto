@@ -1,3 +1,15 @@
+# v9.19.2 (Sun Mar 08 2020)
+
+#### 🐛 Bug Fix
+
+- When checking if remote commits ignore git error message [#1038](https://github.com/intuit/auto/pull/1038) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.1 (Sat Mar 07 2020)
 
 #### 🐛 Bug Fix

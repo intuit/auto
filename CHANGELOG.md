@@ -1,3 +1,21 @@
+# v9.19.2 (Sun Mar 08 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - When checking if remote commits ignore git error message [#1038](https://github.com/intuit/auto/pull/1038) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Update github-actions.md to match actions/checkout@v2 [#1037](https://github.com/intuit/auto/pull/1037) ([@ericclemmons](https://github.com/ericclemmons))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Eric Clemmons ([@ericclemmons](https://github.com/ericclemmons))
+
+---
+
 # v9.19.1 (Sat Mar 07 2020)
 
 #### 🐛 Bug Fix
