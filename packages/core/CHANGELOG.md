@@ -1,3 +1,15 @@
+# v9.19.1 (Sat Mar 07 2020)
+
+#### 🐛 Bug Fix
+
+- Better GitHub Actions support + docs for github action + handle GITHUB_TOKEN [#1036](https://github.com/intuit/auto/pull/1036) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.0 (Sat Mar 07 2020)
 
 ### Release Notes
