@@ -9,6 +9,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import tinyColor from 'tinycolor2';
 import { promisify } from 'util';
 import endent from 'endent';
+import on from 'await-to-js';
 
 import { Memoize as memoize } from 'typescript-memoize';
 
@@ -371,7 +372,13 @@ export default class Git {
   /** Get collaborator permission level to the repo. */
   @memoize()
   async getTokenPermissionLevel() {
-    const user = await this.github.users.getAuthenticated();
+    const [, user] = await on(this.github.users.getAuthenticated());
+
+    if (!user) {
+      return {
+        permission: 'none'
+      };
+    }
 
     try {
       const { permission } = (

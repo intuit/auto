@@ -32,13 +32,22 @@ export async function run(command: string, args: ApiOptions) {
     await auto.loadConfig();
 
     if (args.verbose || command === 'info') {
-      const { hasError } = await auto.info();
+      try {
+        // We don't want auto.info throwing an error during another 
+        // command
+        const { hasError } = await auto.info();
 
-      if (command === 'info') {
-        if (hasError) {
+        if (command === 'info') {
+          // eslint-disable-next-line max-depth
+          if (hasError) {
+            process.exit(1);
+          } else {
+            return;
+          }
+        }
+      } catch (error) {
+        if (command === 'info') {
           process.exit(1);
-        } else {
-          return;
         }
       }
     }

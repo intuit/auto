@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+
+      - run: git fetch --tags
 
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
@@ -38,7 +40,6 @@ jobs:
 
       - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn install --frozen-lockfile
@@ -50,11 +51,8 @@ jobs:
 
 If you are having problems make sure you have done the following:
 
-- Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin)
-- Make sure you give the `GH_TOKEN` `repo` permission or `shipit` will fail!
+- Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin
 - Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
-
-To add a secret for actions go to `https://github.com/<owner>/<repo>/settings/secrets/new`
 
 ## Examples
 
