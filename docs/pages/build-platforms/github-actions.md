@@ -8,7 +8,7 @@ The following config declares the `release` action that run on all branches. The
 **`.github/workflows/release.yml`**
 
 ::: message is-warning
-You must use some sort of action that implements `skip ci` functionality. Otherwise you will get stuck in a release loop!
+You must use some sort of action that implements `skip ci` functionality (as seen below). Otherwise you will get stuck in a release loop!
 :::
 
 ```yaml
@@ -23,7 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: git fetch --tags
+      - name: Prepare repository
+        run: git fetch --prune --unshallow
 
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
@@ -40,6 +41,7 @@ jobs:
 
       - name: Create Release
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn install --frozen-lockfile
@@ -51,7 +53,7 @@ jobs:
 
 If you are having problems make sure you have done the following:
 
-- Any required secrets for plugins are set (Ex; `NPM_TOKEN` with the NPM plugin
+- Any required secrets for plugins are set (e.g. `NPM_TOKEN` with the NPM plugin)
 - Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
 
 ## Examples
