@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/git-tag",
-  "version": "9.19.1",
+  "version": "9.19.2",
   "main": "dist/index.js",
   "description": "Manage your projects version through just a git tag",
   "license": "MIT",
