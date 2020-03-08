@@ -542,6 +542,7 @@ export default class Auto {
     const { html_url } = (await this.git.getProject()) || { html_url: '' };
 
     if (html_url && (await this.git.verifyAuth(html_url))) {
+      this.logger.veryVerbose.note('Using bare html URL as remote');
       return html_url;
     }
 
@@ -565,10 +566,12 @@ export default class Auto {
       });
 
       if (await this.git.verifyAuth(urlWithAuth)) {
+        this.logger.veryVerbose.note('Using token + html URL as remote');
         return urlWithAuth;
       }
     }
 
+    this.logger.veryVerbose.note('Using remote set in environment');
     return configuredRemote;
   }
 
