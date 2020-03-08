@@ -492,7 +492,10 @@ export default class Auto {
     };
     this.config = config;
     const repository = await this.getRepo(config);
-    const token = (repository && repository.token) || process.env.GH_TOKEN;
+    const token =
+      (repository && repository.token) ||
+      process.env.GH_TOKEN ||
+      process.env.GITHUB_TOKEN;
 
     if (!token || token === 'undefined') {
       this.logger.log.error(
@@ -545,12 +548,12 @@ export default class Auto {
     const GIT_TOKENS: Record<string, string | undefined> = {
       // GitHub Actions require the "x-access-token:" prefix for git access
       // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
-      GITHUB_TOKEN: process.env.GITHUB_ACTION ? 'x-access-token:' : undefined
+      GITHUB_TOKEN: process.env.GITHUB_ACTION
+        ? `x-access-token:${process.env.GITHUB_TOKEN}`
+        : undefined
     };
     const envVar = Object.keys(GIT_TOKENS).find(v => process.env[v]) || '';
-    const gitCredentials = GIT_TOKENS[envVar]
-      ? `${GIT_TOKENS[envVar] || ''}${process.env[envVar] || ''}`
-      : process.env.GH_TOKEN;
+    const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
 
     if (gitCredentials) {
       const { port, hostname, ...parsed } = parseUrl(html_url);
