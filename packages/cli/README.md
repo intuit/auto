@@ -101,7 +101,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
 
 4. Set up script
 
-   `auto` is written so that each tool it exposes is useful in isolation. 
+   `auto` is written so that each tool it exposes is useful in isolation.
    To version, changelog, publish and release your code all at the same time we've included the `shipit` tool.
    This tool takes the default `auto` workflow and puts it into one command.
 

@@ -163,7 +163,7 @@ test('should respect PR label if SEMVER', async () => {
     getGitLog: () => Promise.resolve([commit]),
     getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
   } as unknown) as Git;
-  
+
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
     labels: defaultLabels,
@@ -196,7 +196,7 @@ test('should add conventional commit label if none/skip', async () => {
     getGitLog: () => Promise.resolve([commit]),
     getCommitsForPR: () => Promise.resolve([{ sha: '1' }])
   } as unknown) as Git;
-  
+
   conventionalCommitsPlugin.apply({
     hooks: autoHooks,
     labels: defaultLabels,

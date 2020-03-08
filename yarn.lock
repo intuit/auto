@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.16.6"
+  version "9.18.0"
 
 "@auto-it/core@link:packages/core":
-  version "9.16.6"
+  version "9.18.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.0"
@@ -33,6 +33,7 @@
     gitlogplus "^3.1.2"
     https-proxy-agent "^5.0.0"
     import-cwd "^3.0.0"
+    import-from "^3.0.0"
     io-ts "^2.1.2"
     lodash.chunk "^4.2.0"
     log-symbols "^3.0.0"
@@ -48,7 +49,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.16.6"
+  version "9.18.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -65,7 +66,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.16.6"
+  version "9.18.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2537,13 +2538,6 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
-
-"@types/fs-extra@^8.0.1":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-8.1.0.tgz#1114834b53c3914806cd03b3304b37b3bd221a4d"
-  integrity sha512-UoOfVEzAUpeSPmjm7h1uk5MH6KZma2z2O7a75onTGjnNvAvMVrPzPL/vBbT65iIGHWj6rokwfmYcmxmlSf2uwg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/glob@^7.1.1":
   version "7.1.1"
@@ -5877,11 +5871,6 @@ dot-prop@^4.1.0, dot-prop@^4.1.1, dot-prop@^4.2.0:
   integrity sha512-tUMXrxlExSW6U2EXiiKGSBVdYgtV8qlHL+C10TsW4PURY/ic+eaysnSkwB4kA/mBlCyy/IKDJ+Lc3wbWeaXtuQ==
   dependencies:
     is-obj "^1.0.0"
-
-dot-properties@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/dot-properties/-/dot-properties-0.3.2.tgz#aa3efa3c8ca4343701eeac697b17dd426a7c8e40"
-  integrity sha512-1JmMpYEOP4ASJPlAejX3IOVErPyZ1Dqfqiy3jxgOk/9xPgoOWS6p5EHWETgWsIrG0VcIA4Tzyu0zBFzyj9oe7Q==
 
 dotenv@*, dotenv@^8.0.0:
   version "8.2.0"

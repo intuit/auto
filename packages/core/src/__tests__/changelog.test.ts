@@ -361,7 +361,7 @@ describe('generateReleaseNotes', () => {
   });
 
   test('should add "Push to Next"', async () => {
-    currentBranchSpy.mockReturnValueOnce('next')
+    currentBranchSpy.mockReturnValueOnce('next');
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 

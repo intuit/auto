@@ -18,7 +18,7 @@ jest.mock('@octokit/rest', () => {
 
     repos = {
       get: jest.fn().mockReturnValue({})
-    }
+    };
 
     hook = {
       error: () => undefined
