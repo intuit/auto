@@ -1,10 +1,12 @@
 import Auto from '../auto';
 
+jest.mock('child_process');
+
 describe('getRemote', () => {
   test('should fall back to origin with no git client', async () => {
     const auto = new Auto();
     // @ts-ignore
-    expect(await auto.getRemote()).toBe('https://github.com/intuit/auto.git');
+    expect(await auto.getRemote()).toBe('origin');
   });
 
   test('should use html_url if we can push', async () => {
