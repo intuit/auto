@@ -76,7 +76,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",
     "@types/graphql": "^14.2.0",
-    "@types/jest": "~24.0.9",
+    "@types/jest": "~25.1.4",
     "@types/lodash.chunk": "^4.2.6",
     "@types/node": "^13.1.8",
     "@types/node-fetch": "2.5.5",
