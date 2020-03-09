@@ -1,6 +1,6 @@
 # Exec Plugin
 
-Tap into hooks and run commands on the terminal.
+Tap into hooks and run scripts on the terminal.
 
 Main hooks, in call order:
 

@@ -48,6 +48,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [all-contributors](./plugins/all-contributors) - Automatically add contributors as changelogs are produced using [`all-contributors-cli](https://www.npmjs.com/package/all-contributors-cli)
 - [conventional-commits](./plugins/conventional-commits) - Parse conventional commit messages for version bumps
+- [exec](./plugins/exec) - Tap into hooks and run scripts on the terminal
 - [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
 - [gh-pages](./plugins/gh-pages) - Automate publishing to your gh-pages documentation website
 - [jira](./plugins/jira) - Include Jira story links in the changelog
