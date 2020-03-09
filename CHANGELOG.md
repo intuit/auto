@@ -1,3 +1,16 @@
+# v9.19.3 (Mon Mar 09 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - try credentialed remotes first [#1039](https://github.com/intuit/auto/pull/1039) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.2 (Sun Mar 08 2020)
 
 #### 🐛 Bug Fix
