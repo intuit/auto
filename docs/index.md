@@ -53,6 +53,7 @@ Functionality Plugins
 - [All Contributors](../plugins/all-contributors/README.md)
 - [Amazon S3](../plugins/s3/README.md)
 - [Conventional Commits](../plugins/conventional-commits/README.md)
+- [Exec](../plugins/exec/README.md)
 - [First Time Contributor](../plugins/first-time-contributor/README.md)
 - [GitHub Pages](../plugins/gh-pages/README.md)
 - [Jira](../plugins/jira/README.md)
