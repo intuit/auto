@@ -8,13 +8,13 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.19.2"
+  version "9.19.3"
 
 "@auto-it/core@link:packages/core":
-  version "9.19.2"
+  version "9.19.3"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
-    "@octokit/core" "2.4.0"
+    "@octokit/core" "2.4.2"
     "@octokit/graphql" "4.3.1"
     "@octokit/plugin-enterprise-compatibility" "1.2.1"
     "@octokit/plugin-retry" "3.0.1"
@@ -49,7 +49,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.19.2"
+  version "9.19.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -66,7 +66,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.19.2"
+  version "9.19.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2239,17 +2239,17 @@
   dependencies:
     "@octokit/types" "^2.0.0"
 
-"@octokit/core@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-2.4.0.tgz#6a55366dd7cd366827e5804be8021002dbd6cd7b"
-  integrity sha512-MNwnsDBBxlJWFd1JOhXaCZ9xm8nciWb4lVloGJUSSRxqM0BrvqguWMk4vj1L5dB4juuh1LPuL6/DxSLC4SAfZQ==
+"@octokit/core@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-2.4.2.tgz#c22e583afc97e74015ea5bfd3ffb3ffc56c186ed"
+  integrity sha512-fUx/Qt774cgiPhb3HRKfdl6iufVL/ltECkwkCg373I4lIPYvAPY4cbidVZqyVqHI+ThAIlFlTW8FT4QHChv3Sg==
   dependencies:
     "@octokit/auth-token" "^2.4.0"
     "@octokit/graphql" "^4.3.1"
     "@octokit/request" "^5.3.1"
     "@octokit/types" "^2.0.0"
     before-after-hook "^2.1.0"
-    universal-user-agent "^4.0.0"
+    universal-user-agent "^5.0.0"
 
 "@octokit/endpoint@^5.5.0":
   version "5.5.0"
@@ -14924,6 +14924,13 @@ universal-user-agent@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/universal-user-agent/-/universal-user-agent-4.0.0.tgz#27da2ec87e32769619f68a14996465ea1cb9df16"
   integrity sha512-eM8knLpev67iBDizr/YtqkJsF3GK8gzDc6st/WKzrTuPtcsOKW/0IdL4cnMBsU69pOx0otavLWBDGTwg+dB0aA==
+  dependencies:
+    os-name "^3.1.0"
+
+universal-user-agent@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/universal-user-agent/-/universal-user-agent-5.0.0.tgz#a3182aa758069bf0e79952570ca757de3579c1d9"
+  integrity sha512-B5TPtzZleXyPrUMKCpEHFmVhMN6EhmJYjG5PQna9s7mXeSqGTLap4OpqLl5FCEFUI3UBmllkETwKf/db66Y54Q==
   dependencies:
     os-name "^3.1.0"
 
