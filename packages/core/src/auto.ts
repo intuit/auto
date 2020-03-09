@@ -543,11 +543,6 @@ export default class Auto {
 
     const { html_url } = (await this.git.getProject()) || { html_url: '' };
 
-    if (html_url && (await this.git.verifyAuth(html_url))) {
-      this.logger.veryVerbose.note('Using bare html URL as remote');
-      return html_url;
-    }
-
     const GIT_TOKENS: Record<string, string | undefined> = {
       // GitHub Actions require the "x-access-token:" prefix for git access
       // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
@@ -571,6 +566,11 @@ export default class Auto {
         this.logger.veryVerbose.note('Using token + html URL as remote');
         return urlWithAuth;
       }
+    }
+
+    if (html_url && (await this.git.verifyAuth(html_url))) {
+      this.logger.veryVerbose.note('Using bare html URL as remote');
+      return html_url;
     }
 
     this.logger.veryVerbose.note('Using remote set in environment');
