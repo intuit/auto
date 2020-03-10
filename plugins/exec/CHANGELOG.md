@@ -1,3 +1,20 @@
+# v9.19.4 (Tue Mar 10 2020)
+
+#### 🐛 Bug Fix
+
+- Only trim exec output if its a string [#1052](https://github.com/intuit/auto/pull/1052) ([@adierkens](https://github.com/adierkens))
+
+#### 📝 Documentation
+
+- add exec plugin to docs [#1051](https://github.com/intuit/auto/pull/1051) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.18.0 (Sat Mar 07 2020)
 
 ### Release Notes

@@ -1,3 +1,15 @@
+# v9.19.4 (Tue Mar 10 2020)
+
+#### 🔩 Dependency Updates
+
+- Bump all-contributors-cli from 6.13.0 to 6.14.0 [#1040](https://github.com/intuit/auto/pull/1040) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.15.7 (Tue Mar 03 2020)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,37 @@
+# v9.19.4 (Tue Mar 10 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/exec`
+  - Only trim exec output if its a string [#1052](https://github.com/intuit/auto/pull/1052) ([@adierkens](https://github.com/adierkens))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 2.20.0 to 2.23.0 [#1050](https://github.com/intuit/auto/pull/1050) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.21.0 to 2.23.0 [#1049](https://github.com/intuit/auto/pull/1049) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.0.7 to 10.0.8 [#1047](https://github.com/intuit/auto/pull/1047) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.8.1 to 23.8.2 [#1043](https://github.com/intuit/auto/pull/1043) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.7.7 to 13.9.0 [#1042](https://github.com/intuit/auto/pull/1042) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @octokit/core from 2.4.0 to 2.4.2 [#1046](https://github.com/intuit/auto/pull/1046) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @types/jest from 24.0.25 to 25.1.4 [#1041](https://github.com/intuit/auto/pull/1041) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.13.0 to 6.14.0 [#1040](https://github.com/intuit/auto/pull/1040) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- add docs for GitHub action branch protection [#1053](https://github.com/intuit/auto/pull/1053) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add exec plugin to docs [#1051](https://github.com/intuit/auto/pull/1051) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.3 (Mon Mar 09 2020)
 
 #### 🐛 Bug Fix

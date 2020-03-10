@@ -1,3 +1,16 @@
+# v9.19.4 (Tue Mar 10 2020)
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/core from 2.4.0 to 2.4.2 [#1046](https://github.com/intuit/auto/pull/1046) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 24.0.25 to 25.1.4 [#1041](https://github.com/intuit/auto/pull/1041) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.19.3 (Mon Mar 09 2020)
 
 #### 🐛 Bug Fix
