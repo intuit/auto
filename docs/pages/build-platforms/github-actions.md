@@ -56,7 +56,26 @@ If you are having problems make sure you have done the following:
 - Any required secrets for plugins are set (e.g. `NPM_TOKEN` with the NPM plugin)
 - Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
 
+### Running With Branch Protection
+
+GitHub actions require a little more setup to use `auto` with branch protection.
+
+```yml
+steps:
+  - uses: actions/checkout@v2
+
+  - name: Prepare repository
+    # Fetch full git history and tags
+    run: git fetch --unshallow --tags
+
+  - name: Unset header
+    # checkout@v2 adds a header that makes branch protection report errors
+    # because the Github action bot is not a collaborator on the repo
+    run: git config --local --unset http.https://github.com/.extraheader
+```
+
 ## Examples
 
+- [`auto-config-hipstersmoothie`](https://github.com/hipstersmoothie/auto-config-hipstersmoothie/blob/07d128afd96ac6a7b0fe3f04313847c0fc3d84a2/.github/workflows/push.yml)
 - [`create-check`](https://github.com/hipstersmoothie/create-check/blob/master/.github/workflows/push.yml)
 - [`octokit-cli`](https://github.com/hipstersmoothie/octokit-cli/blob/master/.github/workflows/push.yml)
