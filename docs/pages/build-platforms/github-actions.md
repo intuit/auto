@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Prepare repository
-        run: git fetch --prune --unshallow
+        run: git fetch --unshallow --tags
 
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
