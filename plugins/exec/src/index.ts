@@ -13,6 +13,12 @@ import { execSync } from 'child_process';
 
 type CommandMap = Record<string, string | undefined>;
 
+function trim(val: string | undefined) {
+  if (typeof val === 'string') {
+    return val.trim();
+  }
+}
+
 /** Convert a "makeHooks" function into an io-ts interface */
 function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
   hookCreatorFn: () => HookObject,
@@ -81,11 +87,17 @@ const tapHook = (name: string, hook: any, command: string) => {
     name === 'renderChangelogAuthorLine'
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) => {
-      const value = execSync(command, {
-        stdio: ['ignore', 'pipe', 'inherit'],
-        encoding: 'utf8',
-        env: createEnv(args)
-      }).trim();
+      const value = trim(
+        execSync(command, {
+          stdio: ['ignore', 'pipe', 'inherit'],
+          encoding: 'utf8',
+          env: createEnv(args)
+        })
+      );
+
+      if (!value) {
+        return;
+      }
 
       if (name !== 'canary') {
         return JSON.parse(value);
@@ -100,11 +112,13 @@ const tapHook = (name: string, hook: any, command: string) => {
     });
   } else if (name === 'omitCommit' || name === 'omitReleaseNotes') {
     hook.tap(`exec ${name}`, (...args: any[]) => {
-      const value = execSync(command, {
-        stdio: ['ignore', 'pipe', 'inherit'],
-        encoding: 'utf8',
-        env: createEnv(args)
-      }).trim();
+      const value = trim(
+        execSync(command, {
+          stdio: ['ignore', 'pipe', 'inherit'],
+          encoding: 'utf8',
+          env: createEnv(args)
+        })
+      );
 
       if (value === 'true') {
         return true;
@@ -118,14 +132,16 @@ const tapHook = (name: string, hook: any, command: string) => {
     name === 'getPreviousVersion'
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) =>
-      execSync(command, {
-        encoding: 'utf8',
-        env: createEnv(args),
-        stdio:
-          name === 'createChangelogTitle' || name === 'getPreviousVersion'
-            ? ['ignore', 'pipe', 'inherit']
-            : 'inherit'
-      }).trim()
+      trim(
+        execSync(command, {
+          encoding: 'utf8',
+          env: createEnv(args),
+          stdio:
+            name === 'createChangelogTitle' || name === 'getPreviousVersion'
+              ? ['ignore', 'pipe', 'inherit']
+              : 'inherit'
+        })
+      )
     );
   }
 };
