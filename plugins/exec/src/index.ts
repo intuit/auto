@@ -13,6 +13,7 @@ import { execSync } from 'child_process';
 
 type CommandMap = Record<string, string | undefined>;
 
+/** Safely trim the value if it's a string */
 function trim(val: string | undefined) {
   if (typeof val === 'string') {
     return val.trim();
