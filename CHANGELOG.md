@@ -1,3 +1,16 @@
+# v9.19.5 (Wed Mar 11 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - fix first time contributor plugin validation [#1055](https://github.com/intuit/auto/pull/1055) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.4 (Tue Mar 10 2020)
 
 #### 🐛 Bug Fix
