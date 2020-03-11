@@ -22,11 +22,7 @@ auto --help
 auto comment --help
 ```
 
-## Enterprise
-
-If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
-
-### Project already published
+### Make "Latest Release"
 
 If your project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
 
@@ -109,14 +105,12 @@ auto create-labels
 
 `auto` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.
 
-#### Quick Setup
+#### Quick Setup (Recommended)
 
-To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool. This tool takes the default `auto` workflow and puts it into one command.
-
-It will:
-
-1. Publish canary releases when run from a PR or locally on any branch other than the `baseBranch`
-2. Generate a changelog and publish a "latest" release to a package manager when run from the `baseBranch`
+To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool.
+This tool runs all commands in the default `auto` workflow and puts it into one meta-command.
+It is context aware and will make different type of releases based on where you run it.
+[Read more here.](./generated/shipit.md)
 
 ```json
 {
@@ -187,3 +181,7 @@ if [ ! -z "$VERSION" ]; then
   auto release
 fi
 ```
+
+## Enterprise
+
+If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
