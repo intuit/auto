@@ -10,7 +10,7 @@ import { URL } from 'url';
  */
 export default class FirstTimeContributorPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'First Time Contributor';
+  name = 'first-time-contributor';
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
