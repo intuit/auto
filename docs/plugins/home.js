@@ -38,6 +38,11 @@ const Divider = ({ style }) => (
   <hr className="mb-8 text-gray-300" style={style} />
 );
 
+const getImageProps = image =>
+  typeof image === 'object'
+    ? { src: image.src.src, srcset: image.src.srcSet }
+    : { src: image };
+
 const Step = ({ number, label, image }) => (
   <div className="flex items-center flex-col lg:flex-row mb-8 w-fit lg:w-full">
     <div className="flex items-center flex-1 pr-4 mb-6 lg:mb-0 self-start lg:self-auto">
@@ -48,7 +53,7 @@ const Step = ({ number, label, image }) => (
     </div>
     <img
       className="lg:flex-1 w-full lg:max-w-lg border border-gray-300 rounded-lg h-auto"
-      src={image}
+      {...getImageProps(image)}
     />
   </div>
 );
@@ -137,7 +142,7 @@ const Home = () => (
 
             <div className="flex-1 px-12 mb-20 lg:mb-0">
               <img
-                src={changelogExampleImage}
+                {...getImageProps(changelogExampleImage)}
                 alt="Changelog example"
                 className="border border-grey-600 rounded-lg p-4 shadow-md"
                 style={{ maxHeight: 500 }}
