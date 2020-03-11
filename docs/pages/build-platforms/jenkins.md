@@ -45,6 +45,11 @@ pipeline {
     stage('Publish') {
         when { branch 'master' }
         steps {
+          // Jenkins will leave you in a detatched HEAD state during builds
+          // Make sure to checkout your baseBranch here or the push will fail!
+          // The error will look like the following:
+          // error: src refspec master does not match any
+          sh 'git checkout master'
           sh 'auto shipit'
         }
     }
