@@ -63,15 +63,13 @@ GitHub actions require a little more setup to use `auto` with branch protection.
 ```yml
 steps:
   - uses: actions/checkout@v2
+    with:
+      # Ensure that git uses your token with write access to the repo
+      token: ${{ secrets.GH_TOKEN }}
 
   - name: Prepare repository
     # Fetch full git history and tags
     run: git fetch --unshallow --tags
-
-  - name: Unset header
-    # checkout@v2 adds a header that makes branch protection report errors
-    # because the Github action bot is not a collaborator on the repo
-    run: git config --local --unset http.https://github.com/.extraheader
 ```
 
 ## Examples
