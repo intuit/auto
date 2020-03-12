@@ -80,7 +80,7 @@ const Home = () => (
         <div className="bg-purple-600 w-full flex justify-center flex-col items-center py-40 text-center">
           <h1 className="text-6xl font-bold text-white">auto</h1>
 
-          <p className="text-2xl text-purple-200 font-light">
+          <p className="text-2xl text-purple-200 font-light mx-4">
             Streamline your release workflow and{' '}
             <span className="text-yellow-500 font-semibold">
               publish constantly!
