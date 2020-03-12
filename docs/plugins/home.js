@@ -112,7 +112,7 @@ const Home = () => (
                 description={
                   <p>
                     Other tools require you to change how any contributor
-                    commits to you project. With <Emphasize>auto</Emphasize>{' '}
+                    commits to your project. With <Emphasize>auto</Emphasize>{' '}
                     leave that baggage behind!
                   </p>
                 }
@@ -136,7 +136,7 @@ const Home = () => (
               <Feature
                 title="Blazingly Fast Releases"
                 icon={faFireAlt}
-                description="Since all you need to worry about are labels you can work at an incredibly fast pace! This speed to commit also helps with new contributors"
+                description="Since all you need to worry about are labels, you can work at an incredibly fast pace! This speed to commit also helps with new contributors."
               />
             </div>
 
@@ -171,7 +171,7 @@ const Home = () => (
           <Step
             number={4}
             image={releaseImage}
-            label="Wait for you continuous integration to make the release for you!"
+            label="Wait for your continuous integration to make the release for you!"
           />
         </div>
 
