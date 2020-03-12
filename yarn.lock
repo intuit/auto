@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.19.3"
+  version "9.19.5"
 
 "@auto-it/core@link:packages/core":
-  version "9.19.3"
+  version "9.19.5"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.2"
@@ -49,7 +49,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.19.3"
+  version "9.19.5"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -66,7 +66,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.19.3"
+  version "9.19.5"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7893,10 +7893,10 @@ iferr@^0.1.5:
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-ignite@1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.11.0.tgz#d6b583d42e88ffdd12d3fd26c6cb7a25951ed0d4"
-  integrity sha512-AuQigoYyZS/CtJs0FYNVGJPPTHOCnY6ujd/oz/MaJW1AfjUILTzQe55CZOWSlMYWqt0tHlSbK9uCjFQGgBrb6w==
+ignite@1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/ignite/-/ignite-1.11.2.tgz#2a83658d77db80ea2d88f5bea23f1b651794c93f"
+  integrity sha512-wrAO7biVcMaEvBm75qzYuc9HUK5GraeSH3nuVpuJtav7VkU/4yVDCrMQ5A1nkyUSlMP+EPoihADO3HCS3PayXg==
   dependencies:
     "@babel/cli" "7.2.0"
     "@babel/core" "7.2.0"
