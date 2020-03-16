@@ -14260,9 +14260,9 @@ tapable@^1.0.0, tapable@^1.1.0:
   integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
 
 tapable@^2.0.0-beta.2:
-  version "2.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.9.tgz#638496fb27b53e69c21a0e6a4435afbe805845cb"
-  integrity sha512-+VBUuZXh+WIHnKOeo+A27SB/1sHTVWozcKweDIAhB/XOGnr8cy6ULZjU+qpGxO/G4xEyWCCaWTX/HPEkGg3Xrg==
+  version "2.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.10.tgz#54a95a1f6be6c65d2d8aa4eda2562325ff6c2a1e"
+  integrity sha512-yLpWrQT5qTw0SWvaJSrFpog+fvrbpfEfHApCKV+hrkE1937WifJf6UP1xonVXqre30pxmANsqm7B3XYQKtvlcw==
 
 tar-stream@^1.5.2:
   version "1.6.2"
