@@ -53,4 +53,9 @@ This plugin will also call the `publish` task with the release version, if confi
 
 ### Configure `snapshotSuffix`
 
-This plugins will use the `snapshotSuffix` in `gradle.properties` or `build.gradle` if configured.
+This plugin will use the `snapshotSuffix` in `gradle.properties` or `build.gradle` if configured.
+
+### Build After Version Bump Automatically
+
+This plugin will allow build to occur in-line for native apps versus libraries.  It
+will do so if `buildDuringRelease` in `gradle.properties` or `build.gradle` is configured.
