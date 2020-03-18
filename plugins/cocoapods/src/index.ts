@@ -1,6 +1,13 @@
-import { Auto, IPlugin, execPromise } from '@auto-it/core';
+import {
+  Auto,
+  IPlugin,
+  execPromise,
+  validatePluginConfiguration
+} from '@auto-it/core';
 
 import { inc, ReleaseType } from 'semver';
+
+import * as t from 'io-ts';
 
 import { getPodspecContents, writePodspecContents } from './utilities';
 
@@ -16,13 +23,18 @@ const versionRegex = /\.version\s*=\s*['|"](?<version>\d+\.\d+\.\d+)['|"]/;
  */
 const logMessage = (msg: string): string => `${logPrefix} ${msg}`;
 
-export interface ICocoapodsPluginOptions {
-  /** path to podspec file */
-  podspecPath: string;
+const required = t.interface({
+  /** Relative path to podspec file */
+  podspecPath: t.string
+});
 
-  /** the Cocoapods repo to publish to */
-  specsRepo?: string;
-}
+const optional = t.partial({
+  /** The Cocoapods repo to publish to */
+  specsRepo: t.string
+});
+
+const pluginOptions = t.intersection([required, optional]);
+export type ICocoapodsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /**
  * Returns the regex'd version of the podspec file
@@ -108,6 +120,17 @@ export default class CocoapodsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
+    auto.hooks.modifyConfig.tap(this.name, (config: any) => {
+      config.noVersionPrefix = true;
+      return config;
+    });
+
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       return auto.prefixRelease(getVersion(this.options.podspecPath));
     });

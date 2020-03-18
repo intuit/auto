@@ -113,6 +113,14 @@ describe('Cocoapods Plugin', () => {
       expect(mock).lastCalledWith(expect.any(String), specWithVersion('0.0.2'));
     });
   });
+  describe('modifyConfig hook', () => {
+    test('should set noVersionPrefix to true', () => {
+      const config = {};
+      expect(hooks.modifyConfig.call(config as any)).toStrictEqual({
+        noVersionPrefix: true
+      });
+    });
+  });
   describe('getPreviousVersion hook', () => {
     test('should get previous version from podspec', async () => {
       mockPodspec(specWithVersion('0.0.1'));

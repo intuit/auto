@@ -1,6 +1,6 @@
 # Cocoapods Plugin
 
-Use auto to version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+Use `auto` to version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
 
 ## Installation
 
@@ -27,10 +27,7 @@ yarn add -D @auto-it/cocoapods
       }
     ]
     // other plugins
-  ],
-  // THIS IS REQUIRED
-  // Cocoapods cannot work with tags in the format v1.0.0
-  "noVersionPrefix": true
+  ]
 }
 ```
 
@@ -41,10 +38,6 @@ yarn add -D @auto-it/cocoapods
 - The machine running this plugin must have the [Cocoapods](https://cocoapods.org/) `pod` CLI installed already.
 
 - Your `podspec` file must pass `pod lib lint` in order for publishing to a Specs repository to work.
-
-### Versioning
-
-[Cocoapods](https://cocoapods.org/) does not work with the version prefix of `v1.0.0` so all versions must be the plain semver number (`1.0.0`). You are required to set the `noVersionPrefix` setting in your auto configuration.
 
 ### Pushing to the Cocoapods Trunk
 
