@@ -58,6 +58,9 @@
     },
     {
       "path": "plugins/exec"
+    },
+    {
+      "path": "plugins/cocoapods"
     }
   ]
 }

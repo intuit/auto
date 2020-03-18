@@ -486,7 +486,7 @@ export default class Auto {
     }
 
     const config = {
-      ...userConfig,
+      ...this.config,
       // This Line overrides config with args
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...omit(this.options, ['_command', '_all', 'main'] as any),
