@@ -43,6 +43,7 @@ Package Manager Plugins
 
 - [Chrome Web Store](../plugins/chrome/README.md)
 - [Crates](../plugins/crates/README.md)
+- [Cocoapod](../plugins/cocoapods/README.md)
 - [Git Tag](../plugins/git-tag/README.md)
 - [Gradle](../plugins/gradle/README.md)
 - [Maven](../plugins/maven/README.md)
