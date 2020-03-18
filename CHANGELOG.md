@@ -1,3 +1,37 @@
+# v9.20.0 (Wed Mar 18 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Harris Borawski ([@hborawski](https://github.com/hborawski)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/cocoapods`
+  - Cocoapods plugin [#1066](https://github.com/intuit/auto/pull/1066) ([@hborawski](https://github.com/hborawski) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump tapable from 2.0.0-beta.9 to 2.0.0-beta.10 [#1063](https://github.com/intuit/auto/pull/1063) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 22.0.0 to 22.0.1 [#1064](https://github.com/intuit/auto/pull/1064) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump acorn from 6.1.1 to 6.4.1 [#1062](https://github.com/intuit/auto/pull/1062) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- grammer [#1061](https://github.com/intuit/auto/pull/1061) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix some docs bugs [#1060](https://github.com/intuit/auto/pull/1060) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix homepage images [#1059](https://github.com/intuit/auto/pull/1059) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update github-actions.md [#1058](https://github.com/intuit/auto/pull/1058) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- refresh home page [#1057](https://github.com/intuit/auto/pull/1057) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update jenkins.md [#1056](https://github.com/intuit/auto/pull/1056) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.19.5 (Wed Mar 11 2020)
 
 #### 🐛 Bug Fix
