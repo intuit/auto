@@ -78,6 +78,30 @@ describe('Gradle Plugin', () => {
       ]);
     });
 
+    test('should version release - major version - w/build', async () => {
+      const properties = `
+        version: 1.0.0
+        buildDuringRelease: true
+      `;
+
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      mockProperties(properties).mockImplementation(spy);
+
+      await hooks.version.promise(Auto.SEMVER.major);
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
+        'release',
+        '-Prelease.useAutomaticVersion=true',
+        `-Prelease.newVersion=2.0.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
+      ]);
+    }); 
+
     test('should version release - minor version', async () => {
       const properties = 'version: 1.1.0';
       mockProperties(properties);
@@ -116,7 +140,8 @@ describe('Gradle Plugin', () => {
       const properties = `
       version: 1.0.0.SNAP
       snapshotSuffix: .SNAP
-    `;
+      `;
+
       mockProperties(properties);
       await hooks.beforeRun.promise({} as any);
 
