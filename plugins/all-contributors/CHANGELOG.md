@@ -1,3 +1,15 @@
+# v9.20.1 (Thu Mar 19 2020)
+
+#### 🐛 Bug Fix
+
+- All contributors bug [#1070](https://github.com/intuit/auto/pull/1070) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.19.4 (Tue Mar 10 2020)
 
 #### 🔩 Dependency Updates

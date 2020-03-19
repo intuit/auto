@@ -1,3 +1,20 @@
+# v9.20.1 (Thu Mar 19 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - All contributors bug [#1070](https://github.com/intuit/auto/pull/1070) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- add Cocoapod to docs [#1068](https://github.com/intuit/auto/pull/1068) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.20.0 (Wed Mar 18 2020)
 
 :tada: This release contains work from a new contributor! :tada:
