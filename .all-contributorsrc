@@ -217,6 +217,17 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "hborawski",
+      "name": "Harris Borawski",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1325154?v=4",
+      "profile": "https://github.com/hborawski",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
