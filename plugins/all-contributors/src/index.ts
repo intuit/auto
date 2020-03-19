@@ -229,12 +229,8 @@ export default class AllContributorsPlugin implements IPlugin {
           return isMatch;
         })
         .forEach(contribution => {
-          authors.forEach(({ username, hash }) => {
+          authors.forEach(({ username }) => {
             if (!username) {
-              return;
-            }
-
-            if (commit.hash !== hash) {
               return;
             }
 
