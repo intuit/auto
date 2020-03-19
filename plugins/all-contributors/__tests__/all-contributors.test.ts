@@ -266,6 +266,42 @@ describe('All Contributors Plugin', () => {
     );
   });
 
+  test('should include sub-commit contributors', async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+    mockRead(
+      '{ "contributors": [ { "login": "Jeff", "contributions": ["infra"] } ] }'
+    );
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: '0.0.0',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        {
+          subject: 'Do the thing',
+          hash: '123',
+          labels: [],
+          files: ['src/index.ts'],
+          authors: [
+            { username: 'Jeff', hash: '123' },
+            { username: 'Adam', hash: '456' }
+          ]
+        }
+      ]
+    });
+
+    expect(exec.mock.calls[0][0]).toBe(
+      'npx all-contributors-cli add Jeff infra,code'
+    );
+    expect(exec.mock.calls[1][0]).toBe(
+      'npx all-contributors-cli add Adam code'
+    );
+  });
+
   test('should not update if no new contribution types', async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
