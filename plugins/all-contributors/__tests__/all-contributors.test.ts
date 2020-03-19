@@ -12,7 +12,7 @@ const gitShow = jest.fn();
 const getLernaPackages = jest.fn();
 
 getLernaPackages.mockReturnValue(Promise.resolve([]));
-gitShow.mockReturnValue('');
+gitShow.mockReturnValue(Promise.resolve(''));
 exec.mockReturnValue('');
 
 jest.mock('child_process');
@@ -133,7 +133,7 @@ describe('All Contributors Plugin', () => {
           subject: 'Do the thing',
           hash: '123',
           labels: [],
-          files: [],
+          files: ['src/index.ts'],
           authors: [{ username: 'Jeff', hash: '123' }]
         }
       ]
