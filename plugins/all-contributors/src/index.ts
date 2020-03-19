@@ -124,21 +124,14 @@ export default class AllContributorsPlugin implements IPlugin {
     auto.hooks.afterAddToChangelog.tapPromise(
       this.name,
       async ({ commits }) => {
-        await this.updateContributors(auto, commits);
         const rootDir = process.cwd();
-
-        let packages: {
-          /** name of the package to manage contributors in */
-          name: string;
-          /** path to the package */
-          path: string;
-        }[];
+        // Always do the root package
+        let packages = [{ path: rootDir, name: 'root-package' }];
 
         try {
-          packages = await getLernaPackages();
-        } catch (error) {
-          packages = [{ path: rootDir, name: 'single-package' }];
-        }
+          // Try to get sub-packages
+          packages = [...packages, ...(await getLernaPackages())];
+        } catch (error) {}
 
         // Cannot run git operations in parallel
         await packages.reduce(async (last, { name, path }) => {
@@ -229,12 +222,8 @@ export default class AllContributorsPlugin implements IPlugin {
           return isMatch;
         })
         .forEach(contribution => {
-          authors.forEach(({ username, hash }) => {
+          authors.forEach(({ username }) => {
             if (!username) {
-              return;
-            }
-
-            if (commit.hash !== hash) {
               return;
             }
 

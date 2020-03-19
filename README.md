@@ -212,6 +212,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="http://www.jeremiahzucker.com"><img src="https://avatars1.githubusercontent.com/u/9255651?v=4" width="100px;" alt=""/><br /><sub><b>Jeremiah Zucker</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sugarmanz" title="Documentation">📖</a></td>
     <td align="center"><a href="https://www.unconfinedsoftware.com/"><img src="https://avatars2.githubusercontent.com/u/13172697?v=4" width="100px;" alt=""/><br /><sub><b>Brandon Miller</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=unknownerror404" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=unknownerror404" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/hborawski"><img src="https://avatars1.githubusercontent.com/u/1325154?v=4" width="100px;" alt=""/><br /><sub><b>Harris Borawski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hborawski" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
