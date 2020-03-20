@@ -215,7 +215,8 @@
       "profile": "https://www.unconfinedsoftware.com/",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "test"
       ]
     },
     {
