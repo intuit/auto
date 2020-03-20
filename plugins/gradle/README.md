@@ -57,5 +57,4 @@ This plugin will use the `snapshotSuffix` in `gradle.properties` or `build.gradl
 
 ### Build After Version Bump Automatically
 
-This plugin will allow build to occur in-line for native apps versus libraries.  It
-will do so if `buildDuringRelease` in `gradle.properties` or `build.gradle` is configured.
+This plugin will run a release build to create release artifacts.
