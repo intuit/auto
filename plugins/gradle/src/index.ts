@@ -100,7 +100,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private updateGradleVersion = async (
     version: string,
     commitMsg?: string,
-    buildFlag: boolean = true
+    buildFlag = true
   ) => {
     if (buildFlag) {
       // don't create release, tag, or commit since auto will do this
