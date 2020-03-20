@@ -55,9 +55,12 @@ describe('Gradle Plugin', () => {
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.newVersion=1.0.1`
+        `-Prelease.newVersion=1.0.1`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
       ]);
     });
 
@@ -72,9 +75,33 @@ describe('Gradle Plugin', () => {
       await hooks.version.promise(Auto.SEMVER.major);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.newVersion=2.0.0`
+        `-Prelease.newVersion=2.0.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
+      ]);
+    });
+
+    test('should version release - major version - w/build', async () => {
+      const properties = `version: 1.0.0`;
+
+      mockProperties(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      mockProperties(properties).mockImplementation(spy);
+
+      await hooks.version.promise(Auto.SEMVER.major);
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
+        'release',
+        '-Prelease.useAutomaticVersion=true',
+        `-Prelease.newVersion=2.0.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
       ]);
     });
 
@@ -89,9 +116,12 @@ describe('Gradle Plugin', () => {
       await hooks.version.promise(Auto.SEMVER.minor);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.newVersion=1.2.0`
+        `-Prelease.newVersion=1.2.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
       ]);
     });
 
@@ -106,9 +136,12 @@ describe('Gradle Plugin', () => {
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.newVersion=1.0.0`
+        `-Prelease.newVersion=1.0.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
       ]);
     });
 
@@ -116,7 +149,8 @@ describe('Gradle Plugin', () => {
       const properties = `
       version: 1.0.0.SNAP
       snapshotSuffix: .SNAP
-    `;
+      `;
+
       mockProperties(properties);
       await hooks.beforeRun.promise({} as any);
 
@@ -126,9 +160,12 @@ describe('Gradle Plugin', () => {
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradle'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
-        `-Prelease.newVersion=1.0.0`
+        `-Prelease.newVersion=1.0.0`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion'
       ]);
     });
   });
@@ -158,9 +195,12 @@ describe('Gradle Plugin - Custom Command', () => {
       await hooks.version.promise(Auto.SEMVER.patch);
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching('gradlew'), [
-        'updateVersion',
+        'release',
         '-Prelease.useAutomaticVersion=true',
         `-Prelease.newVersion=1.0.1`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion',
         '-P prop=val'
       ]);
     });

@@ -82,6 +82,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** cached properties */
   private properties: IGradleProperties = {};
+
   /** should this release be a snapshot release */
   private snapshotRelease = false;
 
@@ -96,13 +97,30 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   }
 
   /** update gradle version and commit */
-  private updateGradleVersion = async (version: string, commitMsg?: string) => {
-    await execPromise(this.options.gradleCommand, [
-      'updateVersion',
-      '-Prelease.useAutomaticVersion=true',
-      `-Prelease.newVersion=${version}`,
-      ...this.options.gradleOptions
-    ]);
+  private updateGradleVersion = async (
+    version: string,
+    commitMsg?: string,
+    buildFlag = true
+  ) => {
+    if (buildFlag) {
+      // don't create release, tag, or commit since auto will do this
+      await execPromise(this.options.gradleCommand, [
+        'release',
+        '-Prelease.useAutomaticVersion=true',
+        `-Prelease.newVersion=${version}`,
+        '-x createReleaseTag',
+        '-x preTagCommit',
+        '-x commitNewVersion',
+        ...this.options.gradleOptions
+      ]);
+    } else {
+      await execPromise(this.options.gradleCommand, [
+        'updateVersion',
+        '-Prelease.useAutomaticVersion=true',
+        `-Prelease.newVersion=${version}`,
+        ...this.options.gradleOptions
+      ]);
+    }
 
     await execPromise('git', [
       'commit',
@@ -211,7 +229,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
       await this.updateGradleVersion(
         newVersion,
-        `prepare snapshot version: ${newVersion} [skip ci]`
+        `prepare snapshot version: ${newVersion} [skip ci]`,
+        false
       );
 
       await execPromise('git', [
