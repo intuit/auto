@@ -1,3 +1,20 @@
+# v9.21.0 (Fri Mar 20 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Shelby Cohen ([@ShelbyCohen](https://github.com/ShelbyCohen)), for all your work!
+
+#### 🚀 Enhancement
+
+- Re-introduce `build` option back, but make it configurable so that [#1067](https://github.com/intuit/auto/pull/1067) ([@unknownerror404](https://github.com/unknownerror404) [@ShelbyCohen](https://github.com/ShelbyCohen))
+
+#### Authors: 2
+
+- Brandon Miller ([@unknownerror404](https://github.com/unknownerror404))
+- Shelby Cohen ([@ShelbyCohen](https://github.com/ShelbyCohen))
+
+---
+
 # v9.19.0 (Sat Mar 07 2020)
 
 ### Release Notes
