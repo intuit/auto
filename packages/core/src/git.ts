@@ -774,6 +774,7 @@ export default class Git {
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
+      name: tag,
       body: releaseNotes,
       prerelease,
     });
