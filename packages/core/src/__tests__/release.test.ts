@@ -3,7 +3,7 @@ import LogParse from '../log-parse';
 import Release, {
   defaultLabels,
   getVersionMap,
-  ILabelDefinition
+  ILabelDefinition,
 } from '../release';
 import SEMVER from '../semver';
 import { dummyLog } from '../utils/logger';
@@ -45,11 +45,11 @@ const getCommitDate = jest.fn();
 const getFirstCommit = jest.fn();
 
 getProject.mockResolvedValue({
-  html_url: 'https://github.com/web/site'
+  html_url: 'https://github.com/web/site',
 });
 
 const mockLabels = (labels: string[]) => ({
-  data: { labels: labels.map(label => ({ name: label })), user: {} }
+  data: { labels: labels.map((label) => ({ name: label })), user: {} },
 });
 
 // @ts-ignore
@@ -105,14 +105,14 @@ jest.mock('fs', () => ({
   readFile: (a, b, cb) => {
     cb(undefined, readResult);
   },
-  ReadStream: function() {},
-  WriteStream: function() {},
+  ReadStream: function () {},
+  WriteStream: function () {},
   // @ts-ignore
   closeSync: () => undefined,
   // @ts-ignore
   writeFile: (file, data, cb) => {
     cb(undefined, writeSpy(file, data));
-  }
+  },
 }));
 
 const logParse = new LogParse();
@@ -120,7 +120,7 @@ const git = new Git({
   owner: 'Andrew',
   repo: 'test',
   token: 'MY_TOKEN',
-  baseBranch: 'master'
+  baseBranch: 'master',
 });
 
 describe('getVersionMap', () => {
@@ -132,7 +132,7 @@ describe('getVersionMap', () => {
         ['patch', ['patch']],
         ['skip', ['skip-release']],
         ['release', ['release']],
-        ['none', ['internal', 'documentation']]
+        ['none', ['internal', 'documentation']],
       ])
     );
   });
@@ -141,7 +141,7 @@ describe('getVersionMap', () => {
     expect(
       getVersionMap([
         { name: 'major', releaseType: SEMVER.major },
-        { name: 'BREAKING', releaseType: SEMVER.major }
+        { name: 'BREAKING', releaseType: SEMVER.major },
       ])
     ).toStrictEqual(new Map([['major', ['major', 'BREAKING']]]));
   });
@@ -170,7 +170,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second'),
-        makeCommitFromMsg('Third')
+        makeCommitFromMsg('Third'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -183,13 +183,13 @@ describe('Release', () => {
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
-          email: 'andrew@users.noreply.github.com'
+          email: 'andrew@users.noreply.github.com',
         }),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
-          email: 'lisowski54@gmail.com'
+          email: 'lisowski54@gmail.com',
         }),
-        makeCommitFromMsg('Third')
+        makeCommitFromMsg('Third'),
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
@@ -197,26 +197,26 @@ describe('Release', () => {
         Promise.resolve([
           {
             author: {
-              login: 'andrew'
-            }
-          }
+              login: 'andrew',
+            },
+          },
         ])
       );
 
       getCommit.mockReturnValueOnce(
         Promise.resolve({ data: { author: { login: 'adam' } } })
       );
-      getUserByUsername.mockImplementation(username => {
+      getUserByUsername.mockImplementation((username) => {
         if (username === 'andrew') {
           return {
             login: 'andrew',
-            name: 'Andrew Lisowski'
+            name: 'Andrew Lisowski',
           };
         }
 
         return {
           login: 'adam',
-          name: 'Adam Dierkens'
+          name: 'Adam Dierkens',
         };
       });
 
@@ -231,9 +231,9 @@ describe('Release', () => {
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second (#123)', {
           name: 'Andrew Lisowski',
-          email: 'lisowski54@gmail.com'
+          email: 'lisowski54@gmail.com',
         }),
-        makeCommitFromMsg('Third')
+        makeCommitFromMsg('Third'),
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
@@ -241,9 +241,9 @@ describe('Release', () => {
         Promise.resolve([
           {
             author: {
-              login: 'andrew'
-            }
-          }
+              login: 'andrew',
+            },
+          },
         ])
       );
 
@@ -254,24 +254,24 @@ describe('Release', () => {
       getCommit.mockReturnValueOnce(
         Promise.resolve({ data: { author: { login: 'adam' } } })
       );
-      getUserByUsername.mockImplementation(username => {
+      getUserByUsername.mockImplementation((username) => {
         if (username === 'andrew') {
           return {
             login: 'andrew',
-            name: 'Andrew Lisowski'
+            name: 'Andrew Lisowski',
           };
         }
 
         return {
           login: 'adam',
-          name: 'Adam Dierkens'
+          name: 'Adam Dierkens',
         };
       });
 
       const gh = new Release(git);
-      gh.hooks.onCreateLogParse.tap('test', parser => {
-        parser.hooks.omitCommit.tap('test', commit =>
-          Boolean(commit.authors.find(author => author.username === 'adam'))
+      gh.hooks.onCreateLogParse.tap('test', (parser) => {
+        parser.hooks.omitCommit.tap('test', (commit) =>
+          Boolean(commit.authors.find((author) => author.username === 'adam'))
         );
       });
       const modifiedCommits = await gh.getCommits('12345', '1234');
@@ -283,7 +283,7 @@ describe('Release', () => {
 
       getLatestReleaseInfo.mockReturnValueOnce({});
       const commits = await logParse.normalizeCommits([
-        makeCommitFromMsg('Second (#123)')
+        makeCommitFromMsg('Second (#123)'),
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
@@ -295,28 +295,28 @@ describe('Release', () => {
       const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({
-        published_at: '2019-01-16'
+        published_at: '2019-01-16',
       });
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
       getPullRequest.mockReturnValueOnce({
         data: {
           number: 123,
           merge_commit_sha: '1a2b',
-          labels: [{ name: 'skip-release' }, { name: 'minor' }]
-        }
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+        },
       });
       getGitLog.mockReturnValueOnce(
         await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was rebased', {
-            hash: '1a2b'
-          })
+            hash: '1a2b',
+          }),
         ])
       );
       getUserByUsername.mockImplementationOnce(() => {
         return {
           login: 'adam',
-          name: 'Adam Dierkens'
+          name: 'Adam Dierkens',
         };
       });
 
@@ -335,21 +335,21 @@ describe('Release', () => {
         data: {
           number: 123,
           merge_commit_sha: '1a2b',
-          labels: [{ name: 'skip-release' }, { name: 'minor' }]
-        }
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+        },
       });
       getGitLog.mockReturnValueOnce(
         await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was rebased', {
-            hash: '1a2b'
-          })
+            hash: '1a2b',
+          }),
         ])
       );
       getUserByUsername.mockImplementationOnce(() => {
         return {
           login: 'adam',
-          name: 'Adam Dierkens'
+          name: 'Adam Dierkens',
         };
       });
 
@@ -361,29 +361,29 @@ describe('Release', () => {
 
       jest.spyOn(console, 'log').mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
-        published_at: '2019-01-16'
+        published_at: '2019-01-16',
       });
       searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
       getPullRequest.mockReturnValueOnce({
         data: {
           number: 123,
           merge_commit_sha: '1a2b',
-          labels: [{ name: 'skip-release' }, { name: 'minor' }]
-        }
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+        },
       });
       getGitLog.mockReturnValueOnce(
         await logParse.normalizeCommits([
           makeCommitFromMsg('Feature (#124)'),
           makeCommitFromMsg('I was released previously', {
-            hash: '1a2b'
-          })
+            hash: '1a2b',
+          }),
         ])
       );
       exec.mockReturnValueOnce('0');
       exec.mockImplementationOnce(() => {
         throw new Error();
       });
-      
+
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
     });
 
@@ -395,26 +395,57 @@ describe('Release', () => {
           number: 124,
           merge_commit_sha: '1a2b',
           labels: [{ name: 'skip-release' }, { name: 'minor' }],
-          user: {login: 'renovate'}
-        }
-      }
+          user: { login: 'renovate' },
+        },
+      };
 
       getLatestReleaseInfo.mockReturnValueOnce({
-        published_at: '2019-01-16'
+        published_at: '2019-01-16',
       });
       searchRepo.mockReturnValueOnce({ items: [{ number: 124 }] });
       getPullRequest.mockReturnValueOnce(info);
       getGitLog.mockReturnValueOnce(
-        await logParse.normalizeCommits([
-          makeCommitFromMsg('Feature (#124)')
-        ])
+        await logParse.normalizeCommits([makeCommitFromMsg('Feature (#124)')])
       );
-      getPr.mockReturnValueOnce(Promise.resolve(info))
+      getPr.mockReturnValueOnce(Promise.resolve(info));
       getUserByUsername.mockReturnValueOnce({
         name: 'Renovate',
         email: 'renovate@automation.com',
-        login: 'renovate'
-      })
+        login: 'renovate',
+      });
+      exec.mockReturnValueOnce('1');
+
+      expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
+    });
+
+    test('should use latest title of PR', async () => {
+      const gh = new Release(git);
+
+      const info = {
+        data: {
+          number: 124,
+          merge_commit_sha: '1a2b',
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+          user: { login: 'renovate' },
+          title: 'Updated Title',
+        },
+      };
+
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: '2019-01-16',
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 124 }] });
+      getPullRequest.mockReturnValueOnce(info);
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([makeCommitFromMsg('Feature (#124)')])
+      );
+      getPr.mockReturnValueOnce(Promise.resolve(info));
+      getUserByUsername.mockImplementationOnce(() => {
+        return {
+          login: 'adam',
+          name: 'Adam Dierkens',
+        };
+      });
       exec.mockReturnValueOnce('1');
 
       expect(await gh.getCommits('12345', '1234')).toMatchSnapshot();
@@ -445,7 +476,7 @@ describe('Release', () => {
         noVersionPrefix: true,
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       await gh.addToChangelog('# My new Notes', '1.0.0', '1.0.0');
 
@@ -489,10 +520,10 @@ describe('Release', () => {
           authors: [
             {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
+              email: 'adam@dierkens.com',
+            },
           ],
-          subject: 'I should be included\nBut this should not.'
+          subject: 'I should be included\nBut this should not.',
         },
         {
           hash: '2',
@@ -501,13 +532,13 @@ describe('Release', () => {
           authors: [
             {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
+              email: 'adam@dierkens.com',
+            },
           ],
           subject: 'First Feature',
           pullRequest: {
-            number: '1235'
-          }
+            number: '1235',
+          },
         },
         {
           hash: '3',
@@ -516,11 +547,11 @@ describe('Release', () => {
           authors: [
             {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
+              email: 'adam@dierkens.com',
+            },
           ],
-          subject: 'Random Commit for pr 1235'
-        }
+          subject: 'Random Commit for pr 1235',
+        },
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -528,7 +559,7 @@ describe('Release', () => {
       getPr.mockReturnValueOnce(Promise.resolve(mockLabels(['minor'])));
       getCommitsForPR.mockReturnValueOnce(Promise.resolve([{ sha: '3' }]));
       graphql.mockReturnValueOnce({
-        hash_1: { edges: [] }
+        hash_1: { edges: [] },
       });
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
@@ -543,20 +574,20 @@ describe('Release', () => {
           authors: [],
           subject: 'I have a login attached',
           pullRequest: {
-            number: '1235'
-          }
-        }
+            number: '1235',
+          },
+        },
       ];
 
       getGitLog.mockReturnValueOnce(commits);
       getPr.mockReturnValueOnce(
         Promise.resolve({
-          data: { labels: [], user: { login: 'adierkens' } }
+          data: { labels: [], user: { login: 'adierkens' } },
         })
       );
       getUserByUsername.mockReturnValueOnce({
         login: 'adierkens',
-        name: 'Adam Dierkens'
+        name: 'Adam Dierkens',
       });
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
@@ -569,7 +600,7 @@ describe('Release', () => {
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
         makeCommitFromMsg('Third (#1236)'),
-        makeCommitFromMsg('Fourth (#1237)')
+        makeCommitFromMsg('Fourth (#1237)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -587,7 +618,7 @@ describe('Release', () => {
       const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({
-        published_at: '2019-01-16'
+        published_at: '2019-01-16',
       });
       getCommitsForPR.mockReturnValueOnce(Promise.resolve(undefined));
       // Rebased PR will have different commit SHAs than the commits in base branch
@@ -599,23 +630,23 @@ describe('Release', () => {
         data: {
           number: 123,
           merge_commit_sha: '1a2b',
-          labels: [{ name: 'skip-release' }, { name: 'minor' }]
-        }
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+        },
       });
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg('Feature (#124)'),
         makeCommitFromMsg('I was rebased\n\n', {
-          hash: '1a2b'
+          hash: '1a2b',
         }),
         {
           hash: '1',
           authorName: 'Adam Dierkens',
           authorEmail: 'adam@dierkens.com',
-          subject: 'I am a commit to master'
-        }
+          subject: 'I am a commit to master',
+        },
       ]);
       graphql.mockReturnValueOnce({
-        hash_1: { edges: [] }
+        hash_1: { edges: [] },
       });
 
       expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
@@ -625,7 +656,7 @@ describe('Release', () => {
       const gh = new Release(git);
 
       getLatestReleaseInfo.mockReturnValueOnce({
-        published_at: '2019-01-16'
+        published_at: '2019-01-16',
       });
       getCommitsForPR.mockReturnValueOnce(Promise.resolve(undefined));
       // Rebased PR will have different commit SHAs than the commits in base branch
@@ -637,8 +668,8 @@ describe('Release', () => {
         data: {
           number: 123,
           merge_commit_sha: '1a2b',
-          labels: [{ name: 'skip-release' }, { name: 'minor' }]
-        }
+          labels: [{ name: 'skip-release' }, { name: 'minor' }],
+        },
       });
       getGitLog.mockReturnValueOnce(
         await logParse.normalizeCommits([
@@ -648,13 +679,13 @@ describe('Release', () => {
             files: [],
             authorName: 'Adam Dierkens',
             authorEmail: 'adam@dierkens.com',
-            subject: 'I am a commit with a related PR'
-          }
+            subject: 'I am a commit with a related PR',
+          },
         ])
       );
       searchRepo.mockReturnValueOnce({
         total_count: 1,
-        items: [{ labels: [{ name: 'patch' }] }]
+        items: [{ labels: [{ name: 'patch' }] }],
       });
 
       expect(await gh.generateReleaseNotes('12345', '1234')).toMatchSnapshot();
@@ -665,25 +696,25 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg('Doom Patrol enabled', {
-          hash: '1'
+          hash: '1',
         }),
         makeCommitFromMsg('Autobots roll out!', {
-          hash: '2'
-        })
+          hash: '2',
+        }),
       ]);
 
       graphql.mockReturnValueOnce({
         hash_1: {
           edges: [
-            { node: { labels: { edges: [{ node: { name: 'major' } }] } } }
-          ]
-        }
+            { node: { labels: { edges: [{ node: { name: 'major' } }] } } },
+          ],
+        },
       });
       // PR with no label, should become patch
       graphql.mockReturnValueOnce({
         hash_2: {
-          edges: [{ node: { labels: undefined } }]
-        }
+          edges: [{ node: { labels: undefined } }],
+        },
       });
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
@@ -694,11 +725,11 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg('Doom Patrol enabled', {
-          hash: '1'
+          hash: '1',
         }),
         makeCommitFromMsg('Autobots roll out!', {
-          hash: '2'
-        })
+          hash: '2',
+        }),
       ]);
 
       graphql.mockReturnValueOnce({
@@ -707,18 +738,18 @@ describe('Release', () => {
             {
               node: {
                 labels: {
-                  edges: [{ node: { name: 'major', state: 'CLOSED' } }]
-                }
-              }
-            }
-          ]
-        }
+                  edges: [{ node: { name: 'major', state: 'CLOSED' } }],
+                },
+              },
+            },
+          ],
+        },
       });
       // PR with no label, should become patch
       graphql.mockReturnValueOnce({
         hash_2: {
-          edges: [{ node: { labels: undefined } }]
-        }
+          edges: [{ node: { labels: undefined } }],
+        },
       });
 
       expect(await gh.generateReleaseNotes('1234', '123')).toMatchSnapshot();
@@ -729,14 +760,14 @@ describe('Release', () => {
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg('Doom (#12343)', {
-          hash: '1'
+          hash: '1',
         }),
         makeCommitFromMsg('Dino (#1235)', {
-          hash: '2'
+          hash: '2',
         }),
         makeCommitFromMsg('Foo Bar', {
-          hash: '3'
-        })
+          hash: '3',
+        }),
       ]);
       getCommitsForPR.mockReturnValue(
         Promise.resolve([
@@ -745,9 +776,9 @@ describe('Release', () => {
             commit: {},
             author: {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
-          }
+              email: 'adam@dierkens.com',
+            },
+          },
         ])
       );
       getCommitsForPR.mockReturnValue(
@@ -757,9 +788,9 @@ describe('Release', () => {
             commit: {},
             author: {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
-          }
+              email: 'adam@dierkens.com',
+            },
+          },
         ])
       );
       getCommitsForPR.mockReturnValue(
@@ -769,9 +800,9 @@ describe('Release', () => {
             commit: {},
             author: {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
-          }
+              email: 'adam@dierkens.com',
+            },
+          },
         ])
       );
       getCommitsForPR.mockReturnValue(
@@ -781,9 +812,9 @@ describe('Release', () => {
             commit: {},
             author: {
               name: 'Adam Dierkens',
-              email: 'adam@dierkens.com'
-            }
-          }
+              email: 'adam@dierkens.com',
+            },
+          },
         ])
       );
 
@@ -795,7 +826,7 @@ describe('Release', () => {
 
       const commits = await logParse.normalizeCommits([
         makeCommitFromMsg('First'),
-        makeCommitFromMsg('Second (#123)')
+        makeCommitFromMsg('Second (#123)'),
       ]);
 
       getGitLog.mockReturnValueOnce(commits);
@@ -816,7 +847,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First'),
         makeCommitFromMsg('Second'),
-        makeCommitFromMsg('Third')
+        makeCommitFromMsg('Third'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -829,7 +860,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second'),
-        makeCommitFromMsg('Third')
+        makeCommitFromMsg('Third'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -843,7 +874,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -865,7 +896,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -885,7 +916,7 @@ describe('Release', () => {
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -901,12 +932,12 @@ describe('Release', () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -922,12 +953,12 @@ describe('Release', () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       getGitLog.mockReturnValueOnce(commits);
@@ -946,19 +977,19 @@ describe('Release', () => {
         { name: 'Version: Major', releaseType: SEMVER.major },
         { name: 'Version: Minor', releaseType: SEMVER.minor },
         { name: 'Version: Patch', releaseType: SEMVER.patch },
-        { name: 'Deploy', releaseType: 'release' }
+        { name: 'Deploy', releaseType: 'release' },
       ] as ILabelDefinition[];
 
       const gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ['next'],
         labels: customLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       const commits = [
         makeCommitFromMsg('First (#1234)'),
         makeCommitFromMsg('Second (#1235)'),
-        makeCommitFromMsg('Third (#1236)')
+        makeCommitFromMsg('Third (#1236)'),
       ];
 
       // Test default labels do nothing
@@ -996,7 +1027,7 @@ describe('Release', () => {
       const customLabels: ILabelDefinition[] = [
         { name: '1', description: 'major', releaseType: SEMVER.major },
         { name: '2', description: 'minor', releaseType: SEMVER.minor },
-        { name: '3', description: 'patch', releaseType: SEMVER.patch }
+        { name: '3', description: 'patch', releaseType: SEMVER.patch },
       ];
 
       await gh.addLabelsToProject(customLabels);
@@ -1004,17 +1035,17 @@ describe('Release', () => {
       expect(createLabel).toHaveBeenCalledWith({
         name: '1',
         description: 'major',
-        releaseType: SEMVER.major
+        releaseType: SEMVER.major,
       });
       expect(createLabel).toHaveBeenCalledWith({
         name: '2',
         description: 'minor',
-        releaseType: SEMVER.minor
+        releaseType: SEMVER.minor,
       });
       expect(createLabel).toHaveBeenCalledWith({
         name: '3',
         description: 'patch',
-        releaseType: SEMVER.patch
+        releaseType: SEMVER.patch,
       });
     });
 
@@ -1027,13 +1058,13 @@ describe('Release', () => {
         {
           prereleaseBranches: ['next'],
           labels: defaultLabels,
-          baseBranch: 'master'
+          baseBranch: 'master',
         },
         mockLogger
       );
 
       const labels: ILabelDefinition[] = [
-        { name: '3', description: 'three', releaseType: SEMVER.patch }
+        { name: '3', description: 'three', releaseType: SEMVER.patch },
       ];
 
       await gh.addLabelsToProject(labels);
@@ -1048,7 +1079,7 @@ describe('Release', () => {
       const gh = new Release(git);
       const labels: ILabelDefinition[] = [
         { name: '1', description: 'major', releaseType: SEMVER.major },
-        { name: '2', description: 'minor', releaseType: SEMVER.minor }
+        { name: '2', description: 'minor', releaseType: SEMVER.minor },
       ];
 
       getProjectLabels.mockReturnValueOnce(['1']);
@@ -1057,12 +1088,12 @@ describe('Release', () => {
       expect(updateLabel).toHaveBeenCalledWith({
         name: '1',
         description: 'major',
-        releaseType: SEMVER.major
+        releaseType: SEMVER.major,
       });
       expect(createLabel).toHaveBeenCalledWith({
         description: 'minor',
         name: '2',
-        releaseType: SEMVER.minor
+        releaseType: SEMVER.minor,
       });
     });
 
@@ -1070,7 +1101,7 @@ describe('Release', () => {
       const gh = new Release(git);
       const labels: ILabelDefinition[] = [
         { name: 'major', description: '', releaseType: SEMVER.major },
-        { name: 'Minor', description: '', releaseType: SEMVER.minor }
+        { name: 'Minor', description: '', releaseType: SEMVER.minor },
       ];
 
       getProjectLabels.mockReturnValueOnce(['Major', 'minor']);
@@ -1079,12 +1110,12 @@ describe('Release', () => {
       expect(updateLabel).toHaveBeenCalledWith({
         name: 'major',
         description: '',
-        releaseType: SEMVER.major
+        releaseType: SEMVER.major,
       });
       expect(updateLabel).toHaveBeenCalledWith({
         description: '',
         name: 'Minor',
-        releaseType: SEMVER.minor
+        releaseType: SEMVER.minor,
       });
     });
 
@@ -1092,34 +1123,34 @@ describe('Release', () => {
       let gh = new Release(git, {
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       const labels: ILabelDefinition[] = [
         {
           name: 'deploy',
           description: 'release the code',
-          releaseType: 'release'
-        }
+          releaseType: 'release',
+        },
       ];
 
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith({
         name: 'deploy',
         description: 'release the code',
-        releaseType: 'release'
+        releaseType: 'release',
       });
 
       gh = new Release(git, {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith({
         name: 'deploy',
         description: 'release the code',
-        releaseType: 'release'
+        releaseType: 'release',
       });
     });
 
@@ -1128,33 +1159,33 @@ describe('Release', () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       const labels: ILabelDefinition[] = [
         {
           name: 'no!',
           description: 'Do not create a release',
-          releaseType: 'skip'
-        }
+          releaseType: 'skip',
+        },
       ];
 
       await gh.addLabelsToProject(labels);
       expect(createLabel).not.toHaveBeenCalledWith({
         name: 'no!',
         description: 'Do not create a release',
-        releaseType: 'skip'
+        releaseType: 'skip',
       });
 
       gh = new Release(git, {
         prereleaseBranches: ['next'],
         labels: defaultLabels,
-        baseBranch: 'master'
+        baseBranch: 'master',
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith({
         description: 'Do not create a release',
         name: 'no!',
-        releaseType: 'skip'
+        releaseType: 'skip',
       });
     });
   });

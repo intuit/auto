@@ -21,7 +21,7 @@ import { execSync } from 'child_process';
 import {
   buildSearchQuery,
   ISearchResult,
-  processQueryResult
+  processQueryResult,
 } from './match-sha-to-pr';
 import { LoadedAutoRc } from './types';
 
@@ -37,7 +37,7 @@ export const releaseLabels: VersionLabel[] = [
   SEMVER.minor,
   SEMVER.patch,
   'skip',
-  'release'
+  'release',
 ];
 
 /** Determine if a label is a label used for versioning */
@@ -46,7 +46,7 @@ export const isVersionLabel = (label: string): label is VersionLabel =>
 
 const labelDefinitionRequired = t.type({
   /** The label text */
-  name: t.string
+  name: t.string,
 });
 
 const labelDefinitionOptional = t.partial({
@@ -60,15 +60,15 @@ const labelDefinitionOptional = t.partial({
   releaseType: t.union([
     t.literal('none'),
     t.literal('skip'),
-    ...releaseLabels.map(l => t.literal(l))
+    ...releaseLabels.map((l) => t.literal(l)),
   ]),
   /** Whether to overwrite the base label */
-  overwrite: t.boolean
+  overwrite: t.boolean,
 });
 
 export const labelDefinition = t.intersection([
   labelDefinitionOptional,
-  labelDefinitionRequired
+  labelDefinitionRequired,
 ]);
 export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
 
@@ -77,42 +77,42 @@ export const defaultLabels: ILabelDefinition[] = [
     name: 'major',
     changelogTitle: '💥 Breaking Change',
     description: 'Increment the major version when merged',
-    releaseType: SEMVER.major
+    releaseType: SEMVER.major,
   },
   {
     name: 'minor',
     changelogTitle: '🚀 Enhancement',
     description: 'Increment the minor version when merged',
-    releaseType: SEMVER.minor
+    releaseType: SEMVER.minor,
   },
   {
     name: 'patch',
     changelogTitle: '🐛 Bug Fix',
     description: 'Increment the patch version when merged',
-    releaseType: SEMVER.patch
+    releaseType: SEMVER.patch,
   },
   {
     name: 'skip-release',
     description: 'Preserve the current version when merged',
-    releaseType: 'skip'
+    releaseType: 'skip',
   },
   {
     name: 'release',
     description: 'Create a release when this pr is merged',
-    releaseType: 'release'
+    releaseType: 'release',
   },
   {
     name: 'internal',
     changelogTitle: '🏠 Internal',
     description: 'Changes only affect the internal API',
-    releaseType: 'none'
+    releaseType: 'none',
   },
   {
     name: 'documentation',
     changelogTitle: '📝 Documentation',
     description: 'Changes only affect the documentation',
-    releaseType: 'none'
-  }
+    releaseType: 'none',
+  },
 ];
 
 /** Construct a map of label => semver label */
@@ -160,7 +160,7 @@ export default class Release {
     config: LoadedAutoRc = {
       baseBranch: 'master',
       prereleaseBranches: ['next'],
-      labels: defaultLabels
+      labels: defaultLabels,
     },
     logger: ILogger = dummyLog()
   ) {
@@ -181,7 +181,7 @@ export default class Release {
       baseUrl: project.html_url,
       labels: this.config.labels,
       baseBranch: this.config.baseBranch,
-      prereleaseBranches: this.config.prereleaseBranches
+      prereleaseBranches: this.config.prereleaseBranches,
     });
 
     this.hooks.onCreateChangelog.call(changelog, version);
@@ -212,8 +212,8 @@ export default class Release {
     const allCommits = await this.getCommits(from, to);
     const allPrCommits = await Promise.all(
       allCommits
-        .filter(commit => commit.pullRequest)
-        .map(async commit => {
+        .filter((commit) => commit.pullRequest)
+        .map(async (commit) => {
           const [err, commits = []] = await on(
             this.git.getCommitsForPR(Number(commit.pullRequest!.number))
           );
@@ -223,32 +223,32 @@ export default class Release {
     const allPrCommitHashes = allPrCommits
       .filter(Boolean)
       .reduce(
-        (all, pr) => [...all, ...pr.map(subCommit => subCommit.sha)],
+        (all, pr) => [...all, ...pr.map((subCommit) => subCommit.sha)],
         [] as string[]
       );
 
     const uniqueCommits = allCommits.filter(
-      commit =>
+      (commit) =>
         (commit.pullRequest || !allPrCommitHashes.includes(commit.hash)) &&
         !commit.subject.includes('[skip ci]')
     );
 
     const commitsWithoutPR = uniqueCommits.filter(
-      commit => !commit.pullRequest
+      (commit) => !commit.pullRequest
     );
     const batches = chunk(commitsWithoutPR, 10);
 
     const queries = await Promise.all(
       batches
-        .map(batch =>
+        .map((batch) =>
           buildSearchQuery(
             this.git.options.owner,
             this.git.options.repo,
-            batch.map(c => c.hash)
+            batch.map((c) => c.hash)
           )
         )
         .filter((q): q is string => Boolean(q))
-        .map(q => this.git.graphql(q))
+        .map((q) => this.git.graphql(q))
     );
     const data = queries.filter((q): q is GraphQlQueryResponse => Boolean(q));
 
@@ -257,12 +257,12 @@ export default class Release {
     }
 
     const commitsInRelease: (IExtendedCommit | undefined)[] = [
-      ...uniqueCommits
+      ...uniqueCommits,
     ];
     const logParse = await this.createLogParse();
 
     Promise.all(
-      data.map(results =>
+      data.map((results) =>
         Object.entries(results)
           .filter((result): result is [string, ISearchResult] =>
             Boolean(result[1])
@@ -271,9 +271,9 @@ export default class Release {
             processQueryResult(key, result, commitsWithoutPR)
           )
           .filter((commit): commit is IExtendedCommit => Boolean(commit))
-          .map(async commit => {
+          .map(async (commit) => {
             const index = commitsWithoutPR.findIndex(
-              commitWithoutPR => commitWithoutPR.hash === commit.hash
+              (commitWithoutPR) => commitWithoutPR.hash === commit.hash
             );
 
             commitsInRelease[index] = await logParse.normalizeCommit(commit);
@@ -366,31 +366,33 @@ export default class Release {
     this.logger.veryVerbose.info('Got gitlog:\n', gitlog);
 
     const logParse = await this.createLogParse();
-    const commits = (await logParse.normalizeCommits(gitlog)).filter(commit => {
-      let released: boolean;
+    const commits = (await logParse.normalizeCommits(gitlog)).filter(
+      (commit) => {
+        let released: boolean;
 
-      try {
-        // This determines:         Is this commit an ancestor of this commit?
-        //                                       ↓                ↓
-        execSync(`git merge-base --is-ancestor ${from} ${commit.hash}`, {
-          encoding: 'utf8'
-        });
-        released = false;
-      } catch (error) {
-        // --is-ancestor returned false so the commit is **before** "from"
-        // so do not release this commit again
-        released = true;
+        try {
+          // This determines:         Is this commit an ancestor of this commit?
+          //                                       ↓                ↓
+          execSync(`git merge-base --is-ancestor ${from} ${commit.hash}`, {
+            encoding: 'utf8',
+          });
+          released = false;
+        } catch (error) {
+          // --is-ancestor returned false so the commit is **before** "from"
+          // so do not release this commit again
+          released = true;
+        }
+
+        if (released) {
+          const shortHash = commit.hash.slice(0, 8);
+          this.logger.verbose.warn(
+            `Commit already released, omitting: ${shortHash}: "${commit.subject}"`
+          );
+        }
+
+        return !released;
       }
-
-      if (released) {
-        const shortHash = commit.hash.slice(0, 8);
-        this.logger.verbose.warn(
-          `Commit already released, omitting: ${shortHash}: "${commit.subject}"`
-        );
-      }
-
-      return !released;
-    });
+    );
 
     this.logger.veryVerbose.info('Added labels to commits:\n', commits);
 
@@ -402,10 +404,10 @@ export default class Release {
     labels: ILabelDefinition[],
     options: ICreateLabelsOptions = {}
   ) {
-    const oldLabels = ((await this.git.getProjectLabels()) || []).map(l =>
+    const oldLabels = ((await this.git.getProjectLabels()) || []).map((l) =>
       l.toLowerCase()
     );
-    const labelsToCreate = labels.filter(label => {
+    const labelsToCreate = labels.filter((label) => {
       if (
         label.releaseType === 'release' &&
         !this.config.onlyPublishWithReleaseLabel
@@ -425,8 +427,8 @@ export default class Release {
 
     if (!options.dryRun) {
       await Promise.all(
-        labelsToCreate.map(async label => {
-          if (oldLabels.some(o => label.name.toLowerCase() === o)) {
+        labelsToCreate.map(async (label) => {
+          if (oldLabels.some((o) => label.name.toLowerCase() === o)) {
             return this.git.updateLabel(label);
           }
 
@@ -468,14 +470,14 @@ export default class Release {
    */
   async getSemverBump(from: string, to = 'HEAD'): Promise<SEMVER> {
     const commits = await this.getCommits(from, to);
-    const labels = commits.map(commit => commit.labels);
+    const labels = commits.map((commit) => commit.labels);
     const { onlyPublishWithReleaseLabel } = this.config;
     const options = { onlyPublishWithReleaseLabel };
 
     this.logger.verbose.info('Calculating SEMVER bump using:\n', {
       labels,
       versionLabels: this.versionLabels,
-      options
+      options,
     });
 
     const result = calculateSemVerBump(labels, this.versionLabels, options);
@@ -496,13 +498,13 @@ export default class Release {
   private async createLogParse() {
     const logParse = new LogParse();
 
-    logParse.hooks.parseCommit.tapPromise('Author Info', async commit =>
+    logParse.hooks.parseCommit.tapPromise('Author Info', async (commit) =>
       this.attachAuthor(commit)
     );
-    logParse.hooks.parseCommit.tapPromise('PR Information', async commit =>
+    logParse.hooks.parseCommit.tapPromise('PR Information', async (commit) =>
       this.addPrInfoToCommit(commit)
     );
-    logParse.hooks.parseCommit.tapPromise('PR Commits', async commit => {
+    logParse.hooks.parseCommit.tapPromise('PR Commits', async (commit) => {
       const prsSinceLastRelease = await this.getPRsSinceLastRelease();
       return this.getPRForRebasedCommits(commit, prsSinceLastRelease);
     });
@@ -526,7 +528,7 @@ export default class Release {
       const firstCommit = await this.git.getFirstCommit();
 
       lastRelease = {
-        published_at: await this.git.getCommitDate(firstCommit)
+        published_at: await this.git.getCommitDate(firstCommit),
       };
     }
 
@@ -535,7 +537,7 @@ export default class Release {
     }
 
     const prsSinceLastRelease = await this.git.searchRepo({
-      q: `is:pr is:merged merged:>=${lastRelease.published_at}`
+      q: `is:pr is:merged merged:>=${lastRelease.published_at}`,
     });
 
     if (!prsSinceLastRelease || !prsSinceLastRelease.items) {
@@ -551,7 +553,7 @@ export default class Release {
       )
     );
 
-    return data.map(item => item.data);
+    return data.map((item) => item.data);
   }
 
   /**
@@ -575,13 +577,14 @@ export default class Release {
         return modifiedCommit;
       }
 
-      const labels = info ? info.data.labels.map(l => l.name) : [];
+      const labels = info ? info.data.labels.map((l) => l.name) : [];
       modifiedCommit.labels = [
-        ...new Set([...labels, ...modifiedCommit.labels])
+        ...new Set([...labels, ...modifiedCommit.labels]),
       ];
       modifiedCommit.pullRequest.body = info.data.body;
+      modifiedCommit.subject = info.data.title;
       const hasPrOpener = modifiedCommit.authors.some(
-        author => author.username === info.data.user.login
+        (author) => author.username === info.data.user.login
       );
 
       // If we can't find the use who opened the PR in authors attempt
@@ -608,14 +611,14 @@ export default class Release {
     pullRequests: Octokit.PullsGetResponse[]
   ) {
     const matchPr = pullRequests.find(
-      pr => pr.merge_commit_sha === commit.hash
+      (pr) => pr.merge_commit_sha === commit.hash
     );
 
     if (!commit.pullRequest && matchPr) {
-      const labels = matchPr.labels.map(label => label.name) || [];
+      const labels = matchPr.labels.map((label) => label.name) || [];
       commit.labels = [...new Set([...labels, ...commit.labels])];
       commit.pullRequest = {
-        number: matchPr.number
+        number: matchPr.number,
       };
     }
 
@@ -645,7 +648,7 @@ export default class Release {
       }
 
       resolvedAuthors = await Promise.all(
-        prCommits.map(async prCommit => {
+        prCommits.map(async (prCommit) => {
           if (!prCommit.author) {
             return prCommit.commit.author;
           }
@@ -653,7 +656,7 @@ export default class Release {
           return {
             ...prCommit.author,
             ...(await this.git.getUserByUsername(prCommit.author.login)),
-            hash: prCommit.sha
+            hash: prCommit.sha,
           };
         })
       );
@@ -668,7 +671,7 @@ export default class Release {
           name: commit.authorName,
           email: commit.authorEmail,
           ...author,
-          hash: commit.hash
+          hash: commit.hash,
         });
       } else if (commit.authorEmail) {
         const author = await this.git.getUserByEmail(commit.authorEmail);
@@ -677,17 +680,17 @@ export default class Release {
           email: commit.authorEmail,
           name: commit.authorName,
           ...author,
-          hash: commit.hash
+          hash: commit.hash,
         });
       }
     }
 
-    modifiedCommit.authors = resolvedAuthors.map(author => ({
+    modifiedCommit.authors = resolvedAuthors.map((author) => ({
       ...author,
-      ...(author && 'login' in author ? { username: author.login } : {})
+      ...(author && 'login' in author ? { username: author.login } : {}),
     }));
 
-    modifiedCommit.authors.forEach(author => {
+    modifiedCommit.authors.forEach((author) => {
       this.logger.veryVerbose.info(
         `Found author: ${author.username} ${author.email} ${author.name}`
       );
