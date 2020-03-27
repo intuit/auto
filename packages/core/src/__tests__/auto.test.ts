@@ -787,6 +787,23 @@ describe("Auto", () => {
       expect(addToChangelog).not.toHaveBeenCalled();
     });
 
+    test("should be able to override title", async () => {
+      const auto = new Auto(defaults);
+
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToChangelog = jest.fn();
+      auto.release!.addToChangelog = addToChangelog;
+      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+
+      await auto.changelog({ from: "v1.0.0", dryRun: true, title: "foo" });
+      // @ts-ignore
+      expect(await auto.release?.hooks.createChangelogTitle.promise()).toBe(
+        "foo"
+      );
+    });
+
     test("should skip getRepository hook if passed in via cli", async () => {
       process.env.GH_TOKEN = "XXXX";
       const auto = new Auto({
