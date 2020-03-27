@@ -1,3 +1,16 @@
+# v9.21.2 (Fri Mar 27 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - always use tag version for release title, prevent using annotation [#1083](https://github.com/intuit/auto/pull/1083) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.21.1 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix
