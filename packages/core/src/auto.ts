@@ -1509,6 +1509,7 @@ export default class Auto {
       dryRun,
       from,
       to,
+      title,
       message = "Update CHANGELOG.md [skip ci]",
     } = options;
 
@@ -1517,6 +1518,13 @@ export default class Auto {
     }
 
     await this.setGitUser();
+
+    if (title) {
+      this.release.hooks.createChangelogTitle.tap(
+        "Changelog Flag",
+        () => title
+      );
+    }
 
     const lastRelease = from || (await this.git.getLatestRelease());
     const bump = await this.release.getSemverBump(lastRelease, to);

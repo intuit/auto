@@ -60,6 +60,8 @@ export interface IChangelogOptions extends Partial<AuthorInformation> {
   to?: string;
   /** The commit message to commit the changelog changes with */
   message?: string;
+  /** Override the title use in the addition to the CHANGELOG.md. */
+  title?: string;
 }
 
 export interface IReleaseOptions extends Partial<RepoInformation> {

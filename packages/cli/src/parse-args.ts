@@ -368,6 +368,13 @@ export const commands: AutoCommand[] = [
         description: "Tag to end changelog generation on. Defaults to HEAD.",
       },
       {
+        name: "title",
+        type: String,
+        group: "main",
+        description:
+          "Override the title used in the addition to the CHANGELOG.md.",
+      },
+      {
         ...message,
         description:
           "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'",
