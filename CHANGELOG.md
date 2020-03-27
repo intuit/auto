@@ -1,3 +1,16 @@
+# v9.22.0 (Fri Mar 27 2020)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add --title flag to 'auto changelog' [#1084](https://github.com/intuit/auto/pull/1084) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.21.2 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix
