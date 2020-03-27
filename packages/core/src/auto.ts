@@ -1038,14 +1038,14 @@ export default class Auto {
     }
 
     if (!this.hooks.canary.isUsed()) {
-      this.logger.log.error(endent`
+      this.logger.log.warn(endent`
         None of the plugins that you are using implement the \`canary\` command!
 
         "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
         
         If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
       `);
-      process.exit(1);
+      process.exit(0);
     }
 
     await this.checkClean();
@@ -1156,14 +1156,14 @@ export default class Auto {
     }
 
     if (!this.hooks.next.isUsed()) {
-      this.logger.log.error(endent`
+      this.logger.log.warn(endent`
         None of the plugins that you are using implement the \`next\` command!
 
         "next" releases are pre-releases such as betas or alphas. They make sense on some platforms (ex: npm) but not all!
 
         If you think your package manager has the ability to support "next" releases please file an issue or submit a pull request,
       `);
-      process.exit(1);
+      process.exit(0);
     }
 
     await this.checkClean();
