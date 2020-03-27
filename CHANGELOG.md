@@ -1,3 +1,16 @@
+# v9.22.1 (Fri Mar 27 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Exit with warning when canary or next is unimplemented [#1085](https://github.com/intuit/auto/pull/1085) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.22.0 (Fri Mar 27 2020)
 
 #### 🚀 Enhancement
