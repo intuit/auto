@@ -1,3 +1,28 @@
+# v9.21.1 (Fri Mar 27 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/bot-list`, `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Respect Updated PR Titles [#1082](https://github.com/intuit/auto/pull/1082) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump prettier from 1.19.1 to 2.0.1 [#1079](https://github.com/intuit/auto/pull/1079) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 22.0.1 to 22.1.0 [#1078](https://github.com/intuit/auto/pull/1078) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.10.0 to 6.10.1 [#1076](https://github.com/intuit/auto/pull/1076) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/signale from 1.2.1 to 1.4.0 [#1072](https://github.com/intuit/auto/pull/1072) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.23.0 to 2.25.0 [#1077](https://github.com/intuit/auto/pull/1077) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.23.0 to 2.25.0 [#1073](https://github.com/intuit/auto/pull/1073) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.9.0 to 13.9.3 [#1074](https://github.com/intuit/auto/pull/1074) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump env-ci from 5.0.1 to 5.0.2 [#1071](https://github.com/intuit/auto/pull/1071) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.21.0 (Fri Mar 20 2020)
 
 :tada: This release contains work from a new contributor! :tada:
