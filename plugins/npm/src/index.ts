@@ -1,10 +1,10 @@
-import envCi from 'env-ci';
-import * as fs from 'fs';
-import parseAuthor from 'parse-author';
-import path from 'path';
-import { Memoize as memoize } from 'typescript-memoize';
-import { Octokit } from '@octokit/rest';
-import * as t from 'io-ts';
+import envCi from "env-ci";
+import * as fs from "fs";
+import parseAuthor from "parse-author";
+import path from "path";
+import { Memoize as memoize } from "typescript-memoize";
+import { Octokit } from "@octokit/rest";
+import * as t from "io-ts";
 
 import {
   Auto,
@@ -17,25 +17,25 @@ import {
   IPlugin,
   InteractiveInit,
   SEMVER,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import getPackages from 'get-monorepo-packages';
-import { gt, gte, inc, ReleaseType } from 'semver';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import getPackages from "get-monorepo-packages";
+import { gt, gte, inc, ReleaseType } from "semver";
 
-import getConfigFromPackageJson from './package-config';
-import setTokenOnCI from './set-npm-token';
-import { loadPackageJson, writeFile } from './utils';
+import getConfigFromPackageJson from "./package-config";
+import setTokenOnCI from "./set-npm-token";
+import { loadPackageJson, writeFile } from "./utils";
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 
 /** Check if the project is a monorepo */
-const isMonorepo = () => fs.existsSync('lerna.json');
+const isMonorepo = () => fs.existsSync("lerna.json");
 
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
   try {
-    return await execPromise('npm', ['view', name, 'version']);
+    return await execPromise("npm", ["view", name, "version"]);
   } catch (error) {}
 }
 
@@ -59,7 +59,7 @@ export async function greaterRelease(
   // The branch (ex: next) is also the --preid
   const baseVersion =
     prereleaseBranch && packageVersion.includes(prereleaseBranch)
-      ? inc(packageVersion, 'patch') || packageVersion
+      ? inc(packageVersion, "patch") || packageVersion
       : packageVersion;
 
   return gte(baseVersion, publishedPrefixed)
@@ -103,19 +103,19 @@ export async function changedPackages({
   packages,
   lernaJson,
   logger,
-  version
+  version,
 }: ChangedPackagesArgs) {
   const changed = new Set<string>();
-  const changedFiles = await execPromise('git', [
-    'show',
-    '--first-parent',
+  const changedFiles = await execPromise("git", [
+    "show",
+    "--first-parent",
     sha,
-    '--name-only',
-    '--pretty='
+    "--name-only",
+    "--pretty=",
   ]);
 
-  changedFiles.split('\n').forEach(filePath => {
-    const monorepoPackage = packages.find(subPackage =>
+  changedFiles.split("\n").forEach((filePath) => {
+    const monorepoPackage = packages.find((subPackage) =>
       inFolder(subPackage.path, filePath)
     );
 
@@ -124,7 +124,7 @@ export async function changedPackages({
     }
 
     changed.add(
-      lernaJson.version === 'independent'
+      lernaJson.version === "independent"
         ? `${monorepoPackage.name}@${inc(
             monorepoPackage.version,
             version as ReleaseType
@@ -165,8 +165,8 @@ export function getMonorepoPackage() {
 
 /** Get all of the packages+version in the lerna monorepo */
 async function getPackageList() {
-  return getLernaPackages().then(packages =>
-    packages.map(p => `${p.name}@${p.version.split('+')[0]}`)
+  return getLernaPackages().then((packages) =>
+    packages.map((p) => `${p.name}@${p.version.split("+")[0]}`)
   );
 }
 
@@ -180,13 +180,13 @@ async function bumpLatest(
   version: SEMVER
 ) {
   const latestVersion = localVersion
-    ? await greaterRelease(s => s, name, localVersion)
+    ? await greaterRelease((s) => s, name, localVersion)
     : undefined;
 
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
 }
 
-const verbose = ['--loglevel', 'silly'];
+const verbose = ["--loglevel", "silly"];
 
 const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
@@ -198,7 +198,7 @@ const pluginOptions = t.partial({
   /** A scope to publish canary versions under */
   canaryScope: t.string,
   /** Publish a monorepo with the lerna --exact flag */
-  exact: t.boolean
+  exact: t.boolean,
 });
 
 export type INpmConfig = t.TypeOf<typeof pluginOptions>;
@@ -206,7 +206,7 @@ export type INpmConfig = t.TypeOf<typeof pluginOptions>;
 /** Parse the lerna.json file. */
 const getLernaJson = () => {
   try {
-    return JSON.parse(fs.readFileSync('lerna.json', 'utf8'));
+    return JSON.parse(fs.readFileSync("lerna.json", "utf8"));
   } catch (error) {
     return {};
   }
@@ -214,23 +214,23 @@ const getLernaJson = () => {
 
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
-  lines.map(line => `- \`${line}\``).join('\n');
+  lines.map((line) => `- \`${line}\``).join("\n");
 
 /** Get the previous version. Typically from a package distribution description file. */
 async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
-  let previousVersion = '';
+  let previousVersion = "";
 
   if (isMonorepo()) {
     auto.logger.veryVerbose.info(
-      'Using monorepo to calculate previous release'
+      "Using monorepo to calculate previous release"
     );
     const monorepoVersion = getLernaJson().version;
 
-    if (monorepoVersion === 'independent') {
+    if (monorepoVersion === "independent") {
       previousVersion =
-        'dryRun' in auto.options && auto.options.dryRun
+        "dryRun" in auto.options && auto.options.dryRun
           ? markdownList(await getPackageList())
-          : '';
+          : "";
     } else {
       const releasedPackage = getMonorepoPackage();
 
@@ -245,9 +245,9 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
         );
       }
     }
-  } else if (fs.existsSync('package.json')) {
+  } else if (fs.existsSync("package.json")) {
     auto.logger.veryVerbose.info(
-      'Using package.json to calculate previous version'
+      "Using package.json to calculate previous version"
     );
     const { version, name } = await loadPackageJson();
 
@@ -258,11 +258,11 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
           auto.prefixRelease(version),
           prereleaseBranch
         )
-      : '0.0.0';
+      : "0.0.0";
   }
 
   auto.logger.verbose.info(
-    'NPM: Got previous version from package.json',
+    "NPM: Got previous version from package.json",
     previousVersion
   );
 
@@ -270,7 +270,7 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
 }
 
 /** Remove the @ sign */
-const sanitizeScope = (canaryScope: string) => canaryScope.replace('@', '');
+const sanitizeScope = (canaryScope: string) => canaryScope.replace("@", "");
 
 /** Add a npm scope to a package name. Can have leading @ or not. */
 const addCanaryScope = (canaryScope: string, name: string) =>
@@ -279,7 +279,7 @@ const addCanaryScope = (canaryScope: string, name: string) =>
 /** Change the scope of all the packages to the canary scope */
 async function setCanaryScope(canaryScope: string, paths: string[]) {
   const packages = await Promise.all(
-    paths.map(async p => [p, await loadPackageJson(p)] as const)
+    paths.map(async (p) => [p, await loadPackageJson(p)] as const)
   );
   const names = packages.map(([, p]) => p.name);
 
@@ -287,15 +287,15 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
     packages.map(async ([p, packageJson]) => {
       const newJson = { ...packageJson };
       const name = packageJson.name.match(/@\S+\/\S+/)
-        ? packageJson.name.split('/')[1]
+        ? packageJson.name.split("/")[1]
         : packageJson.name;
 
       newJson.name = addCanaryScope(canaryScope, name);
 
       if (newJson.dependencies) {
-        Object.keys(newJson.dependencies).forEach(d => {
+        Object.keys(newJson.dependencies).forEach((d) => {
           if (names.includes(d)) {
-            const depName = d.match(/@\S+\/\S+/) ? d.split('/')[1] : d;
+            const depName = d.match(/@\S+\/\S+/) ? d.split("/")[1] : d;
 
             newJson.dependencies![
               addCanaryScope(canaryScope, depName)
@@ -306,7 +306,7 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
       }
 
       await writeFile(
-        path.join(p, 'package.json'),
+        path.join(p, "package.json"),
         JSON.stringify(newJson, null, 2)
       );
     })
@@ -315,24 +315,24 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
 
 /** Reset the scope changes of all the packages  */
 async function gitReset() {
-  await execPromise('git', ['reset', '--hard', 'HEAD']);
+  await execPromise("git", ["reset", "--hard", "HEAD"]);
 }
 
 /** Make install instructions for multiple repos */
 const makeMonorepoInstallList = (packageList: string[]) =>
   [
-    ':sparkles: Test out this PR locally via:\n',
-    '```sh',
-    ...packageList.map(p => `npm install ${p}`),
-    '# or ',
-    ...packageList.map(p => `yarn add ${p}`),
-    '```'
-  ].join('\n');
+    ":sparkles: Test out this PR locally via:\n",
+    "```sh",
+    ...packageList.map((p) => `npm install ${p}`),
+    "# or ",
+    ...packageList.map((p) => `yarn add ${p}`),
+    "```",
+  ].join("\n");
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'npm';
+  name = "npm";
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
@@ -353,13 +353,13 @@ export default class NPMPlugin implements IPlugin {
     this.exact = Boolean(config.exact);
     this.renderMonorepoChangelog = true;
     this.subPackageChangelogs =
-      typeof config.subPackageChangelogs === 'boolean'
+      typeof config.subPackageChangelogs === "boolean"
         ? config.subPackageChangelogs
         : true;
     this.setRcToken =
-      typeof config.setRcToken === 'boolean' ? config.setRcToken : true;
+      typeof config.setRcToken === "boolean" ? config.setRcToken : true;
     this.forcePublish =
-      typeof config.forcePublish === 'boolean' ? config.forcePublish : true;
+      typeof config.forcePublish === "boolean" ? config.forcePublish : true;
     this.canaryScope = config.canaryScope || undefined;
   }
 
@@ -371,12 +371,12 @@ export default class NPMPlugin implements IPlugin {
 
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
-    initializer.hooks.createEnv.tap(this.name, vars => [
+    initializer.hooks.createEnv.tap(this.name, (vars) => [
       ...vars,
       {
-        variable: 'NPM_TOKEN',
-        message: `Enter a npm token for publishing packages https://docs.npmjs.com/creating-and-viewing-authentication-tokens`
-      }
+        variable: "NPM_TOKEN",
+        message: `Enter a npm token for publishing packages https://docs.npmjs.com/creating-and-viewing-authentication-tokens`,
+      },
     ]);
 
     initializer.hooks.getAuthor.tapPromise(this.name, async () => {
@@ -389,7 +389,7 @@ export default class NPMPlugin implements IPlugin {
       const author = await initializer.getAuthorInformation();
       const newPackageJson = { ...packageJson };
       newPackageJson.author = `${author.name} <${author.email}>`;
-      await writeFile('package.json', JSON.stringify(newPackageJson, null, 2));
+      await writeFile("package.json", JSON.stringify(newPackageJson, null, 2));
 
       return true;
     });
@@ -404,29 +404,29 @@ export default class NPMPlugin implements IPlugin {
       const repository = await initializer.getRepoInformation();
       const newPackageJson = { ...packageJson };
       newPackageJson.repository = `${repository.owner}/${repository.repo}`;
-      await writeFile('package.json', JSON.stringify(newPackageJson, null, 2));
+      await writeFile("package.json", JSON.stringify(newPackageJson, null, 2));
 
       return true;
     });
 
-    initializer.hooks.writeRcFile.tapPromise(this.name, async rc => {
+    initializer.hooks.writeRcFile.tapPromise(this.name, async (rc) => {
       const packageJson = await loadPackageJson();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((packageJson as any).auto) {
         initializer.logger.log.note(
-          'Would have wrote configuration:\n',
+          "Would have wrote configuration:\n",
           JSON.stringify(rc, null, 2)
         );
         initializer.logger.log.warn(
-          'Found auto configuration in package.json. Doing nothing.'
+          "Found auto configuration in package.json. Doing nothing."
         );
       } else {
         await writeFile(
-          'package.json',
+          "package.json",
           JSON.stringify({ ...packageJson, auto: rc }, null, 2)
         );
-        initializer.logger.log.success('Wrote configuration to package.json');
+        initializer.logger.log.success("Wrote configuration to package.json");
       }
 
       return true;
@@ -436,8 +436,8 @@ export default class NPMPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     const isVerbose =
-      auto.logger.logLevel === 'verbose' ||
-      auto.logger.logLevel === 'veryVerbose';
+      auto.logger.logLevel === "verbose" ||
+      auto.logger.logLevel === "veryVerbose";
     const verboseArgs = isVerbose ? verbose : [];
     const prereleaseBranches = auto.config?.prereleaseBranches!;
     const branch = getCurrentBranch();
@@ -455,16 +455,16 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.beforeShipIt.tap(this.name, async () => {
-      const isIndependent = getLernaJson().version === 'independent';
+      const isIndependent = getLernaJson().version === "independent";
 
       // In independent mode it's possible that no changes to packages have been
       // made, so no release will be made.
       if (isIndependent) {
         try {
-          await execPromise('yarn', ['lerna', 'updated']);
+          await execPromise("yarn", ["lerna", "updated"]);
         } catch (error) {
           auto.logger.log.warn(
-            'Lerna detected no changes in project. Aborting release since nothing would be published.'
+            "Lerna detected no changes in project. Aborting release since nothing would be published."
           );
           process.exit(0);
         }
@@ -474,12 +474,12 @@ export default class NPMPlugin implements IPlugin {
         return;
       }
 
-      auto.checkEnv(this.name, 'NPM_TOKEN');
+      auto.checkEnv(this.name, "NPM_TOKEN");
     });
 
     auto.hooks.getAuthor.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
-        'NPM: Getting repo information from package.json'
+        "NPM: Getting repo information from package.json"
       );
       const packageJson = await loadPackageJson();
 
@@ -489,7 +489,7 @@ export default class NPMPlugin implements IPlugin {
 
       const { author } = packageJson;
 
-      if (typeof author === 'string') {
+      if (typeof author === "string") {
         return parseAuthor(author);
       }
 
@@ -502,7 +502,7 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.getRepository.tapPromise(this.name, async () => {
       auto.logger.verbose.info(
-        'NPM: getting repo information from package.json'
+        "NPM: getting repo information from package.json"
       );
       const repo = await getConfigFromPackageJson();
 
@@ -511,12 +511,12 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.onCreateRelease.tap(this.name, release => {
+    auto.hooks.onCreateRelease.tap(this.name, (release) => {
       release.hooks.createChangelogTitle.tap(
         `${this.name} - lerna independent`,
         () => {
-          if (isMonorepo() && getLernaJson().version === 'independent') {
-            return '';
+          if (isMonorepo() && getLernaJson().version === "independent") {
+            return "";
           }
         }
       );
@@ -526,7 +526,7 @@ export default class NPMPlugin implements IPlugin {
       this.name,
       (changelog, version = SEMVER.patch) => {
         changelog.hooks.renderChangelogLine.tapPromise(
-          'NPM - Monorepo',
+          "NPM - Monorepo",
           async ([commit, line]) => {
             if (!isMonorepo() || !this.renderMonorepoChangelog) {
               return [commit, line];
@@ -539,18 +539,18 @@ export default class NPMPlugin implements IPlugin {
               packages: lernaPackages,
               lernaJson,
               logger: auto.logger,
-              version
+              version,
             });
 
             const section = packages?.length
-              ? packages.map(p => `\`${p}\``).join(', ')
-              : 'monorepo';
+              ? packages.map((p) => `\`${p}\``).join(", ")
+              : "monorepo";
 
-            if (section === 'monorepo') {
+            if (section === "monorepo") {
               return [commit, line];
             }
 
-            return [commit, [`- ${section}`, `  ${line}`].join('\n')];
+            return [commit, [`- ${section}`, `  ${line}`].join("\n")];
           }
         );
       }
@@ -576,8 +576,8 @@ export default class NPMPlugin implements IPlugin {
             `Updating changelog for: ${lernaPackage.name}`
           );
 
-          const includedCommits = commits.filter(commit =>
-            commit.files.some(file => inFolder(lernaPackage.path, file))
+          const includedCommits = commits.filter((commit) =>
+            commit.files.some((file) => inFolder(lernaPackage.path, file))
           );
           const title = `v${inc(lernaPackage.version, bump as ReleaseType)}`;
           const releaseNotes = await changelog.generateReleaseNotes(
@@ -588,7 +588,7 @@ export default class NPMPlugin implements IPlugin {
             await auto.release!.updateChangelogFile(
               title,
               releaseNotes,
-              path.join(lernaPackage.path, 'CHANGELOG.md')
+              path.join(lernaPackage.path, "CHANGELOG.md")
             );
           }
         }, Promise.resolve());
@@ -597,33 +597,33 @@ export default class NPMPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (version) => {
       const isBaseBranch = branch === auto.baseBranch;
 
       if (isMonorepo()) {
-        auto.logger.verbose.info('Detected monorepo, using lerna');
-        const isIndependent = getLernaJson().version === 'independent';
+        auto.logger.verbose.info("Detected monorepo, using lerna");
+        const isIndependent = getLernaJson().version === "independent";
         const monorepoBump =
           isIndependent || !isBaseBranch
             ? undefined
             : await bumpLatest(getMonorepoPackage(), version);
 
-        await execPromise('npx', [
-          'lerna',
-          'version',
+        await execPromise("npx", [
+          "lerna",
+          "version",
           monorepoBump || version,
-          !isIndependent && this.forcePublish && '--force-publish',
-          '--no-commit-hooks',
-          '--yes',
-          '--no-push',
-          '-m',
+          !isIndependent && this.forcePublish && "--force-publish",
+          "--no-commit-hooks",
+          "--yes",
+          "--no-push",
+          "-m",
           isIndependent
             ? '"Bump independent versions [skip ci]"'
             : VERSION_COMMIT_MESSAGE,
-          this.exact && '--exact',
-          ...verboseArgs
+          this.exact && "--exact",
+          ...verboseArgs,
         ]);
-        auto.logger.verbose.info('Successfully versioned repo');
+        auto.logger.verbose.info("Successfully versioned repo");
         return;
       }
 
@@ -631,32 +631,32 @@ export default class NPMPlugin implements IPlugin {
         ? await bumpLatest(await loadPackageJson(), version)
         : version;
 
-      await execPromise('npm', [
-        'version',
+      await execPromise("npm", [
+        "version",
         latestBump || version,
-        '--no-commit-hooks',
-        '-m',
+        "--no-commit-hooks",
+        "-m",
         VERSION_COMMIT_MESSAGE,
-        ...verboseArgs
+        ...verboseArgs,
       ]);
-      auto.logger.verbose.info('Successfully versioned repo');
+      auto.logger.verbose.info("Successfully versioned repo");
     });
 
     auto.hooks.canary.tapPromise(this.name, async (bump, postFix) => {
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
-        auto.logger.verbose.info('Set CI NPM_TOKEN');
+        auto.logger.verbose.info("Set CI NPM_TOKEN");
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
       const latestTag = (await auto.git?.getLatestTagInBranch()) || lastRelease;
-      const inPrerelease = prereleaseBranches.some(b =>
+      const inPrerelease = prereleaseBranches.some((b) =>
         latestTag.includes(`-${b}.`)
       );
 
       if (isMonorepo()) {
-        const isIndependent = getLernaJson().version === 'independent';
-        auto.logger.verbose.info('Detected monorepo, using lerna');
+        const isIndependent = getLernaJson().version === "independent";
+        auto.logger.verbose.info("Detected monorepo, using lerna");
 
         const packagesBefore = await getLernaPackages();
         const preid = `canary${postFix}`;
@@ -672,51 +672,51 @@ export default class NPMPlugin implements IPlugin {
         if (this.canaryScope) {
           await setCanaryScope(
             this.canaryScope,
-            packagesBefore.map(p => p.path)
+            packagesBefore.map((p) => p.path)
           );
         }
 
-        await execPromise('npx', [
-          'lerna',
-          'publish',
+        await execPromise("npx", [
+          "lerna",
+          "publish",
           next,
-          '--dist-tag',
-          'canary',
-          !isIndependent && '--force-publish',
-          '--yes', // skip prompts,
-          '--no-git-reset', // so we can get the version that just published
-          '--no-git-tag-version', // no need to tag and commit,
-          '--exact', // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
-          ...(isIndependent ? ['--preid', preid] : []),
-          ...verboseArgs
+          "--dist-tag",
+          "canary",
+          !isIndependent && "--force-publish",
+          "--yes", // skip prompts,
+          "--no-git-reset", // so we can get the version that just published
+          "--no-git-tag-version", // no need to tag and commit,
+          "--exact", // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
+          ...(isIndependent ? ["--preid", preid] : []),
+          ...verboseArgs,
         ]);
 
-        auto.logger.verbose.info('Successfully published canary version');
+        auto.logger.verbose.info("Successfully published canary version");
         const packages = await getLernaPackages();
         const packageList = await getPackageList();
         // Reset after we read the packages from the system!
         await gitReset();
 
         if (isIndependent) {
-          if (!packageList.some(p => p.includes('canary'))) {
-            return { error: 'No packages were changed. No canary published.' };
+          if (!packageList.some((p) => p.includes("canary"))) {
+            return { error: "No packages were changed. No canary published." };
           }
 
           return {
-            newVersion: 'Canary Versions',
+            newVersion: "Canary Versions",
             details: makeMonorepoInstallList(
-              packageList.filter(p => p.includes('canary'))
-            )
+              packageList.filter((p) => p.includes("canary"))
+            ),
           };
         }
 
-        const versioned = packages.find(p => p.version.includes('canary'));
+        const versioned = packages.find((p) => p.version.includes("canary"));
 
         if (!versioned) {
-          return { error: 'No packages were changed. No canary published.' };
+          return { error: "No packages were changed. No canary published." };
         }
 
-        const version = versioned.version.split('+')[0];
+        const version = versioned.version.split("+")[0];
 
         return {
           newVersion: this.canaryScope
@@ -724,11 +724,11 @@ export default class NPMPlugin implements IPlugin {
                 this.canaryScope
               )}@${version}`
             : version,
-          details: makeMonorepoInstallList(packageList)
+          details: makeMonorepoInstallList(packageList),
         };
       }
 
-      auto.logger.verbose.info('Detected single npm package');
+      auto.logger.verbose.info("Detected single npm package");
       const current = await auto.getCurrentVersion(lastRelease);
       const canaryVersion = determineNextVersion(
         lastRelease,
@@ -738,36 +738,36 @@ export default class NPMPlugin implements IPlugin {
       );
 
       if (this.canaryScope) {
-        await setCanaryScope(this.canaryScope, ['./']);
+        await setCanaryScope(this.canaryScope, ["./"]);
       }
 
-      await execPromise('npm', [
-        'version',
+      await execPromise("npm", [
+        "version",
         canaryVersion,
-        '--no-git-tag-version',
-        ...verboseArgs
+        "--no-git-tag-version",
+        ...verboseArgs,
       ]);
 
-      const publishArgs = ['--tag', 'canary'];
-      await execPromise('npm', ['publish', ...publishArgs, ...verboseArgs]);
+      const publishArgs = ["--tag", "canary"];
+      await execPromise("npm", ["publish", ...publishArgs, ...verboseArgs]);
 
       if (this.canaryScope) {
         await gitReset();
       }
 
       const { name } = await loadPackageJson();
-      auto.logger.verbose.info('Successfully published canary version');
+      auto.logger.verbose.info("Successfully published canary version");
 
       return {
         newVersion: canaryVersion,
-        details: makeMonorepoInstallList([`${name}@${canaryVersion}`])
+        details: makeMonorepoInstallList([`${name}@${canaryVersion}`]),
       };
     });
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
-        auto.logger.verbose.info('Set CI NPM_TOKEN');
+        auto.logger.verbose.info("Set CI NPM_TOKEN");
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
@@ -776,12 +776,12 @@ export default class NPMPlugin implements IPlugin {
         (await getPreviousVersion(auto, prereleaseBranch));
 
       if (isMonorepo()) {
-        auto.logger.verbose.info('Detected monorepo, using lerna');
-        const isIndependent = getLernaJson().version === 'independent';
+        auto.logger.verbose.info("Detected monorepo, using lerna");
+        const isIndependent = getLernaJson().version === "independent";
         // It's hard to accurately predict how we should bump independent versions.
         // So we just prerelease most of the time. (independent only)
         const next = isIndependent
-          ? 'prerelease'
+          ? "prerelease"
           : determineNextVersion(
               lastRelease,
               latestTag,
@@ -794,25 +794,25 @@ export default class NPMPlugin implements IPlugin {
           latestTag,
           bump,
           prereleaseBranch,
-          next
+          next,
         });
 
-        await execPromise('npx', [
-          'lerna',
-          'publish',
+        await execPromise("npx", [
+          "lerna",
+          "publish",
           next,
-          '--dist-tag',
+          "--dist-tag",
           prereleaseBranch,
-          '--preid',
+          "--preid",
           prereleaseBranch,
-          '--no-push',
+          "--no-push",
           // you always want a next version to publish
-          !isIndependent && '--force-publish',
+          !isIndependent && "--force-publish",
           // skip prompts
-          '--yes',
+          "--yes",
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
-          '--exact',
-          ...verboseArgs
+          "--exact",
+          ...verboseArgs,
         ]);
 
         // we do not want to commit the next version. this causes
@@ -821,109 +821,109 @@ export default class NPMPlugin implements IPlugin {
         // commit+tag the new version and roll back all the tags to the
         // previous commit.
         const tags = (
-          await execPromise('git', ['tag', '--points-at', 'HEAD'])
-        ).split('\n');
+          await execPromise("git", ["tag", "--points-at", "HEAD"])
+        ).split("\n");
         await Promise.all(
           // Move tags back one commit
-          tags.map(tag => execPromise('git', ['tag', tag, '-f', 'HEAD^']))
+          tags.map((tag) => execPromise("git", ["tag", tag, "-f", "HEAD^"]))
         );
         // Move branch back one commit
-        await execPromise('git', ['reset', '--hard', 'HEAD~1']);
+        await execPromise("git", ["reset", "--hard", "HEAD~1"]);
 
-        auto.logger.verbose.info('Successfully published next version');
+        auto.logger.verbose.info("Successfully published next version");
 
         preReleaseVersions = [
           ...preReleaseVersions,
-          ...tags.map(auto.prefixRelease)
+          ...tags.map(auto.prefixRelease),
         ];
       } else {
-        auto.logger.verbose.info('Detected single npm package');
+        auto.logger.verbose.info("Detected single npm package");
 
-        await execPromise('npm', [
-          'version',
+        await execPromise("npm", [
+          "version",
           determineNextVersion(lastRelease, latestTag, bump, prereleaseBranch),
           // we do not want to commit the next version. this causes
           // merge conflicts when merged into master
-          '--no-git-tag-version',
-          ...verboseArgs
+          "--no-git-tag-version",
+          ...verboseArgs,
         ]);
 
         const { version } = await loadPackageJson();
-        await execPromise('git', [
-          'tag',
+        await execPromise("git", [
+          "tag",
           auto.prefixRelease(version!),
-          '-m',
-          `"Update version to ${version}"`
+          "-m",
+          `"Update version to ${version}"`,
         ]);
 
-        await execPromise('npm', [
-          'publish',
-          '--tag',
+        await execPromise("npm", [
+          "publish",
+          "--tag",
           prereleaseBranch,
-          ...verboseArgs
+          ...verboseArgs,
         ]);
 
-        auto.logger.verbose.info('Successfully published next version');
+        auto.logger.verbose.info("Successfully published next version");
         preReleaseVersions.push(auto.prefixRelease(version!));
       }
 
-      await execPromise('git', ['push', auto.remote, '--tags']);
+      await execPromise("git", ["push", auto.remote, "--tags"]);
       return preReleaseVersions;
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      const status = await execPromise('git', ['status', '--porcelain']);
+      const status = await execPromise("git", ["status", "--porcelain"]);
       const isBaseBranch = branch === auto.baseBranch;
       // The only other time this hook is called is when creating a version
       // branch. So when on one of those branches publish to a tag of the same
       // name
       const tag = isBaseBranch
         ? []
-        : [isMonorepo() ? '--dist-tag' : '--tag', branch];
+        : [isMonorepo() ? "--dist-tag" : "--tag", branch];
 
       if (isVerbose && status) {
-        auto.logger.log.error('Changed Files:\n', status);
+        auto.logger.log.error("Changed Files:\n", status);
       }
 
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
-        auto.logger.verbose.info('Set CI NPM_TOKEN');
+        auto.logger.verbose.info("Set CI NPM_TOKEN");
       }
 
       if (isMonorepo()) {
-        auto.logger.verbose.info('Detected monorepo, using lerna');
+        auto.logger.verbose.info("Detected monorepo, using lerna");
 
         if (auto.options?.verbose) {
-          await execPromise('git', ['status', '--short']);
+          await execPromise("git", ["status", "--short"]);
         }
 
-        await execPromise('npx', [
-          'lerna',
-          'publish',
+        await execPromise("npx", [
+          "lerna",
+          "publish",
           ...tag,
-          '--yes',
+          "--yes",
           // Plugins can add as many commits as they want, lerna will still
           // publish the changed package versions. from-git broke when HEAD
           // didn't contain the tags
-          'from-package',
-          ...verboseArgs
+          "from-package",
+          ...verboseArgs,
         ]);
       } else {
-        await execPromise('npm', ['publish', ...tag, ...verboseArgs]);
+        await execPromise("npm", ["publish", ...tag, ...verboseArgs]);
       }
 
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
         auto.remote,
-        branch || auto.baseBranch
+        branch || auto.baseBranch,
       ]);
-      auto.logger.verbose.info('Successfully published repo');
+      auto.logger.verbose.info("Successfully published repo");
     });
 
-    auto.hooks.makeRelease.tapPromise(this.name, async options => {
-      const isIndependent = getLernaJson().version === 'independent';
+    auto.hooks.makeRelease.tapPromise(this.name, async (options) => {
+      const isIndependent = getLernaJson().version === "independent";
 
       // Independent mode will create multiple releases on Github.
       // Each release will only contain the release notes for the
@@ -935,22 +935,24 @@ export default class NPMPlugin implements IPlugin {
         const lernaPackages = await getLernaPackages();
         // Go through each new tag:
         const newTags = (
-          await execPromise('git', ['tag', '--points-at', 'HEAD'])
-        ).split('\n');
+          await execPromise("git", ["tag", "--points-at", "HEAD"])
+        ).split("\n");
 
         this.renderMonorepoChangelog = false;
 
-        const packagePaths = lernaPackages.map(p => p.path);
+        const packagePaths = lernaPackages.map((p) => p.path);
         const commitsAtRoot = options.commits.filter(
-          commit =>
-            !commit.files.some(file =>
-              packagePaths.some(p => inFolder(p, file))
+          (commit) =>
+            !commit.files.some((file) =>
+              packagePaths.some((p) => inFolder(p, file))
             )
         );
 
         const releases = await Promise.all(
-          newTags.map(async tag => {
-            const lernaPackage = lernaPackages.find(p => tag.includes(p.name));
+          newTags.map(async (tag) => {
+            const lernaPackage = lernaPackages.find((p) =>
+              tag.includes(p.name)
+            );
 
             if (!lernaPackage) {
               return;
@@ -959,12 +961,12 @@ export default class NPMPlugin implements IPlugin {
             auto.logger.log.info(`Releasing ${tag}...`);
 
             // 1. generate release notes for just the commits for the package
-            const includedCommits = options.commits.filter(commit =>
-              commit.files.some(file => inFolder(lernaPackage.path, file))
+            const includedCommits = options.commits.filter((commit) =>
+              commit.files.some((file) => inFolder(lernaPackage.path, file))
             );
             const releaseNotes = await changelog.generateReleaseNotes([
               ...commitsAtRoot,
-              ...includedCommits
+              ...includedCommits,
             ]);
 
             auto.logger.log.info(`Using release notes:\n${releaseNotes}`);

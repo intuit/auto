@@ -2,12 +2,12 @@ import {
   Auto,
   execPromise,
   IPlugin,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import * as fs from 'fs';
-import { inc, ReleaseType } from 'semver';
-import { promisify } from 'util';
-import * as t from 'io-ts';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import * as fs from "fs";
+import { inc, ReleaseType } from "semver";
+import { promisify } from "util";
+import * as t from "io-ts";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -18,20 +18,20 @@ const pluginOptions = t.partial({
   /** The path to the manifest of the chrome extension */
   manifest: t.string,
   /** A path to the packaged extension */
-  build: t.string
+  build: t.string,
 });
 
 export type IChromeWebStoreConfig = t.TypeOf<typeof pluginOptions>;
 
 /** Get the chrome plugin manifest. */
 async function getManifest(path: string) {
-  return JSON.parse(await readFile(path, 'utf-8'));
+  return JSON.parse(await readFile(path, "utf-8"));
 }
 
 /** This plugin allows you to automate the publishing of chrome extensions */
 export default class ChromeWebStorePlugin implements IPlugin {
   /** The name of the plugin */
-  readonly name = 'chrome';
+  readonly name = "chrome";
 
   /** The options of the plugin */
   private readonly options: Required<IChromeWebStoreConfig>;
@@ -40,8 +40,8 @@ export default class ChromeWebStorePlugin implements IPlugin {
   constructor(config: IChromeWebStoreConfig) {
     this.options = {
       id: config.id || process.env.EXTENSION_ID!,
-      manifest: config.manifest || 'manifest.json',
-      build: config.build || process.env.EXTENSION_BUILD || 'extension.zip'
+      manifest: config.manifest || "manifest.json",
+      build: config.build || process.env.EXTENSION_BUILD || "extension.zip",
     };
   }
 
@@ -81,9 +81,9 @@ export default class ChromeWebStorePlugin implements IPlugin {
       }
 
       // Secrets
-      auto.checkEnv(this.name, 'CLIENT_ID');
-      auto.checkEnv(this.name, 'CLIENT_SECRET');
-      auto.checkEnv(this.name, 'REFRESH_TOKEN');
+      auto.checkEnv(this.name, "CLIENT_ID");
+      auto.checkEnv(this.name, "CLIENT_SECRET");
+      auto.checkEnv(this.name, "REFRESH_TOKEN");
     });
 
     auto.hooks.beforeShipIt.tap(this.name, () => {
@@ -143,7 +143,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (version) => {
       // increment version
       const manifest = await getManifest(this.options.manifest);
       manifest.version = inc(manifest.version, version as ReleaseType);
@@ -153,40 +153,40 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
 
       // commit new version
-      await execPromise('git', ['add', this.options.manifest]);
-      await execPromise('git', [
-        'commit',
-        '-m',
+      await execPromise("git", ["add", this.options.manifest]);
+      await execPromise("git", [
+        "commit",
+        "-m",
         `"Bump version to ${manifest.version} [skip ci]"`,
-        '--no-verify'
+        "--no-verify",
       ]);
 
-      await execPromise('git', [
-        'tag',
+      await execPromise("git", [
+        "tag",
         manifest.version,
-        '-m',
-        `"Update version to ${manifest.version}"`
+        "-m",
+        `"Update version to ${manifest.version}"`,
       ]);
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       // publish extension
-      await execPromise('webstore', [
-        'upload',
-        '--extension-id',
+      await execPromise("webstore", [
+        "upload",
+        "--extension-id",
         this.options.id,
-        '--source',
+        "--source",
         this.options.build,
-        '--auto-publish'
+        "--auto-publish",
       ]);
 
       // push to github
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
         auto.remote,
-        auto.baseBranch
+        auto.baseBranch,
       ]);
     });
   }

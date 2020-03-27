@@ -1,11 +1,11 @@
-import { ILogger } from '@auto-it/core';
-import envCi from 'env-ci';
-import path from 'path';
-import registryUrl from 'registry-url';
-import urlJoin from 'url-join';
-import userHome from 'user-home';
+import { ILogger } from "@auto-it/core";
+import envCi from "env-ci";
+import path from "path";
+import registryUrl from "registry-url";
+import urlJoin from "url-join";
+import userHome from "user-home";
 
-import { loadPackageJson, readFile, writeFile } from './utils';
+import { loadPackageJson, readFile, writeFile } from "./utils";
 
 const { isCi } = envCi();
 
@@ -16,8 +16,8 @@ export default async function setTokenOnCI(logger: ILogger) {
   }
 
   const { publishConfig = {}, name } = await loadPackageJson();
-  const rc = path.join(userHome, '.npmrc');
-  let contents = '';
+  const rc = path.join(userHome, ".npmrc");
+  let contents = "";
 
   try {
     contents = (await readFile(rc)).toString();
@@ -29,7 +29,7 @@ export default async function setTokenOnCI(logger: ILogger) {
 
   if (publishConfig.registry) {
     registry = publishConfig.registry;
-  } else if (name?.startsWith('@')) {
+  } else if (name?.startsWith("@")) {
     const scope = name.split(`/`)[0];
     registry = registryUrl(scope);
   } else {
@@ -40,7 +40,7 @@ export default async function setTokenOnCI(logger: ILogger) {
 
   const url = registry.replace(/^https?:/, ``);
   // eslint-disable-next-line no-template-curly-in-string
-  const authTokenString = urlJoin(url, ':_authToken=${NPM_TOKEN}');
+  const authTokenString = urlJoin(url, ":_authToken=${NPM_TOKEN}");
 
   logger.verbose.info(`Will set authentication token string in ${rc}`);
 

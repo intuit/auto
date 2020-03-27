@@ -1,14 +1,14 @@
-import { execPromise } from '@auto-it/core';
-import GhPages, { IGhPagesPluginOptions } from '../src';
-import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
-import { dummyLog } from '@auto-it/core/dist/utils/logger';
-import { execSync } from 'child_process';
+import { execPromise } from "@auto-it/core";
+import GhPages, { IGhPagesPluginOptions } from "../src";
+import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
+import { execSync } from "child_process";
 
 const execSyncSpy = execSync as jest.Mock;
-jest.mock('child_process');
+jest.mock("child_process");
 
 const execSpy = execPromise as jest.Mock;
-jest.mock('@auto-it/core');
+jest.mock("@auto-it/core");
 
 /** Create a test for gh-pages plugin */
 function createTest(
@@ -23,117 +23,117 @@ function createTest(
     logger: dummyLog(),
     setGitUser: () => undefined,
     ...autoOverrides,
-    git: autoOverrides.git || {}
+    git: autoOverrides.git || {},
   } as any);
 
   return hooks;
 }
 
-describe('Gh-Pages Plugin', () => {
+describe("Gh-Pages Plugin", () => {
   beforeEach(() => {
     execSpy.mockReset();
   });
 
-  describe('beforeShipit', () => {
-    test('should not release on anything but a latest release', async () => {
-      const hooks = createTest({ dir: 'test' });
+  describe("beforeShipit", () => {
+    test("should not release on anything but a latest release", async () => {
+      const hooks = createTest({ dir: "test" });
 
-      await hooks.beforeShipIt.promise({ releaseType: 'canary' });
-      await hooks.beforeShipIt.promise({ releaseType: 'next' });
-      await hooks.beforeShipIt.promise({ releaseType: 'old' });
+      await hooks.beforeShipIt.promise({ releaseType: "canary" });
+      await hooks.beforeShipIt.promise({ releaseType: "next" });
+      await hooks.beforeShipIt.promise({ releaseType: "old" });
 
       expect(execSpy).not.toHaveBeenCalled();
     });
 
-    test('should not release if there is a version bump', async () => {
-      const hooks = createTest({ dir: 'test' }, { getVersion: () => 'patch' });
+    test("should not release if there is a version bump", async () => {
+      const hooks = createTest({ dir: "test" }, { getVersion: () => "patch" });
 
-      await hooks.beforeShipIt.promise({ releaseType: 'latest' });
+      await hooks.beforeShipIt.promise({ releaseType: "latest" });
       expect(execSpy).not.toHaveBeenCalled();
     });
 
-    test('should not release if there is no matching PR', async () => {
+    test("should not release if there is no matching PR", async () => {
       const hooks = createTest(
-        { dir: 'test' },
+        { dir: "test" },
         {
-          getVersion: () => '',
-          git: { getSha: () => '123', matchCommitToPr: () => undefined }
+          getVersion: () => "",
+          git: { getSha: () => "123", matchCommitToPr: () => undefined },
         }
       );
 
-      await hooks.beforeShipIt.promise({ releaseType: 'latest' });
+      await hooks.beforeShipIt.promise({ releaseType: "latest" });
       expect(execSpy).not.toHaveBeenCalled();
     });
 
     test("should not release if PR doesn't have documentation label", async () => {
       const hooks = createTest(
-        { dir: 'test' },
+        { dir: "test" },
         {
-          getVersion: () => '',
-          git: { getSha: () => '123', matchCommitToPr: () => ({ labels: [] }) }
+          getVersion: () => "",
+          git: { getSha: () => "123", matchCommitToPr: () => ({ labels: [] }) },
         }
       );
 
-      await hooks.beforeShipIt.promise({ releaseType: 'latest' });
+      await hooks.beforeShipIt.promise({ releaseType: "latest" });
       expect(execSpy).not.toHaveBeenCalled();
     });
 
-    test('should release if noVersion + documentation label', async () => {
+    test("should release if noVersion + documentation label", async () => {
       const hooks = createTest(
-        { dir: 'test' },
+        { dir: "test" },
         {
-          getVersion: () => '',
+          getVersion: () => "",
           git: {
-            getSha: () => '123',
-            matchCommitToPr: () => ({ labels: ['documentation'] })
-          }
+            getSha: () => "123",
+            matchCommitToPr: () => ({ labels: ["documentation"] }),
+          },
         }
       );
 
-      await hooks.beforeShipIt.promise({ releaseType: 'latest' });
+      await hooks.beforeShipIt.promise({ releaseType: "latest" });
       expect(execSpy).toHaveBeenCalled();
     });
   });
 
-  describe('afterRelease', () => {
-    test('should not release if there is not GitHub release', async () => {
-      const hooks = createTest({ dir: 'test' });
+  describe("afterRelease", () => {
+    test("should not release if there is not GitHub release", async () => {
+      const hooks = createTest({ dir: "test" });
       await hooks.afterRelease.promise({ response: undefined } as any);
       expect(execSpy).not.toHaveBeenCalled();
     });
 
-    test('should not release if it was pre-release', async () => {
-      const hooks = createTest({ dir: 'test' });
+    test("should not release if it was pre-release", async () => {
+      const hooks = createTest({ dir: "test" });
       await hooks.afterRelease.promise({
-        response: { data: { prerelease: true } }
+        response: { data: { prerelease: true } },
       } as any);
       expect(execSpy).not.toHaveBeenCalled();
     });
 
-    test('should run build command if present', async () => {
-      const buildCommand = 'dew it';
+    test("should run build command if present", async () => {
+      const buildCommand = "dew it";
       const hooks = createTest({
-        dir: 'test',
-        buildCommand
+        dir: "test",
+        buildCommand,
       });
       await hooks.afterRelease.promise({
-        response: { data: { prerelease: false } }
+        response: { data: { prerelease: false } },
       } as any);
       expect(execSyncSpy).toHaveBeenCalledWith(buildCommand);
     });
 
-    test('should successfully deploy to gh-pages', async () => {
-      const hooks = createTest({ dir: 'test' });
+    test("should successfully deploy to gh-pages", async () => {
+      const hooks = createTest({ dir: "test" });
       await hooks.afterRelease.promise({
-        response: { data: { prerelease: false } }
+        response: { data: { prerelease: false } },
       } as any);
-      expect(execSpy).toHaveBeenCalledWith('npx', [
-        'push-dir',
-        '--cleanup',
-        '--remote=undefined',
-        '--dir=test',
-        '--branch=gh-pages',
-        '--message="Update docs [skip ci]"'
+      expect(execSpy).toHaveBeenCalledWith("npx", [
+        "push-dir",
+        "--cleanup",
+        "--remote=undefined",
+        "--dir=test",
+        "--branch=gh-pages",
+        '--message="Update docs [skip ci]"',
       ]);
     });
   });

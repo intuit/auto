@@ -1,4 +1,4 @@
-import execPromise from './exec-promise';
+import execPromise from "./exec-promise";
 
 interface LernaPackage {
   /** Path to package */
@@ -11,9 +11,9 @@ interface LernaPackage {
 
 /** Get all of the packages in the lerna monorepo */
 export default async function getLernaPackages(): Promise<LernaPackage[]> {
-  return execPromise('npx', ['lerna', 'ls', '-pl']).then(res =>
-    res.split('\n').map(packageInfo => {
-      const [packagePath, name, version] = packageInfo.split(':');
+  return execPromise("npx", ["lerna", "ls", "-pl"]).then((res) =>
+    res.split("\n").map((packageInfo) => {
+      const [packagePath, name, version] = packageInfo.split(":");
       return { path: packagePath, name, version };
     })
   );

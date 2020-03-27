@@ -13,31 +13,31 @@ import Auto, {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
-  INextOptions
-} from '@auto-it/core';
-import endent from 'endent';
-import on from 'await-to-js';
-import link from 'terminal-link';
+  INextOptions,
+} from "@auto-it/core";
+import endent from "endent";
+import on from "await-to-js";
+import link from "terminal-link";
 
 /** Spin up the "auto" node API and provide it the parsed CLI args. */
 export async function run(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
   try {
-    if (command === 'init') {
+    if (command === "init") {
       await auto.init();
       return;
     }
 
     await auto.loadConfig();
 
-    if (args.verbose || command === 'info') {
+    if (args.verbose || command === "info") {
       try {
-        // We don't want auto.info throwing an error during another 
+        // We don't want auto.info throwing an error during another
         // command
         const { hasError } = await auto.info();
 
-        if (command === 'info') {
+        if (command === "info") {
           // eslint-disable-next-line max-depth
           if (hasError) {
             process.exit(1);
@@ -46,50 +46,50 @@ export async function run(command: string, args: ApiOptions) {
           }
         }
       } catch (error) {
-        if (command === 'info') {
+        if (command === "info") {
           process.exit(1);
         }
       }
     }
 
     switch (command) {
-      case 'create-labels':
+      case "create-labels":
         await auto.createLabels(args as ICreateLabelsOptions);
         break;
-      case 'label':
+      case "label":
         await auto.label(args as ILabelOptions);
         break;
-      case 'pr-check':
+      case "pr-check":
         await auto.prCheck(args as IPRCheckOptions);
         break;
-      case 'pr-status':
+      case "pr-status":
         await auto.prStatus(args as IPRStatusOptions);
         break;
-      case 'comment':
+      case "comment":
         await auto.comment(args as ICommentOptions);
         break;
-      case 'pr-body':
+      case "pr-body":
         await auto.prBody(args as IPRBodyOptions);
         break;
-      case 'version':
+      case "version":
         await auto.version(args as IVersionOptions);
         break;
-      case 'changelog':
+      case "changelog":
         await auto.changelog(args as IChangelogOptions);
         break;
-      case 'release':
+      case "release":
         await auto.runRelease(args as IReleaseOptions);
         break;
-      case 'shipit':
+      case "shipit":
         await auto.shipit(args as IShipItOptions);
         break;
-      case 'latest':
+      case "latest":
         await auto.latest(args as IShipItOptions);
         break;
-      case 'canary':
+      case "canary":
         await auto.canary(args as ICanaryOptions);
         break;
-      case 'next':
+      case "next":
         await auto.next(args as INextOptions);
         break;
       default:
@@ -100,7 +100,7 @@ export async function run(command: string, args: ApiOptions) {
       const [, project] = await on(auto.git!.getProject());
       const repoLink = link(
         `${auto.git?.options.owner}/${auto.git?.options.repo}`,
-        project?.html_url || ''
+        project?.html_url || ""
       );
 
       auto.logger.log.error(endent`
@@ -112,7 +112,7 @@ export async function run(command: string, args: ApiOptions) {
 
         You can check the permission for you token by running "auto info".
       `);
-      console.log('');
+      console.log("");
       auto.logger.verbose.error(error.request);
     } else {
       console.log(error);

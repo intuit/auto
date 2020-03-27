@@ -1,32 +1,32 @@
-import { graphql } from '@octokit/graphql';
-import { enterpriseCompatibility } from '@octokit/plugin-enterprise-compatibility';
-import path from 'path';
-import { retry } from '@octokit/plugin-retry';
-import { throttling } from '@octokit/plugin-throttling';
-import { Octokit } from '@octokit/rest';
-import gitlogNode from 'gitlogplus';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import tinyColor from 'tinycolor2';
-import { promisify } from 'util';
-import endent from 'endent';
-import on from 'await-to-js';
+import { graphql } from "@octokit/graphql";
+import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibility";
+import path from "path";
+import { retry } from "@octokit/plugin-retry";
+import { throttling } from "@octokit/plugin-throttling";
+import { Octokit } from "@octokit/rest";
+import gitlogNode from "gitlogplus";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import tinyColor from "tinycolor2";
+import { promisify } from "util";
+import endent from "endent";
+import on from "await-to-js";
 
-import { Memoize as memoize } from 'typescript-memoize';
+import { Memoize as memoize } from "typescript-memoize";
 
-import { ILabelDefinition } from './release';
-import verifyAuth from './utils/verify-auth';
-import execPromise from './utils/exec-promise';
-import { dummyLog, ILogger } from './utils/logger';
-import { gt } from 'semver';
-import { ICommit } from './log-parse';
-import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
+import { ILabelDefinition } from "./release";
+import verifyAuth from "./utils/verify-auth";
+import execPromise from "./utils/exec-promise";
+import { dummyLog, ILogger } from "./utils/logger";
+import { gt } from "semver";
+import { ICommit } from "./log-parse";
+import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
 
 const gitlog = promisify(gitlogNode);
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
-export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, 'owner' | 'repo'>;
+export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, "owner" | "repo">;
 
 export interface IGitOptions {
   /** Github repo owner (user) */
@@ -63,11 +63,11 @@ const makeIdentifier = (type: string, context: string) =>
 
 /** Make an identifier for `auto comment` */
 const makeCommentIdentifier = (context: string) =>
-  makeIdentifier('COMMENT', context);
+  makeIdentifier("COMMENT", context);
 
 /** Make an identifier for `auto pr-body` */
 const makePrBodyIdentifier = (context: string) =>
-  makeIdentifier('PR BODY', context);
+  makeIdentifier("PR BODY", context);
 
 interface ThrottleOpts {
   /** The request object */
@@ -99,7 +99,7 @@ export default class Git {
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
     this.logger = logger;
     this.options = options;
-    this.baseUrl = this.options.baseUrl || 'https://api.github.com';
+    this.baseUrl = this.options.baseUrl || "https://api.github.com";
     this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     const GitHub = Octokit.plugin(enterpriseCompatibility)
@@ -108,7 +108,7 @@ export default class Git {
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
-      previews: ['symmetra-preview'],
+      previews: ["symmetra-preview"],
       request: { agent: this.options.agent },
       throttle: {
         onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
@@ -126,10 +126,10 @@ export default class Git {
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${opts.url}`
           );
-        }
-      }
+        },
+      },
     });
-    this.github.hook.error('request', error => {
+    this.github.hook.error("request", (error) => {
       if (error?.headers?.authorization) {
         delete error.headers.authorization;
       }
@@ -148,7 +148,7 @@ export default class Git {
   async getLatestReleaseInfo() {
     const latestRelease = await this.github.repos.getLatestRelease({
       owner: this.options.owner,
-      repo: this.options.repo
+      repo: this.options.repo,
     });
 
     return latestRelease.data;
@@ -164,7 +164,7 @@ export default class Git {
         'Got response for "getLatestRelease":\n',
         latestRelease
       );
-      this.logger.verbose.info('Got latest release:\n', latestRelease);
+      this.logger.verbose.info("Got latest release:\n", latestRelease);
 
       return latestRelease.tag_name;
     } catch (e) {
@@ -181,24 +181,24 @@ export default class Git {
 
   /** Get the date a commit sha was created */
   async getCommitDate(sha: string): Promise<string> {
-    const date = await execPromise('git', ['show', '-s', '--format=%ci', sha]);
-    const [day, time, timezone] = date.split(' ');
+    const date = await execPromise("git", ["show", "-s", "--format=%ci", sha]);
+    const [day, time, timezone] = date.split(" ");
 
     return `${day}T${time}${timezone}`;
   }
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise('git', ['rev-list', 'HEAD']);
-    return list.split('\n').pop() as string;
+    const list = await execPromise("git", ["rev-list", "HEAD"]);
+    return list.split("\n").pop() as string;
   }
 
   /** Get the SHA of the latest commit */
   async getSha(short?: boolean): Promise<string> {
-    const result = await execPromise('git', [
-      'rev-parse',
-      short && '--short',
-      'HEAD'
+    const result = await execPromise("git", [
+      "rev-parse",
+      short && "--short",
+      "HEAD",
     ]);
 
     this.logger.verbose.info(`Got commit SHA from HEAD: ${result}`);
@@ -209,7 +209,7 @@ export default class Git {
   /** Get the SHA of the latest commit */
   async shaExists(sha?: string): Promise<boolean> {
     try {
-      await execPromise('git', ['rev-parse', '--verify', sha]);
+      await execPromise("git", ["rev-parse", "--verify", sha]);
       return true;
     } catch (error) {
       return false;
@@ -224,10 +224,10 @@ export default class Git {
     const args: Octokit.IssuesListLabelsOnIssueParams = {
       owner: this.options.owner,
       repo: this.options.repo,
-      issue_number: prNumber
+      issue_number: prNumber,
     };
 
-    this.logger.verbose.info('Getting issue labels using:', args);
+    this.logger.verbose.info("Getting issue labels using:", args);
 
     try {
       const labels = await this.github.issues.listLabelsOnIssue(args);
@@ -235,11 +235,11 @@ export default class Git {
         'Got response for "listLabelsOnIssue":\n',
         labels
       );
-      this.logger.verbose.info('Found labels on PR:\n', labels.data);
+      this.logger.verbose.info("Found labels on PR:\n", labels.data);
 
-      return labels.data.map(l => l.name);
+      return labels.data.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError('listLabelsOnIssue', args, e);
+      throw new GitAPIError("listLabelsOnIssue", args, e);
     }
   }
 
@@ -251,17 +251,17 @@ export default class Git {
     const args: Octokit.IssuesListLabelsOnIssueParams = {
       owner: this.options.owner,
       repo: this.options.repo,
-      issue_number: prNumber
+      issue_number: prNumber,
     };
 
-    this.logger.verbose.info('Getting issue info using:', args);
+    this.logger.verbose.info("Getting issue info using:", args);
 
     try {
       const info = await this.github.issues.get(args);
       this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
       return info;
     } catch (e) {
-      throw new GitAPIError('getPr', args, e);
+      throw new GitAPIError("getPr", args, e);
     }
   }
 
@@ -274,7 +274,7 @@ export default class Git {
       const info = await this.github.repos.getCommit({
         owner: this.options.owner,
         repo: this.options.repo,
-        ref: sha
+        ref: sha,
       });
       this.logger.veryVerbose.info(
         'Got response for "repos.getCommit":\n',
@@ -282,7 +282,7 @@ export default class Git {
       );
       return info;
     } catch (e) {
-      throw new GitAPIError('getCommit', [], e);
+      throw new GitAPIError("getCommit", [], e);
     }
   }
 
@@ -294,7 +294,7 @@ export default class Git {
 
     const args = {
       owner: this.options.owner,
-      repo: this.options.repo
+      repo: this.options.repo,
     };
 
     try {
@@ -306,32 +306,32 @@ export default class Git {
         'Got response for "getProjectLabels":\n',
         labels
       );
-      this.logger.verbose.info('Found labels on project:\n', labels);
+      this.logger.verbose.info("Found labels on project:\n", labels);
 
-      return labels.map(l => l.name);
+      return labels.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError('getProjectLabels', args, e);
+      throw new GitAPIError("getProjectLabels", args, e);
     }
   }
 
   /** Get the git log for a range of commits */
   @memoize()
-  async getGitLog(start: string, end = 'HEAD'): Promise<ICommit[]> {
+  async getGitLog(start: string, end = "HEAD"): Promise<ICommit[]> {
     try {
       const log = await gitlog<ICommit>({
         repo: process.cwd(),
         number: Number.MAX_SAFE_INTEGER,
-        fields: ['hash', 'authorName', 'authorEmail', 'rawBody'],
+        fields: ["hash", "authorName", "authorEmail", "rawBody"],
         branch: `${start.trim()}..${end.trim()}`,
-        execOptions: { maxBuffer: 1000 * 1024 }
+        execOptions: { maxBuffer: 1000 * 1024 },
       });
 
-      return log.map(commit => ({
+      return log.map((commit) => ({
         hash: commit.hash,
         authorName: commit.authorName,
         authorEmail: commit.authorEmail,
         subject: commit.rawBody!,
-        files: (commit.files || []).map(file => path.resolve(file))
+        files: (commit.files || []).map((file) => path.resolve(file)),
       }));
     } catch (error) {
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
@@ -359,7 +359,7 @@ export default class Git {
     try {
       const search = (
         await this.github.search.users({
-          q: `in:email ${email}`
+          q: `in:email ${email}`,
         })
       ).data;
 
@@ -376,7 +376,7 @@ export default class Git {
 
     if (!user) {
       return {
-        permission: 'none'
+        permission: "none",
       };
     }
 
@@ -385,14 +385,14 @@ export default class Git {
         await this.github.repos.getCollaboratorPermissionLevel({
           owner: this.options.owner,
           repo: this.options.repo,
-          username: user.data.login
+          username: user.data.login,
         })
       ).data;
 
       return { permission, user: user.data };
     } catch (error) {
       this.logger.verbose.error(`Could not get permissions for token`);
-      return { permission: 'read', user: user.data };
+      return { permission: "read", user: user.data };
     }
   }
 
@@ -401,7 +401,7 @@ export default class Git {
   async getUserByUsername(username: string) {
     try {
       const user = await this.github.users.getByUsername({
-        username
+        username,
       });
 
       return user.data;
@@ -418,15 +418,15 @@ export default class Git {
     const args: Octokit.PullsGetParams = {
       owner: this.options.owner,
       repo: this.options.repo,
-      pull_number: pr
+      pull_number: pr,
     };
 
-    this.logger.verbose.info('Getting pull request info using:', args);
+    this.logger.verbose.info("Getting pull request info using:", args);
 
     const result = await this.github.pulls.get(args);
 
-    this.logger.veryVerbose.info('Got pull request data\n', result);
-    this.logger.verbose.info('Got pull request info');
+    this.logger.veryVerbose.info("Got pull request data\n", result);
+    this.logger.verbose.info("Got pull request info");
 
     return result;
   }
@@ -436,29 +436,29 @@ export default class Git {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
 
-    this.logger.verbose.info('Searching repo using:\n', options);
+    this.logger.verbose.info("Searching repo using:\n", options);
 
     const result = await this.github.search.issuesAndPullRequests(options);
 
-    this.logger.veryVerbose.info('Got response from search\n', result);
-    this.logger.verbose.info('Searched repo on GitHub.');
+    this.logger.veryVerbose.info("Got response from search\n", result);
+    this.logger.verbose.info("Searched repo on GitHub.");
 
     return result.data;
   }
 
   /** Run a graphql query on the GitHub project */
   async graphql(query: string) {
-    this.logger.verbose.info('Querying Github using GraphQL:\n', query);
+    this.logger.verbose.info("Querying Github using GraphQL:\n", query);
 
     const data = await graphql(query, {
       baseUrl: this.graphqlBaseUrl,
       request: { agent: this.options.agent },
       headers: {
-        authorization: `token ${this.options.token}`
-      }
+        authorization: `token ${this.options.token}`,
+      },
     });
 
-    this.logger.veryVerbose.info('Got response from query\n', data);
+    this.logger.veryVerbose.info("Got response from query\n", data);
     return data;
   }
 
@@ -467,15 +467,15 @@ export default class Git {
     const args = {
       ...prInfo,
       owner: this.options.owner,
-      repo: this.options.repo
+      repo: this.options.repo,
     };
 
-    this.logger.verbose.info('Creating status using:\n', args);
+    this.logger.verbose.info("Creating status using:\n", args);
 
     const result = await this.github.repos.createStatus(args);
 
-    this.logger.veryVerbose.info('Got response from createStatues\n', result);
-    this.logger.verbose.info('Created status on GitHub.');
+    this.logger.veryVerbose.info("Got response from createStatues\n", result);
+    this.logger.verbose.info("Created status on GitHub.");
 
     return result;
   }
@@ -483,22 +483,22 @@ export default class Git {
   /** Add a label to the project */
   async createLabel(label: ILabelDefinition) {
     this.logger.verbose.info(
-      `Creating "${label.releaseType || 'general'}" label :\n${label.name}`
+      `Creating "${label.releaseType || "general"}" label :\n${label.name}`
     );
 
     const color = label.color
-      ? tinyColor(label.color).toString('hex6')
-      : tinyColor.random().toString('hex6');
+      ? tinyColor(label.color).toString("hex6")
+      : tinyColor.random().toString("hex6");
     const result = await this.github.issues.createLabel({
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: color.replace('#', ''),
-      description: label.description
+      color: color.replace("#", ""),
+      description: label.description,
     });
 
-    this.logger.veryVerbose.info('Got response from createLabel\n', result);
-    this.logger.verbose.info('Created label on GitHub.');
+    this.logger.veryVerbose.info("Got response from createLabel\n", result);
+    this.logger.verbose.info("Created label on GitHub.");
 
     return result;
   }
@@ -506,23 +506,23 @@ export default class Git {
   /** Update a label on the project */
   async updateLabel(label: ILabelDefinition) {
     this.logger.verbose.info(
-      `Updating "${label.releaseType || 'generic'}" label :\n${label.name}`
+      `Updating "${label.releaseType || "generic"}" label :\n${label.name}`
     );
 
     const color = label.color
-      ? tinyColor(label.color).toString('hex6')
-      : tinyColor.random().toString('hex6');
+      ? tinyColor(label.color).toString("hex6")
+      : tinyColor.random().toString("hex6");
     const result = await this.github.issues.updateLabel({
       current_name: label.name,
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: color.replace('#', ''),
-      description: label.description
+      color: color.replace("#", ""),
+      description: label.description,
     });
 
-    this.logger.veryVerbose.info('Got response from updateLabel\n', result);
-    this.logger.verbose.info('Updated label on GitHub.');
+    this.logger.veryVerbose.info("Got response from updateLabel\n", result);
+    this.logger.verbose.info("Updated label on GitHub.");
 
     return result;
   }
@@ -535,11 +535,11 @@ export default class Git {
       issue_number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
-      labels: [label]
+      labels: [label],
     });
 
-    this.logger.veryVerbose.info('Got response from addLabels\n', result);
-    this.logger.verbose.info('Added labels on Pull Request.');
+    this.logger.veryVerbose.info("Got response from addLabels\n", result);
+    this.logger.verbose.info("Added labels on Pull Request.");
 
     return result;
   }
@@ -552,11 +552,11 @@ export default class Git {
       issue_number: pr,
       owner: this.options.owner,
       repo: this.options.repo,
-      name: label
+      name: label,
     });
 
-    this.logger.veryVerbose.info('Got response from removeLabel\n', result);
-    this.logger.verbose.info('Removed label on Pull Request.');
+    this.logger.veryVerbose.info("Got response from removeLabel\n", result);
+    this.logger.verbose.info("Removed label on Pull Request.");
 
     return result;
   }
@@ -568,11 +568,11 @@ export default class Git {
     const result = await this.github.issues.lock({
       issue_number: issue,
       owner: this.options.owner,
-      repo: this.options.repo
+      repo: this.options.repo,
     });
 
-    this.logger.veryVerbose.info('Got response from lock\n', result);
-    this.logger.verbose.info('Locked issue.');
+    this.logger.veryVerbose.info("Got response from lock\n", result);
+    this.logger.verbose.info("Locked issue.");
 
     return result;
   }
@@ -580,35 +580,35 @@ export default class Git {
   /** Get information about the GitHub project */
   @memoize()
   async getProject() {
-    this.logger.verbose.info('Getting project from GitHub');
+    this.logger.verbose.info("Getting project from GitHub");
 
     const result = (
       await this.github.repos.get({
         owner: this.options.owner,
-        repo: this.options.repo
+        repo: this.options.repo,
       })
     ).data;
 
-    this.logger.veryVerbose.info('Got response from repos\n', result);
-    this.logger.verbose.info('Got project information.');
+    this.logger.veryVerbose.info("Got response from repos\n", result);
+    this.logger.verbose.info("Got project information.");
 
     return result;
   }
 
   /** Get all the pull requests for a project */
   async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
-    this.logger.verbose.info('Getting pull requests...');
+    this.logger.verbose.info("Getting pull requests...");
 
     const result = (
       await this.github.pulls.list({
         owner: this.options.owner.toLowerCase(),
         repo: this.options.repo.toLowerCase(),
-        ...options
+        ...options,
       })
     ).data;
 
-    this.logger.veryVerbose.info('Got response from pull requests', result);
-    this.logger.verbose.info('Got pull request');
+    this.logger.veryVerbose.info("Got response from pull requests", result);
+    this.logger.verbose.info("Got pull request");
 
     return result;
   }
@@ -624,7 +624,7 @@ export default class Git {
       this.github.pulls.listCommits.endpoint({
         owner: this.options.owner.toLowerCase(),
         repo: this.options.repo.toLowerCase(),
-        pull_number: pr
+        pull_number: pr,
       })
     );
 
@@ -635,20 +635,20 @@ export default class Git {
   }
 
   /** Find a comment that is using the context in a PR */
-  async getCommentId(pr: number, context = 'default') {
+  async getCommentId(pr: number, context = "default") {
     const commentIdentifier = makeCommentIdentifier(context);
 
-    this.logger.verbose.info('Getting previous comments on:', pr);
+    this.logger.verbose.info("Getting previous comments on:", pr);
 
     const comments = await this.github.issues.listComments({
       owner: this.options.owner,
       repo: this.options.repo,
-      issue_number: pr
+      issue_number: pr,
     });
 
-    this.logger.veryVerbose.info('Got PR comments\n', comments);
+    this.logger.veryVerbose.info("Got PR comments\n", comments);
 
-    const oldMessage = comments.data.find(comment =>
+    const oldMessage = comments.data.find((comment) =>
       comment.body.includes(commentIdentifier)
     );
 
@@ -656,12 +656,12 @@ export default class Git {
       return -1;
     }
 
-    this.logger.verbose.info('Found previous message from same scope.');
+    this.logger.verbose.info("Found previous message from same scope.");
     return oldMessage.id;
   }
 
   /** Delete a comment on an issue or pull request */
-  async deleteComment(pr: number, context = 'default') {
+  async deleteComment(pr: number, context = "default") {
     const commentId = await this.getCommentId(pr, context);
 
     if (commentId === -1) {
@@ -672,95 +672,95 @@ export default class Git {
     await this.github.issues.deleteComment({
       owner: this.options.owner,
       repo: this.options.repo,
-      comment_id: commentId
+      comment_id: commentId,
     });
     this.logger.verbose.info(`Successfully deleted comment: ${commentId}`);
   }
 
   /** Create a comment on an issue or pull request */
-  async createComment(message: string, pr: number, context = 'default') {
+  async createComment(message: string, pr: number, context = "default") {
     const commentIdentifier = makeCommentIdentifier(context);
 
-    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
+    this.logger.verbose.info("Using comment identifier:", commentIdentifier);
     await this.deleteComment(pr, context);
-    this.logger.verbose.info('Creating new comment');
+    this.logger.verbose.info("Creating new comment");
     const result = await this.github.issues.createComment({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr,
-      body: `${commentIdentifier}\n${message}`
+      body: `${commentIdentifier}\n${message}`,
     });
 
     this.logger.veryVerbose.info(
-      'Got response from creating comment\n',
+      "Got response from creating comment\n",
       result
     );
-    this.logger.verbose.info('Successfully posted comment to PR');
+    this.logger.verbose.info("Successfully posted comment to PR");
 
     return result;
   }
 
   /** Edit a comment on an issue or pull request */
-  async editComment(message: string, pr: number, context = 'default') {
+  async editComment(message: string, pr: number, context = "default") {
     const commentIdentifier = makeCommentIdentifier(context);
 
-    this.logger.verbose.info('Using comment identifier:', commentIdentifier);
+    this.logger.verbose.info("Using comment identifier:", commentIdentifier);
     const commentId = await this.getCommentId(pr, context);
     if (commentId === -1) {
       return this.createComment(message, pr, context);
     }
 
-    this.logger.verbose.info('Editing comment');
+    this.logger.verbose.info("Editing comment");
     const result = await this.github.issues.updateComment({
       owner: this.options.owner,
       repo: this.options.repo,
       comment_id: commentId,
-      body: `${commentIdentifier}\n${message}`
+      body: `${commentIdentifier}\n${message}`,
     });
 
-    this.logger.veryVerbose.info('Got response from editing comment\n', result);
-    this.logger.verbose.info('Successfully edited comment on PR');
+    this.logger.veryVerbose.info("Got response from editing comment\n", result);
+    this.logger.verbose.info("Successfully edited comment on PR");
 
     return result;
   }
 
   /** Create a comment on a pull request body */
-  async addToPrBody(message: string, pr: number, context = 'default') {
+  async addToPrBody(message: string, pr: number, context = "default") {
     const id = makePrBodyIdentifier(context);
 
-    this.logger.verbose.info('Using PR body identifier:', id);
-    this.logger.verbose.info('Getting previous pr body on:', pr);
+    this.logger.verbose.info("Using PR body identifier:", id);
+    this.logger.verbose.info("Getting previous pr body on:", pr);
 
     const issue = await this.github.issues.get({
       owner: this.options.owner,
       repo: this.options.repo,
-      issue_number: pr
+      issue_number: pr,
     });
 
-    this.logger.veryVerbose.info('Got PR description\n', issue.data.body);
+    this.logger.veryVerbose.info("Got PR description\n", issue.data.body);
     const regex = new RegExp(`(${id})\\s*([\\S\\s]*)\\s*(${id})`);
     let body = issue.data.body;
 
     if (!body) {
-      body = message ? `\n${id}\n${message}\n${id}\n` : '';
+      body = message ? `\n${id}\n${message}\n${id}\n` : "";
     } else if (body.match(regex)) {
-      this.logger.verbose.info('Found previous message from same scope.');
-      this.logger.verbose.info('Replacing pr body comment');
-      body = body.replace(regex, message ? `$1\n${message}\n$3` : '');
+      this.logger.verbose.info("Found previous message from same scope.");
+      this.logger.verbose.info("Replacing pr body comment");
+      body = body.replace(regex, message ? `$1\n${message}\n$3` : "");
     } else {
-      body += message ? `\n${id}\n${message}\n${id}\n` : '';
+      body += message ? `\n${id}\n${message}\n${id}\n` : "";
     }
 
-    this.logger.verbose.info('Creating new pr body');
+    this.logger.verbose.info("Creating new pr body");
 
     const result = await this.github.issues.update({
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: pr,
-      body
+      body,
     });
 
-    this.logger.veryVerbose.info('Got response from updating body\n', result);
+    this.logger.veryVerbose.info("Got response from updating body\n", result);
     this.logger.verbose.info(`Successfully updated body of PR #${pr}`);
 
     return result;
@@ -768,25 +768,25 @@ export default class Git {
 
   /** Create a release for the GitHub projecct */
   async publish(releaseNotes: string, tag: string, prerelease = false) {
-    this.logger.verbose.info('Creating release on GitHub for tag:', tag);
+    this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
     const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
       body: releaseNotes,
-      prerelease
+      prerelease,
     });
 
-    this.logger.veryVerbose.info('Got response from createRelease\n', result);
-    this.logger.verbose.info('Created GitHub release.');
+    this.logger.veryVerbose.info("Got response from createRelease\n", result);
+    this.logger.verbose.info("Created GitHub release.");
 
     return result;
   }
 
   /** Get the latest tag in the git tree */
   async getLatestTagInBranch(since?: string) {
-    return execPromise('git', ['describe', '--tags', '--abbrev=0', since]);
+    return execPromise("git", ["describe", "--tags", "--abbrev=0", since]);
   }
 
   /** Get the tag before latest in the git tree */
@@ -797,16 +797,16 @@ export default class Git {
 
   /** Get all the tags for a given branch. */
   async getTags(branch: string) {
-    const tags = await execPromise('git', [
-      'tag',
+    const tags = await execPromise("git", [
+      "tag",
       "--sort='creatordate'",
-      '--merged',
-      branch
+      "--merged",
+      branch,
     ]);
 
     return tags
-      .split('\n')
-      .map(tag => tag.trim())
+      .split("\n")
+      .map((tag) => tag.trim())
       .filter(Boolean);
   }
 
@@ -824,9 +824,9 @@ export default class Git {
       return result;
     });
 
-    this.logger.verbose.info('Tags found in base branch:', baseTags);
-    this.logger.verbose.info('Tags found in branch:', branchTags);
-    this.logger.verbose.info('Latest tag in branch:', firstGreatestUnique);
+    this.logger.verbose.info("Tags found in base branch:", baseTags);
+    this.logger.verbose.info("Tags found in branch:", branchTags);
+    this.logger.verbose.info("Latest tag in branch:", firstGreatestUnique);
 
     return firstGreatestUnique;
   }
@@ -834,7 +834,7 @@ export default class Git {
   /** Determine the pull request for a commit hash */
   async matchCommitToPr(sha: string) {
     const query = buildSearchQuery(this.options.owner, this.options.repo, [
-      sha
+      sha,
     ]);
 
     if (!query) {
@@ -852,7 +852,7 @@ export default class Git {
 
     return {
       ...pr,
-      labels: pr.labels ? pr.labels.edges.map(edge => edge.node.name) : []
+      labels: pr.labels ? pr.labels.edges.map((edge) => edge.node.name) : [],
     };
   }
 }

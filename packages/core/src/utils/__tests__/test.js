@@ -1,1 +1,1 @@
-module.exports = 'success';
+module.exports = "success";

@@ -1,7 +1,7 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
-import merge from 'deepmerge';
-import * as t from 'io-ts';
+import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import merge from "deepmerge";
+import * as t from "io-ts";
 
 const pluginOptions = t.partial({
   /** Message to use when posting on issues and pull requests */
@@ -11,29 +11,29 @@ const pluginOptions = t.partial({
   /** The label to add to issues and pull requests that are in a prerelease */
   prereleaseLabel: t.string,
   /** Whether to lock the issue once the pull request has been released */
-  lockIssues: t.boolean
+  lockIssues: t.boolean,
 });
 
 export type IReleasedLabelPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-const TYPE = '%TYPE';
-const VERSION = '%VERSION';
+const TYPE = "%TYPE";
+const VERSION = "%VERSION";
 const defaultOptions: Required<IReleasedLabelPluginOptions> = {
-  label: 'released',
-  prereleaseLabel: 'prerelease',
+  label: "released",
+  prereleaseLabel: "prerelease",
   lockIssues: false,
-  message: `:rocket: ${TYPE} was released in \`${VERSION}\` :rocket:`
+  message: `:rocket: ${TYPE} was released in \`${VERSION}\` :rocket:`,
 };
 
 const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
 
 /** Determine if string is a canary version */
-const isCanary = (version: string) => version.match('canary');
+const isCanary = (version: string) => version.match("canary");
 
 /** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'released';
+  name = "released";
 
   /** The options of the plugin */
   readonly options: Required<IReleasedLabelPluginOptions>;
@@ -47,20 +47,20 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.modifyConfig.tap(this.name, config => {
-      if (!config.labels.find(l => l.name === this.options.label)) {
+    auto.hooks.modifyConfig.tap(this.name, (config) => {
+      if (!config.labels.find((l) => l.name === this.options.label)) {
         config.labels.push({
           name: this.options.label,
-          description: 'This issue/pull request has been released.',
-          releaseType: 'none'
+          description: "This issue/pull request has been released.",
+          releaseType: "none",
         });
       }
 
-      if (!config.labels.find(l => l.name === this.options.prereleaseLabel)) {
+      if (!config.labels.find((l) => l.name === this.options.prereleaseLabel)) {
         config.labels.push({
           name: this.options.prereleaseLabel,
-          description: 'This change is available in a prerelease.',
-          releaseType: 'none'
+          description: "This change is available in a prerelease.",
+          releaseType: "none",
         });
       }
 
@@ -87,9 +87,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
         }
 
         const skipReleaseLabels = (
-          auto.config?.labels.filter(l => l.releaseType === 'skip') || []
-        ).map(l => l.name);
-        const isSkipped = head.labels.find(label =>
+          auto.config?.labels.filter((l) => l.releaseType === "skip") || []
+        ).map((l) => l.name);
+        const isSkipped = head.labels.find((label) =>
           skipReleaseLabels.includes(label)
         );
 
@@ -98,11 +98,11 @@ export default class ReleasedLabelPlugin implements IPlugin {
         }
 
         const isPrerelease = Array.isArray(response)
-          ? response.some(r => r?.data.prerelease)
+          ? response.some((r) => r?.data.prerelease)
           : response?.data.prerelease;
 
         await Promise.all(
-          commits.map(async commit =>
+          commits.map(async (commit) =>
             this.addReleased(auto, commit, newVersion, isPrerelease)
           )
         );
@@ -131,34 +131,34 @@ export default class ReleasedLabelPlugin implements IPlugin {
         auto,
         newVersion,
         prOrIssue: commit.pullRequest.number,
-        isPrerelease
+        isPrerelease,
       });
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
-      pr.data.body.split('\n').map(line => messages.push(line));
+      pr.data.body.split("\n").map((line) => messages.push(line));
 
       const commitsInPr = await auto.git!.getCommitsForPR(
         commit.pullRequest.number
       );
-      commitsInPr.map(c => messages.push(c.commit.message));
+      commitsInPr.map((c) => messages.push(c.commit.message));
     }
 
     const issues = messages
-      .map(message => message.match(closeIssue))
+      .map((message) => message.match(closeIssue))
       .filter((r): r is string[] => Boolean(r))
       .reduce((all, arr) => [...all, ...arr], [])
-      .map(issue => issue.match(/#(\d+)/i))
+      .map((issue) => issue.match(/#(\d+)/i))
       .filter((r: RegExpMatchArray | null): r is RegExpMatchArray => Boolean(r))
-      .map(match => Number(match[1]));
+      .map((match) => Number(match[1]));
 
     await Promise.all(
-      issues.map(async issue => {
+      issues.map(async (issue) => {
         await this.addCommentAndLabel({
           auto,
           newVersion,
           prOrIssue: issue,
           isIssue: true,
-          isPrerelease
+          isPrerelease,
         });
 
         if (this.options.lockIssues && !isCanary(newVersion) && !isPrerelease) {
@@ -174,7 +174,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     newVersion,
     prOrIssue,
     isIssue = false,
-    isPrerelease = false
+    isPrerelease = false,
   }: {
     /** Reference to auto instance */
     auto: Auto;
@@ -189,7 +189,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
   }) {
     // leave a comment with the new version
     const message = this.createReleasedComment(isIssue, newVersion);
-    await auto.comment({ message, pr: prOrIssue, context: 'released' });
+    await auto.comment({ message, pr: prOrIssue, context: "released" });
 
     // Do not add released to issue/label for canary versions
     if (isCanary(newVersion)) {
@@ -215,7 +215,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
   /** Create a comment that fits the context (pr of issue) */
   private createReleasedComment(isIssue: boolean, version: string) {
     return this.options.message
-      .replace(new RegExp(TYPE, 'g'), isIssue ? 'Issue' : 'PR')
-      .replace(new RegExp(VERSION, 'g'), version);
+      .replace(new RegExp(TYPE, "g"), isIssue ? "Issue" : "PR")
+      .replace(new RegExp(VERSION, "g"), version);
   }
 }

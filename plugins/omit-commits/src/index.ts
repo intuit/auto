@@ -1,5 +1,5 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import * as t from 'io-ts';
+import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import * as t from "io-ts";
 
 const pattern = t.union([t.string, t.array(t.string)]);
 const pluginOptions = t.partial({
@@ -12,7 +12,7 @@ const pluginOptions = t.partial({
   /** Commit messages to omit */
   subject: pattern,
   /** Labels to omit */
-  labels: pattern
+  labels: pattern,
 });
 
 export type IOmitCommitsPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -23,7 +23,7 @@ const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 /** Filter certain commits out of the changelog and version calculation. */
 export default class OmitCommitsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'omit-commits';
+  name = "omit-commits";
 
   /** The options of the plugin */
   readonly options: {
@@ -46,7 +46,7 @@ export default class OmitCommitsPlugin implements IPlugin {
       email: options.email ? arrayify(options.email) : [],
       name: options.name ? arrayify(options.name) : [],
       subject: options.subject ? arrayify(options.subject) : [],
-      labels: options.labels ? arrayify(options.labels) : []
+      labels: options.labels ? arrayify(options.labels) : [],
     };
   }
 
@@ -58,24 +58,24 @@ export default class OmitCommitsPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.onCreateLogParse.tap(this.name, logParse => {
-      logParse.hooks.omitCommit.tap(this.name, commit => {
+    auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
+      logParse.hooks.omitCommit.tap(this.name, (commit) => {
         if (
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(author.name && this.options.name.includes(author.name))
           ) ||
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(author.email && this.options.email.includes(author.email))
           ) ||
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(
               author.username && this.options.username.includes(author.username)
             )
           ) ||
-          commit.labels.find(label =>
+          commit.labels.find((label) =>
             Boolean(this.options.labels.includes(label))
           ) ||
-          this.options.subject.find(str => commit.subject.includes(str))
+          this.options.subject.find((str) => commit.subject.includes(str))
         ) {
           return true;
         }

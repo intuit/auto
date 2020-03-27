@@ -1,5 +1,5 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import * as t from 'io-ts';
+import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import * as t from "io-ts";
 
 const pattern = t.union([t.string, t.array(t.string)]);
 const pluginOptions = t.partial({
@@ -10,7 +10,7 @@ const pluginOptions = t.partial({
   /** Names to omit */
   name: pattern,
   /** Labels to omit */
-  labels: pattern
+  labels: pattern,
 });
 
 export type IReleaseNotesPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -21,7 +21,7 @@ const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);
 /** Filter PRs with release notes that shouldn't make it into a release. */
 export default class ReleaseNotesPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'omit-release-notes';
+  name = "omit-release-notes";
 
   /** The options of the plugin */
   readonly options: {
@@ -41,7 +41,7 @@ export default class ReleaseNotesPlugin implements IPlugin {
       username: options.username ? arrayify(options.username) : [],
       email: options.email ? arrayify(options.email) : [],
       name: options.name ? arrayify(options.name) : [],
-      labels: options.labels ? arrayify(options.labels) : []
+      labels: options.labels ? arrayify(options.labels) : [],
     };
   }
 
@@ -53,21 +53,21 @@ export default class ReleaseNotesPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
-      changelog.hooks.omitReleaseNotes.tap(this.name, commit => {
+    auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
+      changelog.hooks.omitReleaseNotes.tap(this.name, (commit) => {
         if (
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(author.name && this.options.name.includes(author.name))
           ) ||
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(author.email && this.options.email.includes(author.email))
           ) ||
-          commit.authors.find(author =>
+          commit.authors.find((author) =>
             Boolean(
               author.username && this.options.username.includes(author.username)
             )
           ) ||
-          commit.labels.find(label =>
+          commit.labels.find((label) =>
             Boolean(this.options.labels.includes(label))
           )
         ) {

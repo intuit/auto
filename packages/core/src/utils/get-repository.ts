@@ -1,14 +1,14 @@
-import parseGitHubUrl from 'parse-github-url';
-import on from 'await-to-js';
+import parseGitHubUrl from "parse-github-url";
+import on from "await-to-js";
 
-import execPromise from './exec-promise';
+import execPromise from "./exec-promise";
 
 /**
  * Get the owner and repo from the configure remote "origin"
  */
 export default async function getRepository() {
   const [, origin] = await on(
-    execPromise('git', ['remote', 'get-url', 'origin'])
+    execPromise("git", ["remote", "get-url", "origin"])
   );
 
   if (origin) {

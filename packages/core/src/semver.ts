@@ -1,22 +1,22 @@
-import { VersionLabel } from './release';
+import { VersionLabel } from "./release";
 
 enum SEMVER {
-  major = 'major',
-  premajor = 'premajor',
-  minor = 'minor',
-  preminor = 'preminor',
-  patch = 'patch',
-  prepatch = 'prepatch',
-  noVersion = ''
+  major = "major",
+  premajor = "premajor",
+  minor = "minor",
+  preminor = "preminor",
+  patch = "patch",
+  prepatch = "prepatch",
+  noVersion = "",
 }
 
 export const preVersionMap = new Map([
   [SEMVER.major, SEMVER.premajor],
   [SEMVER.minor, SEMVER.preminor],
-  [SEMVER.patch, SEMVER.prepatch]
+  [SEMVER.patch, SEMVER.prepatch],
 ]);
 
-export type IVersionLabels = Map<VersionLabel | 'none', string[]>;
+export type IVersionLabels = Map<VersionLabel | "none", string[]>;
 
 export default SEMVER;
 
@@ -49,7 +49,7 @@ export function calculateSemVerBump(
   { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
 ) {
   const labelSet = new Set<string>();
-  const skipReleaseLabels = labelMap.get('skip') || [];
+  const skipReleaseLabels = labelMap.get("skip") || [];
 
   labels.forEach((pr, index) => {
     // If the head pr has no labels we default to a patch
@@ -57,8 +57,8 @@ export function calculateSemVerBump(
       labelSet.add(SEMVER.patch);
     }
 
-    pr.forEach(label => {
-      const userLabel = [...labelMap.entries()].find(pair =>
+    pr.forEach((label) => {
+      const userLabel = [...labelMap.entries()].find((pair) =>
         pair[1].includes(label)
       );
 
@@ -71,17 +71,17 @@ export function calculateSemVerBump(
   let skipRelease = false;
 
   if (labels.length > 0) {
-    const releaseLabels = labelMap.get('release') || [];
+    const releaseLabels = labelMap.get("release") || [];
 
     skipRelease = onlyPublishWithReleaseLabel
-      ? !labels[0].some(label => releaseLabels.includes(label))
-      : labels[0].some(label => skipReleaseLabels.includes(label));
+      ? !labels[0].some((label) => releaseLabels.includes(label))
+      : labels[0].some((label) => skipReleaseLabels.includes(label));
   }
 
   // If PRs only have none or skip labels, skip the release
   const onlyNoReleaseLabels = [...labelSet].reduce(
     (condition, releaseType) =>
-      condition && (releaseType === 'none' || releaseType === 'skip'),
+      condition && (releaseType === "none" || releaseType === "skip"),
     true
   );
 

@@ -1,6 +1,6 @@
-import { applyPlugins, mappers, parse } from 'parse-commit-message';
+import { applyPlugins, mappers, parse } from "parse-commit-message";
 
-import { Auto, IPlugin, VersionLabel, SEMVER } from '@auto-it/core';
+import { Auto, IPlugin, VersionLabel, SEMVER } from "@auto-it/core";
 
 /**
  * Parse conventional commit messages and use them to
@@ -8,12 +8,12 @@ import { Auto, IPlugin, VersionLabel, SEMVER } from '@auto-it/core';
  */
 export default class ConventionalCommitsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'conventional-commits';
+  name = "conventional-commits";
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.onCreateLogParse.tap(this.name, logParse => {
-      logParse.hooks.parseCommit.tap(this.name, commit => {
+    auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
+      logParse.hooks.parseCommit.tap(this.name, (commit) => {
         if (!auto.semVerLabels) {
           return commit;
         }
@@ -29,7 +29,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           const allSemVerLabels = [
             auto.semVerLabels.get(SEMVER.major),
             auto.semVerLabels.get(SEMVER.minor),
-            auto.semVerLabels.get(SEMVER.patch)
+            auto.semVerLabels.get(SEMVER.patch),
           ].reduce<string[]>(
             (acc, labels) => (labels ? [...acc, ...labels] : acc),
             []
@@ -38,7 +38,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           if (
             conventionalCommit.header &&
             incrementLabel &&
-            !commit.labels.some(l => allSemVerLabels.includes(l))
+            !commit.labels.some((l) => allSemVerLabels.includes(l))
           ) {
             commit.labels = [...commit.labels, ...incrementLabel];
           }
@@ -52,7 +52,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       });
 
       // should omit PR commit if there exists a commit with a CC commit message
-      logParse.hooks.omitCommit.tapPromise(this.name, async commit => {
+      logParse.hooks.omitCommit.tapPromise(this.name, async (commit) => {
         if (
           auto.git &&
           auto.release &&
@@ -65,7 +65,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
           // Omit the commit if one of the commits in the PR contains a CC message since it will already be counted
           return Boolean(
-            prCommits.find(c => {
+            prCommits.find((c) => {
               try {
                 return Boolean(parse(c.commit.message)[0].header);
               } catch (error) {

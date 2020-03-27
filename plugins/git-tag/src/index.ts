@@ -3,14 +3,14 @@ import {
   determineNextVersion,
   execPromise,
   IPlugin,
-  getCurrentBranch
-} from '@auto-it/core';
-import { inc, ReleaseType } from 'semver';
+  getCurrentBranch,
+} from "@auto-it/core";
+import { inc, ReleaseType } from "semver";
 
 /** Manage your projects version through just a git tag. */
 export default class GitTagPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'git-tag';
+  name = "git-tag";
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
@@ -19,7 +19,7 @@ export default class GitTagPlugin implements IPlugin {
       try {
         return await auto.git!.getLatestTagInBranch();
       } catch (error) {
-        return auto.prefixRelease('0.0.0');
+        return auto.prefixRelease("0.0.0");
       }
     }
 
@@ -33,7 +33,7 @@ export default class GitTagPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async version => {
+    auto.hooks.version.tapPromise(this.name, async (version) => {
       if (!auto.git) {
         return;
       }
@@ -42,18 +42,18 @@ export default class GitTagPlugin implements IPlugin {
       const newTag = inc(lastTag, version as ReleaseType);
 
       if (!newTag) {
-        auto.logger.log.info('No release found, doing nothing');
+        auto.logger.log.info("No release found, doing nothing");
         return;
       }
 
       const prefixedTag = auto.prefixRelease(newTag);
 
       auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
-      await execPromise('git', [
-        'tag',
+      await execPromise("git", [
+        "tag",
         prefixedTag,
-        '-m',
-        `"Update version to ${prefixedTag}"`
+        "-m",
+        `"Update version to ${prefixedTag}"`,
       ]);
     });
 
@@ -63,7 +63,7 @@ export default class GitTagPlugin implements IPlugin {
       }
 
       const prereleaseBranches = auto.config?.prereleaseBranches!;
-      const branch = getCurrentBranch() || '';
+      const branch = getCurrentBranch() || "";
       const prereleaseBranch = prereleaseBranches.includes(branch)
         ? branch
         : prereleaseBranches[0];
@@ -78,27 +78,27 @@ export default class GitTagPlugin implements IPlugin {
         prereleaseBranch
       );
 
-      await execPromise('git', [
-        'tag',
+      await execPromise("git", [
+        "tag",
         prerelease,
-        '-m',
-        `"Tag pre-release: ${prerelease}"`
+        "-m",
+        `"Tag pre-release: ${prerelease}"`,
       ]);
-      await execPromise('git', ['push', auto.remote, '--tags']);
+      await execPromise("git", ["push", auto.remote, "--tags"]);
 
       return preReleaseVersions;
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      auto.logger.log.info('Pushing new tag to GitHub');
+      auto.logger.log.info("Pushing new tag to GitHub");
 
-      await execPromise('git', [
-        'push',
-        '--follow-tags',
-        '--set-upstream',
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
         auto.remote,
-        getCurrentBranch() || auto.baseBranch
+        getCurrentBranch() || auto.baseBranch,
       ]);
-    })
+    });
   }
 }

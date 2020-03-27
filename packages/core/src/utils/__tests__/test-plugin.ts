@@ -1,6 +1,6 @@
 module.exports = class Test {
   /** The name of the plugin */
-  name = 'foo';
+  name = "foo";
 
   /** The options of the plugin */
   config: {};

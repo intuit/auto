@@ -1,21 +1,21 @@
 /* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
 
-import endent from 'endent';
-import { prompt } from 'enquirer';
-import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
+import endent from "endent";
+import { prompt } from "enquirer";
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
-import { makeInteractiveInitHooks } from './utils/make-hooks';
-import { defaultLabels, ILabelDefinition } from './release';
-import SEMVER from './semver';
-import loadPlugin from './utils/load-plugins';
-import { ILogger } from './utils/logger';
-import { readFileSync, writeFileSync } from 'fs';
+import { makeInteractiveInitHooks } from "./utils/make-hooks";
+import { defaultLabels, ILabelDefinition } from "./release";
+import SEMVER from "./semver";
+import loadPlugin from "./utils/load-plugins";
+import { ILogger } from "./utils/logger";
+import { readFileSync, writeFileSync } from "fs";
 import {
   AutoRc,
   RepoInformation,
   AuthorInformation,
-  PluginConfig
-} from './types';
+  PluginConfig,
+} from "./types";
 
 // const writeFile = promisify(fs.writeFile);
 
@@ -24,7 +24,7 @@ interface Confirmation {
   confirmed: boolean;
 }
 
-interface InputResponse<T = 'string'> {
+interface InputResponse<T = "string"> {
   /** he value of the input prompt */
   value: T;
 }
@@ -62,9 +62,9 @@ async function getLabel(label?: ILabelDefinition) {
   }
 
   const response = await prompt<LabelResponse>({
-    type: 'snippet',
-    name: 'value',
-    message: label ? `Edit "${label.name}" label:` : 'Add a label:',
+    type: "snippet",
+    name: "value",
+    message: label ? `Edit "${label.name}" label:` : "Add a label:",
     // @ts-ignore
     template: label
       ? endent`{
@@ -72,7 +72,7 @@ async function getLabel(label?: ILabelDefinition) {
           ${
             label.changelogTitle
               ? `changelogTitle: #{changelogTitle:${label.changelogTitle}},`
-              : ''
+              : ""
           }
           description: #{description:${label.description}},
           releaseType: #{releaseType:${label.releaseType}}
@@ -88,16 +88,16 @@ async function getLabel(label?: ILabelDefinition) {
       values: ILabelDefinition;
     }) => {
       if (!state.values.name) {
-        return 'name is required for new label';
+        return "name is required for new label";
       }
 
       const releaseTypes = [
         SEMVER.major,
         SEMVER.minor,
         SEMVER.patch,
-        'none',
-        'skip',
-        'release'
+        "none",
+        "skip",
+        "release",
       ];
 
       if (
@@ -105,19 +105,19 @@ async function getLabel(label?: ILabelDefinition) {
         !releaseTypes.includes(state.values.releaseType)
       ) {
         return `Release type can only be one of the following: ${releaseTypes.join(
-          ', '
+          ", "
         )}`;
       }
 
       return true;
-    }
+    },
   });
 
   const {
     name,
     changelogTitle,
     description,
-    releaseType
+    releaseType,
   } = response.value.values;
   return { name, changelogTitle, description, releaseType };
 }
@@ -127,20 +127,20 @@ async function getAdditionalLabels() {
   const labels: ILabelDefinition[] = [];
 
   let addLabels = await prompt<Confirmation>({
-    type: 'confirm',
-    name: 'confirmed',
-    message: 'Would you like to add more labels?',
-    initial: 'no'
+    type: "confirm",
+    name: "confirmed",
+    message: "Would you like to add more labels?",
+    initial: "no",
   });
 
   while (addLabels.confirmed) {
     labels.push(await getLabel());
 
     addLabels = await prompt<Confirmation>({
-      type: 'confirm',
-      name: 'confirmed',
-      message: 'Would you like to add another label?',
-      initial: 'no'
+      type: "confirm",
+      name: "confirmed",
+      message: "Would you like to add another label?",
+      initial: "no",
     });
   }
 
@@ -151,10 +151,10 @@ async function getAdditionalLabels() {
 async function getCustomizedDefaultLabels() {
   const labels: ILabelDefinition[] = [];
   const addLabels = await prompt<Confirmation>({
-    type: 'confirm',
-    name: 'confirmed',
-    message: 'Would you like to use customize the default labels?',
-    initial: 'no'
+    type: "confirm",
+    name: "confirmed",
+    message: "Would you like to use customize the default labels?",
+    initial: "no",
   });
 
   if (addLabels.confirmed) {
@@ -174,79 +174,79 @@ async function getCustomizedDefaultLabels() {
 /** Get the plugins the user wants to use */
 async function getPlugins() {
   const releasePlugins = {
-    'Chrome Web Store': 'chrome',
-    'Rust Crate': 'crates',
-    'Git Tag': 'git-tag',
-    'npm Package': 'npm',
-    Maven: 'maven'
+    "Chrome Web Store": "chrome",
+    "Rust Crate": "crates",
+    "Git Tag": "git-tag",
+    "npm Package": "npm",
+    Maven: "maven",
   };
 
   const releasePlugin = await prompt<InputResponse>({
-    type: 'select',
-    name: 'value',
+    type: "select",
+    name: "value",
     required: true,
     message:
-      'What package manager plugin would you like to publish your project with?',
-    choices: Object.keys(releasePlugins)
+      "What package manager plugin would you like to publish your project with?",
+    choices: Object.keys(releasePlugins),
   });
 
   const featurePlugin = await prompt<InputResponse<string[]>>({
-    type: 'multiselect',
-    name: 'value',
+    type: "multiselect",
+    name: "value",
     required: true,
-    message: 'What other plugins would you like to use?',
+    message: "What other plugins would you like to use?",
     choices: [
       {
-        name: 'all-contributors',
+        name: "all-contributors",
         message:
-          'All Contributors - Automatically add contributors as changelogs are produced'
+          "All Contributors - Automatically add contributors as changelogs are produced",
       },
       {
-        name: 'conventional-commits',
-        message: 'Conventional Commits - Parse conventional commit messages'
+        name: "conventional-commits",
+        message: "Conventional Commits - Parse conventional commit messages",
       },
       {
-        name: 'first-time-contributor',
+        name: "first-time-contributor",
         message:
-          'First Time Contributor - Thank first time contributors for their work right in your release notes'
+          "First Time Contributor - Thank first time contributors for their work right in your release notes",
       },
       {
-        name: 'jira',
-        message: 'Jira - Include Jira story information'
+        name: "jira",
+        message: "Jira - Include Jira story information",
       },
       {
-        name: 'released',
-        message: 'Released - Mark PRs as released'
+        name: "released",
+        message: "Released - Mark PRs as released",
       },
       {
-        name: 'slack',
-        message: 'Slack - Post your release notes to a slack channel'
+        name: "slack",
+        message: "Slack - Post your release notes to a slack channel",
       },
       {
-        name: 'twitter',
-        message: 'Twitter - Post tweets after a release is made'
-      }
-    ]
+        name: "twitter",
+        message: "Twitter - Post tweets after a release is made",
+      },
+    ],
   });
 
   return [
     releasePlugins[releasePlugin.value as keyof typeof releasePlugins],
-    ...featurePlugin.value
+    ...featurePlugin.value,
   ];
 }
 
 /** Get env vars, create .env file, add to .gitignore */
-async function createEnv(hook: InteractiveInitHooks['createEnv']) {
+async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   let currentEnv: string;
 
   try {
-    currentEnv = readFileSync('.env', { encoding: 'utf8' });
+    currentEnv = readFileSync(".env", { encoding: "utf8" });
   } catch (error) {
-    currentEnv = '';
+    currentEnv = "";
   }
 
   const env = (await hook.promise([])).filter(
-    envVar => !currentEnv.includes(envVar.variable)
+    (envVar) => !currentEnv.includes(envVar.variable)
   );
 
   if (env.length === 0) {
@@ -254,11 +254,11 @@ async function createEnv(hook: InteractiveInitHooks['createEnv']) {
   }
 
   const shouldCreateEnv = await prompt<Confirmation>({
-    type: 'confirm',
-    name: 'confirmed',
+    type: "confirm",
+    name: "confirmed",
     message:
-      'Would you like to create an .env file? This makes it easy to test and use auto locally.',
-    initial: 'yes'
+      "Would you like to create an .env file? This makes it easy to test and use auto locally.",
+    initial: "yes",
   });
 
   if (!shouldCreateEnv.confirmed) {
@@ -270,28 +270,28 @@ async function createEnv(hook: InteractiveInitHooks['createEnv']) {
     await last;
 
     const token = await prompt<InputResponse>({
-      type: 'input',
-      name: 'value',
+      type: "input",
+      name: "value",
       message: envVar.message,
-      required: true
+      required: true,
     });
 
     currentEnv += `${envVar.variable}=${token.value}\n`;
   }, Promise.resolve());
 
-  writeFileSync('.env', currentEnv);
+  writeFileSync(".env", currentEnv);
 
   let gitIgnore: string;
 
   try {
-    gitIgnore = readFileSync('.env', { encoding: 'utf8' });
+    gitIgnore = readFileSync(".env", { encoding: "utf8" });
   } catch (error) {
-    gitIgnore = '';
+    gitIgnore = "";
   }
 
   // Add env to gitignore if not already there
-  if (!gitIgnore.includes('.env')) {
-    writeFileSync('.env', gitIgnore ? `${gitIgnore}\n.env` : '.env');
+  if (!gitIgnore.includes(".env")) {
+    writeFileSync(".env", gitIgnore ? `${gitIgnore}\n.env` : ".env");
   }
 }
 
@@ -318,14 +318,14 @@ export default class InteractiveInit {
   /** Run a prompt to get the author information */
   async getAuthorInformation() {
     const response = await prompt({
-      type: 'snippet',
-      name: 'author',
+      type: "snippet",
+      name: "author",
       message: `What git user would you like to make commits with?`,
       required: true,
       // @ts-ignore
       template: endent`
         Name:   #{name} 
-        Email:  #{email}`
+        Email:  #{email}`,
     });
 
     return response.author.values as AuthorInformation;
@@ -334,12 +334,12 @@ export default class InteractiveInit {
   /** Run a prompt to get the repo information */
   async getRepoInformation() {
     const response = await prompt({
-      type: 'snippet',
-      name: 'repoInfo',
+      type: "snippet",
+      name: "repoInfo",
       message: `What GitHub project you would like to publish?`,
       required: true,
       // @ts-ignore
-      template: endent`#{owner}/#{repo}`
+      template: endent`#{owner}/#{repo}`,
     });
 
     return response.repoInfo.values as RepoInformation;
@@ -347,17 +347,17 @@ export default class InteractiveInit {
 
   /** Load the default behavior */
   private tapDefaults() {
-    this.hooks.getRepo.tapPromise('Init Default', this.getRepoInformation);
-    this.hooks.getAuthor.tapPromise('Init Default', this.getAuthorInformation);
-    this.hooks.createEnv.tap('Init Default', vars => [
+    this.hooks.getRepo.tapPromise("Init Default", this.getRepoInformation);
+    this.hooks.getAuthor.tapPromise("Init Default", this.getAuthorInformation);
+    this.hooks.createEnv.tap("Init Default", (vars) => [
       ...vars,
       {
-        variable: 'GH_TOKEN',
-        message: `Enter a personal access token for the GitHub API https://github.com/settings/tokens/new`
-      }
+        variable: "GH_TOKEN",
+        message: `Enter a personal access token for the GitHub API https://github.com/settings/tokens/new`,
+      },
     ]);
-    this.hooks.writeRcFile.tap('Init Default', rc => {
-      const filename = '.autorc';
+    this.hooks.writeRcFile.tap("Init Default", (rc) => {
+      const filename = ".autorc";
       writeFileSync(filename, JSON.stringify(rc, null, 2));
       this.logger.log.success(`Wrote configuration to: ${filename}`);
     });
@@ -371,8 +371,8 @@ export default class InteractiveInit {
 
     if (plugins) {
       plugins
-        .map(name => loadPlugin([name, {}], this.logger))
-        .forEach(plugin => {
+        .map((name) => loadPlugin([name, {}], this.logger))
+        .forEach((plugin) => {
           if (plugin?.init) {
             plugin.init(this);
           }
@@ -381,7 +381,7 @@ export default class InteractiveInit {
       autoRc.plugins = await plugins.reduce(async (last, plugin) => {
         return [
           ...(await last),
-          (await this.hooks.configurePlugin.promise(plugin)) || plugin
+          (await this.hooks.configurePlugin.promise(plugin)) || plugin,
         ];
       }, Promise.resolve([] as PluginConfig[]));
     }
@@ -389,21 +389,21 @@ export default class InteractiveInit {
     this.tapDefaults();
     const repoInfo = await this.hooks.getRepo.promise();
 
-    if (typeof repoInfo === 'object') {
+    if (typeof repoInfo === "object") {
       autoRc = { ...autoRc, ...repoInfo };
     }
 
     const author = await this.hooks.getAuthor.promise();
 
-    if (typeof author === 'object') {
+    if (typeof author === "object") {
       autoRc = { ...autoRc, ...author };
     }
 
     const onlyPublishWithReleaseLabel = await prompt<Confirmation>({
-      type: 'confirm',
-      name: 'confirmed',
+      type: "confirm",
+      name: "confirmed",
       message: 'Only make releases if "release" label is on pull request?',
-      initial: 'no'
+      initial: "no",
     });
 
     if (onlyPublishWithReleaseLabel.confirmed) {
@@ -411,22 +411,22 @@ export default class InteractiveInit {
     }
 
     const isEnterprise = await prompt<Confirmation>({
-      type: 'confirm',
-      name: 'confirmed',
-      message: 'Are you using an enterprise instance of GitHub?',
-      initial: 'no'
+      type: "confirm",
+      name: "confirmed",
+      message: "Are you using an enterprise instance of GitHub?",
+      initial: "no",
     });
 
     if (isEnterprise.confirmed) {
       const response = await prompt({
-        type: 'snippet',
-        name: 'repoInfo',
+        type: "snippet",
+        name: "repoInfo",
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
         template: endent`
           GitHub API:  #{githubApi}
-          Graphql API: #{githubGraphqlApi}`
+          Graphql API: #{githubGraphqlApi}`,
       });
 
       autoRc = { ...autoRc, ...response.repoInfo.values };
@@ -436,7 +436,7 @@ export default class InteractiveInit {
 
     const newLabels = [
       ...(await getCustomizedDefaultLabels()),
-      ...(await getAdditionalLabels())
+      ...(await getAdditionalLabels()),
     ];
 
     if (newLabels.length > 0) {

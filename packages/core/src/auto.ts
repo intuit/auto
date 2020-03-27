@@ -1,25 +1,25 @@
-import { Octokit } from '@octokit/rest';
-import dotenv from 'dotenv';
-import envCi from 'env-ci';
-import fs from 'fs';
-import path from 'path';
-import link from 'terminal-link';
-import icons from 'log-symbols';
-import chalk from 'chalk';
-import { eq, gt, lte, inc, parse, ReleaseType, major } from 'semver';
+import { Octokit } from "@octokit/rest";
+import dotenv from "dotenv";
+import envCi from "env-ci";
+import fs from "fs";
+import path from "path";
+import link from "terminal-link";
+import icons from "log-symbols";
+import chalk from "chalk";
+import { eq, gt, lte, inc, parse, ReleaseType, major } from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   SyncHook,
   SyncWaterfallHook,
   AsyncSeriesHook,
-  AsyncSeriesWaterfallHook
-} from 'tapable';
-import endent from 'endent';
-import { parse as parseUrl, format } from 'url';
-import on from 'await-to-js';
+  AsyncSeriesWaterfallHook,
+} from "tapable";
+import endent from "endent";
+import { parse as parseUrl, format } from "url";
+import on from "await-to-js";
 
-import createHttpsProxyAgent from 'https-proxy-agent';
+import createHttpsProxyAgent from "https-proxy-agent";
 import {
   ApiOptions,
   ICanaryOptions,
@@ -32,37 +32,37 @@ import {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
-  INextOptions
-} from './auto-args';
-import Changelog from './changelog';
-import { preVersionMap } from './semver';
-import Config from './config';
-import Git, { IGitOptions, IPRInfo } from './git';
-import InteractiveInit from './init';
-import LogParse, { IExtendedCommit } from './log-parse';
-import Release, { getVersionMap, ILabelDefinition } from './release';
-import SEMVER, { calculateSemVerBump, IVersionLabels } from './semver';
-import execPromise from './utils/exec-promise';
-import loadPlugin, { IPlugin } from './utils/load-plugins';
-import createLog, { ILogger, setLogLevel } from './utils/logger';
-import { makeHooks } from './utils/make-hooks';
-import { getCurrentBranch } from './utils/get-current-branch';
-import { buildSearchQuery, ISearchResult } from './match-sha-to-pr';
-import getRepository from './utils/get-repository';
+  INextOptions,
+} from "./auto-args";
+import Changelog from "./changelog";
+import { preVersionMap } from "./semver";
+import Config from "./config";
+import Git, { IGitOptions, IPRInfo } from "./git";
+import InteractiveInit from "./init";
+import LogParse, { IExtendedCommit } from "./log-parse";
+import Release, { getVersionMap, ILabelDefinition } from "./release";
+import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
+import execPromise from "./utils/exec-promise";
+import loadPlugin, { IPlugin } from "./utils/load-plugins";
+import createLog, { ILogger, setLogLevel } from "./utils/logger";
+import { makeHooks } from "./utils/make-hooks";
+import { getCurrentBranch } from "./utils/get-current-branch";
+import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
+import getRepository from "./utils/get-repository";
 import {
   RepoInformation,
   AuthorInformation,
   AutoRc,
-  LoadedAutoRc
-} from './types';
+  LoadedAutoRc,
+} from "./types";
 import {
   validateAutoRc,
   validatePlugins,
   ValidatePluginHook,
-  formatError
-} from './validate-config';
-import { omit } from './utils/omit';
-import { execSync } from 'child_process';
+  formatError,
+} from "./validate-config";
+import { omit } from "./utils/omit";
+import { execSync } from "child_process";
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -85,7 +85,7 @@ interface TestingToken {
   token?: string;
 }
 
-type ShipitContext = 'canary' | 'next' | 'latest' | 'old';
+type ShipitContext = "canary" | "next" | "latest" | "old";
 
 interface ShipitInfo {
   /** The Version published when shipit ran */
@@ -106,7 +106,7 @@ const makeDetail = (summary: string, body: string) => endent`
   </details>
 `;
 
-type ShipitRelease = 'latest' | 'old' | 'next' | 'canary';
+type ShipitRelease = "latest" | "old" | "next" | "canary";
 
 interface BeforeShipitContext {
   /** The type of release that will be made when shipit runs. */
@@ -233,7 +233,7 @@ export interface IAutoHooks {
 
 /** Load the .env file into process.env. Useful for local usage. */
 const loadEnv = () => {
-  const envFile = path.resolve(process.cwd(), '.env');
+  const envFile = path.resolve(process.cwd(), ".env");
 
   if (!fs.existsSync(envFile)) {
     return;
@@ -248,7 +248,7 @@ const loadEnv = () => {
 
 /** Get the pr number from user input or the CI env. */
 function getPrNumberFromEnv(pr?: number) {
-  const envPr = 'pr' in env && Number(env.pr);
+  const envPr = "pr" in env && Number(env.pr);
   const prNumber = pr || envPr;
 
   return prNumber;
@@ -269,23 +269,23 @@ export function determineNextVersion(
   tag: string
 ) {
   const next =
-    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || 'prerelease';
+    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || "prerelease";
 
   return lte(next, currentVersion)
-    ? inc(currentVersion, 'prerelease', tag) || 'prerelease'
+    ? inc(currentVersion, "prerelease", tag) || "prerelease"
     : next;
 }
 
 /** Print the current version of "auto" */
 export function getAutoVersion() {
-  const packagePath = path.join(__dirname, '../package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+  const packagePath = path.join(__dirname, "../package.json");
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"));
   return packageJson.version;
 }
 
 /** Escape a string for use in a Regex */
 function escapeRegExp(str: string) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
 /**
@@ -321,47 +321,50 @@ export default class Auto {
   /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
     this.options = options;
-    this.baseBranch = options.baseBranch || 'master';
+    this.baseBranch = options.baseBranch || "master";
     setLogLevel(
       Array.isArray(options.verbose) && options.verbose.length > 1
-        ? 'veryVerbose'
+        ? "veryVerbose"
         : options.verbose
-        ? 'verbose'
+        ? "verbose"
         : undefined
     );
     this.logger = createLog();
     this.hooks = makeHooks();
 
     this.hooks.getRepository.tapPromise(
-      'Get repo info from origin',
+      "Get repo info from origin",
       getRepository
     );
-    this.hooks.onCreateRelease.tap('Link onCreateChangelog', release => {
+    this.hooks.onCreateRelease.tap("Link onCreateChangelog", (release) => {
       release.hooks.onCreateChangelog.tap(
-        'Link onCreateChangelog',
+        "Link onCreateChangelog",
         (changelog, version) => {
           this.hooks.onCreateChangelog.call(changelog, version);
         }
       );
     });
-    this.hooks.onCreateRelease.tap('Link onCreateLogParse', release => {
-      release.hooks.onCreateLogParse.tap('Link onCreateLogParse', logParse => {
-        this.hooks.onCreateLogParse.call(logParse);
-      });
+    this.hooks.onCreateRelease.tap("Link onCreateLogParse", (release) => {
+      release.hooks.onCreateLogParse.tap(
+        "Link onCreateLogParse",
+        (logParse) => {
+          this.hooks.onCreateLogParse.call(logParse);
+        }
+      );
     });
     this.hooks.beforeCommitChangelog.tapPromise(
-      'Old Version Branches',
+      "Old Version Branches",
       async ({ bump }) => {
         if (bump === SEMVER.major && this.config?.versionBranches) {
           const branch = `${this.config.versionBranches}${major(
             await this.hooks.getPreviousVersion.promise()
           )}`;
 
-          await execPromise('git', [
-            'branch',
-            await this.git?.getLatestTagInBranch()
+          await execPromise("git", [
+            "branch",
+            await this.git?.getLatestTagInBranch(),
           ]);
-          await execPromise('git', ['push', this.remote, branch]);
+          await execPromise("git", ["push", this.remote, branch]);
         }
       }
     );
@@ -370,32 +373,32 @@ export default class Auto {
      * Determine if repo is behind HEAD of current branch. We do this in
      * the "afterVersion" hook so the check happens as late as possible.
      */
-    this.hooks.afterVersion.tapPromise('Check remote for commits', async () => {
+    this.hooks.afterVersion.tapPromise("Check remote for commits", async () => {
       // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
       // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
       try {
-        const heads = await execPromise('git', [
-          'ls-remote',
-          '--heads',
+        const heads = await execPromise("git", [
+          "ls-remote",
+          "--heads",
           this.remote,
-          getCurrentBranch()
+          getCurrentBranch(),
         ]);
         const [, remoteHead] = heads.match(/^(\w+)?/) || [];
 
         if (remoteHead) {
           // This will throw if the branch is ahead of the current branch
           execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`, {
-            stdio: 'ignore'
+            stdio: "ignore",
           });
         }
 
         this.logger.verbose.info(
-          'Current branch is up to date, proceeding with release'
+          "Current branch is up to date, proceeding with release"
         );
       } catch (error) {
         // If we are behind or there is no match, exit and skip the release
         this.logger.log.warn(
-          'Current commit is behind, skipping the release to avoid collisions.'
+          "Current commit is behind, skipping the release to avoid collisions."
         );
         process.exit(0);
       }
@@ -403,7 +406,7 @@ export default class Auto {
 
     loadEnv();
 
-    this.logger.verbose.info('ENV:', env);
+    this.logger.verbose.info("ENV:", env);
   }
 
   /**
@@ -411,7 +414,7 @@ export default class Auto {
    * plugins take precedence.
    */
   private loadDefaultBehavior() {
-    this.hooks.makeRelease.tapPromise('Default', async options => {
+    this.hooks.makeRelease.tapPromise("Default", async (options) => {
       if (options.dryRun) {
         const bump = await this.getVersion({ from: options.from });
 
@@ -444,12 +447,12 @@ export default class Auto {
     const configLoader = new Config(this.logger);
     const userConfig = await configLoader.loadConfig();
 
-    this.logger.verbose.success('Loaded `auto` with config:', userConfig);
+    this.logger.verbose.success("Loaded `auto` with config:", userConfig);
 
     // Allow plugins to be overriden for testing
     this.config = {
       ...userConfig,
-      plugins: this.options.plugins || userConfig.plugins
+      plugins: this.options.plugins || userConfig.plugins,
     };
     this.loadPlugins(this.config!);
     this.loadDefaultBehavior();
@@ -460,7 +463,7 @@ export default class Auto {
 
     const errors = [
       ...(await validateAutoRc(this.config)),
-      ...(await validatePlugins(this.hooks.validateConfig, this.config))
+      ...(await validatePlugins(this.hooks.validateConfig, this.config)),
     ];
 
     if (errors.length) {
@@ -468,17 +471,17 @@ export default class Auto {
         endent`
           Found configuration errors:
           
-          ${errors.map(formatError).join('\n')}
+          ${errors.map(formatError).join("\n")}
         `,
-        '\n'
+        "\n"
       );
       this.logger.log.warn(
-        'These errors are for the fully loaded configuration (this is why some paths might seem off).'
+        "These errors are for the fully loaded configuration (this is why some paths might seem off)."
       );
 
       if (this.config.extends) {
         this.logger.log.warn(
-          'Some errors might originate from an extend config.'
+          "Some errors might originate from an extend config."
         );
       }
 
@@ -489,8 +492,8 @@ export default class Auto {
       ...this.config,
       // This Line overrides config with args
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...omit(this.options, ['_command', '_all', 'main'] as any),
-      baseBranch: this.baseBranch
+      ...omit(this.options, ["_command", "_all", "main"] as any),
+      baseBranch: this.baseBranch,
     };
     this.config = config;
     const repository = await this.getRepo(config);
@@ -499,11 +502,11 @@ export default class Auto {
       process.env.GH_TOKEN ||
       process.env.GITHUB_TOKEN;
 
-    if (!token || token === 'undefined') {
+    if (!token || token === "undefined") {
       this.logger.log.error(
-        'No GitHub was found. Make sure it is available on process.env.GH_TOKEN.'
+        "No GitHub was found. Make sure it is available on process.env.GH_TOKEN."
       );
-      throw new Error('GitHub token not found!');
+      throw new Error("GitHub token not found!");
     }
 
     const githubOptions = {
@@ -512,9 +515,9 @@ export default class Auto {
       ...repository,
       token,
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
-      baseUrl: config.githubApi || 'https://api.github.com',
+      baseUrl: config.githubApi || "https://api.github.com",
       graphqlBaseUrl:
-        config.githubGraphqlApi || config.githubApi || 'https://api.github.com'
+        config.githubGraphqlApi || config.githubApi || "https://api.github.com",
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
@@ -533,24 +536,24 @@ export default class Auto {
 
   /** Determine the remote we have auth to push to. */
   private async getRemote(): Promise<string> {
-    const [, configuredRemote = 'origin'] = await on(
-      execPromise('git', ['remote', 'get-url', 'origin'])
+    const [, configuredRemote = "origin"] = await on(
+      execPromise("git", ["remote", "get-url", "origin"])
     );
 
     if (!this.git) {
       return configuredRemote;
     }
 
-    const { html_url } = (await this.git.getProject()) || { html_url: '' };
+    const { html_url } = (await this.git.getProject()) || { html_url: "" };
 
     const GIT_TOKENS: Record<string, string | undefined> = {
       // GitHub Actions require the "x-access-token:" prefix for git access
       // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
       GITHUB_TOKEN: process.env.GITHUB_ACTION
         ? `x-access-token:${process.env.GITHUB_TOKEN}`
-        : undefined
+        : undefined,
     };
-    const envVar = Object.keys(GIT_TOKENS).find(v => process.env[v]) || '';
+    const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
     const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
 
     if (gitCredentials) {
@@ -559,21 +562,21 @@ export default class Auto {
       const urlWithAuth = format({
         ...parsed,
         auth: gitCredentials,
-        host: `${hostname}${port ? `:${port}` : ''}`
+        host: `${hostname}${port ? `:${port}` : ""}`,
       });
 
       if (await this.git.verifyAuth(urlWithAuth)) {
-        this.logger.veryVerbose.note('Using token + html URL as remote');
+        this.logger.veryVerbose.note("Using token + html URL as remote");
         return urlWithAuth;
       }
     }
 
     if (html_url && (await this.git.verifyAuth(html_url))) {
-      this.logger.veryVerbose.note('Using bare html URL as remote');
+      this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
     }
 
-    this.logger.veryVerbose.note('Using remote set in environment');
+    this.logger.veryVerbose.note("Using remote set in environment");
     return configuredRemote;
   }
 
@@ -589,7 +592,7 @@ export default class Auto {
       return { hasError: false };
     }
 
-    const [, gitVersion = ''] = await on(execPromise('git', ['--version']));
+    const [, gitVersion = ""] = await on(execPromise("git", ["--version"]));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
@@ -600,27 +603,27 @@ export default class Auto {
     const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
     const latestReleaseLink = latestRelease
       ? link(latestRelease.tag_name, latestRelease.html_url)
-      : '';
-    const { headers } = await this.git.github.request('HEAD /');
+      : "";
+    const { headers } = await this.git.github.request("HEAD /");
     const access = headers as Record<string, string>;
     const rateLimitRefresh = new Date(
-      Number(access['x-ratelimit-reset']) * 1000
+      Number(access["x-ratelimit-reset"]) * 1000
     );
-    const token = this.git.options.token || '';
+    const token = this.git.options.token || "";
     const tokenRefresh = `${rateLimitRefresh.toLocaleTimeString()} ${rateLimitRefresh.toLocaleDateString(
-      'en-us'
+      "en-us"
     )}`;
     const projectLabels = await this.git.getProjectLabels();
     const hasLabels = this.config?.labels.reduce((acc, label) => {
       if (
-        label.name === 'release' &&
+        label.name === "release" &&
         !this.config?.onlyPublishWithReleaseLabel
       ) {
         return acc;
       }
 
       if (
-        label.name === 'skip-release' &&
+        label.name === "skip-release" &&
         this.config?.onlyPublishWithReleaseLabel
       ) {
         return acc;
@@ -643,7 +646,7 @@ export default class Auto {
       return icons.success;
     };
 
-    console.log('');
+    console.log("");
     // prettier-ignore
     console.log(endent`
       ${chalk.underline.white('Environment Information:')}
@@ -673,7 +676,7 @@ export default class Auto {
       ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
-    console.log('');
+    console.log("");
 
     return { hasError };
   }
@@ -732,22 +735,22 @@ export default class Auto {
       labels = await this.git.getLabels(number);
     } else {
       const pulls = await this.git.getPullRequests({
-        state: 'closed'
+        state: "closed",
       });
       const lastMerged = pulls
         .sort(
           (a, b) =>
             new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
         )
-        .find(pull => pull.merged_at);
+        .find((pull) => pull.merged_at);
 
       if (lastMerged) {
-        labels = lastMerged.labels.map(label => label.name);
+        labels = lastMerged.labels.map((label) => label.name);
       }
     }
 
     if (labels.length) {
-      console.log(labels.join('\n'));
+      console.log(labels.join("\n"));
     }
   }
 
@@ -765,7 +768,7 @@ export default class Auto {
     let prNumber: number | undefined;
 
     try {
-      prNumber = this.getPrNumber('pr', pr);
+      prNumber = this.getPrNumber("pr", pr);
     } catch (error) {
       // default to sha if no PR found
     }
@@ -773,26 +776,26 @@ export default class Auto {
     this.logger.verbose.info("Using command: 'pr-status'");
 
     if (!sha && prNumber) {
-      this.logger.verbose.info('Getting commit SHA from PR.');
+      this.logger.verbose.info("Getting commit SHA from PR.");
       const res = await this.git.getPullRequest(prNumber);
       sha = res.data.head.sha;
     } else if (!sha) {
-      this.logger.verbose.info('No PR found, getting commit SHA from HEAD.');
+      this.logger.verbose.info("No PR found, getting commit SHA from HEAD.");
       sha = await this.git.getSha();
     }
 
-    this.logger.verbose.info('Found PR SHA:', sha);
+    this.logger.verbose.info("Found PR SHA:", sha);
 
     const target_url = url;
 
     if (dryRun) {
-      this.logger.verbose.info('`pr` dry run complete.');
+      this.logger.verbose.info("`pr` dry run complete.");
     } else {
       try {
         await this.git.createStatus({
           ...options,
           sha,
-          target_url
+          target_url,
         });
       } catch (error) {
         throw new Error(
@@ -800,10 +803,10 @@ export default class Auto {
         );
       }
 
-      this.logger.log.success('Posted status to Pull Request.');
+      this.logger.log.success("Posted status to Pull Request.");
     }
 
-    this.logger.verbose.success('Finished `pr` command');
+    this.logger.verbose.success("Finished `pr` command");
   }
 
   /**
@@ -819,7 +822,7 @@ export default class Auto {
     this.logger.verbose.info(`Using command: 'pr-check' for '${url}'`);
 
     const target_url = url;
-    const prNumber = this.getPrNumber('prCheck', pr);
+    const prNumber = this.getPrNumber("prCheck", pr);
     let msg;
     let sha;
 
@@ -829,22 +832,22 @@ export default class Auto {
 
       const labels = await this.git.getLabels(prNumber);
       const labelValues = [...this.semVerLabels.values()];
-      const releaseTag = labels.find(l => l === 'release');
+      const releaseTag = labels.find((l) => l === "release");
 
       const skipReleaseLabels = (
-        this.config?.labels.filter(l => l.releaseType === 'skip') || []
-      ).map(l => l.name);
-      const skipReleaseTag = labels.find(l => skipReleaseLabels.includes(l));
+        this.config?.labels.filter((l) => l.releaseType === "skip") || []
+      ).map((l) => l.name);
+      const skipReleaseTag = labels.find((l) => skipReleaseLabels.includes(l));
 
       const semverTag = labels.find(
-        l =>
-          labelValues.some(labelValue => labelValue.includes(l)) &&
+        (l) =>
+          labelValues.some((labelValue) => labelValue.includes(l)) &&
           !skipReleaseLabels.includes(l) &&
-          l !== 'release'
+          l !== "release"
       );
 
       if (semverTag === undefined && !skipReleaseTag) {
-        throw new Error('No semver label!');
+        throw new Error("No semver label!");
       }
 
       this.logger.log.success(
@@ -854,7 +857,7 @@ export default class Auto {
       let description;
 
       if (skipReleaseTag) {
-        description = 'PR will not create a release';
+        description = "PR will not create a release";
       } else if (releaseTag) {
         description = `PR will create release once merged - ${semverTag}`;
       } else {
@@ -863,29 +866,29 @@ export default class Auto {
 
       msg = {
         description,
-        state: 'success'
+        state: "success",
       };
     } catch (error) {
       msg = {
         description: error.message,
-        state: 'error'
+        state: "error",
       };
     }
 
-    this.logger.verbose.info('Posting status to GitHub\n', msg);
+    this.logger.verbose.info("Posting status to GitHub\n", msg);
 
     if (dryRun) {
-      this.logger.verbose.info('`pr-check` dry run complete.');
+      this.logger.verbose.info("`pr-check` dry run complete.");
     } else {
       try {
         await this.git.createStatus({
           ...options,
           ...msg,
           target_url,
-          sha
+          sha,
         } as IPRInfo);
 
-        this.logger.log.success('Posted status to Pull Request.');
+        this.logger.log.success("Posted status to Pull Request.");
       } catch (error) {
         throw new Error(
           `Failed to post status to Pull Request with error code ${error.status}`
@@ -893,7 +896,7 @@ export default class Auto {
       }
     }
 
-    this.logger.verbose.success('Finished `pr-check` command');
+    this.logger.verbose.success("Finished `pr-check` command");
   }
 
   /**
@@ -903,14 +906,14 @@ export default class Auto {
    * @param args - Options for the comment functionality
    */
   async comment(args: ICommentOptions) {
-    const options = { ...this.getCommandDefault('comment'), ...args };
+    const options = { ...this.getCommandDefault("comment"), ...args };
     const {
       message,
       pr,
-      context = 'default',
+      context = "default",
       dryRun,
       delete: deleteFlag,
-      edit: editFlag
+      edit: editFlag,
     } = options;
 
     if (!this.git) {
@@ -918,7 +921,7 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'comment'");
-    const prNumber = this.getPrNumber('comment', pr);
+    const prNumber = this.getPrNumber("comment", pr);
 
     if (dryRun) {
       if (deleteFlag) {
@@ -965,9 +968,9 @@ export default class Auto {
     const {
       message,
       pr,
-      context = 'default',
+      context = "default",
       dryRun,
-      delete: deleteFlag
+      delete: deleteFlag,
     } = options;
 
     if (!this.git) {
@@ -975,7 +978,7 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Using command: 'pr-body'");
-    const prNumber = this.getPrNumber('pr-body', pr);
+    const prNumber = this.getPrNumber("pr-body", pr);
 
     if (dryRun) {
       if (deleteFlag) {
@@ -989,7 +992,7 @@ export default class Auto {
       }
     } else {
       if (deleteFlag) {
-        await this.git.addToPrBody('', prNumber, context);
+        await this.git.addToPrBody("", prNumber, context);
       }
 
       if (message) {
@@ -1028,7 +1031,7 @@ export default class Auto {
   /** Create a canary (or test) version of the project */
   // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
-    const options = { ...this.getCommandDefault('canary'), ...args };
+    const options = { ...this.getCommandDefault("canary"), ...args };
 
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -1051,11 +1054,11 @@ export default class Auto {
     pr = options.pr ? String(options.pr) : pr;
     build = options.build ? String(options.build) : build;
 
-    this.logger.verbose.info('Canary info found:', { pr, build });
+    this.logger.verbose.info("Canary info found:", { pr, build });
 
-    const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
+    const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const head = await this.release.getCommitsInRelease(from);
-    const labels = head.map(commit => commit.labels);
+    const labels = head.map((commit) => commit.labels);
     const version = calculateSemVerBump(
       labels,
       this.semVerLabels!,
@@ -1064,13 +1067,13 @@ export default class Auto {
 
     if (version === SEMVER.noVersion && !options.force) {
       this.logger.log.info(
-        'Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting'
+        "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
       );
       return;
     }
 
-    let canaryVersion = '';
-    let newVersion = '';
+    let canaryVersion = "";
+    let newVersion = "";
 
     if (pr) {
       canaryVersion = `${canaryVersion}.${pr}`;
@@ -1089,10 +1092,10 @@ export default class Auto {
         `Published canary identifier would be: "-canary${canaryVersion}"`
       );
     } else {
-      this.logger.verbose.info('Calling canary hook');
+      this.logger.verbose.info("Calling canary hook");
       const result = await this.hooks.canary.promise(version, canaryVersion);
 
-      if (typeof result === 'object' && 'error' in result) {
+      if (typeof result === "object" && "error" in result) {
         this.logger.log.warn(result.error);
         return;
       }
@@ -1101,31 +1104,31 @@ export default class Auto {
         return;
       }
 
-      newVersion = typeof result === 'string' ? result : result.newVersion;
+      newVersion = typeof result === "string" ? result : result.newVersion;
       const messageHeader = (
-        options.message || '📦 Published PR as canary version: %v'
+        options.message || "📦 Published PR as canary version: %v"
       ).replace(
-        '%v',
-        !newVersion || newVersion.includes('\n')
+        "%v",
+        !newVersion || newVersion.includes("\n")
           ? newVersion
           : `<code>${newVersion}</code>`
       );
 
-      if (options.message !== 'false' && pr) {
+      if (options.message !== "false" && pr) {
         const message =
-          typeof result === 'string'
+          typeof result === "string"
             ? messageHeader
             : makeDetail(messageHeader, result.details);
 
         await this.prBody({
           pr: Number(pr),
-          context: 'canary-version',
-          message
+          context: "canary-version",
+          message,
         });
       }
 
       this.logger.log.success(
-        `Published canary version${newVersion ? `: ${newVersion}` : ''}`
+        `Published canary version${newVersion ? `: ${newVersion}` : ""}`
       );
     }
 
@@ -1138,7 +1141,7 @@ export default class Auto {
     }
 
     const commitsInRelease = await this.release.getCommits(latestTag);
-    return { newVersion, commitsInRelease, context: 'canary' };
+    return { newVersion, commitsInRelease, context: "canary" };
   }
 
   /**
@@ -1146,7 +1149,7 @@ export default class Auto {
    * release to the default "next" branch.
    */
   async next(args: INextOptions): Promise<ShipitInfo | undefined> {
-    const options = { ...this.getCommandDefault('next'), ...args };
+    const options = { ...this.getCommandDefault("next"), ...args };
 
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
@@ -1170,7 +1173,7 @@ export default class Auto {
     const lastTag = await this.git.getLatestTagInBranch();
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
-    const labels = commits.map(commit => commit.labels);
+    const labels = commits.map((commit) => commit.labels);
     const bump =
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
@@ -1180,15 +1183,15 @@ export default class Auto {
         `Would have created prerelease version with: ${bump}`
       );
 
-      return { newVersion: '', commitsInRelease: commits, context: 'next' };
+      return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
     const result = await this.hooks.next.promise([], bump);
-    const newVersion = result.join(', ');
+    const newVersion = result.join(", ");
 
     await Promise.all(
-      result.map(async prerelease => {
+      result.map(async (prerelease) => {
         const release = await this.git?.publish(releaseNotes, prerelease, true);
 
         this.logger.verbose.info(release);
@@ -1198,39 +1201,39 @@ export default class Auto {
           newVersion: prerelease,
           commits,
           releaseNotes,
-          response: release
+          response: release,
         });
       })
     );
 
     this.logger.log.success(
-      `Published next version${result.length > 1 ? `s` : ''}: ${newVersion}`
+      `Published next version${result.length > 1 ? `s` : ""}: ${newVersion}`
     );
 
     const { pr } = await this.getPrEnvInfo();
 
     if (pr) {
-      const message = options.message || 'Published prerelease version: %v';
+      const message = options.message || "Published prerelease version: %v";
 
       if (pr) {
         await this.prBody({
           pr: Number(pr),
-          context: 'prerelease-version',
+          context: "prerelease-version",
           message: endent`
             # Version
 
-            ${message.replace('%v', result.map(r => `\`${r}\``).join('\n'))}
+            ${message.replace("%v", result.map((r) => `\`${r}\``).join("\n"))}
 
             <details>
               <summary>Changelog</summary>
               ${await this.release.generateReleaseNotes(lastRelease)}
             </details>
-          `
+          `,
         });
       }
     }
 
-    return { newVersion, commitsInRelease: commits, context: 'next' };
+    return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
   /** Force a release to latest and bypass `shipit` safeguards. */
@@ -1248,8 +1251,8 @@ export default class Auto {
    */
   async shipit(args: IShipItOptions = {}) {
     const options: IShipItOptions = {
-      ...this.getCommandDefault('shipit'),
-      ...args
+      ...this.getCommandDefault("shipit"),
+      ...args,
     };
 
     if (!this.git || !this.release) {
@@ -1258,8 +1261,8 @@ export default class Auto {
 
     this.logger.verbose.info("Using command: 'shipit'");
 
-    const isPR = 'isPr' in env && env.isPr;
-    const from = (await this.git.shaExists('HEAD^')) ? 'HEAD^' : 'HEAD';
+    const isPR = "isPr" in env && env.isPr;
+    const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const head = await this.release.getCommitsInRelease(from);
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
@@ -1268,11 +1271,11 @@ export default class Auto {
     const shouldGraduate =
       !options.onlyGraduateWithReleaseLabel ||
       (options.onlyGraduateWithReleaseLabel &&
-        head[0].labels.some(l =>
-          this.semVerLabels?.get('release')?.includes(l)
+        head[0].labels.some((l) =>
+          this.semVerLabels?.get("release")?.includes(l)
         ));
     const isPrereleaseBranch = this.config?.prereleaseBranches?.some(
-      branch => currentBranch === branch
+      (branch) => currentBranch === branch
     );
     const publishPrerelease =
       isPrereleaseBranch ||
@@ -1285,34 +1288,34 @@ export default class Auto {
       isPR,
       shouldGraduate,
       isPrereleaseBranch,
-      publishPrerelease
+      publishPrerelease,
     });
     let publishInfo: ShipitInfo | undefined;
 
-    let releaseType: ShipitRelease = 'canary';
+    let releaseType: ShipitRelease = "canary";
 
     if (isBaseBrach && shouldGraduate) {
-      releaseType = 'latest';
+      releaseType = "latest";
     } else if (this.inOldVersionBranch()) {
-      releaseType = 'old';
+      releaseType = "old";
     } else if (publishPrerelease) {
-      releaseType = 'next';
+      releaseType = "next";
     }
 
     await this.hooks.beforeShipIt.promise({ releaseType });
 
-    if (releaseType === 'latest') {
+    if (releaseType === "latest") {
       publishInfo = await this.publishFullRelease(options);
-    } else if (releaseType === 'old') {
+    } else if (releaseType === "old") {
       publishInfo = await this.oldRelease(options);
-    } else if (releaseType === 'next') {
+    } else if (releaseType === "next") {
       publishInfo = await this.next(options);
     } else {
       publishInfo = await this.canary(options);
 
       if (options.dryRun) {
         this.logger.log.success(
-          'Below is what would happen upon merge of the current branch into master'
+          "Below is what would happen upon merge of the current branch into master"
         );
         await this.publishFullRelease(options);
       }
@@ -1324,17 +1327,17 @@ export default class Auto {
 
     const { newVersion, commitsInRelease, context } = publishInfo;
     await this.hooks.afterShipIt.promise(newVersion, commitsInRelease, {
-      context
+      context,
     });
   }
 
   /** Get the latest version number of the project */
   async getCurrentVersion(lastRelease: string) {
-    this.hooks.getPreviousVersion.tap('None', () => {
+    this.hooks.getPreviousVersion.tap("None", () => {
       this.logger.veryVerbose.info(
-        'No previous release found, using 0.0.0 as previous version.'
+        "No previous release found, using 0.0.0 as previous version."
       );
-      return this.prefixRelease('0.0.0');
+      return this.prefixRelease("0.0.0");
     });
 
     const lastVersion = await this.hooks.getPreviousVersion.promise();
@@ -1344,7 +1347,7 @@ export default class Auto {
       parse(lastVersion) &&
       gt(lastRelease, lastVersion)
     ) {
-      this.logger.veryVerbose.info('Using latest release as previous version');
+      this.logger.veryVerbose.info("Using latest release as previous version");
       return lastRelease;
     }
 
@@ -1367,11 +1370,11 @@ export default class Auto {
     const latestTag = await this.git?.getLatestTagInBranch();
     const result = await this.publishFullRelease({
       ...options,
-      from: latestTag
+      from: latestTag,
     });
 
     if (result) {
-      result.context = 'old';
+      result.context = "old";
     }
 
     return result;
@@ -1392,8 +1395,8 @@ export default class Auto {
 
     this.logger.log.success(`Calculated version bump: ${version}`);
 
-    if (version === '') {
-      this.logger.log.info('No version published.');
+    if (version === "") {
+      this.logger.log.info("No version published.");
       return;
     }
 
@@ -1406,13 +1409,13 @@ export default class Auto {
 
     if (!options.dryRun) {
       await this.checkClean();
-      this.logger.verbose.info('Calling version hook');
+      this.logger.verbose.info("Calling version hook");
       await this.hooks.version.promise(version);
-      this.logger.verbose.info('Calling after version hook');
+      this.logger.verbose.info("Calling after version hook");
       await this.hooks.afterVersion.promise();
-      this.logger.verbose.info('Calling publish hook');
+      this.logger.verbose.info("Calling publish hook");
       await this.hooks.publish.promise(version);
-      this.logger.verbose.info('Calling after publish hook');
+      this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
     }
 
@@ -1428,7 +1431,7 @@ export default class Auto {
       }
     }
 
-    return { newVersion, commitsInRelease, context: 'latest' };
+    return { newVersion, commitsInRelease, context: "latest" };
   }
 
   /** Get a pr number from user input or the env */
@@ -1453,18 +1456,18 @@ export default class Auto {
   /** Create a client to interact with git */
   private startGit(gitOptions: IGitOptions) {
     if (!gitOptions.owner || !gitOptions.repo || !gitOptions.token) {
-      throw new Error('Must set owner, repo, and GitHub token.');
+      throw new Error("Must set owner, repo, and GitHub token.");
     }
 
-    this.logger.verbose.info('Options contain repo information.');
+    this.logger.verbose.info("Options contain repo information.");
 
     // So that --verbose can be used on public CIs
     const tokenlessArgs = {
       ...gitOptions,
-      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`
+      token: `[Token starting with ${gitOptions.token.substring(0, 4)}]`,
     };
 
-    this.logger.verbose.info('Initializing GitHub API with:\n', tokenlessArgs);
+    this.logger.verbose.info("Initializing GitHub API with:\n", tokenlessArgs);
     return new Git(
       {
         owner: gitOptions.owner,
@@ -1473,7 +1476,7 @@ export default class Auto {
         baseUrl: gitOptions.baseUrl,
         baseBranch: this.baseBranch,
         graphqlBaseUrl: gitOptions.graphqlBaseUrl,
-        agent: gitOptions.agent
+        agent: gitOptions.agent,
       },
       this.logger
     );
@@ -1501,12 +1504,12 @@ export default class Auto {
 
   /** Make a changelog over a range of commits */
   private async makeChangelog(args: IChangelogOptions = {}) {
-    const options = { ...this.getCommandDefault('changelog'), ...args };
+    const options = { ...this.getCommandDefault("changelog"), ...args };
     const {
       dryRun,
       from,
       to,
-      message = 'Update CHANGELOG.md [skip ci]'
+      message = "Update CHANGELOG.md [skip ci]",
     } = options;
 
     if (!this.release || !this.git) {
@@ -1524,12 +1527,12 @@ export default class Auto {
     );
 
     if (dryRun) {
-      this.logger.log.info('Potential Changelog Addition:\n', releaseNotes);
-      this.logger.verbose.info('`changelog` dry run complete.');
+      this.logger.log.info("Potential Changelog Addition:\n", releaseNotes);
+      this.logger.verbose.info("`changelog` dry run complete.");
       return;
     }
 
-    this.logger.log.info('New Release Notes\n', releaseNotes);
+    this.logger.log.info("New Release Notes\n", releaseNotes);
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
 
@@ -1544,19 +1547,19 @@ export default class Auto {
       commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
       lastRelease,
-      currentVersion
+      currentVersion,
     };
 
     await this.hooks.beforeCommitChangelog.promise(context);
-    await execPromise('git', ['commit', '-m', `"${message}"`, '--no-verify']);
-    this.logger.verbose.info('Committed new changelog.');
+    await execPromise("git", ["commit", "-m", `"${message}"`, "--no-verify"]);
+    this.logger.verbose.info("Committed new changelog.");
 
     await this.hooks.afterAddToChangelog.promise(context);
   }
 
   /** Make a release over a range of commits */
   private async makeRelease(args: IReleaseOptions = {}) {
-    const options = { ...this.getCommandDefault('release'), ...args };
+    const options = { ...this.getCommandDefault("release"), ...args };
     const { dryRun, from, useVersion, prerelease = false } = options;
 
     if (!this.release || !this.git) {
@@ -1566,7 +1569,7 @@ export default class Auto {
     // This will usually resolve to something on head
     const [err, latestTag] = await on(this.git.getLatestTagInBranch());
 
-    if (err && err.message.includes('No names found')) {
+    if (err && err.message.includes("No names found")) {
       this.logger.log.error(
         endent`
           Could not find any tags in the local repository. Exiting early.
@@ -1575,7 +1578,7 @@ export default class Auto {
           
           If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
         `,
-        '\n'
+        "\n"
       );
       this.logger.verbose.error(err);
       return process.exit(1);
@@ -1614,7 +1617,7 @@ export default class Auto {
       latestTag;
 
     if (!rawVersion) {
-      this.logger.log.error('Could not calculate next version from last tag.');
+      this.logger.log.error("Could not calculate next version from last tag.");
       return;
     }
 
@@ -1640,7 +1643,7 @@ export default class Auto {
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,
-      commits: commitsInRelease
+      commits: commitsInRelease,
     });
 
     if (release) {
@@ -1649,7 +1652,7 @@ export default class Auto {
         newVersion,
         commits: commitsInRelease,
         releaseNotes,
-        response: release
+        response: release,
       });
     }
 
@@ -1658,16 +1661,16 @@ export default class Auto {
 
   /** Check if `git status` is clean. */
   readonly checkClean = async () => {
-    const status = await execPromise('git', ['status', '--porcelain']);
+    const status = await execPromise("git", ["status", "--porcelain"]);
 
     if (!status) {
       return;
     }
 
-    this.logger.log.error('Changed Files:\n', status);
+    this.logger.log.error("Changed Files:\n", status);
 
     throw new Error(
-      'Working direction is not clean, make sure all files are committed'
+      "Working direction is not clean, make sure all files are committed"
     );
   };
 
@@ -1677,7 +1680,7 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    return this.config?.noVersionPrefix || release.startsWith('v')
+    return this.config?.noVersionPrefix || release.startsWith("v")
       ? release
       : `v${release}`;
   };
@@ -1695,12 +1698,12 @@ export default class Auto {
       return {
         /** The git user is already set in the current env */
         system: true,
-        email: await execPromise('git', ['config', 'user.email']),
-        name: await execPromise('git', ['config', 'user.name'])
+        email: await execPromise("git", ["config", "user.email"]),
+        name: await execPromise("git", ["config", "user.name"]),
       };
     } catch (error) {
       this.logger.verbose.warn(
-        'Could not find git user or email configured in git config'
+        "Could not find git user or email configured in git config"
       );
 
       if (!this.release) {
@@ -1742,12 +1745,12 @@ export default class Auto {
       }
 
       if (user.email) {
-        await execPromise('git', ['config', 'user.email', `"${user.email}"`]);
+        await execPromise("git", ["config", "user.email", `"${user.email}"`]);
         this.logger.verbose.warn(`Set git email to ${user.email}`);
       }
 
       if (user.name) {
-        await execPromise('git', ['config', 'user.name', `"${user.name}"`]);
+        await execPromise("git", ["config", "user.name", `"${user.name}"`]);
         this.logger.verbose.warn(`Set git name to ${user.name}`);
       }
     }
@@ -1771,7 +1774,7 @@ export default class Auto {
           - configure the repo for your package manager (ex: set "repository" in package.json)
           - configure your git remote 'origin' to point to your project on GitHub.
         `,
-        ''
+        ""
       );
       process.exit(1);
     }
@@ -1784,10 +1787,10 @@ export default class Auto {
    */
   private loadPlugins(config: AutoRc) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const defaultPlugins = [(process as any).pkg ? 'git-tag' : 'npm'];
+    const defaultPlugins = [(process as any).pkg ? "git-tag" : "npm"];
     const pluginsPaths = [
-      require.resolve('./plugins/filter-non-pull-request'),
-      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins)
+      require.resolve("./plugins/filter-non-pull-request"),
+      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins),
     ];
     let extendedLocation: string | undefined;
 
@@ -1800,13 +1803,13 @@ export default class Auto {
     }
 
     pluginsPaths
-      .map(plugin =>
+      .map((plugin) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        typeof plugin === 'string' ? ([plugin, {}] as [string, any]) : plugin
+        typeof plugin === "string" ? ([plugin, {}] as [string, any]) : plugin
       )
-      .map(plugin => loadPlugin(plugin, this.logger, extendedLocation))
+      .map((plugin) => loadPlugin(plugin, this.logger, extendedLocation))
       .filter((plugin): plugin is IPlugin => Boolean(plugin))
-      .forEach(plugin => {
+      .forEach((plugin) => {
         this.logger.verbose.info(`Using ${plugin.name} Plugin...`);
         plugin.apply(this);
       });
@@ -1818,10 +1821,10 @@ export default class Auto {
     let pr: string | undefined;
     let build: string | undefined;
 
-    if ('pr' in env && 'build' in env) {
+    if ("pr" in env && "build" in env) {
       ({ pr } = env);
       ({ build } = env);
-    } else if ('pr' in env && 'commit' in env) {
+    } else if ("pr" in env && "commit" in env) {
       ({ pr } = env);
       build = env.commit;
     }
@@ -1857,21 +1860,21 @@ export default class Auto {
     }
 
     const commandConfig = this.config[name as keyof AutoRc];
-    return typeof commandConfig === 'object' ? commandConfig : {};
+    return typeof commandConfig === "object" ? commandConfig : {};
   }
 }
 
 // Plugin Utils
 
-export * from './auto-args';
-export { default as InteractiveInit } from './init';
-export { getCurrentBranch } from './utils/get-current-branch';
-export { validatePluginConfiguration } from './validate-config';
-export { ILogger } from './utils/logger';
-export { IPlugin } from './utils/load-plugins';
-export { default as Auto } from './auto';
-export { default as SEMVER } from './semver';
-export { default as execPromise } from './utils/exec-promise';
-export { default as getLernaPackages } from './utils/get-lerna-packages';
-export { default as inFolder } from './utils/in-folder';
-export { VersionLabel } from './release';
+export * from "./auto-args";
+export { default as InteractiveInit } from "./init";
+export { getCurrentBranch } from "./utils/get-current-branch";
+export { validatePluginConfiguration } from "./validate-config";
+export { ILogger } from "./utils/logger";
+export { IPlugin } from "./utils/load-plugins";
+export { default as Auto } from "./auto";
+export { default as SEMVER } from "./semver";
+export { default as execPromise } from "./utils/exec-promise";
+export { default as getLernaPackages } from "./utils/get-lerna-packages";
+export { default as inFolder } from "./utils/in-folder";
+export { VersionLabel } from "./release";

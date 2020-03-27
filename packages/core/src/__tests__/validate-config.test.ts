@@ -3,271 +3,271 @@ import {
   validatePlugins,
   ValidatePluginHook,
   formatError,
-  validatePluginConfiguration
-} from '../validate-config';
-import { AsyncSeriesBailHook } from 'tapable';
-import * as t from 'io-ts';
+  validatePluginConfiguration,
+} from "../validate-config";
+import { AsyncSeriesBailHook } from "tapable";
+import * as t from "io-ts";
 
-describe('formatError', () => {
+describe("formatError", () => {
   test.each([
-    { path: 'test', expectedType: 'number', value: '123' },
-    { path: 'test', expectedType: 'string', value: 123 },
-    { path: 'test', expectedType: 'string', value: ['123', 2, true] },
-    { path: 'test', expectedType: 'number', value: { foo: 'bar' } }
-  ])('should format errors %#', configError => {
+    { path: "test", expectedType: "number", value: "123" },
+    { path: "test", expectedType: "string", value: 123 },
+    { path: "test", expectedType: "string", value: ["123", 2, true] },
+    { path: "test", expectedType: "number", value: { foo: "bar" } },
+  ])("should format errors %#", (configError) => {
     expect(formatError(configError)).toMatchSnapshot();
   });
 });
 
-describe('validateConfig', () => {
-  test('should not return errors when there are none', async () => {
+describe("validateConfig", () => {
+  test("should not return errors when there are none", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
-        email: 'andrew@lisowski.com',
-        owner: 'bar',
-        repo: 'foo',
+        name: "Andrew",
+        email: "andrew@lisowski.com",
+        owner: "bar",
+        repo: "foo",
         comment: {
           delete: true,
-          edit: true
+          edit: true,
         },
         changelog: {
-          message: 'foo'
+          message: "foo",
         },
         canary: {
-          message: 'foo'
+          message: "foo",
         },
         next: {
-          message: 'foo'
+          message: "foo",
         },
         release: {
-          prerelease: true
+          prerelease: true,
         },
         shipit: {
-          onlyGraduateWithReleaseLabel: true
-        }
+          onlyGraduateWithReleaseLabel: true,
+        },
       })
     ).toStrictEqual([]);
   });
 
-  test('should not return errors when there are none - more complex', async () => {
+  test("should not return errors when there are none - more complex", async () => {
     expect(await validateAutoRc({ verbose: true })).toStrictEqual([]);
     expect(await validateAutoRc({ verbose: [true, true] })).toStrictEqual([]);
   });
 
-  test('should not return errors when there are none - multiple type', async () => {
+  test("should not return errors when there are none - multiple type", async () => {
     expect(await validateAutoRc({ versionBranches: true })).toStrictEqual([]);
-    expect(await validateAutoRc({ versionBranches: 'foo-' })).toStrictEqual([]);
+    expect(await validateAutoRc({ versionBranches: "foo-" })).toStrictEqual([]);
     expect(await validateAutoRc({ versionBranches: 123 })).toStrictEqual([
       {
         expectedType: '"boolean" or "string"',
-        path: 'versionBranches',
-        value: 123
-      }
+        path: "versionBranches",
+        value: 123,
+      },
     ]);
   });
 
-  test('should catch misconfigured options', async () => {
+  test("should catch misconfigured options", async () => {
     expect(
       await validateAutoRc({
         name: 123,
-        owner: 456
+        owner: 456,
       })
     ).toStrictEqual([
       {
         expectedType: '"string"',
-        path: 'owner',
-        value: 456
+        path: "owner",
+        value: 456,
       },
       {
         expectedType: '"string"',
-        path: 'name',
-        value: 123
-      }
+        path: "name",
+        value: 123,
+      },
     ]);
   });
 
-  test('should catch unknown options', async () => {
+  test("should catch unknown options", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
-        foo: 456
+        name: "Andrew",
+        foo: 456,
       })
     ).toMatchSnapshot();
   });
 
-  test('should validate labels', async () => {
+  test("should validate labels", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
+        name: "Andrew",
         labels: [
           {
-            name: 'Version: Minor'
+            name: "Version: Minor",
           },
           {
-            name: 'Version: Major',
-            changelogTitle: 'The API has changed:',
-            description: 'Add this label to a PR to create a major release',
-            color: 'blue',
-            releaseType: 'major'
-          }
-        ]
+            name: "Version: Major",
+            changelogTitle: "The API has changed:",
+            description: "Add this label to a PR to create a major release",
+            color: "blue",
+            releaseType: "major",
+          },
+        ],
       })
     ).toStrictEqual([]);
   });
 
-  test('should catch errors in labels', async () => {
+  test("should catch errors in labels", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
+        name: "Andrew",
         labels: [
           {
-            name: 'Version: Minor'
+            name: "Version: Minor",
           },
           {
-            name: 'Version: Major',
-            changelogTitle: 123
-          }
-        ]
+            name: "Version: Major",
+            changelogTitle: 123,
+          },
+        ],
       })
     ).toStrictEqual([
       {
         expectedType: '"string"',
-        path: 'labels.1.changelogTitle',
-        value: 123
-      }
+        path: "labels.1.changelogTitle",
+        value: 123,
+      },
     ]);
   });
 
-  test('should not fail w/plugin configuration', async () => {
+  test("should not fail w/plugin configuration", async () => {
     expect(
       await validateAutoRc({
         plugins: [
           [
-            'npm',
+            "npm",
             {
-              canaryScope: '@auto-canary'
-            }
-          ]
+              canaryScope: "@auto-canary",
+            },
+          ],
         ],
         labels: [
           {
-            name: 'dependencies',
-            changelogTitle: '🔩 Dependency Updates',
-            releasepe: 'none'
+            name: "dependencies",
+            changelogTitle: "🔩 Dependency Updates",
+            releasepe: "none",
           },
           {
-            name: 'blog-post',
-            changelogTitle: '📚 Blog Post',
-            releaseType: 'none'
-          }
-        ]
+            name: "blog-post",
+            changelogTitle: "📚 Blog Post",
+            releaseType: "none",
+          },
+        ],
       })
     ).toMatchSnapshot();
   });
 
-  test('should not go too deep', async () => {
+  test("should not go too deep", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
+        name: "Andrew",
         labelz: [
           {
-            name: 'Version: Minor'
-          }
-        ]
+            name: "Version: Minor",
+          },
+        ],
       })
     ).toMatchSnapshot();
   });
 
-  test('should error on invalid plugin config', async () => {
+  test("should error on invalid plugin config", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
-        plugins: [123, true]
+        name: "Andrew",
+        plugins: [123, true],
       })
     ).toStrictEqual([
       {
         expectedType: '"string" or "[string, any]"',
-        path: 'plugins.0',
-        value: 123
+        path: "plugins.0",
+        value: 123,
       },
       {
         expectedType: '"string" or "[string, any]"',
-        path: 'plugins.1',
-        value: true
-      }
+        path: "plugins.1",
+        value: true,
+      },
     ]);
   });
 
-  test('should handle basic plugin config', async () => {
+  test("should handle basic plugin config", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
-        plugins: ['npm', 'release']
+        name: "Andrew",
+        plugins: ["npm", "release"],
       })
     ).toStrictEqual([]);
   });
 
-  test('should warn about required props', async () => {
+  test("should warn about required props", async () => {
     expect(
       await validateAutoRc({
-        name: 'Andrew',
-        labels: [{}]
+        name: "Andrew",
+        labels: [{}],
       })
     ).toStrictEqual([
       {
         expectedType: '"string"',
-        path: 'labels.0.name',
-        value: undefined
-      }
+        path: "labels.0.name",
+        value: undefined,
+      },
     ]);
   });
 
-  test('should handle complex plugin config', async () => {
+  test("should handle complex plugin config", async () => {
     // NOTE: since these plugins aren't loaded they do not get their
     // options validated
     expect(
       await validateAutoRc({
-        name: 'Andrew',
+        name: "Andrew",
         plugins: [
-          ['npm', { forcePublish: true }],
+          ["npm", { forcePublish: true }],
           [
-            'released',
+            "released",
             {
-              label: ':shipit:'
-            }
-          ]
-        ]
+              label: ":shipit:",
+            },
+          ],
+        ],
       })
     ).toStrictEqual([]);
   });
 
-  test('should validate plugin configuration', async () => {
+  test("should validate plugin configuration", async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
-      'name',
-      'options'
+      "name",
+      "options",
     ]);
 
-    hook.tap('test', (name, options) => {
-      if (name === 'test-plugin') {
+    hook.tap("test", (name, options) => {
+      if (name === "test-plugin") {
         const errors: string[] = [];
 
-        if (options.label && typeof options.label !== 'string') {
+        if (options.label && typeof options.label !== "string") {
           errors.push(
             formatError({
-              path: 'npm.label',
-              expectedType: 'string',
-              value: options.label
+              path: "npm.label",
+              expectedType: "string",
+              value: options.label,
             })
           );
         }
 
-        if (options.other && typeof options.other !== 'number') {
+        if (options.other && typeof options.other !== "number") {
           errors.push(
             formatError({
-              path: 'npm.other',
-              expectedType: 'number',
-              value: options.other
+              path: "npm.other",
+              expectedType: "number",
+              value: options.other,
             })
           );
         }
@@ -280,52 +280,52 @@ describe('validateConfig', () => {
 
     expect(
       await validatePlugins(hook, {
-        name: 'Andrew',
+        name: "Andrew",
         plugins: [
           [
-            'test-plugin',
+            "test-plugin",
             {
-              label: 123
-            }
-          ]
-        ]
+              label: 123,
+            },
+          ],
+        ],
       })
     ).toMatchSnapshot();
 
     expect(
       await validatePlugins(hook, {
-        name: 'Andrew',
+        name: "Andrew",
         plugins: [
           [
-            'test-plugin',
+            "test-plugin",
             {
-              label: 'foo',
-              other: 123
-            }
-          ]
-        ]
+              label: "foo",
+              other: 123,
+            },
+          ],
+        ],
       })
     ).toStrictEqual([]);
   });
 });
 
-describe('validatePlugin', () => {
-  test('should validate plugin configuration - nested objects', async () => {
+describe("validatePlugin", () => {
+  test("should validate plugin configuration - nested objects", async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
-      'name',
-      'options'
+      "name",
+      "options",
     ]);
 
     const pluginOptions = t.partial({
       types: t.partial({
-        docs: t.string
-      })
+        docs: t.string,
+      }),
     });
 
-    hook.tapPromise('test', async (name, options) => {
-      if (name === 'test-plugin') {
+    hook.tapPromise("test", async (name, options) => {
+      if (name === "test-plugin") {
         return validatePluginConfiguration(
-          'test-plugin',
+          "test-plugin",
           pluginOptions,
           options
         );
@@ -336,32 +336,32 @@ describe('validatePlugin', () => {
       await validatePlugins(hook, {
         plugins: [
           [
-            'test-plugin',
+            "test-plugin",
             {
               types: {
-                doc: 'foo'
-              }
-            }
-          ]
-        ]
+                doc: "foo",
+              },
+            },
+          ],
+        ],
       })
     ).toMatchSnapshot();
   });
 
-  test('should not include redundant errors', async () => {
+  test("should not include redundant errors", async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
-      'name',
-      'options'
+      "name",
+      "options",
     ]);
 
     const pluginOptions = t.partial({
-      types: t.union([t.string, t.array(t.string)])
+      types: t.union([t.string, t.array(t.string)]),
     });
 
-    hook.tapPromise('test', async (name, options) => {
-      if (name === 'test-plugin') {
+    hook.tapPromise("test", async (name, options) => {
+      if (name === "test-plugin") {
         return validatePluginConfiguration(
-          'test-plugin',
+          "test-plugin",
           pluginOptions,
           options
         );
@@ -372,40 +372,40 @@ describe('validatePlugin', () => {
       await validatePlugins(hook, {
         plugins: [
           [
-            'test-plugin',
+            "test-plugin",
             {
-              types: ['foo', 'bar', true]
-            }
-          ]
-        ]
+              types: ["foo", "bar", true],
+            },
+          ],
+        ],
       })
     ).toStrictEqual([
       {
         expectedType: '"string"',
-        path: 'test-plugin.types.2',
-        value: true
-      }
+        path: "test-plugin.types.2",
+        value: true,
+      },
     ]);
   });
 
-  test('should validate plugin configuration - array of objects', async () => {
+  test("should validate plugin configuration - array of objects", async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
-      'name',
-      'options'
+      "name",
+      "options",
     ]);
 
     const pluginOptions = t.partial({
       exclude: t.array(
         t.partial({
-          name: t.string
+          name: t.string,
         })
-      )
+      ),
     });
 
-    hook.tapPromise('test', async (name, options) => {
-      if (name === 'test-plugin') {
+    hook.tapPromise("test", async (name, options) => {
+      if (name === "test-plugin") {
         return validatePluginConfiguration(
-          'test-plugin',
+          "test-plugin",
           pluginOptions,
           options
         );
@@ -416,12 +416,12 @@ describe('validatePlugin', () => {
       await validatePlugins(hook, {
         plugins: [
           [
-            'test-plugin',
+            "test-plugin",
             {
-              exclude: [{ name: 'foo' }, { name: 'bar', extra: true }]
-            }
-          ]
-        ]
+              exclude: [{ name: "foo" }, { name: "bar", extra: true }],
+            },
+          ],
+        ],
       })
     ).toMatchSnapshot();
   });
