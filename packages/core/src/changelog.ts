@@ -1,14 +1,14 @@
-import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
-import { URL } from 'url';
-import join from 'url-join';
-import botList from '@auto-it/bot-list';
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
+import { URL } from "url";
+import join from "url-join";
+import botList from "@auto-it/bot-list";
 
-import { ICommitAuthor, IExtendedCommit } from './log-parse';
-import { ILabelDefinition } from './release';
-import { ILogger } from './utils/logger';
-import { makeChangelogHooks } from './utils/make-hooks';
-import { getCurrentBranch } from './utils/get-current-branch';
-import SEMVER from './semver';
+import { ICommitAuthor, IExtendedCommit } from "./log-parse";
+import { ILabelDefinition } from "./release";
+import { ILogger } from "./utils/logger";
+import { makeChangelogHooks } from "./utils/make-hooks";
+import { getCurrentBranch } from "./utils/get-current-branch";
+import SEMVER from "./semver";
 
 export interface IGenerateReleaseNotesOptions {
   /** Github repo owner (user) */
@@ -59,11 +59,11 @@ export interface IChangelogHooks {
 
 /** Determine how deep the markdown headers are in a string */
 const getHeaderDepth = (line: string) =>
-  line.split('').reduce((count, char) => (char === '#' ? count + 1 : count), 0);
+  line.split("").reduce((count, char) => (char === "#" ? count + 1 : count), 0);
 
 /** Filter for only commits that have a specific label */
 const filterLabel = (commits: IExtendedCommit[], label: string) =>
-  commits.filter(commit => commit.labels.includes(label));
+  commits.filter((commit) => commit.labels.includes(label));
 
 /**
  * Manages creating the "Release Notes" that are included in
@@ -87,7 +87,7 @@ export default class Changelog {
     this.hooks = makeChangelogHooks();
     const currentBranch = getCurrentBranch();
 
-    if (!this.options.labels.find(l => l.name === 'pushToBaseBranch')) {
+    if (!this.options.labels.find((l) => l.name === "pushToBaseBranch")) {
       // Either put the name of a prerelease branch or the base-branch in the changelog
       const branch =
         (currentBranch &&
@@ -96,36 +96,36 @@ export default class Changelog {
         options.baseBranch;
 
       this.options.labels.push({
-        name: 'pushToBaseBranch',
+        name: "pushToBaseBranch",
         changelogTitle: `⚠️  Pushed to \`${branch}\``,
-        description: 'N/A',
-        releaseType: SEMVER.patch
+        description: "N/A",
+        releaseType: SEMVER.patch,
       });
     }
   }
 
   /** Load the default configuration */
   loadDefaultHooks() {
-    this.hooks.renderChangelogAuthor.tap('Default', (author, commit) =>
+    this.hooks.renderChangelogAuthor.tap("Default", (author, commit) =>
       this.createUserLink(author, commit)
     );
-    this.hooks.renderChangelogAuthorLine.tap('Default', (author, user) => {
+    this.hooks.renderChangelogAuthorLine.tap("Default", (author, user) => {
       const authorString =
         author.name && user ? `${author.name} (${user})` : user;
       return authorString ? `- ${authorString}` : undefined;
     });
-    this.hooks.renderChangelogLine.tap('Default', ([commit, line]) => [
+    this.hooks.renderChangelogLine.tap("Default", ([commit, line]) => [
       commit,
-      line
+      line,
     ]);
     this.hooks.renderChangelogTitle.tap(
-      'Default',
+      "Default",
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
     );
-    this.hooks.omitReleaseNotes.tap('Bots', commit => {
+    this.hooks.omitReleaseNotes.tap("Bots", (commit) => {
       if (
         commit.authors.some(
-          author =>
+          (author) =>
             (author.name && botList.includes(author.name)) ||
             (author.username && botList.includes(author.username))
         )
@@ -138,31 +138,31 @@ export default class Changelog {
   /** Generate the release notes for a group of commits */
   async generateReleaseNotes(commits: IExtendedCommit[]): Promise<string> {
     if (commits.length === 0) {
-      return '';
+      return "";
     }
 
-    this.logger.verbose.info('Generating release notes for:\n', commits);
+    this.logger.verbose.info("Generating release notes for:\n", commits);
     const split = this.splitCommits(commits);
-    this.logger.verbose.info('Split commits into groups');
-    this.logger.veryVerbose.info('\n', split);
+    this.logger.verbose.info("Split commits into groups");
+    this.logger.veryVerbose.info("\n", split);
 
     const sections: string[] = [];
 
     const extraNotes = (await this.hooks.addToBody.promise([], commits)) || [];
-    extraNotes.filter(Boolean).forEach(note => sections.push(note));
+    extraNotes.filter(Boolean).forEach((note) => sections.push(note));
 
     await this.createReleaseNotesSection(commits, sections);
-    this.logger.verbose.info('Added release notes to changelog');
+    this.logger.verbose.info("Added release notes to changelog");
 
     this.authors = this.getAllAuthors(split);
     await this.createLabelSection(split, sections);
-    this.logger.verbose.info('Added groups to changelog');
+    this.logger.verbose.info("Added groups to changelog");
 
     await this.createAuthorSection(sections);
-    this.logger.verbose.info('Added authors to changelog');
+    this.logger.verbose.info("Added authors to changelog");
 
-    const result = sections.join('\n\n');
-    this.logger.verbose.info('Successfully generated release notes.');
+    const result = sections.join("\n\n");
+    this.logger.verbose.info("Successfully generated release notes.");
 
     return result;
   }
@@ -171,7 +171,7 @@ export default class Changelog {
   createUserLink(author: ICommitAuthor, commit: IExtendedCommit) {
     const githubUrl = new URL(this.options.baseUrl).origin;
 
-    if (author.username === 'invalid-email-address') {
+    if (author.username === "invalid-email-address") {
       return;
     }
 
@@ -183,39 +183,39 @@ export default class Changelog {
   /** Split commits into changelogTitle sections. */
   private splitCommits(commits: IExtendedCommit[]): ICommitSplit {
     let currentCommits = [...commits];
-    const order = ['major', 'minor', 'patch'];
+    const order = ["major", "minor", "patch"];
     const sections = this.options.labels
-      .filter(label => label.changelogTitle)
+      .filter((label) => label.changelogTitle)
       .sort((a, b) => {
         const bIndex =
-          order.indexOf(b.releaseType || '') + 1 || order.length + 1;
+          order.indexOf(b.releaseType || "") + 1 || order.length + 1;
         const aIndex =
-          order.indexOf(a.releaseType || '') + 1 || order.length + 1;
+          order.indexOf(a.releaseType || "") + 1 || order.length + 1;
         return aIndex - bIndex;
       })
       .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
 
     const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
       this.options.labels,
-      'patch'
+      "patch"
     );
 
     commits
       .filter(
         ({ labels }) =>
           // in case pr commit doesn't contain a label for section inclusion
-          !sections.some(section => labels.includes(section.name)) ||
+          !sections.some((section) => labels.includes(section.name)) ||
           // in this case we auto attached a patch when it was merged
-          (labels[0] === 'released' && labels.length === 1)
+          (labels[0] === "released" && labels.length === 1)
       )
       .map(({ labels }) => labels.push(defaultPatchLabelName));
 
     return Object.assign(
       {},
-      ...sections.map(label => {
+      ...sections.map((label) => {
         const matchedCommits = filterLabel(currentCommits, label.name);
         currentCommits = currentCommits.filter(
-          commit => !matchedCommits.includes(commit)
+          (commit) => !matchedCommits.includes(commit)
         );
 
         return matchedCommits.length === 0
@@ -230,7 +230,7 @@ export default class Changelog {
     labels: ILabelDefinition[],
     labelKey: string
   ) {
-    return labels.find(l => l.releaseType === labelKey)?.name || labelKey;
+    return labels.find((l) => l.releaseType === labelKey)?.name || labelKey;
   }
 
   /** Create a list of users */
@@ -238,7 +238,7 @@ export default class Changelog {
     const result = new Set<string>();
 
     await Promise.all(
-      commit.authors.map(async rawAuthor => {
+      commit.authors.map(async (rawAuthor) => {
         const data = (this.authors!.find(
           ([, commitAuthor]) =>
             (commitAuthor.name &&
@@ -264,31 +264,31 @@ export default class Changelog {
       })
     );
 
-    return [...result].join(' ');
+    return [...result].join(" ");
   }
 
   /** Transform a commit into a line in the changelog */
   private async generateCommitNote(commit: IExtendedCommit) {
     const subject = commit.subject
       ? commit.subject
-          .split('\n')[0]
+          .split("\n")[0]
           .trim()
-          .replace('[skip ci]', '\\[skip ci\\]')
-      : '';
+          .replace("[skip ci]", "\\[skip ci\\]")
+      : "";
 
-    let pr = '';
+    let pr = "";
 
     if (commit.pullRequest?.number) {
       const prLink = join(
         this.options.baseUrl,
-        'pull',
+        "pull",
         commit.pullRequest.number.toString()
       );
       pr = `[#${commit.pullRequest.number}](${prLink})`;
     }
 
     const user = await this.createUserLinkList(commit);
-    return `- ${subject}${pr ? ` ${pr}` : ''}${user ? ` (${user})` : ''}`;
+    return `- ${subject}${pr ? ` ${pr}` : ""}${user ? ` (${user})` : ""}`;
   }
 
   /** Get all the authors in the provided commits */
@@ -302,17 +302,17 @@ export default class Changelog {
     );
 
     return commits
-      .map(commit =>
+      .map((commit) =>
         commit.authors
           .filter(
-            author =>
-              author.username !== 'invalid-email-address' &&
+            (author) =>
+              author.username !== "invalid-email-address" &&
               (author.name || author.email || author.username)
           )
-          .map(author => [commit, author] as [IExtendedCommit, ICommitAuthor])
+          .map((author) => [commit, author] as [IExtendedCommit, ICommitAuthor])
       )
       .reduce((all, more) => [...all, ...more], [])
-      .sort(a => ('id' in a[1] ? 0 : 1));
+      .sort((a) => ("id" in a[1] ? 0 : 1));
   }
 
   /** Create a section in the changelog to showcase contributing authors */
@@ -320,13 +320,13 @@ export default class Changelog {
     const authors = new Set<string>();
     const authorsWithFullData = this.authors!.map(
       ([, author]) => author
-    ).filter(author => 'id' in author);
+    ).filter((author) => "id" in author);
 
     await Promise.all(
       this.authors!.map(async ([commit, author]) => {
         const info =
           authorsWithFullData.find(
-            u =>
+            (u) =>
               (author.name && u.name === author.name) ||
               (author.email && u.email === author.email)
           ) || author;
@@ -351,7 +351,7 @@ export default class Changelog {
     }
 
     let authorSection = `#### Authors: ${authors.size}\n\n`;
-    authorSection += [...authors].sort((a, b) => a.localeCompare(b)).join('\n');
+    authorSection += [...authors].sort((a, b) => a.localeCompare(b)).join("\n");
     sections.push(authorSection);
   }
 
@@ -375,9 +375,9 @@ export default class Changelog {
         const lines = new Set<string>();
 
         await Promise.all(
-          labelCommits.map(async commit => {
-            const base = commit.pullRequest?.base || '';
-            const branch = base.includes('/') ? base.split('/')[1] : base;
+          labelCommits.map(async (commit) => {
+            const base = commit.pullRequest?.base || "";
+            const branch = base.includes("/") ? base.split("/")[1] : base;
 
             // We want to keep the release notes for a prerelease branch but
             // omit the changelog item
@@ -387,7 +387,7 @@ export default class Changelog {
 
             const [, line] = await this.hooks.renderChangelogLine.promise([
               commit,
-              await this.generateCommitNote(commit)
+              await this.generateCommitNote(commit),
             ]);
 
             lines.add(line);
@@ -396,7 +396,9 @@ export default class Changelog {
 
         return [
           title as string,
-          [...lines].sort((a, b) => a.split('\n').length - b.split('\n').length)
+          [...lines].sort(
+            (a, b) => a.split("\n").length - b.split("\n").length
+          ),
         ] as [string, string[]];
       })
     );
@@ -404,14 +406,14 @@ export default class Changelog {
     const mergedSections = labelSections.reduce(
       (acc, [title, commits]) => ({
         ...acc,
-        [title]: [...(acc[title] || []), ...commits]
+        [title]: [...(acc[title] || []), ...commits],
       }),
       {} as Record<string, string[]>
     );
 
     Object.entries(mergedSections)
-      .map(([title, lines]) => [title, ...lines].join('\n'))
-      .map(section => sections.push(section));
+      .map(([title, lines]) => [title, ...lines].join("\n"))
+      .map((section) => sections.push(section));
   }
 
   /** Gather extra release notes to display at the top of the changelog */
@@ -423,10 +425,10 @@ export default class Changelog {
       return;
     }
 
-    let section = '';
+    let section = "";
     const visited = new Set<number>();
     const included = await Promise.all(
-      commits.map(async commit => {
+      commits.map(async (commit) => {
         const omit = await this.hooks.omitReleaseNotes.promise(commit);
 
         if (!omit) {
@@ -435,7 +437,7 @@ export default class Changelog {
       })
     );
 
-    included.forEach(commit => {
+    included.forEach((commit) => {
       if (!commit) {
         return;
       }
@@ -447,8 +449,8 @@ export default class Changelog {
       }
 
       const title = /^[#]{0,5}[ ]*[R|r]elease [N|n]otes$/;
-      const lines = pr.body.split('\n').map(line => line.replace(/\r$/, ''));
-      const notesStart = lines.findIndex(line => Boolean(line.match(title)));
+      const lines = pr.body.split("\n").map((line) => line.replace(/\r$/, ""));
+      const notesStart = lines.findIndex((line) => Boolean(line.match(title)));
 
       if (notesStart === -1 || visited.has(pr.number)) {
         return;
@@ -456,13 +458,13 @@ export default class Changelog {
 
       const depth = getHeaderDepth(lines[notesStart]);
       visited.add(pr.number);
-      let notes = '';
+      let notes = "";
 
       for (let index = notesStart; index < lines.length; index++) {
         const line = lines[index];
         const isTitle = line.match(title);
 
-        if (line.startsWith('#') && getHeaderDepth(line) <= depth && !isTitle) {
+        if (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) {
           break;
         }
 

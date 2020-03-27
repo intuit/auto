@@ -1,26 +1,26 @@
-import { Auto, IPlugin } from '@auto-it/core';
-import { ICommitAuthor } from '@auto-it/core/dist/log-parse';
-import flatMap from 'array.prototype.flatmap';
-import endent from 'endent';
-import urlJoin from 'url-join';
-import { URL } from 'url';
+import { Auto, IPlugin } from "@auto-it/core";
+import { ICommitAuthor } from "@auto-it/core/dist/log-parse";
+import flatMap from "array.prototype.flatmap";
+import endent from "endent";
+import urlJoin from "url-join";
+import { URL } from "url";
 
 /**
  * Thank first time contributors for their work right in your release notes.
  */
 export default class FirstTimeContributorPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'first-time-contributor';
+  name = "first-time-contributor";
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+    auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
       const base = new URL(changelog.options.baseUrl).origin;
 
       /** Format a string for the contributor */
       const renderContributor = ({ name, username }: ICommitAuthor) => {
-        const link = `[@${username}](${urlJoin(base, username || '')})`;
-        return `${name}${username ? (name ? ` (${link})` : link) : ''}`;
+        const link = `[@${username}](${urlJoin(base, username || "")})`;
+        return `${name}${username ? (name ? ` (${link})` : link) : ""}`;
       };
 
       changelog.hooks.addToBody.tapPromise(
@@ -28,8 +28,8 @@ export default class FirstTimeContributorPlugin implements IPlugin {
         async (notes, commits) => {
           const newContributors = (
             await Promise.all(
-              flatMap(commits, c => c.authors).map(async author => {
-                if (!author.username || author.type === 'Bot') {
+              flatMap(commits, (c) => c.authors).map(async (author) => {
+                if (!author.username || author.type === "Bot") {
                   return;
                 }
 
@@ -61,8 +61,8 @@ export default class FirstTimeContributorPlugin implements IPlugin {
               :tada: This release contains work from new contributors! :tada:
 
               Thanks for all your work!\n\n${[...lines]
-                .map(line => `:heart: ${line}`)
-                .join('\n\n')}
+                .map((line) => `:heart: ${line}`)
+                .join("\n\n")}
             `;
           } else {
             thankYou = endent`

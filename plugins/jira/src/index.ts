@@ -1,23 +1,23 @@
-import join from 'url-join';
-import { prompt } from 'enquirer';
-import * as t from 'io-ts';
+import join from "url-join";
+import { prompt } from "enquirer";
+import * as t from "io-ts";
 
 import {
   Auto,
   IPlugin,
   InteractiveInit,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import { IExtendedCommit } from '@auto-it/core/dist/log-parse';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 const pluginOptions = t.interface({
   /** Url to a hosted JIRA instance */
-  url: t.string
+  url: t.string,
 });
 
 export type IJiraPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-interface InputResponse<T = 'string'> {
+interface InputResponse<T = "string"> {
   /** he value of the input prompt */
   value: T;
 }
@@ -57,19 +57,19 @@ export function parseJira(commit: IExtendedCommit): IJiraCommit {
   return {
     ...commit,
     jira: {
-      number: matches.map(match => match[1])
-    }
+      number: matches.map((match) => match[1]),
+    },
   };
 }
 
 /** Convert shorthand options to noraml shape */
 const normalizeOptions = (options: IJiraPluginOptions | string) =>
-  typeof options === 'string' ? { url: options } : options;
+  typeof options === "string" ? { url: options } : options;
 
 /** Include Jira story information in your changelogs */
 export default class JiraPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'jira';
+  name = "jira";
 
   /** The options of the plugin */
   readonly options: IJiraPluginOptions;
@@ -81,16 +81,16 @@ export default class JiraPlugin implements IPlugin {
 
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
-    initializer.hooks.configurePlugin.tapPromise(this.name, async name => {
-      if (name === 'jira') {
+    initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
+      if (name === "jira") {
         const url = await prompt<InputResponse>({
-          type: 'input',
-          name: 'value',
-          message: 'What is the root url of your Jira instance?',
-          required: true
+          type: "input",
+          name: "value",
+          message: "What is the root url of your Jira instance?",
+          required: true,
         });
 
-        return ['jira', url.value];
+        return ["jira", url.value];
       }
     });
   }
@@ -107,7 +107,7 @@ export default class JiraPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.onCreateChangelog.tap(this.name, changelog => {
+    auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
       changelog.hooks.renderChangelogLine.tap(
         this.name,
         ([commit, currentRender]) => {
@@ -120,7 +120,7 @@ export default class JiraPlugin implements IPlugin {
 
             line = line.replace(
               jira,
-              `[${jiraCommit.jira.number}](${link})${rest ? ':' : ''} $2`
+              `[${jiraCommit.jira.number}](${link})${rest ? ":" : ""} $2`
             );
           }
 

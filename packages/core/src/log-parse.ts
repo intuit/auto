@@ -1,5 +1,5 @@
-import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from 'tapable';
-import { makeLogParseHooks } from './utils/make-hooks';
+import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
+import { makeLogParseHooks } from "./utils/make-hooks";
 
 export interface ICommitAuthor {
   /** Author's name */
@@ -11,7 +11,7 @@ export interface ICommitAuthor {
   /** The commit this author created */
   hash?: string;
   /** The type of user */
-  type?: 'Bot' | 'User' | string;
+  type?: "Bot" | "User" | string;
 }
 
 export interface IPullRequest {
@@ -76,15 +76,15 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
     ...commit,
     pullRequest: {
       number: Number(prMatch[1]),
-      base: prMatch[2]
+      base: prMatch[2],
     },
-    subject: prMatch[3].trim()
+    subject: prMatch[3].trim(),
   };
 }
 
 /** Parse the PR information for the squashed commit message */
 export function parseSquashPR(commit: IExtendedCommit): IExtendedCommit {
-  const firstLine = commit.subject.split('\n')[0];
+  const firstLine = commit.subject.split("\n")[0];
   const squashMerge = /\(#(\d+)\)$/;
 
   const squashMergeMatch = firstLine.match(squashMerge);
@@ -96,11 +96,11 @@ export function parseSquashPR(commit: IExtendedCommit): IExtendedCommit {
   return {
     ...commit,
     pullRequest: {
-      number: Number(squashMergeMatch[1])
+      number: Number(squashMergeMatch[1]),
     },
     subject: firstLine
       .substr(0, firstLine.length - squashMergeMatch[0].length)
-      .trim()
+      .trim(),
   };
 }
 
@@ -124,14 +124,14 @@ export default class LogParse {
   constructor() {
     this.hooks = makeLogParseHooks();
 
-    this.hooks.parseCommit.tap('Merge Commit', parsePR);
-    this.hooks.parseCommit.tap('Squash Merge Commit', parseSquashPR);
+    this.hooks.parseCommit.tap("Merge Commit", parsePR);
+    this.hooks.parseCommit.tap("Squash Merge Commit", parseSquashPR);
   }
 
   /** Run the log parser over a set of commits */
   async normalizeCommits(commits: ICommit[]): Promise<IExtendedCommit[]> {
     const eCommits = await Promise.all(
-      commits.map(async commit => this.normalizeCommit(commit))
+      commits.map(async (commit) => this.normalizeCommit(commit))
     );
 
     return eCommits.filter(Boolean) as IExtendedCommit[];
@@ -142,7 +142,7 @@ export default class LogParse {
     const extended = await this.hooks.parseCommit.promise({
       labels: [],
       ...commit,
-      authors: [{ name: commit.authorName, email: commit.authorEmail }]
+      authors: [{ name: commit.authorName, email: commit.authorEmail }],
     });
     const shouldOmit = await this.hooks.omitCommit.promise(extended);
 

@@ -1,12 +1,12 @@
-import { cosmiconfig } from 'cosmiconfig';
-import merge from 'deepmerge';
-import fetch from 'node-fetch';
-import * as path from 'path';
+import { cosmiconfig } from "cosmiconfig";
+import merge from "deepmerge";
+import fetch from "node-fetch";
+import * as path from "path";
 
-import { defaultLabels, getVersionMap, ILabelDefinition } from './release';
-import { ILogger } from './utils/logger';
-import tryRequire from './utils/try-require';
-import endent from 'endent';
+import { defaultLabels, getVersionMap, ILabelDefinition } from "./release";
+import { ILogger } from "./utils/logger";
+import tryRequire from "./utils/try-require";
+import endent from "endent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
@@ -16,10 +16,10 @@ export function normalizeLabel(
   label: Partial<ILabelDefinition>
 ): Partial<ILabelDefinition> {
   const baseLabel =
-    defaultLabels.find(l => {
+    defaultLabels.find((l) => {
       let isBase = false;
 
-      if (label.releaseType !== 'none') {
+      if (label.releaseType !== "none") {
         isBase = l.releaseType === label.releaseType;
       }
 
@@ -36,9 +36,9 @@ export function normalizeLabels(config: ConfigObject) {
   if (config.labels) {
     const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
     const baseLabels = defaultLabels.filter(
-      d =>
+      (d) =>
         !userLabels.some(
-          u => u.releaseType && u.releaseType === d.releaseType && u.overwrite
+          (u) => u.releaseType && u.releaseType === d.releaseType && u.overwrite
         )
     );
 
@@ -63,14 +63,14 @@ export default class Config {
    * load the extends property, load the plugins and start the git remote interface.
    */
   async loadConfig() {
-    const explorer = cosmiconfig('auto', {
+    const explorer = cosmiconfig("auto", {
       searchPlaces: [
         `.autorc`,
         `.autorc.json`,
         `.autorc.yaml`,
         `.autorc.yml`,
-        'package.json'
-      ]
+        "package.json",
+      ],
     });
     const result = await explorer.search();
 
@@ -91,16 +91,16 @@ export default class Config {
     const labels = normalizeLabels(rawConfig);
     const semVerLabels = getVersionMap(labels);
 
-    this.logger.verbose.success('Using SEMVER labels:', '\n', semVerLabels);
+    this.logger.verbose.success("Using SEMVER labels:", "\n", semVerLabels);
 
     return {
       ...rawConfig,
       labels,
-      prereleaseBranches: rawConfig.prereleaseBranches || ['next'],
+      prereleaseBranches: rawConfig.prereleaseBranches || ["next"],
       versionBranches:
-        typeof rawConfig.versionBranches === 'boolean'
-          ? 'version-'
-          : rawConfig.versionBranches
+        typeof rawConfig.versionBranches === "boolean"
+          ? "version-"
+          : rawConfig.versionBranches,
     };
   }
 
@@ -120,11 +120,11 @@ export default class Config {
           auto: ConfigObject;
         };
 
-    if (extend.endsWith('.js') || extend.endsWith('.mjs')) {
-      throw new Error('Extended config cannot be a JavaScript file');
+    if (extend.endsWith(".js") || extend.endsWith(".mjs")) {
+      throw new Error("Extended config cannot be a JavaScript file");
     }
 
-    if (extend.startsWith('http')) {
+    if (extend.startsWith("http")) {
       try {
         config = (await fetch(extend)).json();
         this.logger.verbose.note(`${extend} found: ${config}`);
@@ -132,10 +132,10 @@ export default class Config {
         error.message = `Failed to get extended config from ${extend} -- ${error.message}`;
         throw error;
       }
-    } else if (extend.startsWith('.')) {
+    } else if (extend.startsWith(".")) {
       config = tryRequire(extend);
 
-      if (extend.endsWith('package.json')) {
+      if (extend.endsWith("package.json")) {
         config = config?.auto;
       }
 

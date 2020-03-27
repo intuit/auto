@@ -1,78 +1,78 @@
-import Auto, { SEMVER } from '@auto-it/core';
-import makeCommitFromMsg from '@auto-it/core/dist/__tests__/make-commit-from-msg';
+import Auto, { SEMVER } from "@auto-it/core";
+import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Changelog, {
-  IGenerateReleaseNotesOptions
-} from '@auto-it/core/dist/changelog';
-import LogParse from '@auto-it/core/dist/log-parse';
-import { defaultLabels } from '@auto-it/core/dist/release';
-import { dummyLog } from '@auto-it/core/dist/utils/logger';
+  IGenerateReleaseNotesOptions,
+} from "@auto-it/core/dist/changelog";
+import LogParse from "@auto-it/core/dist/log-parse";
+import { defaultLabels } from "@auto-it/core/dist/release";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import {
   makeChangelogHooks,
-  makeHooks
-} from '@auto-it/core/dist/utils/make-hooks';
-import JiraPlugin, { parseJira } from '../src';
+  makeHooks,
+} from "@auto-it/core/dist/utils/make-hooks";
+import JiraPlugin, { parseJira } from "../src";
 
-describe('parse jira', () => {
-  test('no story', () => {
+describe("parse jira", () => {
+  test("no story", () => {
     const commit = {
-      ...makeCommitFromMsg('Add log')
+      ...makeCommitFromMsg("Add log"),
     };
 
     expect(parseJira(commit)).toStrictEqual(commit);
   });
 
-  test('story found', () => {
+  test("story found", () => {
     const jira = {
-      number: ['P-5052']
+      number: ["P-5052"],
     };
 
-    expect(parseJira(makeCommitFromMsg('P-5052: Add log')).jira).toStrictEqual(
+    expect(parseJira(makeCommitFromMsg("P-5052: Add log")).jira).toStrictEqual(
       jira
     );
     expect(
-      parseJira(makeCommitFromMsg('[P-5052] - Add log')).jira
+      parseJira(makeCommitFromMsg("[P-5052] - Add log")).jira
     ).toStrictEqual(jira);
-    expect(parseJira(makeCommitFromMsg('[P-5052] Add log')).jira).toStrictEqual(
-      jira
-    );
-  });
-
-  test('story found, pr no title', () => {
-    const jira = {
-      number: ['PLAYA-5052']
-    };
-
-    expect(parseJira(makeCommitFromMsg('[PLAYA-5052]')).jira).toStrictEqual(
+    expect(parseJira(makeCommitFromMsg("[P-5052] Add log")).jira).toStrictEqual(
       jira
     );
   });
 
-  test('story found multiple', () => {
+  test("story found, pr no title", () => {
     const jira = {
-      number: ['PLAYA-5052', 'PLAYA-6000']
+      number: ["PLAYA-5052"],
+    };
+
+    expect(parseJira(makeCommitFromMsg("[PLAYA-5052]")).jira).toStrictEqual(
+      jira
+    );
+  });
+
+  test("story found multiple", () => {
+    const jira = {
+      number: ["PLAYA-5052", "PLAYA-6000"],
     };
 
     expect(
-      parseJira(makeCommitFromMsg('PLAYA-5052 PLAYA-6000: Add log')).jira
+      parseJira(makeCommitFromMsg("PLAYA-5052 PLAYA-6000: Add log")).jira
     ).toStrictEqual(jira);
     expect(
-      parseJira(makeCommitFromMsg('[PLAYA-5052][PLAYA-6000] - Add log')).jira
+      parseJira(makeCommitFromMsg("[PLAYA-5052][PLAYA-6000] - Add log")).jira
     ).toStrictEqual(jira);
     expect(
-      parseJira(makeCommitFromMsg('[PLAYA-5052] PLAYA-6000: Add log')).jira
+      parseJira(makeCommitFromMsg("[PLAYA-5052] PLAYA-6000: Add log")).jira
     ).toStrictEqual(jira);
     expect(
-      parseJira(makeCommitFromMsg('PLAYA-5052 [PLAYA-6000] - Add log')).jira
+      parseJira(makeCommitFromMsg("PLAYA-5052 [PLAYA-6000] - Add log")).jira
     ).toStrictEqual(jira);
   });
 });
 
-describe('render jira', () => {
-  test('no jira number', async () => {
-    const plugin = new JiraPlugin('jira.com');
+describe("render jira", () => {
+  test("no jira number", async () => {
+    const plugin = new JiraPlugin("jira.com");
     const hooks = makeHooks();
     const changelogHooks = makeChangelogHooks();
-    const commit = makeCommitFromMsg('Add log');
+    const commit = makeCommitFromMsg("Add log");
 
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
     hooks.onCreateChangelog.promise(
@@ -81,12 +81,12 @@ describe('render jira', () => {
     );
 
     expect(
-      (await changelogHooks.renderChangelogLine.promise([commit, 'Add log']))[1]
-    ).toBe('Add log');
+      (await changelogHooks.renderChangelogLine.promise([commit, "Add log"]))[1]
+    ).toBe("Add log");
   });
 
-  test('with jira number', async () => {
-    const plugin = new JiraPlugin({ url: 'jira.com' });
+  test("with jira number", async () => {
+    const plugin = new JiraPlugin({ url: "jira.com" });
     const hooks = makeHooks();
     const changelogHooks = makeChangelogHooks();
 
@@ -97,29 +97,29 @@ describe('render jira', () => {
     );
 
     const [, line] = await changelogHooks.renderChangelogLine.promise([
-      makeCommitFromMsg('[PLAYA-5052] Add log'),
-      '[PLAYA-5052] Add log [author](link/to/author)'
+      makeCommitFromMsg("[PLAYA-5052] Add log"),
+      "[PLAYA-5052] Add log [author](link/to/author)",
     ]);
 
     expect(line).toBe(
-      '[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)'
+      "[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)"
     );
   });
 });
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
-  owner: 'foobar',
-  repo: 'auto',
-  baseUrl: 'https://github.custom.com/foobar/auto',
+  owner: "foobar",
+  repo: "auto",
+  baseUrl: "https://github.custom.com/foobar/auto",
   labels: defaultLabels,
-  baseBranch: 'master',
-  prereleaseBranches: ['next']
+  baseBranch: "master",
+  prereleaseBranches: ["next"],
 });
 const logParse = new LogParse();
 
-test('should create note for jira commits without PR title', async () => {
+test("should create note for jira commits without PR title", async () => {
   const changelog = new Changelog(dummyLog(), testOptions());
-  const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+  const plugin = new JiraPlugin({ url: "https://jira.custom.com/browse/" });
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
@@ -127,15 +127,15 @@ test('should create note for jira commits without PR title', async () => {
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([
-    makeCommitFromMsg('[PLAYA-5052]')
+    makeCommitFromMsg("[PLAYA-5052]"),
   ]);
 
   expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
 });
 
-test('should create note for JIRA commits', async () => {
+test("should create note for JIRA commits", async () => {
   const changelog = new Changelog(dummyLog(), testOptions());
-  const plugin = new JiraPlugin({ url: 'https://jira.custom.com/browse/' });
+  const plugin = new JiraPlugin({ url: "https://jira.custom.com/browse/" });
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
@@ -143,12 +143,12 @@ test('should create note for JIRA commits', async () => {
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([
-    makeCommitFromMsg('[PLAYA-5052] - Some Feature (#12345)', {
-      labels: ['major'],
-      packages: []
+    makeCommitFromMsg("[PLAYA-5052] - Some Feature (#12345)", {
+      labels: ["major"],
+      packages: [],
     }),
-    makeCommitFromMsg('Some Feature (#1234)', { labels: ['internal'] }),
-    makeCommitFromMsg('Third', { labels: ['patch'] })
+    makeCommitFromMsg("Some Feature (#1234)", { labels: ["internal"] }),
+    makeCommitFromMsg("Third", { labels: ["patch"] }),
   ]);
 
   expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();

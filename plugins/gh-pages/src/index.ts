@@ -3,14 +3,14 @@ import {
   IPlugin,
   execPromise,
   validatePluginConfiguration,
-  SEMVER
-} from '@auto-it/core';
-import { execSync } from 'child_process';
-import * as t from 'io-ts';
+  SEMVER,
+} from "@auto-it/core";
+import { execSync } from "child_process";
+import * as t from "io-ts";
 
 const required = t.interface({
   /** The directory to push to gh-pages */
-  dir: t.string
+  dir: t.string,
 });
 
 const optional = t.partial({
@@ -19,7 +19,7 @@ const optional = t.partial({
   /** The branch to push to */
   branch: t.string,
   /** A label to look for and always publish the docs */
-  label: t.string
+  label: t.string,
 });
 
 const pluginOptions = t.intersection([required, optional]);
@@ -27,14 +27,14 @@ const pluginOptions = t.intersection([required, optional]);
 export type IGhPagesPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 const defaults = {
-  branch: 'gh-pages',
-  label: 'documentation'
+  branch: "gh-pages",
+  label: "documentation",
 };
 
 /** Automate publishing to your gh-pages documentation website. */
 export default class GhPagesPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'gh-pages';
+  name = "gh-pages";
 
   /** The options of the plugin */
   readonly options: IGhPagesPluginOptions & typeof defaults;
@@ -53,7 +53,7 @@ export default class GhPagesPlugin implements IPlugin {
     });
 
     auto.hooks.beforeShipIt.tapPromise(this.name, async ({ releaseType }) => {
-      if (releaseType !== 'latest' || !auto.git) {
+      if (releaseType !== "latest" || !auto.git) {
         return;
       }
 
@@ -88,7 +88,7 @@ export default class GhPagesPlugin implements IPlugin {
       }
 
       const releases = Array.isArray(response) ? response : [response];
-      const isPrerelease = releases.some(release => release.data.prerelease);
+      const isPrerelease = releases.some((release) => release.data.prerelease);
 
       if (isPrerelease) {
         return;
@@ -105,21 +105,21 @@ export default class GhPagesPlugin implements IPlugin {
     }
 
     try {
-      await execPromise('npx', [
-        'push-dir',
-        '--cleanup',
+      await execPromise("npx", [
+        "push-dir",
+        "--cleanup",
         `--remote=${auto.remote}`,
         `--dir=${this.options.dir}`,
         `--branch=${this.options.branch}`,
-        '--message="Update docs [skip ci]"'
+        '--message="Update docs [skip ci]"',
       ]);
     } catch (error) {
       auto.logger.log.error(
-        'Oh no! It looks like there was trouble publishing to GitHub Pages 😢'
+        "Oh no! It looks like there was trouble publishing to GitHub Pages 😢"
       );
       throw error;
     }
 
-    auto.logger.log.success('Successfully deployed to GitHub Pages!');
+    auto.logger.log.success("Successfully deployed to GitHub Pages!");
   }
 }

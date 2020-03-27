@@ -424,3 +424,34 @@ Array [
   },
 ]
 `;
+
+exports[`Release getCommits should use latest title of PR 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+      Object {
+        "login": "adam",
+        "name": "Adam Dierkens",
+        "username": "adam",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [
+      "skip-release",
+      "minor",
+    ],
+    "pullRequest": Object {
+      "body": undefined,
+      "number": 124,
+    },
+    "subject": "Updated Title",
+  },
+]
+`;

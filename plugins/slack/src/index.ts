@@ -1,28 +1,28 @@
-import { githubToSlack } from '@atomist/slack-messages';
+import { githubToSlack } from "@atomist/slack-messages";
 import {
   Auto,
   IPlugin,
   getCurrentBranch,
   InteractiveInit,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import fetch from 'node-fetch';
-import join from 'url-join';
-import * as t from 'io-ts';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import fetch from "node-fetch";
+import join from "url-join";
+import * as t from "io-ts";
 
 /** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
-    .split('\n')
-    .map(line => {
+    .split("\n")
+    .map((line) => {
       // Strip out the ### prefix and replace it with *<word>* to make it bold
-      if (line.startsWith('#')) {
-        return `*${line.replace(/^[#]+/, '')}*`;
+      if (line.startsWith("#")) {
+        return `*${line.replace(/^[#]+/, "")}*`;
       }
 
       return line;
     })
-    .join('\n');
+    .join("\n");
 
 const pluginOptions = t.partial({
   /** URL of the slack to post to */
@@ -30,7 +30,7 @@ const pluginOptions = t.partial({
   /** Who to bother when posting to the channel */
   atTarget: t.string,
   /** Allow users to opt into having prereleases posted to slack */
-  publishPreRelease: t.boolean
+  publishPreRelease: t.boolean,
 });
 
 export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -38,34 +38,34 @@ export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
 /** Post your release notes to Slack during `auto release` */
 export default class SlackPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'slack';
+  name = "slack";
 
   /** The options of the plugin */
   readonly options: ISlackPluginOptions;
 
   /** Initialize the plugin with it's options */
   constructor(options: ISlackPluginOptions | string = {}) {
-    if (typeof options === 'string') {
-      this.options = { url: options, atTarget: 'channel' };
+    if (typeof options === "string") {
+      this.options = { url: options, atTarget: "channel" };
     } else {
       this.options = {
-        url: process.env.SLACK_WEBHOOK_URL || options.url || '',
-        atTarget: options.atTarget ? options.atTarget : 'channel',
+        url: process.env.SLACK_WEBHOOK_URL || options.url || "",
+        atTarget: options.atTarget ? options.atTarget : "channel",
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
-          : false
+          : false,
       };
     }
   }
 
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
-    initializer.hooks.createEnv.tapPromise(this.name, async vars => [
+    initializer.hooks.createEnv.tapPromise(this.name, async (vars) => [
       ...vars,
       {
-        variable: 'SLACK_WEBHOOK_URL',
-        message: 'What is the root url of your slack hook? ()'
-      }
+        variable: "SLACK_WEBHOOK_URL",
+        message: "What is the root url of your slack hook? ()",
+      },
     ]);
   }
 
@@ -73,7 +73,7 @@ export default class SlackPlugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config
-      if (name === this.name && typeof options !== 'string') {
+      if (name === this.name && typeof options !== "string") {
         return validatePluginConfiguration(this.name, pluginOptions, options);
       }
     });
@@ -102,9 +102,9 @@ export default class SlackPlugin implements IPlugin {
         }
 
         const skipReleaseLabels = (
-          auto.config?.labels.filter(l => l.releaseType === 'skip') || []
-        ).map(l => l.name);
-        const isSkipped = head.labels.find(label =>
+          auto.config?.labels.filter((l) => l.releaseType === "skip") || []
+        ).map((l) => l.name);
+        const isSkipped = head.labels.find((label) =>
           skipReleaseLabels.includes(label)
         );
 
@@ -113,7 +113,7 @@ export default class SlackPlugin implements IPlugin {
         }
 
         if (!this.options.url) {
-          throw new Error('Slack url must be set to post a message to slack.');
+          throw new Error("Slack url must be set to post a message to slack.");
         }
 
         await this.postToSlack(auto, newVersion, releaseNotes);
@@ -127,30 +127,30 @@ export default class SlackPlugin implements IPlugin {
       return;
     }
 
-    auto.logger.verbose.info('Posting release notes to slack.');
+    auto.logger.verbose.info("Posting release notes to slack.");
 
     const project = await auto.git.getProject();
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const releaseUrl = join(project.html_url, 'releases/tag', newVersion);
+    const releaseUrl = join(project.html_url, "releases/tag", newVersion);
     const atTarget = this.options.atTarget;
 
     if (!token) {
-      auto.logger.verbose.warn('Slack may need a token to send a message');
+      auto.logger.verbose.warn("Slack may need a token to send a message");
     }
 
-    await fetch(`${this.options.url}${token ? `?token=${token}` : ''}`, {
-      method: 'POST',
+    await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
+      method: "POST",
       body: JSON.stringify({
         text: [
           `@${atTarget}: New release *<${releaseUrl}|${newVersion}>*`,
-          body
-        ].join('\n'),
-        link_names: 1
+          body,
+        ].join("\n"),
+        link_names: 1,
       }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
 
-    auto.logger.verbose.info('Posted release notes to slack.');
+    auto.logger.verbose.info("Posted release notes to slack.");
   }
 }

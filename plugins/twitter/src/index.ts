@@ -2,14 +2,14 @@ import {
   Auto,
   IPlugin,
   SEMVER,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import endent from 'endent';
-import { diff, ReleaseType } from 'semver';
-import twitter from 'tweet-tweet';
-import tweetValidation from 'twitter-text';
-import { promisify } from 'util';
-import * as t from 'io-ts';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import endent from "endent";
+import { diff, ReleaseType } from "semver";
+import twitter from "tweet-tweet";
+import tweetValidation from "twitter-text";
+import { promisify } from "util";
+import * as t from "io-ts";
 
 const pluginOptions = t.partial({
   /** The message template to use to post to Twitter */
@@ -18,8 +18,8 @@ const pluginOptions = t.partial({
   threshold: t.keyof({
     patch: null,
     minor: null,
-    major: null
-  })
+    major: null,
+  }),
 });
 
 export type ITwitterPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -32,10 +32,10 @@ const defaults: Required<ITwitterPluginOptions> = {
     %notes
 
     %link
-  `
+  `,
 };
 
-const RELEASE_PRECEDENCE: ReleaseType[] = ['patch', 'minor', 'major'];
+const RELEASE_PRECEDENCE: ReleaseType[] = ["patch", "minor", "major"];
 
 /** Determine the release with the biggest semver change */
 const isGreaterThan = (a: ReleaseType, b: ReleaseType) =>
@@ -43,11 +43,7 @@ const isGreaterThan = (a: ReleaseType, b: ReleaseType) =>
 
 /** Remove the last line of text from a multiline string */
 const removeLastLine = (text: string) =>
-  text
-    .split('\n')
-    .slice(0, -1)
-    .join('\n')
-    .trim();
+  text.split("\n").slice(0, -1).join("\n").trim();
 
 interface MakeTweetArgs {
   /** The generated release notes for the release */
@@ -71,21 +67,21 @@ const makeTweet = ({
   versionBump,
   newVersion,
   repo,
-  url
+  url,
 }: MakeTweetArgs) => {
   /** Replace all the variables in the message */
   const build = (notes: string) =>
     message
-      .replace('%release', versionBump)
-      .replace('%package', repo)
-      .replace('%version', newVersion)
-      .replace('%notes', notes)
-      .replace('%link', url);
+      .replace("%release", versionBump)
+      .replace("%package", repo)
+      .replace("%version", newVersion)
+      .replace("%notes", notes)
+      .replace("%link", url);
 
   let truncatedNotes = releaseNotes
-    .split('#### Authors')[0]
-    .replace(/#### /gm, '')
-    .replace(/\(?\[\S+\]\(\S+\)/gm, '')
+    .split("#### Authors")[0]
+    .replace(/#### /gm, "")
+    .replace(/\(?\[\S+\]\(\S+\)/gm, "")
     .trim();
   let tweet = build(truncatedNotes);
 
@@ -103,7 +99,7 @@ const makeTweet = ({
 /** Post your release notes to twitter during `auto release` */
 export default class TwitterPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'twitter';
+  name = "twitter";
 
   /** The options of the plugin */
   readonly options: Required<ITwitterPluginOptions>;
@@ -122,7 +118,7 @@ export default class TwitterPlugin implements IPlugin {
       !process.env.TWITTER_CONSUMER_KEY_SECRET
     ) {
       throw new Error(
-        'Need all of the following secrets available on the environment: TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET'
+        "Need all of the following secrets available on the environment: TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_KEY_SECRET"
       );
     }
 
@@ -131,7 +127,7 @@ export default class TwitterPlugin implements IPlugin {
         accessToken: process.env.TWITTER_ACCESS_TOKEN,
         accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
         consumerKey: process.env.TWITTER_CONSUMER_KEY,
-        consumerSecret: process.env.TWITTER_CONSUMER_KEY_SECRET
+        consumerSecret: process.env.TWITTER_CONSUMER_KEY_SECRET,
       })
     );
   }
@@ -151,14 +147,14 @@ export default class TwitterPlugin implements IPlugin {
           return;
         }
 
-        const versionBump = diff(newVersion, lastRelease) || 'patch';
+        const versionBump = diff(newVersion, lastRelease) || "patch";
 
         if (isGreaterThan(this.options.threshold as ReleaseType, versionBump)) {
           return;
         }
 
         const url = Array.isArray(response)
-          ? response.map(r => `- ${r.data.html_url}`).join('\n')
+          ? response.map((r) => `- ${r.data.html_url}`).join("\n")
           : response.data.html_url;
 
         await this.tweet(
@@ -168,7 +164,7 @@ export default class TwitterPlugin implements IPlugin {
             versionBump,
             newVersion,
             repo: auto.git.options.repo,
-            url
+            url,
           })
         );
       }

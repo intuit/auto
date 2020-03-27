@@ -4,55 +4,55 @@ import {
   execPromise,
   getLernaPackages,
   inFolder,
-  validatePluginConfiguration
-} from '@auto-it/core';
-import botList from '@auto-it/bot-list';
-import fs from 'fs';
-import path from 'path';
-import match from 'anymatch';
-import on from 'await-to-js';
-import { execSync } from 'child_process';
-import { IExtendedCommit } from '@auto-it/core/src/log-parse';
-import * as t from 'io-ts';
-import fromEntries from 'fromentries';
+  validatePluginConfiguration,
+} from "@auto-it/core";
+import botList from "@auto-it/bot-list";
+import fs from "fs";
+import path from "path";
+import match from "anymatch";
+import on from "await-to-js";
+import { execSync } from "child_process";
+import { IExtendedCommit } from "@auto-it/core/src/log-parse";
+import * as t from "io-ts";
+import fromEntries from "fromentries";
 
 const contributionTypes = [
-  'blog',
-  'bug',
-  'business',
-  'code',
-  'content',
-  'design',
-  'doc',
-  'eventOrganizing',
-  'example',
-  'financial',
-  'fundingFinding',
-  'ideas',
-  'infra',
-  'maintenance',
-  'platform',
-  'plugin',
-  'projectManagement',
-  'question',
-  'review',
-  'security',
-  'talk',
-  'test',
-  'tool',
-  'translation',
-  'tutorial',
-  'userTesting',
-  'video'
+  "blog",
+  "bug",
+  "business",
+  "code",
+  "content",
+  "design",
+  "doc",
+  "eventOrganizing",
+  "example",
+  "financial",
+  "fundingFinding",
+  "ideas",
+  "infra",
+  "maintenance",
+  "platform",
+  "plugin",
+  "projectManagement",
+  "question",
+  "review",
+  "security",
+  "talk",
+  "test",
+  "tool",
+  "translation",
+  "tutorial",
+  "userTesting",
+  "video",
 ] as const;
 type Contribution = typeof contributionTypes[number];
 
 /** Get an rc file if there is one. */
 function getRcFile() {
   try {
-    const rcFile = path.join(process.cwd(), '.all-contributorsrc');
+    const rcFile = path.join(process.cwd(), ".all-contributorsrc");
     const config: AllContributorsRc = JSON.parse(
-      fs.readFileSync(rcFile, 'utf8')
+      fs.readFileSync(rcFile, "utf8")
     );
 
     return config;
@@ -65,11 +65,11 @@ const pluginOptions = t.partial({
   exclude: t.array(t.string),
   /** Globs to detect change types by */
   types: t.partial(
-    fromEntries(contributionTypes.map(c => [c, pattern])) as Record<
+    fromEntries(contributionTypes.map((c) => [c, pattern])) as Record<
       Contribution,
       typeof pattern
     >
-  )
+  ),
 });
 
 export type IAllContributorsPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -89,18 +89,18 @@ interface AllContributorsRc {
 const defaultOptions: IAllContributorsPluginOptions = {
   exclude: botList,
   types: {
-    doc: ['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*'],
-    example: ['**/*.stories*', '**/*.story.*'],
-    infra: ['**/.circle/**/*', '**/.github/**/*', '**/travis.yml'],
-    test: ['**/*.test.*', '**/test/**', '**/__tests__/**'],
-    code: ['**/src/**/*', '**/lib/**/*', '**/package.json', '**/tsconfig.json']
-  }
+    doc: ["**/*.mdx", "**/*.md", "**/docs/**/*", "**/documentation/**/*"],
+    example: ["**/*.stories*", "**/*.story.*"],
+    infra: ["**/.circle/**/*", "**/.github/**/*", "**/travis.yml"],
+    test: ["**/*.test.*", "**/test/**", "**/__tests__/**"],
+    code: ["**/src/**/*", "**/lib/**/*", "**/package.json", "**/tsconfig.json"],
+  },
 };
 
 /** Automatically add contributors as changelogs are produced. */
 export default class AllContributorsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'all-contributors';
+  name = "all-contributors";
 
   /** The options of the plugin */
   readonly options: Required<IAllContributorsPluginOptions>;
@@ -109,7 +109,7 @@ export default class AllContributorsPlugin implements IPlugin {
   constructor(options: IAllContributorsPluginOptions = {}) {
     this.options = {
       exclude: [...(defaultOptions.exclude || []), ...(options.exclude || [])],
-      types: { ...defaultOptions.types, ...options.types }
+      types: { ...defaultOptions.types, ...options.types },
     };
   }
 
@@ -126,7 +126,7 @@ export default class AllContributorsPlugin implements IPlugin {
       async ({ commits }) => {
         const rootDir = process.cwd();
         // Always do the root package
-        let packages = [{ path: rootDir, name: 'root-package' }];
+        let packages = [{ path: rootDir, name: "root-package" }];
 
         try {
           // Try to get sub-packages
@@ -139,8 +139,8 @@ export default class AllContributorsPlugin implements IPlugin {
 
           auto.logger.verbose.info(`Updating contributors for: ${name}`);
 
-          const includedCommits = commits.filter(commit =>
-            commit.files.some(file => inFolder(path, file))
+          const includedCommits = commits.filter((commit) =>
+            commit.files.some((file) => inFolder(path, file))
           );
 
           if (includedCommits.length > 0) {
@@ -157,21 +157,21 @@ export default class AllContributorsPlugin implements IPlugin {
         }, Promise.resolve());
 
         process.chdir(rootDir);
-        const changedFiles = await execPromise('git', [
-          'status',
-          '--porcelain'
+        const changedFiles = await execPromise("git", [
+          "status",
+          "--porcelain",
         ]);
 
         if (changedFiles) {
-          await execPromise('git', ['add', 'README.md']);
-          await execPromise('git', ['add', '.all-contributorsrc']);
-          await on(execPromise('git', ['add', '**/README.md']));
-          await on(execPromise('git', ['add', '**/.all-contributorsrc']));
-          await execPromise('git', [
-            'commit',
-            '--no-verify',
-            '-m',
-            '"Update contributors [skip ci]"'
+          await execPromise("git", ["add", "README.md"]);
+          await execPromise("git", ["add", ".all-contributorsrc"]);
+          await on(execPromise("git", ["add", "**/README.md"]));
+          await on(execPromise("git", ["add", "**/.all-contributorsrc"]));
+          await execPromise("git", [
+            "commit",
+            "--no-verify",
+            "-m",
+            '"Update contributors [skip ci]"',
           ]);
         }
       }
@@ -190,24 +190,24 @@ export default class AllContributorsPlugin implements IPlugin {
     let didUpdate = false;
 
     const commitsWithAllChangedFiles = await Promise.all(
-      commits.map(async commit => {
-        const extra = await execPromise('git', [
-          'show',
+      commits.map(async (commit) => {
+        const extra = await execPromise("git", [
+          "show",
           '--pretty=""',
-          '--name-only',
-          '--first-parent',
-          '-m',
-          commit.hash
+          "--name-only",
+          "--first-parent",
+          "-m",
+          commit.hash,
         ]);
 
-        commit.files = [...new Set([...commit.files, ...extra.split('\n')])];
+        commit.files = [...new Set([...commit.files, ...extra.split("\n")])];
 
         return commit;
       })
     );
 
     // 1. Find all the authors and their contribution types
-    commitsWithAllChangedFiles.forEach(commit => {
+    commitsWithAllChangedFiles.forEach((commit) => {
       const { authors } = commit;
       let { files } = commit;
 
@@ -217,11 +217,11 @@ export default class AllContributorsPlugin implements IPlugin {
           const isType = (file: string) =>
             match(this.options.types[type as Contribution] || [], file);
           const isMatch = files.some(isType);
-          files = files.filter(file => !isType(file));
+          files = files.filter((file) => !isType(file));
 
           return isMatch;
         })
-        .forEach(contribution => {
+        .forEach((contribution) => {
           authors.forEach(({ username }) => {
             if (!username) {
               return;
@@ -236,17 +236,17 @@ export default class AllContributorsPlugin implements IPlugin {
         });
     });
 
-    auto.logger.verbose.info('Found contributions:', authorContributions);
+    auto.logger.verbose.info("Found contributions:", authorContributions);
 
     // 2. Determine if contributor has update
     Object.entries(authorContributions).forEach(([username, contributions]) => {
       const { contributions: old = [] } =
         config.contributors.find(
-          contributor =>
+          (contributor) =>
             contributor.login.toLowerCase() === username.toLowerCase()
         ) || {};
       const hasNew = [...contributions].find(
-        contribution => !old.includes(contribution)
+        (contribution) => !old.includes(contribution)
       );
 
       if (hasNew && !this.options.exclude.includes(username)) {
@@ -257,9 +257,9 @@ export default class AllContributorsPlugin implements IPlugin {
 
         execSync(
           `npx all-contributors-cli add ${username} ${[
-            ...newContributions
-          ].join(',')}`,
-          { stdio: 'inherit' }
+            ...newContributions,
+          ].join(",")}`,
+          { stdio: "inherit" }
         );
       } else {
         auto.logger.verbose.warn(`"${username}" had no new contributions...`);
@@ -267,7 +267,7 @@ export default class AllContributorsPlugin implements IPlugin {
     });
 
     if (didUpdate) {
-      auto.logger.log.success('Updated contributors!');
+      auto.logger.log.success("Updated contributors!");
     }
   }
 }

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
-import signale from 'signale';
+import signale from "signale";
 
-export type LogLevel = undefined | 'verbose' | 'veryVerbose';
+export type LogLevel = undefined | "verbose" | "veryVerbose";
 
 export interface ILogger {
   /** The level at which to log messages */
@@ -20,19 +20,19 @@ export function dummyLog(): ILogger {
   return {
     log: new signale.Signale({ disabled: true }),
     verbose: new signale.Signale({ disabled: true }),
-    veryVerbose: new signale.Signale({ disabled: true })
+    veryVerbose: new signale.Signale({ disabled: true }),
   };
 }
 
 const logger: ILogger = {
   log: new signale.Signale(),
   verbose: new signale.Signale(),
-  veryVerbose: new signale.Signale()
+  veryVerbose: new signale.Signale(),
 };
 
 /** Turn the logs on an off */
 function toggleLogs(
-  options: Record<Exclude<keyof ILogger, 'logLevel'>, boolean>
+  options: Record<Exclude<keyof ILogger, "logLevel">, boolean>
 ) {
   Object.entries(options).forEach(([level, enabled]) => {
     if (enabled) {
@@ -49,9 +49,9 @@ function toggleLogs(
 export function setLogLevel(newLogLevel: LogLevel) {
   logger.logLevel = newLogLevel;
 
-  if (logger.logLevel === 'verbose') {
+  if (logger.logLevel === "verbose") {
     toggleLogs({ log: true, verbose: true, veryVerbose: false });
-  } else if (logger.logLevel === 'veryVerbose') {
+  } else if (logger.logLevel === "veryVerbose") {
     toggleLogs({ log: true, verbose: true, veryVerbose: true });
   } else {
     toggleLogs({ log: true, verbose: false, veryVerbose: false });

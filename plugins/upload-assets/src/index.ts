@@ -1,18 +1,18 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import endent from 'endent';
-import FileType from 'file-type';
-import fs from 'fs';
-import glob from 'fast-glob';
-import path from 'path';
-import { promisify } from 'util';
-import * as t from 'io-ts';
+import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import endent from "endent";
+import FileType from "file-type";
+import fs from "fs";
+import glob from "fast-glob";
+import path from "path";
+import { promisify } from "util";
+import * as t from "io-ts";
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 
 const pluginOptions = t.interface({
   /** Paths to assets to upload */
-  assets: t.array(t.string)
+  assets: t.array(t.string),
 });
 
 /** Convert shorthand options to noraml shape */
@@ -24,7 +24,7 @@ export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
 /** Attach extra assets to a GitHub Release */
 export default class UploadAssetsPlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'upload-assets';
+  name = "upload-assets";
 
   /** The options of the plugin */
   readonly options: IUploadAssetsPluginOptions;
@@ -52,12 +52,12 @@ export default class UploadAssetsPlugin implements IPlugin {
       auto.logger.log.info(endent`
         Uploading:
 
-        ${assets.map(asset => `\t- ${asset}`).join('\n')}
+        ${assets.map((asset) => `\t- ${asset}`).join("\n")}
 
       `);
 
       await Promise.all(
-        assets.map(async asset => {
+        assets.map(async (asset) => {
           if (!auto.git || !response) {
             return;
           }
@@ -70,25 +70,25 @@ export default class UploadAssetsPlugin implements IPlugin {
             file,
             name: path.basename(asset),
             headers: {
-              'content-length': stats.size,
-              'content-type': type ? type.mime : 'application/octet-stream'
-            }
+              "content-length": stats.size,
+              "content-type": type ? type.mime : "application/octet-stream",
+            },
           };
 
           // Multiple releases were made
           if (Array.isArray(response)) {
             await Promise.all(
-              response.map(r =>
+              response.map((r) =>
                 auto.git!.github.repos.uploadReleaseAsset({
                   ...options,
-                  url: r.data.upload_url
+                  url: r.data.upload_url,
                 })
               )
             );
           } else {
             await auto.git.github.repos.uploadReleaseAsset({
               ...options,
-              url: response.data.upload_url
+              url: response.data.upload_url,
             });
           }
 

@@ -59,9 +59,10 @@ You will also need all of the following configuration blocks for all parts of `a
      <tag>HEAD</tag>
    </scm>
    ```
-  ::: message is-info
-  Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
-  :::
+
+   ::: message is-info
+   Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
+   :::
 
 3. Version
 

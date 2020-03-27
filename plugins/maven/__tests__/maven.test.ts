@@ -1,17 +1,17 @@
-import fs from 'fs';
+import fs from "fs";
 
-import * as Auto from '@auto-it/core';
-import { dummyLog } from '@auto-it/core/dist/utils/logger';
-import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
-import MavenPlugin from '../src';
+import * as Auto from "@auto-it/core";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
+import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
+import MavenPlugin from "../src";
 
 const mockRead = (result: string) =>
   jest
-    .spyOn(fs, 'readFile')
+    .spyOn(fs, "readFile")
     // @ts-ignore
     .mockImplementationOnce((a, b, cb) => cb(undefined, result));
 
-describe('maven', () => {
+describe("maven", () => {
   let hooks: Auto.IAutoHooks;
 
   beforeEach(() => {
@@ -20,12 +20,12 @@ describe('maven', () => {
     plugin.apply({
       hooks,
       logger: dummyLog(),
-      prefixRelease: r => `v${r}`
+      prefixRelease: (r) => `v${r}`,
     } as Auto.Auto);
   });
 
-  describe('getAuthor', () => {
-    test('should get author from pom.xml', async () => {
+  describe("getAuthor", () => {
+    test("should get author from pom.xml", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -42,13 +42,13 @@ describe('maven', () => {
 
       expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
-          email: 'test@email.com',
-          name: 'Andrew Lisowski'
+          email: "test@email.com",
+          name: "Andrew Lisowski",
         })
       );
     });
 
-    test('should support multiple developers', async () => {
+    test("should support multiple developers", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -69,13 +69,13 @@ describe('maven', () => {
 
       expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
-          email: 'test@email.com',
-          name: 'Andrew Lisowski'
+          email: "test@email.com",
+          name: "Andrew Lisowski",
         })
       );
     });
 
-    test('should get author from pom.xml - simple', async () => {
+    test("should get author from pom.xml - simple", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -88,8 +88,8 @@ describe('maven', () => {
     });
   });
 
-  describe('getRepository', () => {
-    test('should get repo from pom.xml', async () => {
+  describe("getRepository", () => {
+    test("should get repo from pom.xml", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -105,13 +105,13 @@ describe('maven', () => {
 
       expect(await hooks.getRepository.promise()).toStrictEqual(
         expect.objectContaining({
-          owner: 'Fuego-Tools',
-          repo: 'java-test-project'
+          owner: "Fuego-Tools",
+          repo: "java-test-project",
         })
       );
     });
 
-    test('should throw if no repo found', async () => {
+    test("should throw if no repo found", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -123,7 +123,7 @@ describe('maven', () => {
       await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
     });
 
-    test('should throw if cannot find github URL', async () => {
+    test("should throw if cannot find github URL", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -140,7 +140,7 @@ describe('maven', () => {
       await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
     });
 
-    test('should throw if cannot parse github URL', async () => {
+    test("should throw if cannot parse github URL", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -158,8 +158,8 @@ describe('maven', () => {
     });
   });
 
-  describe('getPreviousVersion', () => {
-    test('should get previous version from pom.xml', async () => {
+  describe("getPreviousVersion", () => {
+    test("should get previous version from pom.xml", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -169,19 +169,19 @@ describe('maven', () => {
         </project>
       `);
 
-      expect(await hooks.getPreviousVersion.promise()).toBe('v1.0.0');
+      expect(await hooks.getPreviousVersion.promise()).toBe("v1.0.0");
     });
 
-    test('should throw when no version in pom.xml', async () => {
-      mockRead('');
+    test("should throw when no version in pom.xml", async () => {
+      mockRead("");
       await expect(hooks.getPreviousVersion.promise()).rejects.toBeInstanceOf(
         Error
       );
     });
   });
 
-  describe('version', () => {
-    test('should version release - not versioned because of prepatched snapshot', async () => {
+  describe("version", () => {
+    test("should version release - not versioned because of prepatched snapshot", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -191,15 +191,15 @@ describe('maven', () => {
         </project>
       `);
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      jest.spyOn(Auto, "execPromise").mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
       const call = spy.mock.calls[1][1];
-      expect(call).toContain('-DreleaseVersion=1.0.0');
-      expect(call).toContain('-Dtag=v1.0.0');
+      expect(call).toContain("-DreleaseVersion=1.0.0");
+      expect(call).toContain("-Dtag=v1.0.0");
     });
 
-    test('should error when failing to increment previous version', async () => {
+    test("should error when failing to increment previous version", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -215,13 +215,13 @@ describe('maven', () => {
     });
   });
 
-  describe('publish', () => {
-    test('should publish release', async () => {
+  describe("publish", () => {
+    test("should publish release", async () => {
       const spy = jest.fn();
-      jest.spyOn(Auto, 'execPromise').mockImplementation(spy);
+      jest.spyOn(Auto, "execPromise").mockImplementation(spy);
 
       await hooks.publish.promise(Auto.SEMVER.patch);
-      expect(spy.mock.calls[1][1]).toContain('release:perform');
+      expect(spy.mock.calls[1][1]).toContain("release:perform");
     });
   });
 });

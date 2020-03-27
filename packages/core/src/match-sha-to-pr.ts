@@ -1,6 +1,6 @@
-import endent from 'endent';
+import endent from "endent";
 
-import { IExtendedCommit } from './log-parse';
+import { IExtendedCommit } from "./log-parse";
 
 interface ISearchEdge {
   /** Graphql search node */
@@ -8,7 +8,7 @@ interface ISearchEdge {
     /** PR number */
     number: number;
     /** State of the PR */
-    state: 'MERGED' | 'CLOSED' | 'OPEN';
+    state: "MERGED" | "CLOSED" | "OPEN";
     /** Body of the PR */
     body: string;
     /** Labels attached to the PR */
@@ -67,7 +67,7 @@ export function buildSearchQuery(
         }
       }
     `;
-  }, '');
+  }, "");
 
   if (!query) {
     return;
@@ -90,9 +90,9 @@ export function processQueryResult(
   result: ISearchResult,
   commitsWithoutPR: IExtendedCommit[]
 ) {
-  const hash = key.split('hash_')[1];
+  const hash = key.split("hash_")[1];
   const commit = commitsWithoutPR.find(
-    commitWithoutPR => commitWithoutPR.hash === hash
+    (commitWithoutPR) => commitWithoutPR.hash === hash
   );
 
   if (!commit) {
@@ -100,7 +100,7 @@ export function processQueryResult(
   }
 
   if (result.edges.length > 0) {
-    if (result.edges[0].node.state === 'CLOSED') {
+    if (result.edges[0].node.state === "CLOSED") {
       return;
     }
 
@@ -108,18 +108,18 @@ export function processQueryResult(
       /** The label */
       name: string;
     }[] = result.edges[0].node.labels
-      ? result.edges[0].node.labels.edges.map(edge => edge.node)
+      ? result.edges[0].node.labels.edges.map((edge) => edge.node)
       : [];
     commit.pullRequest = {
       number: result.edges[0].node.number,
-      body: result.edges[0].node.body
+      body: result.edges[0].node.body,
     };
-    commit.labels = [...labels.map(label => label.name), ...commit.labels];
+    commit.labels = [...labels.map((label) => label.name), ...commit.labels];
   } else {
-    commit.labels = ['pushToBaseBranch', ...commit.labels];
+    commit.labels = ["pushToBaseBranch", ...commit.labels];
   }
 
-  commit.subject = commit.subject.split('\n')[0];
+  commit.subject = commit.subject.split("\n")[0];
 
   return commit;
 }

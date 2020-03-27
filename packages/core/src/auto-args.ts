@@ -3,8 +3,8 @@ import {
   RepoInformation,
   GithubInformation,
   LogOptions,
-  ReleaseCalculationOptions
-} from './types';
+  ReleaseCalculationOptions,
+} from "./types";
 
 export interface ICreateLabelsOptions {
   /** Do not actually do anything */
@@ -35,7 +35,7 @@ export interface IPRStatusOptions {
   /** URL to attach to the checkmark */
   url: string;
   /** The state to set the checkmark to */
-  state: 'pending' | 'success' | 'error' | 'failure';
+  state: "pending" | "success" | "error" | "failure";
   /** The description to attach to the checkmark */
   description: string;
   /** The context the check should be attached to */
@@ -90,7 +90,7 @@ export interface ICommentOptions {
   edit?: boolean;
 }
 
-export type IPRBodyOptions = Omit<ICommentOptions, 'edit' | 'delete'>;
+export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
 export interface IShipItOptions {
   /** Do not actually do anything */
@@ -112,7 +112,7 @@ export interface ICanaryOptions {
   /** The build to attach the canary to */
   build?: number;
   /** The message used when attaching the canary version to a PR */
-  message?: string | 'false';
+  message?: string | "false";
   /** Always deploy a canary, even if the PR is marked as skip release */
   force?: boolean;
 }

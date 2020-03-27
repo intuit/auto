@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import * as path from 'path';
-import Auto from '../auto';
-import { ILogger } from './logger';
-import tryRequire from './try-require';
-import InteractiveInit from '../init';
+import * as path from "path";
+import Auto from "../auto";
+import { ILogger } from "./logger";
+import tryRequire from "./try-require";
+import InteractiveInit from "../init";
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -40,8 +40,8 @@ export default function loadPlugin(
   extendedLocation?: string
 ): IPlugin | undefined {
   const isLocal =
-    pluginPath.startsWith('.') ||
-    pluginPath.startsWith('/') ||
+    pluginPath.startsWith(".") ||
+    pluginPath.startsWith("/") ||
     pluginPath.match(/^[A-Z]:\\/); // Support for windows paths
 
   /** Attempt to require a plugin */
@@ -75,9 +75,9 @@ export default function loadPlugin(
   if (!plugin) {
     const pkgPath = path.join(
       __dirname,
-      '../../../../../plugins/',
+      "../../../../../plugins/",
       pluginPath,
-      'dist/index.js'
+      "dist/index.js"
     );
     plugin = attempt(pkgPath);
   }
@@ -89,20 +89,20 @@ export default function loadPlugin(
 
   // Try importing official plugin
   if (!plugin) {
-    plugin = attempt(path.join('@auto-it', pluginPath));
+    plugin = attempt(path.join("@auto-it", pluginPath));
   }
 
   // Try importing canary version of plugin
   if (!plugin) {
-    plugin = attempt(path.join('@auto-canary', pluginPath));
+    plugin = attempt(path.join("@auto-canary", pluginPath));
   }
 
   // Try requiring a package
   if (
     !plugin &&
-    (pluginPath.includes('/auto-plugin-') ||
-      pluginPath.startsWith('auto-plugin-') ||
-      pluginPath.startsWith('@auto-it'))
+    (pluginPath.includes("/auto-plugin-") ||
+      pluginPath.startsWith("auto-plugin-") ||
+      pluginPath.startsWith("@auto-it"))
   ) {
     plugin = attempt(pluginPath);
   }
@@ -113,7 +113,7 @@ export default function loadPlugin(
   }
 
   try {
-    if ('default' in plugin && plugin.default) {
+    if ("default" in plugin && plugin.default) {
       // eslint-disable-next-line new-cap
       return new plugin.default(options);
     }

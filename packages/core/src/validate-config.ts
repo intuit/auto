@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import * as t from 'io-ts';
-import { isRight } from 'fp-ts/lib/Either';
-import { autoRc, AutoRc } from './types';
-import { AsyncSeriesBailHook } from 'tapable';
-import { omit } from './utils/omit';
-import chalk from 'chalk';
-import endent from 'endent';
+import * as t from "io-ts";
+import { isRight } from "fp-ts/lib/Either";
+import { autoRc, AutoRc } from "./types";
+import { AsyncSeriesBailHook } from "tapable";
+import { omit } from "./utils/omit";
+import chalk from "chalk";
+import endent from "endent";
 
-const ignoreTypes = ['PartialType', 'IntersectionType', 'ExactType'];
+const ignoreTypes = ["PartialType", "IntersectionType", "ExactType"];
 const unexpectedValue = chalk.redBright.bold;
 const errorPath = chalk.underline.bold;
 
@@ -25,7 +25,7 @@ export type ConfigError = string | ConfigOptionError;
 
 /** Format and error as a string */
 export function formatError(error: ConfigError) {
-  if (typeof error === 'string') {
+  if (typeof error === "string") {
     return error;
   }
 
@@ -34,10 +34,10 @@ export function formatError(error: ConfigError) {
     (Array.isArray(value) &&
       endent`
         [
-          ${value.join(',\n')}
+          ${value.join(",\n")}
         ]
       `) ||
-    (typeof value === 'object' && JSON.stringify(value, null, 2)) ||
+    (typeof value === "object" && JSON.stringify(value, null, 2)) ||
     value;
 
   return `${errorPath(`"${path}"`)}\n\nExpected ${chalk.greenBright.bold(
@@ -47,41 +47,41 @@ export function formatError(error: ConfigError) {
 
 /** Report configuration errors */
 function reporter<T>(validation: t.Validation<T>) {
-  if (validation._tag !== 'Left') {
+  if (validation._tag !== "Left") {
     return false;
   }
 
-  const errors: ConfigError[] = validation.left.map(error => {
-    let parentType = '';
+  const errors: ConfigError[] = validation.left.map((error) => {
+    let parentType = "";
 
     const path = error.context
       // The context entry with an empty key is the original type ("default
       // context"), not an type error.
-      .filter(c => c.key.length > 0)
-      .filter(c => {
+      .filter((c) => c.key.length > 0)
+      .filter((c) => {
         const tag = (c.type as any)._tag;
         const include =
-          parentType === 'ArrayType' ||
+          parentType === "ArrayType" ||
           (!ignoreTypes.includes(tag) &&
-            parentType !== 'UnionType' &&
-            parentType !== 'IntersectionType');
+            parentType !== "UnionType" &&
+            parentType !== "IntersectionType");
 
         parentType = tag;
         return include;
       })
-      .map(c => c.key)
-      .join('.');
+      .map((c) => c.key)
+      .join(".");
 
     return {
       path,
       expectedType: error.context[error.context.length - 1].type.name,
-      value: error.value
+      value: error.value,
     };
   });
 
   const otherErrors: string[] = [];
   const grouped = errors.reduce((acc, item) => {
-    if (typeof item === 'string') {
+    if (typeof item === "string") {
       otherErrors.push(item);
       return acc;
     }
@@ -99,30 +99,30 @@ function reporter<T>(validation: t.Validation<T>) {
     ...otherErrors,
     ...Object.entries(grouped)
       .filter(([path]) => {
-        return !paths.some(p => p.includes(path) && p !== path);
+        return !paths.some((p) => p.includes(path) && p !== path);
       })
       .map(([path, group]) => {
         const expectedType = group
-          .map(g => g.expectedType)
-          .map(t => `"${t}"`)
-          .join(' or ');
+          .map((g) => g.expectedType)
+          .map((t) => `"${t}"`)
+          .join(" or ");
         const value = group[0].value;
 
         return {
           expectedType,
           path,
-          value
+          value,
         };
-      })
+      }),
   ];
 }
 
 /** Convert nested object to array of flat key paths */
 function flatKeys(obj: Record<string, any>): string[] {
   return Object.keys(obj)
-    .map(key => {
-      if (typeof obj[key] === 'object') {
-        return flatKeys(obj[key]).map(sub => `${key}.${sub}`);
+    .map((key) => {
+      if (typeof obj[key] === "object") {
+        return flatKeys(obj[key]).map((sub) => `${key}.${sub}`);
       }
 
       return [key];
@@ -147,7 +147,7 @@ export async function validatePlugins(
   }
 
   await Promise.all(
-    rc.plugins.map(async plugin => {
+    rc.plugins.map(async (plugin) => {
       if (!Array.isArray(plugin)) {
         return;
       }
@@ -164,10 +164,10 @@ export async function validatePlugins(
 }
 
 const shouldRecurse = [
-  'PartialType',
-  'IntersectionType',
-  'ArrayType',
-  'InterfaceType'
+  "PartialType",
+  "IntersectionType",
+  "ArrayType",
+  "InterfaceType",
 ];
 
 /**
@@ -180,8 +180,8 @@ function makeExactType(
   let strictConfigDeclaration = configDeceleration;
 
   if (
-    'props' in configDeceleration &&
-    configDeceleration._tag !== 'StrictType'
+    "props" in configDeceleration &&
+    configDeceleration._tag !== "StrictType"
   ) {
     const props: Record<string, t.Any> = {};
 
@@ -194,20 +194,20 @@ function makeExactType(
     );
 
     strictConfigDeclaration = t.exact(
-      configDeceleration._tag === 'InterfaceType'
+      configDeceleration._tag === "InterfaceType"
         ? t.interface({ ...props })
         : t.partial({ ...props })
     );
-  } else if ('types' in configDeceleration) {
-    const exactInterfaces: t.Any[] = configDeceleration.types.map(propType =>
+  } else if ("types" in configDeceleration) {
+    const exactInterfaces: t.Any[] = configDeceleration.types.map((propType) =>
       shouldRecurse.includes(propType._tag) ? makeExactType(propType) : propType
     );
 
     strictConfigDeclaration =
-      configDeceleration._tag === 'IntersectionType'
+      configDeceleration._tag === "IntersectionType"
         ? t.intersection(exactInterfaces as [t.Any, t.Any])
         : t.union(exactInterfaces as [t.Any, t.Any]);
-  } else if ('type' in configDeceleration) {
+  } else if ("type" in configDeceleration) {
     strictConfigDeclaration = t.array(makeExactType(configDeceleration.type));
   }
 
@@ -236,11 +236,11 @@ export const validateIoConfiguration = (
 
     const correctKeys = flatKeys(exactRc.right);
     const unknownTopKeys = Object.keys(looseRc.right).filter(
-      k => !((k as keyof typeof exactRc.right) in exactRc.right)
+      (k) => !((k as keyof typeof exactRc.right) in exactRc.right)
     );
     const unknownDeepKeys = flatKeys(
       omit(looseRc.right, unknownTopKeys as any)
-    ).filter(k => !correctKeys.includes(k));
+    ).filter((k) => !correctKeys.includes(k));
     const unknownKeys = [...unknownTopKeys, ...unknownDeepKeys];
 
     if (unknownKeys.length === 0) {
@@ -251,12 +251,12 @@ export const validateIoConfiguration = (
       `${errorPath(
         `"${name}"`
       )}\n\nFound unknown configuration keys: ${unexpectedValue(
-        unknownKeys.join(', ')
-      )}\n`
+        unknownKeys.join(", ")
+      )}\n`,
     ];
   };
 
-export const validateAutoRc = validateIoConfiguration('.autorc', autoRc);
+export const validateAutoRc = validateIoConfiguration(".autorc", autoRc);
 
 /** Validate a plugin's configuration. */
 export async function validatePluginConfiguration(
@@ -267,14 +267,14 @@ export async function validatePluginConfiguration(
   const validateConfig = validateIoConfiguration(name, pluginDefinition);
   const errors = await validateConfig(providedOptions);
 
-  return errors.map(error => {
-    if (typeof error === 'string') {
+  return errors.map((error) => {
+    if (typeof error === "string") {
       return error;
     }
 
     return {
       ...error,
-      path: error.path ? `${name}.${error.path}` : name
+      path: error.path ? `${name}.${error.path}` : name,
     };
   });
 }

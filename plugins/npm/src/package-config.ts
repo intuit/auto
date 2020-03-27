@@ -1,5 +1,5 @@
-import parseGitHubUrl from 'parse-github-url';
-import { loadPackageJson } from './utils';
+import parseGitHubUrl from "parse-github-url";
+import { loadPackageJson } from "./utils";
 
 export interface IRepoConfig {
   /** Owner of the repo (or GitHub user) */
@@ -20,7 +20,7 @@ export default async function getConfigFromPackageJson(): Promise<
 
   const { owner, name } =
     parseGitHubUrl(
-      typeof repository === 'string' ? repository : repository.url
+      typeof repository === "string" ? repository : repository.url
     ) || {};
 
   if (!owner || !name) {
@@ -29,6 +29,6 @@ export default async function getConfigFromPackageJson(): Promise<
 
   return {
     repo: name,
-    owner
+    owner,
   };
 }

@@ -1,4 +1,4 @@
-import fromEntries from 'fromentries';
+import fromEntries from "fromentries";
 
 /** Omit properties from an object */
 export const omit = <Props, Prop extends keyof Props>(

@@ -1,35 +1,35 @@
-import Auto from '../auto';
-import { dummyLog } from '../utils/logger';
+import Auto from "../auto";
+import { dummyLog } from "../utils/logger";
 
-jest.mock('env-ci', () => () => ({ pr: 123 }));
+jest.mock("env-ci", () => () => ({ pr: 123 }));
 
 const defaults = {
-  owner: 'foo',
-  repo: 'bar'
+  owner: "foo",
+  repo: "bar",
 };
 
-process.env.GH_TOKEN = 'XXXX';
+process.env.GH_TOKEN = "XXXX";
 
-jest.mock('@octokit/rest', () => {
+jest.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
     repos = {
-      get: jest.fn().mockReturnValue({})
+      get: jest.fn().mockReturnValue({}),
     };
 
     hook = {
-      error: () => undefined
+      error: () => undefined,
     };
   };
 
   return { Octokit };
 });
 
-describe('comment', () => {
-  test('should find PR number from CI', async () => {
+describe("comment", () => {
+  test("should find PR number from CI", async () => {
     const auto = new Auto(defaults);
     auto.logger = dummyLog();
     await auto.loadConfig();
@@ -37,7 +37,7 @@ describe('comment', () => {
     const createComment = jest.fn();
     auto.git!.createComment = createComment;
 
-    await auto.comment({ message: 'foo' });
+    await auto.comment({ message: "foo" });
     expect(createComment).toHaveBeenCalled();
   });
 });

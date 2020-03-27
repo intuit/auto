@@ -1,22 +1,22 @@
-import loadPlugin from '../load-plugins';
-import { dummyLog } from '../logger';
+import loadPlugin from "../load-plugins";
+import { dummyLog } from "../logger";
 
 const logger = dummyLog();
 
 jest.mock(
-  '@auto-canary/baz',
+  "@auto-canary/baz",
   () => ({
     default: class {
-      name = 'baz';
-    }
+      name = "baz";
+    },
   }),
   {
-    virtual: true
+    virtual: true,
   }
 );
 
-describe('loadPlugins', () => {
-  test('should load canary plugins', () => {
-    expect(loadPlugin(['baz', {}], logger)?.name).toBe('baz');
+describe("loadPlugins", () => {
+  test("should load canary plugins", () => {
+    expect(loadPlugin(["baz", {}], logger)?.name).toBe("baz");
   });
 });

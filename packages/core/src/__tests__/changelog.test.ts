@@ -1,116 +1,116 @@
-import endent from 'endent';
-import Changelog, { IGenerateReleaseNotesOptions } from '../changelog';
-import LogParse from '../log-parse';
-import { defaultLabels } from '../release';
-import { dummyLog } from '../utils/logger';
+import endent from "endent";
+import Changelog, { IGenerateReleaseNotesOptions } from "../changelog";
+import LogParse from "../log-parse";
+import { defaultLabels } from "../release";
+import { dummyLog } from "../utils/logger";
 
-import makeCommitFromMsg from './make-commit-from-msg';
-import SEMVER from '../semver';
-import { getCurrentBranch } from '../utils/get-current-branch';
+import makeCommitFromMsg from "./make-commit-from-msg";
+import SEMVER from "../semver";
+import { getCurrentBranch } from "../utils/get-current-branch";
 
 const currentBranchSpy = getCurrentBranch as jest.Mock;
-jest.mock('../utils/get-current-branch');
+jest.mock("../utils/get-current-branch");
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
-  owner: 'foobar',
-  repo: 'auto',
-  baseUrl: 'https://github.custom.com/foobar/auto',
+  owner: "foobar",
+  repo: "auto",
+  baseUrl: "https://github.custom.com/foobar/auto",
   labels: [...defaultLabels],
-  baseBranch: 'master',
-  prereleaseBranches: ['next']
+  baseBranch: "master",
+  prereleaseBranches: ["next"],
 });
 
 const logParse = new LogParse();
 
-describe('createUserLink', () => {
-  test('should ', () => {
+describe("createUserLink", () => {
+  test("should ", () => {
     const changelog = new Changelog(dummyLog(), {
-      owner: '',
-      repo: '',
-      baseUrl: 'https://github.custom.com/',
+      owner: "",
+      repo: "",
+      baseUrl: "https://github.custom.com/",
       labels: [...defaultLabels],
-      baseBranch: 'master',
-      prereleaseBranches: ['next']
+      baseBranch: "master",
+      prereleaseBranches: ["next"],
     });
     changelog.loadDefaultHooks();
 
     expect(
       changelog.createUserLink(
         {
-          name: 'none',
+          name: "none",
           email: undefined,
-          username: 'invalid-email-address'
+          username: "invalid-email-address",
         },
         {
-          hash: '1',
+          hash: "1",
           files: [],
           labels: [],
 
           pullRequest: {
-            number: 22
+            number: 22,
           },
-          authorName: 'none',
-          authorEmail: 'default@email.com',
+          authorName: "none",
+          authorEmail: "default@email.com",
           authors: [
             {
-              name: 'none',
-              email: undefined
-            }
+              name: "none",
+              email: undefined,
+            },
           ],
-          subject: ''
+          subject: "",
         }
       )
     ).toBe(undefined);
   });
 
-  test('should find email', () => {
+  test("should find email", () => {
     const changelog = new Changelog(dummyLog(), {
-      owner: '',
-      repo: '',
-      baseUrl: 'https://github.custom.com/',
+      owner: "",
+      repo: "",
+      baseUrl: "https://github.custom.com/",
       labels: [...defaultLabels],
-      baseBranch: 'master',
-      prereleaseBranches: ['next']
+      baseBranch: "master",
+      prereleaseBranches: ["next"],
     });
     changelog.loadDefaultHooks();
 
     expect(
       changelog.createUserLink(
         {
-          name: 'none',
-          email: undefined
+          name: "none",
+          email: undefined,
         },
         {
-          hash: '1',
+          hash: "1",
           files: [],
           labels: [],
           pullRequest: {
-            number: 22
+            number: 22,
           },
-          authorName: 'none',
-          authorEmail: 'default@email.com',
+          authorName: "none",
+          authorEmail: "default@email.com",
           authors: [
             {
-              name: 'none',
-              email: undefined
-            }
+              name: "none",
+              email: undefined,
+            },
           ],
-          subject: ''
+          subject: "",
         }
       )
-    ).toBe('default@email.com');
+    ).toBe("default@email.com");
   });
 });
 
-describe('Hooks', () => {
-  test('title', async () => {
+describe("Hooks", () => {
+  test("title", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)')
+      makeCommitFromMsg("Some Feature (#1234)"),
     ]);
 
     changelog.hooks.renderChangelogTitle.tap(
-      'test',
+      "test",
       (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
     );
     changelog.loadDefaultHooks();
@@ -118,19 +118,19 @@ describe('Hooks', () => {
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('author', async () => {
+  test("author", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)')
+      makeCommitFromMsg("Some Feature (#1234)"),
     ]);
 
     changelog.hooks.renderChangelogAuthor.tap(
-      'test',
+      "test",
       (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
     );
 
     changelog.hooks.renderChangelogAuthorLine.tap(
-      'test',
+      "test",
       (author, user) => `:shipit: ${author.name} (${user})`
     );
     changelog.loadDefaultHooks();
@@ -139,174 +139,176 @@ describe('Hooks', () => {
   });
 });
 
-describe('generateReleaseNotes', () => {
-  test('should create note for PR commits', async () => {
+describe("generateReleaseNotes", () => {
+  test("should create note for PR commits", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
+      makeCommitFromMsg("Some Feature (#1234)", { labels: ["minor"] }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should omit authors with invalid email addresses', async () => {
+  test("should omit authors with invalid email addresses", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['minor'] })
+      makeCommitFromMsg("Some Feature (#1234)", { labels: ["minor"] }),
     ]);
-    normalized[0].authors[0].username = 'invalid-email-address';
+    normalized[0].authors[0].username = "invalid-email-address";
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should create note for PR commits without labels', async () => {
+  test("should create note for PR commits without labels", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)')
+      makeCommitFromMsg("Some Feature (#1234)"),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should create note for PR commits without labels with custom patch label', async () => {
+  test("should create note for PR commits without labels with custom patch label", async () => {
     const options = testOptions();
     options.labels = [
       {
-        name: 'Version: Patch',
-        changelogTitle: '🐛  Bug Fix',
-        description: 'N/A',
-        releaseType: SEMVER.patch
-      }
+        name: "Version: Patch",
+        changelogTitle: "🐛  Bug Fix",
+        description: "N/A",
+        releaseType: SEMVER.patch,
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)')
+      makeCommitFromMsg("Some Feature (#1234)"),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should create note for PR commits with only non config labels', async () => {
+  test("should create note for PR commits with only non config labels", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', {
-        labels: ['someOtherNonConfigLabel']
-      })
+      makeCommitFromMsg("Some Feature (#1234)", {
+        labels: ["someOtherNonConfigLabel"],
+      }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should prefer section with highest releaseType for PR with multiple labels', async () => {
+  test("should prefer section with highest releaseType for PR with multiple labels", async () => {
     const options = testOptions();
     options.labels = [
       {
-        name: 'Internal',
-        changelogTitle: 'Internal Section',
-        releaseType: 'none'
+        name: "Internal",
+        changelogTitle: "Internal Section",
+        releaseType: "none",
       },
       {
-        name: 'Version: Minor',
-        changelogTitle: 'Minor Section',
-        releaseType: SEMVER.minor
-      }
+        name: "Version: Minor",
+        changelogTitle: "Minor Section",
+        releaseType: SEMVER.minor,
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', {
-        labels: ['Internal', 'Version: Minor']
-      })
+      makeCommitFromMsg("Some Feature (#1234)", {
+        labels: ["Internal", "Version: Minor"],
+      }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should prefer section defined first in config for PR with multiple labels of same releaseType', async () => {
+  test("should prefer section defined first in config for PR with multiple labels of same releaseType", async () => {
     const options = testOptions();
     options.labels = [
       {
-        name: 'Internal',
-        changelogTitle: 'Internal Section',
-        releaseType: 'none'
+        name: "Internal",
+        changelogTitle: "Internal Section",
+        releaseType: "none",
       },
       {
-        name: 'Typescript',
-        changelogTitle: 'Typescript Section',
-        releaseType: 'none'
-      }
+        name: "Typescript",
+        changelogTitle: "Typescript Section",
+        releaseType: "none",
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', {
-        labels: ['Typescript', 'Internal']
-      })
+      makeCommitFromMsg("Some Feature (#1234)", {
+        labels: ["Typescript", "Internal"],
+      }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should prefer section of default label for PR with multiple labels of same releaseType', async () => {
+  test("should prefer section of default label for PR with multiple labels of same releaseType", async () => {
     const options = testOptions();
     options.labels = [
       ...options.labels,
       {
-        name: 'Minor2',
-        changelogTitle: 'Minor 2 Section',
-        releaseType: SEMVER.minor
-      }
+        name: "Minor2",
+        changelogTitle: "Minor 2 Section",
+        releaseType: SEMVER.minor,
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['Minor2', 'minor'] })
+      makeCommitFromMsg("Some Feature (#1234)", {
+        labels: ["Minor2", "minor"],
+      }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should use username if present', async () => {
+  test("should use username if present", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', {
-        labels: ['minor'],
-        username: 'adam'
-      })
+      makeCommitFromMsg("Some Feature (#1234)", {
+        labels: ["minor"],
+        username: "adam",
+      }),
     ]);
 
-    normalized[0].authors[0].username = 'adam';
+    normalized[0].authors[0].username = "adam";
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should combine pr w/no label and labelled pr', async () => {
+  test("should combine pr w/no label and labelled pr", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)'),
-      makeCommitFromMsg('Third', { labels: ['patch'] })
+      makeCommitFromMsg("Some Feature (#1234)"),
+      makeCommitFromMsg("Third", { labels: ["patch"] }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
 
-  test('should include prs with released label', async () => {
+  test("should include prs with released label", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
     const normalized = await logParse.normalizeCommits([
-      makeCommitFromMsg('Some Feature (#1234)', { labels: ['released'] }),
-      makeCommitFromMsg('Third', { labels: ['patch'] })
+      makeCommitFromMsg("Some Feature (#1234)", { labels: ["released"] }),
+      makeCommitFromMsg("Third", { labels: ["patch"] }),
     ]);
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
@@ -317,84 +319,84 @@ describe('generateReleaseNotes', () => {
     changelog.loadDefaultHooks();
     const commits = await logParse.normalizeCommits([
       {
-        hash: 'foo',
+        hash: "foo",
         files: [],
         labels: [],
-        authorEmail: 'adam@dierkens.com',
-        subject: 'Another Feature (#1234)'
+        authorEmail: "adam@dierkens.com",
+        subject: "Another Feature (#1234)",
       },
       {
-        hash: 'foo',
+        hash: "foo",
         files: [],
         labels: [],
-        subject: 'One Feature (#1235)'
-      }
+        subject: "One Feature (#1235)",
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should include PR-less commits as patches', async () => {
+  test("should include PR-less commits as patches", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '1',
+        hash: "1",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master\n\nfoo bar',
-        labels: ['pushToBaseBranch']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\nfoo bar",
+        labels: ["pushToBaseBranch"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
   test('should add "Push to Next"', async () => {
-    currentBranchSpy.mockReturnValueOnce('next');
+    currentBranchSpy.mockReturnValueOnce("next");
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '1',
+        hash: "1",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master\n\n',
-        labels: ['pushToBaseBranch']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\n",
+        labels: ["pushToBaseBranch"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should order the section major, minor, patch, then the rest', async () => {
+  test("should order the section major, minor, patch, then the rest", async () => {
     const options = testOptions();
     options.labels = [
-      options.labels.find(l => l.name === 'documentation')!,
-      options.labels.find(l => l.name === 'internal')!,
-      options.labels.find(l => l.name === 'patch')!,
-      options.labels.find(l => l.name === 'minor')!,
-      options.labels.find(l => l.name === 'major')!
+      options.labels.find((l) => l.name === "documentation")!,
+      options.labels.find((l) => l.name === "internal")!,
+      options.labels.find((l) => l.name === "patch")!,
+      options.labels.find((l) => l.name === "minor")!,
+      options.labels.find((l) => l.name === "major")!,
     ];
 
     const changelog = new Changelog(dummyLog(), options);
@@ -402,87 +404,87 @@ describe('generateReleaseNotes', () => {
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '0a',
+        hash: "0a",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'something\n\n',
-        labels: ['internal']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "something\n\n",
+        labels: ["internal"],
       },
       {
-        hash: '0',
+        hash: "0",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'docs\n\n',
-        labels: ['documentation']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "docs\n\n",
+        labels: ["documentation"],
       },
 
       {
-        hash: '1',
+        hash: "1",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master\n\n',
-        labels: ['patch']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\n",
+        labels: ["patch"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['major']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["major"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should match authors correctly', async () => {
+  test("should match authors correctly", async () => {
     const options = testOptions();
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '0a',
+        hash: "0a",
         files: [],
-        subject: 'something\n\n',
-        labels: ['internal']
+        subject: "something\n\n",
+        labels: ["internal"],
       },
       {
-        hash: '0',
+        hash: "0",
         files: [],
-        subject: 'docs\n\n',
-        labels: ['documentation']
+        subject: "docs\n\n",
+        labels: ["documentation"],
       },
       {
-        hash: '0',
+        hash: "0",
         files: [],
-        subject: 'another\n\n',
-        labels: ['documentation']
-      }
+        subject: "another\n\n",
+        labels: ["documentation"],
+      },
     ]);
 
     commits.forEach((commit, index) => {
       switch (index) {
         case 0:
-          commit.authors = [{ email: 'andrew@email.com' }];
+          commit.authors = [{ email: "andrew@email.com" }];
           break;
         case 1:
-          commit.authors = [{ email: 'kendall@email.com' }];
+          commit.authors = [{ email: "kendall@email.com" }];
           break;
         case 2:
-          commit.authors = [{ username: 'rdubzz' }];
+          commit.authors = [{ username: "rdubzz" }];
           break;
         default:
       }
@@ -491,16 +493,16 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should be able to customize pushToBaseBranch title', async () => {
+  test("should be able to customize pushToBaseBranch title", async () => {
     const options = testOptions();
     options.labels = [
       ...options.labels,
       {
-        name: 'pushToBaseBranch',
-        changelogTitle: 'Custom Title',
-        description: 'N/A',
-        releaseType: 'none'
-      }
+        name: "pushToBaseBranch",
+        changelogTitle: "Custom Title",
+        description: "N/A",
+        releaseType: "none",
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
@@ -508,73 +510,73 @@ describe('generateReleaseNotes', () => {
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '1',
+        hash: "1",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'I was a push to master\n\n',
-        labels: ['pushToBaseBranch']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\n",
+        labels: ["pushToBaseBranch"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should omit changelog item for next branches', async () => {
+  test("should omit changelog item for next branches", async () => {
     const options = testOptions();
     const changelog = new Changelog(dummyLog(), options);
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
 
     expect(
       await changelog.generateReleaseNotes([
         {
           ...commits[0],
-          hash: '1',
+          hash: "1",
           files: [],
-          authorName: 'Adam Dierkens',
-          authorEmail: 'adam@dierkens.com',
-          subject: 'V8\n\n',
-          labels: [''],
+          authorName: "Adam Dierkens",
+          authorEmail: "adam@dierkens.com",
+          subject: "V8\n\n",
+          labels: [""],
           pullRequest: {
-            base: 'intuit/next',
+            base: "intuit/next",
             number: 123,
-            body: '# Release Notes\n\nfoobar'
-          }
+            body: "# Release Notes\n\nfoobar",
+          },
         },
-        ...commits
+        ...commits,
       ])
     ).toMatchSnapshot();
   });
 
-  test('should be able to customize titles', async () => {
+  test("should be able to customize titles", async () => {
     const options = testOptions();
     options.labels = [
       ...options.labels,
       {
-        name: 'Version: Minor',
-        changelogTitle: 'Woo Woo New Features',
-        description: 'N/A',
-        releaseType: SEMVER.minor
-      }
+        name: "Version: Minor",
+        changelogTitle: "Woo Woo New Features",
+        description: "N/A",
+        releaseType: SEMVER.minor,
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
@@ -582,33 +584,33 @@ describe('generateReleaseNotes', () => {
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['Version: Minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["Version: Minor"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should merge sections with same changelog title', async () => {
+  test("should merge sections with same changelog title", async () => {
     const options = testOptions();
     options.labels = [
       ...options.labels,
       {
-        name: 'new-component',
-        changelogTitle: 'Enhancement',
-        releaseType: SEMVER.minor
+        name: "new-component",
+        changelogTitle: "Enhancement",
+        releaseType: SEMVER.minor,
       },
       {
-        name: 'Version: Minor',
-        changelogTitle: 'Enhancement',
-        description: 'N/A',
-        releaseType: SEMVER.minor
-      }
+        name: "Version: Minor",
+        changelogTitle: "Enhancement",
+        description: "N/A",
+        releaseType: SEMVER.minor,
+      },
     ];
 
     const changelog = new Changelog(dummyLog(), options);
@@ -616,39 +618,39 @@ describe('generateReleaseNotes', () => {
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '3',
+        hash: "3",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'Second Feature (#1236)',
-        labels: ['new-component']
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "Second Feature (#1236)",
+        labels: ["new-component"],
       },
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['Version: Minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["Version: Minor"],
+      },
     ]);
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('should add additional release notes', async () => {
+  test("should add additional release notes", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
     commits[0].pullRequest!.body = endent`
       # Why
@@ -667,19 +669,19 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('additional release notes should be able to contain sub-headers', async () => {
+  test("additional release notes should be able to contain sub-headers", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
     commits[0].pullRequest!.body = endent`
       # Why
@@ -708,13 +710,13 @@ describe('generateReleaseNotes', () => {
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
     commits[0].pullRequest!.body = endent`
       # Why
@@ -726,21 +728,21 @@ describe('generateReleaseNotes', () => {
     expect(res).toMatchSnapshot();
   });
 
-  test('additional release notes should omit renovate prs', async () => {
+  test("additional release notes should omit renovate prs", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
     ]);
-    commits[0].authors[0].username = 'renovate-bot';
+    commits[0].authors[0].username = "renovate-bot";
     commits[0].pullRequest!.body = endent`
       # Why
 
@@ -762,25 +764,25 @@ describe('generateReleaseNotes', () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
-  test('additional release notes should have tappable omit', async () => {
+  test("additional release notes should have tappable omit", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();
 
-    changelog.hooks.omitReleaseNotes.tap('test', commit => {
-      if (commit.labels.includes('no-notes')) {
+    changelog.hooks.omitReleaseNotes.tap("test", (commit) => {
+      if (commit.labels.includes("no-notes")) {
         return true;
       }
     });
 
     const commits = await logParse.normalizeCommits([
       {
-        hash: '2',
+        hash: "2",
         files: [],
-        authorName: 'Adam Dierkens',
-        authorEmail: 'adam@dierkens.com',
-        subject: 'First Feature (#1235)',
-        labels: ['minor', 'no-notes']
-      }
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor", "no-notes"],
+      },
     ]);
     commits[0].pullRequest!.body = endent`
       # Why

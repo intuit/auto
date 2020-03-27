@@ -1,6 +1,6 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import { Aws, Options } from 'aws-cli-js';
-import * as t from 'io-ts';
+import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import { Aws, Options } from "aws-cli-js";
+import * as t from "io-ts";
 
 const pluginOptions = t.intersection([
   t.interface({
@@ -9,12 +9,12 @@ const pluginOptions = t.intersection([
     /** S3 Region to post the asset to */
     region: t.string,
     /** Paths to the files to upload to S3 */
-    files: t.array(t.tuple([t.string, t.string]))
+    files: t.array(t.tuple([t.string, t.string])),
   }),
   t.partial({
     /** Whether this plugin should overwrite files on S3 */
-    overwrite: t.boolean
-  })
+    overwrite: t.boolean,
+  }),
 ]);
 
 export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -25,7 +25,7 @@ export type ConfigOptions = t.TypeOf<typeof configOptions>;
 /** Post your built artifacts to s3 during `auto release` */
 export default class S3Plugin implements IPlugin {
   /** The name of the plugin */
-  name = 's3';
+  name = "s3";
 
   /** The options of the plugin */
   private readonly options: IUploadAssetsPluginOptions[];
@@ -52,7 +52,7 @@ export default class S3Plugin implements IPlugin {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         if (Array.isArray(options)) {
           const errors = await Promise.all(
-            options.map(o =>
+            options.map((o) =>
               validatePluginConfiguration(this.name, pluginOptions, o)
             )
           );
@@ -65,14 +65,16 @@ export default class S3Plugin implements IPlugin {
     });
 
     auto.hooks.beforeRun.tap(this.name, () => {
-      auto.checkEnv(this.name, 'AWS_ACCESS_KEY');
-      auto.checkEnv(this.name, 'AWS_SECRET_KEY');
-      auto.checkEnv(this.name, 'AWS_SESSION_TOKEN');
+      auto.checkEnv(this.name, "AWS_ACCESS_KEY");
+      auto.checkEnv(this.name, "AWS_SECRET_KEY");
+      auto.checkEnv(this.name, "AWS_SESSION_TOKEN");
     });
 
     auto.hooks.afterRelease.tapPromise(this.name, async ({ newVersion }) => {
       await Promise.all(
-        this.options.map(option => this.processBucket(auto, newVersion, option))
+        this.options.map((option) =>
+          this.processBucket(auto, newVersion, option)
+        )
       );
     });
   }
@@ -85,7 +87,7 @@ export default class S3Plugin implements IPlugin {
   /** Upload files to a bucket */
   private async processBucket(
     auto: Auto,
-    newVersion = '',
+    newVersion = "",
     options: IUploadAssetsPluginOptions
   ) {
     const { bucket, region, files, overwrite = true } = options;
