@@ -1,3 +1,19 @@
+# v9.22.2 (Mon Mar 30 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kyle Brown ([@krohrsb](https://github.com/krohrsb)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(conventional-commits): skip release when no increment detected [#1086](https://github.com/intuit/auto/pull/1086) ([@krohrsb](https://github.com/krohrsb))
+
+#### Authors: 1
+
+- Kyle Brown ([@krohrsb](https://github.com/krohrsb))
+
+---
+
 # v9.21.1 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix
