@@ -23,9 +23,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             mappers.increment,
             parse(commit.subject)
           );
-          const incrementLabel = auto.semVerLabels.get(
-            conventionalCommit.increment as VersionLabel
-          );
+          // conventional commits will return a falsy value when no incrememnt is detected (e.g., chore/perf/refactor commits)
+          const commitIncrement =
+            (conventionalCommit.increment as VersionLabel) || "skip";
+          const incrementLabel = auto.semVerLabels.get(commitIncrement);
           const allSemVerLabels = [
             auto.semVerLabels.get(SEMVER.major),
             auto.semVerLabels.get(SEMVER.minor),
