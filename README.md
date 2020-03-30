@@ -215,6 +215,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   <tr>
     <td align="center"><a href="https://github.com/hborawski"><img src="https://avatars1.githubusercontent.com/u/1325154?v=4" width="100px;" alt=""/><br /><sub><b>Harris Borawski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hborawski" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ShelbyCohen"><img src="https://avatars1.githubusercontent.com/u/7768053?v=4" width="100px;" alt=""/><br /><sub><b>Shelby Cohen</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/krohrsb"><img src="https://avatars1.githubusercontent.com/u/321544?v=4" width="100px;" alt=""/><br /><sub><b>Kyle Brown</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Code">💻</a></td>
   </tr>
 </table>
 

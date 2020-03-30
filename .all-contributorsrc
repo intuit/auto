@@ -240,6 +240,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "krohrsb",
+      "name": "Kyle Brown",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/321544?v=4",
+      "profile": "https://github.com/krohrsb",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
