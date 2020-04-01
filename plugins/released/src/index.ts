@@ -1,5 +1,7 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import { Octokit } from "@octokit/rest";
+
 import merge from "deepmerge";
 import * as t from "io-ts";
 
@@ -22,13 +24,10 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   label: "released",
   prereleaseLabel: "prerelease",
   lockIssues: false,
-  message: `:rocket: ${TYPE} was released in \`${VERSION}\` :rocket:`,
+  message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
 
 const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
-
-/** Determine if string is a canary version */
-const isCanary = (version: string) => version.match("canary");
 
 /** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {
@@ -97,13 +96,14 @@ export default class ReleasedLabelPlugin implements IPlugin {
           return;
         }
 
-        const isPrerelease = Array.isArray(response)
-          ? response.some((r) => r?.data.prerelease)
-          : response?.data.prerelease;
+        const releases =
+          (Array.isArray(response) && response) ||
+          (response && [response]) ||
+          [];
 
         await Promise.all(
           commits.map(async (commit) =>
-            this.addReleased(auto, commit, newVersion, isPrerelease)
+            this.addReleased(auto, commit, releases)
           )
         );
       }
@@ -114,10 +114,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
   private async addReleased(
     auto: Auto,
     commit: IExtendedCommit,
-    newVersion: string,
-    isPrerelease = false
+    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
   ) {
     const messages = [commit.subject];
+    const isPrerelease = releases.some((r) => r?.data.prerelease);
 
     if (commit.pullRequest) {
       const branch = (await auto.git?.getPullRequest(commit.pullRequest.number))
@@ -129,9 +129,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
       await this.addCommentAndLabel({
         auto,
-        newVersion,
         prOrIssue: commit.pullRequest.number,
         isPrerelease,
+        releases,
       });
 
       const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
@@ -155,13 +155,13 @@ export default class ReleasedLabelPlugin implements IPlugin {
       issues.map(async (issue) => {
         await this.addCommentAndLabel({
           auto,
-          newVersion,
           prOrIssue: issue,
           isIssue: true,
           isPrerelease,
+          releases,
         });
 
-        if (this.options.lockIssues && !isCanary(newVersion) && !isPrerelease) {
+        if (this.options.lockIssues && !isPrerelease) {
           await auto.git!.lockIssue(issue);
         }
       })
@@ -171,30 +171,30 @@ export default class ReleasedLabelPlugin implements IPlugin {
   /** Add the templated comment to the pr and attach the "released" label */
   private async addCommentAndLabel({
     auto,
-    newVersion,
     prOrIssue,
     isIssue = false,
     isPrerelease = false,
+    releases,
   }: {
     /** Reference to auto instance */
     auto: Auto;
-    /** The version being publishing */
-    newVersion: string;
     /** Issue or pr number */
     prOrIssue: number;
     /** Whether it's an issue number */
     isIssue?: boolean;
     /** Whether the release was a prerelease */
     isPrerelease?: boolean;
+    /** All of the releases that happened */
+    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[];
   }) {
     // leave a comment with the new version
-    const message = this.createReleasedComment(isIssue, newVersion);
+    const urls = releases.map((release) =>
+      this.options.message === defaultOptions.message
+        ? `[\`${release.data.name}\`](${release.data.html_url})`
+        : release.data.name
+    );
+    const message = this.createReleasedComment(isIssue, urls.join(", "));
     await auto.comment({ message, pr: prOrIssue, context: "released" });
-
-    // Do not add released to issue/label for canary versions
-    if (isCanary(newVersion)) {
-      return;
-    }
 
     // add a `released` label to a PR
     const labels = await auto.git!.getLabels(prOrIssue);
