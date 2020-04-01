@@ -41,6 +41,7 @@
 
 Package Manager Plugins
 
+- [Homebrew](../plugins/brew/README.md)
 - [Chrome Web Store](../plugins/chrome/README.md)
 - [Crates](../plugins/crates/README.md)
 - [Cocoapod](../plugins/cocoapods/README.md)

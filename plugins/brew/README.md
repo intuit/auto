@@ -1,6 +1,7 @@
 # Brew Plugin
 
 Automate the creation of Homebrew formulae.
+This plugin can be use with any other package manager plugin.
 
 > NOTE: This plugin does not work in `lerna` monorepos that use `independent` versioning.
 
