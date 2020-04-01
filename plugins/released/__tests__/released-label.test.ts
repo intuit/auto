@@ -34,6 +34,15 @@ const lockIssue = jest.fn();
 git.lockIssue = lockIssue;
 lockIssue.mockReturnValue([]);
 
+const mockResponse = [
+  {
+    data: {
+      html_url: "https://git.hub/some/project/releases/v1.0.0",
+      name: "v1.0.0",
+    },
+  },
+];
+
 describe("release label plugin", () => {
   beforeEach(() => {
     comment.mockClear();
@@ -199,11 +208,14 @@ describe("release label plugin", () => {
       lastRelease: "0.1.0",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(comment).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: ":rocket: PR was released in `1.0.0` :rocket:",
+        message:
+          ":rocket: PR was released in [`v1.0.0`](https://git.hub/some/project/releases/v1.0.0) :rocket:",
       })
     );
   });
@@ -229,12 +241,14 @@ describe("release label plugin", () => {
       lastRelease: "0.1.0",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(comment).toHaveBeenCalledWith(
       expect.objectContaining({
         message:
-          ":rocket: PR is fixed. PR was released in [1.0.0](https://github.com/intuit/auto/releases/tag/1.0.0) :rocket:",
+          ":rocket: PR is fixed. PR was released in [v1.0.0](https://github.com/intuit/auto/releases/tag/v1.0.0) :rocket:",
       })
     );
   });
@@ -344,12 +358,15 @@ describe("release label plugin", () => {
       lastRelease: "0.1.0",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(comment).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
-        message: ":rocket: Issue was released in `1.0.0` :rocket:",
+        message:
+          ":rocket: Issue was released in [`v1.0.0`](https://git.hub/some/project/releases/v1.0.0) :rocket:",
         pr: 420,
         context: "released",
       })
