@@ -1,3 +1,15 @@
+# v9.22.3 (Wed Apr 01 2020)
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/plugin-enterprise-compatibility from 1.2.1 to 1.2.2 [#1087](https://github.com/intuit/auto/pull/1087) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.22.1 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix

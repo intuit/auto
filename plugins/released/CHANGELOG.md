@@ -1,3 +1,15 @@
+# v9.22.3 (Wed Apr 01 2020)
+
+#### 🐛 Bug Fix
+
+- add link in released comment + handle multiple releases [#1097](https://github.com/intuit/auto/pull/1097) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.21.1 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix

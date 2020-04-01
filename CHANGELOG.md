@@ -1,3 +1,28 @@
+# v9.22.3 (Wed Apr 01 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/released`
+  - add link in released comment + handle multiple releases [#1097](https://github.com/intuit/auto/pull/1097) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/parser from 2.25.0 to 2.26.0 [#1094](https://github.com/intuit/auto/pull/1094) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.25.0 to 2.26.0 [#1089](https://github.com/intuit/auto/pull/1089) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.4 to 4.4.5 [#1095](https://github.com/intuit/auto/pull/1095) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.0.1 to 2.0.2 [#1092](https://github.com/intuit/auto/pull/1092) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 25.2.1 to 25.3.0 [#1091](https://github.com/intuit/auto/pull/1091) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @fortawesome/fontawesome-svg-core from 1.2.27 to 1.2.28 [#1090](https://github.com/intuit/auto/pull/1090) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.1.3 to 14.1.4 [#1088](https://github.com/intuit/auto/pull/1088) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-enterprise-compatibility from 1.2.1 to 1.2.2 [#1087](https://github.com/intuit/auto/pull/1087) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.22.2 (Mon Mar 30 2020)
 
 :tada: This release contains work from a new contributor! :tada:
