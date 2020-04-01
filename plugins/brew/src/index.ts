@@ -58,7 +58,7 @@ export default class BrewPlugin implements IPlugin {
     }
 
     try {
-      const { executable, name, formula = "formula.template" } = config;
+      const { executable, name, formula = "formula-template.rb" } = config;
       const version = await auto.git.getLatestTagInBranch();
       const sha = execSync(`shasum --algorithm 256 ${executable}`, {
         encoding: "utf8",
