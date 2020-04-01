@@ -425,4 +425,38 @@ describe("validatePlugin", () => {
       })
     ).toMatchSnapshot();
   });
+
+  test("should validate plugin configuration - array of configurations", async () => {
+    const hook: ValidatePluginHook = new AsyncSeriesBailHook([
+      "name",
+      "options",
+    ]);
+
+    const config = t.partial({
+      name: t.string,
+    });
+    const pluginOptions = t.union([config, t.array(config)]);
+
+    hook.tapPromise("test", async (name, options) => {
+      if (name === "test-plugin") {
+        return validatePluginConfiguration(
+          "test-plugin",
+          pluginOptions,
+          options
+        );
+      }
+    });
+
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", { named: "foo" }]],
+      })
+    ).toMatchSnapshot();
+
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", [{ named: "foo" }]]],
+      })
+    ).toMatchSnapshot();
+  });
 });

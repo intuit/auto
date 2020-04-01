@@ -70,6 +70,24 @@ Expected string but got: 123
 ]
 `;
 
+exports[`validatePlugin should validate plugin configuration - array of configurations 1`] = `
+Array [
+  "\\"test-plugin\\"
+
+Found unknown configuration keys: named
+",
+]
+`;
+
+exports[`validatePlugin should validate plugin configuration - array of configurations 2`] = `
+Array [
+  "\\"test-plugin\\"
+
+Found unknown configuration keys: 0.named
+",
+]
+`;
+
 exports[`validatePlugin should validate plugin configuration - array of objects 1`] = `
 Array [
   "\\"test-plugin\\"
