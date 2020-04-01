@@ -16,6 +16,8 @@ yarn add -D @auto-it/brew
 
 ## Usage
 
+To use this plugin you will need to add the required configuration and a template file.
+
 ```jsonc
 {
   "plugins": [
@@ -26,7 +28,7 @@ yarn add -D @auto-it/brew
         "executable": "path/to/some/executable",
         // REQUIRED: The name of the formula to create
         "name": "name-of-formula",
-        // Optional: A path to the formula template. Default is './formula.template'
+        // Optional: A path to the formula template. Default is './formula-template.rb'
         "formula": "path/to/formula/template"
       }
     ]
@@ -34,6 +36,38 @@ yarn add -D @auto-it/brew
   ]
 }
 ```
+
+Create a template name `./formula-template.rb` at the root of the project (or use the `formula` option to customize the location)/
+The template file must be a valid homebrew ruby file.
+
+`auto` will replace the following tokens in the template file:
+
+- `$VERSION` - The version being published
+- `$SHA` - The sha of the executable being included in the formula
+
+Here is the template `auto` uses to publish it's own `brew` formula:
+
+```ruby
+class Auto < Formula
+  desc "Generate releases based on semantic version labels on pull requests."
+  homepage "https://intuit.github.io/auto/home.html"
+  url "https://github.com/intuit/auto/releases/download/$VERSION/auto-macos.gz"
+  version "$VERSION"
+  sha256 "$SHA"
+
+  def install
+    libexec.install Dir["*"]
+    bin.install libexec/"auto-macos"
+    mv bin/"auto-macos", bin/"auto"
+  end
+
+  test do
+    system bin/"auto", "--version"
+  end
+end
+```
+
+### Multiple Formulae
 
 You can also use this to create multiple `brew` formulae.
 
