@@ -19,21 +19,21 @@ yarn add -D @auto-it/brew
 
 To use this plugin you will need to add the required configuration and a template file.
 
-```jsonc
+- `executable` - REQUIRED: The executable to create a formula for
+- `name` - REQUIRED: The name of the formula to create
+- `formula` - A path to the formula template. Default is './formula-template.rb'
+
+```json
 {
   "plugins": [
     [
       "brew",
       {
-        // REQUIRED: The executable to create a formula for
         "executable": "path/to/some/executable",
-        // REQUIRED: The name of the formula to create
         "name": "name-of-formula",
-        // Optional: A path to the formula template. Default is './formula-template.rb'
         "formula": "path/to/formula/template"
       }
     ]
-    // other plugins
   ]
 }
 ```
@@ -72,7 +72,7 @@ end
 
 You can also use this to create multiple `brew` formulae.
 
-```jsonc
+```json
 {
   "plugins": [
     [
