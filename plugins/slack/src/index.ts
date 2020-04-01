@@ -1,4 +1,6 @@
 import { githubToSlack } from "@atomist/slack-messages";
+import { Octokit } from "@octokit/rest";
+
 import {
   Auto,
   IPlugin,
@@ -7,7 +9,6 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import fetch from "node-fetch";
-import join from "url-join";
 import * as t from "io-ts";
 
 /** Transform markdown into slack friendly text */
@@ -80,7 +81,7 @@ export default class SlackPlugin implements IPlugin {
 
     auto.hooks.afterRelease.tapPromise(
       this.name,
-      async ({ newVersion, commits, releaseNotes }) => {
+      async ({ newVersion, commits, releaseNotes, response }) => {
         // Avoid publishing on prerelease branches by default, but allow folks to opt in if they care to
         const currentBranch = getCurrentBranch();
         if (
@@ -116,24 +117,38 @@ export default class SlackPlugin implements IPlugin {
           throw new Error("Slack url must be set to post a message to slack.");
         }
 
-        await this.postToSlack(auto, newVersion, releaseNotes);
+        await this.postToSlack(
+          auto,
+          newVersion,
+          releaseNotes,
+          (Array.isArray(response) && response) ||
+            (response && [response]) ||
+            []
+        );
       }
     );
   }
 
   /** Post the release notes to slack */
-  async postToSlack(auto: Auto, newVersion: string, releaseNotes: string) {
+  async postToSlack(
+    auto: Auto,
+    newVersion: string,
+    releaseNotes: string,
+    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
+  ) {
     if (!auto.git) {
       return;
     }
 
     auto.logger.verbose.info("Posting release notes to slack.");
 
-    const project = await auto.git.getProject();
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const releaseUrl = join(project.html_url, "releases/tag", newVersion);
     const atTarget = this.options.atTarget;
+    const urls = releases.map(
+      (release) => `*<${release.data.html_url}|${release.data.name}>*`
+    );
+    const releaseUrl = urls.length ? urls.join(", ") : newVersion;
 
     if (!token) {
       auto.logger.verbose.warn("Slack may need a token to send a message");
@@ -142,10 +157,7 @@ export default class SlackPlugin implements IPlugin {
     await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
       method: "POST",
       body: JSON.stringify({
-        text: [
-          `@${atTarget}: New release *<${releaseUrl}|${newVersion}>*`,
-          body,
-        ].join("\n"),
+        text: [`@${atTarget}: New release ${releaseUrl}`, body].join("\n"),
         link_names: 1,
       }),
       headers: { "Content-Type": "application/json" },
