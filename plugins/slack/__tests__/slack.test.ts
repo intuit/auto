@@ -17,22 +17,22 @@ beforeEach(() => {
   fetchSpy.mockClear();
 });
 
+const mockResponse = [
+  {
+    data: {
+      html_url: "https://git.hub/some/project/releases/v1.0.0",
+      name: "v1.0.0",
+    },
+  },
+];
+
 // For the purpose of this test, we use the current branch as the "prerelease" branch to fake being on a "next" branch
 const nextBranch = execSync("git rev-parse --abbrev-ref HEAD", {
   encoding: "utf8",
 }).trim();
 
-const mockGit = {
-  options: {
-    owner: "adierkens",
-    repo: "test",
-  },
-  getProject: () => ({
-    html_url: "https://github.custom.com/adierkens/test",
-  }),
-};
 const mockAuto = ({
-  git: mockGit,
+  git: {},
   logger: dummyLog(),
 } as unknown) as Auto;
 
@@ -113,7 +113,7 @@ describe("postToSlack", () => {
     ).rejects.toBeInstanceOf(Error);
   });
 
-  test("doesn't post when prelease branch and using default prereleasePublish setting", async () => {
+  test("doesn't post when prerelease branch and using default prereleasePublish setting", async () => {
     // @ts-ignore
     const plugin = new SlackPlugin({
       url: "https://custom-slack-url",
@@ -141,7 +141,7 @@ describe("postToSlack", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  test("doesn't post when prelease branch setting is false", async () => {
+  test("doesn't post when prerelease branch setting is false", async () => {
     // @ts-ignore
     const plugin = new SlackPlugin({
       url: "https://custom-slack-url",
@@ -170,7 +170,7 @@ describe("postToSlack", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  test("posts when prelease branch setting is true", async () => {
+  test("posts when prerelease branch setting is true", async () => {
     // @ts-ignore
     const plugin = new SlackPlugin({
       url: "https://custom-slack-url",
@@ -192,6 +192,8 @@ describe("postToSlack", () => {
       lastRelease: "0.1.0",
       commits: [makeCommitFromMsg("a patch")],
       releaseNotes: "# My Notes",
+      // @ts-ignore
+      response: mockResponse,
     });
     expect(plugin.postToSlack).toHaveBeenCalledTimes(1);
   });
@@ -205,7 +207,9 @@ describe("postToSlack", () => {
     await plugin.postToSlack(
       { ...mockAuto, logger } as Auto,
       "1.0.0",
-      "# My Notes\n- PR [some link](google.com)"
+      "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      mockResponse
     );
 
     expect(logger.verbose.warn).toHaveBeenCalled();
@@ -218,7 +222,9 @@ describe("postToSlack", () => {
     await plugin.postToSlack(
       mockAuto,
       "1.0.0",
-      "# My Notes\n- PR [some link](google.com)"
+      "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      mockResponse
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -239,6 +245,8 @@ describe("postToSlack", () => {
       lastRelease: "0.1.0",
       commits: [makeCommitFromMsg("a patch")],
       releaseNotes: "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -262,6 +270,8 @@ describe("postToSlack", () => {
       lastRelease: "0.1.0",
       commits: [makeCommitFromMsg("a patch")],
       releaseNotes: "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -284,6 +294,8 @@ describe("postToSlack", () => {
       lastRelease: "0.1.0",
       commits: [makeCommitFromMsg("a patch")],
       releaseNotes: "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(fetchSpy).toHaveBeenCalled();
