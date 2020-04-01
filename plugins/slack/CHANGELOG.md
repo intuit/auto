@@ -1,3 +1,15 @@
+# v9.22.4 (Wed Apr 01 2020)
+
+#### 🐛 Bug Fix
+
+- use release URL from response for an accurate URL [#1096](https://github.com/intuit/auto/pull/1096) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.21.1 (Fri Mar 27 2020)
 
 #### 🐛 Bug Fix
