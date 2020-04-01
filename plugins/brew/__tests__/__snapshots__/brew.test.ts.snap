@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Brew Plugin should validate it's configuration 1`] = `
+Array [
+  Object {
+    "expectedType": "\\"string\\"",
+    "path": "brew.executable",
+    "value": undefined,
+  },
+]
+`;

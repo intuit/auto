@@ -61,6 +61,9 @@
     },
     {
       "path": "plugins/cocoapods"
+    },
+    {
+      "path": "plugins/brew"
     }
   ]
 }

@@ -55,9 +55,6 @@ function reporter<T>(validation: t.Validation<T>) {
     let parentType = "";
 
     const path = error.context
-      // The context entry with an empty key is the original type ("default
-      // context"), not an type error.
-      .filter((c) => c.key.length > 0)
       .filter((c) => {
         const tag = (c.type as any)._tag;
         const include =
@@ -67,7 +64,7 @@ function reporter<T>(validation: t.Validation<T>) {
             parentType !== "IntersectionType");
 
         parentType = tag;
-        return include;
+        return c.key && include;
       })
       .map((c) => c.key)
       .join(".");
@@ -261,7 +258,7 @@ export const validateAutoRc = validateIoConfiguration(".autorc", autoRc);
 /** Validate a plugin's configuration. */
 export async function validatePluginConfiguration(
   name: string,
-  pluginDefinition: t.HasProps,
+  pluginDefinition: t.Any | t.HasProps,
   providedOptions: unknown
 ) {
   const validateConfig = validateIoConfiguration(name, pluginDefinition);
