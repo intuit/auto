@@ -1226,6 +1226,7 @@ export default class Auto {
 
             <details>
               <summary>Changelog</summary>
+
               ${await this.release.generateReleaseNotes(lastRelease)}
             </details>
           `,
