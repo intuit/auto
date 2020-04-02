@@ -7,7 +7,7 @@ import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 import { makeInteractiveInitHooks } from "./utils/make-hooks";
 import { defaultLabels, ILabelDefinition } from "./release";
 import SEMVER from "./semver";
-import loadPlugin from "./utils/load-plugins";
+import { loadPlugin } from "./utils/load-plugins";
 import { ILogger } from "./utils/logger";
 import { readFileSync, writeFileSync } from "fs";
 import {

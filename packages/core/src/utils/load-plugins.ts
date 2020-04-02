@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { execSync } from "child_process";
+import chalk from "chalk";
 
 import * as path from "path";
 import Auto from "../auto";
 import { ILogger } from "./logger";
 import tryRequire from "./try-require";
 import InteractiveInit from "../init";
+import { LoadedAutoRc } from "../types";
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -172,7 +174,7 @@ export function findPlugin(
 }
 
 /** Try to load a plugin in various ways */
-export default function loadPlugin(
+export function loadPlugin(
   [pluginPath, options]: [string, any],
   logger: ILogger,
   extendedLocation?: string
@@ -203,3 +205,54 @@ export default function loadPlugin(
     throw error;
   }
 }
+
+/** Print a list of plugins */
+const printPlugins = (title: string, modules: InstalledModule[]) => {
+  if (!modules.length) {
+    return;
+  }
+
+  console.log(chalk.underline.white(title));
+  console.log("");
+  console.log(
+    modules.map((plugin) => `- ${plugin.name} (${plugin.path})`).join("\n")
+  );
+  console.log("");
+};
+
+/** List some of the plugins available to auto */
+export const listPlugins = async (
+  { plugins = [] }: LoadedAutoRc,
+  logger: ILogger,
+  extendedLocation?: string
+) => {
+  printPlugins(
+    "Found the following plugins in your .autorc:",
+    plugins.map((plugin) => {
+      if (typeof plugin === "string") {
+        return {
+          name: plugin,
+          path: findPlugin(plugin, logger, extendedLocation) || "",
+        };
+      }
+
+      return {
+        name: plugin[0],
+        path: findPlugin(plugin[0], logger, extendedLocation) || "",
+      };
+    })
+  );
+
+  printPlugins(
+    "Found the following plugins installed in your project:",
+    getInstalledPlugins().map((installed) => ({
+      ...installed,
+      path: path.relative(process.cwd(), installed.path),
+    }))
+  );
+
+  printPlugins(
+    "Found the following plugins globally installed in your environment:",
+    getInstalledPlugins(true)
+  );
+};

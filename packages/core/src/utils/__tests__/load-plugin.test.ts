@@ -2,7 +2,7 @@ import path from "path";
 import endent from "endent";
 import { execSync } from "child_process";
 
-import loadPlugin, { getInstalledPlugins } from "../load-plugins";
+import { getInstalledPlugins, loadPlugin } from "../load-plugins";
 import { dummyLog } from "../logger";
 
 const logger = dummyLog();

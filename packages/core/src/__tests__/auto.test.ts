@@ -3,7 +3,7 @@ import { IPRStatusOptions } from "../auto-args";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
-import loadPlugin from "../utils/load-plugins";
+import { loadPlugin } from "../utils/load-plugins";
 import child from "child_process";
 
 const importMock = jest.fn();

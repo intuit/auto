@@ -44,12 +44,7 @@ import LogParse, { IExtendedCommit } from "./log-parse";
 import Release, { getVersionMap, ILabelDefinition } from "./release";
 import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
 import execPromise from "./utils/exec-promise";
-import loadPlugin, {
-  IPlugin,
-  findPlugin,
-  InstalledModule,
-  getInstalledPlugins,
-} from "./utils/load-plugins";
+import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
 import createLog, { ILogger, setLogLevel } from "./utils/logger";
 import { makeHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
@@ -417,51 +412,10 @@ export default class Auto {
 
   /** List some of the plugins available to auto */
   private async listPlugins() {
-    const { plugins = [] } = this.config!;
-    const extendedLocation = this.getExtendedLocation(this.config!);
-
-    /** Print a list of plugins */
-    const printPlugins = (title: string, modules: InstalledModule[]) => {
-      if (!modules.length) {
-        return;
-      }
-
-      console.log(chalk.underline.white(title));
-      console.log("");
-      console.log(
-        modules.map((plugin) => `- ${plugin.name} (${plugin.path})`).join("\n")
-      );
-      console.log("");
-    };
-
-    printPlugins(
-      "Found the following plugins in your .autorc:",
-      plugins.map((plugin) => {
-        if (typeof plugin === "string") {
-          return {
-            name: plugin,
-            path: findPlugin(plugin, this.logger, extendedLocation) || "",
-          };
-        }
-
-        return {
-          name: plugin[0],
-          path: findPlugin(plugin[0], this.logger, extendedLocation) || "",
-        };
-      })
-    );
-
-    printPlugins(
-      "Found the following plugins installed in your project:",
-      getInstalledPlugins().map((installed) => ({
-        ...installed,
-        path: path.relative(process.cwd(), installed.path),
-      }))
-    );
-
-    printPlugins(
-      "Found the following plugins globally installed in your environment:",
-      getInstalledPlugins(true)
+    await listPlugins(
+      this.config!,
+      this.logger,
+      this.getExtendedLocation(this.config!)
     );
   }
 

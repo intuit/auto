@@ -1,4 +1,4 @@
-import loadPlugin from "../load-plugins";
+import { loadPlugin } from "../load-plugins";
 import { dummyLog } from "../logger";
 
 const logger = dummyLog();
