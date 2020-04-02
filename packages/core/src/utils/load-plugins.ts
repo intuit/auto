@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { execSync } from "child_process";
 import chalk from "chalk";
+import endent from "endent";
 
 import * as path from "path";
 import Auto from "../auto";
@@ -212,11 +213,11 @@ const printPlugins = (title: string, modules: InstalledModule[]) => {
     return;
   }
 
-  console.log(chalk.underline.white(title));
-  console.log("");
-  console.log(
-    modules.map((plugin) => `- ${plugin.name} (${plugin.path})`).join("\n")
-  );
+  console.log(endent`
+    ${chalk.underline.white(title)}
+
+    ${modules.map((plugin) => `- ${plugin.name} (${plugin.path})`).join("\n")}
+  `);
   console.log("");
 };
 

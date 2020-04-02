@@ -2,7 +2,7 @@ import path from "path";
 import endent from "endent";
 import { execSync } from "child_process";
 
-import { getInstalledPlugins, loadPlugin } from "../load-plugins";
+import { getInstalledPlugins, loadPlugin, listPlugins } from "../load-plugins";
 import { dummyLog } from "../logger";
 
 const logger = dummyLog();
@@ -149,5 +149,30 @@ describe("getInstalledPlugins", () => {
         path: "/some/folder/node_modules/@auto-it/chrome",
       },
     ]);
+  });
+});
+
+const log = jest.fn();
+console.log = log;
+
+describe("listPlugins", () => {
+  beforeEach(() => {
+    log.mockClear();
+  });
+
+  test("should get plugins from autorc", async () => {
+    exec.mockReturnValue("");
+    await listPlugins({ plugins: ["npm"] } as any, dummyLog());
+    expect(log.mock.calls[0]).toMatchSnapshot();
+  });
+
+  test("should get plugins from local module", async () => {
+    exec.mockReturnValue(
+      "/some/folder/node_modules/@auto-it/npm\n/some/folder/node_modules/@auto-it/released"
+    );
+    await listPlugins({ plugins: ["npm"] } as any, dummyLog());
+    expect(log.mock.calls[0]).toMatchSnapshot();
+    expect(log.mock.calls[2]).toMatchSnapshot();
+    expect(log.mock.calls[4]).toMatchSnapshot();
   });
 });
