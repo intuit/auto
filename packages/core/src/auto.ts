@@ -22,6 +22,7 @@ import on from "await-to-js";
 import createHttpsProxyAgent from "https-proxy-agent";
 import {
   ApiOptions,
+  IInfoOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -415,7 +416,7 @@ export default class Auto {
   }
 
   /** List some of the plugins available to auto */
-  async listPlugins() {
+  private async listPlugins() {
     const { plugins = [] } = this.config!;
     const extendedLocation = this.getExtendedLocation(this.config!);
 
@@ -425,7 +426,7 @@ export default class Auto {
         return;
       }
 
-      this.logger.log.success(title);
+      console.log(chalk.underline.white(title));
       console.log("");
       console.log(
         modules.map((plugin) => `- ${plugin.name} (${plugin.path})`).join("\n")
@@ -642,7 +643,7 @@ export default class Auto {
   }
 
   /** Check if auto is set up correctly */
-  async info() {
+  async info(args: IInfoOptions) {
     if (!this.git) {
       return { hasError: false };
     }
@@ -732,6 +733,10 @@ export default class Auto {
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
     console.log("");
+
+    if (args.listPlugins) {
+      await this.listPlugins();
+    }
 
     return { hasError };
   }
