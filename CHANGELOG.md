@@ -1,3 +1,21 @@
+# v9.23.1 (Thu Apr 02 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - next: add whitspace so markdown formats correctly [#1104](https://github.com/intuit/auto/pull/1104) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/brew`
+  - fix docs syntax highlighting [#1101](https://github.com/intuit/auto/pull/1101) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.23.0 (Wed Apr 01 2020)
 
 #### 🚀 Enhancement
