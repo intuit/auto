@@ -129,6 +129,8 @@ export interface INextOptions {
 export type GlobalOptions = {
   /** Plugins to initialize "auto" with */
   plugins?: string[];
+  /** List some of the available plugins */
+  listPlugins?: boolean;
 } & Partial<GithubInformation & RepoInformation> &
   LogOptions;
 

@@ -67,6 +67,12 @@ const version: AutoOption = {
 
 const defaultOptions: AutoOption[] = [
   {
+    name: "list-plugins",
+    type: Boolean,
+    description: "List some of the available plugins",
+    group: "global",
+  },
+  {
     name: "verbose",
     alias: "v",
     type: Boolean,

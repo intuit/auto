@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { execSync } from "child_process";
 
 import * as path from "path";
 import Auto from "../auto";
@@ -18,6 +19,58 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
+const pluginPatterns = ["@auto-it", "@auto-canary", "auto-plugin-"].map(
+  (p) => new RegExp(`${p}\\/([a-zA-Z-_\\.]+)$`)
+);
+const excluded = ["core", "cli", "bot-list"];
+
+export interface InstalledModule {
+  /** The name of the module */
+  name: string;
+  /** The path to the module */
+  path: string;
+}
+
+/** Get the paths of available installed plugins. */
+export const getInstalledPlugins = (global = false): InstalledModule[] => {
+  let modules: string[] = [];
+
+  try {
+    const stdout = execSync(`npm ls --parseable ${global ? "--global" : ""}`, {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "ignore"],
+    });
+
+    modules = stdout.split("\n");
+  } catch (error) {
+    modules = error.stdout.split("\n");
+  }
+
+  return modules
+    .map((p) => {
+      if (!pluginPatterns.some((pattern) => p.match(pattern))) {
+        return undefined;
+      }
+
+      const parts = p.split("node_modules/");
+      const name = parts[parts.length - 1]
+        .replace("@auto-it/", "")
+        .replace("@auto-canary/", "");
+
+      if (excluded.includes(name)) {
+        return undefined;
+      }
+
+      return {
+        name,
+        path: p,
+      };
+    })
+    .filter((m: InstalledModule | undefined): m is InstalledModule =>
+      Boolean(m)
+    );
+};
+
 /** Require a plugin and log where it was found. */
 function requirePlugin(
   pluginPath: string,
@@ -30,7 +83,92 @@ function requirePlugin(
     logger.verbose.info(`Found plugin using: ${pluginPath}`);
   }
 
-  return plugin as IPluginConstructor;
+  return plugin as
+    | IPluginConstructor
+    | {
+        /** The plugin under the default export */
+        default: IPluginConstructor;
+      }
+    | undefined;
+}
+
+/** Try to load a plugin in various ways */
+export function findPlugin(
+  pluginPath: string,
+  logger: ILogger,
+  extendedLocation?: string
+): string | undefined {
+  const isLocal =
+    pluginPath.startsWith(".") ||
+    pluginPath.startsWith("/") ||
+    pluginPath.match(/^[A-Z]:\\/); // Support for windows paths
+
+  /** Attempt to require a plugin */
+  const exists = (p: string) =>
+    Boolean(requirePlugin(p, logger, extendedLocation));
+
+  // Try requiring a path
+  if (isLocal && exists(pluginPath)) {
+    return pluginPath;
+  }
+
+  // Try requiring a path from cwd
+  if (isLocal) {
+    const localPath = path.join(process.cwd(), pluginPath);
+
+    if (!exists(localPath)) {
+      logger.log.warn(`Could not find plugin from path: ${localPath}`);
+      return;
+    }
+
+    return localPath;
+  }
+
+  // For pkg bundle
+  const pkgPath = path.join(
+    __dirname,
+    "../../../../../plugins/",
+    pluginPath,
+    "dist/index.js"
+  );
+
+  if (exists(pkgPath)) {
+    return pkgPath;
+  }
+
+  const userPlugin = `auto-plugin-${pluginPath}`;
+
+  // For a user created plugin
+  if (exists(userPlugin)) {
+    return userPlugin;
+  }
+
+  const officialPlugin = path.join("@auto-it", pluginPath);
+
+  // Try importing official plugin
+  if (exists(officialPlugin)) {
+    return officialPlugin;
+  }
+
+  const canaryPlugin = path.join("@auto-canary", pluginPath);
+
+  // Try importing official plugin
+  if (exists(canaryPlugin)) {
+    return canaryPlugin;
+  }
+
+  // Try requiring a package
+  if (
+    pluginPath.includes("/auto-plugin-") ||
+    pluginPath.startsWith("auto-plugin-") ||
+    pluginPath.startsWith("@auto-it")
+  ) {
+    if (exists(pluginPath)) {
+      return pluginPath;
+    }
+  }
+
+  logger.log.warn(`Could not find plugin: ${pluginPath}`);
 }
 
 /** Try to load a plugin in various ways */
@@ -39,76 +177,15 @@ export default function loadPlugin(
   logger: ILogger,
   extendedLocation?: string
 ): IPlugin | undefined {
-  const isLocal =
-    pluginPath.startsWith(".") ||
-    pluginPath.startsWith("/") ||
-    pluginPath.match(/^[A-Z]:\\/); // Support for windows paths
+  const localPluginPath = findPlugin(pluginPath, logger, extendedLocation);
 
-  /** Attempt to require a plugin */
-  const attempt = (p: string) => requirePlugin(p, logger, extendedLocation);
-
-  let plugin:
-    | IPluginConstructor
-    | {
-        /** The plugin under the default export */
-        default: IPluginConstructor;
-      }
-    | undefined;
-
-  // Try requiring a path
-  if (isLocal) {
-    plugin = attempt(pluginPath);
+  if (!localPluginPath) {
+    return;
   }
 
-  // Try requiring a path from cwd
-  if (!plugin && isLocal) {
-    const localPath = path.join(process.cwd(), pluginPath);
-    plugin = attempt(localPath);
-
-    if (!plugin) {
-      logger.log.warn(`Could not find plugin from path: ${localPath}`);
-      return;
-    }
-  }
-
-  // For pkg bundle
-  if (!plugin) {
-    const pkgPath = path.join(
-      __dirname,
-      "../../../../../plugins/",
-      pluginPath,
-      "dist/index.js"
-    );
-    plugin = attempt(pkgPath);
-  }
-
-  // For a user created plugin
-  if (!plugin) {
-    plugin = attempt(`auto-plugin-${pluginPath}`);
-  }
-
-  // Try importing official plugin
-  if (!plugin) {
-    plugin = attempt(path.join("@auto-it", pluginPath));
-  }
-
-  // Try importing canary version of plugin
-  if (!plugin) {
-    plugin = attempt(path.join("@auto-canary", pluginPath));
-  }
-
-  // Try requiring a package
-  if (
-    !plugin &&
-    (pluginPath.includes("/auto-plugin-") ||
-      pluginPath.startsWith("auto-plugin-") ||
-      pluginPath.startsWith("@auto-it"))
-  ) {
-    plugin = attempt(pluginPath);
-  }
+  const plugin = requirePlugin(localPluginPath, logger, extendedLocation);
 
   if (!plugin) {
-    logger.log.warn(`Could not find plugin: ${pluginPath}`);
     return;
   }
 
