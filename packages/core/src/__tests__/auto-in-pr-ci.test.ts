@@ -190,6 +190,7 @@ describe("next in ci", () => {
 
         <details>
           <summary>Changelog</summary>
+
           notes
         </details>
       `,
