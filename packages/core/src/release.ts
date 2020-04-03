@@ -1,4 +1,7 @@
-import { GraphQlQueryResponse } from "@octokit/graphql/dist-types/types";
+import {
+  GraphQlQueryResponse,
+  GraphQlQueryResponseData,
+} from "@octokit/graphql/dist-types/types";
 import { Octokit } from "@octokit/rest";
 import on from "await-to-js";
 import * as fs from "fs";
@@ -226,7 +229,6 @@ export default class Release {
         (all, pr) => [...all, ...pr.map((subCommit) => subCommit.sha)],
         [] as string[]
       );
-
     const uniqueCommits = allCommits.filter(
       (commit) =>
         (commit.pullRequest || !allPrCommitHashes.includes(commit.hash)) &&
@@ -261,24 +263,29 @@ export default class Release {
     ];
     const logParse = await this.createLogParse();
 
-    Promise.all(
-      data.map((results) =>
-        Object.entries(results)
-          .filter((result): result is [string, ISearchResult] =>
-            Boolean(result[1])
-          )
-          .map(([key, result]) =>
-            processQueryResult(key, result, commitsWithoutPR)
-          )
-          .filter((commit): commit is IExtendedCommit => Boolean(commit))
-          .map(async (commit) => {
-            const index = commitsWithoutPR.findIndex(
-              (commitWithoutPR) => commitWithoutPR.hash === commit.hash
-            );
+    type QueryEntry = [string, GraphQlQueryResponseData];
 
-            commitsInRelease[index] = await logParse.normalizeCommit(commit);
-          })
-      )
+    const entries = data.reduce(
+      (acc, result) => [...acc, ...(Object.entries(result) as QueryEntry[])],
+      [] as QueryEntry[]
+    );
+
+    await Promise.all(
+      entries
+        .filter((result): result is [string, ISearchResult] =>
+          Boolean(result[1])
+        )
+        .map(([key, result]) =>
+          processQueryResult(key, result, commitsWithoutPR)
+        )
+        .filter((commit): commit is IExtendedCommit => Boolean(commit))
+        .map(async (commit) => {
+          const index = commitsInRelease.findIndex(
+            (c) => c && c.hash === commit.hash
+          );
+
+          commitsInRelease[index] = await logParse.normalizeCommit(commit);
+        })
     );
 
     return commitsInRelease.filter((commit): commit is IExtendedCommit =>
