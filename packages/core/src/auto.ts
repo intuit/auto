@@ -64,6 +64,7 @@ import {
 } from "./validate-config";
 import { omit } from "./utils/omit";
 import { execSync } from "child_process";
+import isBinary from "./utils/is-binary";
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -1824,8 +1825,7 @@ export default class Auto {
    * Apply all of the plugins in the config.
    */
   private loadPlugins(config: AutoRc) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const defaultPlugins = [(process as any).pkg ? "git-tag" : "npm"];
+    const defaultPlugins = [isBinary() ? "git-tag" : "npm"];
     const pluginsPaths = [
       require.resolve("./plugins/filter-non-pull-request"),
       ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins),

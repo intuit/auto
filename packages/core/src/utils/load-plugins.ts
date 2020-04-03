@@ -2,6 +2,7 @@
 import { execSync } from "child_process";
 import chalk from "chalk";
 import endent from "endent";
+import glob from "fast-glob";
 
 import * as path from "path";
 import Auto from "../auto";
@@ -9,6 +10,7 @@ import { ILogger } from "./logger";
 import tryRequire from "./try-require";
 import InteractiveInit from "../init";
 import { LoadedAutoRc } from "../types";
+import isBinary from "./is-binary";
 
 export type IPluginConstructor = new (options?: any) => IPlugin;
 
@@ -22,9 +24,12 @@ export interface IPlugin {
   apply(auto: Auto): void;
 }
 
-const pluginPatterns = ["@auto-it", "@auto-canary", "auto-plugin-"].map(
-  (p) => new RegExp(`${p}\\/([a-zA-Z-_\\.]+)$`)
-);
+const pluginPatterns = [
+  "@auto-it",
+  "@auto-canary",
+  "auto-plugin-",
+  "auto\\/plugins",
+].map((p) => new RegExp(`${p}\\/([a-zA-Z-_\\.]+)$`));
 const excluded = ["core", "cli", "bot-list"];
 
 export interface InstalledModule {
@@ -33,6 +38,34 @@ export interface InstalledModule {
   /** The path to the module */
   path: string;
 }
+
+/** Format a list of plugins */
+const formatPluginList = (plugins: string[]): InstalledModule[] =>
+  plugins
+    .map((plugin) => {
+      if (!pluginPatterns.some((pattern) => plugin.match(pattern))) {
+        return undefined;
+      }
+
+      const parts = plugin.includes("node_modules/")
+        ? plugin.split("node_modules/")
+        : plugin.split("auto/plugins/");
+      const name = parts[parts.length - 1]
+        .replace("@auto-it/", "")
+        .replace("@auto-canary/", "");
+
+      if (excluded.includes(name)) {
+        return undefined;
+      }
+
+      return {
+        name,
+        path: plugin,
+      };
+    })
+    .filter((m: InstalledModule | undefined): m is InstalledModule =>
+      Boolean(m)
+    );
 
 /** Get the paths of available installed plugins. */
 export const getInstalledPlugins = (global = false): InstalledModule[] => {
@@ -49,29 +82,7 @@ export const getInstalledPlugins = (global = false): InstalledModule[] => {
     modules = error.stdout.split("\n");
   }
 
-  return modules
-    .map((p) => {
-      if (!pluginPatterns.some((pattern) => p.match(pattern))) {
-        return undefined;
-      }
-
-      const parts = p.split("node_modules/");
-      const name = parts[parts.length - 1]
-        .replace("@auto-it/", "")
-        .replace("@auto-canary/", "");
-
-      if (excluded.includes(name)) {
-        return undefined;
-      }
-
-      return {
-        name,
-        path: p,
-      };
-    })
-    .filter((m: InstalledModule | undefined): m is InstalledModule =>
-      Boolean(m)
-    );
+  return formatPluginList(modules);
 };
 
 /** Require a plugin and log where it was found. */
@@ -129,8 +140,7 @@ export function findPlugin(
 
   // For pkg bundle
   const pkgPath = path.join(
-    __dirname,
-    "../../../../../plugins/",
+    "/snapshot/auto/plugins/",
     pluginPath,
     "dist/index.js"
   );
@@ -227,37 +237,65 @@ export const listPlugins = async (
   logger: ILogger,
   extendedLocation?: string
 ) => {
-  printPlugins(
-    "Found the following plugins in your .autorc:",
-    plugins.map((plugin) => {
-      if (typeof plugin === "string") {
-        return {
-          name: plugin,
-          path: findPlugin(plugin, logger, extendedLocation) || "",
-        };
-      }
-
+  const rcPlugins = plugins.map((plugin) => {
+    if (typeof plugin === "string") {
       return {
-        name: plugin[0],
-        path: findPlugin(plugin[0], logger, extendedLocation) || "",
+        name: plugin,
+        path: findPlugin(plugin, logger, extendedLocation) || "",
       };
-    })
+    }
+
+    return {
+      name: plugin[0],
+      path: findPlugin(plugin[0], logger, extendedLocation) || "",
+    };
+  });
+
+  printPlugins("Found the following plugins in your .autorc:", rcPlugins);
+
+  const bundledPlugins = isBinary()
+    ? formatPluginList(
+        await glob("/snapshot/auto/plugins/**", {
+          onlyDirectories: true,
+          deep: 0,
+        })
+      )
+    : [];
+
+  printPlugins(
+    "Found the following plugins bundled with your binary:",
+    bundledPlugins
   );
+
+  const localPlugins = getInstalledPlugins().map((installed) => ({
+    ...installed,
+    path: path.relative(process.cwd(), installed.path),
+  }));
 
   printPlugins(
     "Found the following plugins installed in your project:",
-    getInstalledPlugins().map((installed) => ({
-      ...installed,
-      path: path.relative(process.cwd(), installed.path),
-    }))
+    localPlugins
   );
+
+  const globalPlugins = getInstalledPlugins(true);
 
   printPlugins(
     "Found the following plugins globally installed in your environment:",
-    getInstalledPlugins(true)
+    globalPlugins
   );
 
-  logger.log.note(
-    'There might be other plugins available as files on your machine. This flag can only list plugins from your .autorc or plugins managed with "npm".'
-  );
+  if (
+    !rcPlugins.length &&
+    !localPlugins.length &&
+    !globalPlugins.length &&
+    !bundledPlugins.length
+  ) {
+    logger.log.note(
+      "No plugins found through .autorc, npm, or binary. There might be other plugins available as files on your machine."
+    );
+  } else {
+    logger.log.note(
+      'There might be other plugins available as files on your machine. This flag can only list plugins from your .autorc or plugins managed with "npm".'
+    );
+  }
 };
