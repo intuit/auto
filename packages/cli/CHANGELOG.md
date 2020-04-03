@@ -1,3 +1,15 @@
+# v9.24.0 (Thu Apr 02 2020)
+
+#### 🚀 Enhancement
+
+- Add `--list-plugins` flag to `info` command [#1103](https://github.com/intuit/auto/pull/1103) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.22.0 (Fri Mar 27 2020)
 
 #### 🚀 Enhancement
