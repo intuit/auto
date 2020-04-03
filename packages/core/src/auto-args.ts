@@ -126,6 +126,11 @@ export interface INextOptions {
   message?: string;
 }
 
+export interface IInfoOptions {
+  /** List some of the available plugins */
+  listPlugins?: boolean;
+}
+
 export type GlobalOptions = {
   /** Plugins to initialize "auto" with */
   plugins?: string[];
@@ -134,6 +139,7 @@ export type GlobalOptions = {
 
 export type ApiOptions = GlobalOptions &
   (
+    | IInfoOptions
     | ICreateLabelsOptions
     | ILabelOptions
     | IPRCheckOptions

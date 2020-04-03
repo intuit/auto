@@ -187,8 +187,16 @@ export const commands: AutoCommand[] = [
     name: "info",
     group: "Setup Command",
     description:
-      "Determine the environment and check if auto is set up correctly",
+      "Determine the environment, check if auto is set up correctly, and list plugins.",
     examples: ["{green $} auto info"],
+    options: [
+      {
+        name: "list-plugins",
+        type: Boolean,
+        description: "List the available plugins",
+        group: "main",
+      },
+    ],
   },
   {
     name: "create-labels",

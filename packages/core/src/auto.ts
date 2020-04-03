@@ -22,6 +22,7 @@ import on from "await-to-js";
 import createHttpsProxyAgent from "https-proxy-agent";
 import {
   ApiOptions,
+  IInfoOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -43,7 +44,7 @@ import LogParse, { IExtendedCommit } from "./log-parse";
 import Release, { getVersionMap, ILabelDefinition } from "./release";
 import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
 import execPromise from "./utils/exec-promise";
-import loadPlugin, { IPlugin } from "./utils/load-plugins";
+import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
 import createLog, { ILogger, setLogLevel } from "./utils/logger";
 import { makeHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
@@ -409,6 +410,15 @@ export default class Auto {
     this.logger.verbose.info("ENV:", env);
   }
 
+  /** List some of the plugins available to auto */
+  private async listPlugins() {
+    await listPlugins(
+      this.config!,
+      this.logger,
+      this.getExtendedLocation(this.config!)
+    );
+  }
+
   /**
    * Load the default hook behaviors. Should run after loadPlugins so
    * plugins take precedence.
@@ -587,7 +597,7 @@ export default class Auto {
   }
 
   /** Check if auto is set up correctly */
-  async info() {
+  async info(args: IInfoOptions) {
     if (!this.git) {
       return { hasError: false };
     }
@@ -677,6 +687,10 @@ export default class Auto {
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
     console.log("");
+
+    if (args.listPlugins) {
+      await this.listPlugins();
+    }
 
     return { hasError };
   }
@@ -1791,6 +1805,21 @@ export default class Auto {
     return author;
   }
 
+  /** Find the location of the extended configuration */
+  private getExtendedLocation(config: AutoRc) {
+    let extendedLocation: string | undefined;
+
+    try {
+      if (config.extends) {
+        extendedLocation = require.resolve(config.extends);
+      }
+    } catch (error) {
+      this.logger.veryVerbose.error(error);
+    }
+
+    return extendedLocation;
+  }
+
   /**
    * Apply all of the plugins in the config.
    */
@@ -1801,15 +1830,7 @@ export default class Auto {
       require.resolve("./plugins/filter-non-pull-request"),
       ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins),
     ];
-    let extendedLocation: string | undefined;
-
-    try {
-      if (config.extends) {
-        extendedLocation = require.resolve(config.extends);
-      }
-    } catch (error) {
-      this.logger.veryVerbose.error();
-    }
+    const extendedLocation = this.getExtendedLocation(config);
 
     pluginsPaths
       .map((plugin) =>

@@ -2,6 +2,7 @@
 
 import Auto, {
   ApiOptions,
+  IInfoOptions,
   ICanaryOptions,
   IChangelogOptions,
   ICommentOptions,
@@ -35,7 +36,7 @@ export async function run(command: string, args: ApiOptions) {
       try {
         // We don't want auto.info throwing an error during another
         // command
-        const { hasError } = await auto.info();
+        const { hasError } = await auto.info(args as IInfoOptions);
 
         if (command === "info") {
           // eslint-disable-next-line max-depth
