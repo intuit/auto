@@ -65,6 +65,13 @@ const version: AutoOption = {
   group: "global",
 };
 
+const onlyPublishWithReleaseLabel: AutoOption = {
+  name: "only-publish-with-release-label",
+  type: Boolean,
+  description: "Only bump version if 'release' label is on pull request",
+  group: "main",
+};
+
 const defaultOptions: AutoOption[] = [
   {
     name: "verbose",
@@ -331,12 +338,7 @@ export const commands: AutoCommand[] = [
     description:
       "Get the semantic version bump for the given changes. Requires all PRs to have labels for the change type. If a PR does not have a label associated with it, it will default to `patch`.",
     options: [
-      {
-        name: "only-publish-with-release-label",
-        type: Boolean,
-        description: "Only bump version if 'release' label is on pull request",
-        group: "main",
-      },
+      onlyPublishWithReleaseLabel,
       {
         name: "from",
         type: String,
@@ -453,6 +455,7 @@ export const commands: AutoCommand[] = [
     options: [
       baseBranch,
       dryRun,
+      onlyPublishWithReleaseLabel,
       {
         name: "only-graduate-with-release-label",
         type: Boolean,

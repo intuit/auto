@@ -39,14 +39,13 @@ export const getInstalledPlugins = (global = false): InstalledModule[] => {
   let modules: string[] = [];
 
   try {
-    const stdout = execSync(`npm2 ls --parseable ${global ? "--global" : ""}`, {
+    const stdout = execSync(`npm ls --parseable ${global ? "--global" : ""}`, {
       encoding: "utf8",
       stdio: ["pipe", "pipe", "ignore"],
     });
 
     modules = stdout.split("\n");
   } catch (error) {
-    console.log(error);
     modules = error.stdout.split("\n");
   }
 
