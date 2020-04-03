@@ -1,3 +1,15 @@
+# v9.25.0 (Thu Apr 02 2020)
+
+#### 🚀 Enhancement
+
+- shipit: expose --only-publish-with-release-label [#1108](https://github.com/intuit/auto/pull/1108) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.24.0 (Thu Apr 02 2020)
 
 #### 🚀 Enhancement
