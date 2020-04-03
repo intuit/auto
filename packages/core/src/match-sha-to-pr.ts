@@ -1,6 +1,7 @@
 import endent from "endent";
 
 import { IExtendedCommit } from "./log-parse";
+import { ILabelDefinition } from "./release";
 
 interface ISearchEdge {
   /** Graphql search node */
@@ -48,7 +49,7 @@ export function buildSearchQuery(
     return endent`
       ${q}
 
-      hash_${commit}: search(query: "${subQuery}", type: ISSUE, first: 1) {
+      hash_${commit}: search(query: "${subQuery}", type: ISSUE, first: 10) {
         edges {
           node {
             ... on PullRequest {
@@ -99,23 +100,21 @@ export function processQueryResult(
     return;
   }
 
-  if (result.edges.length > 0) {
-    if (result.edges[0].node.state === "CLOSED") {
-      return;
-    }
+  // When matching SHA to PR only take merged into account. You can have
+  // multiple open PRs with the same commits, such as in a rebase.
+  const prs = result.edges.filter((edge) => edge.node.state === "MERGED");
 
-    const labels: {
-      /** The label */
-      name: string;
-    }[] = result.edges[0].node.labels
-      ? result.edges[0].node.labels.edges.map((edge) => edge.node)
+  if (prs.length) {
+    const pr = prs[0].node;
+    const labels: ILabelDefinition[] = pr.labels
+      ? pr.labels.edges.map((edge) => edge.node)
       : [];
     commit.pullRequest = {
-      number: result.edges[0].node.number,
-      body: result.edges[0].node.body,
+      number: pr.number,
+      body: pr.body,
     };
     commit.labels = [...labels.map((label) => label.name), ...commit.labels];
-  } else {
+  } else if (!result.edges.length) {
     commit.labels = ["pushToBaseBranch", ...commit.labels];
   }
 

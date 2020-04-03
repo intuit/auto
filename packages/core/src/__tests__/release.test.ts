@@ -706,21 +706,24 @@ describe("Release", () => {
       graphql.mockReturnValueOnce({
         hash_1: {
           edges: [
-            { node: { labels: { edges: [{ node: { name: "major" } }] } } },
+            {
+              node: {
+                state: "MERGED",
+                labels: { edges: [{ node: { name: "major" } }] },
+              },
+            },
           ],
         },
-      });
-      // PR with no label, should become patch
-      graphql.mockReturnValueOnce({
+        // PR with no label, should become patch
         hash_2: {
-          edges: [{ node: { labels: undefined } }],
+          edges: [{ node: { state: "MERGED", labels: undefined } }],
         },
       });
 
       expect(await gh.generateReleaseNotes("1234", "123")).toMatchSnapshot();
     });
 
-    test("should find ignore closed prs", async () => {
+    test("should ignore closed prs", async () => {
       const gh = new Release(git);
 
       getGitLog.mockReturnValueOnce([
@@ -738,17 +741,16 @@ describe("Release", () => {
             {
               node: {
                 labels: {
-                  edges: [{ node: { name: "major", state: "CLOSED" } }],
+                  edges: [{ node: { name: "major" } }],
                 },
+                state: "CLOSED",
               },
             },
           ],
         },
-      });
-      // PR with no label, should become patch
-      graphql.mockReturnValueOnce({
+        // PR with no label, should become patch
         hash_2: {
-          edges: [{ node: { labels: undefined } }],
+          edges: [{ node: { labels: undefined, state: "MERGED" } }],
         },
       });
 
