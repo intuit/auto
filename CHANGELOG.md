@@ -1,3 +1,16 @@
+# v9.25.1 (Fri Apr 03 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix info command in fresh envs + list plugins in binary [#1110](https://github.com/intuit/auto/pull/1110) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.25.0 (Thu Apr 02 2020)
 
 #### 🚀 Enhancement
