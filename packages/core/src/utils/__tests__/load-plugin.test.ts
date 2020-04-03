@@ -167,6 +167,7 @@ describe("listPlugins", () => {
   });
 
   test("should get plugins from local module", async () => {
+    process.cwd = () => "/home";
     exec.mockReturnValue(
       "/some/folder/node_modules/@auto-it/npm\n/some/folder/node_modules/@auto-it/released"
     );

@@ -20,8 +20,8 @@ exports[`listPlugins should get plugins from local module 2`] = `
 Array [
   "Found the following plugins installed in your project:
 
-- npm (../../../../some/folder/node_modules/@auto-it/npm)
-- released (../../../../some/folder/node_modules/@auto-it/released)",
+- npm (../some/folder/node_modules/@auto-it/npm)
+- released (../some/folder/node_modules/@auto-it/released)",
 ]
 `;
 
