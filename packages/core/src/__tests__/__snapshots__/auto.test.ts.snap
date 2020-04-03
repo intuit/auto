@@ -109,7 +109,9 @@ Object {
   ],
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
-  "plugins": undefined,
+  "plugins": Array [
+    "npm",
+  ],
   "prereleaseBranches": Array [
     "next",
   ],
@@ -166,7 +168,9 @@ Object {
   ],
   "noVersionPrefix": true,
   "owner": "foo",
-  "plugins": undefined,
+  "plugins": Array [
+    "npm",
+  ],
   "prereleaseBranches": Array [
     "next",
   ],

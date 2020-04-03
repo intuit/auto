@@ -64,6 +64,7 @@ import {
 } from "./validate-config";
 import { omit } from "./utils/omit";
 import { execSync } from "child_process";
+import isBinary from "./utils/is-binary";
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -615,7 +616,7 @@ export default class Auto {
       ? link(latestRelease.tag_name, latestRelease.html_url)
       : "";
     const { headers } = await this.git.github.request("HEAD /");
-    const access = headers as Record<string, string>;
+    const access = headers as Record<string, string | undefined>;
     const rateLimitRefresh = new Date(
       Number(access["x-ratelimit-reset"]) * 1000
     );
@@ -683,7 +684,7 @@ export default class Auto {
       ${logSuccess(!(permission === 'admin' || permission === 'write'))} Repo Permission:  ${permission}
       ${logSuccess(!user?.login)} User:             ${user?.login}
       ${logSuccess()} API:              ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
-      ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
+      ${logSuccess(!access['x-oauth-scopes']?.includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
     console.log("");
@@ -1824,13 +1825,13 @@ export default class Auto {
    * Apply all of the plugins in the config.
    */
   private loadPlugins(config: AutoRc) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const defaultPlugins = [(process as any).pkg ? "git-tag" : "npm"];
+    config.plugins = config.plugins || [isBinary() ? "git-tag" : "npm"];
+
+    const extendedLocation = this.getExtendedLocation(config);
     const pluginsPaths = [
       require.resolve("./plugins/filter-non-pull-request"),
-      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins),
+      ...config.plugins,
     ];
-    const extendedLocation = this.getExtendedLocation(config);
 
     pluginsPaths
       .map((plugin) =>
