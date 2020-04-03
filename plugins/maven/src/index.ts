@@ -47,7 +47,7 @@ export default class MavenPlugin implements IPlugin {
     });
 
     auto.hooks.beforeRun.tap(this.name, async () => {
-      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS } = process.env;
+      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS, MAVEN_OPTIONS } = process.env;
 
       if (!MAVEN_PASSWORD && !MAVEN_SETTINGS) {
         auto.logger.log.warn(
@@ -148,7 +148,7 @@ export default class MavenPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS } = process.env;
+      const { MAVEN_PASSWORD, MAVEN_USERNAME, MAVEN_SETTINGS, MAVEN_OPTIONS} = process.env;
 
       auto.logger.log.await("Performing maven release...");
 
@@ -164,6 +164,7 @@ export default class MavenPlugin implements IPlugin {
         MAVEN_PASSWORD && `-Dpassword=${MAVEN_PASSWORD}`,
         MAVEN_USERNAME && `-Dusername=${MAVEN_USERNAME}`,
         MAVEN_SETTINGS && `-s=${MAVEN_SETTINGS}`,
+        MAVEN_OPTIONS && ` ${MAVEN_OPTIONS}`,
         "release:perform",
       ]);
 
