@@ -1825,12 +1825,13 @@ export default class Auto {
    * Apply all of the plugins in the config.
    */
   private loadPlugins(config: AutoRc) {
-    const defaultPlugins = [isBinary() ? "git-tag" : "npm"];
+    config.plugins = config.plugins || [isBinary() ? "git-tag" : "npm"];
+
+    const extendedLocation = this.getExtendedLocation(config);
     const pluginsPaths = [
       require.resolve("./plugins/filter-non-pull-request"),
-      ...(Array.isArray(config.plugins) ? config.plugins : defaultPlugins),
+      ...config.plugins,
     ];
-    const extendedLocation = this.getExtendedLocation(config);
 
     pluginsPaths
       .map((plugin) =>

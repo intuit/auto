@@ -238,16 +238,12 @@ export const listPlugins = async (
   extendedLocation?: string
 ) => {
   const rcPlugins = plugins.map((plugin) => {
-    if (typeof plugin === "string") {
-      return {
-        name: plugin,
-        path: findPlugin(plugin, logger, extendedLocation) || "",
-      };
-    }
+    const name = typeof plugin === "string" ? plugin : plugin[0];
+    const pluginPath = findPlugin(name, logger, extendedLocation) || "";
 
     return {
-      name: plugin[0],
-      path: findPlugin(plugin[0], logger, extendedLocation) || "",
+      name,
+      path: pluginPath.replace("/dist/index.js", ""),
     };
   });
 
