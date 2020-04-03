@@ -4,7 +4,8 @@
 
 ## Installation
 
-If you're on some platform other than [npm](https://npmjs.com) it doesn't make sense to download `auto` through [npm](https://npmjs.com). For these situations we package `auto` for all major operating systems (`linux`, `osx`, `windows`).
+If you're on some platform other than [npm](https://npmjs.com) it doesn't make sense to download `auto` through [npm](https://npmjs.com).
+For these situations we package `auto` for all major operating systems (`linux`, `osx`, `windows`).
 
 Simply download the appropriate version for your operating system and make it executable.
 
@@ -15,7 +16,9 @@ curl -vkL -o - https://github.com/intuit/auto/releases/download/v7.2.0/auto-linu
 chmod a+x ~/auto
 ```
 
-This executable contains all of the official `auto` plugins so you do not have to download anything extra. This version of `auto` uses the [git-tag](../../plugins/git-tag/README.md) plugins as the default instead of [npm](../../plugins/npm/README.md). If you specify any plugins this will be overriden.
+This executable contains all of the official `auto` plugins so you do not have to download anything extra.
+This version of `auto` uses the [git-tag](../../plugins/git-tag/README.md) plugins as the default instead of [npm](../../plugins/npm/README.md).
+If you specify any plugins this will be overridden.
 
 ### Installation via brew (OSX)
 
@@ -76,3 +79,61 @@ Now that you have `auto` all set up you can use all of it's commands!
 ::: message is-info
 ℹ️ Tip: Using `auto` locally with an `.env` file is a great experience. See how [here](./getting-started.md#local-.env).
 :::
+
+## Plugins
+
+As stated above, all of the official plugins (the ones included in this repo/docs) are included in the binary version of `auto`.
+However you might want to use an unofficial plugin or even write your own.
+
+#### Local Plugins
+
+One way to use unofficial plugins in a non-javascript project is to have a directory committed to your project where you store them.
+
+You could:
+
+- Write your own custom plugins and store them in here
+- Copy a plugin from the internet
+
+**`.autorc`:**
+
+```json
+{
+  "plugins": ["./plugins/custom-plugin.js"]
+}
+```
+
+#### Hosted Plugins
+
+If you want to share your custom plugins between projects then you can host them on some SCM (ex: GitHub).
+A plugin just needs to consist of an `index.js` that implements your plugin. (or it could be as complex as any NPM package)
+
+Edit your CI build to download these plugins when building.
+
+```sh
+mkdir plugins
+git clone https://github.com/me/custom-plugin plugins/custom-plugin
+```
+
+**`.autorc`:**
+
+```json
+{
+  "plugins": ["./plugins/custom-plugin"]
+}
+```
+
+#### NPM Plugins
+
+If distributed via NPM you could install those plugins globally through `npm`:
+
+```sh
+npm i -g auto-plugin-my-custom-plugin
+```
+
+**`.autorc`:**
+
+```json
+{
+  "plugins": ["my-custom-plugin"]
+}
+```
