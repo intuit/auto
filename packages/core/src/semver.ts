@@ -1,4 +1,5 @@
 import { VersionLabel } from "./release";
+import { ReleaseCalculationOptions } from "./types";
 
 enum SEMVER {
   major = "major",
@@ -33,11 +34,6 @@ export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
   return SEMVER.patch;
 }
 
-interface ISemVerOptions {
-  /** Only publish changes when "release" label is present */
-  onlyPublishWithReleaseLabel?: boolean;
-}
-
 /**
  * Determine the version bump from the labels on merged PRs.
  * Respects skip-release labels and the "onlyPublishWithReleaseLabel"
@@ -46,7 +42,7 @@ interface ISemVerOptions {
 export function calculateSemVerBump(
   labels: string[][],
   labelMap: IVersionLabels,
-  { onlyPublishWithReleaseLabel }: ISemVerOptions = {}
+  { onlyPublishWithReleaseLabel }: ReleaseCalculationOptions = {}
 ) {
   const labelSet = new Set<string>();
   const skipReleaseLabels = labelMap.get("skip") || [];
