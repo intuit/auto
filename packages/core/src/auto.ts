@@ -615,7 +615,7 @@ export default class Auto {
       ? link(latestRelease.tag_name, latestRelease.html_url)
       : "";
     const { headers } = await this.git.github.request("HEAD /");
-    const access = headers as Record<string, string>;
+    const access = headers as Record<string, string | undefined>;
     const rateLimitRefresh = new Date(
       Number(access["x-ratelimit-reset"]) * 1000
     );
@@ -683,7 +683,7 @@ export default class Auto {
       ${logSuccess(!(permission === 'admin' || permission === 'write'))} Repo Permission:  ${permission}
       ${logSuccess(!user?.login)} User:             ${user?.login}
       ${logSuccess()} API:              ${link(this.git.options.baseUrl!, this.git.options.baseUrl!)}
-      ${logSuccess(!access['x-oauth-scopes'].includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
+      ${logSuccess(!access['x-oauth-scopes']?.includes('repo'))} Enabled Scopes:   ${access['x-oauth-scopes']}
       ${logSuccess(Number(access['x-ratelimit-remaining']) === 0)} Rate Limit:       ${access['x-ratelimit-remaining'] || '∞'}/${access['x-ratelimit-limit'] || '∞'} ${access['ratelimit-reset'] ? `(Renews @ ${tokenRefresh})` : ''}
     `);
     console.log("");
