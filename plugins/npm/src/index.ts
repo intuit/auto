@@ -5,6 +5,7 @@ import path from "path";
 import { Memoize as memoize } from "typescript-memoize";
 import { Octokit } from "@octokit/rest";
 import * as t from "io-ts";
+import { execSync } from "child_process";
 
 import {
   Auto,
@@ -76,7 +77,7 @@ interface IMonorepoPackage {
   version: string;
 }
 
-interface ChangedPackagesArgs {
+interface GetChangedPackagesArgs {
   /** Commit hash to find changes for */
   sha: string;
   /** All of the packages in the monorepo */
@@ -98,21 +99,18 @@ interface ChangedPackagesArgs {
  * we only care about the package that changed, not what other
  * packages that might effect.
  */
-export async function changedPackages({
+export async function getChangedPackages({
   sha,
   packages,
   lernaJson,
   logger,
   version,
-}: ChangedPackagesArgs) {
+}: GetChangedPackagesArgs) {
   const changed = new Set<string>();
-  const changedFiles = await execPromise("git", [
-    "show",
-    "--first-parent",
-    sha,
-    "--name-only",
-    "--pretty=",
-  ]);
+  const changedFiles = execSync(
+    `git --no-pager show --first-parent ${sha} --name-only --pretty=`,
+    { encoding: "utf8" }
+  );
 
   changedFiles.split("\n").forEach((filePath) => {
     const monorepoPackage = packages.find((subPackage) =>
@@ -534,7 +532,7 @@ export default class NPMPlugin implements IPlugin {
 
             const lernaPackages = await this.getLernaPackages();
             const lernaJson = getLernaJson();
-            const packages = await changedPackages({
+            const changedPackages = await getChangedPackages({
               sha: commit.hash,
               packages: lernaPackages,
               lernaJson,
@@ -542,8 +540,8 @@ export default class NPMPlugin implements IPlugin {
               version,
             });
 
-            const section = packages?.length
-              ? packages.map((p) => `\`${p}\``).join(", ")
+            const section = changedPackages?.length
+              ? changedPackages.map((p) => `\`${p}\``).join(", ")
               : "monorepo";
 
             if (section === "monorepo") {
