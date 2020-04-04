@@ -1061,7 +1061,9 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!args.dryRun) {
+      await this.checkClean();
+    }
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -1179,7 +1181,10 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!args.dryRun) {
+      await this.checkClean();
+    }
+
     await this.setGitUser();
 
     const lastRelease = await this.git.getLatestRelease();
