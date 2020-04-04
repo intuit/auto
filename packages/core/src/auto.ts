@@ -509,9 +509,7 @@ export default class Auto {
     this.config = config;
     const repository = await this.getRepo(config);
     const token =
-      (repository && repository.token) ||
-      process.env.GH_TOKEN ||
-      process.env.GITHUB_TOKEN;
+      repository?.token || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 
     if (!token || token === "undefined") {
       this.logger.log.error(
@@ -1593,7 +1591,7 @@ export default class Auto {
     // This will usually resolve to something on head
     const [err, latestTag] = await on(this.git.getLatestTagInBranch());
 
-    if (err && err.message.includes("No names found")) {
+    if (err?.message.includes("No names found")) {
       this.logger.log.error(
         endent`
           Could not find any tags in the local repository. Exiting early.
@@ -1873,7 +1871,7 @@ export default class Auto {
       if (query) {
         const result = await this.git.graphql(query);
 
-        if (result && result[`hash_${commit}`]) {
+        if (result?.[`hash_${commit}`]) {
           pr = String(
             (result[`hash_${commit}`] as ISearchResult).edges[0]?.node?.number
           );

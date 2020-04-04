@@ -56,11 +56,7 @@ export function getParsedPodspecContents(
  */
 export function getVersion(podspecPath: string): string {
   const podspecContents = getParsedPodspecContents(podspecPath);
-  if (
-    podspecContents &&
-    podspecContents.groups &&
-    podspecContents.groups.version
-  ) {
+  if (podspecContents?.groups?.version) {
     return podspecContents.groups.version;
   }
 
@@ -82,7 +78,7 @@ export async function updatePodspecVersion(
   const podspecContents = getPodspecContents(podspecPath);
 
   try {
-    if (parsedContents && parsedContents[0]) {
+    if (parsedContents?.[0]) {
       const newVersionString = parsedContents[0].replace(
         previousVersion,
         version

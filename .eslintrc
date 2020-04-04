@@ -39,7 +39,11 @@
     /* typescript */
 
     "no-undef": 0,
+    "@typescript-eslint/no-unnecessary-type-arguments": 2,
     "@typescript-eslint/no-this-alias": 2,
+    "@typescript-eslint/prefer-for-of": 2,
+    "@typescript-eslint/prefer-as-const": 2,
+    "@typescript-eslint/prefer-optional-chain": 2,
     "@typescript-eslint/no-unnecessary-type-assertion": 2,
     "@typescript-eslint/no-useless-constructor": 2,
     "@typescript-eslint/no-floating-promises": 2,
