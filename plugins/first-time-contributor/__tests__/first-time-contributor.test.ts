@@ -16,7 +16,7 @@ exec.mockReturnValue("");
 jest.spyOn(Auto, "execPromise").mockImplementation(exec);
 
 const setup = (
-  contributors: Partial<Octokit.ReposListContributorsResponseItem>[] = []
+  contributors: Array<Partial<Octokit.ReposListContributorsResponseItem>> = []
 ) => {
   const plugin = new FirstTimeContributor();
   const hooks = makeHooks();

@@ -76,7 +76,7 @@ export default class Changelog {
   readonly options: IGenerateReleaseNotesOptions;
 
   /** The authors in the current changelog */
-  private authors?: [IExtendedCommit, ICommitAuthor][];
+  private authors?: Array<[IExtendedCommit, ICommitAuthor]>;
   /** A logger that uses log levels */
   private readonly logger: ILogger;
 

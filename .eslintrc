@@ -39,11 +39,19 @@
     /* typescript */
 
     "no-undef": 0,
-    "@typescript-eslint/no-this-alias": 2,
+    "@typescript-eslint/no-unnecessary-type-arguments": 2,
     "@typescript-eslint/no-unnecessary-type-assertion": 2,
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": 2,
+    "@typescript-eslint/no-unnecessary-qualifier": 2,
+    "@typescript-eslint/no-this-alias": 2,
     "@typescript-eslint/no-useless-constructor": 2,
-    // if we turn this on babel adds regeneratorRuntime which makes builds harder and larger
-    "@typescript-eslint/promise-function-async": 0,
+    "@typescript-eslint/no-floating-promises": 2,
+    "@typescript-eslint/prefer-as-const": 2,
+    "@typescript-eslint/prefer-for-of": 2,
+    "@typescript-eslint/prefer-optional-chain": 2,
+    "@typescript-eslint/prefer-readonly": 2,
+    "@typescript-eslint/array-type": [2, { "default": "array-simple" }],
+
     // just rely on typescript inference
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/camelcase": 0,

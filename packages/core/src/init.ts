@@ -41,12 +41,12 @@ export interface InteractiveInitHooks {
   /** Add environment variables to get from the user */
   createEnv: AsyncSeriesWaterfallHook<
     [
-      {
+      Array<{
         /** The name of the env var */
         variable: string;
         /** The message to ask the user for the the env var */
         message: string;
-      }[]
+      }>
     ]
   >;
 }

@@ -12,7 +12,7 @@ const log = createLog();
  */
 export default async function execPromise(
   cmd: string,
-  args: (string | undefined | false)[] = []
+  args: Array<string | undefined | false> = []
 ) {
   const callSite = new Error().stack;
   const filteredArgs = args.filter(

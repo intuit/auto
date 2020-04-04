@@ -114,10 +114,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
   private async addReleased(
     auto: Auto,
     commit: IExtendedCommit,
-    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
+    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
   ) {
     const messages = [commit.subject];
-    const isPrerelease = releases.some((r) => r?.data.prerelease);
+    const isPrerelease = releases.some((r) => r.data.prerelease);
 
     if (commit.pullRequest) {
       const branch = (await auto.git?.getPullRequest(commit.pullRequest.number))
@@ -185,7 +185,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     /** Whether the release was a prerelease */
     isPrerelease?: boolean;
     /** All of the releases that happened */
-    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[];
+    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>;
   }) {
     // leave a comment with the new version
     const urls = releases.map((release) =>

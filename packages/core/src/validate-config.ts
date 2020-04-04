@@ -217,7 +217,7 @@ export const validateIoConfiguration = (
   configDeceleration: t.Any | t.HasProps
 ) =>
   /** A function the will validate a configuration based on the configDeceleration */
-  async (rc: unknown): Promise<(ConfigError | string)[]> => {
+  async (rc: unknown): Promise<Array<ConfigError | string>> => {
     const looseRc = configDeceleration.decode(rc);
     const errors = reporter(looseRc);
 
