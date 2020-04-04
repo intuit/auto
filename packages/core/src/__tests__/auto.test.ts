@@ -379,7 +379,7 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      auto.prStatus({ ...required, sha: "1234" });
+      await auto.prStatus({ ...required, sha: "1234" });
       expect(process.exit).toHaveBeenCalled();
       expect(createStatus).toHaveBeenCalled();
     });

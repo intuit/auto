@@ -42,6 +42,7 @@
     "@typescript-eslint/no-this-alias": 2,
     "@typescript-eslint/no-unnecessary-type-assertion": 2,
     "@typescript-eslint/no-useless-constructor": 2,
+    "@typescript-eslint/no-floating-promises": 2,
     // if we turn this on babel adds regeneratorRuntime which makes builds harder and larger
     "@typescript-eslint/promise-function-async": 0,
     // just rely on typescript inference
