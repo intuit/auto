@@ -22,17 +22,6 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should find ignore closed prs 1`] = `
-"#### 🐛 Bug Fix
-
-- Doom Patrol enabled (adam@dierkens.com)
-- Autobots roll out! (adam@dierkens.com)
-
-#### Authors: 1
-
-- Adam Dierkens (adam@dierkens.com)"
-`;
-
 exports[`Release generateReleaseNotes should find matching PRs for shas through search 1`] = `
 "#### 💥 Breaking Change
 
@@ -55,6 +44,17 @@ exports[`Release generateReleaseNotes should get extra user data for login 1`] =
 #### Authors: 1
 
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))"
+`;
+
+exports[`Release generateReleaseNotes should ignore closed prs 1`] = `
+"#### 🐛 Bug Fix
+
+- Doom Patrol enabled (adam@dierkens.com)
+- Autobots roll out! (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
 `;
 
 exports[`Release generateReleaseNotes should include PR-less commits 1`] = `

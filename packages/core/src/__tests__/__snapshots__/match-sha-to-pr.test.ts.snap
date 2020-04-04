@@ -2,7 +2,7 @@
 
 exports[`buildSearchQuery generates a valid query 1`] = `
 "{
-    hash_abc123: search(query: \\"repo:Andrew/test abc123\\", type: ISSUE, first: 1) {
+    hash_abc123: search(query: \\"repo:Andrew/test abc123\\", type: ISSUE, first: 10) {
   edges {
     node {
       ... on PullRequest {
@@ -21,7 +21,7 @@ exports[`buildSearchQuery generates a valid query 1`] = `
   }
 }
 
-hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 1) {
+hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 10) {
   edges {
     node {
       ... on PullRequest {

@@ -1,3 +1,5 @@
+import { execSync } from "child_process";
+
 import * as Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Changelog from "@auto-it/core/dist/changelog";
@@ -5,14 +7,20 @@ import LogParse from "@auto-it/core/dist/log-parse";
 import { defaultLabels } from "@auto-it/core/dist/release";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
+
 import NpmPlugin from "../src";
 
 const exec = jest.fn();
+const execPromise = jest.fn();
 const getLernaPackages = jest.fn();
 const readFileSync = jest.fn();
 
+jest.mock("child_process");
+// @ts-ignore
+execSync.mockImplementation(exec);
+
 jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.spyOn(Auto, "execPromise").mockImplementation(execPromise);
 jest.mock("fs", () => ({
   // @ts-ignore
   existsSync: jest.fn().mockReturnValue(true),
@@ -62,20 +70,22 @@ test("should create sections for packages", async () => {
       },
     ])
   );
-  exec.mockImplementation(async () => {
+  exec.mockImplementation((cmd: string) => {
+    if (!cmd.startsWith("git --no-pager show")) {
+      return;
+    }
+
     changed++;
 
     if (changed === 3) {
-      return Promise.resolve("");
+      return "";
     }
 
     if (changed === 4) {
-      return Promise.resolve("packages/@foobar/release/README.md");
+      return "packages/@foobar/release/README.md";
     }
 
-    return Promise.resolve(
-      "packages/@foobar/release/README.md\npackages/@foobar/party/package.jso"
-    );
+    return "packages/@foobar/release/README.md\npackages/@foobar/party/package.jso";
   });
 
   readFileSync.mockReturnValue("{}");
@@ -120,20 +130,22 @@ test("should add versions for independent packages", async () => {
       },
     ])
   );
-  exec.mockImplementation(async () => {
+  exec.mockImplementation((cmd: string) => {
+    if (!cmd.startsWith("git --no-pager show")) {
+      return;
+    }
+
     changed++;
 
     if (changed === 3) {
-      return Promise.resolve("");
+      return "";
     }
 
     if (changed === 4) {
-      return Promise.resolve("packages/@foobar/release/README.md");
+      return "packages/@foobar/release/README.md";
     }
 
-    return Promise.resolve(
-      "packages/@foobar/release/README.md\npackages/@foobar/party/package.jso"
-    );
+    return "packages/@foobar/release/README.md\npackages/@foobar/party/package.jso";
   });
 
   readFileSync.mockReturnValue('{ "version": "independent" }');
@@ -179,10 +191,9 @@ test("should create extra change logs for sub-packages", async () => {
     ])
   );
 
-  exec.mockImplementation(async () =>
-    Promise.resolve(
+  exec.mockImplementation(
+    async () =>
       "packages/@foobar/release/README.md\npackages/@foobar/party/package.json"
-    )
   );
 
   const plugin = new NpmPlugin();

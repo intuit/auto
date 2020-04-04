@@ -1,8 +1,10 @@
+import { execSync } from "child_process";
+
 import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import NPMPlugin, {
-  changedPackages,
+  getChangedPackages,
   getMonorepoPackage,
   greaterRelease,
   INpmConfig,
@@ -10,11 +12,17 @@ import NPMPlugin, {
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 const exec = jest.fn();
+const execPromise = jest.fn();
 const getLernaPackages = jest.fn();
 const monorepoPackages = jest.fn();
 const existsSync = jest.fn();
 const readFileSync = jest.fn();
 const writeSpy = jest.fn();
+
+jest.mock("child_process");
+// @ts-ignore
+execSync.mockImplementation(exec);
+exec.mockReturnValue("");
 
 jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("master");
 
@@ -22,7 +30,7 @@ let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
 // @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.spyOn(Auto, "execPromise").mockImplementation(execPromise);
 jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
@@ -52,12 +60,12 @@ const monorepoPackagesResult = [
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
 ];
 
-describe("changedPackages ", () => {
+describe("getChangedPackages ", () => {
   test("should return nothing without a package directory", async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
     expect(
-      await changedPackages({
+      await getChangedPackages({
         sha: "sha",
         packages: [],
         lernaJson: {},
@@ -72,7 +80,7 @@ describe("changedPackages ", () => {
     );
 
     expect(
-      await changedPackages({
+      await getChangedPackages({
         sha: "sha",
         packages: [
           {
@@ -98,7 +106,7 @@ describe("changedPackages ", () => {
     );
 
     expect(
-      await changedPackages({
+      await getChangedPackages({
         sha: "sha",
         packages: [
           {
@@ -135,7 +143,7 @@ const prefixRelease = (str: string) => str;
 
 describe("greaterRelease", () => {
   test("should default to packageVersion if not published", async () => {
-    exec.mockImplementationOnce(() => {
+    execPromise.mockImplementationOnce(() => {
       throw new Error("could not find name");
     });
     expect(
@@ -143,13 +151,13 @@ describe("greaterRelease", () => {
     ).toBe("1.0.0");
   });
   test("should default to packageVersion if greatest", async () => {
-    exec.mockReturnValueOnce("0.5.0");
+    execPromise.mockReturnValueOnce("0.5.0");
     expect(
       await greaterRelease(prefixRelease, "test-package-name", "1.0.0")
     ).toBe("1.0.0");
   });
   test("should default to publishedVersion if greatest", async () => {
-    exec.mockReturnValueOnce("1.0.1");
+    execPromise.mockReturnValueOnce("1.0.1");
     expect(
       await greaterRelease(prefixRelease, "test-package-name", "1.0.0")
     ).toBe("1.0.1");
@@ -345,7 +353,7 @@ describe("getPreviousVersion", () => {
       }
     `);
     // published version of test package
-    exec.mockReturnValueOnce("0.1.2");
+    execPromise.mockReturnValueOnce("0.1.2");
 
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
@@ -374,7 +382,7 @@ test("should use string semver if no published package", async () => {
 
 describe("publish", () => {
   beforeEach(() => {
-    exec.mockClear();
+    execPromise.mockClear();
   });
 
   test("should use silly logging in verbose mode", async () => {
@@ -398,7 +406,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npm", [
+    expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
       "--no-commit-hooks",
@@ -428,7 +436,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npm", [
+    expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
       "--no-commit-hooks",
@@ -459,7 +467,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npx", [
+    expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
       "patch",
@@ -495,7 +503,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npx", [
+    expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
       "patch",
@@ -531,7 +539,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npx", [
+    expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
       "patch",
@@ -560,7 +568,7 @@ describe("publish", () => {
     existsSync.mockReturnValueOnce(true);
 
     await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npx", [
+    expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
       "--yes",
@@ -580,7 +588,7 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    exec.mockReturnValueOnce("1.0.0");
+    execPromise.mockReturnValueOnce("1.0.0");
 
     readResult = `
       {
@@ -590,7 +598,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npm", [
+    expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       "1.0.1",
       "--no-commit-hooks",
@@ -613,7 +621,7 @@ describe("publish", () => {
 
     existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
-    exec.mockReturnValueOnce("1.0.0");
+    execPromise.mockReturnValueOnce("1.0.0");
 
     readResult = `
       {
@@ -622,7 +630,7 @@ describe("publish", () => {
     `;
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenNthCalledWith(2, "npx", [
+    expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
       "lerna",
       "version",
       "1.0.1",
@@ -656,13 +664,13 @@ describe("publish", () => {
     `;
 
     await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenCalledWith("npm", ["publish"]);
+    expect(execPromise).toHaveBeenCalledWith("npm", ["publish"]);
   });
 });
 
 describe("canary", () => {
   beforeEach(() => {
-    exec.mockClear();
+    execPromise.mockClear();
   });
 
   test("use npm for normal package", async () => {
@@ -689,8 +697,8 @@ describe("canary", () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, ".123.1");
-    expect(exec.mock.calls[0]).toContain("npm");
-    expect(exec.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[0]).toContain("npm");
+    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
   });
 
   test("use lerna for monorepo package", async () => {
@@ -732,7 +740,7 @@ describe("canary", () => {
     );
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
-    expect(exec.mock.calls[0][1]).toContain("lerna");
+    expect(execPromise.mock.calls[0][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
   });
@@ -817,7 +825,7 @@ describe("canary", () => {
     );
 
     await hooks.version.promise(Auto.SEMVER.patch);
-    expect(exec).toHaveBeenNthCalledWith(1, "npx", [
+    expect(execPromise).toHaveBeenNthCalledWith(1, "npx", [
       "lerna",
       "version",
       "patch",
@@ -921,7 +929,7 @@ describe("canary", () => {
 
 describe("next", () => {
   beforeEach(() => {
-    exec.mockClear();
+    execPromise.mockClear();
   });
 
   test("works in single package", async () => {
@@ -953,19 +961,27 @@ describe("next", () => {
       "1.2.4-next.0",
     ]);
 
-    expect(exec).toHaveBeenCalledWith("npm", [
+    expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       "1.2.4-next.0",
       "--no-git-tag-version",
     ]);
-    expect(exec).toHaveBeenCalledWith("git", [
+    expect(execPromise).toHaveBeenCalledWith("git", [
       "tag",
       "1.2.4-next.0",
       "-m",
       '"Update version to 1.2.4-next.0"',
     ]);
-    expect(exec).toHaveBeenCalledWith("git", ["push", "origin", "--tags"]);
-    expect(exec).toHaveBeenCalledWith("npm", ["publish", "--tag", "next"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "--tags",
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--tag",
+      "next",
+    ]);
   });
 
   test("works in monorepo", async () => {
@@ -975,8 +991,8 @@ describe("next", () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "1.2.3" }');
-    exec.mockReturnValueOnce("");
-    exec.mockReturnValueOnce("1.2.4-next.0");
+    execPromise.mockReturnValueOnce("");
+    execPromise.mockReturnValueOnce("1.2.4-next.0");
 
     plugin.apply(({
       config: { prereleaseBranches: ["next"] },
@@ -996,11 +1012,15 @@ describe("next", () => {
       "1.2.4-next.0",
     ]);
 
-    expect(exec).toHaveBeenCalledWith(
+    expect(execPromise).toHaveBeenCalledWith(
       "npx",
       expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
     );
-    expect(exec).toHaveBeenCalledWith("git", ["push", "origin", "--tags"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "--tags",
+    ]);
   });
 
   test("works in monorepo - independent", async () => {
@@ -1010,8 +1030,8 @@ describe("next", () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
-    exec.mockReturnValueOnce("");
-    exec.mockReturnValueOnce("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
+    execPromise.mockReturnValueOnce("");
+    execPromise.mockReturnValueOnce("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
 
     plugin.apply(({
       config: { prereleaseBranches: ["next"] },
@@ -1031,11 +1051,15 @@ describe("next", () => {
       "@foo/2@2.0.0-next.0",
     ]);
 
-    expect(exec).toHaveBeenCalledWith(
+    expect(execPromise).toHaveBeenCalledWith(
       "npx",
       expect.arrayContaining(["lerna", "publish", "prerelease"])
     );
-    expect(exec).toHaveBeenCalledWith("git", ["push", "origin", "--tags"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "--tags",
+    ]);
   });
 });
 
@@ -1045,7 +1069,7 @@ describe("makeRelease", () => {
     const hooks = makeHooks();
 
     // isMonorepo
-    exec.mockReturnValue("@packages/a\n@packages/b");
+    execPromise.mockReturnValue("@packages/a\n@packages/b");
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
     readFileSync.mockReturnValue(
       '{ "name": "test", "version": "independent" }'
@@ -1112,7 +1136,7 @@ describe("beforeCommitChangelog", () => {
     const hooks = makeHooks();
 
     // isMonorepo
-    exec.mockReturnValue("@packages/a\n@packages/b");
+    execPromise.mockReturnValue("@packages/a\n@packages/b");
     existsSync.mockReturnValueOnce(true);
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
