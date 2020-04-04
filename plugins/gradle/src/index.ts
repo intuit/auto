@@ -97,7 +97,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   }
 
   /** update gradle version and commit */
-  private updateGradleVersion = async (
+  private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
     buildFlag = true

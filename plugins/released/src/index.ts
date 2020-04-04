@@ -117,7 +117,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
     releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
   ) {
     const messages = [commit.subject];
-    const isPrerelease = releases.some((r) => r?.data.prerelease);
+    const isPrerelease = releases.some((r) => r.data.prerelease);
 
     if (commit.pullRequest) {
       const branch = (await auto.git?.getPullRequest(commit.pullRequest.number))
