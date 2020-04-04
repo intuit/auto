@@ -1407,7 +1407,7 @@ export default class Auto {
 
     const version = await this.getVersion(options);
 
-    this.logger.log.success(`Calculated version bump: ${version}`);
+    this.logger.log.success(`Calculated version bump: ${version || "none"}`);
 
     if (version === "") {
       this.logger.log.info("No version published.");
@@ -1591,7 +1591,9 @@ export default class Auto {
     // This will usually resolve to something on head
     const [err, latestTag] = await on(this.git.getLatestTagInBranch());
 
-    if (err?.message.includes("No names found")) {
+    // If its a dry run we want to show what would happen. Otherwise no
+    // tags indicates that something would definitely go wrong.
+    if (err?.message.includes("No names found") && !args.dryRun) {
       this.logger.log.error(
         endent`
           Could not find any tags in the local repository. Exiting early.
