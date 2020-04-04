@@ -134,7 +134,7 @@ export default class SlackPlugin implements IPlugin {
     auto: Auto,
     newVersion: string,
     releaseNotes: string,
-    releases: Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
+    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
   ) {
     if (!auto.git) {
       return;

@@ -154,7 +154,7 @@ export interface IAutoHooks {
         /** The response from creating the new release. */
         response?:
           | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-          | Octokit.Response<Octokit.ReposCreateReleaseResponse>[];
+          | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>;
       }
     ]
   >;
@@ -177,7 +177,7 @@ export interface IAutoHooks {
       }
     ],
     | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-    | Octokit.Response<Octokit.ReposCreateReleaseResponse>[]
+    | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
     | void
   >;
   /** Get git author. Typically from a package distribution description file. */

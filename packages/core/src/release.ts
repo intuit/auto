@@ -258,7 +258,7 @@ export default class Release {
       return uniqueCommits;
     }
 
-    const commitsInRelease: (IExtendedCommit | undefined)[] = [
+    const commitsInRelease: Array<IExtendedCommit | undefined> = [
       ...uniqueCommits,
     ];
     const logParse = await this.createLogParse();
@@ -635,13 +635,13 @@ export default class Release {
   /** Parse the commit for information about the author and any other author that might have helped. */
   private async attachAuthor(commit: IExtendedCommit) {
     const modifiedCommit = { ...commit };
-    let resolvedAuthors: (
+    let resolvedAuthors: Array<
       | (ICommitAuthor & {
           /** The GitHub user name of the git committer */
           login?: string;
         })
       | Partial<Octokit.UsersGetByUsernameResponse>
-    )[] = [];
+    > = [];
 
     // If there is a pull request we will attempt to get the authors
     // from any commit in the PR
