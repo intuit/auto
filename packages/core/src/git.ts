@@ -318,11 +318,21 @@ export default class Git {
   @memoize()
   async getGitLog(start: string, end = "HEAD"): Promise<ICommit[]> {
     try {
+      const first = await this.getFirstCommit();
+      // This "shaExists" is just so we don't have to refactor all the tests
+      // in auto.test.ts. If the SHA doesn't really exist then the call to
+      // gitlog will fail too.
+      const startSha = (await this.shaExists(start))
+        ? await execPromise("git", ["rev-parse", start])
+        : "";
+
       const log = await gitlog<ICommit>({
         repo: process.cwd(),
         number: Number.MAX_SAFE_INTEGER,
         fields: ["hash", "authorName", "authorEmail", "rawBody"],
-        branch: `${start.trim()}..${end.trim()}`,
+        // If start === firstCommit then we want to include that commit in the changelog
+        // Otherwise it was that last release and should not be included in the release.
+        branch: first === startSha ? end : `${start.trim()}..${end.trim()}`,
         execOptions: { maxBuffer: 1000 * 1024 },
       });
 
@@ -334,6 +344,7 @@ export default class Git {
         files: (commit.files || []).map((file) => path.resolve(file)),
       }));
     } catch (error) {
+      console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {

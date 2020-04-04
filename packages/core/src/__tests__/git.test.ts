@@ -210,7 +210,7 @@ describe("github", () => {
     expect(await gh.getLastTagNotInBaseBranch("alpha")).toBe("0.4.0-alpha.1");
   });
 
-  test("getGitLog ", async () => {
+  test("getGitLog", async () => {
     const gh = new Git(options);
 
     expect(
