@@ -1,3 +1,16 @@
+# v9.25.2 (Fri Apr 03 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Changelog bugs [#1111](https://github.com/intuit/auto/pull/1111) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.25.1 (Fri Apr 03 2020)
 
 #### 🐛 Bug Fix
