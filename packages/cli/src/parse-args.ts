@@ -465,6 +465,8 @@ export const commands: AutoCommand[] = [
           'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.',
         config: true,
       },
+      name,
+      email,
     ],
   },
   {
@@ -474,7 +476,7 @@ export const commands: AutoCommand[] = [
       Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
     `,
     examples: ["{green $} auto latest"],
-    options: [baseBranch, dryRun],
+    options: [name, email, baseBranch, dryRun],
   },
   {
     name: "canary",
