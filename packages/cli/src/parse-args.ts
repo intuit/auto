@@ -186,10 +186,36 @@ const message: AutoOption = {
   alias: "m",
 };
 
+const changelogTitle: AutoOption = {
+  name: "title",
+  type: String,
+  group: "main",
+  description: "Override the title used in the addition to the CHANGELOG.md.",
+};
+
+const changelogCommitMessage: AutoOption = {
+  ...message,
+  description:
+    "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'",
+  config: true,
+};
+
 interface AutoCommand extends Command {
   /** Options for the command */
   options?: AutoOption[];
 }
+
+const latestCommandArgs: AutoOption[] = [
+  name,
+  email,
+  onlyPublishWithReleaseLabel,
+  baseBranch,
+  dryRun,
+  noVersionPrefix,
+  prerelease,
+  changelogTitle,
+  changelogCommitMessage,
+];
 
 export const commands: AutoCommand[] = [
   {
@@ -385,19 +411,8 @@ export const commands: AutoCommand[] = [
         group: "main",
         description: "Tag to end changelog generation on. Defaults to HEAD.",
       },
-      {
-        name: "title",
-        type: String,
-        group: "main",
-        description:
-          "Override the title used in the addition to the CHANGELOG.md.",
-      },
-      {
-        ...message,
-        description:
-          "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'",
-        config: true,
-      },
+      changelogTitle,
+      changelogCommitMessage,
       baseBranch,
     ],
     examples: [
@@ -455,9 +470,7 @@ export const commands: AutoCommand[] = [
     `,
     examples: ["{green $} auto shipit"],
     options: [
-      baseBranch,
-      dryRun,
-      onlyPublishWithReleaseLabel,
+      ...latestCommandArgs,
       {
         name: "only-graduate-with-release-label",
         type: Boolean,
@@ -467,10 +480,6 @@ export const commands: AutoCommand[] = [
           'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.',
         config: true,
       },
-      name,
-      email,
-      noVersionPrefix,
-      prerelease,
     ],
   },
   {
@@ -480,15 +489,7 @@ export const commands: AutoCommand[] = [
       Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
     `,
     examples: ["{green $} auto latest"],
-    options: [
-      name,
-      email,
-      onlyPublishWithReleaseLabel,
-      baseBranch,
-      dryRun,
-      noVersionPrefix,
-      prerelease,
-    ],
+    options: latestCommandArgs,
   },
   {
     name: "canary",
