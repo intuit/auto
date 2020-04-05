@@ -1,3 +1,15 @@
+# v9.26.0 (Sun Apr 05 2020)
+
+#### 🚀 Enhancement
+
+- Add most flags for version+changelog+release to shipit/latest [#1117](https://github.com/intuit/auto/pull/1117) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.25.0 (Thu Apr 02 2020)
 
 #### 🚀 Enhancement
