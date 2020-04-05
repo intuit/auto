@@ -1,3 +1,16 @@
+# v9.25.4 (Sat Apr 04 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - include first commit in changelogs [#1115](https://github.com/intuit/auto/pull/1115) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.25.3 (Sat Apr 04 2020)
 
 #### 🐛 Bug Fix
