@@ -65,6 +65,14 @@ const version: AutoOption = {
   group: "global",
 };
 
+const prerelease: AutoOption = {
+  name: "prerelease",
+  type: Boolean,
+  group: "main",
+  description: "Publish a prerelease on GitHub.",
+  config: true,
+};
+
 const onlyPublishWithReleaseLabel: AutoOption = {
   name: "only-publish-with-release-label",
   type: Boolean,
@@ -427,13 +435,7 @@ export const commands: AutoCommand[] = [
           "Version number to publish as. Defaults to reading from the package definition for the platform.",
       },
       baseBranch,
-      {
-        name: "prerelease",
-        type: Boolean,
-        group: "main",
-        description: "Publish a prerelease.",
-        config: true,
-      },
+      prerelease,
     ],
     examples: [
       "{green $} auto release",
@@ -468,6 +470,7 @@ export const commands: AutoCommand[] = [
       name,
       email,
       noVersionPrefix,
+      prerelease,
     ],
   },
   {
@@ -484,6 +487,7 @@ export const commands: AutoCommand[] = [
       baseBranch,
       dryRun,
       noVersionPrefix,
+      prerelease,
     ],
   },
   {
