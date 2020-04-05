@@ -467,6 +467,7 @@ export const commands: AutoCommand[] = [
       },
       name,
       email,
+      noVersionPrefix,
     ],
   },
   {
@@ -476,7 +477,14 @@ export const commands: AutoCommand[] = [
       Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
     `,
     examples: ["{green $} auto latest"],
-    options: [name, email, onlyPublishWithReleaseLabel, baseBranch, dryRun],
+    options: [
+      name,
+      email,
+      onlyPublishWithReleaseLabel,
+      baseBranch,
+      dryRun,
+      noVersionPrefix,
+    ],
   },
   {
     name: "canary",
