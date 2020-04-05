@@ -1,20 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`github getGitLog  1`] = `
-Array [
-  Object {
-    "authorEmail": "lisowski54@gmail.com",
-    "authorName": "Andrew Lisowski",
-    "files": Array [
-      "<PROJECT_ROOT>/src/__tests__/git.test.ts",
-    ],
-    "hash": "a7f6634429731055a5a44bae24ac88c5f9822e58",
-    "subject": "update tests
-",
-  },
-]
-`;
-
 exports[`github getGitLog - merge commits 1`] = `
 Object {
   "authorEmail": "lisowski54@gmail.com",
@@ -31,4 +16,73 @@ Object {
 
 determine if branch behind remote and exit before trying to publish",
 }
+`;
+
+exports[`github getGitLog 1`] = `
+Array [
+  Object {
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
+    "files": Array [
+      "<PROJECT_ROOT>/src/__tests__/git.test.ts",
+    ],
+    "hash": "a7f6634429731055a5a44bae24ac88c5f9822e58",
+    "subject": "update tests
+",
+  },
+  Object {
+    "authorEmail": "lisowski54@gmail.com",
+    "authorName": "Andrew Lisowski",
+    "files": Array [
+      "<PROJECT_ROOT>/.circleci/config.yml",
+      "<PROJECT_ROOT>/.gitignore",
+      "<PROJECT_ROOT>/.vscode/settings.json",
+      "<PROJECT_ROOT>/CHANGELOG.md",
+      "<PROJECT_ROOT>/LICENSE",
+      "<PROJECT_ROOT>/README.md",
+      "<PROJECT_ROOT>/package.json",
+      "<PROJECT_ROOT>/scripts/post-install.sh",
+      "<PROJECT_ROOT>/scripts/release.sh",
+      "<PROJECT_ROOT>/src/__tests__/__snapshots__/git.test.ts.snap",
+      "<PROJECT_ROOT>/src/__tests__/__snapshots__/log-parse.test.ts.snap",
+      "<PROJECT_ROOT>/src/__tests__/__snapshots__/main.test.ts.snap",
+      "<PROJECT_ROOT>/src/__tests__/git-changed-packages.test.ts",
+      "<PROJECT_ROOT>/src/__tests__/git.test.ts",
+      "<PROJECT_ROOT>/src/__tests__/github-responses/bad-credentials.json",
+      "<PROJECT_ROOT>/src/__tests__/github-responses/pr-labels.json",
+      "<PROJECT_ROOT>/src/__tests__/log-parse.test.ts",
+      "<PROJECT_ROOT>/src/__tests__/main.test.ts",
+      "<PROJECT_ROOT>/src/__tests__/make-commit-from-msg.ts",
+      "<PROJECT_ROOT>/src/__tests__/semver.test.ts",
+      "<PROJECT_ROOT>/src/auto-rc.json",
+      "<PROJECT_ROOT>/src/bin/__tests__/bin.test.ts",
+      "<PROJECT_ROOT>/src/bin/auto.ts",
+      "<PROJECT_ROOT>/src/cli/__tests__/args.test.ts",
+      "<PROJECT_ROOT>/src/cli/args.ts",
+      "<PROJECT_ROOT>/src/git.ts",
+      "<PROJECT_ROOT>/src/log-parse.ts",
+      "<PROJECT_ROOT>/src/main.ts",
+      "<PROJECT_ROOT>/src/semver.ts",
+      "<PROJECT_ROOT>/src/types/parse-git.d.ts",
+      "<PROJECT_ROOT>/src/types/registry-url.d.ts",
+      "<PROJECT_ROOT>/src/utils/__tests__/__snapshots__/slack.test.ts.snap",
+      "<PROJECT_ROOT>/src/utils/__tests__/exec-promise.test.ts",
+      "<PROJECT_ROOT>/src/utils/__tests__/github-token.test.ts",
+      "<PROJECT_ROOT>/src/utils/__tests__/package-config.test.ts",
+      "<PROJECT_ROOT>/src/utils/__tests__/slack.test.ts",
+      "<PROJECT_ROOT>/src/utils/exec-promise.ts",
+      "<PROJECT_ROOT>/src/utils/github-token.ts",
+      "<PROJECT_ROOT>/src/utils/logger.ts",
+      "<PROJECT_ROOT>/src/utils/package-config.ts",
+      "<PROJECT_ROOT>/src/utils/slack.ts",
+      "<PROJECT_ROOT>/tsconfig.build.json",
+      "<PROJECT_ROOT>/tsconfig.json",
+      "<PROJECT_ROOT>/tslint.json",
+      "<PROJECT_ROOT>/yarn.lock",
+    ],
+    "hash": "0b2af75d8b55c8869cda93d0e5589ad9f2677e18",
+    "subject": "init
+",
+  },
+]
 `;
