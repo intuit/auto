@@ -1,3 +1,19 @@
+# v9.25.3 (Sat Apr 04 2020)
+
+#### 🐛 Bug Fix
+
+- --dry-run improvements [#1114](https://github.com/intuit/auto/pull/1114) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- Turn on eslint rules that would have prevented last bug [#1112](https://github.com/intuit/auto/pull/1112) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.25.2 (Fri Apr 03 2020)
 
 #### 🐛 Bug Fix
