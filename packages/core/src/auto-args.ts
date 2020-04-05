@@ -49,62 +49,92 @@ export type IVersionOptions = ReleaseCalculationOptions & {
   from?: string;
 };
 
-export interface IChangelogOptions extends Partial<AuthorInformation> {
+interface NoVersionPrefix {
   /** Whether to prefix the version with a "v" */
   noVersionPrefix?: boolean;
+}
+
+interface DryRun {
   /** Do not actually do anything */
   dryRun?: boolean;
-  /** Commit to start calculating the changelog from */
-  from?: string;
-  /** Commit to start calculating the changelog to */
-  to?: string;
+}
+
+interface ChangelogMessage {
   /** The commit message to commit the changelog changes with */
   message?: string;
+}
+
+interface ChangelogTitle {
   /** Override the title use in the addition to the CHANGELOG.md. */
   title?: string;
 }
 
-export interface IReleaseOptions extends Partial<RepoInformation> {
-  /** Whether to prefix the version with a "v" */
-  noVersionPrefix?: boolean;
-  /** Do not actually do anything */
-  dryRun?: boolean;
-  /** Commit to start calculating the release from */
-  from?: string;
-  /** Override the version to release */
-  useVersion?: string;
+interface Prerelease {
   /** Create a prerelease */
   prerelease?: boolean;
 }
 
-export interface ICommentOptions {
+interface BaseBranch {
+  /** The branch to treat as the base. Default is master */
+  baseBranch?: string;
+}
+
+export type IChangelogOptions = BaseBranch &
+  ChangelogTitle &
+  ChangelogMessage &
+  DryRun &
+  NoVersionPrefix &
+  Partial<AuthorInformation> & {
+    /** Commit to start calculating the changelog from */
+    from?: string;
+    /** Commit to start calculating the changelog to */
+    to?: string;
+  };
+
+export type IReleaseOptions = BaseBranch &
+  Prerelease &
+  DryRun &
+  NoVersionPrefix &
+  Partial<AuthorInformation> &
+  Partial<RepoInformation> & {
+    /** Commit to start calculating the release from */
+    from?: string;
+    /** Override the version to release */
+    useVersion?: string;
+  };
+
+export type ICommentOptions = DryRun & {
   /** The message to use when commenting */
   message?: string;
   /** THe PR to comment on */
   pr?: number;
   /** The context the message should be attached to. Use to post multiple comments to a PR */
   context?: string;
-  /** Do not actually do anything */
-  dryRun?: boolean;
   /** Delete the previous comment */
   delete?: boolean;
   /** Instead of deleting/adding a new comment. Just edit the old one */
   edit?: boolean;
-}
+};
 
 export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
-export interface IShipItOptions {
-  /** Do not actually do anything */
-  dryRun?: boolean;
-  /**
-   * Make auto publish prerelease versions when merging to master.
-   * Only PRs merged with "release" label will generate a "latest" release.
-   * Only use this flag if you do not want to maintain a prerelease branch,
-   * and instead only want to use master.
-   */
-  onlyGraduateWithReleaseLabel?: boolean;
-}
+export type IShipItOptions = BaseBranch &
+  Prerelease &
+  NoVersionPrefix &
+  ChangelogMessage &
+  ChangelogTitle &
+  DryRun &
+  Partial<AuthorInformation> &
+  Partial<RepoInformation> &
+  ReleaseCalculationOptions & {
+    /**
+     * Make auto publish prerelease versions when merging to master.
+     * Only PRs merged with "release" label will generate a "latest" release.
+     * Only use this flag if you do not want to maintain a prerelease branch,
+     * and instead only want to use master.
+     */
+    onlyGraduateWithReleaseLabel?: boolean;
+  };
 
 export interface ICanaryOptions {
   /** Do not actually do anything */

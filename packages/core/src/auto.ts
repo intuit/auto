@@ -1269,8 +1269,8 @@ export default class Auto {
    * 4. Create a release
    */
   async shipit(args: IShipItOptions = {}) {
-    const options: IShipItOptions = {
-      ...this.getCommandDefault("shipit"),
+    const options = {
+      ...(this.getCommandDefault("shipit") as IShipItOptions),
       ...args,
     };
 
