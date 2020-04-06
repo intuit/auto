@@ -303,7 +303,7 @@ export default class Auto {
   options: ApiOptions;
   /** The branch auto uses as master. */
   baseBranch: string;
-  /** The remote git to push changes to */
+  /** The remote git to push changes to. This is the full URL with auth */
   remote!: string;
   /** The user configuration of auto (.autorc) */
   config?: LoadedAutoRc;
@@ -1187,8 +1187,22 @@ export default class Auto {
 
     await this.setGitUser();
 
-    const lastRelease = await this.git.getLatestRelease();
-    const lastTag = await this.git.getLatestTagInBranch();
+    const currentBranch = getCurrentBranch();
+    const initialForkCommit = (
+      (
+        await execPromise("git", [
+          "rev-list",
+          "--boundary",
+          `${currentBranch}...origin/${this.baseBranch}`,
+          "--left-only",
+        ])
+      )
+        .split("\n")
+        .filter((line) => line.startsWith("-"))[0] || ""
+    ).slice(1);
+    const lastRelease =
+      initialForkCommit || (await this.git.getLatestRelease());
+    const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1198,8 +1212,13 @@ export default class Auto {
 
     if (options.dryRun) {
       this.logger.log.success(
-        `Would have created prerelease version with: ${bump}`
+        `Would have created prerelease version with: ${bump} from ${lastTag}`
       );
+
+      this.logger.log.info("Full Release notes for next release:");
+      console.log(await this.release.generateReleaseNotes(lastRelease));
+      this.logger.log.info("Release notes for last change in next release");
+      console.log(releaseNotes);
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
@@ -1549,7 +1568,7 @@ export default class Auto {
     const bump = await this.release.getSemverBump(lastRelease, to);
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      to || undefined,
+      to,
       this.versionBump
     );
 

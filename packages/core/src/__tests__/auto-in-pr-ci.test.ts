@@ -3,6 +3,13 @@ import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import endent from "endent";
+import execPromise from "../utils/exec-promise";
+
+const exec = jest.fn();
+jest.mock("../utils/exec-promise");
+// @ts-ignore
+execPromise.mockImplementation(exec);
+exec.mockResolvedValue("");
 
 jest.mock("env-ci", () => () => ({
   pr: 123,
@@ -160,6 +167,7 @@ describe("next in ci", () => {
   test("should post comment with new version", async () => {
     const auto = new Auto({ ...defaults, plugins: [] });
 
+    exec.mockResolvedValue("v1.0.0");
     // @ts-ignore
     auto.checkClean = () => Promise.resolve(true);
     const prBody = jest.fn();

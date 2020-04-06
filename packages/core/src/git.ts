@@ -17,7 +17,7 @@ import { ILabelDefinition } from "./release";
 import verifyAuth from "./utils/verify-auth";
 import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
-import { gt } from "semver";
+import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
 import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
 
@@ -822,14 +822,21 @@ export default class Git {
       .filter(Boolean);
   }
 
-  /** Get the last tag that isn't in the base branch */
-  async getLastTagNotInBaseBranch(branch: string) {
+  /** Get the a tag that isn't in the base branch */
+  async getTagNotInBaseBranch(
+    branch: string,
+    options: {
+      /** Return the first tag not in baseBrach, defaults to last tag. */
+      first?: boolean;
+    } = {}
+  ) {
     const baseTags = (
       await this.getTags(`origin/${this.options.baseBranch}`)
     ).reverse();
     const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
+    const comparator = options.first ? lt : gt;
     const firstGreatestUnique = branchTags.reduce((result, tag) => {
-      if (!baseTags.includes(tag) && (!result || gt(tag, result))) {
+      if (!baseTags.includes(tag) && (!result || comparator(tag, result))) {
         return tag;
       }
 
@@ -838,9 +845,17 @@ export default class Git {
 
     this.logger.verbose.info("Tags found in base branch:", baseTags);
     this.logger.verbose.info("Tags found in branch:", branchTags);
-    this.logger.verbose.info("Latest tag in branch:", firstGreatestUnique);
+    this.logger.verbose.info(
+      `${options.first ? "First" : "Latest"} tag in branch:`,
+      firstGreatestUnique
+    );
 
     return firstGreatestUnique;
+  }
+
+  /** Get the last tag that isn't in the base branch */
+  async getLastTagNotInBaseBranch(branch: string) {
+    return this.getTagNotInBaseBranch(branch);
   }
 
   /** Determine the pull request for a commit hash */
