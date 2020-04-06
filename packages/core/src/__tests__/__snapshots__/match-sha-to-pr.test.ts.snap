@@ -9,6 +9,10 @@ exports[`buildSearchQuery generates a valid query 1`] = `
         number
         state
         body
+        headRefName
+        headRepositoryOwner {
+          login
+        }
         labels(first: 10) {
           edges {
             node {
@@ -28,6 +32,10 @@ hash_3def78: search(query: \\"repo:Andrew/test 3def78\\", type: ISSUE, first: 10
         number
         state
         body
+        headRefName
+        headRepositoryOwner {
+          login
+        }
         labels(first: 10) {
           edges {
             node {

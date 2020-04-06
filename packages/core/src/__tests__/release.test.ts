@@ -9,6 +9,7 @@ import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import child from "child_process";
+import { getCurrentBranch } from "../utils/get-current-branch";
 
 const { execSync } = child;
 const exec = jest.fn();
@@ -92,6 +93,12 @@ getGitLog.mockReturnValue([]);
 const execSpy = jest.fn();
 // @ts-ignore
 jest.mock("../utils/exec-promise.ts", () => (...args) => execSpy(...args));
+
+const currentBranch = jest.fn();
+currentBranch.mockReturnValue("master");
+jest.mock("../utils/get-current-branch.ts");
+// @ts-ignore
+getCurrentBranch.mockImplementation(currentBranch);
 
 const existsSync = jest.fn();
 const writeSpy = jest.fn();
@@ -744,6 +751,45 @@ describe("Release", () => {
                   edges: [{ node: { name: "major" } }],
                 },
                 state: "CLOSED",
+              },
+            },
+          ],
+        },
+        // PR with no label, should become patch
+        hash_2: {
+          edges: [{ node: { labels: undefined, state: "MERGED" } }],
+        },
+      });
+
+      expect(await gh.generateReleaseNotes("1234", "123")).toMatchSnapshot();
+    });
+
+    test("should detect pre-release branches", async () => {
+      const gh = new Release(git);
+
+      getGitLog.mockReturnValueOnce([
+        makeCommitFromMsg("Doom Patrol enabled", {
+          hash: "1",
+        }),
+        makeCommitFromMsg("Autobots roll out!", {
+          hash: "2",
+        }),
+      ]);
+
+      currentBranch.mockReturnValue("next");
+      graphql.mockReturnValueOnce({
+        hash_1: {
+          edges: [
+            {
+              node: {
+                labels: {
+                  edges: [{ node: { name: "major" } }],
+                },
+                state: "CLOSED",
+                headRefName: "next",
+                headRepositoryOwner: {
+                  login: "test",
+                },
               },
             },
           ],
