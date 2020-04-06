@@ -1,3 +1,16 @@
+# v9.26.2 (Mon Apr 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - ensure commits pushed directly to next branch are labelled correctly in next-PR changelog [#1123](https://github.com/intuit/auto/pull/1123) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.1 (Sun Apr 05 2020)
 
 #### 🐛 Bug Fix
