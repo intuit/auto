@@ -1193,7 +1193,7 @@ export default class Auto {
         await execPromise("git", [
           "rev-list",
           "--boundary",
-          `${currentBranch}...master`,
+          `${currentBranch}...${this.remote}/${this.baseBranch}`,
           "--left-only",
         ])
       )
