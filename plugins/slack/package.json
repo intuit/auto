@@ -39,7 +39,7 @@
   "dependencies": {
     "@atomist/slack-messages": "~1.1.0",
     "@auto-it/core": "link:../../packages/core",
-    "@octokit/rest": "16.43.1",
+    "@octokit/rest": "17.1.4",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "node-fetch": "2.6.0",

@@ -43,7 +43,7 @@
     "@octokit/plugin-enterprise-compatibility": "1.2.2",
     "@octokit/plugin-retry": "3.0.1",
     "@octokit/plugin-throttling": "^3.2.0",
-    "@octokit/rest": "16.43.1",
+    "@octokit/rest": "17.1.4",
     "await-to-js": "^2.1.1",
     "chalk": "^3.0.0",
     "cosmiconfig": "6.0.0",

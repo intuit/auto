@@ -47,6 +47,6 @@
     "tslib": "1.11.1"
   },
   "devDependencies": {
-    "@octokit/rest": "^16.28.1"
+    "@octokit/rest": "^17.1.4"
   }
 }
