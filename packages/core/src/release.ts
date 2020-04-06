@@ -276,7 +276,13 @@ export default class Release {
           Boolean(result[1])
         )
         .map(([key, result]) =>
-          processQueryResult(key, result, commitsWithoutPR)
+          processQueryResult({
+            sha: key,
+            result,
+            commitsWithoutPR,
+            owner: this.git.options.owner,
+            prereleaseBranches: this.config.prereleaseBranches,
+          })
         )
         .filter((commit): commit is IExtendedCommit => Boolean(commit))
         .map(async (commit) => {

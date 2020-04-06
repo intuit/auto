@@ -95,12 +95,15 @@ export default class Changelog {
           currentBranch) ||
         options.baseBranch;
 
-      this.options.labels.push({
-        name: "pushToBaseBranch",
-        changelogTitle: `⚠️  Pushed to \`${branch}\``,
-        description: "N/A",
-        releaseType: SEMVER.patch,
-      });
+      this.options.labels = [
+        ...this.options.labels,
+        {
+          name: "pushToBaseBranch",
+          changelogTitle: `⚠️  Pushed to \`${branch}\``,
+          description: "N/A",
+          releaseType: SEMVER.patch,
+        },
+      ];
     }
   }
 
