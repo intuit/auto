@@ -1,3 +1,31 @@
+# v9.26.3 (Mon Apr 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Improve next branch preview changelog [#1132](https://github.com/intuit/auto/pull/1132) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump pkg from 4.4.5 to 4.4.6 [#1127](https://github.com/intuit/auto/pull/1127) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node from 13.9.3 to 13.11.0 [#1131](https://github.com/intuit/auto/pull/1131) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump twitter-text from 3.0.1 to 3.1.0 [#1128](https://github.com/intuit/auto/pull/1128) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.0.2 to 2.0.4 [#1126](https://github.com/intuit/auto/pull/1126) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.26.0 to 2.27.0 [#1124](https://github.com/intuit/auto/pull/1124) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump @types/jest from 25.1.4 to 25.2.1 [#1130](https://github.com/intuit/auto/pull/1130) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump graphql from 14.6.0 to 15.0.0 [#1129](https://github.com/intuit/auto/pull/1129) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.14.0 to 6.14.1 [#1125](https://github.com/intuit/auto/pull/1125) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.2 (Mon Apr 06 2020)
 
 #### 🐛 Bug Fix

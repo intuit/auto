@@ -1,3 +1,21 @@
+# v9.26.3 (Mon Apr 06 2020)
+
+#### 🐛 Bug Fix
+
+- Improve next branch preview changelog [#1132](https://github.com/intuit/auto/pull/1132) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/jest from 25.1.4 to 25.2.1 [#1130](https://github.com/intuit/auto/pull/1130) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 14.6.0 to 15.0.0 [#1129](https://github.com/intuit/auto/pull/1129) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.2 (Mon Apr 06 2020)
 
 #### 🐛 Bug Fix
