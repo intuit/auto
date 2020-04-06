@@ -64,15 +64,11 @@ export function calculateSemVerBump(
     });
   });
 
-  let skipRelease = false;
-
-  if (labels.length > 0) {
-    const releaseLabels = labelMap.get("release") || [];
-
-    skipRelease = onlyPublishWithReleaseLabel
-      ? !labels[0].some((label) => releaseLabels.includes(label))
-      : labels[0].some((label) => skipReleaseLabels.includes(label));
-  }
+  const lastMergedCommitLabels = labels[0] || [];
+  const releaseLabels = labelMap.get("release") || [];
+  const skipRelease = onlyPublishWithReleaseLabel
+    ? !lastMergedCommitLabels.some((label) => releaseLabels.includes(label))
+    : lastMergedCommitLabels.some((label) => skipReleaseLabels.includes(label));
 
   // If PRs only have none or skip labels, skip the release
   const onlyNoReleaseLabels = [...labelSet].reduce(

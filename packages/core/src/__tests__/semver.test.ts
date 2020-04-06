@@ -50,9 +50,17 @@ describe("calculateSemVerBump", () => {
     );
   });
 
-  test("should respect onlyPublishWithReleaseLabel when no labels present", () => {
+  test("should respect onlyPublishWithReleaseLabel when no labels present on PR", () => {
     expect(
       calculateSemVerBump([[]], semverMap, {
+        onlyPublishWithReleaseLabel: true,
+      })
+    ).toBe(SEMVER.noVersion);
+  });
+
+  test("should respect onlyPublishWithReleaseLabel when no labels present on push to master", () => {
+    expect(
+      calculateSemVerBump([], semverMap, {
         onlyPublishWithReleaseLabel: true,
       })
     ).toBe(SEMVER.noVersion);
