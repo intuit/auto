@@ -303,7 +303,7 @@ export default class Auto {
   options: ApiOptions;
   /** The branch auto uses as master. */
   baseBranch: string;
-  /** The remote git to push changes to */
+  /** The remote git to push changes to. This is the full URL with auth */
   remote!: string;
   /** The user configuration of auto (.autorc) */
   config?: LoadedAutoRc;
@@ -1193,7 +1193,7 @@ export default class Auto {
         await execPromise("git", [
           "rev-list",
           "--boundary",
-          `${currentBranch}...${this.remote}/${this.baseBranch}`,
+          `${currentBranch}...origin/${this.baseBranch}`,
           "--left-only",
         ])
       )
