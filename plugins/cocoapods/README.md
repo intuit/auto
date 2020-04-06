@@ -35,7 +35,7 @@ yarn add -D @auto-it/cocoapods
 
 ### General
 
-- The machine running this plugin must have the [CocoapPods](https://cocoapods.org/) `pod` CLI installed already.
+- The machine running this plugin must have the [CocoaPods](https://cocoapods.org/) `pod` CLI installed already.
 
 - Your `podspec` file must pass `pod lib lint` in order for publishing to a Specs repository to work.
 
