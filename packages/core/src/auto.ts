@@ -1188,7 +1188,9 @@ export default class Auto {
     await this.setGitUser();
 
     const lastRelease = await this.git.getLatestRelease();
-    const lastTag = await this.git.getLatestTagInBranch();
+    const lastTag = await this.git.getTagNotInBaseBranch(getCurrentBranch()!, {
+      first: true,
+    });
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1198,8 +1200,9 @@ export default class Auto {
 
     if (options.dryRun) {
       this.logger.log.success(
-        `Would have created prerelease version with: ${bump}`
+        `Would have created prerelease version with: ${bump} from ${lastTag}`
       );
+      this.logger.log.info(releaseNotes);
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
@@ -1549,7 +1552,7 @@ export default class Auto {
     const bump = await this.release.getSemverBump(lastRelease, to);
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      to || undefined,
+      to,
       this.versionBump
     );
 
