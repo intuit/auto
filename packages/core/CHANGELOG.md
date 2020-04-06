@@ -1,3 +1,15 @@
+# v9.26.1 (Sun Apr 05 2020)
+
+#### 🐛 Bug Fix
+
+- fix: push to master w/--only-publish-with-release-label creating release [#1121](https://github.com/intuit/auto/pull/1121) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.0 (Sun Apr 05 2020)
 
 #### 🚀 Enhancement

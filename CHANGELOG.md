@@ -1,3 +1,22 @@
+# v9.26.1 (Sun Apr 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix: push to master w/--only-publish-with-release-label creating release [#1121](https://github.com/intuit/auto/pull/1121) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/cocoapods`
+  - Cocoapods -> CocoaPods [#1120](https://github.com/intuit/auto/pull/1120) ([@orta](https://github.com/orta) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Orta ([@orta](https://github.com/orta))
+
+---
+
 # v9.26.0 (Sun Apr 05 2020)
 
 #### 🚀 Enhancement

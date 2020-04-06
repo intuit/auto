@@ -1,3 +1,16 @@
+# v9.26.1 (Sun Apr 05 2020)
+
+#### 📝 Documentation
+
+- Cocoapods -> CocoaPods [#1120](https://github.com/intuit/auto/pull/1120) ([@orta](https://github.com/orta) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Orta ([@orta](https://github.com/orta))
+
+---
+
 # v9.25.3 (Sat Apr 04 2020)
 
 #### 🏠 Internal
