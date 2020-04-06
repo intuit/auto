@@ -1187,10 +1187,22 @@ export default class Auto {
 
     await this.setGitUser();
 
-    const lastRelease = await this.git.getLatestRelease();
-    const lastTag = await this.git.getTagNotInBaseBranch(getCurrentBranch()!, {
-      first: true,
-    });
+    const currentBranch = getCurrentBranch();
+    const initialForkCommit = (
+      (
+        await execPromise("git", [
+          "rev-list",
+          "--boundary",
+          `${currentBranch}...master`,
+          "--left-only",
+        ])
+      )
+        .split("\n")
+        .filter((line) => line.startsWith("-"))[0] || ""
+    ).slice(1);
+    const lastRelease =
+      initialForkCommit || (await this.git.getLatestRelease());
+    const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1202,7 +1214,11 @@ export default class Auto {
       this.logger.log.success(
         `Would have created prerelease version with: ${bump} from ${lastTag}`
       );
-      this.logger.log.info(releaseNotes);
+
+      this.logger.log.info("Full Release notes for next release:");
+      console.log(await this.release.generateReleaseNotes(lastRelease));
+      this.logger.log.info("Release notes for last change in next release");
+      console.log(releaseNotes);
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
