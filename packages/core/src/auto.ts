@@ -268,12 +268,11 @@ export function determineNextVersion(
   lastVersion: string,
   currentVersion: string,
   bump: SEMVER,
-  tag: string
+  tag?: string
 ) {
-  const next =
-    inc(lastVersion, `pre${bump}` as ReleaseType, tag) || "prerelease";
+  const next = inc(lastVersion, `pre${bump}` as ReleaseType, tag);
 
-  return lte(next, currentVersion)
+  return !next || lte(next, currentVersion)
     ? inc(currentVersion, "prerelease", tag) || "prerelease"
     : next;
 }
