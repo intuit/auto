@@ -331,6 +331,7 @@ export default class Git {
         // Otherwise it was that last release and should not be included in the release.
         branch: first === startSha ? end : `${start.trim()}..${end.trim()}`,
         execOptions: { maxBuffer: 1000 * 1024 },
+        includeMergeCommitFiles: true,
       });
 
       return log

@@ -50,16 +50,17 @@ jest.mock("@octokit/rest", () => {
 });
 
 // @ts-ignore
-jest.mock("gitlogplus", () => (a, cb) => {
-  cb(undefined, [
-    {
-      rawBody: "foo",
-    },
-    {
-      rawBody: "foo",
-    },
-  ]);
-});
+jest.mock("gitlog", () => ({
+  gitlogPromise: () =>
+    Promise.resolve([
+      {
+        rawBody: "foo",
+      },
+      {
+        rawBody: "foo",
+      },
+    ]),
+}));
 
 describe("Auto", () => {
   test("should add to changelog", async () => {
