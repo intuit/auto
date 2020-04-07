@@ -1,3 +1,15 @@
+# v9.26.6 (Tue Apr 07 2020)
+
+#### 🐛 Bug Fix
+
+- Next improvements [#1135](https://github.com/intuit/auto/pull/1135) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.22.2 (Mon Mar 30 2020)
 
 :tada: This release contains work from a new contributor! :tada:

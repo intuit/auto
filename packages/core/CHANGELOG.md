@@ -1,3 +1,20 @@
+# v9.26.6 (Tue Apr 07 2020)
+
+#### 🐛 Bug Fix
+
+- Next improvements [#1135](https://github.com/intuit/auto/pull/1135) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use TS-refactor of gitlog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- omit merge commits from next changelog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- combine duplicate merge commits ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- dont omit unreleased commits ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.5 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix
