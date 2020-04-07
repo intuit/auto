@@ -1186,6 +1186,14 @@ export default class Auto {
 
     await this.setGitUser();
 
+    this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
+      logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
+        if (commit.subject.includes(`Merge origin/${this.baseBranch}`)) {
+          return true;
+        }
+      });
+    });
+
     const currentBranch = getCurrentBranch();
     const initialForkCommit = (
       (
