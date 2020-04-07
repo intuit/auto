@@ -289,6 +289,49 @@ Array [
 ]
 `;
 
+exports[`Release getCommits should not omit commits in next branch 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": Object {
+      "number": 124,
+    },
+    "subject": "Feature",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "hash": "1a2b",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "1a2b",
+    "labels": Array [
+      "skip-release",
+      "minor",
+    ],
+    "pullRequest": Object {
+      "number": 123,
+    },
+    "subject": "I wasn't released previously",
+  },
+]
+`;
+
 exports[`Release getCommits should not resolve authors with no PR commits 1`] = `
 Array [
   Object {

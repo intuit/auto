@@ -4,10 +4,9 @@ import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
 import { Octokit } from "@octokit/rest";
-import gitlogNode from "gitlogplus";
+import { gitlogPromise as gitlog } from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
-import { promisify } from "util";
 import endent from "endent";
 import on from "await-to-js";
 
@@ -20,8 +19,6 @@ import { dummyLog, ILogger } from "./utils/logger";
 import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
 import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
-
-const gitlog = promisify(gitlogNode);
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
@@ -326,7 +323,7 @@ export default class Git {
         ? await execPromise("git", ["rev-parse", start])
         : "";
 
-      const log = await gitlog<ICommit>({
+      const log = await gitlog({
         repo: process.cwd(),
         number: Number.MAX_SAFE_INTEGER,
         fields: ["hash", "authorName", "authorEmail", "rawBody"],
@@ -334,15 +331,32 @@ export default class Git {
         // Otherwise it was that last release and should not be included in the release.
         branch: first === startSha ? end : `${start.trim()}..${end.trim()}`,
         execOptions: { maxBuffer: 1000 * 1024 },
+        includeMergeCommitFiles: true,
       });
 
-      return log.map((commit) => ({
-        hash: commit.hash,
-        authorName: commit.authorName,
-        authorEmail: commit.authorEmail,
-        subject: commit.rawBody!,
-        files: (commit.files || []).map((file) => path.resolve(file)),
-      }));
+      return log
+        .map((commit) => ({
+          hash: commit.hash,
+          authorName: commit.authorName,
+          authorEmail: commit.authorEmail,
+          subject: commit.rawBody!,
+          files: (commit.files || []).map((file) => path.resolve(file)),
+        }))
+        .reduce((all, commit) => {
+          // The -m option will list a commit for each merge parent. This
+          // means two items will have the same hash. We are using -m to get all the changed files
+          // in a merge commit. The following code combines these repeated hashes into
+          // one commit
+          const current = all.find((c) => c.hash === commit.hash);
+
+          if (current) {
+            current.files = [...current.files, ...commit.files];
+          } else {
+            all.push(commit);
+          }
+
+          return all;
+        }, [] as ICommit[]);
     } catch (error) {
       console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);

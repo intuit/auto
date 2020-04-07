@@ -56,18 +56,19 @@ jest.mock("@octokit/rest", () => {
 });
 
 // @ts-ignore
-jest.mock("gitlogplus", () => (a, cb) => {
-  cb(undefined, [
-    {
-      rawBody: "foo",
-      hash: "123",
-    },
-    {
-      rawBody: "foo",
-      hash: "456",
-    },
-  ]);
-});
+jest.mock("gitlog", () => ({
+  gitlogPromise: () =>
+    Promise.resolve([
+      {
+        rawBody: "foo",
+        hash: "123",
+      },
+      {
+        rawBody: "foo",
+        hash: "456",
+      },
+    ]),
+}));
 
 describe("Auto", () => {
   beforeEach(() => {

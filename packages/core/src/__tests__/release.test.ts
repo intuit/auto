@@ -394,6 +394,40 @@ describe("Release", () => {
       expect(await gh.getCommits("12345", "1234")).toMatchSnapshot();
     });
 
+    test("should not omit commits in next branch", async () => {
+      const gh = new Release(git);
+
+      jest.spyOn(console, "log").mockImplementationOnce(() => {});
+      getLatestReleaseInfo.mockReturnValueOnce({
+        published_at: "2019-01-16",
+      });
+      searchRepo.mockReturnValueOnce({ items: [{ number: 123 }] });
+      getPullRequest.mockReturnValueOnce({
+        data: {
+          number: 123,
+          merge_commit_sha: "1a2b",
+          labels: [{ name: "skip-release" }, { name: "minor" }],
+        },
+      });
+      getGitLog.mockReturnValueOnce(
+        await logParse.normalizeCommits([
+          makeCommitFromMsg("Feature (#124)"),
+          makeCommitFromMsg("I wasn't released previously", {
+            hash: "1a2b",
+          }),
+        ])
+      );
+      exec.mockReturnValueOnce("0");
+      exec.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      exec.mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      expect(await gh.getCommits("12345", "1234")).toMatchSnapshot();
+    });
+
     test("should include PR opener in authors (in case of external rebase)", async () => {
       const gh = new Release(git);
 
