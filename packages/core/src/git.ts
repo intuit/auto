@@ -336,13 +336,29 @@ export default class Git {
         execOptions: { maxBuffer: 1000 * 1024 },
       });
 
-      return log.map((commit) => ({
-        hash: commit.hash,
-        authorName: commit.authorName,
-        authorEmail: commit.authorEmail,
-        subject: commit.rawBody!,
-        files: (commit.files || []).map((file) => path.resolve(file)),
-      }));
+      return log
+        .map((commit) => ({
+          hash: commit.hash,
+          authorName: commit.authorName,
+          authorEmail: commit.authorEmail,
+          subject: commit.rawBody!,
+          files: (commit.files || []).map((file) => path.resolve(file)),
+        }))
+        .reduce((all, commit) => {
+          // The -m option will list a commit for each merge parent. This
+          // means two items will have the same hash. We are using -m to get all the changed files
+          // in a merge commit. The following code combines these repeated hashes into
+          // one commit
+          const current = all.find((c) => c.hash === commit.hash);
+
+          if (current) {
+            current.files = [...current.files, ...commit.files];
+          } else {
+            all.push(commit);
+          }
+
+          return all;
+        }, [] as ICommit[]);
     } catch (error) {
       console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
