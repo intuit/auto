@@ -4,10 +4,9 @@ import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
 import { Octokit } from "@octokit/rest";
-import gitlogNode from "gitlogplus";
+import { gitlogPromise as gitlog } from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
-import { promisify } from "util";
 import endent from "endent";
 import on from "await-to-js";
 
@@ -20,8 +19,6 @@ import { dummyLog, ILogger } from "./utils/logger";
 import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
 import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
-
-const gitlog = promisify(gitlogNode);
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
@@ -326,7 +323,7 @@ export default class Git {
         ? await execPromise("git", ["rev-parse", start])
         : "";
 
-      const log = await gitlog<ICommit>({
+      const log = await gitlog({
         repo: process.cwd(),
         number: Number.MAX_SAFE_INTEGER,
         fields: ["hash", "authorName", "authorEmail", "rawBody"],

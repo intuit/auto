@@ -9,11 +9,10 @@ The following config declares the `deploy` job that run on all branches. The job
 
 ```yaml
 language: node_js
-node_js: '10'
-env:
-  global:
-    - GIT_NAME="Andrew Lisowski"
-    - GIT_EMAIL="lisowski54@gmail.com"
+node_js: "10"
+
+git:
+  depth: false
 
 script:
   - yarn lint
@@ -44,7 +43,7 @@ To fix this add the following lines to your `.travis.yml`
 ```yml
 before_deploy:
   - if [ "$TRAVIS_BRANCH" == "master" ];then
-      git checkout master;
+    git checkout master;
     fi;
 ```
 
