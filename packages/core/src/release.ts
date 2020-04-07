@@ -391,9 +391,19 @@ export default class Release {
           });
           released = false;
         } catch (error) {
-          // --is-ancestor returned false so the commit is **before** "from"
-          // so do not release this commit again
-          released = true;
+          try {
+            // --is-ancestor returned false so the commit might be **before** "from"
+            // so test if it is and do not release this commit again
+            // This determines:         Is this commit an ancestor of this commit?
+            //                                       ↓                ↓
+            execSync(`git merge-base --is-ancestor ${commit.hash} ${from}`, {
+              encoding: "utf8",
+            });
+            released = true;
+          } catch (error) {
+            // neither commit is a parent of the other so include it
+            released = false;
+          }
         }
 
         if (released) {
