@@ -858,29 +858,35 @@ export default class Auto {
           !skipReleaseLabels.includes(l) &&
           l !== "release"
       );
+      const branch = getCurrentBranch();
 
-      if (semverTag === undefined && !skipReleaseTag) {
+      if (branch && this.config?.prereleaseBranches.includes(branch)) {
+        msg = {
+          description: "PR will graduate prerelease once merged",
+          state: "success",
+        };
+      } else if (semverTag === undefined && !skipReleaseTag) {
         throw new Error("No semver label!");
-      }
-
-      this.logger.log.success(
-        `PR is using label: ${semverTag || skipReleaseTag}`
-      );
-
-      let description;
-
-      if (skipReleaseTag) {
-        description = "PR will not create a release";
-      } else if (releaseTag) {
-        description = `PR will create release once merged - ${semverTag}`;
       } else {
-        description = `CI - ${semverTag}`;
-      }
+        this.logger.log.success(
+          `PR is using label: ${semverTag || skipReleaseTag}`
+        );
 
-      msg = {
-        description,
-        state: "success",
-      };
+        let description;
+
+        if (skipReleaseTag) {
+          description = "PR will not create a release";
+        } else if (releaseTag) {
+          description = `PR will create release once merged - ${semverTag}`;
+        } else {
+          description = `CI - ${semverTag}`;
+        }
+
+        msg = {
+          description,
+          state: "success",
+        };
+      }
     } catch (error) {
       msg = {
         description: error.message,
