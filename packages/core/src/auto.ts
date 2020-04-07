@@ -1194,6 +1194,11 @@ export default class Auto {
 
     this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
       logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
+        console.log(
+          "Omit merges from master",
+          commit.subject.includes(`Merge origin/${this.baseBranch}`),
+          commit.subject
+        );
         if (commit.subject.includes(`Merge origin/${this.baseBranch}`)) {
           return true;
         }
