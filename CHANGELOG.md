@@ -1,3 +1,16 @@
+# v9.26.4 (Mon Apr 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - pr-check: succeed on pre-release branch PRs [#1133](https://github.com/intuit/auto/pull/1133) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.3 (Mon Apr 06 2020)
 
 #### 🐛 Bug Fix
