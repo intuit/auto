@@ -1,3 +1,16 @@
+# v9.26.7 (Tue Apr 07 2020)
+
+#### 🐛 Bug Fix
+
+- Skip next commit hooks [#1136](https://github.com/intuit/auto/pull/1136) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- dont run commit hooks when publishing next ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.6 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix
