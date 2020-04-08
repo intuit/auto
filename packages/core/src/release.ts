@@ -517,7 +517,6 @@ export default class Release {
   }
 
   /** Create the class that will parse the log for PR info */
-  @memoize()
   private async createLogParse() {
     const logParse = new LogParse();
 
