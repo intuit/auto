@@ -1150,6 +1150,8 @@ export default class Auto {
       this.logger.log.success(
         `Published canary version${newVersion ? `: ${newVersion}` : ""}`
       );
+
+      await execPromise("git", ["reset", "--hard", "HEAD"]);
     }
 
     let latestTag: string;
@@ -1194,9 +1196,7 @@ export default class Auto {
 
     this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
       logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
-        const shouldOmit = commit.subject.includes(
-          `Merge origin/${this.baseBranch}`
-        );
+        const shouldOmit = commit.subject.match(/^Merge (?:\S+\/)*master/);
         this.logger.verbose.info(
           `Omit merges from master?" ${shouldOmit}: ${commit.subject}`
         );
@@ -1223,6 +1223,9 @@ export default class Auto {
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
     const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
+    const fullReleaseNotes = await this.release.generateReleaseNotes(
+      lastRelease
+    );
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1230,15 +1233,18 @@ export default class Auto {
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
 
+    this.logger.log.info("Full Release notes for next release:");
+    console.log(fullReleaseNotes);
+
+    if (releaseNotes) {
+      this.logger.log.info("Release notes for last change in next release");
+      console.log(releaseNotes);
+    }
+
     if (options.dryRun) {
       this.logger.log.success(
         `Would have created prerelease version with: ${bump} from ${lastTag}`
       );
-
-      this.logger.log.info("Full Release notes for next release:");
-      console.log(await this.release.generateReleaseNotes(lastRelease));
-      this.logger.log.info("Release notes for last change in next release");
-      console.log(releaseNotes);
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
@@ -1284,13 +1290,14 @@ export default class Auto {
             <details>
               <summary>Changelog</summary>
 
-              ${await this.release.generateReleaseNotes(lastRelease)}
+              ${fullReleaseNotes}
             </details>
           `,
         });
       }
     }
 
+    await execPromise("git", ["reset", "--hard", "HEAD"]);
     return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
