@@ -743,6 +743,7 @@ export default class NPMPlugin implements IPlugin {
         "version",
         canaryVersion,
         "--no-git-tag-version",
+        "--no-commit-hooks",
         ...verboseArgs,
       ]);
 
@@ -810,6 +811,7 @@ export default class NPMPlugin implements IPlugin {
           "--yes",
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
           "--exact",
+          "--no-commit-hooks",
           ...verboseArgs,
         ]);
 
