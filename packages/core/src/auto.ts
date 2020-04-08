@@ -1150,6 +1150,8 @@ export default class Auto {
       this.logger.log.success(
         `Published canary version${newVersion ? `: ${newVersion}` : ""}`
       );
+
+      await execPromise("git", ["reset", "--hard", "HEAD"]);
     }
 
     let latestTag: string;
@@ -1291,6 +1293,7 @@ export default class Auto {
       }
     }
 
+    await execPromise("git", ["reset", "--hard", "HEAD"]);
     return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
