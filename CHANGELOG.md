@@ -1,3 +1,16 @@
+# v9.26.8 (Wed Apr 08 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix omitting merges from master into next when running "shipit" [#1137](https://github.com/intuit/auto/pull/1137) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.7 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix

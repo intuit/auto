@@ -1,3 +1,18 @@
+# v9.26.8 (Wed Apr 08 2020)
+
+#### 🐛 Bug Fix
+
+- Fix omitting merges from master into next when running "shipit" [#1137](https://github.com/intuit/auto/pull/1137) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- recreate logparse every time so we can dynamically tap ti ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- improve release note logging ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- reset git changes after next/canary ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.7 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix
