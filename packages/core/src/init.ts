@@ -15,7 +15,8 @@ import {
   RepoInformation,
   AuthorInformation,
   PluginConfig,
-} from "./types";
+  GithubInformation
+} from './types';
 
 // const writeFile = promisify(fs.writeFile);
 
@@ -83,6 +84,7 @@ async function getLabel(label?: ILabelDefinition) {
           description: #{description},
           releaseType: #{releaseType}
         }`,
+    // @ts-ignore
     validate: (state: {
       /** The result of the prompt */
       values: ILabelDefinition;
@@ -295,6 +297,14 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   }
 }
 
+type SnippetResponse<Key extends string, ReponseValue> = Record<
+  Key,
+  {
+    /** The response from the user */
+    values: ReponseValue;
+  }
+>;
+
 /**
  * Parse the gitlog for commits that are PRs and attach their labels.
  * This class can also be tapped into via plugin to parse commits
@@ -317,32 +327,35 @@ export default class InteractiveInit {
 
   /** Run a prompt to get the author information */
   async getAuthorInformation() {
-    const response = await prompt({
-      type: "snippet",
-      name: "author",
-      message: `What git user would you like to make commits with?`,
-      required: true,
-      // @ts-ignore
-      template: endent`
+    const response = await prompt<SnippetResponse<'author', AuthorInformation>>(
+      {
+        type: 'snippet',
+        name: 'author',
+        message: `What git user would you like to make commits with?`,
+        required: true,
+        template: endent`
         Name:   #{name} 
-        Email:  #{email}`,
-    });
+        Email:  #{email}`
+      }
+    );
 
-    return response.author.values as AuthorInformation;
+    return response.author.values;
   }
 
   /** Run a prompt to get the repo information */
   async getRepoInformation() {
-    const response = await prompt({
-      type: "snippet",
-      name: "repoInfo",
-      message: `What GitHub project you would like to publish?`,
-      required: true,
-      // @ts-ignore
-      template: endent`#{owner}/#{repo}`,
-    });
+    const response = await prompt<SnippetResponse<'repoInfo', RepoInformation>>(
+      {
+        type: 'snippet',
+        name: 'repoInfo',
+        message: `What GitHub project you would like to publish?`,
+        required: true,
+        template: endent`#{owner}/#{repo}`
+      }
+    );
+    console.log(response);
 
-    return response.repoInfo.values as RepoInformation;
+    return response.repoInfo.values;
   }
 
   /** Load the default behavior */
@@ -418,9 +431,11 @@ export default class InteractiveInit {
     });
 
     if (isEnterprise.confirmed) {
-      const response = await prompt({
-        type: "snippet",
-        name: "repoInfo",
+      const response = await prompt<
+        SnippetResponse<'repoInfo', Omit<GithubInformation, 'baseBranch'>>
+      >({
+        type: 'snippet',
+        name: 'repoInfo',
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
