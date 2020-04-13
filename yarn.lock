@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.26.5"
+  version "9.26.8"
 
 "@auto-it/core@link:packages/core":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.2"
@@ -50,7 +50,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -67,7 +67,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7305,9 +7305,9 @@ gitconfiglocal@^1.0.0:
     ini "^1.3.2"
 
 gitlog@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/gitlog/-/gitlog-3.3.4.tgz#ee2b58d0230802e894fbec6e4020db8c53322ece"
-  integrity sha512-v66BJ2ymt/BjRrLMfeMpZup30FonPGGRf2r9liluAdq5RzWP9CuYOrT/pqcdTH5ypZ0aYCg27u0RsUxNsX85eQ==
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/gitlog/-/gitlog-3.3.6.tgz#698319bea130e1f6b7cbae424fe905e6c98b368c"
+  integrity sha512-+30OaCk7p71Np0w2wsa0RgPx21OTVAEZvSNU1VZf1NYjBbh2la9XZqBClgT90Ou0e6NIKq6M4MPPnkj0oYJdhA==
   dependencies:
     debug "^4.1.1"
     tslib "^1.11.1"
