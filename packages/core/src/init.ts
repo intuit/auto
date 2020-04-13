@@ -15,8 +15,8 @@ import {
   RepoInformation,
   AuthorInformation,
   PluginConfig,
-  GithubInformation
-} from './types';
+  GithubInformation,
+} from "./types";
 
 // const writeFile = promisify(fs.writeFile);
 
@@ -66,7 +66,6 @@ async function getLabel(label?: ILabelDefinition) {
     type: "snippet",
     name: "value",
     message: label ? `Edit "${label.name}" label:` : "Add a label:",
-    // @ts-ignore
     template: label
       ? endent`{
           name: #{name:${label.name}},
@@ -327,15 +326,15 @@ export default class InteractiveInit {
 
   /** Run a prompt to get the author information */
   async getAuthorInformation() {
-    const response = await prompt<SnippetResponse<'author', AuthorInformation>>(
+    const response = await prompt<SnippetResponse<"author", AuthorInformation>>(
       {
-        type: 'snippet',
-        name: 'author',
+        type: "snippet",
+        name: "author",
         message: `What git user would you like to make commits with?`,
         required: true,
         template: endent`
         Name:   #{name} 
-        Email:  #{email}`
+        Email:  #{email}`,
       }
     );
 
@@ -344,13 +343,13 @@ export default class InteractiveInit {
 
   /** Run a prompt to get the repo information */
   async getRepoInformation() {
-    const response = await prompt<SnippetResponse<'repoInfo', RepoInformation>>(
+    const response = await prompt<SnippetResponse<"repoInfo", RepoInformation>>(
       {
-        type: 'snippet',
-        name: 'repoInfo',
+        type: "snippet",
+        name: "repoInfo",
         message: `What GitHub project you would like to publish?`,
         required: true,
-        template: endent`#{owner}/#{repo}`
+        template: endent`#{owner}/#{repo}`,
       }
     );
     console.log(response);
@@ -432,10 +431,10 @@ export default class InteractiveInit {
 
     if (isEnterprise.confirmed) {
       const response = await prompt<
-        SnippetResponse<'repoInfo', Omit<GithubInformation, 'baseBranch'>>
+        SnippetResponse<"repoInfo", Omit<GithubInformation, "baseBranch">>
       >({
-        type: 'snippet',
-        name: 'repoInfo',
+        type: "snippet",
+        name: "repoInfo",
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
