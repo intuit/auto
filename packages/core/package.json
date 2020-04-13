@@ -55,7 +55,7 @@
     "fast-glob": "^3.1.1",
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
-    "gitlog": "^3.3.4",
+    "gitlog": "^4.0.0",
     "https-proxy-agent": "^5.0.0",
     "import-cwd": "^3.0.0",
     "import-from": "^3.0.0",
