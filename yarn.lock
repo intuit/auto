@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.26.5"
+  version "9.26.8"
 
 "@auto-it/core@link:packages/core":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.2"
@@ -21,7 +21,7 @@
     "@octokit/plugin-throttling" "^3.2.0"
     "@octokit/rest" "16.43.1"
     await-to-js "^2.1.1"
-    chalk "^3.0.0"
+    chalk "^4.0.0"
     cosmiconfig "6.0.0"
     deepmerge "^4.0.0"
     dotenv "^8.0.0"
@@ -50,7 +50,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/core" "link:packages/core"
     env-ci "^5.0.1"
@@ -67,7 +67,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.26.5"
+  version "9.26.8"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
