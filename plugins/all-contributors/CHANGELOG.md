@@ -1,3 +1,29 @@
+# v9.27.0 (Tue Apr 14 2020)
+
+#### 🚀 Enhancement
+
+- all contributors: add ability to add non-code contributions [#1148](https://github.com/intuit/auto/pull/1148) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add @ sign ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- handle case with some valid contributions ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use markdown code blcok ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- warn about known contribution types ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add note in readme ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- handle case where there are no valid contributions ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- handle \r\n ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix title matching ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add logs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- all contributors: add ability to add non-code contributions ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.6 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix

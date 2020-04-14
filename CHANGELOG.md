@@ -1,3 +1,30 @@
+# v9.27.0 (Tue Apr 14 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/all-contributors`
+  - all contributors: add ability to add non-code contributions [#1148](https://github.com/intuit/auto/pull/1148) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump pkg from 4.4.6 to 4.4.7 [#1143](https://github.com/intuit/auto/pull/1143) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.26.0 to 2.27.0 [#1139](https://github.com/intuit/auto/pull/1139) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.2.3 to 4.2.5 [#1141](https://github.com/intuit/auto/pull/1141) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 7.1.3 to 7.2.2 [#1138](https://github.com/intuit/auto/pull/1138) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump gitlog from 3.3.4 to 4.0.0 [#1145](https://github.com/intuit/auto/pull/1145) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - Bump typescript from 3.7.5 to 3.8.3 [#1045](https://github.com/intuit/auto/pull/1045) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`
+  - Bump chalk from 3.0.0 to 4.0.0 [#1140](https://github.com/intuit/auto/pull/1140) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.8 (Wed Apr 08 2020)
 
 #### 🐛 Bug Fix

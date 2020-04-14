@@ -1,3 +1,27 @@
+# v9.27.0 (Tue Apr 14 2020)
+
+#### 🐛 Bug Fix
+
+- update gitlog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- unneeded ts-ignore ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update enquirer usage ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump chalk from 3.0.0 to 4.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump gitlog from 3.3.4 to 4.0.0 [#1145](https://github.com/intuit/auto/pull/1145) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump typescript from 3.7.5 to 3.8.3 [#1045](https://github.com/intuit/auto/pull/1045) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.6 to 4.4.7 [#1143](https://github.com/intuit/auto/pull/1143) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.26.0 to 2.27.0 [#1139](https://github.com/intuit/auto/pull/1139) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump chalk from 3.0.0 to 4.0.0 [#1140](https://github.com/intuit/auto/pull/1140) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.8 (Wed Apr 08 2020)
 
 #### 🐛 Bug Fix
