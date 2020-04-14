@@ -49,13 +49,12 @@ const contributionTypes = [
 ] as const;
 type Contribution = typeof contributionTypes[number];
 
-const isContribution = /**
+const isContribution =
+  /**
 ccccccccccccccccccccccc *
 ccccccccccccccccccccccc */
-(
-  contribution: string | Contribution
-): contribution is Contribution =>
-  contributionTypes.includes(contribution as Contribution);
+  (contribution: string | Contribution): contribution is Contribution =>
+    contributionTypes.includes(contribution as Contribution);
 
 /** Get an rc file if there is one. */
 function getRcFile() {
@@ -238,7 +237,7 @@ export default class AllContributorsPlugin implements IPlugin {
                 We found some unknown contribution types in your PR body!
                 These contributions will not be counted and you should fix them.
 
-                ${unknownTypes.map((type) => `- ${type}`)}
+                ${unknownTypes.map((type) => `- \`${type}\``)}
               `
             : ""
         }
