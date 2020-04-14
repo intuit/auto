@@ -58,6 +58,21 @@ If you configure an pre-configured contribution type the arrays are not merged, 
 }
 ```
 
+### Adding Non-Code Contributions
+
+Sometimes you worked with a person that didn't touch the code personally so this plugin would never attribute them with any contributions.
+Since these contributions cannot be automated you can instead just list out another contributor's (name + GitHub username) contributions directly in the PR.
+
+Add the following to a PR body and auto will try to parse it and add contributors from it.
+
+```md
+# Contributions
+
+- Some Guy (@some_guy) - design, doc
+```
+
+To ensure you are doing it right `auto` will comment on the PR with the people + contributions you are manually adding.
+
 ### Exclude Users
 
 Useful for excluding bots from getting into your contributors.
@@ -81,7 +96,7 @@ Useful for excluding bots from getting into your contributors.
 
 Maintain contributors lists for sub-packages in a monorepo setup (`lerna`/`yarn`).
 
-All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package.
+All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package. Any non-code contribution listed in the PR body will also be added to the sub-package contributors list.
 
 ```sh
 cd packages/your-package

@@ -4,20 +4,26 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import fs from "fs";
+import env from "env-ci";
 
 import AllContributors from "../src";
 
+const envMock = jest.fn();
 const exec = jest.fn();
 const gitShow = jest.fn();
 const getLernaPackages = jest.fn();
 
+envMock.mockReturnValue({});
 getLernaPackages.mockReturnValue(Promise.resolve([]));
 gitShow.mockReturnValue(Promise.resolve(""));
 exec.mockReturnValue("");
 
+jest.mock("env-ci");
 jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
+// @ts-ignore
+env.mockImplementation(envMock);
 // @ts-ignore
 jest.spyOn(Auto, "execPromise").mockImplementation(gitShow);
 jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
@@ -32,6 +38,209 @@ const mockRead = (result: string) =>
 describe("All Contributors Plugin", () => {
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe("beforeShipit", () => {
+    test("should not do anything for certain release types", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "latest",
+      });
+
+      expect(comment).not.toHaveBeenCalled();
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "old",
+      });
+
+      expect(comment).not.toHaveBeenCalled();
+    });
+
+    test("should not do anything without a PR", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: undefined });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment).not.toHaveBeenCalled();
+    });
+
+    test("should not do anything if PR doesn't exist", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment).not.toHaveBeenCalled();
+    });
+
+    test("should not do anything if no extra contributions found", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: { body: "A body with no contributions" },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment).not.toHaveBeenCalled();
+    });
+
+    test("should comment confirming extra contributions", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: {
+              body:
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design, doc\r\n\r\n",
+            },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment.mock.calls[0][0].message).toMatchSnapshot();
+    });
+
+    test("should warn about unknown contribution types", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: {
+              body:
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc\r\n\r\n",
+            },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment.mock.calls[0][0].message).toMatchSnapshot();
+    });
+
+    test("should warn about unknown contribution types - no valid", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: {
+              body:
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n\r\n",
+            },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment.mock.calls[0][0].message).toMatchSnapshot();
+    });
+
+    test("should warn about unknown contribution types - some valid", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: {
+              body:
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n- @adam - doc\r\n\r\n",
+            },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment.mock.calls[0][0].message).toMatchSnapshot();
+    });
   });
 
   test("should do nothing for username-less commits", async () => {
