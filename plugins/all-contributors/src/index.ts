@@ -100,7 +100,7 @@ const defaultOptions: IAllContributorsPluginOptions = {
   },
 };
 
-const title = /^[#]{0,5}[ ]*[C|c]ontributions$/;
+const title = /[#]{0,5}[ ]*[C|c]ontributions/;
 const contributorLine = /^[-*] @(\S+)\s+[:-]\s+([\S ,]+)$/;
 
 /** Find contributions listed in PR bodies */
