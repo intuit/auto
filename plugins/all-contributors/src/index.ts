@@ -191,31 +191,35 @@ export default class AllContributorsPlugin implements IPlugin {
       }
 
       const prInfo = await auto.git?.getPullRequest(pr);
+      auto.logger.log.info(this.name, { prInfo });
 
       if (!prInfo) {
         return;
       }
 
       const extra = getExtraContributors(prInfo.data.body);
+      auto.logger.log.info(this.name, { extra });
 
       if (!extra || !Object.keys(extra).length) {
         return;
       }
 
+      const message = endent`
+        # Extra Contribution
+
+        The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
+
+        ${Object.entries(extra).map(
+          ([username, contributions]) =>
+            `- ${username} - ${[...contributions].join(", ")}`
+        )}
+      `;
+
       await auto.comment({
         pr,
         context: "Extra Contributions",
         edit: true,
-        message: endent`
-          # Extra Contribution
-
-          The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
-
-          ${Object.entries(extra).map(
-            ([username, contributions]) =>
-              `- ${username} - ${[...contributions].join(", ")}`
-          )}
-        `,
+        message,
       });
     });
 
