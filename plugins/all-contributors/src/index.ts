@@ -49,6 +49,14 @@ const contributionTypes = [
 ] as const;
 type Contribution = typeof contributionTypes[number];
 
+const isContribution = /**
+ccccccccccccccccccccccc *
+ccccccccccccccccccccccc */
+(
+  contribution: string | Contribution
+): contribution is Contribution =>
+  contributionTypes.includes(contribution as Contribution);
+
 /** Get an rc file if there is one. */
 function getRcFile() {
   try {
@@ -104,7 +112,7 @@ const contributorLine = /^[-*] @(\S+)\s+[:-]\s+([\S ,]+)$/;
 
 /** Find contributions listed in PR bodies */
 function getExtraContributors(body?: string) {
-  const authorContributions: Record<string, Set<Contribution>> = {};
+  const authorContributions: Record<string, Set<string>> = {};
 
   if (!body) {
     return;
@@ -140,9 +148,6 @@ function getExtraContributors(body?: string) {
       contributions
         .split(",")
         .map((contribution) => contribution.trim())
-        .filter((contribution): contribution is Contribution =>
-          contributionTypes.includes(contribution as Contribution)
-        )
         .forEach((contribution) =>
           authorContributions[username].add(contribution)
         );
@@ -206,6 +211,13 @@ export default class AllContributorsPlugin implements IPlugin {
         return;
       }
 
+      const unknownTypes = Object.values(extra)
+        .reduce((all, i) => [...all, ...i], [] as string[])
+        .filter(
+          (contribution) =>
+            !contributionTypes.includes(contribution as Contribution)
+        );
+
       const message = endent`
         # Extra Contributions
 
@@ -213,8 +225,23 @@ export default class AllContributorsPlugin implements IPlugin {
 
         ${Object.entries(extra).map(
           ([username, contributions]) =>
-            `- @${username} - ${[...contributions].join(", ")}`
+            `- @${username} - ${[...contributions]
+              .filter(isContribution)
+              .join(", ")}`
         )}
+
+        ${
+          unknownTypes.length
+            ? endent`
+                ## Unknown Contribution Types
+
+                We found some unknown contribution types in your PR body!
+                These contributions will not be counted and you should fix them.
+
+                ${unknownTypes.map((type) => `- ${type}`)}
+              `
+            : ""
+        }
       `;
 
       await auto.comment({
@@ -350,9 +377,11 @@ export default class AllContributorsPlugin implements IPlugin {
             authorContributions[username] = new Set();
           }
 
-          contributions.forEach((contribution) =>
-            authorContributions[username].add(contribution)
-          );
+          [...contributions]
+            .filter(isContribution)
+            .forEach((contribution) =>
+              authorContributions[username].add(contribution)
+            );
         });
       }
     });
