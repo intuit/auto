@@ -14,6 +14,8 @@ export default class FirstTimeContributorPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const cache: Record<string, Record<string, any>> = {};
+
     auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
       const base = new URL(changelog.options.baseUrl).origin;
 
@@ -21,6 +23,27 @@ export default class FirstTimeContributorPlugin implements IPlugin {
       const renderContributor = ({ name, username }: ICommitAuthor) => {
         const link = `[@${username}](${urlJoin(base, username || "")})`;
         return `${name}${username ? (name ? ` (${link})` : link) : ""}`;
+      };
+
+      /** Get the PRs made by a user */
+      const getContributions = async (username: string) => {
+        if (cache[username]) {
+          return cache[username];
+        }
+
+        const response = await auto.git?.graphql(`
+          {
+            search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${username}") {
+              issueCount
+            }
+          }
+        `);
+
+        if (response) {
+          cache[username] = response;
+        }
+
+        return response;
       };
 
       changelog.hooks.addToBody.tapPromise(
@@ -34,13 +57,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                 }
 
                 // prettier-ignore
-                const prs = await auto.git?.graphql(`
-                  {
-                    search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${author.username}") {
-                      issueCount
-                    }
-                  }
-                `);
+                const prs = await getContributions(author.username)
 
                 if (prs && prs.search.issueCount <= 1) {
                   return author;
