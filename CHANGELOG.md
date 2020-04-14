@@ -1,3 +1,16 @@
+# v9.27.1 (Tue Apr 14 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - first-time-contributor: cache results of graphql queries [#1149](https://github.com/intuit/auto/pull/1149) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.27.0 (Tue Apr 14 2020)
 
 #### 🚀 Enhancement
