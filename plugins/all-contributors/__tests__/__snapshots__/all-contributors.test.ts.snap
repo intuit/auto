@@ -8,6 +8,19 @@ The following contributions will be added to all-contributors (as well as any co
 - @andrew - design, doc"
 `;
 
+exports[`All Contributors Plugin beforeShipit should warn about unknown contribution types - no valid 1`] = `
+"# Extra Contributions
+
+No valid contribution types found!
+
+## Unknown Contribution Types
+
+We found some unknown contribution types in your PR body!
+These contributions will not be counted and you should fix them.
+
+- \`design123\`,- \`doc456\`"
+`;
+
 exports[`All Contributors Plugin beforeShipit should warn about unknown contribution types 1`] = `
 "# Extra Contributions
 

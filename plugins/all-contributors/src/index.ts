@@ -210,24 +210,38 @@ export default class AllContributorsPlugin implements IPlugin {
         return;
       }
 
-      const unknownTypes = Object.values(extra)
-        .reduce((all, i) => [...all, ...i], [] as string[])
-        .filter(
-          (contribution) =>
-            !contributionTypes.includes(contribution as Contribution)
-        );
+      const allContributions = Object.values(extra).reduce(
+        (all, i) => [...all, ...i],
+        [] as string[]
+      );
+      const unknownTypes = allContributions.filter(
+        (contribution) =>
+          !contributionTypes.includes(contribution as Contribution)
+      );
+      const hasValidTypes = allContributions.length !== unknownTypes.length;
 
       const message = endent`
         # Extra Contributions
 
-        The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
+        ${
+          hasValidTypes
+            ? endent`
+              The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
 
-        ${Object.entries(extra).map(
-          ([username, contributions]) =>
-            `- @${username} - ${[...contributions]
-              .filter(isContribution)
-              .join(", ")}`
-        )}
+              ${Object.entries(extra).map(([username, contributions]) => {
+                const validContributions = [...contributions].filter(
+                  isContribution
+                );
+
+                if (!validContributions.length) {
+                  return;
+                }
+
+                return `- @${username} - ${validContributions.join(", ")}`;
+              })}
+            `
+            : "No valid contribution types found!"
+        }
 
         ${
           unknownTypes.length
