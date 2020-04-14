@@ -213,7 +213,7 @@ export default class AllContributorsPlugin implements IPlugin {
 
         ${Object.entries(extra).map(
           ([username, contributions]) =>
-            `- ${username} - ${[...contributions].join(", ")}`
+            `- @${username} - ${[...contributions].join(", ")}`
         )}
       `;
 
