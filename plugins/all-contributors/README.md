@@ -58,6 +58,21 @@ If you configure an pre-configured contribution type the arrays are not merged, 
 }
 ```
 
+### Adding Non-Code Contributions
+
+Sometimes you worked with a person that didn't touch the code personally so this plugin would never attribute them with any contributions.
+Since these contributions cannot be automated you can instead just list out another contributor's (name + GitHub username) contributions directly in the PR.
+
+Add the following to a PR body and auto will try to parse it and add contributors from it.
+
+```md
+# Contributions
+
+- Some Guy (@some_guy) - design, doc
+```
+
+To ensure you are doing it right `auto` will comment on the PR with the people + contributions you are manually adding.
+
 ### Exclude Users
 
 Useful for excluding bots from getting into your contributors.
