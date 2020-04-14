@@ -96,7 +96,7 @@ Useful for excluding bots from getting into your contributors.
 
 Maintain contributors lists for sub-packages in a monorepo setup (`lerna`/`yarn`).
 
-All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package.
+All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package. Any non-code contribution listed in the PR body will also be added to the sub-package contributors list.
 
 ```sh
 cd packages/your-package
