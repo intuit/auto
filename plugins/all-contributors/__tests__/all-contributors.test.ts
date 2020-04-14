@@ -213,6 +213,34 @@ describe("All Contributors Plugin", () => {
 
       expect(comment.mock.calls[0][0].message).toMatchSnapshot();
     });
+
+    test("should warn about unknown contribution types - some valid", async () => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      const comment = jest.fn();
+
+      envMock.mockReturnValueOnce({ pr: 123 });
+
+      releasedLabel.apply({
+        comment: comment as any,
+        hooks: autoHooks,
+        logger: dummyLog(),
+        git: {
+          getPullRequest: () => ({
+            data: {
+              body:
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n- @adam - doc\r\n\r\n",
+            },
+          }),
+        } as any,
+      } as Auto.Auto);
+
+      await autoHooks.beforeShipIt.promise({
+        releaseType: "canary",
+      });
+
+      expect(comment.mock.calls[0][0].message).toMatchSnapshot();
+    });
   });
 
   test("should do nothing for username-less commits", async () => {

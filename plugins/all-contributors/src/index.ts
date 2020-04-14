@@ -234,11 +234,11 @@ export default class AllContributorsPlugin implements IPlugin {
                 );
 
                 if (!validContributions.length) {
-                  return;
+                  return "";
                 }
 
                 return `- @${username} - ${validContributions.join(", ")}`;
-              })}
+              }).filter(Boolean).join('\n')}
             `
             : "No valid contribution types found!"
         }
