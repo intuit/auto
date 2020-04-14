@@ -18,7 +18,6 @@ import { IExtendedCommit } from "@auto-it/core/src/log-parse";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
 
-const env = envCi();
 const contributionTypes = [
   "blog",
   "bug",
@@ -169,6 +168,8 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const env = envCi();
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
@@ -205,7 +206,7 @@ export default class AllContributorsPlugin implements IPlugin {
       }
 
       const message = endent`
-        # Extra Contribution
+        # Extra Contributions
 
         The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
 

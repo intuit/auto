@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`All Contributors Plugin beforeShipit should comment confirming extra contributions 1`] = `
+"# Extra Contributions
+
+The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
+
+- andrew - design, doc"
+`;
