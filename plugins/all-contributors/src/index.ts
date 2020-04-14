@@ -117,7 +117,8 @@ function getExtraContributors(body?: string) {
   }
 
   body
-    .slice(start.index)
+    .slice((start.index || 0) + (start[0] || "").length)
+    .replace(/\r\n/g, "\n")
     .split("\n")
     .forEach((line) => {
       if (line.startsWith("#") || line.startsWith("<!--")) {

@@ -145,7 +145,7 @@ describe("All Contributors Plugin", () => {
           getPullRequest: () => ({
             data: {
               body:
-                "A body with contributions\n\n# Contributions\n\n- @andrew - design, doc",
+                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design, doc\r\n\r\n",
             },
           }),
         } as any,
