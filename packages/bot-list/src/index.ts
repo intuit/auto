@@ -6,5 +6,6 @@ export default [
   "renovate",
   "renovate-bot",
   "renovate[bot]",
+  "renovate-pro[bot]",
   "renovate-approve",
 ];
