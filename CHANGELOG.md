@@ -1,3 +1,16 @@
+# v9.27.2 (Wed Apr 15 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/bot-list`
+  - Add renovate-pro[bot] to bot list [#1150](https://github.com/intuit/auto/pull/1150) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.27.1 (Tue Apr 14 2020)
 
 #### 🐛 Bug Fix
