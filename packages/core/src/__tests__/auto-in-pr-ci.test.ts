@@ -167,6 +167,8 @@ describe("next in ci", () => {
   test("should post comment with new version", async () => {
     const auto = new Auto({ ...defaults, plugins: [] });
 
+    // @ts-ignore
+    jest.spyOn(console, 'log').mockImplementation();
     exec.mockResolvedValue("v1.0.0");
     // @ts-ignore
     auto.checkClean = () => Promise.resolve(true);
