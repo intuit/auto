@@ -2,8 +2,8 @@
 
 Update github repos with a pull request.
 
-Currently this plugin only works with singular NPM package (i.e no monorepos) updating other singular NPM pacakges.
-This plugin is built in such a way that it should be easy to add other types of package update (i.e monorepos updating monorepos).
+Currently this plugin only works with NPM packages (and monorepos) updating other NPM packages.
+This plugin is built in such a way that it should be easy to add other types of package update.
 If you would like this functionality please file and issue or, better yet, open a pull request!
 
 ## Installation
