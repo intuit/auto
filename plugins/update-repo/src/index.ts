@@ -52,11 +52,20 @@ const updateLernaMonorepo = (dir: string, name: string, version: string) =>
   );
 
 /** Update a dependency in a JS project */
-const updateJsProject = (dir: string, name: string, version: string) => {
+const updateJsProject = (
+  auto: Auto,
+  dir: string,
+  name: string,
+  version: string
+) => {
   if (isLernaMonorepo()) {
+    auto.logger.verbose.info(
+      "Creating an update for necessary packages in target monorepo."
+    );
     updateLernaMonorepo(dir, name, version);
   } else {
     const hasLock = fs.existsSync("yarn.lock");
+    auto.logger.verbose.info("Creating an update for target npm package.");
     updateNpmPackage(dir, name, version, hasLock);
   }
 };
@@ -77,6 +86,10 @@ async function getUpdater(
   // We are in a lerna monorepo so we should try to make updates for all of the
   // packages in it. We assume that the thing we are updating is also a JS project
   if (isLernaMonorepo()) {
+    auto.logger.verbose.info(
+      "Detected monorepo of package to create PR updates for."
+    );
+
     const { name } = readPackageJson();
     // Since we have already tagged the release we need to calculate from the previous tag
     const lastRelease = await auto.git!.getPreviousTagInBranch();
@@ -92,7 +105,7 @@ async function getUpdater(
             return;
           }
 
-          updateJsProject(dir, p.name, p.version);
+          updateJsProject(auto, dir, p.name, p.version);
         });
       },
     ];
@@ -100,8 +113,9 @@ async function getUpdater(
 
   // We are in NPM package. We assume that the thing we are updating is also a JS project.
   if (isNpmPackage()) {
+    auto.logger.verbose.info("Detected NPM package to create PR updates for.");
     const { name, version } = readPackageJson();
-    return [name, (dir) => updateJsProject(dir, name, version)];
+    return [name, (dir) => updateJsProject(auto, dir, name, version)];
   }
 }
 
@@ -150,12 +164,14 @@ export default class UpdateRepoPlugin implements IPlugin {
       this.name,
       async ({ newVersion, releaseNotes, response }) => {
         if (!newVersion || !response) {
+          auto.logger.verbose.warn("No new versions to open PRs for.");
           return;
         }
 
         const releases = Array.isArray(response) ? response : [response];
 
         if (releases.some((release) => release.data.prerelease)) {
+          auto.logger.verbose.warn("In prerelease, no PRs generated.");
           return;
         }
 
@@ -203,5 +219,7 @@ export default class UpdateRepoPlugin implements IPlugin {
       body: releaseNotes,
       update,
     });
+
+    auto.logger.log.success(`Opened PR on ${repo.repo}: ${message}`);
   }
 }
