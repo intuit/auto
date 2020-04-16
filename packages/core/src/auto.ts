@@ -1112,10 +1112,32 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
+    canaryVersion = `canary${canaryVersion}`;
+
     if (options.dryRun) {
-      this.logger.log.warn(
-        `Published canary identifier would be: "-canary${canaryVersion}"`
-      );
+      const lastRelease = await this.git.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      if (parse(current)) {
+        const next = determineNextVersion(
+          lastRelease,
+          current,
+          version,
+          canaryVersion
+        );
+
+        if (options.quiet) {
+          console.log(next);
+        } else {
+          this.logger.log.warn(`Published canary identifier would be: ${next}`);
+        }
+      } else if (options.quiet) {
+        console.log(`-${canaryVersion}`);
+      } else {
+        this.logger.log.warn(
+          `Published canary identifier would be: "-${canaryVersion}"`
+        );
+      }
     } else {
       this.logger.verbose.info("Calling canary hook");
       const result = await this.hooks.canary.promise(version, canaryVersion);
@@ -1253,9 +1275,37 @@ export default class Auto {
     }
 
     if (options.dryRun) {
-      this.logger.log.success(
-        `Would have created prerelease version with: ${bump} from ${lastTag}`
-      );
+      const lastRelease = await this.git.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      if (parse(current)) {
+        const prereleaseBranches = this.config?.prereleaseBranches!;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const prerelease = determineNextVersion(
+          lastRelease,
+          current,
+          bump,
+          prereleaseBranch
+        );
+
+        if (options.quiet) {
+          console.log(prerelease);
+        } else {
+          this.logger.log.success(
+            `Would have created prerelease version: ${prerelease}`
+          );
+        }
+      } else if (options.quiet) {
+        // The following cases could use some work. They are really just there for lerna independent
+        console.log(`${bump} on ${lastTag}`);
+      } else {
+        this.logger.log.success(
+          `Would have created prerelease version with: ${bump} on ${lastTag}`
+        );
+      }
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
@@ -1510,13 +1560,15 @@ export default class Auto {
       const current = await this.getCurrentVersion(lastRelease);
 
       if (parse(current)) {
-        this.logger.log.warn(
-          `Published version would be: ${inc(current, version as ReleaseType)}`
-        );
-      }
-    }
+        const next = inc(current, version as ReleaseType);
 
-    if (options.quiet) {
+        if (options.quiet) {
+          console.log(next);
+        } else {
+          this.logger.log.warn(`Published version would be: ${next}`);
+        }
+      }
+    } else if (options.quiet) {
       console.log(newVersion);
     }
 

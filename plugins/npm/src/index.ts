@@ -643,7 +643,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info("Successfully versioned repo");
     });
 
-    auto.hooks.canary.tapPromise(this.name, async (bump, postFix) => {
+    auto.hooks.canary.tapPromise(this.name, async (bump, preid) => {
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info("Set CI NPM_TOKEN");
@@ -660,7 +660,6 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info("Detected monorepo, using lerna");
 
         const packagesBefore = await getLernaPackages();
-        const preid = `canary${postFix}`;
         const next =
           (isIndependent && `pre${bump}`) ||
           determineNextVersion(
@@ -735,7 +734,7 @@ export default class NPMPlugin implements IPlugin {
         lastRelease,
         current,
         bump,
-        `canary${postFix}`
+        preid
       );
 
       if (this.canaryScope) {
