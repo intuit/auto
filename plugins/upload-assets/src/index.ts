@@ -67,7 +67,7 @@ export default class UploadAssetsPlugin implements IPlugin {
           const type = await FileType.fromBuffer(file);
 
           const options = {
-            file,
+            data: file,
             name: path.basename(asset),
             headers: {
               "content-length": stats.size,
