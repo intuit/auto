@@ -184,8 +184,6 @@ async function bumpLatest(
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
 }
 
-const verbose = ["--loglevel", "silly"];
-
 const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
   subPackageChangelogs: t.boolean,
@@ -433,10 +431,15 @@ export default class NPMPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const isQuiet = auto.logger.logLevel === "verbose";
     const isVerbose =
       auto.logger.logLevel === "verbose" ||
       auto.logger.logLevel === "veryVerbose";
-    const verboseArgs = isVerbose ? verbose : [];
+    const verboseArgs = isQuiet
+      ? ["-silent"]
+      : isVerbose
+      ? ["--loglevel", "silly"]
+      : [];
     const prereleaseBranches = auto.config?.prereleaseBranches!;
     const branch = getCurrentBranch();
     // if ran from master we publish the prerelease to the first

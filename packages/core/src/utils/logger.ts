@@ -2,7 +2,7 @@
 
 import signale from "signale";
 
-export type LogLevel = undefined | "verbose" | "veryVerbose";
+export type LogLevel = undefined | "verbose" | "veryVerbose" | "quiet";
 
 export interface ILogger {
   /** The level at which to log messages */
@@ -53,6 +53,8 @@ export function setLogLevel(newLogLevel: LogLevel) {
     toggleLogs({ log: true, verbose: true, veryVerbose: false });
   } else if (logger.logLevel === "veryVerbose") {
     toggleLogs({ log: true, verbose: true, veryVerbose: true });
+  } else if (logger.logLevel === "quiet") {
+    toggleLogs({ log: false, verbose: false, veryVerbose: false });
   } else {
     toggleLogs({ log: true, verbose: false, veryVerbose: false });
   }

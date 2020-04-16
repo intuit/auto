@@ -80,6 +80,14 @@ const onlyPublishWithReleaseLabel: AutoOption = {
   group: "main",
 };
 
+const quiet: AutoOption = {
+  name: "quiet",
+  alias: "q",
+  type: Boolean,
+  description: "Print **only** the result of the command",
+  group: "global",
+};
+
 const defaultOptions: AutoOption[] = [
   {
     name: "verbose",
@@ -215,6 +223,7 @@ const latestCommandArgs: AutoOption[] = [
   prerelease,
   changelogTitle,
   changelogCommitMessage,
+  quiet,
 ];
 
 export const commands: AutoCommand[] = [
@@ -414,6 +423,7 @@ export const commands: AutoCommand[] = [
       changelogTitle,
       changelogCommitMessage,
       baseBranch,
+      quiet,
     ],
     examples: [
       {
@@ -535,6 +545,7 @@ export const commands: AutoCommand[] = [
           "Force a canary release, even if the PR is marked to skip the release",
         config: true,
       },
+      quiet,
     ],
   },
   {
@@ -557,6 +568,7 @@ export const commands: AutoCommand[] = [
           "The message used when attaching the prerelease version to a PR",
         config: true,
       },
+      quiet,
     ],
   },
 ];

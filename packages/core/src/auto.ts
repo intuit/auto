@@ -324,7 +324,9 @@ export default class Auto {
     this.options = options;
     this.baseBranch = options.baseBranch || "master";
     setLogLevel(
-      Array.isArray(options.verbose) && options.verbose.length > 1
+      "quiet" in options && options.quiet
+        ? "quiet"
+        : Array.isArray(options.verbose) && options.verbose.length > 1
         ? "veryVerbose"
         : options.verbose
         ? "verbose"
@@ -1154,6 +1156,10 @@ export default class Auto {
         `Published canary version${newVersion ? `: ${newVersion}` : ""}`
       );
 
+      if (args.quiet) {
+        console.log(newVersion);
+      }
+
       await execPromise("git", ["reset", "--hard", "HEAD"]);
     }
 
@@ -1236,12 +1242,14 @@ export default class Auto {
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
 
-    this.logger.log.info("Full Release notes for next release:");
-    console.log(fullReleaseNotes);
+    if (!args.quiet) {
+      this.logger.log.info("Full Release notes for next release:");
+      console.log(fullReleaseNotes);
 
-    if (releaseNotes) {
-      this.logger.log.info("Release notes for last change in next release");
-      console.log(releaseNotes);
+      if (releaseNotes) {
+        this.logger.log.info("Release notes for last change in next release");
+        console.log(releaseNotes);
+      }
     }
 
     if (options.dryRun) {
@@ -1300,13 +1308,22 @@ export default class Auto {
       }
     }
 
+    if (options.quiet) {
+      console.log(newVersion);
+    }
+
     await execPromise("git", ["reset", "--hard", "HEAD"]);
     return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
   /** Force a release to latest and bypass `shipit` safeguards. */
-  async latest(options: IShipItOptions = {}) {
-    await this.publishFullRelease(options);
+  async latest(args: IShipItOptions = {}) {
+    const options = {
+      ...(this.getCommandDefault("latest") as IShipItOptions),
+      ...args,
+    };
+
+    return this.publishFullRelease(options);
   }
 
   /**
@@ -1373,7 +1390,7 @@ export default class Auto {
     await this.hooks.beforeShipIt.promise({ releaseType });
 
     if (releaseType === "latest") {
-      publishInfo = await this.publishFullRelease(options);
+      publishInfo = await this.latest(options);
     } else if (releaseType === "old") {
       publishInfo = await this.oldRelease(options);
     } else if (releaseType === "next") {
@@ -1473,7 +1490,7 @@ export default class Auto {
       lastRelease
     );
 
-    await this.makeChangelog(options);
+    await this.makeChangelog({ ...options, quiet: undefined });
 
     if (!options.dryRun) {
       await this.checkClean();
@@ -1497,6 +1514,10 @@ export default class Auto {
           `Published version would be: ${inc(current, version as ReleaseType)}`
         );
       }
+    }
+
+    if (options.quiet) {
+      console.log(newVersion);
     }
 
     return { newVersion, commitsInRelease, context: "latest" };
@@ -1608,7 +1629,11 @@ export default class Auto {
       return;
     }
 
-    this.logger.log.info("New Release Notes\n", releaseNotes);
+    if (args.quiet) {
+      console.log(releaseNotes);
+    } else {
+      this.logger.log.info("New Release Notes\n", releaseNotes);
+    }
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
 
