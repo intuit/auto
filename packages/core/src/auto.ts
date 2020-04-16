@@ -440,11 +440,14 @@ export default class Auto {
       } else {
         this.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
 
-        return this.git!.publish(
+        const release = await this.git!.publish(
           options.fullReleaseNotes,
           options.newVersion,
           options.isPrerelease
         );
+
+        this.logger.log.info(release.data.html_url);
+        return release;
       }
     });
   }
