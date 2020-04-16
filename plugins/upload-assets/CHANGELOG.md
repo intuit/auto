@@ -1,3 +1,16 @@
+# v9.27.3 (Thu Apr 16 2020)
+
+#### 🐛 Bug Fix
+
+- upload-assets: update deprecated option [#1152](https://github.com/intuit/auto/pull/1152) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- file deprecated for data ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.26.6 (Tue Apr 07 2020)
 
 #### 🐛 Bug Fix
