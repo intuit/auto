@@ -65,6 +65,7 @@ import {
 import { omit } from "./utils/omit";
 import { execSync } from "child_process";
 import isBinary from "./utils/is-binary";
+import { gitReset } from "./utils/git-reset";
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -1182,7 +1183,7 @@ export default class Auto {
         console.log(newVersion);
       }
 
-      await execPromise("git", ["reset", "--hard", "HEAD"]);
+      await gitReset();
     }
 
     let latestTag: string;
@@ -1362,7 +1363,7 @@ export default class Auto {
       console.log(newVersion);
     }
 
-    await execPromise("git", ["reset", "--hard", "HEAD"]);
+    await gitReset();
     return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
@@ -1448,7 +1449,7 @@ export default class Auto {
     } else {
       publishInfo = await this.canary(options);
 
-      if (options.dryRun) {
+      if (options.dryRun && !options.quiet) {
         this.logger.log.success(
           "Below is what would happen upon merge of the current branch into master"
         );
