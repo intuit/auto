@@ -184,8 +184,6 @@ async function bumpLatest(
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
 }
 
-const verbose = ["--loglevel", "silly"];
-
 const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
   subPackageChangelogs: t.boolean,
@@ -433,10 +431,15 @@ export default class NPMPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const isQuiet = auto.logger.logLevel === "verbose";
     const isVerbose =
       auto.logger.logLevel === "verbose" ||
       auto.logger.logLevel === "veryVerbose";
-    const verboseArgs = isVerbose ? verbose : [];
+    const verboseArgs = isQuiet
+      ? ["-silent"]
+      : isVerbose
+      ? ["--loglevel", "silly"]
+      : [];
     const prereleaseBranches = auto.config?.prereleaseBranches!;
     const branch = getCurrentBranch();
     // if ran from master we publish the prerelease to the first
@@ -640,7 +643,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info("Successfully versioned repo");
     });
 
-    auto.hooks.canary.tapPromise(this.name, async (bump, postFix) => {
+    auto.hooks.canary.tapPromise(this.name, async (bump, preid) => {
       if (this.setRcToken) {
         await setTokenOnCI(auto.logger);
         auto.logger.verbose.info("Set CI NPM_TOKEN");
@@ -657,7 +660,6 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info("Detected monorepo, using lerna");
 
         const packagesBefore = await getLernaPackages();
-        const preid = `canary${postFix}`;
         const next =
           (isIndependent && `pre${bump}`) ||
           determineNextVersion(
@@ -732,7 +734,7 @@ export default class NPMPlugin implements IPlugin {
         lastRelease,
         current,
         bump,
-        `canary${postFix}`
+        preid
       );
 
       if (this.canaryScope) {

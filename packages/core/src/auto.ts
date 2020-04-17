@@ -65,6 +65,7 @@ import {
 import { omit } from "./utils/omit";
 import { execSync } from "child_process";
 import isBinary from "./utils/is-binary";
+import { gitReset } from "./utils/git-reset";
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
@@ -324,7 +325,9 @@ export default class Auto {
     this.options = options;
     this.baseBranch = options.baseBranch || "master";
     setLogLevel(
-      Array.isArray(options.verbose) && options.verbose.length > 1
+      "quiet" in options && options.quiet
+        ? "quiet"
+        : Array.isArray(options.verbose) && options.verbose.length > 1
         ? "veryVerbose"
         : options.verbose
         ? "verbose"
@@ -1110,10 +1113,32 @@ export default class Auto {
       canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
     }
 
+    canaryVersion = `canary${canaryVersion}`;
+
     if (options.dryRun) {
-      this.logger.log.warn(
-        `Published canary identifier would be: "-canary${canaryVersion}"`
-      );
+      const lastRelease = await this.git.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      if (parse(current)) {
+        const next = determineNextVersion(
+          lastRelease,
+          current,
+          version,
+          canaryVersion
+        );
+
+        if (options.quiet) {
+          console.log(next);
+        } else {
+          this.logger.log.warn(`Published canary identifier would be: ${next}`);
+        }
+      } else if (options.quiet) {
+        console.log(`-${canaryVersion}`);
+      } else {
+        this.logger.log.warn(
+          `Published canary identifier would be: "-${canaryVersion}"`
+        );
+      }
     } else {
       this.logger.verbose.info("Calling canary hook");
       const result = await this.hooks.canary.promise(version, canaryVersion);
@@ -1154,7 +1179,11 @@ export default class Auto {
         `Published canary version${newVersion ? `: ${newVersion}` : ""}`
       );
 
-      await execPromise("git", ["reset", "--hard", "HEAD"]);
+      if (args.quiet) {
+        console.log(newVersion);
+      }
+
+      await gitReset();
     }
 
     let latestTag: string;
@@ -1236,18 +1265,48 @@ export default class Auto {
       calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
       SEMVER.patch;
 
-    this.logger.log.info("Full Release notes for next release:");
-    console.log(fullReleaseNotes);
+    if (!args.quiet) {
+      this.logger.log.info("Full Release notes for next release:");
+      console.log(fullReleaseNotes);
 
-    if (releaseNotes) {
-      this.logger.log.info("Release notes for last change in next release");
-      console.log(releaseNotes);
+      if (releaseNotes) {
+        this.logger.log.info("Release notes for last change in next release");
+        console.log(releaseNotes);
+      }
     }
 
     if (options.dryRun) {
-      this.logger.log.success(
-        `Would have created prerelease version with: ${bump} from ${lastTag}`
-      );
+      const lastRelease = await this.git.getLatestRelease();
+      const current = await this.getCurrentVersion(lastRelease);
+
+      if (parse(current)) {
+        const prereleaseBranches = this.config?.prereleaseBranches!;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const prerelease = determineNextVersion(
+          lastRelease,
+          current,
+          bump,
+          prereleaseBranch
+        );
+
+        if (options.quiet) {
+          console.log(prerelease);
+        } else {
+          this.logger.log.success(
+            `Would have created prerelease version: ${prerelease}`
+          );
+        }
+      } else if (options.quiet) {
+        // The following cases could use some work. They are really just there for lerna independent
+        console.log(`${bump} on ${lastTag}`);
+      } else {
+        this.logger.log.success(
+          `Would have created prerelease version with: ${bump} on ${lastTag}`
+        );
+      }
 
       return { newVersion: "", commitsInRelease: commits, context: "next" };
     }
@@ -1300,13 +1359,22 @@ export default class Auto {
       }
     }
 
-    await execPromise("git", ["reset", "--hard", "HEAD"]);
+    if (options.quiet) {
+      console.log(newVersion);
+    }
+
+    await gitReset();
     return { newVersion, commitsInRelease: commits, context: "next" };
   }
 
   /** Force a release to latest and bypass `shipit` safeguards. */
-  async latest(options: IShipItOptions = {}) {
-    await this.publishFullRelease(options);
+  async latest(args: IShipItOptions = {}) {
+    const options = {
+      ...(this.getCommandDefault("latest") as IShipItOptions),
+      ...args,
+    };
+
+    return this.publishFullRelease(options);
   }
 
   /**
@@ -1373,7 +1441,7 @@ export default class Auto {
     await this.hooks.beforeShipIt.promise({ releaseType });
 
     if (releaseType === "latest") {
-      publishInfo = await this.publishFullRelease(options);
+      publishInfo = await this.latest(options);
     } else if (releaseType === "old") {
       publishInfo = await this.oldRelease(options);
     } else if (releaseType === "next") {
@@ -1381,7 +1449,7 @@ export default class Auto {
     } else {
       publishInfo = await this.canary(options);
 
-      if (options.dryRun) {
+      if (options.dryRun && !options.quiet) {
         this.logger.log.success(
           "Below is what would happen upon merge of the current branch into master"
         );
@@ -1473,7 +1541,7 @@ export default class Auto {
       lastRelease
     );
 
-    await this.makeChangelog(options);
+    await this.makeChangelog({ ...options, quiet: undefined });
 
     if (!options.dryRun) {
       await this.checkClean();
@@ -1493,10 +1561,16 @@ export default class Auto {
       const current = await this.getCurrentVersion(lastRelease);
 
       if (parse(current)) {
-        this.logger.log.warn(
-          `Published version would be: ${inc(current, version as ReleaseType)}`
-        );
+        const next = inc(current, version as ReleaseType);
+
+        if (options.quiet) {
+          console.log(next);
+        } else {
+          this.logger.log.warn(`Published version would be: ${next}`);
+        }
       }
+    } else if (options.quiet) {
+      console.log(newVersion);
     }
 
     return { newVersion, commitsInRelease, context: "latest" };
@@ -1608,7 +1682,11 @@ export default class Auto {
       return;
     }
 
-    this.logger.log.info("New Release Notes\n", releaseNotes);
+    if (args.quiet) {
+      console.log(releaseNotes);
+    } else {
+      this.logger.log.info("New Release Notes\n", releaseNotes);
+    }
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
 

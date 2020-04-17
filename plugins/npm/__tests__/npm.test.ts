@@ -696,7 +696,7 @@ describe("canary", () => {
       }
     `;
 
-    await hooks.canary.promise(Auto.SEMVER.patch, ".123.1");
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
     expect(execPromise.mock.calls[0]).toContain("npm");
     expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
   });

@@ -8,6 +8,7 @@ import child from "child_process";
 
 const importMock = jest.fn();
 
+jest.mock("../utils/git-reset.ts");
 jest.mock("../utils/load-plugins.ts");
 jest.mock("../utils/verify-auth.ts", () => () => true);
 jest.mock("import-cwd", () => (path: string) => importMock(path));
@@ -1066,7 +1067,7 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, ".123.1");
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
@@ -1114,7 +1115,7 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, ".abc");
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abc");
     });
 
     test("doesn't comment if there is an error", async () => {
@@ -1153,7 +1154,7 @@ describe("Auto", () => {
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, ".abcd");
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
     });
 
     test('should not publish when is present "skip-release" label', async () => {

@@ -49,6 +49,11 @@ export type IVersionOptions = ReleaseCalculationOptions & {
   from?: string;
 };
 
+interface Quiet {
+  /** Print **only** the result of the command */
+  quiet?: boolean;
+}
+
 interface NoVersionPrefix {
   /** Whether to prefix the version with a "v" */
   noVersionPrefix?: boolean;
@@ -82,6 +87,7 @@ interface BaseBranch {
 export type IChangelogOptions = BaseBranch &
   ChangelogTitle &
   ChangelogMessage &
+  Quiet &
   DryRun &
   NoVersionPrefix &
   Partial<AuthorInformation> & {
@@ -124,6 +130,7 @@ export type IShipItOptions = BaseBranch &
   ChangelogMessage &
   ChangelogTitle &
   DryRun &
+  Quiet &
   Partial<AuthorInformation> &
   Partial<RepoInformation> &
   ReleaseCalculationOptions & {
@@ -136,7 +143,7 @@ export type IShipItOptions = BaseBranch &
     onlyGraduateWithReleaseLabel?: boolean;
   };
 
-export interface ICanaryOptions {
+export type ICanaryOptions = Quiet & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** THe PR to attach the canary to */
@@ -147,14 +154,14 @@ export interface ICanaryOptions {
   message?: string | "false";
   /** Always deploy a canary, even if the PR is marked as skip release */
   force?: boolean;
-}
+};
 
-export interface INextOptions {
+export type INextOptions = Quiet & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** The message used when attaching the prerelease version to a PR */
   message?: string;
-}
+};
 
 export interface IInfoOptions {
   /** List some of the available plugins */
