@@ -61,7 +61,7 @@ describe("canary in ci", () => {
     jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
     await auto.canary();
-    expect(canary).toHaveBeenCalledWith(SEMVER.patch, ".123.1");
+    expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
   });
 
   test("comments on PR in CI", async () => {
@@ -117,7 +117,7 @@ describe("canary in ci", () => {
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
     jest.spyOn(auto.release!, "getCommits").mockImplementation();
-    auto.hooks.canary.tap("test", (bump, post) => `1.2.4-canary${post}`);
+    auto.hooks.canary.tap("test", (bump, post) => `1.2.4-${post}`);
 
     await auto.canary({ pr: 123, build: 1, message: "false" });
     expect(addToPrBody).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe("canary in ci", () => {
     const addToPrBody = jest.fn();
     auto.git!.addToPrBody = addToPrBody;
     jest.spyOn(auto.release!, "getCommits").mockImplementation();
-    auto.hooks.canary.tap("test", (bump, post) => `1.2.4-canary${post}`);
+    auto.hooks.canary.tap("test", (bump, post) => `1.2.4-${post}`);
 
     const version = await auto.canary({ pr: 456, build: 5 });
     expect(version!.newVersion).toBe("1.2.4-canary.456.5");
@@ -159,7 +159,7 @@ describe("shipit in ci", () => {
     auto.hooks.canary.tap("test", canary);
 
     await auto.shipit();
-    expect(canary).toHaveBeenCalledWith(SEMVER.patch, ".123.1");
+    expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
   });
 });
 
@@ -168,7 +168,7 @@ describe("next in ci", () => {
     const auto = new Auto({ ...defaults, plugins: [] });
 
     // @ts-ignore
-    jest.spyOn(console, 'log').mockImplementation();
+    jest.spyOn(console, "log").mockImplementation();
     exec.mockResolvedValue("v1.0.0");
     // @ts-ignore
     auto.checkClean = () => Promise.resolve(true);
