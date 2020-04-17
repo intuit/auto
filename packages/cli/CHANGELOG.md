@@ -1,3 +1,19 @@
+# v9.28.0 (Fri Apr 17 2020)
+
+#### 🚀 Enhancement
+
+- Add --quiet flag [#1155](https://github.com/intuit/auto/pull/1155) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add quiet flag ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.27.0 (Tue Apr 14 2020)
 
 #### 🐛 Bug Fix

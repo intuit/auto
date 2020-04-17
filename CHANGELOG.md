@@ -1,3 +1,16 @@
+# v9.28.0 (Fri Apr 17 2020)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/npm`
+  - Add --quiet flag [#1155](https://github.com/intuit/auto/pull/1155) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.27.3 (Thu Apr 16 2020)
 
 #### 🐛 Bug Fix
