@@ -1,3 +1,16 @@
+# v9.28.1 (Mon Apr 20 2020)
+
+#### 🐛 Bug Fix
+
+- add verbose logs when branch is behind [#1159](https://github.com/intuit/auto/pull/1159) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add verbose logs when branch is behind ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.28.0 (Fri Apr 17 2020)
 
 #### 🚀 Enhancement
