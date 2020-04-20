@@ -431,7 +431,7 @@ export default class NPMPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    const isQuiet = auto.logger.logLevel === "verbose";
+    const isQuiet = auto.logger.logLevel === "quiet";
     const isVerbose =
       auto.logger.logLevel === "verbose" ||
       auto.logger.logLevel === "veryVerbose";
