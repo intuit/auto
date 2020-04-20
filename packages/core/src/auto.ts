@@ -381,12 +381,15 @@ export default class Auto {
       // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
       // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
       try {
+        const currentBranch = getCurrentBranch();
         const heads = await execPromise("git", [
           "ls-remote",
           "--heads",
           this.remote,
-          getCurrentBranch(),
+          currentBranch,
         ]);
+        this.logger.verbose.info("Branch:", currentBranch);
+        this.logger.verbose.info("HEADs:", heads);
         const [, remoteHead] = heads.match(/^(\w+)?/) || [];
 
         if (remoteHead) {
@@ -404,6 +407,7 @@ export default class Auto {
         this.logger.log.warn(
           "Current commit is behind, skipping the release to avoid collisions."
         );
+        this.logger.verbose.warn(error);
         process.exit(0);
       }
     });
