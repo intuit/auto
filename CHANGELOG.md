@@ -1,3 +1,16 @@
+# v9.28.3 (Mon Apr 20 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix quiet flag in npm plugin. was always on [#1161](https://github.com/intuit/auto/pull/1161) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.28.2 (Mon Apr 20 2020)
 
 #### 🐛 Bug Fix
