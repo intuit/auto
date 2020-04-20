@@ -1,3 +1,15 @@
+# v9.28.2 (Mon Apr 20 2020)
+
+#### 🐛 Bug Fix
+
+- bug in silent flag [#1160](https://github.com/intuit/auto/pull/1160) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.27.3 (Thu Apr 16 2020)
 
 #### 🐛 Bug Fix
