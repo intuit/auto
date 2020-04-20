@@ -436,7 +436,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.logLevel === "verbose" ||
       auto.logger.logLevel === "veryVerbose";
     const verboseArgs = isQuiet
-      ? ["-silent"]
+      ? ["--silent"]
       : isVerbose
       ? ["--loglevel", "silly"]
       : [];
