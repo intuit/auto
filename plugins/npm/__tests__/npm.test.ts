@@ -380,6 +380,77 @@ test("should use string semver if no published package", async () => {
   );
 });
 
+describe("modifyConfig", () => {
+  beforeEach(() => {
+    execPromise.mockClear();
+  });
+
+  test("should not modify config in single package", async () => {
+    const plugin = new NPMPlugin({ setRcToken: false });
+    const hooks = makeHooks();
+    const logger = dummyLog();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger,
+    } as Auto.Auto);
+
+    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+  });
+
+  test("should not modify config when tagVersionPrefix is not set", async () => {
+    const plugin = new NPMPlugin({ setRcToken: false });
+    const hooks = makeHooks();
+    const logger = dummyLog();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger,
+    } as Auto.Auto);
+
+    existsSync.mockReturnValueOnce(true);
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+  });
+
+  test("should modify config when tagVersionPrefix is set", async () => {
+    const plugin = new NPMPlugin({ setRcToken: false });
+    const hooks = makeHooks();
+    const logger = dummyLog();
+
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue(`
+      {
+        "name": "test",
+        "tagVersionPrefix": ""
+      }
+    `);
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger,
+    } as Auto.Auto);
+
+    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({
+      noVersionPrefix: true,
+    });
+  });
+});
+
 describe("publish", () => {
   beforeEach(() => {
     execPromise.mockClear();
