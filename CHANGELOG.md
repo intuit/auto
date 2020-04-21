@@ -1,3 +1,16 @@
+# v9.29.0 (Tue Apr 21 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - set noVersionPrefix if tagVersionPrefix is set [#1170](https://github.com/intuit/auto/pull/1170) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.28.3 (Mon Apr 20 2020)
 
 #### 🐛 Bug Fix
