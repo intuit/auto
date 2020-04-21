@@ -455,6 +455,21 @@ export default class NPMPlugin implements IPlugin {
       }
     });
 
+    auto.hooks.modifyConfig.tap(this.name, (config) => {
+      if (isMonorepo()) {
+        const lernaJson = getLernaJson();
+
+        if (lernaJson.tagVersionPrefix === "") {
+          return {
+            ...config,
+            noVersionPrefix: true,
+          };
+        }
+      }
+
+      return config;
+    });
+
     auto.hooks.beforeShipIt.tap(this.name, async () => {
       const isIndependent = getLernaJson().version === "independent";
 
