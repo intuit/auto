@@ -5,7 +5,7 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import * as fs from "fs";
-import { inc, ReleaseType } from "semver";
+import { inc, ReleaseType, gte } from "semver";
 import { promisify } from "util";
 import * as t from "io-ts";
 
@@ -52,6 +52,21 @@ export default class ChromeWebStorePlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    /** Get the latest tag in the repo, if none then the first commit */
+    const getVersion = async () => {
+      try {
+        const manifest = await getManifest(this.options.manifest);
+        const latest = await auto.git!.getLatestTagInBranch();
+        const version = gte(manifest.version, latest)
+          ? manifest.version
+          : latest;
+
+        return auto.prefixRelease(version);
+      } catch (error) {
+        return auto.prefixRelease("0.0.0");
+      }
+    };
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
@@ -126,14 +141,8 @@ export default class ChromeWebStorePlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
-      const manifest = await getManifest(this.options.manifest);
-      const version = auto.prefixRelease(manifest.version);
-
-      auto.logger.verbose.info(
-        `${this.name}: Got previous version from manifest.json`,
-        version
-      );
-
+      const version = await getVersion();
+      auto.logger.verbose.info(`${this.name}: Got previous version:`, version);
       return version;
     });
 
@@ -143,10 +152,12 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
+    auto.hooks.version.tapPromise(this.name, async (bump) => {
+      const version = await getVersion();
+
       // increment version
       const manifest = await getManifest(this.options.manifest);
-      manifest.version = inc(manifest.version, version as ReleaseType);
+      manifest.version = inc(version, bump as ReleaseType);
       await writeFile(
         this.options.manifest,
         JSON.stringify(manifest, undefined, 2)
