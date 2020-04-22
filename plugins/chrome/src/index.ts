@@ -9,6 +9,7 @@ import { inc, ReleaseType, gte } from "semver";
 import { promisify } from "util";
 import * as t from "io-ts";
 
+const copyFile = promisify(fs.copyFile);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
@@ -162,6 +163,8 @@ export default class ChromeWebStorePlugin implements IPlugin {
         this.options.manifest,
         JSON.stringify(manifest, undefined, 2)
       );
+
+      await copyFile(this.options.manifest, this.options.build);
 
       // commit new version
       await execPromise("git", ["add", this.options.manifest]);
