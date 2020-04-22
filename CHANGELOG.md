@@ -1,3 +1,15 @@
+# v9.30.1 (Wed Apr 22 2020)
+
+#### ⚠️  Pushed to `master`
+
+- add missing root devdep ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.30.0 (Wed Apr 22 2020)
 
 #### 🚀 Enhancement
