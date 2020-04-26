@@ -1,3 +1,20 @@
+# v9.30.2 (Sat Apr 25 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - --silent is not a lerna flag [#1174](https://github.com/intuit/auto/pull/1174) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- actually fix docs publish [#1172](https://github.com/intuit/auto/pull/1172) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.30.1 (Wed Apr 22 2020)
 
 #### ⚠️  Pushed to `master`
