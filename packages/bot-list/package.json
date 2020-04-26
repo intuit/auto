@@ -2,7 +2,7 @@
   "name": "@auto-it/bot-list",
   "main": "dist/index.js",
   "description": "A list of bots for auto plugins to ignore",
-  "version": "9.30.1",
+  "version": "9.30.2",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
