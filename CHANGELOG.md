@@ -1,3 +1,16 @@
+# v9.30.3 (Mon Apr 27 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - pass Gradle options to getProperties helper function [#1184](https://github.com/intuit/auto/pull/1184) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v9.30.2 (Sat Apr 25 2020)
 
 #### 🐛 Bug Fix
