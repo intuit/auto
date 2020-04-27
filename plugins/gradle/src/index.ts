@@ -47,7 +47,7 @@ export async function getProperties(
   gradleOptions: string[]
 ): Promise<IGradleProperties> {
   const properties = (
-    await execPromise(gradleCommand, ["properties", "-q", ...gradleOptions])
+    await execPromise(gradleCommand, ["-q", "properties", ...gradleOptions])
   )
     .split("\n")
     .map((line) => /([^:\s]+):\s?(.+)/.exec(line) || [])

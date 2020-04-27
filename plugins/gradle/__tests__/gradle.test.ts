@@ -227,9 +227,9 @@ describe("getProperties", () => {
       version: "1.0.0",
     });
     expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-      "properties",
       "-q",
-      `-someOpt`,
+      "properties",
+      "-someOpt",
     ]);
   });
 
