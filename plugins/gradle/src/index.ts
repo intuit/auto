@@ -39,12 +39,16 @@ export interface IGradleProperties {
  * Builds properties object from gradle properties command
  *
  * @param gradleCommand - base gradle command
+ * @param gradleOptions - options to pass to gradle command
  * @returns properties wrapped in a promise
  */
 export async function getProperties(
-  gradleCommand: string
+  gradleCommand: string,
+  gradleOptions: string[]
 ): Promise<IGradleProperties> {
-  const properties = (await execPromise(gradleCommand, ["properties", "-q"]))
+  const properties = (
+    await execPromise(gradleCommand, ["-q", "properties", ...gradleOptions])
+  )
     .split("\n")
     .map((line) => /([^:\s]+):\s?(.+)/.exec(line) || [])
     .map(([, key, value]) => key && value && { [key]: value })
@@ -57,13 +61,17 @@ export async function getProperties(
  * Retrieves version from gradle properties. Will throw error if version does not exist
  *
  * @param gradleCommand - base gradle command
+ * @param gradleOptions - options to pass to gradle command
  * @returns version wrapped in a promise
  */
-async function getVersion(gradleCommand: string): Promise<string> {
+async function getVersion(
+  gradleCommand: string,
+  gradleOptions: string[]
+): Promise<string> {
   const {
     version,
     snapshotSuffix = defaultSnapshotSuffix,
-  } = await getProperties(gradleCommand);
+  } = await getProperties(gradleCommand, gradleOptions);
 
   if (version) {
     return version.replace(snapshotSuffix, "");
@@ -141,7 +149,10 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     auto.hooks.beforeRun.tap(this.name, async () => {
       auto.logger.log.warn(`${logPrefix} BeforeRun`);
 
-      this.properties = await getProperties(this.options.gradleCommand);
+      this.properties = await getProperties(
+        this.options.gradleCommand,
+        this.options.gradleOptions
+      );
       const {
         version = "",
         snapshotSuffix = defaultSnapshotSuffix,
@@ -160,11 +171,16 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
-      return auto.prefixRelease(await getVersion(this.options.gradleCommand));
+      return auto.prefixRelease(
+        await getVersion(this.options.gradleCommand, this.options.gradleOptions)
+      );
     });
 
     auto.hooks.version.tapPromise(this.name, async (version: string) => {
-      const previousVersion = await getVersion(this.options.gradleCommand);
+      const previousVersion = await getVersion(
+        this.options.gradleCommand,
+        this.options.gradleOptions
+      );
 
       const releaseVersion =
         // After release we bump the version by a patch and add -SNAPSHOT
@@ -221,7 +237,10 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
 
       const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
-      const releaseVersion = await getVersion(this.options.gradleCommand);
+      const releaseVersion = await getVersion(
+        this.options.gradleCommand,
+        this.options.gradleOptions
+      );
 
       // snapshots precede releases, so if we had a minor/major release,
       // then we need to set up snapshots on the next version

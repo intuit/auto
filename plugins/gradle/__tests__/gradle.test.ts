@@ -213,14 +213,28 @@ describe("getProperties", () => {
       version: 1.0.0
       snapshotSuffix: :SNAPSHOT
     `);
-    expect(await getProperties("")).toStrictEqual({
+    expect(await getProperties("", [])).toStrictEqual({
       version: "1.0.0",
       snapshotSuffix: ":SNAPSHOT",
     });
   });
 
+  test("should read properties from file with options", async () => {
+    const spy = jest.fn(() => Promise.resolve("version: 1.0.0"));
+    jest.spyOn(Auto, "execPromise").mockImplementation(spy);
+
+    expect(await getProperties("gradle", ["-someOpt"])).toStrictEqual({
+      version: "1.0.0",
+    });
+    expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+      "-q",
+      "properties",
+      "-someOpt",
+    ]);
+  });
+
   test("should read nothing from empty file", async () => {
     mockProperties("");
-    expect(await getProperties("")).toStrictEqual({});
+    expect(await getProperties("", [])).toStrictEqual({});
   });
 });
