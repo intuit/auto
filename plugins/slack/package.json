@@ -46,7 +46,7 @@
     "tslib": "1.11.1"
   },
   "devDependencies": {
-    "@types/node-fetch": "2.5.5",
+    "@types/node-fetch": "2.5.7",
     "@types/url-join": "^4.0.0"
   }
 }
