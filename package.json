@@ -61,7 +61,7 @@
     "graphql": "^15.0.0",
     "husky": "^4.0.7",
     "ignite": "1.11.2",
-    "jest": "~25.1.0",
+    "jest": "~25.4.0",
     "jest-serializer-path": "^0.1.15",
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
