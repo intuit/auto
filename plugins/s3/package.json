@@ -33,12 +33,16 @@
     "build": "tsc -b",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2 --config ../../package.json"
+    "test": "jest --maxWorkers=2 --config ../../package.json",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "aws-cli-js": "^2.0.6",
     "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2"
-  }
+    "io-ts": "^2.1.2",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
