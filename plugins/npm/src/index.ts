@@ -6,6 +6,7 @@ import { Memoize as memoize } from "typescript-memoize";
 import { Octokit } from "@octokit/rest";
 import * as t from "io-ts";
 import { execSync } from "child_process";
+import on from "await-to-js";
 
 import {
   Auto,
@@ -665,7 +666,9 @@ export default class NPMPlugin implements IPlugin {
       }
 
       const lastRelease = await auto.git!.getLatestRelease();
-      const latestTag = (await auto.git?.getLatestTagInBranch()) || lastRelease;
+      const [, latestTag = lastRelease] = await on(
+        auto.git!.getLatestTagInBranch()
+      );
       const inPrerelease = prereleaseBranches.some((b) =>
         latestTag.includes(`-${b}.`)
       );

@@ -757,7 +757,35 @@ describe("canary", () => {
       getCurrentVersion: () => "1.2.3",
       git: {
         getLatestRelease: () => "1.2.3",
-        getLatestTagInBranch: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    expect(execPromise.mock.calls[0]).toContain("npm");
+    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+  });
+
+  test("use handles repos with no tags", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.reject(new Error()),
       },
     } as unknown) as Auto.Auto);
 
@@ -784,7 +812,7 @@ describe("canary", () => {
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
-        getLatestTagInBranch: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
     existsSync.mockReturnValueOnce(true);
@@ -828,7 +856,7 @@ describe("canary", () => {
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
-        getLatestTagInBranch: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
     existsSync.mockReturnValueOnce(true);
@@ -922,7 +950,7 @@ describe("canary", () => {
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
-        getLatestTagInBranch: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
     existsSync.mockReturnValueOnce(true);
@@ -964,7 +992,7 @@ describe("canary", () => {
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
-        getLatestTagInBranch: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
     existsSync.mockReturnValueOnce(true);
