@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "await-to-js": "^2.1.1",
     "env-ci": "^5.0.1",
     "fp-ts": "^2.5.3",
     "get-monorepo-packages": "^1.1.0",

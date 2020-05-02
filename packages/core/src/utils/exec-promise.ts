@@ -59,14 +59,13 @@ export default async function execPromise(
         appendedStdErr += allStdout.length ? `\n\n${allStdout}` : "";
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : "";
 
-        reject(
-          new Error(
-            `Running command '${cmd}' with args [${args.join(
-              ", "
-            )}] failed${appendedStdErr}`
-          )
+        const error = new Error(
+          `Running command '${cmd}' with args [${args.join(
+            ", "
+          )}] failed${appendedStdErr}`
         );
-        log.verbose.error("Called from:", callSite);
+        error.stack = (error.stack || "") + callSite;
+        reject(error);
       } else {
         // Tools can occasionally print to stderr but not fail, so print that just in case.
         if (allStderr.length) {
