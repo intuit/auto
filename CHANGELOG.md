@@ -1,3 +1,16 @@
+# v9.30.5 (Sat May 02 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix PR detection bug [#1191](https://github.com/intuit/auto/pull/1191) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.30.4 (Sat May 02 2020)
 
 #### 🐛 Bug Fix
