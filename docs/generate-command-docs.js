@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const {camelCase} = require('change-case')
 const endent = require("endent").default;
 const docs = require("command-line-docs").default;
 const { commands } = require("../packages/cli/dist/parse-args");
@@ -76,7 +77,7 @@ commands.map((command) => {
                   (o.type === Number && 123);
               }
 
-              return `"${o.name}": ${value}`;
+              return `"${camelCase(o.name)}": ${value}`;
             })
             .join(",\n")}
         }

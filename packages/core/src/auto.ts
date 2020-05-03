@@ -34,6 +34,7 @@ import {
   IShipItOptions,
   IVersionOptions,
   INextOptions,
+  ILatestOptions,
 } from "./auto-args";
 import Changelog from "./changelog";
 import { preVersionMap } from "./semver";
@@ -1522,8 +1523,8 @@ export default class Auto {
 
   /** Publish a new version with changelog, publish, and release */
   private async publishFullRelease(
-    options: IShipItOptions & {
-      /** Internal option to shipt from a certain tag or commit */
+    options: ILatestOptions & {
+      /** Internal option to shipit from a certain tag or commit */
       from?: string;
     }
   ): Promise<ShipitInfo | undefined> {
@@ -1545,7 +1546,11 @@ export default class Auto {
       lastRelease
     );
 
-    await this.makeChangelog({ ...options, quiet: undefined });
+    await this.makeChangelog({
+      ...options,
+      quiet: undefined,
+      noCommit: options.noChangelog,
+    });
 
     if (!options.dryRun) {
       await this.checkClean();
@@ -1657,6 +1662,7 @@ export default class Auto {
       to,
       title,
       message = "Update CHANGELOG.md [skip ci]",
+      noCommit,
     } = options;
 
     if (!this.release || !this.git) {
@@ -1693,13 +1699,6 @@ export default class Auto {
     }
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
-
-    await this.release.addToChangelog(
-      releaseNotes,
-      lastRelease,
-      currentVersion
-    );
-
     const context = {
       bump,
       commits: await this.release.getCommits(lastRelease, to || undefined),
@@ -1708,9 +1707,17 @@ export default class Auto {
       currentVersion,
     };
 
-    await this.hooks.beforeCommitChangelog.promise(context);
-    await execPromise("git", ["commit", "-m", `"${message}"`, "--no-verify"]);
-    this.logger.verbose.info("Committed new changelog.");
+    if (!noCommit) {
+      await this.release.addToChangelog(
+        releaseNotes,
+        lastRelease,
+        currentVersion
+      );
+
+      await this.hooks.beforeCommitChangelog.promise(context);
+      await execPromise("git", ["commit", "-m", `"${message}"`, "--no-verify"]);
+      this.logger.verbose.info("Committed new changelog.");
+    }
 
     await this.hooks.afterAddToChangelog.promise(context);
   }
