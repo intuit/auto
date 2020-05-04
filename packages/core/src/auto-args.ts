@@ -95,6 +95,8 @@ export type IChangelogOptions = BaseBranch &
     from?: string;
     /** Commit to start calculating the changelog to */
     to?: string;
+    /** Don't commit the changelog */
+    noCommit?: boolean;
   };
 
 export type IReleaseOptions = BaseBranch &
@@ -124,24 +126,28 @@ export type ICommentOptions = DryRun & {
 
 export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
-export type IShipItOptions = BaseBranch &
+export type ILatestOptions = BaseBranch &
+  DryRun &
+  Partial<AuthorInformation> &
   Prerelease &
   NoVersionPrefix &
-  ChangelogMessage &
   ChangelogTitle &
-  DryRun &
+  ChangelogMessage &
   Quiet &
-  Partial<AuthorInformation> &
-  Partial<RepoInformation> &
   ReleaseCalculationOptions & {
-    /**
-     * Make auto publish prerelease versions when merging to master.
-     * Only PRs merged with "release" label will generate a "latest" release.
-     * Only use this flag if you do not want to maintain a prerelease branch,
-     * and instead only want to use master.
-     */
-    onlyGraduateWithReleaseLabel?: boolean;
+    /** Skip creating the changelog */
+    noChangelog?: boolean;
   };
+
+export type IShipItOptions = ILatestOptions & {
+  /**
+   * Make auto publish prerelease versions when merging to master.
+   * Only PRs merged with "release" label will generate a "latest" release.
+   * Only use this flag if you do not want to maintain a prerelease branch,
+   * and instead only want to use master.
+   */
+  onlyGraduateWithReleaseLabel?: boolean;
+};
 
 export type ICanaryOptions = Quiet & {
   /** Do not actually do anything */
@@ -176,6 +182,7 @@ export type GlobalOptions = {
 
 export type ApiOptions = GlobalOptions &
   (
+    | ILatestOptions
     | IInfoOptions
     | ICreateLabelsOptions
     | ILabelOptions

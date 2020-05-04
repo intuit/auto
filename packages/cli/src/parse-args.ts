@@ -208,6 +208,14 @@ const changelogCommitMessage: AutoOption = {
   config: true,
 };
 
+const noChangelog: AutoOption = {
+  name: "no-changelog",
+  type: Boolean,
+  group: "main",
+  description: "Skip creating the changelog",
+  config: true,
+};
+
 interface AutoCommand extends Command {
   /** Options for the command */
   options?: AutoOption[];
@@ -224,6 +232,7 @@ const latestCommandArgs: AutoOption[] = [
   changelogTitle,
   changelogCommitMessage,
   quiet,
+  noChangelog,
 ];
 
 export const commands: AutoCommand[] = [

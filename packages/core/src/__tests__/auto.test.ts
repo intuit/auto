@@ -1287,6 +1287,29 @@ describe("Auto", () => {
       expect(afterShipIt).toHaveBeenCalled();
     });
 
+    test("should not create changelog with noChangelog", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "https://github.com/intuit/auto";
+
+      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+      jest.spyOn(auto.git!, "publish").mockImplementation();
+      jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
+      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
+      const beforeCommitChangelog = jest.fn();
+      auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
+      const afterAddToChangelog = jest.fn();
+      auto.hooks.afterAddToChangelog.tap("test", afterAddToChangelog);
+
+      await auto.shipit({noChangelog: true});
+      expect(beforeCommitChangelog).not.toHaveBeenCalled();
+      expect(afterAddToChangelog).toHaveBeenCalled();
+    });
+
     test("should not publish when behind remote", async () => {
       jest.spyOn(child, "execSync").mockImplementation((command) => {
         if (command.startsWith("git")) {
