@@ -1,3 +1,16 @@
+# v9.31.1 (Mon May 04 2020)
+
+#### 🐛 Bug Fix
+
+- Add log when exiting early on independent lerna projects [#1194](https://github.com/intuit/auto/pull/1194) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add log when exiting early on independent lerna projects ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.30.4 (Sat May 02 2020)
 
 #### 🐛 Bug Fix
