@@ -11915,10 +11915,10 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-fetch@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/pkg-fetch/-/pkg-fetch-2.6.6.tgz#8cec66bb7c80d8149a55765e317ac554ad834b72"
-  integrity sha512-PdL6lpoSryzP6rMZD1voZQX0LHx6q4pOaD1djaFphmBfYPoQzLalF2+St+wdYxbZ37xRNHACTeQIKNEKA0xdbA==
+pkg-fetch@^2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/pkg-fetch/-/pkg-fetch-2.6.7.tgz#4625b1583e5b32e0771f35c1dc56306e52f1a3db"
+  integrity sha512-hQ+M53fphA300EkIvNoIxEdFltWcsDOqHZlaFzWJ78wIuFTIT7OrnXUQMAGC6qLkXq7eWCMU/4pTWsFvprUZMg==
   dependencies:
     "@babel/runtime" "^7.9.2"
     byline "^5.0.0"
@@ -11933,9 +11933,9 @@ pkg-fetch@^2.6.6:
     unique-temp-dir "^1.0.0"
 
 pkg@^4.4.0:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/pkg/-/pkg-4.4.7.tgz#8efbf392009339a3fa1cf552beefcb4a6b9ebe65"
-  integrity sha512-yDGEg2k09AOxV3KfJpKoEQkhckVN2woV/4Cm2iNnRUgJeSHcodxylertz49ePcJyknUyUFjTYDkogfK/188mag==
+  version "4.4.8"
+  resolved "https://registry.yarnpkg.com/pkg/-/pkg-4.4.8.tgz#145fb81f31eebfb90d2010dd2c4b663ca0db4009"
+  integrity sha512-Fqqv0iaX48U3CFZxd6Dq6JKe7BrAWbgRAqMJkz/m8W3H5cqJ6suvsUWe5AJPRlN/AhbBYXBJ0XG9QlYPTXcVFA==
   dependencies:
     "@babel/parser" "^7.9.4"
     "@babel/runtime" "^7.9.2"
@@ -11946,7 +11946,7 @@ pkg@^4.4.0:
     into-stream "^5.1.1"
     minimist "^1.2.5"
     multistream "^2.1.1"
-    pkg-fetch "^2.6.6"
+    pkg-fetch "^2.6.7"
     progress "^2.0.3"
     resolve "^1.15.1"
     stream-meter "^1.0.4"
