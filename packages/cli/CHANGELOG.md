@@ -1,3 +1,19 @@
+# v9.31.0 (Mon May 04 2020)
+
+#### 🚀 Enhancement
+
+- add --no-changelog option [#1193](https://github.com/intuit/auto/pull/1193) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add --no-changelog option ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.30.4 (Sat May 02 2020)
 
 #### 🔩 Dependency Updates
