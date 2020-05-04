@@ -483,6 +483,7 @@ export default class NPMPlugin implements IPlugin {
           auto.logger.log.warn(
             "Lerna detected no changes in project. Aborting release since nothing would be published."
           );
+          auto.logger.verbose.warn(error);
           process.exit(0);
         }
       }
