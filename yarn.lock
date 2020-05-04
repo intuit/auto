@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.30.2"
+  version "9.31.0"
 
 "@auto-it/core@link:packages/core":
-  version "9.30.2"
+  version "9.31.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/core" "2.4.2"
@@ -50,9 +50,10 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.30.2"
+  version "9.31.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
+    await-to-js "^2.1.1"
     env-ci "^5.0.1"
     fp-ts "^2.5.3"
     get-monorepo-packages "^1.1.0"
@@ -67,7 +68,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.30.2"
+  version "9.31.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -11914,10 +11915,10 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-fetch@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/pkg-fetch/-/pkg-fetch-2.6.6.tgz#8cec66bb7c80d8149a55765e317ac554ad834b72"
-  integrity sha512-PdL6lpoSryzP6rMZD1voZQX0LHx6q4pOaD1djaFphmBfYPoQzLalF2+St+wdYxbZ37xRNHACTeQIKNEKA0xdbA==
+pkg-fetch@^2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/pkg-fetch/-/pkg-fetch-2.6.7.tgz#4625b1583e5b32e0771f35c1dc56306e52f1a3db"
+  integrity sha512-hQ+M53fphA300EkIvNoIxEdFltWcsDOqHZlaFzWJ78wIuFTIT7OrnXUQMAGC6qLkXq7eWCMU/4pTWsFvprUZMg==
   dependencies:
     "@babel/runtime" "^7.9.2"
     byline "^5.0.0"
@@ -11932,9 +11933,9 @@ pkg-fetch@^2.6.6:
     unique-temp-dir "^1.0.0"
 
 pkg@^4.4.0:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/pkg/-/pkg-4.4.7.tgz#8efbf392009339a3fa1cf552beefcb4a6b9ebe65"
-  integrity sha512-yDGEg2k09AOxV3KfJpKoEQkhckVN2woV/4Cm2iNnRUgJeSHcodxylertz49ePcJyknUyUFjTYDkogfK/188mag==
+  version "4.4.8"
+  resolved "https://registry.yarnpkg.com/pkg/-/pkg-4.4.8.tgz#145fb81f31eebfb90d2010dd2c4b663ca0db4009"
+  integrity sha512-Fqqv0iaX48U3CFZxd6Dq6JKe7BrAWbgRAqMJkz/m8W3H5cqJ6suvsUWe5AJPRlN/AhbBYXBJ0XG9QlYPTXcVFA==
   dependencies:
     "@babel/parser" "^7.9.4"
     "@babel/runtime" "^7.9.2"
@@ -11945,7 +11946,7 @@ pkg@^4.4.0:
     into-stream "^5.1.1"
     minimist "^1.2.5"
     multistream "^2.1.1"
-    pkg-fetch "^2.6.6"
+    pkg-fetch "^2.6.7"
     progress "^2.0.3"
     resolve "^1.15.1"
     stream-meter "^1.0.4"
@@ -15843,7 +15844,7 @@ yaml@^1.7.2:
   dependencies:
     "@babel/runtime" "^7.6.3"
 
-yargs-parser@18.x:
+yargs-parser@18.x, yargs-parser@^18.1.1:
   version "18.1.3"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-18.1.3.tgz#be68c4975c6b2abf469236b0c870362fab09a7b0"
   integrity sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==
