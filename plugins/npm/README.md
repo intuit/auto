@@ -57,7 +57,7 @@ When running the `shipit` command auto will try to set your `.npmrc` token while
 
 ### forcePublish
 
-By default `auto` will force publish all packages for monorepos. To disable this behavior you must set the `setRcToken` to false.
+By default `auto` will force publish all packages for monorepos. To disable this behavior you must set the `forcePublish` to false.
 
 ```json
 {
