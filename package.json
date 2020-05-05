@@ -182,11 +182,6 @@
     ],
     "labels": [
       {
-        "name": "dependencies",
-        "changelogTitle": "🔩 Dependency Updates",
-        "releaseType": "none"
-      },
-      {
         "name": "blog-post",
         "changelogTitle": "📚 Blog Post",
         "releaseType": "none"
