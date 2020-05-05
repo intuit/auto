@@ -132,7 +132,7 @@ export const defaultLabels: ILabelDefinition[] = [
     name: "performance",
     changelogTitle: "🏎 Performance",
     description: "Improve performance of an existing feature",
-    releaseType: "none",
+    releaseType: SEMVER.patch,
   },
 ];
 
