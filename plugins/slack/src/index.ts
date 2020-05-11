@@ -1,5 +1,6 @@
 import { githubToSlack } from "@atomist/slack-messages";
 import { Octokit } from "@octokit/rest";
+import createHttpsProxyAgent from "https-proxy-agent";
 
 import {
   Auto,
@@ -144,6 +145,7 @@ export default class SlackPlugin implements IPlugin {
 
     const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
+    const proxyUrl = process.env.https_proxy || process.env.http_proxy;
     const atTarget = this.options.atTarget;
     const urls = releases.map(
       (release) => `*<${release.data.html_url}|${release.data.name}>*`
@@ -161,6 +163,7 @@ export default class SlackPlugin implements IPlugin {
         link_names: 1,
       }),
       headers: { "Content-Type": "application/json" },
+      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined
     });
 
     auto.logger.verbose.info("Posted release notes to slack.");

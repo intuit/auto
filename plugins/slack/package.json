@@ -41,6 +41,7 @@
     "@auto-it/core": "link:../../packages/core",
     "@octokit/rest": "16.43.1",
     "fp-ts": "^2.5.3",
+    "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
     "node-fetch": "2.6.0",
     "tslib": "1.11.1"
