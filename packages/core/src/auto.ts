@@ -1837,7 +1837,7 @@ export default class Auto {
     this.logger.log.error("Changed Files:\n", status);
 
     throw new Error(
-      "Working direction is not clean, make sure all files are committed"
+      "Working directory is not clean, make sure all files are committed"
     );
   };
 
