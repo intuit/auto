@@ -231,6 +231,48 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       "https://custom-slack-url?token=MY_TOKEN"
     );
+    expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined()
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+
+  test("should call slack api through http proxy", async () => {
+    const plugin = new SlackPlugin("https://custom-slack-url");
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+    process.env.http_proxy = "http-proxy"
+
+    await plugin.postToSlack(
+      mockAuto,
+      "1.0.0",
+      "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      mockResponse
+    );
+
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      "https://custom-slack-url?token=MY_TOKEN"
+    );
+    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined()
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+  test("should call slack api through https proxy", async () => {
+    const plugin = new SlackPlugin("https://custom-slack-url");
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+    process.env.https_proxy = "https-proxy"
+
+    await plugin.postToSlack(
+      mockAuto,
+      "1.0.0",
+      "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      mockResponse
+    );
+
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      "https://custom-slack-url?token=MY_TOKEN"
+    );
+    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined()
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
