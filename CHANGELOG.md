@@ -1,3 +1,16 @@
+# v9.32.0 (Mon May 11 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/slack`
+  - Slack Plugin HTTP Proxy support [#1210](https://github.com/intuit/auto/pull/1210) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.31.2 (Mon May 11 2020)
 
 #### 🐛 Bug Fix
