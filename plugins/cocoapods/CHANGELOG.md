@@ -1,3 +1,25 @@
+# v9.32.1 (Fri May 15 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Till Weisser ([@whynotzoidberg](https://github.com/whynotzoidberg)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Increase gitlog maximum buffer size to Infinity [#1212](https://github.com/intuit/auto/pull/1212) ([@whynotzoidberg](https://github.com/whynotzoidberg))
+
+#### 🔩 Dependency Updates
+
+- Bump fp-ts from 2.5.4 to 2.6.0 [#1209](https://github.com/intuit/auto/pull/1209) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 25.4.0 to 25.5.1 [#1208](https://github.com/intuit/auto/pull/1208) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Till Weisser ([@whynotzoidberg](https://github.com/whynotzoidberg))
+
+---
+
 # v9.31.2 (Mon May 11 2020)
 
 #### 🔩 Dependency Updates
