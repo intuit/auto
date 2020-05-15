@@ -927,6 +927,7 @@ export default class NPMPlugin implements IPlugin {
           // publish the changed package versions. from-git broke when HEAD
           // didn't contain the tags
           "from-package",
+          this.exact && "--exact",
           ...verboseArgs,
         ]);
       } else {
