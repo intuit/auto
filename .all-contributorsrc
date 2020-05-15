@@ -254,6 +254,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "whynotzoidberg",
+      "name": "Till Weisser",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/18683899?v=4",
+      "profile": "https://github.com/whynotzoidberg",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
