@@ -622,6 +622,18 @@ describe("publish", () => {
       '"Bump version to: %s [skip ci]"',
       "--exact",
     ]);
+
+    execPromise.mockClear();
+    existsSync.mockReturnValueOnce(true);
+
+    await hooks.publish.promise(Auto.SEMVER.patch);
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "--yes",
+      "from-package",
+      "--exact",
+    ]);
   });
 
   test("monorepo - should publish", async () => {
@@ -644,6 +656,7 @@ describe("publish", () => {
       "publish",
       "--yes",
       "from-package",
+      false,
     ]);
   });
 
