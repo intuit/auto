@@ -1,3 +1,16 @@
+# v9.32.2 (Fri May 15 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - pass exact flag to publish too [#1215](https://github.com/intuit/auto/pull/1215) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.32.1 (Fri May 15 2020)
 
 :tada: This release contains work from a new contributor! :tada:
