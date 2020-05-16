@@ -616,9 +616,8 @@ export default class Auto {
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
     const author = (await this.getGitUser()) || ({} as IAuthor);
-    const version = await this.getCurrentVersion(
-      await this.git.getLatestRelease()
-    );
+    const [, lastRelease = "0.0.0"] = await on(this.git.getLatestRelease());
+    const version = await this.getCurrentVersion(lastRelease);
     const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
     const latestReleaseLink = latestRelease
       ? link(latestRelease.tag_name, latestRelease.html_url)
