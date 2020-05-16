@@ -1,3 +1,16 @@
+# v9.32.3 (Fri May 15 2020)
+
+#### 🐛 Bug Fix
+
+- only create sub-package changelogs for `lerna changed` packages [#1216](https://github.com/intuit/auto/pull/1216) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- only create sub-package changelogs for `lerna changed` pacakges ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.32.2 (Fri May 15 2020)
 
 #### 🐛 Bug Fix
