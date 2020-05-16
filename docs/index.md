@@ -68,6 +68,14 @@ Functionality Plugins
 
 ---
 
+Plugin Authoring
+
+- [Writing Plugins](pages/plugins/writing-plugins.md)
+- [Creating Publishing Plugins](pages/plugins/writing-publishing-plugins.md)
+- [Hook APIs](pages/plugins/hook-api-docs.md)
+
+---
+
 :bathtub: Continuous Integration
 
 - [CircleCI](pages/build-platforms/circleci.md)
