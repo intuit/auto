@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Gem Plugin validateConfig validates invalid configuration 1`] = `
+Array [
+  "\\"gem\\"
+
+Found unknown configuration keys: command
+",
+]
+`;

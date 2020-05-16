@@ -6,16 +6,14 @@ import {
 } from "@auto-it/core";
 import { execSync } from "child_process";
 import * as fs from "fs";
-import { promisify } from "util";
 import endent from "endent";
 import glob from "fast-glob";
 import parseGitHubUrl from "parse-github-url";
 import { inc, ReleaseType } from "semver";
 import * as t from "io-ts";
 import envCi from "env-ci";
+import { readFile, writeFile } from "./utils";
 
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 const VERSION_REGEX = /\d+\.\d+\.\d+/;
 const { isCi } = envCi();
 
@@ -32,9 +30,9 @@ export default class GemPlugin implements IPlugin {
   name = "gem";
 
   /** A path the gemspec to publish */
-  readonly gemspec: string;
+  private readonly gemspec: string;
   /** User options for the plugins */
-  readonly options: IGemPluginOptions;
+  private readonly options: IGemPluginOptions;
 
   /** Initialize the plugin with it's options */
   constructor(options: IGemPluginOptions = {}) {
@@ -107,8 +105,9 @@ export default class GemPlugin implements IPlugin {
       const newTag = inc(version, bump as ReleaseType);
 
       if (!newTag) {
-        auto.logger.log.info("No release found, doing nothing");
-        return;
+        throw new Error(
+          `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
+        );
       }
 
       const content = await readFile(versionFile, { encoding: "utf8" });
@@ -172,6 +171,6 @@ export default class GemPlugin implements IPlugin {
       }
     }
 
-    throw new Error("No version found!");
+    throw new Error("No version found in gemspec or version.rb!");
   }
 }
