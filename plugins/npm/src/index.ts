@@ -581,6 +581,9 @@ export default class NPMPlugin implements IPlugin {
           return;
         }
 
+        const changedPackages = (
+          await execPromise("yarn", ["lerna", "changed"])
+        ).split("\n");
         const lernaPackages = await getLernaPackages();
         const changelog = await auto.release.makeChangelog(bump);
 
@@ -589,6 +592,14 @@ export default class NPMPlugin implements IPlugin {
         // Cannot run git operations in parallel
         await lernaPackages.reduce(async (last, lernaPackage) => {
           await last;
+
+          // If lerna doesn't think a package has changed then do not create sub-package changelog
+          // Since we use "git log -m", merge commits can have lots of files in them. Lerna does not
+          // use this option. This means that this hooks will only create a sub-package changelog if
+          // lerna will publish an update for it
+          if (!changedPackages.some((name) => lernaPackage.name === name)) {
+            return;
+          }
 
           auto.logger.verbose.info(
             `Updating changelog for: ${lernaPackage.name}`
