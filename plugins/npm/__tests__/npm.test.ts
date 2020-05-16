@@ -1248,7 +1248,10 @@ describe("beforeCommitChangelog", () => {
     const hooks = makeHooks();
 
     // isMonorepo
-    execPromise.mockReturnValue("@packages/a\n@packages/b");
+    execPromise.mockReturnValueOnce(
+      '@packages/a\n@packages/b'
+    );
+    execPromise.mockReturnValueOnce("@packages/a\n@packages/b");
     existsSync.mockReturnValueOnce(true);
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
