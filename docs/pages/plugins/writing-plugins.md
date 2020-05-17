@@ -4,9 +4,8 @@ If you've ever written a `webpack` plugin it's a lot like that.
 
 A plugin definition is:
 
-- a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
 - a name for the plugin, should match the [name of the package](../plugins.md#plugin-declaration) (REQUIRED)
-- a constructor where you can load plugin specific config
+- a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
 
 ```ts
 import { Auto, IPlugin } from "auto";
@@ -14,15 +13,8 @@ import { Auto, IPlugin } from "auto";
 export default class TestPlugin implements IPlugin {
   name = "test";
 
-  private readonly config: any;
-
-  constructor(config: any) {
-    this.config = config;
-  }
-
-  apply(auto: Auto) {
-    // hook into auto
-  }
+  /** Tap into auto plugin points. */
+  apply(auto: Auto) {}
 }
 ```
 
@@ -30,43 +22,16 @@ Or in JavaScript:
 
 ```js
 module.exports = class TestPlugin {
-  constructor(config) {
-    this.config = config;
+  constructor() {
     this.name = "test";
   }
 
   /**
-   * Setup the plugin
+   * Tap into auto plugin points.
    * @param {import('@auto-it/core').default} auto
    */
-  apply(auto) {
-    // hook into auto
-  }
+  apply(auto) {}
 };
-```
-
-## Constructor
-
-In the constructor you have access to any plugin specific config provided in the `.autorc`.
-It might be useful to write a more type-safe interface for your config.
-
-```ts
-import { Auto, IPlugin } from "auto";
-
-interface ITestPluginConfig {
-  foo?: string;
-  bar?: boolean;
-}
-
-export default class TestPlugin implements IPlugin {
-  name = "test";
-
-  private readonly config: ITestPluginConfig;
-
-  constructor(config: ITestPluginConfig) {
-    this.config = config;
-  }
-}
 ```
 
 ## Hooks
@@ -74,6 +39,78 @@ export default class TestPlugin implements IPlugin {
 Plugins work by hooking into various actions that `auto` has to do in order to facilitate a release or interact with your GitHub repo.
 
 [Read more about using hooks](./hook-api-docs.md)
+
+## Adding Options
+
+Most plugins will find the need to some some options from the user.
+The constructor of the plugin gets access to the options passed in the `.autorc`.
+
+```ts
+import { Auto, IPlugin } from "@auto-it/core";
+
+interface TestPluginOptions {
+  someOption?: boolean;
+}
+
+export default class TestPlugin implements IPlugin {
+  /** The name of the plugin */
+  name = "test";
+
+  /** The options of the plugin */
+  readonly options: TestPluginOptions;
+
+  /** Initialize the plugin with it's options */
+  constructor(options: TestPluginOptions) {
+    this.options = options;
+  }
+}
+```
+
+### Validation
+
+To get validate of the options passed to plugins, `auto` uses [io-ts](https://github.com/gcanti/io-ts) and exports a utility function to validate the structured produced by `io-ts`.
+It lets you defined your interfaces in JavaScript and easily convert them to TypeScript.
+This means it's super simple to have type-safe code and runtime validation checking!
+
+First install the following:
+
+```sh
+npm i --save io-ts fp-ts
+# or
+yarn add io-ts fp-ts
+```
+
+Then convert your options interface to the equivalent `io-ts` structure.
+
+```ts
+import * as t from "io-ts";
+
+const pluginOptions = t.partial({
+  someOption: t.boolean,
+});
+
+export type TestPluginOptions = t.TypeOf<typeof pluginOptions>;
+```
+
+Then tap into the `validateConfig` hook and use the `validatePluginConfiguration` utility.
+
+```ts
+import { validatePluginConfiguration } from "@auto-it/core";
+
+export default class MyPlugin implements IPlugin {
+  // ...
+  apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `auto-plugin-${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+  }
+}
+```
+
+And that's it!
+Now `auto` will validate your plugins configuration before running.
 
 ## Example Plugin - NPM (simple)
 
@@ -138,3 +175,5 @@ export default class NPMPlugin {
   }
 }
 ```
+
+[Read more about creating publishing plugins.](./writing-publishing-plugins.md)

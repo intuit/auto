@@ -120,83 +120,6 @@ Once you have the above hooks implemented you should be able to successfully use
 
 The above plugins is pretty simple and there are a bunch of features you can add to your plugin through hooks or functions that `auto` exports.
 
-## Adding Options
-
-Most plugins will find the need to some some options from the user.
-The constructor of the plugin gets access to the options passed in the `.autorc`.
-
-```ts
-import { Auto, IPlugin } from "@auto-it/core";
-
-interface IGitTagPluginOptions {
-  someOption?: boolean;
-}
-
-export default class GitTagPlugin implements IPlugin {
-  /** The name of the plugin */
-  name = "my-git-tag";
-
-  /** The options of the plugin */
-  readonly options: IGitTagPluginOptions;
-
-  /** Initialize the plugin with it's options */
-  constructor(options: IGitTagPluginOptions) {
-    this.options = options;
-  }
-
-  /** Tap into auto plugin points. */
-  apply(auto: Auto) {
-    console.log(this.options.someOption);
-  }
-}
-```
-
-### Validation
-
-To get validate of the options passed to plugins, `auto` uses [io-ts](https://github.com/gcanti/io-ts) and exports a utility function to validate the structured produced by `io-ts`.
-It lets you defined your interfaces in JavaScript and easily convert them to TypeScript.
-This means it's super simple to have type-safe code and runtime validation checking!
-
-First install the following:
-
-```sh
-npm i --save io-ts fp-ts
-# or
-yarn add io-ts fp-ts
-```
-
-Then convert your options interface to the equivalent `io-ts` structure.
-
-```ts
-import * as t from "io-ts";
-
-const pluginOptions = t.partial({
-  someOption: t.boolean,
-});
-
-export type IGitTagPluginOptions = t.TypeOf<typeof pluginOptions>;
-```
-
-Then tap into the `validateConfig` hook and use the `validatePluginConfiguration` utility.
-
-```ts
-import { validatePluginConfiguration } from "@auto-it/core";
-
-export default class GitTagPlugin implements IPlugin {
-  // ...
-  apply(auto: Auto) {
-    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
-      if (name === this.name || name === `@auto-it/${this.name}`) {
-        return validatePluginConfiguration(this.name, pluginOptions, options);
-      }
-    });
-  }
-}
-```
-
-And that's it!
-Now `auto` will validate your plugins configuration before running.
-
 ## Advanced Release Hooks
 
 ### `canary`
@@ -225,7 +148,7 @@ Like the `canary` hook your package management platform must support separate re
 
 These hooks are not required for publishing plugins, but can really improve the developer experience of it.
 
-### beforeRun
+### `beforeRun`
 
 Happens before anything is done.
 This is a great place to check for platform specific secrets such as a npm token.
@@ -242,7 +165,7 @@ export default class GitTagPlugin implements IPlugin {
 }
 ```
 
-### getAuthor
+### `getAuthor`
 
 Get git author to commit with.
 Typically from a package distribution description file.
@@ -257,7 +180,7 @@ auto.hooks.getAuthor.tapPromise("NPM", async () => {
 });
 ```
 
-### getRepository
+### `getRepository`
 
 Get owner and repository for the project to automate releases for.
 Typically from a package distribution description file.
