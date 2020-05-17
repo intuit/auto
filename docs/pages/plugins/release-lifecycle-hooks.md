@@ -3,8 +3,6 @@
 The following hooks are all called during various release commands (ex: `latest`, `next`, `canary`, `shipit`).
 These hooks is where the publishing of your package actually happens.
 
-[Read more about the order of the hooks.](./hook-order.md)
-
 - [beforeShipIt](#beforeshipit)
 - [beforeCommitChangelog](#beforecommitchangelog)
 - [afterAddToChangelog](#afteraddtochangelog)
