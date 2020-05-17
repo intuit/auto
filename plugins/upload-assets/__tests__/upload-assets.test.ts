@@ -1,10 +1,15 @@
 import Auto from "@auto-it/core";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import path from "path";
 
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import UploadAssets from "../src";
+
+const options = {
+  owner: "test",
+  repo: "repo",
+};
 
 describe("Upload Assets Plugin", () => {
   test("should do nothing without a response", async () => {
@@ -17,7 +22,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { github: { repos: { uploadReleaseAsset } } },
+      git: { options, github: { repos: { uploadReleaseAsset } } },
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -40,7 +45,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { github: { repos: { uploadReleaseAsset } } },
+      git: { options, github: { repos: { uploadReleaseAsset } } },
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -49,8 +54,8 @@ describe("Upload Assets Plugin", () => {
       commits: [],
       releaseNotes: "",
       response: {
-        data: { upload_url: "https://foo.com" },
-      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>,
+        data: { id: "123" },
+      } as any,
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledWith(
@@ -60,7 +65,7 @@ describe("Upload Assets Plugin", () => {
           "content-type": "application/octet-stream",
         },
         name: "macos",
-        url: "https://foo.com",
+        release_id: "123",
       })
     );
   });
@@ -78,7 +83,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { github: { repos: { uploadReleaseAsset } } },
+      git: { options, github: { repos: { uploadReleaseAsset } } },
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -88,7 +93,7 @@ describe("Upload Assets Plugin", () => {
       releaseNotes: "",
       response: {
         data: { upload_url: "https://foo.com" },
-      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>,
+      } as RestEndpointMethodTypes["repos"]["createRelease"]["response"],
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);
@@ -104,7 +109,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
-      git: { github: { repos: { uploadReleaseAsset } } },
+      git: { options, github: { repos: { uploadReleaseAsset } } },
     } as unknown) as Auto);
 
     await hooks.afterRelease.promise({
@@ -114,7 +119,7 @@ describe("Upload Assets Plugin", () => {
       releaseNotes: "",
       response: {
         data: { upload_url: "https://foo.com" },
-      } as Octokit.Response<Octokit.ReposCreateReleaseResponse>,
+      } as RestEndpointMethodTypes["repos"]["createRelease"]["response"],
     });
 
     expect(uploadReleaseAsset).toHaveBeenCalledTimes(2);

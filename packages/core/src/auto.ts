@@ -1,4 +1,4 @@
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import dotenv from "dotenv";
 import envCi from "env-ci";
 import fs from "fs";
@@ -117,6 +117,8 @@ interface BeforeShipitContext {
   releaseType: ShipitRelease;
 }
 
+type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
@@ -154,9 +156,7 @@ export interface IAutoHooks {
         /** The generated release notes for the commits */
         releaseNotes: string;
         /** The response from creating the new release. */
-        response?:
-          | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-          | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>;
+        response?: PublishResponse | PublishResponse[];
       }
     ]
   >;
@@ -178,9 +178,7 @@ export interface IAutoHooks {
         commits: IExtendedCommit[];
       }
     ],
-    | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-    | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
-    | void
+    PublishResponse | PublishResponse[] | void
   >;
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;

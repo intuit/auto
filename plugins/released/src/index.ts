@@ -1,6 +1,6 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 
 import merge from "deepmerge";
 import * as t from "io-ts";
@@ -114,7 +114,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
   private async addReleased(
     auto: Auto,
     commit: IExtendedCommit,
-    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
+    releases: Array<
+      RestEndpointMethodTypes["repos"]["createRelease"]["response"]
+    >
   ) {
     const messages = [commit.subject];
     const isPrerelease = releases.some((r) => r.data.prerelease);
@@ -185,7 +187,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
     /** Whether the release was a prerelease */
     isPrerelease?: boolean;
     /** All of the releases that happened */
-    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>;
+    releases: Array<
+      RestEndpointMethodTypes["repos"]["createRelease"]["response"]
+    >;
   }) {
     // leave a comment with the new version
     const urls = releases.map((release) =>

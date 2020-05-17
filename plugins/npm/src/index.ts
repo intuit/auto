@@ -3,7 +3,7 @@ import * as fs from "fs";
 import parseAuthor from "parse-author";
 import path from "path";
 import { Memoize as memoize } from "typescript-memoize";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
@@ -1013,9 +1013,12 @@ export default class NPMPlugin implements IPlugin {
 
         this.renderMonorepoChangelog = false;
 
-        return releases.filter((release): release is Octokit.Response<
-          Octokit.ReposCreateReleaseResponse
-        > => Boolean(release));
+        return releases.filter(
+          (
+            release
+          ): release is RestEndpointMethodTypes["repos"]["createRelease"]["response"] =>
+            Boolean(release)
+        );
       }
     });
   }
