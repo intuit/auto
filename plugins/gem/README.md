@@ -4,7 +4,8 @@ A plugin that automates publishing ruby gems.
 
 ## Prerequisites
 
-To publish to npm you will need an `RUBYGEMS_API_KEY` set in your environment.
+To publish to your gem you will need you your environment authenticated.
+You can either create a `~/.gem/credentials` yourself or provide `RUBYGEMS_API_KEY` as an environment variable.
 
 This plugin also looks in your `.gemspec` and `lib/**/version.rb` for a version.
 `auto` will use this value and keep it up to date.

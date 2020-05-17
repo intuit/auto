@@ -12,7 +12,7 @@ import parseGitHubUrl from "parse-github-url";
 import { inc, ReleaseType } from "semver";
 import * as t from "io-ts";
 import envCi from "env-ci";
-import { readFile, writeFile } from "./utils";
+import { readFile, writeFile, mkdir } from "./utils";
 
 const VERSION_REGEX = /\d+\.\d+\.\d+/;
 const { isCi } = envCi();
@@ -48,14 +48,6 @@ export default class GemPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.beforeRun.tap(this.name, () => {
-      if (!isCi) {
-        return;
-      }
-
-      auto.checkEnv(this.name, "RUBYGEMS_API_KEY");
-    });
-
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
@@ -115,7 +107,15 @@ export default class GemPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      if (isCi && !fs.existsSync("~/.gem/credentials")) {
+      if (
+        isCi &&
+        !fs.existsSync("~/.gem/credentials") &&
+        process.env.RUBYGEMS_API_KEY
+      ) {
+        if (!fs.existsSync("~/.gem")) {
+          await mkdir("~/.gem");
+        }
+
         await writeFile(
           "~/.gem/credentials",
           endent`
