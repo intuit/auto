@@ -1,4 +1,4 @@
-import { GetResponseTypeFromEndpointMethod } from "@octokit/types";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import dotenv from "dotenv";
 import envCi from "env-ci";
 import fs from "fs";
@@ -117,7 +117,7 @@ interface BeforeShipitContext {
   releaseType: ShipitRelease;
 }
 
-type PublishResponse = GetResponseTypeFromEndpointMethod<Git["publish"]>;
+type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
