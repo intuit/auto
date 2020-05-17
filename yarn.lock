@@ -4782,10 +4782,10 @@ commander@~2.8.1:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-comment-parser@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-0.7.2.tgz#baf6d99b42038678b81096f15b630d18142f4b8a"
-  integrity sha512-4Rjb1FnxtOcv9qsfuaNuVsmmVn4ooVoBHzYfyKteiXwIU84PClyGA5jASoFMwPV93+FPh9spwueXauxFJZkGAg==
+comment-parser@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-0.7.4.tgz#f5eb83cbae323cae6533c057f41d52692361c83a"
+  integrity sha512-Nnl77/mt6sj1BiYSVMeMWzvD0183F2MFOJyFRmZHimUVDYS9J40AvXpiFA7RpU5pQH+HkvYc0dnsHpwW2xmbyQ==
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -6295,12 +6295,12 @@ eslint-plugin-jest@^23.0.1:
   dependencies:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
-eslint-plugin-jsdoc@^24.0.0:
-  version "24.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-24.0.0.tgz#41c7b06d33741e41e80a8f08c82aaa58ceef2e4b"
-  integrity sha512-AGAc9PYpramsJGVmqtxnXBYlq+AMh+hIZdbJ52OLvyJS3f+PaT/PzuckRFOLnth2uhCDv4IjgsB3r5jUFWqUnw==
+eslint-plugin-jsdoc@^25.2.0:
+  version "25.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-25.2.0.tgz#dd90f0a11778888637ea3aaaae1a6d3bfa3f3132"
+  integrity sha512-P+3zIyu5fSEZlAtoKI+pGxO8XWwWG7RlO7Zm25+sZTcWUb4jGteYSYLt04ChMauHjoDJSzhwfTXhAn2gVUijpQ==
   dependencies:
-    comment-parser "^0.7.2"
+    comment-parser "^0.7.4"
     debug "^4.1.1"
     jsdoctypeparser "^6.1.0"
     lodash "^4.17.15"
