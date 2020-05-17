@@ -1,0 +1,96 @@
+# Init Hooks
+
+The `auto init` command provides an easy way to create an `.autorc` without reading too many docs.
+It exposes hooks to get the basic information auto needs to function ([getRepo](#getrepo) and [getAuthor](#getauthor)).
+It also provides hooks the set up your plugin quicker ([configurePlugin](#configureplugin) and [createEnv](#createenv)).
+
+- [writeRcFile](#writercfile)
+- [getRepo](#getrepo)
+- [getAuthor](#getauthor)
+- [configurePlugin](#configureplugin)
+- [createEnv](#createenv)
+
+## writeRcFile
+
+Override where/how the rc file is written.
+
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.writeRcFile.tapPromise("Example", async (rc) => {
+      // write the file somewhere other than .autorc
+      return filename;
+    });
+  }
+}
+```
+
+_Other examples:_
+
+- In Core: Defaults to writing rc file to root of project
+- [npm](../../../plugins/npm/README.md) - Writes RC file to package.json
+
+## getRepo
+
+Get or verify the repo information.
+
+_Examples:_
+
+- [npm](../../../plugins/npm/README.md) - Gets repo info from package.json
+
+## getAuthor
+
+Get or verify the author information.
+
+_Examples:_
+
+- [npm](../../../plugins/npm/README.md) - Gets author info from package.json
+
+## configurePlugin
+
+Run extra configuration for a plugin. Here is where to display prompts to the user.
+
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.configurePlugin.tapPromise("Example", async (name) => {
+      if (name === "my-plugins") {
+        return [
+          name,
+          {
+            // extra config options
+          },
+        ];
+      }
+    });
+  }
+}
+```
+
+_Other examples:_
+
+- [jira](../../../plugins/jira/README.md) - Query the user for their JIRA url
+
+## createEnv
+
+Add environment variables to get from the user.
+These values are stored in a local `.env` file.
+
+```ts
+class MyPlugin implements IPlugin {
+  init(initializer: InteractiveInit) {
+    initializer.hooks.createEnv.tap("Example", (vars) => [
+      ...vars,
+      {
+        variable: "MY_TOKEN",
+        message: `This is a very important secret`,
+      },
+    ]);
+  }
+}
+```
+
+_Other examples:_
+
+- [npm](../../../plugins/npm/README.md) - Query the user for their npm token
+- [slack](../../../plugins/slack/README.md) - Query the user for their slack url
