@@ -672,8 +672,7 @@ describe("github", () => {
 
   describe("error hook", () => {
     test("strip authorization headers from error", () => {
-      type HookError = import("@octokit/rest").Octokit.HookError;
-      const error = (headers = {}): HookError => ({
+      const error = (headers = {}) => ({
         name: "Request failed",
         message: "The request has failed",
         status: 404,
@@ -685,9 +684,7 @@ describe("github", () => {
 
       expect(errorHook).toHaveBeenCalled();
 
-      const errorHandler = errorHook.mock.calls[0][1] as (
-        error: HookError
-      ) => void;
+      const errorHandler = errorHook.mock.calls[0][1] as (error: Error) => void;
 
       expect(
         errorHandler.bind(undefined, error({ authorization: "token abc" }))

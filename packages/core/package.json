@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@octokit/core": "2.4.2",
     "@octokit/graphql": "4.3.1",
     "@octokit/plugin-enterprise-compatibility": "1.2.2",
     "@octokit/plugin-retry": "3.0.1",
@@ -74,6 +73,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
+    "@octokit/types": "^2.8.0-beta.3",
     "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",
     "@types/graphql": "^14.2.0",

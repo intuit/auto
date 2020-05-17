@@ -4,6 +4,7 @@ import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
 import { Octokit } from "@octokit/rest";
+import * as OctokitTypes from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/types";
 import { gitlogPromise as gitlog } from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
@@ -23,7 +24,10 @@ import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
-export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, "owner" | "repo">;
+export type IPRInfo = Omit<
+  OctokitTypes.ReposCreateStatusParams,
+  "owner" | "repo"
+>;
 
 export interface IGitOptions {
   /** Github repo owner (user) */
@@ -218,7 +222,7 @@ export default class Git {
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
-    const args: Octokit.IssuesListLabelsOnIssueParams = {
+    const args: OctokitTypes.IssuesListLabelsOnIssueParams = {
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: prNumber,
@@ -245,7 +249,7 @@ export default class Git {
   async getPr(prNumber: number) {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
 
-    const args: Octokit.IssuesListLabelsOnIssueParams = {
+    const args: OctokitTypes.IssuesListLabelsOnIssueParams = {
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: prNumber,
@@ -440,7 +444,7 @@ export default class Git {
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
-    const args: Octokit.PullsGetParams = {
+    const args: OctokitTypes.PullsGetParams = {
       owner: this.options.owner,
       repo: this.options.repo,
       pull_number: pr,
@@ -457,7 +461,7 @@ export default class Git {
   }
 
   /** Search to GitHub project's issue and pull requests */
-  async searchRepo(options: Octokit.SearchIssuesAndPullRequestsParams) {
+  async searchRepo(options: OctokitTypes.SearchIssuesAndPullRequestsParams) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
 
@@ -621,7 +625,7 @@ export default class Git {
   }
 
   /** Get all the pull requests for a project */
-  async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
+  async getPullRequests(options?: Partial<OctokitTypes.PullsListParams>) {
     this.logger.verbose.info("Getting pull requests...");
 
     const result = (
