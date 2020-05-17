@@ -5,7 +5,7 @@ If you've ever written a `webpack` plugin it's a lot like that.
 A plugin definition is:
 
 - a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
-- a name for the plugin, should match the [name of the package](./plugins.md#plugin-declaration) (REQUIRED)
+- a name for the plugin, should match the [name of the package](../plugins.md#plugin-declaration) (REQUIRED)
 - a constructor where you can load plugin specific config
 
 ```ts
