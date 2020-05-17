@@ -728,8 +728,6 @@ export default class Auto {
 
   /**
    * Create all of the user's labels on the git remote if the don't already exist
-   *
-   * @param options - Options for the createLabels functionality
    */
   async createLabels(options: ICreateLabelsOptions = {}) {
     if (!this.release || !this.labels) {
@@ -741,8 +739,6 @@ export default class Auto {
 
   /**
    * Get the labels on a specific PR. Defaults to the labels of the last merged PR
-   *
-   * @param options - Options for the createLabels functionality
    */
   async label({ pr }: ILabelOptions = {}) {
     if (!this.git) {
@@ -779,8 +775,6 @@ export default class Auto {
 
   /**
    * Create a status on a PR.
-   *
-   * @param options - Options for the pr status functionality
    */
   async prStatus({ dryRun, pr, url, ...options }: IPRStatusOptions) {
     if (!this.git) {
@@ -834,8 +828,6 @@ export default class Auto {
 
   /**
    * Check that a PR has a SEMVER label. Set a success status on the PR.
-   *
-   * @param options - Options for the pr check functionality
    */
   async prCheck({ dryRun, pr, url, ...options }: IPRCheckOptions) {
     if (!this.git || !this.release || !this.semVerLabels) {
@@ -931,8 +923,6 @@ export default class Auto {
   /**
    * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
    * You can use the "context" option to multiple comments on a PR.
-   *
-   * @param args - Options for the comment functionality
    */
   async comment(args: ICommentOptions) {
     const options = { ...this.getCommandDefault("comment"), ...args };
@@ -990,8 +980,6 @@ export default class Auto {
    * Update the body of a PR with a message. Only one message will be present in the PR,
    * Older messages are removed. You can use the "context" option to multiple message
    * in a PR body.
-   *
-   * @param options - Options
    */
   async prBody(options: ICommentOptions) {
     const {

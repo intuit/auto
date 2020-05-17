@@ -49,12 +49,11 @@ const contributionTypes = [
 ] as const;
 type Contribution = typeof contributionTypes[number];
 
-const isContribution =
-  /**
-ccccccccccccccccccccccc *
-ccccccccccccccccccccccc */
-  (contribution: string | Contribution): contribution is Contribution =>
-    contributionTypes.includes(contribution as Contribution);
+/** Determine if it's a valid contribution type */
+const isContribution = (
+  contribution: string | Contribution
+): contribution is Contribution =>
+  contributionTypes.includes(contribution as Contribution);
 
 /** Get an rc file if there is one. */
 function getRcFile() {
@@ -228,17 +227,20 @@ export default class AllContributorsPlugin implements IPlugin {
             ? endent`
               The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
 
-              ${Object.entries(extra).map(([username, contributions]) => {
-                const validContributions = [...contributions].filter(
-                  isContribution
-                );
+              ${Object.entries(extra)
+                .map(([username, contributions]) => {
+                  const validContributions = [...contributions].filter(
+                    isContribution
+                  );
 
-                if (!validContributions.length) {
-                  return "";
-                }
+                  if (!validContributions.length) {
+                    return "";
+                  }
 
-                return `- @${username} - ${validContributions.join(", ")}`;
-              }).filter(Boolean).join('\n')}
+                  return `- @${username} - ${validContributions.join(", ")}`;
+                })
+                .filter(Boolean)
+                .join("\n")}
             `
             : "No valid contribution types found!"
         }

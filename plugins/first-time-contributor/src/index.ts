@@ -14,6 +14,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cache: Record<string, Record<string, any>> = {};
 
     auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
