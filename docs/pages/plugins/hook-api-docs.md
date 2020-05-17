@@ -18,6 +18,8 @@ Here are a few ideas of what you could do.
 - `size-changelog`: Every time a `latest` release is made update a `size-changelog.md` with the bundle size
 - Use the `afterRelease` hook to communicate changes to consumers (ex: twitter or slack)
 
+The documentation for each hook also lists examples of how the hook is used.
+
 ## Fitting It All Together
 
 The hooks that are called depends on the command is run.
