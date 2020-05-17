@@ -496,7 +496,7 @@ describe("github", () => {
     });
 
     await gh.getCommitsForPR(22);
-    expect(listCommits).toHaveBeenCalled();
+    expect(paginate).toHaveBeenCalled();
   });
 
   test("getPullRequests", async () => {

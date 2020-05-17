@@ -1,7 +1,3 @@
-import {
-  GraphQlQueryResponse,
-  GraphQlQueryResponseData,
-} from "@octokit/graphql/dist-types/types";
 import { AsyncReturnType } from "type-fest";
 import on from "await-to-js";
 import * as fs from "fs";
@@ -252,7 +248,10 @@ export default class Release {
         .filter((q): q is string => Boolean(q))
         .map((q) => this.git.graphql(q))
     );
-    const data = queries.filter((q): q is GraphQlQueryResponse => Boolean(q));
+    type GraphQlQueryResponseData = NonNullable<typeof queries[number]>;
+    const data = queries.filter((q): q is GraphQlQueryResponseData =>
+      Boolean(q)
+    );
 
     if (!data.length) {
       return uniqueCommits;
@@ -265,9 +264,9 @@ export default class Release {
 
     type QueryEntry = [string, GraphQlQueryResponseData];
 
-    const entries = data.reduce(
+    const entries = data.reduce<QueryEntry[]>(
       (acc, result) => [...acc, ...(Object.entries(result) as QueryEntry[])],
-      [] as QueryEntry[]
+      []
     );
 
     await Promise.all(

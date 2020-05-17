@@ -1,5 +1,5 @@
 import { githubToSlack } from "@atomist/slack-messages";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import createHttpsProxyAgent from "https-proxy-agent";
 
 import {
@@ -135,7 +135,9 @@ export default class SlackPlugin implements IPlugin {
     auto: Auto,
     newVersion: string,
     releaseNotes: string,
-    releases: Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
+    releases: Array<
+      RestEndpointMethodTypes["repos"]["createRelease"]["response"]
+    >
   ) {
     if (!auto.git) {
       return;
@@ -163,7 +165,7 @@ export default class SlackPlugin implements IPlugin {
         link_names: 1,
       }),
       headers: { "Content-Type": "application/json" },
-      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined
+      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
     });
 
     auto.logger.verbose.info("Posted release notes to slack.");

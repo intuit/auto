@@ -38,11 +38,11 @@
   },
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@octokit/graphql": "4.3.1",
-    "@octokit/plugin-enterprise-compatibility": "1.2.2",
-    "@octokit/plugin-retry": "3.0.1",
+    "@octokit/graphql": "^4.4.0",
+    "@octokit/plugin-enterprise-compatibility": "^1.2.2",
+    "@octokit/plugin-retry": "^3.0.1",
     "@octokit/plugin-throttling": "^3.2.0",
-    "@octokit/rest": "17.2.1",
+    "@octokit/rest": "^17.9.0",
     "await-to-js": "^2.1.1",
     "chalk": "^4.0.0",
     "cosmiconfig": "6.0.0",
@@ -73,7 +73,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@octokit/types": "^2.8.0-beta.3",
+    "@octokit/types": "^3.0.1",
     "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",
     "@types/graphql": "^14.2.0",
