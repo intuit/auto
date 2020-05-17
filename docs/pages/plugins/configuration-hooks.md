@@ -103,7 +103,7 @@ Make sure to account for the [different ways you plugin can be included](./plugi
 
 ```ts
 auto.hooks.validateConfig.tapPromise("test", (name, options) => {
-  if (name === this.name || name === `@auto-it/${this.name}`) {
+  if (name === this.name || name === `auto-plugin-${this.name}`) {
     return; // your validation error. Can either be strings for { path, expectedType, value }
   }
 });
@@ -137,7 +137,7 @@ To do this `auto` exposes a helper function to validate you plugins with the `io
 import { validatePluginConfiguration } from "@auto-it/core";
 
 auto.hooks.validateConfig.tapPromise("test", (name, options) => {
-  if (name === this.name || name === `@auto-it/${this.name}`) {
+  if (name === this.name || name === `auto-plugin-${this.name}`) {
     return validatePluginConfiguration(this.name, pluginOptions, options);
   }
 });

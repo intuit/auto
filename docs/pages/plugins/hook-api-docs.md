@@ -16,10 +16,9 @@ Some hooks are specific to a single command, such as the "Init" hooks, and other
 This is the general flow when any `auto` command is ran:
 
 - Call configuration hooks
-- Run `before` release lifecycle hooks
 - Get `git log` => Pass through `LogParse` hooks
 - If necessary: Create a changelog and => Call `Changelog` hooks
-- Run necessary remaining release lifecycle hooks
+- Run release lifecycle hooks
 
 ## Plugin Ideas
 
