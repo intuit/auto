@@ -28,7 +28,7 @@ Here are a few ideas of what you could do.
 - `size-changelog`: Every time a `latest` release is made update a `size-changelog.md` with the bundle size
 - Use the `afterRelease` hook to communicate changes to consumers (ex: twitter or slack)
 
-The documentation for each hook also lists examples of how the hook is used.
+The documentation for each hook also lists examples of how the hook is used in various parts of `auto` and its plugins.
 
 ## Example Run: `auto latest`
 
