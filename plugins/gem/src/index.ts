@@ -132,6 +132,10 @@ export default class GemPlugin implements IPlugin {
           `
         );
         auto.logger.verbose.success(`Wrote ${credentials}`);
+
+        execSync(`chmod 0600 ${credentials}`, {
+          stdio: "inherit",
+        });
       }
 
       const [version] = await this.getVersion(auto);
