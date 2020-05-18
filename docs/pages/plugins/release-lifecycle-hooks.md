@@ -188,7 +188,7 @@ It is "test" release and has no impact on any of your real releases.
 Used to publish a `next` release.
 In this hook you get the semver bump and a list of all pre-releases made.
 
-This hook **must** add the version it published to `preReleaseVersions` amd return it.
+This hook **must** add the version it published to `preReleaseVersions` and return it.
 
 - `preReleaseVersions` - A list of prerelease version publish during the current run
 - `bump` - The version bump to apply
