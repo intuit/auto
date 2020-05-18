@@ -1,3 +1,16 @@
+# v9.33.1 (Mon May 18 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - align octokit types [#1225](https://github.com/intuit/auto/pull/1225) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.33.0 (Mon May 18 2020)
 
 #### 🚀 Enhancement
