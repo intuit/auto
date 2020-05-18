@@ -5,7 +5,8 @@ import {
   execPromise,
 } from "@auto-it/core";
 import { execSync } from "child_process";
-import * as fs from "fs";
+import fs from "fs";
+import path from "path";
 import endent from "endent";
 import glob from "fast-glob";
 import parseGitHubUrl from "parse-github-url";
@@ -112,19 +113,25 @@ export default class GemPlugin implements IPlugin {
         !fs.existsSync("~/.gem/credentials") &&
         process.env.RUBYGEMS_API_KEY
       ) {
-        if (!fs.existsSync("~/.gem")) {
-          auto.logger.verbose.info("Creating ~/.gem directory");
-          await mkdir("~/.gem");
+        const home = process.env.HOME || "~";
+        const gemDir = path.join(home, ".gem");
+
+        if (!fs.existsSync(gemDir)) {
+          auto.logger.verbose.info(`Creating ${gemDir} directory`);
+          await mkdir(gemDir);
         }
 
+        const credentials = path.join(gemDir, "credentials");
+
         await writeFile(
-          "~/.gem/credentials",
+          credentials,
           endent`
             ---
             :rubygems_api_key: ${process.env.RUBYGEMS_API_KEY}
+
           `
         );
-        auto.logger.verbose.success("Wrote ~/.gem/credentials");
+        auto.logger.verbose.success(`Wrote ${credentials}`);
       }
 
       const [version] = await this.getVersion(auto);
