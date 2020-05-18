@@ -86,6 +86,7 @@ export default class GitTagPlugin implements IPlugin {
       ]);
       await execPromise("git", ["push", auto.remote, "--tags"]);
 
+      preReleaseVersions.push(prerelease);
       return preReleaseVersions;
     });
 
