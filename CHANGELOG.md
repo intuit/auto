@@ -1,3 +1,39 @@
+# v9.33.0 (Mon May 18 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/gem`, `@auto-it/git-tag`
+  - 💎 Ruby Gem  Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- [Security] Bump handlebars from 4.5.3 to 4.7.6 [#1213](https://github.com/intuit/auto/pull/1213) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/first-time-contributor`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/upload-assets`
+  - Bump @octokit/rest from 16.43.1 to 17.2.1 [#1146](https://github.com/intuit/auto/pull/1146) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/first-time-contributor`
+  - Bump eslint-plugin-jsdoc from 24.0.0 to 25.2.0 [#1211](https://github.com/intuit/auto/pull/1211) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- `@auto-it/core`
+  - fix(shipit): correct variable name isBaseBranch [#1223](https://github.com/intuit/auto/pull/1223) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### 📝 Documentation
+
+- fix(docs): correct typo in release lifecycle hooks [#1222](https://github.com/intuit/auto/pull/1222) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+- remove dead link in docs [#1221](https://github.com/intuit/auto/pull/1221) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- clean up writing plugin docs [#1220](https://github.com/intuit/auto/pull/1220) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix links in plugin docs [#1219](https://github.com/intuit/auto/pull/1219) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Improve Plugin Docs [#1218](https://github.com/intuit/auto/pull/1218) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+---
+
 # v9.32.3 (Fri May 15 2020)
 
 #### 🐛 Bug Fix
