@@ -1,3 +1,16 @@
+# v9.33.2 (Mon May 18 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - fix upload-assets plugin [#1227](https://github.com/intuit/auto/pull/1227) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.33.1 (Mon May 18 2020)
 
 #### 🐛 Bug Fix
