@@ -67,7 +67,7 @@ export default class UploadAssetsPlugin implements IPlugin {
           const type = await FileType.fromBuffer(file);
 
           const options = {
-            data: file.toString(),
+            data: file as any,
             name: path.basename(asset),
             owner: auto.git.options.owner,
             repo: auto.git.options.repo,
