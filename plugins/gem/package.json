@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gem",
-  "version": "9.32.3",
+  "version": "9.33.0",
   "main": "dist/index.js",
   "description": "",
   "license": "MIT",
@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "fast-glob": "^3.1.1",
     "endent": "^2.0.1",
     "env-ci": "^5.0.1",
+    "fast-glob": "^3.1.1",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "parse-github-url": "1.0.2",
