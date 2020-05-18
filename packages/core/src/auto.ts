@@ -1394,7 +1394,7 @@ export default class Auto {
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const currentBranch = getCurrentBranch();
-    const isBaseBrach = !isPR && currentBranch === this.baseBranch;
+    const isBaseBranch = !isPR && currentBranch === this.baseBranch;
     const shouldGraduate =
       !options.onlyGraduateWithReleaseLabel ||
       (options.onlyGraduateWithReleaseLabel &&
@@ -1411,7 +1411,7 @@ export default class Auto {
 
     this.logger.veryVerbose.info({
       currentBranch,
-      isBaseBrach,
+      isBaseBranch,
       isPR,
       shouldGraduate,
       isPrereleaseBranch,
@@ -1421,7 +1421,7 @@ export default class Auto {
 
     let releaseType: ShipitRelease = "canary";
 
-    if (isBaseBrach && shouldGraduate) {
+    if (isBaseBranch && shouldGraduate) {
       releaseType = "latest";
     } else if (this.inOldVersionBranch()) {
       releaseType = "old";
