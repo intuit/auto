@@ -30,7 +30,7 @@ yarn add -D @auto-it/gem
 
 ## Options
 
-### Build Command
+### Release Command
 
 When `auto` publishes you gem it does it by running a command.
 The default for this is `bundle exec rake release`.

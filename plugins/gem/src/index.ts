@@ -113,6 +113,7 @@ export default class GemPlugin implements IPlugin {
         process.env.RUBYGEMS_API_KEY
       ) {
         if (!fs.existsSync("~/.gem")) {
+          auto.logger.verbose.info("Creating ~/.gem directory");
           await mkdir("~/.gem");
         }
 
@@ -123,11 +124,12 @@ export default class GemPlugin implements IPlugin {
             :rubygems_api_key: ${process.env.RUBYGEMS_API_KEY}
           `
         );
+        auto.logger.verbose.success("Wrote ~/.gem/credentials");
       }
 
       const [version] = await this.getVersion(auto);
 
-      /** Commit the new version */
+      /** Commit the new version. we wait because "rake build" changes the lock file */
       const commitVersion = async () =>
         execPromise("git", [
           "commit",
@@ -137,11 +139,14 @@ export default class GemPlugin implements IPlugin {
         ]);
 
       if (this.options.releaseCommand) {
+        auto.logger.verbose.info("Running custom release command");
         await commitVersion();
         execSync(this.options.releaseCommand, { stdio: "inherit" });
       } else {
+        auto.logger.verbose.info("Running default release command");
         await execPromise("bundle", ["exec", "rake", "build"]);
         await commitVersion();
+        // will tag and push
         await execPromise("bundle", ["exec", "rake", "release"]);
       }
     });
