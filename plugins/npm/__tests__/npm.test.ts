@@ -1243,15 +1243,16 @@ describe("makeRelease", () => {
 describe("beforeCommitChangelog", () => {
   let updateChangelogFile: jest.Mock;
 
-  async function subPackageChangelogTest(options: INpmConfig = {}) {
+  async function subPackageChangelogTest(
+    options: INpmConfig = {},
+    changed = "@packages/a\n@packages/b"
+  ) {
     const plugin = new NPMPlugin(options);
     const hooks = makeHooks();
 
     // isMonorepo
-    execPromise.mockReturnValueOnce(
-      '@packages/a\n@packages/b'
-    );
-    execPromise.mockReturnValueOnce("@packages/a\n@packages/b");
+    execPromise.mockResolvedValue("@packages/a\n@packages/b");
+    execPromise.mockResolvedValue(changed);
     existsSync.mockReturnValueOnce(true);
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
@@ -1303,6 +1304,11 @@ describe("beforeCommitChangelog", () => {
 
   test("should not create sub-package changelogs ", async () => {
     await subPackageChangelogTest({ subPackageChangelogs: false });
+    expect(updateChangelogFile).not.toHaveBeenCalled();
+  });
+
+  test("should not create sub-package changelogs when nothing has changed", async () => {
+    await subPackageChangelogTest({}, "");
     expect(updateChangelogFile).not.toHaveBeenCalled();
   });
 });

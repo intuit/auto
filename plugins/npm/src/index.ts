@@ -581,9 +581,15 @@ export default class NPMPlugin implements IPlugin {
           return;
         }
 
-        const changedPackages = (
-          await execPromise("yarn", ["lerna", "changed"])
-        ).split("\n");
+        const [, changedPackagesResult = ""] = await on(
+          execPromise("yarn", ["lerna", "changed"])
+        );
+        const changedPackages = changedPackagesResult.split("\n");
+
+        if (!changedPackages.length) {
+          return;
+        }
+
         const lernaPackages = await getLernaPackages();
         const changelog = await auto.release.makeChangelog(bump);
 
