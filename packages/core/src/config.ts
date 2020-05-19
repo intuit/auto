@@ -63,15 +63,7 @@ export default class Config {
    * load the extends property, load the plugins and start the git remote interface.
    */
   async loadConfig() {
-    const explorer = cosmiconfig("auto", {
-      searchPlaces: [
-        `.autorc`,
-        `.autorc.json`,
-        `.autorc.yaml`,
-        `.autorc.yml`,
-        "package.json",
-      ],
-    });
+    const explorer = cosmiconfig("auto");
     const result = await explorer.search();
 
     let rawConfig: ConfigObject = {};
