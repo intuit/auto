@@ -38,7 +38,13 @@ This is generally an anti-pattern and makes your repo less ergonomic.
 
 To remedy this problem, this plugin can update the tag with whatever files you want! (Thanks to [Jason Etco](https://github.com/JasonEtco/build-and-tag-action) for the inspiration) This way you do not have to commit `node_modules` or your `dist` files to your repo. They instead live only in the tag alongside your `action.yml` definition.
 
+To make things simple we recommend using [ncc](https://github.com/zeit/ncc) to bundle your JavaScript action into 1 file.
+Without any settings this plugins will treat the `main` of your `package.json` as a single bundled file.
+
+#### Files
+
 Use the `files` option to make this plugin update the tag with a list of files or globs.
+This is useful if you do not want to bundle your code and just want to ship `node_modules` + `dist`.
 
 ```json
 {
@@ -48,5 +54,3 @@ Use the `files` option to make this plugin update the tag with a list of files o
   ]
 }
 ```
-
-To make things simple we recommend using [ncc](https://github.com/zeit/ncc) to bundle your JavaScript action into 1 file.

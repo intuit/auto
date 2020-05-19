@@ -6,6 +6,7 @@ import {
 } from "@auto-it/core";
 import GitTagPlugin from "@auto-it/git-tag";
 import glob from "fast-glob";
+import fs from "fs";
 import { major } from "semver";
 import * as t from "io-ts";
 import { readFile } from "./utils";
@@ -28,6 +29,14 @@ export default class GhActionsPlugin implements IPlugin {
   /** Initialize the plugin with it's options */
   constructor(options: IGhActionsPluginOptions) {
     this.options = options;
+
+    if (!this.options.files && fs.existsSync("package.json")) {
+      const { main } = JSON.parse(
+        fs.readFileSync("package.json", { encoding: "utf8" })
+      );
+
+      this.options.files = [main];
+    }
   }
 
   /** Tap into auto plugin points. */
@@ -39,7 +48,7 @@ export default class GhActionsPlugin implements IPlugin {
       const latestRelease = await auto.git!.getLatestReleaseInfo();
       return latestRelease.tag_name;
     };
-    
+
     gitTag.apply(auto);
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
@@ -55,6 +64,7 @@ export default class GhActionsPlugin implements IPlugin {
 
       const newTag = await auto.git.getLatestTagInBranch();
       const head = await auto.git.getSha();
+      let tagSha = head;
 
       if (this.options.files) {
         // create a commit with only files + actions.yml
@@ -86,12 +96,13 @@ export default class GhActionsPlugin implements IPlugin {
           tree: tree.data.sha,
           parents: [head],
         });
+        tagSha = commit.data.sha;
 
         await execPromise("git", [
           "tag",
           "--force",
           newTag,
-          commit.data.sha,
+          tagSha,
           "-m",
           `"Update version to ${newTag}"`,
         ]);
@@ -106,7 +117,7 @@ export default class GhActionsPlugin implements IPlugin {
           "tag",
           "--force",
           majorTag,
-          head,
+          tagSha,
           "-m",
           `"Update ${majorTag}"`,
         ]);
