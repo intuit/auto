@@ -47,6 +47,7 @@ Package Manager Plugins
 - [Cocoapod](../plugins/cocoapods/README.md)
 - [Gem](../plugins/gem/README.md)
 - [Git Tag](../plugins/git-tag/README.md)
+- [GitHub Actions](../plugins/gh-actions/README.md)
 - [Gradle](../plugins/gradle/README.md)
 - [Maven](../plugins/maven/README.md)
 - [NPM](../plugins/npm/README.md)

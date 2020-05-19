@@ -42,6 +42,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [crates](./plugins/crates) - Publish Rust crates
 - [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
 - [gem](./plugins/gem) - Publish ruby gems
+- [gh-actions](./plugins/gh-actions) - Publish `docker` and JavaScript GitHub Actions
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag (`default` when used with binary)
 - [gradle](./plugins/gradle) - Publish code with gradle
 - [maven](./plugins/maven) - Publish code with maven
