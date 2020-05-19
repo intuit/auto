@@ -1,3 +1,16 @@
+# v9.34.1 (Tue May 19 2020)
+
+#### 🐛 Bug Fix
+
+- sub-package changelogs: Handle when no changes made to monorepo packages [#1236](https://github.com/intuit/auto/pull/1236) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- sub-package changelogs: Handle when no changes made to monorepo packages ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.34.0 (Tue May 19 2020)
 
 #### 🔩 Dependency Updates
