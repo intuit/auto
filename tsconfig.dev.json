@@ -67,6 +67,9 @@
     },
     {
       "path": "plugins/gem"
+    },
+    {
+      "path": "plugins/gh-actions"
     }
   ]
 }

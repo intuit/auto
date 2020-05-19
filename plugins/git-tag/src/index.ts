@@ -12,16 +12,23 @@ export default class GitTagPlugin implements IPlugin {
   /** The name of the plugin */
   name = "git-tag";
 
+  /**
+   * Function that gets the latest version for the git-tag managed plugin.
+   * This API is for other plugins to use to build off of this one.
+   */
+  getLatestFunction: "getLatestTagInBranch" | "getLatestRelease" =
+    "getLatestTagInBranch";
+
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     /** Get the latest tag in the repo, if none then the first commit */
-    async function getTag() {
+    const getTag = async () => {
       try {
-        return await auto.git!.getLatestTagInBranch();
+        return await auto.git![this.getLatestFunction]();
       } catch (error) {
         return auto.prefixRelease("0.0.0");
       }
-    }
+    };
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       if (!auto.git) {
