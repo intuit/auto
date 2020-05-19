@@ -1,12 +1,13 @@
 # `auto` RC File
 
-`auto` uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config. This means you can define this file a variety of ways. Our `cosmiconfig` setup is custom and will start at the root of your project and start to search up the directory tree for the following:
+`auto` uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config.
+This means you can define this file a variety of ways.
+`cosmiconfig` will start at the root of your project and start to search up the directory tree for the following:
 
-- a JSON or YAML, extension-less "rc file"
-- an "rc file" with the extensions `.json`, `.yaml`, or `.yml`
 - a package.json property
-
-`auto` does not support writing configuration files in JavaScript.
+- a JSON or YAML, extension-less "rc file"
+- an "rc file" with the extensions `.json`, `.yaml`, `.yml`, or `.js`
+- a `.config.js` CommonJS module
 
 ## Initialization
 
