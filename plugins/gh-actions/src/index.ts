@@ -35,7 +35,11 @@ export default class GhActionsPlugin implements IPlugin {
     const gitTag = new GitTagPlugin();
     // Since the tags aren't actually in master's tree we need to look at the
     // latest release on Github.
-    gitTag.getLatestFunction = "getLatestRelease";
+    gitTag.getLatestFunction = async () => {
+      const latestRelease = await auto.git!.getLatestReleaseInfo();
+      return latestRelease.tag_name;
+    };
+    
     gitTag.apply(auto);
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
