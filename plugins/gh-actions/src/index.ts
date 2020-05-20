@@ -10,6 +10,7 @@ import fs from "fs";
 import { major } from "semver";
 import * as t from "io-ts";
 import { readFile } from "./utils";
+import { inc, ReleaseType } from "semver";
 
 const pluginOptions = t.partial({
   /** A list of files or globs to update the tag with */
@@ -131,6 +132,46 @@ export default class GhActionsPlugin implements IPlugin {
       }
 
       await execPromise("git", ["push", auto.remote, "--tags"]);
+    });
+
+    auto.hooks.makeRelease.tapPromise(this.name, async (options) => {
+      let newVersion = options.newVersion;
+
+      // If we are maintaining a separate commit for dist files we must release
+      // that commit and not the last tag in the branch.
+      if (this.options.files) {
+        const allTags = (
+          await execPromise("git", ["tag", "--sort=committerdate"])
+        ).split("\n");
+        newVersion = allTags[allTags.length - 1];
+      }
+
+      // Everything below here copied from core
+      // TODO move?
+      if (options.dryRun) {
+        const bump = await auto.getVersion({ from: options.from });
+
+        auto.logger.log.info(
+          `Would have created a release on GitHub for version: ${inc(
+            newVersion,
+            bump as ReleaseType
+          )}`
+        );
+        auto.logger.log.note(
+          'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
+        );
+      } else {
+        auto.logger.log.info(`Releasing ${newVersion} to GitHub.`);
+
+        const release = await auto.git!.publish(
+          options.fullReleaseNotes,
+          newVersion,
+          options.isPrerelease
+        );
+
+        auto.logger.log.info(release.data.html_url);
+        return release;
+      }
     });
   }
 }
