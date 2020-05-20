@@ -5,12 +5,29 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import GitTagPlugin from "@auto-it/git-tag";
-import glob from "fast-glob";
 import fs from "fs";
 import { major } from "semver";
 import * as t from "io-ts";
-import { readFile } from "./utils";
-import { inc, ReleaseType } from "semver";
+
+/** get all tags in repo */
+const getAllTags = async () => {
+  try {
+    return (await execPromise("git", ["tag", "--sort=taggerdate"])).split("\n");
+  } catch (error) {
+    return [];
+  }
+};
+
+/** Get the newest tag in the branch */
+const newestTag = async () => {
+  const allTags = (await getAllTags()).filter((tag) => !tag.match(/^v\d+$/));
+
+  if (!allTags.length) {
+    throw new Error("No tag found in repo");
+  }
+
+  return allTags[allTags.length - 1];
+};
 
 const pluginOptions = t.partial({
   /** A list of files or globs to update the tag with */
@@ -45,11 +62,7 @@ export default class GhActionsPlugin implements IPlugin {
     const gitTag = new GitTagPlugin();
     // Since the tags aren't actually in master's tree we need to look at the
     // latest release on Github.
-    gitTag.getLatestFunction = async () => {
-      const latestRelease = await auto.git!.getLatestReleaseInfo();
-      return latestRelease.tag_name;
-    };
-
+    gitTag.getLatestFunction = newestTag;
     gitTag.apply(auto);
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
@@ -64,53 +77,11 @@ export default class GhActionsPlugin implements IPlugin {
       }
 
       const newTag = await auto.git.getLatestTagInBranch();
-      const head = await auto.git.getSha();
-      let tagSha = head;
-
-      if (this.options.files) {
-        // create a commit with only files + actions.yml
-        const files = await Promise.all(
-          glob.sync(this.options.files || []).map(async (file) => ({
-            path: file,
-            mode: "100644" as const,
-            type: "blob" as const,
-            content: await readFile(file, { encoding: "utf8" }),
-          }))
-        );
-
-        const tree = await auto.git.github.git.createTree({
-          ...auto.git.options,
-          tree: [
-            {
-              path: "action.yml",
-              mode: "100644",
-              type: "blob",
-              content: await readFile("action.yml", { encoding: "utf8" }),
-            },
-            ...files,
-          ],
-        });
-
-        const commit = await auto.git.github.git.createCommit({
-          ...auto.git.options,
-          message: "Automatic compilation",
-          tree: tree.data.sha,
-          parents: [head],
-        });
-        tagSha = commit.data.sha;
-
-        await execPromise("git", [
-          "tag",
-          "--force",
-          newTag,
-          tagSha,
-          "-m",
-          `"Update version to ${newTag}"`,
-        ]);
-      }
-
-      const tags = await auto.git.getTags(auto.baseBranch);
       const majorTag = `v${major(newTag)}`;
+      const tags = await getAllTags();
+      const newTagSha = this.options.files
+        ? await this.createReleaseTag(auto, newTag)
+        : await auto.git.getSha();
 
       if (tags.some((t) => t === majorTag)) {
         // If v1 already exists update where the tag points to
@@ -118,7 +89,7 @@ export default class GhActionsPlugin implements IPlugin {
           "tag",
           "--force",
           majorTag,
-          tagSha,
+          newTagSha,
           "-m",
           `"Update ${majorTag}"`,
         ]);
@@ -126,52 +97,47 @@ export default class GhActionsPlugin implements IPlugin {
         await execPromise("git", [
           "tag",
           majorTag,
+          newTagSha,
           "-m",
           `"Create ${majorTag}"`,
         ]);
       }
 
-      await execPromise("git", ["push", auto.remote, "--tags"]);
+      await execPromise("git", ["push", auto.remote, "--tags", "--force"]);
     });
 
     auto.hooks.makeRelease.tapPromise(this.name, async (options) => {
-      let newVersion = options.newVersion;
-
       // If we are maintaining a separate commit for dist files we must release
       // that commit and not the last tag in the branch.
       if (this.options.files) {
-        const allTags = (
-          await execPromise("git", ["tag", "--sort=committerdate"])
-        ).split("\n");
-        newVersion = allTags[allTags.length - 1];
-      }
-
-      // Everything below here copied from core
-      // TODO move?
-      if (options.dryRun) {
-        const bump = await auto.getVersion({ from: options.from });
-
-        auto.logger.log.info(
-          `Would have created a release on GitHub for version: ${inc(
-            newVersion,
-            bump as ReleaseType
-          )}`
-        );
-        auto.logger.log.note(
-          'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
-        );
-      } else {
-        auto.logger.log.info(`Releasing ${newVersion} to GitHub.`);
-
-        const release = await auto.git!.publish(
-          options.fullReleaseNotes,
-          newVersion,
-          options.isPrerelease
-        );
-
-        auto.logger.log.info(release.data.html_url);
-        return release;
+        options.newVersion = await newestTag();
       }
     });
+  }
+
+  /** Create a tag with only the release files */
+  private async createReleaseTag(auto: Auto, newTag: string) {
+    await execPromise("git", ["checkout", "HEAD", "--detach"]);
+
+    // Remove all source files
+    await execPromise("git", ["rm", "*", "--ignore-unmatch", "-r", "--cached"]);
+
+    // Add package files
+    await execPromise("git", [
+      "add",
+      "--force",
+      "action.yml",
+      ...(this.options.files || []),
+    ]);
+
+    const message = `"Update version to ${newTag}"`;
+    await execPromise("git", ["commit", "-m", message]);
+
+    const tagSha = await auto.git!.getSha();
+
+    await execPromise("git", ["tag", "--force", newTag, tagSha, "-m", message]);
+    await execPromise("git", ["checkout", "-f", auto.baseBranch]);
+
+    return tagSha;
   }
 }
