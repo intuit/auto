@@ -41,6 +41,8 @@ To remedy this problem, this plugin can update the tag with whatever files you w
 To make things simple we recommend using [ncc](https://github.com/zeit/ncc) to bundle your JavaScript action into 1 file.
 Without any settings this plugins will treat the `main` of your `package.json` as a single bundled file.
 
+> Note: If you use this method you cannot use Version Branches. If you want this feature, please file an issue.
+
 #### Files
 
 Use the `files` option to make this plugin update the tag with a list of files or globs.
