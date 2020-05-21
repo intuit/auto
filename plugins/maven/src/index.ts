@@ -171,9 +171,11 @@ export default class MavenPlugin implements IPlugin {
     });
 
     auto.hooks.afterShipIt.tapPromise(this.name, async () => {
+      const { MAVEN_SNAPSHOT_BRANCH } = process.env;
+      const mavenSnapshotBranch = MAVEN_SNAPSHOT_BRANCH || "dev-snapshot";
       // prepare for next development iteration
-      await execPromise("git", ["reset", "--hard", "dev-snapshot"]);
-      await execPromise("git", ["branch", "-d", "dev-snapshot"]);
+      await execPromise("git", ["reset", "--hard", mavenSnapshotBranch]);
+      await execPromise("git", ["branch", "-d", mavenSnapshotBranch]);
       await execPromise("git", ["push", auto.remote, auto.baseBranch]);
     });
   }
