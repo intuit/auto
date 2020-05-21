@@ -1,3 +1,16 @@
+# v9.35.1 (Thu May 21 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/released`, `@auto-it/slack`
+  - fallback to tag name when the release has no name [#1243](https://github.com/intuit/auto/pull/1243) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.35.0 (Thu May 21 2020)
 
 :tada: This release contains work from a new contributor! :tada:

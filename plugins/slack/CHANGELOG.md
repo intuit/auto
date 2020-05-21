@@ -1,3 +1,16 @@
+# v9.35.1 (Thu May 21 2020)
+
+#### 🐛 Bug Fix
+
+- fallback to tag name when the release has no name [#1243](https://github.com/intuit/auto/pull/1243) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fallback to tag name when the release has no name ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.34.0 (Tue May 19 2020)
 
 #### 🔩 Dependency Updates
