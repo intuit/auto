@@ -219,12 +219,12 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/ShelbyCohen"><img src="https://avatars1.githubusercontent.com/u/7768053?v=4" width="100px;" alt=""/><br /><sub><b>Shelby Cohen</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/krohrsb"><img src="https://avatars1.githubusercontent.com/u/321544?v=4" width="100px;" alt=""/><br /><sub><b>Kyle Brown</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/whynotzoidberg"><img src="https://avatars0.githubusercontent.com/u/18683899?v=4" width="100px;" alt=""/><br /><sub><b>Till Weisser</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.terradatum.com"><img src="https://avatars0.githubusercontent.com/u/94763?v=4" width="100px;" alt=""/><br /><sub><b>G. Richard Bellamy</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

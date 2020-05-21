@@ -265,6 +265,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "rbellamy",
+      "name": "G. Richard Bellamy",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/94763?v=4",
+      "profile": "http://www.terradatum.com",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
