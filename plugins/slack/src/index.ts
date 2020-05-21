@@ -150,7 +150,10 @@ export default class SlackPlugin implements IPlugin {
     const proxyUrl = process.env.https_proxy || process.env.http_proxy;
     const atTarget = this.options.atTarget;
     const urls = releases.map(
-      (release) => `*<${release.data.html_url}|${release.data.name}>*`
+      (release) =>
+        `*<${release.data.html_url}|${
+          release.data.name || release.data.tag_name
+        }>*`
     );
     const releaseUrl = urls.length ? urls.join(", ") : newVersion;
 
