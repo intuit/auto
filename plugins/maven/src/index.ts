@@ -145,7 +145,7 @@ export default class MavenPlugin implements IPlugin {
         "-DpushChanges=false",
       ]);
       await execPromise("git", ["checkout", "-b", mavenSnapshotBranch]);
-      await execPromise("git", ["checkout", "master"]);
+      await execPromise("git", ["checkout", auto.baseBranch]);
       await execPromise("git", ["reset", "--hard", "HEAD~1"]);
     });
 
