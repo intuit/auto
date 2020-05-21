@@ -194,7 +194,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
     // leave a comment with the new version
     const urls = releases.map((release) =>
       this.options.message === defaultOptions.message
-        ? `[\`${release.data.name}\`](${release.data.html_url})`
+        ? `[\`${release.data.name || release.data.tag_name}\`](${
+            release.data.html_url
+          })`
         : release.data.name
     );
     const message = this.createReleasedComment(isIssue, urls.join(", "));
