@@ -1,3 +1,23 @@
+# v9.35.0 (Thu May 21 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy)), for all your work!
+
+#### 🚀 Enhancement
+
+- Maven plugin support for configurable SNAPSHOT branch [#1241](https://github.com/intuit/auto/pull/1241) ([@rbellamy](https://github.com/rbellamy))
+
+#### 🐛 Bug Fix
+
+- Maven plugin support for configurable SNAPSHOT branch ([@rbellamy](https://github.com/rbellamy))
+
+#### Authors: 1
+
+- G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy))
+
+---
+
 # v9.34.0 (Tue May 19 2020)
 
 #### 🔩 Dependency Updates
