@@ -26,7 +26,7 @@ const sanitizeMarkdown = (markdown: string) =>
 
       // Strip markdown code block type. Slack does not render them correctly.
       if (line.match(MARKDOWN_LANGUAGE)) {
-        return line.replace(MARKDOWN_LANGUAGE, "$1");
+        return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
       }
 
       return line;
