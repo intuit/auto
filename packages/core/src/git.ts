@@ -3,7 +3,7 @@ import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibilit
 import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
-import { Octokit } from "@octokit/rest";
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { gitlogPromise as gitlog } from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
@@ -23,7 +23,10 @@ import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
-export type IPRInfo = Omit<Octokit.ReposCreateStatusParams, "owner" | "repo">;
+export type IPRInfo = Omit<
+  RestEndpointMethodTypes["repos"]["createStatus"]["parameters"],
+  "owner" | "repo"
+>;
 
 export interface IGitOptions {
   /** Github repo owner (user) */
@@ -118,7 +121,7 @@ export default class Git {
             return true;
           }
         },
-        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
+        onAbuseLimit: (_: number, opts: ThrottleOpts) => {
           // does not retry, only logs an error
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${opts.url}`
@@ -218,7 +221,7 @@ export default class Git {
   async getLabels(prNumber: number) {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
-    const args: Octokit.IssuesListLabelsOnIssueParams = {
+    const args: RestEndpointMethodTypes["issues"]["listLabelsOnIssue"]["parameters"] = {
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: prNumber,
@@ -245,7 +248,7 @@ export default class Git {
   async getPr(prNumber: number) {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
 
-    const args: Octokit.IssuesListLabelsOnIssueParams = {
+    const args: RestEndpointMethodTypes["issues"]["get"]["parameters"] = {
       owner: this.options.owner,
       repo: this.options.repo,
       issue_number: prNumber,
@@ -295,8 +298,9 @@ export default class Git {
     };
 
     try {
-      const labels: Octokit.IssuesListLabelsForRepoResponse = await this.github.paginate(
-        this.github.issues.listLabelsForRepo.endpoint(args)
+      const labels = await this.github.paginate(
+        this.github.issues.listLabelsForRepo,
+        args
       );
 
       this.logger.veryVerbose.info(
@@ -330,7 +334,7 @@ export default class Git {
         // If start === firstCommit then we want to include that commit in the changelog
         // Otherwise it was that last release and should not be included in the release.
         branch: first === startSha ? end : `${start.trim()}..${end.trim()}`,
-        execOptions: { maxBuffer: 1000 * 1024 },
+        execOptions: { maxBuffer: Infinity },
         includeMergeCommitFiles: true,
       });
 
@@ -440,7 +444,7 @@ export default class Git {
   async getPullRequest(pr: number) {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
-    const args: Octokit.PullsGetParams = {
+    const args: RestEndpointMethodTypes["pulls"]["get"]["parameters"] = {
       owner: this.options.owner,
       repo: this.options.repo,
       pull_number: pr,
@@ -457,7 +461,9 @@ export default class Git {
   }
 
   /** Search to GitHub project's issue and pull requests */
-  async searchRepo(options: Octokit.SearchIssuesAndPullRequestsParams) {
+  async searchRepo(
+    options: RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"]
+  ) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} ${options.q}`;
 
@@ -497,7 +503,9 @@ export default class Git {
 
     this.logger.verbose.info("Creating status using:\n", args);
 
-    const result = await this.github.repos.createStatus(args);
+    const result = await this.github.repos.createStatus(
+      args as RestEndpointMethodTypes["repos"]["createStatus"]["parameters"]
+    );
 
     this.logger.veryVerbose.info("Got response from createStatues\n", result);
     this.logger.verbose.info("Created status on GitHub.");
@@ -621,7 +629,9 @@ export default class Git {
   }
 
   /** Get all the pull requests for a project */
-  async getPullRequests(options?: Partial<Octokit.PullsListParams>) {
+  async getPullRequests(
+    options?: Partial<RestEndpointMethodTypes["pulls"]["list"]["parameters"]>
+  ) {
     this.logger.verbose.info("Getting pull requests...");
 
     const result = (
@@ -640,18 +650,14 @@ export default class Git {
 
   /** Get all the commits for a PR */
   @memoize()
-  async getCommitsForPR(
-    pr: number
-  ): Promise<Octokit.PullsListCommitsResponseItem[]> {
+  async getCommitsForPR(pr: number) {
     this.logger.verbose.info(`Getting commits for PR #${pr}`);
 
-    const result = await this.github.paginate(
-      this.github.pulls.listCommits.endpoint({
-        owner: this.options.owner.toLowerCase(),
-        repo: this.options.repo.toLowerCase(),
-        pull_number: pr,
-      })
-    );
+    const result = await this.github.paginate(this.github.pulls.listCommits, {
+      owner: this.options.owner.toLowerCase(),
+      repo: this.options.repo.toLowerCase(),
+      pull_number: pr,
+    });
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
     this.logger.verbose.info(`Got commits for PR #${pr}.`);

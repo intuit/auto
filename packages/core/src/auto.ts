@@ -1,4 +1,4 @@
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import dotenv from "dotenv";
 import envCi from "env-ci";
 import fs from "fs";
@@ -117,6 +117,8 @@ interface BeforeShipitContext {
   releaseType: ShipitRelease;
 }
 
+type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
   modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
@@ -154,9 +156,7 @@ export interface IAutoHooks {
         /** The generated release notes for the commits */
         releaseNotes: string;
         /** The response from creating the new release. */
-        response?:
-          | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-          | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>;
+        response?: PublishResponse | PublishResponse[];
       }
     ]
   >;
@@ -178,9 +178,7 @@ export interface IAutoHooks {
         commits: IExtendedCommit[];
       }
     ],
-    | Octokit.Response<Octokit.ReposCreateReleaseResponse>
-    | Array<Octokit.Response<Octokit.ReposCreateReleaseResponse>>
-    | void
+    PublishResponse | PublishResponse[] | void
   >;
   /** Get git author. Typically from a package distribution description file. */
   getAuthor: AsyncSeriesBailHook<[], Partial<AuthorInformation> | void>;
@@ -616,9 +614,8 @@ export default class Auto {
     const repo = (await this.getRepo(this.config!)) || {};
     const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
     const author = (await this.getGitUser()) || ({} as IAuthor);
-    const version = await this.getCurrentVersion(
-      await this.git.getLatestRelease()
-    );
+    const [, lastRelease = "0.0.0"] = await on(this.git.getLatestRelease());
+    const version = await this.getCurrentVersion(lastRelease);
     const [err, latestRelease] = await on(this.git.getLatestReleaseInfo());
     const latestReleaseLink = latestRelease
       ? link(latestRelease.tag_name, latestRelease.html_url)
@@ -728,8 +725,6 @@ export default class Auto {
 
   /**
    * Create all of the user's labels on the git remote if the don't already exist
-   *
-   * @param options - Options for the createLabels functionality
    */
   async createLabels(options: ICreateLabelsOptions = {}) {
     if (!this.release || !this.labels) {
@@ -741,8 +736,6 @@ export default class Auto {
 
   /**
    * Get the labels on a specific PR. Defaults to the labels of the last merged PR
-   *
-   * @param options - Options for the createLabels functionality
    */
   async label({ pr }: ILabelOptions = {}) {
     if (!this.git) {
@@ -779,8 +772,6 @@ export default class Auto {
 
   /**
    * Create a status on a PR.
-   *
-   * @param options - Options for the pr status functionality
    */
   async prStatus({ dryRun, pr, url, ...options }: IPRStatusOptions) {
     if (!this.git) {
@@ -834,8 +825,6 @@ export default class Auto {
 
   /**
    * Check that a PR has a SEMVER label. Set a success status on the PR.
-   *
-   * @param options - Options for the pr check functionality
    */
   async prCheck({ dryRun, pr, url, ...options }: IPRCheckOptions) {
     if (!this.git || !this.release || !this.semVerLabels) {
@@ -931,8 +920,6 @@ export default class Auto {
   /**
    * Comment on a PR. Only one comment will be present on the PR, Older comments are removed.
    * You can use the "context" option to multiple comments on a PR.
-   *
-   * @param args - Options for the comment functionality
    */
   async comment(args: ICommentOptions) {
     const options = { ...this.getCommandDefault("comment"), ...args };
@@ -990,8 +977,6 @@ export default class Auto {
    * Update the body of a PR with a message. Only one message will be present in the PR,
    * Older messages are removed. You can use the "context" option to multiple message
    * in a PR body.
-   *
-   * @param options - Options
    */
   async prBody(options: ICommentOptions) {
     const {
@@ -1408,7 +1393,7 @@ export default class Auto {
     // env-ci sets branch to target branch (ex: master) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const currentBranch = getCurrentBranch();
-    const isBaseBrach = !isPR && currentBranch === this.baseBranch;
+    const isBaseBranch = !isPR && currentBranch === this.baseBranch;
     const shouldGraduate =
       !options.onlyGraduateWithReleaseLabel ||
       (options.onlyGraduateWithReleaseLabel &&
@@ -1425,7 +1410,7 @@ export default class Auto {
 
     this.logger.veryVerbose.info({
       currentBranch,
-      isBaseBrach,
+      isBaseBranch,
       isPR,
       shouldGraduate,
       isPrereleaseBranch,
@@ -1435,7 +1420,7 @@ export default class Auto {
 
     let releaseType: ShipitRelease = "canary";
 
-    if (isBaseBrach && shouldGraduate) {
+    if (isBaseBranch && shouldGraduate) {
       releaseType = "latest";
     } else if (this.inOldVersionBranch()) {
       releaseType = "old";
@@ -1837,7 +1822,7 @@ export default class Auto {
     this.logger.log.error("Changed Files:\n", status);
 
     throw new Error(
-      "Working direction is not clean, make sure all files are committed"
+      "Working directory is not clean, make sure all files are committed"
     );
   };
 

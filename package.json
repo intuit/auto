@@ -33,7 +33,7 @@
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "yarn docs:build && ignite",
-    "docs:build": "./docs/generate-command-docs.js",
+    "docs:build": "./docs/generate-command-docs.js && ./docs/update-curl-version.js",
     "docs:watch": "yarn docs --watch",
     "docs:publish": "./scripts/publish-docs.sh",
     "create:plugin": "./scripts/create-plugin.js",
@@ -56,7 +56,7 @@
     "eslint-config-xo": "^0.29.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^23.0.1",
-    "eslint-plugin-jsdoc": "^24.0.0",
+    "eslint-plugin-jsdoc": "^25.2.0",
     "eslint-plugin-prettier": "^3.1.1",
     "graphql": "^15.0.0",
     "husky": "^4.0.7",
@@ -71,6 +71,7 @@
     "rimraf": "^3.0.0",
     "title-case": "^3.0.2",
     "ts-jest": "^25.0.0",
+    "type-fest": "^0.13.1",
     "typescript": "~3.8.3"
   },
   "husky": {

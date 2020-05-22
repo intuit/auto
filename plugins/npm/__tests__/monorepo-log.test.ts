@@ -196,6 +196,8 @@ test("should create extra change logs for sub-packages", async () => {
       "packages/@foobar/release/README.md\npackages/@foobar/party/package.json"
   );
 
+  execPromise.mockResolvedValueOnce("@foobar/release");
+
   const plugin = new NpmPlugin();
   const hooks = makeHooks();
   const update = jest.fn();

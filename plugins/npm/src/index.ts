@@ -3,7 +3,7 @@ import * as fs from "fs";
 import parseAuthor from "parse-author";
 import path from "path";
 import { Memoize as memoize } from "typescript-memoize";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
@@ -581,6 +581,15 @@ export default class NPMPlugin implements IPlugin {
           return;
         }
 
+        const [, changedPackagesResult = ""] = await on(
+          execPromise("yarn", ["lerna", "changed"])
+        );
+        const changedPackages = changedPackagesResult.split("\n");
+
+        if (!changedPackages.length) {
+          return;
+        }
+
         const lernaPackages = await getLernaPackages();
         const changelog = await auto.release.makeChangelog(bump);
 
@@ -589,6 +598,14 @@ export default class NPMPlugin implements IPlugin {
         // Cannot run git operations in parallel
         await lernaPackages.reduce(async (last, lernaPackage) => {
           await last;
+
+          // If lerna doesn't think a package has changed then do not create sub-package changelog
+          // Since we use "git log -m", merge commits can have lots of files in them. Lerna does not
+          // use this option. This means that this hooks will only create a sub-package changelog if
+          // lerna will publish an update for it
+          if (!changedPackages.some((name) => lernaPackage.name === name)) {
+            return;
+          }
 
           auto.logger.verbose.info(
             `Updating changelog for: ${lernaPackage.name}`
@@ -927,6 +944,7 @@ export default class NPMPlugin implements IPlugin {
           // publish the changed package versions. from-git broke when HEAD
           // didn't contain the tags
           "from-package",
+          this.exact && "--exact",
           ...verboseArgs,
         ]);
       } else {
@@ -1001,9 +1019,12 @@ export default class NPMPlugin implements IPlugin {
 
         this.renderMonorepoChangelog = false;
 
-        return releases.filter((release): release is Octokit.Response<
-          Octokit.ReposCreateReleaseResponse
-        > => Boolean(release));
+        return releases.filter(
+          (
+            release
+          ): release is RestEndpointMethodTypes["repos"]["createRelease"]["response"] =>
+            Boolean(release)
+        );
       }
     });
   }

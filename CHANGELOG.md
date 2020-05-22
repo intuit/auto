@@ -1,3 +1,228 @@
+# v9.35.1 (Thu May 21 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/released`, `@auto-it/slack`
+  - fallback to tag name when the release has no name [#1243](https://github.com/intuit/auto/pull/1243) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.35.0 (Thu May 21 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/maven`
+  - Maven plugin support for configurable SNAPSHOT branch [#1241](https://github.com/intuit/auto/pull/1241) ([@rbellamy](https://github.com/rbellamy))
+
+#### Authors: 1
+
+- G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy))
+
+---
+
+# v9.34.1 (Tue May 19 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - sub-package changelogs: Handle when no changes made to monorepo packages [#1236](https://github.com/intuit/auto/pull/1236) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.34.0 (Tue May 19 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - allow more rc file types [#1235](https://github.com/intuit/auto/pull/1235) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump lerna from 3.20.2 to 3.21.0 [#1232](https://github.com/intuit/auto/pull/1232) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump io-ts from 2.2.1 to 2.2.2 [#1231](https://github.com/intuit/auto/pull/1231) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 2.31.0 to 2.34.0 [#1230](https://github.com/intuit/auto/pull/1230) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 25.2.0 to 25.4.2 [#1229](https://github.com/intuit/auto/pull/1229) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.9.0 to 23.13.1 [#1228](https://github.com/intuit/auto/pull/1228) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🏠 Internal
+
+- `auto`
+  - add test that ensure bundled auto still works [#1226](https://github.com/intuit/auto/pull/1226) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.33.2 (Mon May 18 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - fix upload-assets plugin [#1227](https://github.com/intuit/auto/pull/1227) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.33.1 (Mon May 18 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - align octokit types [#1225](https://github.com/intuit/auto/pull/1225) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.33.0 (Mon May 18 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/gem`, `@auto-it/git-tag`
+  - 💎 Ruby Gem Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- [Security] Bump handlebars from 4.5.3 to 4.7.6 [#1213](https://github.com/intuit/auto/pull/1213) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/first-time-contributor`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/upload-assets`
+  - Bump @octokit/rest from 16.43.1 to 17.2.1 [#1146](https://github.com/intuit/auto/pull/1146) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/first-time-contributor`
+  - Bump eslint-plugin-jsdoc from 24.0.0 to 25.2.0 [#1211](https://github.com/intuit/auto/pull/1211) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- `@auto-it/core`
+  - fix(shipit): correct variable name isBaseBranch [#1223](https://github.com/intuit/auto/pull/1223) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### 📝 Documentation
+
+- fix(docs): correct typo in release lifecycle hooks [#1222](https://github.com/intuit/auto/pull/1222) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+- remove dead link in docs [#1221](https://github.com/intuit/auto/pull/1221) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- clean up writing plugin docs [#1220](https://github.com/intuit/auto/pull/1220) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix links in plugin docs [#1219](https://github.com/intuit/auto/pull/1219) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Improve Plugin Docs [#1218](https://github.com/intuit/auto/pull/1218) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+---
+
+# v9.32.3 (Fri May 15 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - only create sub-package changelogs for `lerna changed` packages [#1216](https://github.com/intuit/auto/pull/1216) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.32.2 (Fri May 15 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - pass exact flag to publish too [#1215](https://github.com/intuit/auto/pull/1215) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.32.1 (Fri May 15 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Till Weisser ([@whynotzoidberg](https://github.com/whynotzoidberg)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Increase gitlog maximum buffer size to Infinity [#1212](https://github.com/intuit/auto/pull/1212) ([@whynotzoidberg](https://github.com/whynotzoidberg))
+
+#### 🔩 Dependency Updates
+
+- Bump fp-ts from 2.5.4 to 2.6.0 [#1209](https://github.com/intuit/auto/pull/1209) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 25.4.0 to 25.5.1 [#1208](https://github.com/intuit/auto/pull/1208) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Till Weisser ([@whynotzoidberg](https://github.com/whynotzoidberg))
+
+---
+
+# v9.32.0 (Mon May 11 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/slack`
+  - Slack Plugin HTTP Proxy support [#1210](https://github.com/intuit/auto/pull/1210) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
+# v9.31.2 (Mon May 11 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix(auto): correct git porcelain error message [#1207](https://github.com/intuit/auto/pull/1207) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/parser from 2.27.0 to 2.31.0 [#1198](https://github.com/intuit/auto/pull/1198) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.10.1 to 6.11.0 [#1197](https://github.com/intuit/auto/pull/1197) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest from 25.4.0 to 25.5.4 [#1196](https://github.com/intuit/auto/pull/1196) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.8.2 to 23.9.0 [#1195](https://github.com/intuit/auto/pull/1195) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.27.0 to 2.31.0 [#1199](https://github.com/intuit/auto/pull/1199) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump semver from 7.2.2 to 7.3.2 [#1200](https://github.com/intuit/auto/pull/1200) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.7 to 4.4.8 [#1201](https://github.com/intuit/auto/pull/1201) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.2.0 to 14.3.0 [#1202](https://github.com/intuit/auto/pull/1202) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.0.4 to 2.0.5 [#1203](https://github.com/intuit/auto/pull/1203) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- `@auto-it/npm`
+  - fix(docs): mention correct key within forcePublish [#1205](https://github.com/intuit/auto/pull/1205) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+---
+
 # v9.31.1 (Mon May 04 2020)
 
 #### 🐛 Bug Fix
@@ -98,7 +323,7 @@
 
 # v9.30.1 (Wed Apr 22 2020)
 
-#### ⚠️  Pushed to `master`
+#### ⚠️ Pushed to `master`
 
 - add missing root devdep ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -934,7 +1159,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.6 (Thu Mar 05 2020)
 
-#### ⚠️  Pushed to `master`
+#### ⚠️ Pushed to `master`
 
 - `@auto-it/core`
   - add dep for parse-github-url ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -947,7 +1172,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.5 (Thu Mar 05 2020)
 
-#### ⚠️  Pushed to `master`
+#### ⚠️ Pushed to `master`
 
 - `@auto-it/core`
   - add bot-list dep to core ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -986,7 +1211,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.2 (Thu Mar 05 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/bot-list`, `@auto-it/core`, `@auto-it/all-contributors`
   - move botlist to package and use it in release notes exclusion [#1027](https://github.com/intuit/auto/pull/1027) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -999,7 +1224,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.1 (Thu Mar 05 2020)
 
-#### 🐛  Bug Fix
+#### 🐛 Bug Fix
 
 - `@auto-it/npm`
   - npm: respect subPackageChangelogs false [#1025](https://github.com/intuit/auto/pull/1025) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -3780,7 +4005,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 ```js
 auto.hooks.afterRelease.tap(
-  'MyPlugin',
+  "MyPlugin",
   async (version, commits, releaseNotes) => {
     // do something
   }

@@ -1,7 +1,7 @@
 import * as Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Changelog from "@auto-it/core/dist/changelog";
-import { Octokit } from "@octokit/rest";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import {
   makeChangelogHooks,
   makeHooks,
@@ -16,7 +16,11 @@ exec.mockReturnValue("");
 jest.spyOn(Auto, "execPromise").mockImplementation(exec);
 
 const setup = (
-  contributors: Array<Partial<Octokit.ReposListContributorsResponseItem>> = []
+  contributors: Array<
+    Partial<
+      RestEndpointMethodTypes["repos"]["listContributors"]["response"]["data"][number]
+    >
+  > = []
 ) => {
   const plugin = new FirstTimeContributor();
   const hooks = makeHooks();

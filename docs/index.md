@@ -45,6 +45,7 @@ Package Manager Plugins
 - [Chrome Web Store](../plugins/chrome/README.md)
 - [Crates](../plugins/crates/README.md)
 - [Cocoapod](../plugins/cocoapods/README.md)
+- [Gem](../plugins/gem/README.md)
 - [Git Tag](../plugins/git-tag/README.md)
 - [Gradle](../plugins/gradle/README.md)
 - [Maven](../plugins/maven/README.md)
@@ -65,6 +66,19 @@ Functionality Plugins
 - [Slack](../plugins/slack/README.md)
 - [Twitter](../plugins/twitter/README.md)
 - [Upload Assets](../plugins/upload-assets/README.md)
+
+---
+
+Plugin Authoring
+
+- [Writing Plugins](pages/plugins/writing-plugins.md)
+- [Creating Publishing Plugins](pages/plugins/writing-publishing-plugins.md)
+- [Hook APIs](pages/plugins/hook-api-docs.md)
+  - [Configuration Hooks](pages/plugins/configuration-hooks.md)
+  - [Init Hooks](pages/plugins/init-hooks.md)
+  - [Log Parser Hooks](pages/plugins/log-parse-hooks.md)
+  - [Changelog Hooks](pages/plugins/changelog-hooks.md)
+  - [Release Lifecycle Hooks](pages/plugins/release-lifecycle-hooks.md)
 
 ---
 

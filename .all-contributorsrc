@@ -168,7 +168,8 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/298435?v=4",
       "profile": "http://brianmuenzenmeyer.com",
       "contributions": [
-        "doc"
+        "doc",
+        "code"
       ]
     },
     {
@@ -251,6 +252,27 @@
       "profile": "https://github.com/krohrsb",
       "contributions": [
         "test",
+        "code"
+      ]
+    },
+    {
+      "login": "whynotzoidberg",
+      "name": "Till Weisser",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/18683899?v=4",
+      "profile": "https://github.com/whynotzoidberg",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "rbellamy",
+      "name": "G. Richard Bellamy",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/94763?v=4",
+      "profile": "http://www.terradatum.com",
+      "contributions": [
+        "doc",
         "code"
       ]
     }

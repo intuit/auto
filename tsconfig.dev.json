@@ -64,6 +64,9 @@
     },
     {
       "path": "plugins/brew"
+    },
+    {
+      "path": "plugins/gem"
     }
   ]
 }

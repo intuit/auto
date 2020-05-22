@@ -41,6 +41,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [crates](./plugins/crates) - Publish Rust crates
 - [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+- [gem](./plugins/gem) - Publish ruby gems
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag (`default` when used with binary)
 - [gradle](./plugins/gradle) - Publish code with gradle
 - [maven](./plugins/maven) - Publish code with maven
@@ -206,7 +207,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/rdipika"><img src="https://avatars3.githubusercontent.com/u/12812259?v=4" width="100px;" alt=""/><br /><sub><b>rdipika94</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rdipika" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://brianmuenzenmeyer.com"><img src="https://avatars1.githubusercontent.com/u/298435?v=4" width="100px;" alt=""/><br /><sub><b>Brian Muenzenmeyer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://brianmuenzenmeyer.com"><img src="https://avatars1.githubusercontent.com/u/298435?v=4" width="100px;" alt=""/><br /><sub><b>Brian Muenzenmeyer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/sarah-vanderlaan"><img src="https://avatars0.githubusercontent.com/u/32620284?v=4" width="100px;" alt=""/><br /><sub><b>Sarah van der Laan</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sarah-vanderlaan" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/reckter"><img src="https://avatars1.githubusercontent.com/u/1771450?v=4" width="100px;" alt=""/><br /><sub><b>Hannes Güdelhöfer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=reckter" title="Code">💻</a></td>
     <td align="center"><a href="https://ericclemmons.com/"><img src="https://avatars0.githubusercontent.com/u/15182?v=4" width="100px;" alt=""/><br /><sub><b>Eric Clemmons</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Tests">⚠️</a></td>
@@ -217,11 +218,14 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/hborawski"><img src="https://avatars1.githubusercontent.com/u/1325154?v=4" width="100px;" alt=""/><br /><sub><b>Harris Borawski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hborawski" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ShelbyCohen"><img src="https://avatars1.githubusercontent.com/u/7768053?v=4" width="100px;" alt=""/><br /><sub><b>Shelby Cohen</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/krohrsb"><img src="https://avatars1.githubusercontent.com/u/321544?v=4" width="100px;" alt=""/><br /><sub><b>Kyle Brown</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/whynotzoidberg"><img src="https://avatars0.githubusercontent.com/u/18683899?v=4" width="100px;" alt=""/><br /><sub><b>Till Weisser</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.terradatum.com"><img src="https://avatars0.githubusercontent.com/u/94763?v=4" width="100px;" alt=""/><br /><sub><b>G. Richard Bellamy</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
