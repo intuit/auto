@@ -33,7 +33,7 @@
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "yarn docs:build && ignite",
-    "docs:build": "./docs/generate-command-docs.js && ./docs/update-curl-version.js",
+    "docs:build": "./docs/generate-command-docs.js",
     "docs:watch": "yarn docs --watch",
     "docs:publish": "./scripts/publish-docs.sh",
     "create:plugin": "./scripts/create-plugin.js",
@@ -145,6 +145,7 @@
       ],
       "released",
       "first-time-contributor",
+      "./scripts/auto-update-curl-version.js",
       [
         "all-contributors",
         {
