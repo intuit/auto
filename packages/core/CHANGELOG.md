@@ -1,3 +1,26 @@
+# v9.35.2 (Fri May 22 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Extend default labels [#1206](https://github.com/intuit/auto/pull/1206) ([@kevinwolfdev](https://github.com/kevinwolfdev) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- ensure user label order is respected if changelog titles match ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- reset changelog changes ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix failing tests ([@kevinwolfdev](https://github.com/kevinwolfdev))
+- Merge branch 'master' into extend-default-labels ([@kevinwolfdev](https://github.com/kevinwolfdev))
+- add patch releaseType to performance label ([@kevinwolfdev](https://github.com/kevinwolfdev))
+- extend default labels ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+---
+
 # v9.34.0 (Tue May 19 2020)
 
 #### 🚀 Enhancement

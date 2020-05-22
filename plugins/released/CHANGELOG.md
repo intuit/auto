@@ -1,3 +1,21 @@
+# v9.35.2 (Fri May 22 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev)), for all your work!
+
+#### 🐛 Bug Fix
+
+- reset changelog changes ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Merge branch 'master' into extend-default-labels ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+---
+
 # v9.35.1 (Thu May 21 2020)
 
 #### 🐛 Bug Fix
