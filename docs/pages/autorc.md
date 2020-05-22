@@ -162,45 +162,45 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 ```js
 [
   {
-    name: 'major',
-    changelogTitle: '💥 Breaking Change',
-    description: 'Increment the major version when merged',
-    releaseType: 'major'
+    name: "major",
+    changelogTitle: "💥 Breaking Change",
+    description: "Increment the major version when merged",
+    releaseType: "major",
   },
   {
-    name: 'minor',
-    changelogTitle: '🚀 Enhancement',
-    description: 'Increment the minor version when merged',
-    releaseType: 'minor'
+    name: "minor",
+    changelogTitle: "🚀 Enhancement",
+    description: "Increment the minor version when merged",
+    releaseType: "minor",
   },
   {
-    name: 'patch',
-    changelogTitle: '🐛 Bug Fix',
-    description: 'Increment the patch version when merged',
-    releaseType: 'patch'
+    name: "patch",
+    changelogTitle: "🐛 Bug Fix",
+    description: "Increment the patch version when merged",
+    releaseType: "patch",
   },
   {
-    name: 'skip-release',
-    description: 'Preserve the current version when merged',
-    releaseType: 'skip'
+    name: "skip-release",
+    description: "Preserve the current version when merged",
+    releaseType: "skip",
   },
   {
-    name: 'release',
-    description: 'Create a release when this pr is merged',
-    releaseType: 'release'
+    name: "release",
+    description: "Create a release when this pr is merged",
+    releaseType: "release",
   },
   {
-    name: 'internal',
-    changelogTitle: '🏠 Internal',
-    description: 'Changes only affect the internal API',
-    releaseType: 'none'
+    name: "internal",
+    changelogTitle: "🏠 Internal",
+    description: "Changes only affect the internal API",
+    releaseType: "none",
   },
   {
-    name: 'documentation',
-    changelogTitle: '📝 Documentation',
-    description: 'Changes only affect the documentation',
-    releaseType: 'none'
-  }
+    name: "documentation",
+    changelogTitle: "📝 Documentation",
+    description: "Changes only affect the documentation",
+    releaseType: "none",
+  },
 ];
 ```
 

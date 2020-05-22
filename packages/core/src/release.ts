@@ -112,6 +112,24 @@ export const defaultLabels: ILabelDefinition[] = [
     description: "Changes only affect the documentation",
     releaseType: "none",
   },
+  {
+    name: "tests",
+    changelogTitle: "🧪 Tests",
+    description: "Add or improve existing tests",
+    releaseType: "none",
+  },
+  {
+    name: "dependencies",
+    changelogTitle: "🔩 Dependency Updates",
+    description: "Update one or more dependencies version",
+    releaseType: "none",
+  },
+  {
+    name: "performance",
+    changelogTitle: "🏎 Performance",
+    description: "Improve performance of an existing feature",
+    releaseType: SEMVER.patch,
+  },
 ];
 
 /** Construct a map of label => semver label */

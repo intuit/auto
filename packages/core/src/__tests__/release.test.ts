@@ -136,10 +136,10 @@ describe("getVersionMap", () => {
       new Map([
         ["major", ["major"]],
         ["minor", ["minor"]],
-        ["patch", ["patch"]],
+        ["patch", ["patch", "performance"]],
         ["skip", ["skip-release"]],
         ["release", ["release"]],
-        ["none", ["internal", "documentation"]],
+        ["none", ["internal", "documentation", "tests", "dependencies"]],
       ])
     );
   });

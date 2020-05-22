@@ -190,7 +190,7 @@ describe("Auto", () => {
       ["Version: Minor"],
       ["skip-release"],
       ["release"],
-      ["internal", "documentation"],
+      ["internal", "documentation", "tests", "dependencies"],
     ]);
   });
 
@@ -1305,7 +1305,7 @@ describe("Auto", () => {
       const afterAddToChangelog = jest.fn();
       auto.hooks.afterAddToChangelog.tap("test", afterAddToChangelog);
 
-      await auto.shipit({noChangelog: true});
+      await auto.shipit({ noChangelog: true });
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
       expect(afterAddToChangelog).toHaveBeenCalled();
     });

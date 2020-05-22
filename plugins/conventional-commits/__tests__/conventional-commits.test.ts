@@ -54,7 +54,7 @@ test("should add correct semver label to commit", async () => {
   const commit = makeCommitFromMsg("fix: normal commit with no bump");
   expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
     ...commit,
-    labels: ["patch"],
+    labels: ["patch", "performance"],
   });
 });
 
@@ -209,7 +209,12 @@ test("should add conventional commit label if none/skip", async () => {
   autoHooks.onCreateLogParse.call(logParse);
 
   const result = await logParse.normalizeCommit(commit);
-  expect(result?.labels).toStrictEqual(["skip-release", "internal", "patch"]);
+  expect(result?.labels).toStrictEqual([
+    "skip-release",
+    "internal",
+    "patch",
+    "performance",
+  ]);
 });
 
 test("should not add skip when a non skip commit is present with a skip commit", async () => {
@@ -241,7 +246,7 @@ test("should not add skip when a non skip commit is present with a skip commit",
   autoHooks.onCreateLogParse.call(logParse);
 
   const result = await logParse.normalizeCommit(commit);
-  expect(result?.labels).toStrictEqual(["patch"]);
+  expect(result?.labels).toStrictEqual(["patch", "performance"]);
 });
 
 test("should skip when not a fix/feat/breaking change commit", async () => {
