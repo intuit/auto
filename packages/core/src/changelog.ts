@@ -99,7 +99,7 @@ export default class Changelog {
         ...this.options.labels,
         {
           name: "pushToBaseBranch",
-          changelogTitle: `⚠️  Pushed to \`${branch}\``,
+          changelogTitle: `⚠️ Pushed to \`${branch}\``,
           description: "N/A",
           releaseType: SEMVER.patch,
         },
