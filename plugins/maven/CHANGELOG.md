@@ -1,3 +1,15 @@
+# v9.35.3 (Fri May 22 2020)
+
+#### 🐛 Bug Fix
+
+- Changelog formatting [#1246](https://github.com/intuit/auto/pull/1246) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.35.2 (Fri May 22 2020)
 
 :tada: This release contains work from a new contributor! :tada:
