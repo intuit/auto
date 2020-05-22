@@ -1,3 +1,20 @@
+# v9.36.0 (Fri May 22 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/slack`
+  - Slack code blocks [#1247](https://github.com/intuit/auto/pull/1247) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- move updating curl version to an auto plugin [#1248](https://github.com/intuit/auto/pull/1248) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.35.3 (Fri May 22 2020)
 
 #### 🐛 Bug Fix

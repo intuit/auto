@@ -1,3 +1,20 @@
+# v9.36.0 (Fri May 22 2020)
+
+#### 🚀 Enhancement
+
+- Slack code blocks [#1247](https://github.com/intuit/auto/pull/1247) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- include code type as heading before code block ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- strip code type from slack code blocks ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.35.3 (Fri May 22 2020)
 
 #### 🐛 Bug Fix
