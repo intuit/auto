@@ -12,6 +12,8 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
+const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
+
 /** Transform markdown into slack friendly text */
 const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
@@ -20,6 +22,11 @@ const sanitizeMarkdown = (markdown: string) =>
       // Strip out the ### prefix and replace it with *<word>* to make it bold
       if (line.startsWith("#")) {
         return `*${line.replace(/^[#]+/, "")}*`;
+      }
+
+      // Strip markdown code block type. Slack does not render them correctly.
+      if (line.match(MARKDOWN_LANGUAGE)) {
+        return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
       }
 
       return line;
