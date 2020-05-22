@@ -53,4 +53,14 @@ describe("normalizeCommits", () => {
 
     expect(await logParse.normalizeCommits(commits)).toMatchSnapshot();
   });
+
+  test("should strip whitespace in subject", async () => {
+    const logParse = new LogParse();
+    const commits = [
+      makeCommitFromMsg("First                     PR"),
+      makeCommitFromMsg("Second\t PR"),
+    ];
+
+    expect(await logParse.normalizeCommits(commits)).toMatchSnapshot();
+  });
 });
