@@ -99,7 +99,7 @@ Thank you, G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy)), for al
 #### 🚀 Enhancement
 
 - `@auto-it/core`, `@auto-it/gem`, `@auto-it/git-tag`
-  - 💎 Ruby Gem Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - 💎 Ruby Gem  Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### 🔩 Dependency Updates
 
@@ -323,7 +323,7 @@ Thank you, Till Weisser ([@whynotzoidberg](https://github.com/whynotzoidberg)), 
 
 # v9.30.1 (Wed Apr 22 2020)
 
-#### ⚠️ Pushed to `master`
+#### ⚠️  Pushed to `master`
 
 - add missing root devdep ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
@@ -1159,7 +1159,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.6 (Thu Mar 05 2020)
 
-#### ⚠️ Pushed to `master`
+#### ⚠️  Pushed to `master`
 
 - `@auto-it/core`
   - add dep for parse-github-url ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1172,7 +1172,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.5 (Thu Mar 05 2020)
 
-#### ⚠️ Pushed to `master`
+#### ⚠️  Pushed to `master`
 
 - `@auto-it/core`
   - add bot-list dep to core ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1211,7 +1211,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.2 (Thu Mar 05 2020)
 
-#### 🐛 Bug Fix
+#### 🐛  Bug Fix
 
 - `@auto-it/bot-list`, `@auto-it/core`, `@auto-it/all-contributors`
   - move botlist to package and use it in release notes exclusion [#1027](https://github.com/intuit/auto/pull/1027) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -1224,7 +1224,7 @@ Here is an example of a super light weight version of the `npm` and `gh-pages` p
 
 # v9.16.1 (Thu Mar 05 2020)
 
-#### 🐛 Bug Fix
+#### 🐛  Bug Fix
 
 - `@auto-it/npm`
   - npm: respect subPackageChangelogs false [#1025](https://github.com/intuit/auto/pull/1025) ([@hipstersmoothie](https://github.com/hipstersmoothie))
@@ -4005,7 +4005,7 @@ auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
 
 ```js
 auto.hooks.afterRelease.tap(
-  "MyPlugin",
+  'MyPlugin',
   async (version, commits, releaseNotes) => {
     // do something
   }
