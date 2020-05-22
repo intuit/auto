@@ -194,6 +194,15 @@ export default class Changelog {
           order.indexOf(b.releaseType || "") + 1 || order.length + 1;
         const aIndex =
           order.indexOf(a.releaseType || "") + 1 || order.length + 1;
+
+        if (aIndex === bIndex) {
+          // If the labels are the same release type order by user defined order
+          return (
+            this.options.labels.findIndex((l) => l.name === a.name) -
+            this.options.labels.findIndex((l) => l.name === b.name)
+          );
+        }
+
         return aIndex - bIndex;
       })
       .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
