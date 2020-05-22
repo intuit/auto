@@ -255,6 +255,22 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
+
+  test("should remove markdown code types from block", async () => {
+    const plugin = new SlackPlugin("https://custom-slack-url");
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+
+    await plugin.postToSlack(
+      mockAuto,
+      "1.0.0",
+      `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`,
+      // @ts-ignore
+      mockResponse
+    );
+
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+
   test("should call slack api through https proxy", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
