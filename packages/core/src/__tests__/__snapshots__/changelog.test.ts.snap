@@ -76,7 +76,7 @@ exports[`generateReleaseNotes should add "Push to Next" 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`next\`
+#### ⚠️ Pushed to \`next\`
 
 - I was a push to master (adam@dierkens.com)
 
@@ -183,7 +183,7 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`master\`
+#### ⚠️ Pushed to \`master\`
 
 - I was a push to master (adam@dierkens.com)
 

@@ -126,6 +126,19 @@ export default class LogParse {
 
     this.hooks.parseCommit.tap("Merge Commit", parsePR);
     this.hooks.parseCommit.tap("Squash Merge Commit", parseSquashPR);
+    this.hooks.parseCommit.tap(
+      "Strip consecutive white-space in Titles",
+      (commit) => {
+        const [firstLine, ...lines] = commit.subject.split("\n");
+
+        commit.subject = [
+          firstLine.replace(/[^\S\r\n]{2,}/g, " "),
+          ...lines,
+        ].join("\n");
+
+        return commit;
+      }
+    );
   }
 
   /** Run the log parser over a set of commits */

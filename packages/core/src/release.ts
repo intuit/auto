@@ -317,6 +317,8 @@ export default class Release {
       this.logger.verbose.info("Old changelog exists, prepending changes.");
       const oldChangelog = await readFile(changelogPath, "utf8");
       newChangelog = `${newChangelog}\n\n---\n\n${oldChangelog}`;
+    } else {
+      newChangelog += "\n";
     }
 
     await writeFile(changelogPath, newChangelog);

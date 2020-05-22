@@ -27,7 +27,7 @@ exports[`Release generateReleaseNotes should detect pre-release branches 1`] = `
 
 - Autobots roll out! (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`next\`
+#### ⚠️ Pushed to \`next\`
 
 - Doom Patrol enabled (adam@dierkens.com)
 
@@ -76,7 +76,7 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 
 - First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`master\`
+#### ⚠️ Pushed to \`master\`
 
 - I should be included (adam@dierkens.com)
 
@@ -116,7 +116,7 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
 - I was rebased [#123](https://github.com/web/site/pull/123) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`master\`
+#### ⚠️ Pushed to \`master\`
 
 - I am a commit to master (adam@dierkens.com)
 

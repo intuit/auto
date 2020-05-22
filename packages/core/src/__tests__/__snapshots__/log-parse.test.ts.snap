@@ -49,3 +49,38 @@ Array [
   },
 ]
 `;
+
+exports[`normalizeCommits should strip whitespace in subject 1`] = `
+Array [
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "First PR",
+  },
+  Object {
+    "authorEmail": "adam@dierkens.com",
+    "authorName": "Adam Dierkens",
+    "authors": Array [
+      Object {
+        "email": "adam@dierkens.com",
+        "name": "Adam Dierkens",
+      },
+    ],
+    "files": Array [],
+    "hash": "foo",
+    "labels": Array [],
+    "pullRequest": undefined,
+    "subject": "Second PR",
+  },
+]
+`;

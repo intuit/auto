@@ -23,7 +23,7 @@
 
 #### 🚀 Enhancement
 
-- 💎 Ruby Gem  Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- 💎 Ruby Gem Plugin [#1217](https://github.com/intuit/auto/pull/1217) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### 🐛 Bug Fix
 
