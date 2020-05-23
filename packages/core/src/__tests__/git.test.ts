@@ -127,10 +127,12 @@ describe("github", () => {
   });
 
   describe("getTagNotInBaseBranch", () => {
-    test("works with no tags", async () => {
+    test("works with no tags, defaults to first commit", async () => {
       const gh = new Git(options);
       gh.getTags = () => Promise.resolve([]);
-      expect(await gh.getTagNotInBaseBranch("branch")).toBeUndefined();
+      expect(await gh.getTagNotInBaseBranch("branch")).toBe(
+        "0b2af75d8b55c8869cda93d0e5589ad9f2677e18"
+      );
     });
 
     test("finds greatest tag not in base branch", async () => {

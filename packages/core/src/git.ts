@@ -873,7 +873,7 @@ export default class Git {
       firstGreatestUnique
     );
 
-    return firstGreatestUnique;
+    return firstGreatestUnique || this.getFirstCommit();
   }
 
   /** Get the last tag that isn't in the base branch */
