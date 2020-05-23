@@ -143,23 +143,29 @@ export async function getChangedPackages({
 export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
 
-  return packages.reduce((greatest, subPackage) => {
+  if (!packages.length) {
+    return {} as IPackageJSON;
+  }
+
+  const monorepoPackage = packages.reduce((greatest, subPackage) => {
     if (subPackage.package.version) {
-      if (!greatest.version) {
-        return subPackage.package;
+      if (!greatest.package.version) {
+        return subPackage;
       }
 
       if (subPackage.package.private) {
         return greatest;
       }
 
-      return gt(greatest.version, subPackage.package.version)
+      return gt(greatest.package.version, subPackage.package.version)
         ? greatest
-        : subPackage.package;
+        : subPackage;
     }
 
     return greatest;
-  }, {} as IPackageJSON);
+  });
+
+  return monorepoPackage.package;
 }
 
 /** Get all of the packages+version in the lerna monorepo */

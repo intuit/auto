@@ -77,19 +77,22 @@ function reporter<T>(validation: t.Validation<T>) {
   });
 
   const otherErrors: string[] = [];
-  const grouped = errors.reduce((acc, item) => {
-    if (typeof item === "string") {
-      otherErrors.push(item);
+  const grouped = errors.reduce<Record<string, ConfigOptionError[]>>(
+    (acc, item) => {
+      if (typeof item === "string") {
+        otherErrors.push(item);
+        return acc;
+      }
+
+      if (!acc[item.path]) {
+        acc[item.path] = [];
+      }
+
+      acc[item.path].push(item);
       return acc;
-    }
-
-    if (!acc[item.path]) {
-      acc[item.path] = [];
-    }
-
-    acc[item.path].push(item);
-    return acc;
-  }, {} as Record<string, ConfigOptionError[]>);
+    },
+    {}
+  );
   const paths = Object.keys(grouped);
 
   return [
