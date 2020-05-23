@@ -1,3 +1,18 @@
+# v9.36.1 (Fri May 22 2020)
+
+#### 🐛 Bug Fix
+
+- fix reduce without initial value [#1249](https://github.com/intuit/auto/pull/1249) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add build ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix reduce without initial value ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.35.3 (Fri May 22 2020)
 
 #### 🐛 Bug Fix

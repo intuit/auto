@@ -1,3 +1,16 @@
+# v9.36.1 (Fri May 22 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/npm`
+  - fix reduce without initial value [#1249](https://github.com/intuit/auto/pull/1249) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.0 (Fri May 22 2020)
 
 #### 🚀 Enhancement
