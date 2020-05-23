@@ -369,13 +369,16 @@ export default class Changelog {
 
   /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
-    const changelogTitles = this.options.labels.reduce((titles, label) => {
-      if (label.changelogTitle) {
-        titles[label.name] = label.changelogTitle;
-      }
+    const changelogTitles = this.options.labels.reduce<Record<string, string>>(
+      (titles, label) => {
+        if (label.changelogTitle) {
+          titles[label.name] = label.changelogTitle;
+        }
 
-      return titles;
-    }, {} as { [label: string]: string });
+        return titles;
+      },
+      {}
+    );
 
     const labelSections = await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {
@@ -415,12 +418,12 @@ export default class Changelog {
       })
     );
 
-    const mergedSections = labelSections.reduce(
+    const mergedSections = labelSections.reduce<Record<string, string[]>>(
       (acc, [title, commits]) => ({
         ...acc,
         [title]: [...(acc[title] || []), ...commits],
       }),
-      {} as Record<string, string[]>
+      {}
     );
 
     Object.entries(mergedSections)

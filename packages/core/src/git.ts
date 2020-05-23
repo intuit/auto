@@ -346,7 +346,7 @@ export default class Git {
           subject: commit.rawBody!,
           files: (commit.files || []).map((file) => path.resolve(file)),
         }))
-        .reduce((all, commit) => {
+        .reduce<ICommit[]>((all, commit) => {
           // The -m option will list a commit for each merge parent. This
           // means two items will have the same hash. We are using -m to get all the changed files
           // in a merge commit. The following code combines these repeated hashes into
@@ -360,7 +360,7 @@ export default class Git {
           }
 
           return all;
-        }, [] as ICommit[]);
+        }, []);
     } catch (error) {
       console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
@@ -855,13 +855,16 @@ export default class Git {
     ).reverse();
     const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
     const comparator = options.first ? lt : gt;
-    const firstGreatestUnique = branchTags.reduce((result, tag) => {
-      if (!baseTags.includes(tag) && (!result || comparator(tag, result))) {
-        return tag;
-      }
+    const firstGreatestUnique = branchTags.reduce<string | undefined>(
+      (result, tag) => {
+        if (!baseTags.includes(tag) && (!result || comparator(tag, result))) {
+          return tag;
+        }
 
-      return result;
-    });
+        return result;
+      },
+      undefined
+    );
 
     this.logger.verbose.info("Tags found in base branch:", baseTags);
     this.logger.verbose.info("Tags found in branch:", branchTags);

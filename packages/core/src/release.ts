@@ -134,14 +134,14 @@ export const defaultLabels: ILabelDefinition[] = [
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabels) =>
-  labels.reduce((semVer, { releaseType: type, name }) => {
+  labels.reduce<IVersionLabels>((semVer, { releaseType: type, name }) => {
     if (type && (isVersionLabel(type) || type === "none")) {
       const list = semVer.get(type) || [];
       semVer.set(type, [...list, name]);
     }
 
     return semVer;
-  }, new Map() as IVersionLabels);
+  }, new Map());
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -239,9 +239,9 @@ export default class Release {
     );
     const allPrCommitHashes = allPrCommits
       .filter(Boolean)
-      .reduce(
+      .reduce<string[]>(
         (all, pr) => [...all, ...pr.map((subCommit) => subCommit.sha)],
-        [] as string[]
+        []
       );
     const uniqueCommits = allCommits.filter(
       (commit) =>

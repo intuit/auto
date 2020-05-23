@@ -46,6 +46,7 @@
     "@typescript-eslint/no-this-alias": 2,
     "@typescript-eslint/no-useless-constructor": 2,
     "@typescript-eslint/no-floating-promises": 2,
+    "@typescript-eslint/prefer-reduce-type-parameter": 2,
     "@typescript-eslint/prefer-as-const": 2,
     "@typescript-eslint/prefer-for-of": 2,
     "@typescript-eslint/prefer-optional-chain": 2,

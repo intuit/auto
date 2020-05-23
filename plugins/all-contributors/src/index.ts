@@ -209,9 +209,9 @@ export default class AllContributorsPlugin implements IPlugin {
         return;
       }
 
-      const allContributions = Object.values(extra).reduce(
+      const allContributions = Object.values(extra).reduce<string[]>(
         (all, i) => [...all, ...i],
-        [] as string[]
+        []
       );
       const unknownTypes = allContributions.filter(
         (contribution) =>
