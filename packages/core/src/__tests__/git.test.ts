@@ -126,6 +126,56 @@ describe("github", () => {
     });
   });
 
+  describe("getTagNotInBaseBranch", () => {
+    test("works with no tags", async () => {
+      const gh = new Git(options);
+      gh.getTags = () => Promise.resolve([]);
+      expect(await gh.getTagNotInBaseBranch("branch")).toBeUndefined();
+    });
+
+    test("finds greatest tag not in base branch", async () => {
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
+        }
+
+        return Promise.resolve([
+          "1.0.0",
+          "1.2.3",
+          "1.4.0",
+          "1.4.0-next",
+          "1.4.1-next",
+        ]);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch")).toBe("1.4.1-next");
+    });
+
+    test("finds first tag not in base branch", async () => {
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
+        }
+
+        return Promise.resolve([
+          "1.0.0",
+          "1.2.3",
+          "1.4.0",
+          "1.4.0-next",
+          "1.4.1-next",
+        ]);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch", { first: true })).toBe(
+        "1.4.0-next"
+      );
+    });
+  });
+
   test("publish", async () => {
     const gh = new Git(options);
 
