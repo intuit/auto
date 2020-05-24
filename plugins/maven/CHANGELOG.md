@@ -1,3 +1,17 @@
+# v9.36.2 (Sat May 23 2020)
+
+#### 🐛 Bug Fix
+
+- Fix missing use of MAVEN_SNAPSHOT_BRANCH [#1242](https://github.com/intuit/auto/pull/1242) ([@rbellamy](https://github.com/rbellamy))
+- Fix hard-coded reference to "master" ([@rbellamy](https://github.com/rbellamy))
+- Fix missing use of MAVEN_SNAPSHOT_BRANCH ([@rbellamy](https://github.com/rbellamy))
+
+#### Authors: 1
+
+- G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy))
+
+---
+
 # v9.36.1 (Fri May 22 2020)
 
 #### 🐛 Bug Fix
