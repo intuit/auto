@@ -119,6 +119,8 @@ export default class MavenPlugin implements IPlugin {
     );
 
     auto.hooks.version.tapPromise(this.name, async (version) => {
+      const { MAVEN_SNAPSHOT_BRANCH } = process.env;
+      const mavenSnapshotBranch = MAVEN_SNAPSHOT_BRANCH || "dev-snapshot";
       const previousVersion = await getPreviousVersion(auto);
       const newVersion =
         // After release we bump the version by a patch and add -SNAPSHOT
@@ -142,8 +144,8 @@ export default class MavenPlugin implements IPlugin {
         `-DreleaseVersion=${newVersion}`,
         "-DpushChanges=false",
       ]);
-      await execPromise("git", ["checkout", "-b", "dev-snapshot"]);
-      await execPromise("git", ["checkout", "master"]);
+      await execPromise("git", ["checkout", "-b", mavenSnapshotBranch]);
+      await execPromise("git", ["checkout", auto.baseBranch]);
       await execPromise("git", ["reset", "--hard", "HEAD~1"]);
     });
 
