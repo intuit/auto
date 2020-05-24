@@ -273,7 +273,8 @@
       "profile": "http://www.terradatum.com",
       "contributions": [
         "doc",
-        "code"
+        "code",
+        "test"
       ]
     },
     {
