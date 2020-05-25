@@ -8,10 +8,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.35.1"
+  version "9.36.2"
 
 "@auto-it/core@link:packages/core":
-  version "9.35.1"
+  version "9.36.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/graphql" "^4.4.0"
@@ -49,7 +49,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.35.1"
+  version "9.36.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -67,7 +67,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.35.1"
+  version "9.36.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2416,12 +2416,12 @@
     universal-user-agent "^5.0.0"
 
 "@octokit/plugin-enterprise-compatibility@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.2.tgz#a30b635b63760e1504e57af5cf54da058b32a1de"
-  integrity sha512-LjESzkcoQHm1JN3drgjttbSk5fYNI8EPtcAiDqpnok0oL69vWIb5tcjyKrg7fPwzyRl/+A+UQbkIOsG2LJh09w==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.4.tgz#617ab902b571cf3fd01e99f33850590fbc297638"
+  integrity sha512-NN9U8bR0xWK5VeimTuk7kzQkPGFdICF0+7Oj5MYwbpr6IKu63Sp/aSNzhV7Q7bNasHC8mCHTyftAufrrzazJGQ==
   dependencies:
     "@octokit/request-error" "^2.0.0"
-    "@octokit/types" "^2.0.1"
+    "@octokit/types" "^4.0.1"
 
 "@octokit/plugin-enterprise-rest@^3.6.1":
   version "3.6.2"
@@ -2547,6 +2547,13 @@
   version "2.16.2"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-2.16.2.tgz#4c5f8da3c6fecf3da1811aef678fda03edac35d2"
   integrity sha512-O75k56TYvJ8WpAakWwYRN8Bgu60KrmX0z1KqFp1kNiFNkgW+JW+9EBKZ+S33PU6SLvbihqd+3drvPxKK68Ee8Q==
+  dependencies:
+    "@types/node" ">= 8"
+
+"@octokit/types@^4.0.1":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-4.0.2.tgz#4e5be1ed1d39532f6b1bc5ad7ce52086a83cf379"
+  integrity sha512-+4X6qfhT/fk/5FD66395NrFLxCzD6FsGlpPwfwvnukdyfYbhiZB/FJltiT1XM5Q63rGGBSf9FPaNV3WpNHm54A==
   dependencies:
     "@types/node" ">= 8"
 
