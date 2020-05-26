@@ -24,14 +24,20 @@ jest.mock("child_process");
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 
-jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("master");
-
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
-// @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(execPromise);
-jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => execPromise(...args),
+}));
+jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+  getCurrentBranch: () => "master",
+}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  // @ts-ignore
+  default: (...args) => getLernaPackages(...args),
+}));
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({

@@ -46,6 +46,12 @@ const mockPodspec = (contents: string) => {
   return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
+const exec = jest.fn().mockResolvedValueOnce("");
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
+
 describe("Cocoapods Plugin", () => {
   let hooks: Auto.IAutoHooks;
   const prefixRelease: (a: string) => string = (version: string) => {
@@ -58,10 +64,10 @@ describe("Cocoapods Plugin", () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
     hooks = makeHooks();
     plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
-    jest.spyOn(Auto, "execPromise").mockReturnValue(Promise.resolve(""));
   });
 
   describe("getParsedPodspecContents", () => {
@@ -182,13 +188,10 @@ describe("Cocoapods Plugin", () => {
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("1.0.0"));
     });
   });
+
   describe("publish hook", () => {
     test("should push to trunk if no specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
-
-      const mock = jest
-        .spyOn(Auto, "execPromise")
-        .mockReturnValue(Promise.resolve(""));
 
       const plugin = new CocoapodsPlugin(options);
       const hook = makeHooks();
@@ -200,15 +203,12 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise(Auto.SEMVER.patch);
 
-      expect(mock).toBeCalledTimes(2);
-      expect(mock).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
+      expect(exec).toBeCalledTimes(2);
+      expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
     });
+
     test("should push to specs repo if specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
-
-      const mock = jest
-        .spyOn(Auto, "execPromise")
-        .mockReturnValue(Promise.resolve(""));
 
       const plugin = new CocoapodsPlugin({
         ...options,
@@ -223,20 +223,20 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise(Auto.SEMVER.patch);
 
-      expect(mock).toBeCalledTimes(4);
-      expect(mock).toHaveBeenNthCalledWith(2, "pod", [
+      expect(exec).toBeCalledTimes(4);
+      expect(exec).toHaveBeenNthCalledWith(2, "pod", [
         "repo",
         "add",
         "autoPublishRepo",
         "someSpecsRepo",
       ]);
-      expect(mock).toHaveBeenNthCalledWith(3, "pod", [
+      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",
         "push",
         "autoPublishRepo",
         "./Test.podspec",
       ]);
-      expect(mock).toHaveBeenNthCalledWith(4, "pod", [
+      expect(exec).toHaveBeenNthCalledWith(4, "pod", [
         "repo",
         "remove",
         "autoPublishRepo",
