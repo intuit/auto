@@ -114,13 +114,7 @@ async function getLabel(label?: ILabelDefinition) {
     },
   });
 
-  const {
-    name,
-    changelogTitle,
-    description,
-    releaseType,
-  } = response.value.values;
-  return { name, changelogTitle, description, releaseType };
+  return response.value.values[0];
 }
 
 /** Get any custom labels from the user */
