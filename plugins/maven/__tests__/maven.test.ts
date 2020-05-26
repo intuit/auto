@@ -5,6 +5,13 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import MavenPlugin from "../src";
 
+const exec = jest.fn();
+
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
+
 const mockRead = (result: string) =>
   jest
     .spyOn(fs, "readFile")
@@ -15,6 +22,7 @@ describe("maven", () => {
   let hooks: Auto.IAutoHooks;
 
   beforeEach(() => {
+    exec.mockClear();
     const plugin = new MavenPlugin();
     hooks = makeHooks();
     plugin.apply({
@@ -190,11 +198,9 @@ describe("maven", () => {
           <version>1.0.0-SNAPSHOT</version>
         </project>
       `);
-      const spy = jest.fn();
-      jest.spyOn(Auto, "execPromise").mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
-      const call = spy.mock.calls[1][1];
+      const call = exec.mock.calls[1][1];
       expect(call).toContain("-DreleaseVersion=1.0.0");
       expect(call).toContain("-Dtag=v1.0.0");
     });
@@ -217,11 +223,8 @@ describe("maven", () => {
 
   describe("publish", () => {
     test("should publish release", async () => {
-      const spy = jest.fn();
-      jest.spyOn(Auto, "execPromise").mockImplementation(spy);
-
       await hooks.publish.promise(Auto.SEMVER.patch);
-      expect(spy.mock.calls[1][1]).toContain("release:perform");
+      expect(exec.mock.calls[1][1]).toContain("release:perform");
     });
   });
 });

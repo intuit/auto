@@ -25,8 +25,14 @@ execSync.mockImplementation(exec);
 // @ts-ignore
 env.mockImplementation(envMock);
 // @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(gitShow);
-jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => gitShow(...args),
+}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  // @ts-ignore
+  default: (...args) => getLernaPackages(...args),
+}));
 jest.spyOn(process, "chdir").mockReturnValue();
 
 const mockRead = (result: string) =>

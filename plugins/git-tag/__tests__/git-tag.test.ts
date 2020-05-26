@@ -5,7 +5,10 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import GitTag from "../src";
 
 const exec = jest.fn();
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
 
 const setup = (mockGit?: any) => {
   const plugin = new GitTag();
