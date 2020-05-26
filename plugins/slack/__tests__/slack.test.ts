@@ -34,7 +34,7 @@ const nextBranch = execSync("git rev-parse --abbrev-ref HEAD", {
 const mockAuto = ({
   git: {},
   logger: dummyLog(),
-} as unknown) as Auto;
+} as any) ;
 
 describe("postToSlack", () => {
   test("doesn't post with no new version", async () => {
