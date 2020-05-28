@@ -1243,7 +1243,9 @@ export default class Auto {
     const initialForkCommit = (forkPoints[forkPoints.length - 1] || "").slice(1);
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
-    const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
+    const lastTag =
+      (await this.git.getLastTagNotInBaseBranch(currentBranch!)) ||
+      (await this.git.getFirstCommit());
     const fullReleaseNotes = await this.release.generateReleaseNotes(
       lastRelease
     );
