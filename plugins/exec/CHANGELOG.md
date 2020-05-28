@@ -1,3 +1,19 @@
+# v9.36.4 (Thu May 28 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Marty Henderson ([@10hendersonm](https://github.com/10hendersonm)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(git): Prevents getLastTagNotInBaseBranch from returning a commit hash [#1262](https://github.com/intuit/auto/pull/1262) ([@10hendersonm](https://github.com/10hendersonm))
+
+#### Authors: 1
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+
+---
+
 # v9.36.1 (Fri May 22 2020)
 
 #### 🐛 Bug Fix
