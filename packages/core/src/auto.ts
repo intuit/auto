@@ -1219,29 +1219,28 @@ export default class Auto {
     this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
       logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
         const shouldOmit = commit.subject.match(/^Merge (?:\S+\/)*master/);
-        this.logger.verbose.info(
-          `Omit merges from master?" ${shouldOmit}: ${commit.subject}`
-        );
 
         if (shouldOmit) {
+          this.logger.verbose.info(
+            `Omitting merge commit from master: ${commit.subject}`
+          );
           return true;
         }
       });
     });
 
     const currentBranch = getCurrentBranch();
-    const initialForkCommit = (
-      (
-        await execPromise("git", [
-          "rev-list",
-          "--boundary",
-          `${currentBranch}...origin/${this.baseBranch}`,
-          "--left-only",
-        ])
-      )
-        .split("\n")
-        .filter((line) => line.startsWith("-"))[0] || ""
-    ).slice(1);
+    const forkPoints = (
+      await execPromise("git", [
+        "rev-list",
+        "--boundary",
+        `${currentBranch}...origin/${this.baseBranch}`,
+        "--left-only",
+      ])
+    )
+      .split("\n")
+      .filter((line) => line.startsWith("-"));
+    const initialForkCommit = (forkPoints[forkPoints.length - 1] || "").slice(1);
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
     const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
