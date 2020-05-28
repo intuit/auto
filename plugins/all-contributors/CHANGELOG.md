@@ -1,3 +1,23 @@
+# v9.36.3 (Thu May 28 2020)
+
+#### 🐛 Bug Fix
+
+- really fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump all-contributors-cli from 6.14.2 to 6.15.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.8.3 to 3.9.3 [#1255](https://github.com/intuit/auto/pull/1255) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump type-fest from 0.13.1 to 0.15.0 [#1259](https://github.com/intuit/auto/pull/1259) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump all-contributors-cli from 6.14.2 to 6.15.0 [#1251](https://github.com/intuit/auto/pull/1251) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.1 (Fri May 22 2020)
 
 #### 🐛 Bug Fix

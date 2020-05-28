@@ -1,3 +1,32 @@
+# v9.36.3 (Thu May 28 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - calculate next release notes using the latest fork commit not the first [#1264](https://github.com/intuit/auto/pull/1264) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump lint-staged from 10.1.7 to 10.2.6 [#1256](https://github.com/intuit/auto/pull/1256) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 3.2.0 to 3.2.1 [#1257](https://github.com/intuit/auto/pull/1257) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 7.1.0 to 7.2.0 [#1252](https://github.com/intuit/auto/pull/1252) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-enterprise-compatibility from 1.2.2 to 1.2.4 [#1253](https://github.com/intuit/auto/pull/1253) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.6.0 to 2.6.1 [#1254](https://github.com/intuit/auto/pull/1254) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lerna from 3.21.0 to 3.22.0 [#1250](https://github.com/intuit/auto/pull/1250) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/slack`
+  - Bump typescript from 3.8.3 to 3.9.3 [#1255](https://github.com/intuit/auto/pull/1255) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump type-fest from 0.13.1 to 0.15.0 [#1259](https://github.com/intuit/auto/pull/1259) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.14.2 to 6.15.0 [#1251](https://github.com/intuit/auto/pull/1251) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.2 (Sat May 23 2020)
 
 #### 🐛 Bug Fix

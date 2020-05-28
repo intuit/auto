@@ -1,3 +1,22 @@
+# v9.36.3 (Thu May 28 2020)
+
+#### 🐛 Bug Fix
+
+- calculate next release notes using the latest fork commit not the first [#1264](https://github.com/intuit/auto/pull/1264) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- calculate next release notes using the latest fork commit not the first ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix build ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump type-fest from 0.13.1 to 0.15.0 [#1259](https://github.com/intuit/auto/pull/1259) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.1 (Fri May 22 2020)
 
 #### 🐛 Bug Fix
