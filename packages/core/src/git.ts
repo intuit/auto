@@ -870,10 +870,10 @@ export default class Git {
     this.logger.verbose.info("Tags found in branch:", branchTags);
     this.logger.verbose.info(
       `${options.first ? "First" : "Latest"} tag in branch:`,
-      firstGreatestUnique
+      firstGreatestUnique || "Not Found"
     );
 
-    return firstGreatestUnique || this.getFirstCommit();
+    return firstGreatestUnique;
   }
 
   /** Get the last tag that isn't in the base branch */
