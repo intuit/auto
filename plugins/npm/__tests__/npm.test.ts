@@ -1075,9 +1075,9 @@ describe("next", () => {
       }
     `;
 
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "1.2.4-next.0",
-    ]);
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
@@ -1126,9 +1126,9 @@ describe("next", () => {
       },
     } as unknown) as Auto.Auto);
 
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "1.2.4-next.0",
-    ]);
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
       "npx",
@@ -1164,10 +1164,9 @@ describe("next", () => {
       },
     } as unknown) as Auto.Auto);
 
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "@foo/1@1.0.0-next.0",
-      "@foo/2@2.0.0-next.0",
-    ]);
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["@foo/1@1.0.0-next.0", "@foo/2@2.0.0-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
       "npx",
