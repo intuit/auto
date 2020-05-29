@@ -117,6 +117,15 @@ interface BeforeShipitContext {
   releaseType: ShipitRelease;
 }
 
+interface NextContext {
+  /** The commits in the next release */
+  commits: IExtendedCommit[];
+  /** The release notes for all the commits in the next release */
+  fullReleaseNotes: string;
+  /** The release notes for the last change merged to the next release */
+  releaseNotes: string;
+}
+
 type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 export interface IAutoHooks {
@@ -228,7 +237,7 @@ export interface IAutoHooks {
    * and an array of next versions that been released. If you make another
    * next release be sure to add it the the array.
    */
-  next: AsyncSeriesWaterfallHook<[string[], SEMVER]>;
+  next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
 }
@@ -1240,7 +1249,9 @@ export default class Auto {
     )
       .split("\n")
       .filter((line) => line.startsWith("-"));
-    const initialForkCommit = (forkPoints[forkPoints.length - 1] || "").slice(1);
+    const initialForkCommit = (forkPoints[forkPoints.length - 1] || "").slice(
+      1
+    );
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
     const lastTag =
@@ -1303,7 +1314,11 @@ export default class Auto {
     }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
-    const result = await this.hooks.next.promise([], bump);
+    const result = await this.hooks.next.promise([], bump, {
+      commits,
+      fullReleaseNotes,
+      releaseNotes,
+    });
     const newVersion = result.join(", ");
 
     await Promise.all(
