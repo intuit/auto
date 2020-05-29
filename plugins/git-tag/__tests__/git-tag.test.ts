@@ -85,7 +85,7 @@ describe("Git Tag Plugin", () => {
   describe("next", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch);
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -95,7 +95,7 @@ describe("Git Tag Plugin", () => {
         getLastTagNotInBaseBranch: () => "v1.0.0",
       });
 
-      await hooks.next.promise([], Auto.SEMVER.patch);
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
 
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
