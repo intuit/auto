@@ -1,3 +1,16 @@
+# v9.37.0 (Fri May 29 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/git-tag`, `@auto-it/npm`
+  - add more contextual information to next hook [#1265](https://github.com/intuit/auto/pull/1265) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.4 (Thu May 28 2020)
 
 :tada: This release contains work from a new contributor! :tada:

@@ -1,3 +1,19 @@
+# v9.37.0 (Fri May 29 2020)
+
+#### 🚀 Enhancement
+
+- add more contextual information to next hook [#1265](https://github.com/intuit/auto/pull/1265) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.4 (Thu May 28 2020)
 
 :tada: This release contains work from a new contributor! :tada:
