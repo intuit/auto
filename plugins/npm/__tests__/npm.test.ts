@@ -666,6 +666,63 @@ describe("publish", () => {
     ]);
   });
 
+  test("monorepo - should use legacy", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    existsSync.mockReturnValueOnce(true);
+
+    await hooks.publish.promise(Auto.SEMVER.patch);
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "--yes",
+      "from-package",
+      false,
+      "--legacy-auth",
+      "abcd",
+    ]);
+  });
+
+  test("should use legacy", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    execPromise.mockReturnValueOnce("1.0.0");
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "0.0.0"
+      }
+    `;
+
+    await hooks.publish.promise(Auto.SEMVER.patch);
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--_auth",
+      "abcd",
+    ]);
+  });
+
   test("should bump published version", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -791,6 +848,40 @@ describe("canary", () => {
     expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
   });
 
+  test("legacy auth work", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--tag",
+      "canary",
+      "--_auth",
+      "abcd",
+    ]);
+  });
+
   test("use handles repos with no tags", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -861,6 +952,62 @@ describe("canary", () => {
     expect(execPromise.mock.calls[0][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
+  });
+
+  test("legacy auth works in monorepo", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      git: {
+        getLatestRelease: () => Promise.resolve("1.2.3"),
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as any);
+    existsSync.mockReturnValueOnce(true);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    getLernaPackages.mockImplementation(async () =>
+      Promise.resolve([
+        {
+          path: "path/to/package",
+          name: "@foobar/app",
+          version: "1.2.3-canary.0+abcd",
+        },
+        {
+          path: "path/to/package",
+          name: "@foobar/lib",
+          version: "1.2.3-canary.0+abcd",
+        },
+      ])
+    );
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "");
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "1.2.4-0",
+      "--dist-tag",
+      "canary",
+      "--force-publish",
+      "--legacy-auth",
+      "abcd",
+      "--yes",
+      "--no-git-reset",
+      "--no-git-tag-version",
+      "--exact",
+    ]);
   });
 
   test("error when no canary release found", async () => {
@@ -957,7 +1104,7 @@ describe("canary", () => {
     ]);
   });
 
-  test("dont force publish canaries", async () => {
+  test("don't force publish canaries", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1102,6 +1249,61 @@ describe("next", () => {
     ]);
   });
 
+  test("works with legacy auth", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+    `;
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "version",
+      "1.2.4-next.0",
+      "--no-git-tag-version",
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "tag",
+      "1.2.4-next.0",
+      "-m",
+      '"Update version to 1.2.4-next.0"',
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "--tags",
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--tag",
+      "next",
+      "--_auth",
+      "abcd",
+    ]);
+  });
+
   test("works in monorepo", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -1133,6 +1335,52 @@ describe("next", () => {
     expect(execPromise).toHaveBeenCalledWith(
       "npx",
       expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
+    );
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "--tags",
+    ]);
+  });
+
+  test("legacy auth works in monorepo", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    execPromise.mockReturnValueOnce("");
+    execPromise.mockReturnValueOnce("1.2.4-next.0");
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith(
+      "npx",
+      expect.arrayContaining([
+        "lerna",
+        "publish",
+        "1.2.4-next.0",
+        "--legacy-auth",
+        "abcd",
+      ])
     );
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
