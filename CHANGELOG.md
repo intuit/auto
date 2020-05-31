@@ -1,3 +1,16 @@
+# v9.38.0 (Sun May 31 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - add legacyAuth option [#1268](https://github.com/intuit/auto/pull/1268) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.37.0 (Fri May 29 2020)
 
 #### 🚀 Enhancement
