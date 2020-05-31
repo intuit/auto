@@ -107,6 +107,28 @@ You can disable this behavior by using the `subPackageChangelogs` option.
 }
 ```
 
+### legacyAuth
+
+When publishing packages that require authentication but you are working with an internally hosted npm registry that only uses the legacy Base64 version of username:password.
+This is the same as the NPM publish \_auth flag.
+
+For security this option only accepts a boolean.
+When this option is set true `auto` will pass `--_auth $NPM_TOKEN` to the publish command.
+Set `$NPM_TOKEN` to the "Base64 version of username:password".
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "legacyAuth": true
+      }
+    ]
+  ]
+}
+```
+
 ### canaryScope
 
 Publishing canary versions comes with some security risks.

@@ -191,6 +191,26 @@ async function bumpLatest(
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
 }
 
+interface GetLegacyAuthArgsOptions {
+  /** whether the project is a monorepo */
+  isMonorepo?: boolean;
+}
+
+/** Get the args to use legacy auth */
+function getLegacyAuthArgs(
+  useLegacy: boolean,
+  options: GetLegacyAuthArgsOptions = {}
+) {
+  if (!useLegacy) {
+    return [];
+  }
+
+  return [
+    options.isMonorepo ? "--legacy-auth" : "--_auth",
+    process.env.NPM_TOKEN,
+  ];
+}
+
 const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
   subPackageChangelogs: t.boolean,
@@ -202,6 +222,12 @@ const pluginOptions = t.partial({
   canaryScope: t.string,
   /** Publish a monorepo with the lerna --exact flag */
   exact: t.boolean,
+  /**
+   * When publishing packages that require authentication but you are working with an internally
+   * hosted NPM Registry that only uses the legacy Base64 version of username:password. This is
+   * the same as the NPM publish _auth flag.
+   */
+  legacyAuth: t.boolean,
 });
 
 export type INpmConfig = t.TypeOf<typeof pluginOptions>;
@@ -350,9 +376,12 @@ export default class NPMPlugin implements IPlugin {
   private readonly exact: boolean;
   /** A scope to publish canary versions under */
   private readonly canaryScope: string | undefined;
+  /** Whether to use legacy auth for npm */
+  private readonly legacyAuth: boolean;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
+    this.legacyAuth = Boolean(config.legacyAuth);
     this.exact = Boolean(config.exact);
     this.renderMonorepoChangelog = true;
     this.subPackageChangelogs =
@@ -725,6 +754,7 @@ export default class NPMPlugin implements IPlugin {
           "--dist-tag",
           "canary",
           !isIndependent && "--force-publish",
+          ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
           "--yes", // skip prompts,
           "--no-git-reset", // so we can get the version that just published
           "--no-git-tag-version", // no need to tag and commit,
@@ -792,7 +822,12 @@ export default class NPMPlugin implements IPlugin {
       ]);
 
       const publishArgs = ["--tag", "canary"];
-      await execPromise("npm", ["publish", ...publishArgs, ...verboseArgs]);
+      await execPromise("npm", [
+        "publish",
+        ...publishArgs,
+        ...verboseArgs,
+        ...getLegacyAuthArgs(this.legacyAuth),
+      ]);
 
       if (this.canaryScope) {
         await gitReset();
@@ -851,6 +886,7 @@ export default class NPMPlugin implements IPlugin {
           "--no-push",
           // you always want a next version to publish
           !isIndependent && "--force-publish",
+          ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
           // skip prompts
           "--yes",
           // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
@@ -905,6 +941,7 @@ export default class NPMPlugin implements IPlugin {
           "--tag",
           prereleaseBranch,
           ...verboseArgs,
+          ...getLegacyAuthArgs(this.legacyAuth),
         ]);
 
         auto.logger.verbose.info("Successfully published next version");
@@ -952,9 +989,15 @@ export default class NPMPlugin implements IPlugin {
           "from-package",
           this.exact && "--exact",
           ...verboseArgs,
+          ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
         ]);
       } else {
-        await execPromise("npm", ["publish", ...tag, ...verboseArgs]);
+        await execPromise("npm", [
+          "publish",
+          ...tag,
+          ...verboseArgs,
+          ...getLegacyAuthArgs(this.legacyAuth),
+        ]);
       }
 
       await execPromise("git", [
