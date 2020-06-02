@@ -721,14 +721,14 @@ export default class Auto {
   /** Determine if the repo is currently in a old-version branch */
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
-    const prereleaseBranchPrefix = this.config?.versionBranches as
+    const oldVersionBranchPrefix = this.config?.versionBranches as
       | string
       | undefined;
 
     return Boolean(
-      prereleaseBranchPrefix &&
+      oldVersionBranchPrefix &&
         branch &&
-        new RegExp(`^${escapeRegExp(prereleaseBranchPrefix)}`).test(branch)
+        new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
     );
   }
 
