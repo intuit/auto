@@ -168,6 +168,30 @@ describe("github", () => {
         "1.4.0-next"
       );
     });
+
+    test("handles tags with package names", async () => {
+      const baseTags = ["@monorepo/models@2.0.0", "@monorepo/core@2.0.0"];
+      const branchTags = [
+        "@monorepo/models@2.0.0",
+        "@monorepo/core@1.0.0",
+        "@monorepo/models@6.0.1-next.0",
+        "@monorepo/core@6.0.1-next.0",
+      ];
+
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(baseTags);
+        }
+
+        return Promise.resolve(branchTags);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch")).toBe(
+        "@monorepo/core@6.0.1-next.0"
+      );
+    });
   });
 
   test("publish", async () => {
