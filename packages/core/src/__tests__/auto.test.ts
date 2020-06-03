@@ -1178,6 +1178,28 @@ describe("Auto", () => {
       await auto.canary();
       expect(canary).not.toHaveBeenCalled();
     });
+
+    test("should publish with --force and skip-release label", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getSha = () => Promise.resolve("abcd");
+      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg("Test Commit", {
+            labels: ["skip-release"],
+          }),
+        ]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap("test", canary);
+
+      await auto.canary({ force: true });
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+    });
   });
 
   describe("next", () => {
