@@ -1,3 +1,16 @@
+# v9.38.2 (Wed Jun 03 2020)
+
+#### 🐛 Bug Fix
+
+- if canary --force provided default to patch [#1275](https://github.com/intuit/auto/pull/1275) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- if force provided default to patch ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.38.1 (Wed Jun 03 2020)
 
 #### 🐛 Bug Fix
