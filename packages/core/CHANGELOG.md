@@ -1,3 +1,27 @@
+# v9.38.1 (Wed Jun 03 2020)
+
+#### 🐛 Bug Fix
+
+- fix next release start commit calculation when tags are package@version [#1273](https://github.com/intuit/auto/pull/1273) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix next release start commit calculation when tags are package@version ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- chore: accurately name variable within inOldVersionBranch() ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### 🏠 Internal
+
+- chore: accurately name variable within inOldVersionBranch() [#1271](https://github.com/intuit/auto/pull/1271) ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+#### 🔩 Dependency Updates
+
+- Bump io-ts from 2.2.2 to 2.2.4 [#1269](https://github.com/intuit/auto/pull/1269) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Brian Muenzenmeyer ([@bmuenzenmeyer](https://github.com/bmuenzenmeyer))
+
+---
+
 # v9.37.0 (Fri May 29 2020)
 
 #### 🚀 Enhancement
