@@ -57,6 +57,27 @@ class GitAPIError extends Error {
   }
 }
 
+const taggedPackageRegex = /(\S+)@(\S+)/;
+
+/**
+ * Extract a version from a tag.
+ *
+ * Supports tags like:
+ *
+ * - 1.2.3
+ * - 1.2.3-beta.0
+ * - package@1.2.3-beta.0
+ * - @scope/package@1.2.3-beta.0
+ */
+function getVersionFromTag(tag: string) {
+  if (taggedPackageRegex.test(tag)) {
+    const [, , version] = tag.match(taggedPackageRegex)!;
+    return version;
+  }
+
+  return tag;
+}
+
 /** Make a comment to build automation in PRs off of. */
 const makeIdentifier = (type: string, context: string) =>
   `<!-- GITHUB_RELEASE ${type}: ${context} -->`;
@@ -855,16 +876,21 @@ export default class Git {
     ).reverse();
     const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
     const comparator = options.first ? lt : gt;
-    const firstGreatestUnique = branchTags.reduce<string | undefined>(
-      (result, tag) => {
-        if (!baseTags.includes(tag) && (!result || comparator(tag, result))) {
-          return tag;
-        }
+    let firstGreatestUnique: string | undefined;
 
-        return result;
-      },
-      undefined
-    );
+    branchTags.forEach((tag) => {
+      const tagVersion = getVersionFromTag(tag);
+      const greatestVersion = firstGreatestUnique
+        ? getVersionFromTag(firstGreatestUnique)
+        : undefined;
+
+      if (
+        !baseTags.includes(tag) &&
+        (!greatestVersion || comparator(tagVersion, greatestVersion))
+      ) {
+        firstGreatestUnique = tag;
+      }
+    });
 
     this.logger.verbose.info("Tags found in base branch:", baseTags);
     this.logger.verbose.info("Tags found in branch:", branchTags);
