@@ -1084,17 +1084,17 @@ export default class Auto {
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const head = await this.release.getCommitsInRelease(from);
     const labels = head.map((commit) => commit.labels);
-    const version = calculateSemVerBump(
-      labels,
-      this.semVerLabels!,
-      this.config
-    );
+    let version = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
-    if (version === SEMVER.noVersion && !options.force) {
-      this.logger.log.info(
-        "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
-      );
-      return;
+    if (version === SEMVER.noVersion) {
+      if (options.force) {
+        version = SEMVER.patch;
+      } else {
+        this.logger.log.info(
+          "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
+        );
+        return;
+      }
     }
 
     let canaryVersion = "";
