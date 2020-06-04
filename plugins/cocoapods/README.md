@@ -36,8 +36,8 @@ yarn add -D @auto-it/cocoapods
 ### General
 
 - The machine running this plugin must have the [CocoaPods](https://cocoapods.org/) `pod` CLI installed already.
-
 - Your `podspec` file must pass `pod lib lint` in order for publishing to a Specs repository to work.
+  - All warnings and errors must be addressed before attempting to push to a Specs repository.
 
 ### Pushing to the CocoaPods Trunk
 
@@ -46,3 +46,6 @@ If a `specsRepo` is not provided in the plugin options, this plugin will push to
 ### Pushing to a private specs repo
 
 If `specsRepo` is provided in the configuration, this plugin will add that repo under a temporary name, push to it, and remove the repo from the CocoaPods installation on the machine. The machine that is running the plugin must have the appropriate git credentials to push to that repository.
+
+#### Note
+When pushing to a private Specs repo, this plugin will temporarily create a repository with the name `autoPublishRepo` using `pod repo add`, and will remove it when the release has completed.

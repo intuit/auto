@@ -46,7 +46,7 @@ const mockPodspec = (contents: string) => {
   return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
-const exec = jest.fn().mockResolvedValueOnce("");
+let exec = jest.fn().mockResolvedValueOnce("");
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
   // @ts-ignore
   default: (...args) => exec(...args),
@@ -223,20 +223,89 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise(Auto.SEMVER.patch);
 
-      expect(exec).toBeCalledTimes(4);
+      expect(exec).toBeCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", [
+        "repo",
+        "list"
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",
         "add",
         "autoPublishRepo",
         "someSpecsRepo",
       ]);
-      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
+      expect(exec).toHaveBeenNthCalledWith(4, "pod", [
         "repo",
         "push",
         "autoPublishRepo",
         "./Test.podspec",
       ]);
+      expect(exec).toHaveBeenNthCalledWith(5, "pod", [
+        "repo",
+        "remove",
+        "autoPublishRepo",
+      ]);
+    });
+    test("should delete autoPublishRepo if it exists and push to specs repo if specsRepo in options", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      exec = jest.fn().mockImplementation((...args) => {
+        if (args && args[1] && args[1][1] === 'list') {
+          return `
+autoPublishRepo
+- Type: git (master)
+- URL:  someSpecsRepo
+- Path: /Users/someUser/.cocoapods/repos/autoPublishRepo
+
+master
+- Type: git (master)
+- URL:  https://github.com/CocoaPods/Specs.git
+- Path: /Users/someUser/.cocoapods/repos/master
+
+trunk
+- Type: CDN
+- URL:  https://cdn.cocoapods.org/
+- Path: /Users/someUser/.cocoapods/repos/trunk
+          `
+        }
+      })
+
+      const plugin = new CocoapodsPlugin({
+        ...options,
+        specsRepo: "someSpecsRepo",
+      });
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise(Auto.SEMVER.patch);
+
+      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenNthCalledWith(2, "pod", [
+        "repo",
+        "list"
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
+        "repo",
+        "remove",
+        "autoPublishRepo"
+      ]);
       expect(exec).toHaveBeenNthCalledWith(4, "pod", [
+        "repo",
+        "add",
+        "autoPublishRepo",
+        "someSpecsRepo",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(5, "pod", [
+        "repo",
+        "push",
+        "autoPublishRepo",
+        "./Test.podspec",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(6, "pod", [
         "repo",
         "remove",
         "autoPublishRepo",
