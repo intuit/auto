@@ -250,7 +250,7 @@ describe("Cocoapods Plugin", () => {
       mockPodspec(specWithVersion("0.0.1"));
 
       exec = jest.fn().mockImplementation((...args) => {
-        if (args && args[1] && args[1][1] === 'list') {
+        if (args[1]?.[1] === 'list') {
           return `
 autoPublishRepo
 - Type: git (master)
