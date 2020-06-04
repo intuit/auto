@@ -48,4 +48,5 @@ If a `specsRepo` is not provided in the plugin options, this plugin will push to
 If `specsRepo` is provided in the configuration, this plugin will add that repo under a temporary name, push to it, and remove the repo from the CocoaPods installation on the machine. The machine that is running the plugin must have the appropriate git credentials to push to that repository.
 
 #### Note
+
 When pushing to a private Specs repo, this plugin will temporarily create a repository with the name `autoPublishRepo` using `pod repo add`, and will remove it when the release has completed.
