@@ -167,6 +167,23 @@ export default class CocoapodsPlugin implements IPlugin {
       }
 
       try {
+        const existingRepos = await execPromise("pod", [
+          "repo",
+          "list"
+        ]);
+        if (existingRepos.indexOf('autoPublishRepo') !== -1) {
+          auto.logger.log.info('Removing existing autoPublishRepo')
+          await execPromise("pod", [
+            "repo",
+            "remove",
+            "autoPublishRepo"
+          ])
+        }
+      } catch (error) {
+        auto.logger.log.warn(`Error Checking for existing Specs repositories: ${error}`)
+      }
+
+      try {
         await execPromise("pod", [
           "repo",
           "add",
