@@ -372,10 +372,8 @@ export default class Auto {
             await this.hooks.getPreviousVersion.promise()
           )}`;
 
-          await execPromise("git", [
-            "branch",
-            await this.git?.getLatestTagInBranch(),
-          ]);
+          await execPromise("git", ["branch", branch]);
+          this.logger.log.success(`Created old version branch: ${branch}`)
           await execPromise("git", ["push", this.remote, branch]);
         }
       }

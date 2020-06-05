@@ -90,7 +90,7 @@ export default class Config {
       labels,
       prereleaseBranches: rawConfig.prereleaseBranches || ["next"],
       versionBranches:
-        typeof rawConfig.versionBranches === "boolean"
+        typeof rawConfig.versionBranches === "boolean" && rawConfig.versionBranches
           ? "version-"
           : rawConfig.versionBranches,
     };
