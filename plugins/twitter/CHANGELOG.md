@@ -1,3 +1,15 @@
+# v9.39.0 (Thu Jun 04 2020)
+
+#### 🐛 Bug Fix
+
+- fix automated old branch creation [#1278](https://github.com/intuit/auto/pull/1278) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.36.4 (Thu May 28 2020)
 
 :tada: This release contains work from a new contributor! :tada:

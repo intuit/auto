@@ -1,3 +1,24 @@
+# v9.39.0 (Thu Jun 04 2020)
+
+#### 🚀 Enhancement
+
+- check for autoPublishRepo before trying to add it [#1277](https://github.com/intuit/auto/pull/1277) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- fix automated old branch creation [#1278](https://github.com/intuit/auto/pull/1278) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Merge branch 'ensure-clean-slate' of https://github.com/hborawski/auto into ensure-clean-slate ([@hborawski](https://github.com/hborawski))
+- lint fix ([@hborawski](https://github.com/hborawski))
+- Update plugins/cocoapods/README.md ([@hborawski](https://github.com/hborawski))
+- check for autoPublishRepo before trying to add it ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.36.4 (Thu May 28 2020)
 
 :tada: This release contains work from a new contributor! :tada:
