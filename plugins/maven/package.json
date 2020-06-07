@@ -37,12 +37,14 @@
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
-  "dependencies": {
+  "devDependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "@types/xml2js": "^0.4.5",
+    "fast-glob": "^3.1.1",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
     "semver": "^7.0.0",
     "tslib": "2.0.0",
-    "xml2js-es6-promise": "^1.1.1"
+    "xml2js": "^0.4.23"
   }
 }

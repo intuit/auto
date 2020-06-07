@@ -1,6 +1,6 @@
 # Maven Plugin
 
-Release a Java project to a [maven](https://maven.apache.org/) instance.
+Release a Java project to a [maven](https://maven.apache.org/) repository.
 
 ## Installation
 
@@ -14,38 +14,49 @@ yarn add -D @auto-it/maven
 
 ## Usage
 
-```json
+```jsonc
 {
-  "plugins": ["maven"]
+  "plugins": [
+    [
+      "maven",
+      {
+        // An optional maven binary cmd/path
+        // @default /usr/bin/mvn
+        "mavenCommand": "mvn",
+
+        // An optional maven argument list - e.g. any maven option allowed for the version
+        // of maven you're using
+        // @default []
+        "mavenOptions": ["-DskipTests", "-P some-profile"],
+
+        // An optional set of goals to execute for release
+        // @default ["deploy", "site-deploy"]
+        "mavenReleaseGoals": ["deploy"],
+
+        // An optional path to a maven settings.xml file
+        // @default ""
+        "mavenSettings": "./.github/maven/settings.xml"
+      }
+    ]
+    // other plugins
+  ]
 }
 ```
 
 ## Environment Variables
 
-| Name                    | Description                                                                                      | Default value  |
-| ----------------------- | ------------------------------------------------------------------------------------------------ | -------------- |
-| `MAVEN_USERNAME`        | The deploy username used to login to the repository.                                             | `null`         |
-| `MAVEN_PASSWORD`        | The deploy password used to login to the repository.                                             | `null`         |
-| `MAVEN_SETTINGS`        | The maven `settings.xml` file used by maven.                                                     | `null`         |
-| `MAVEN_SNAPSHOT_BRANCH` | The branch on which the `SNAPSHOT` version lives. Must be different than the Auto "base branch." | `dev-snapshot` |
+| Name                  | Description                                                                  | Default value               |
+| --------------------- | ---------------------------------------------------------------------------- | --------------------------- |
+| `MAVEN_COMMAND`       | The Maven command to use.                                                    | `/usr/bin/mvn`              |
+| `MAVEN_OPTIONS`       | A list of maven command customizations to pass to maven.                     | `null`                      |
+| `MAVEN_RELEASE_GOALS` | A list of maven goals to pass to maven for release.                          | `["deploy", "site-deploy"]` |
+| `MAVEN_SETTINGS`      | The maven `settings.xml` file used by maven.                                 | `null`                      |
+| `MAVEN_USERNAME`      | (DEPRECATED IN 9.38.0 ) The deploy username used to login to the repository. | `null`                      |
+| `MAVEN_PASSWORD`      | (DEPRECATED IN 9.38.0 ) The deploy password used to login to the repository. | `null`                      |
 
 ## Maven Project Configuration
 
-Your project must be using the maven release plugin. Make sure the the latest `maven-release-plugin` is in your `pom.xml`.
-
-```xml
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-release-plugin</artifactId>
-  <version>3.0.0-M1</version>
-  <configuration>
-    <preparationGoals>initialize</preparationGoals>
-    <goals>deploy</goals>
-  </configuration>
-</plugin>
-```
-
-You will also need all the following configuration blocks for all parts of `auto` to function:
+You will need all the following configuration blocks for all parts of `auto` to function:
 
 1. Author
 

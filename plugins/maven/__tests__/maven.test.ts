@@ -3,7 +3,7 @@ import fs from "fs";
 import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
-import MavenPlugin from "../src";
+import MavenPlugin, { IMavenPluginOptions } from "../src";
 
 const exec = jest.fn();
 
@@ -20,16 +20,16 @@ const mockRead = (result: string) =>
 
 describe("maven", () => {
   let hooks: Auto.IAutoHooks;
+  const prefixRelease: (a: string) => string = jest.fn(
+    (version) => `v${version}`
+  );
+  const options: IMavenPluginOptions = {};
 
   beforeEach(() => {
     exec.mockClear();
-    const plugin = new MavenPlugin();
+    const plugin = new MavenPlugin(options);
     hooks = makeHooks();
-    plugin.apply({
-      hooks,
-      logger: dummyLog(),
-      prefixRelease: (r) => `v${r}`,
-    } as Auto.Auto);
+    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
   });
 
   describe("getAuthor", () => {
@@ -47,6 +47,8 @@ describe("maven", () => {
           </developers>
         </project>
       `);
+
+      await hooks.beforeRun.promise({} as any);
 
       expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
@@ -75,6 +77,8 @@ describe("maven", () => {
         </project>
       `);
 
+      await hooks.beforeRun.promise({} as any);
+
       expect(await hooks.getAuthor.promise()).toStrictEqual(
         expect.objectContaining({
           email: "test@email.com",
@@ -92,7 +96,9 @@ describe("maven", () => {
         </project>
       `);
 
-      await expect(hooks.getAuthor.promise()).rejects.toBeInstanceOf(Error);
+      await hooks.beforeRun.promise({} as any);
+
+      await expect(hooks.getAuthor.promise()).resolves.toBeUndefined();
     });
   });
 
@@ -111,6 +117,8 @@ describe("maven", () => {
         </project>
       `);
 
+      await hooks.beforeRun.promise({} as any);
+
       expect(await hooks.getRepository.promise()).toStrictEqual(
         expect.objectContaining({
           owner: "Fuego-Tools",
@@ -119,7 +127,7 @@ describe("maven", () => {
       );
     });
 
-    test("should throw if no repo found", async () => {
+    test("should be undefined if no repo found", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -128,10 +136,17 @@ describe("maven", () => {
         </project>
       `);
 
-      await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
+      await hooks.beforeRun.promise({} as any);
+
+      expect(await hooks.getRepository.promise()).toStrictEqual(
+        expect.objectContaining({
+          owner: undefined,
+          repo: undefined,
+        })
+      );
     });
 
-    test("should throw if cannot find github URL", async () => {
+    test("should be undefined if cannot find github URL", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -145,10 +160,17 @@ describe("maven", () => {
         </project>
       `);
 
-      await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
+      await hooks.beforeRun.promise({} as any);
+
+      expect(await hooks.getRepository.promise()).toStrictEqual(
+        expect.objectContaining({
+          owner: undefined,
+          repo: undefined,
+        })
+      );
     });
 
-    test("should throw if cannot parse github URL", async () => {
+    test("should be undefined if cannot parse github URL", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -162,7 +184,14 @@ describe("maven", () => {
         </project>
       `);
 
-      await expect(hooks.getRepository.promise()).rejects.toBeInstanceOf(Error);
+      await hooks.beforeRun.promise({} as any);
+
+      expect(await hooks.getRepository.promise()).toStrictEqual(
+        expect.objectContaining({
+          owner: undefined,
+          repo: undefined,
+        })
+      );
     });
   });
 
@@ -177,19 +206,19 @@ describe("maven", () => {
         </project>
       `);
 
+      await hooks.beforeRun.promise({} as any);
+
       expect(await hooks.getPreviousVersion.promise()).toBe("v1.0.0");
     });
 
-    test("should throw when no version in pom.xml", async () => {
+    test("should be undefined when no version in pom.xml", async () => {
       mockRead("");
-      await expect(hooks.getPreviousVersion.promise()).rejects.toBeInstanceOf(
-        Error
-      );
+      expect(await hooks.getPreviousVersion.promise()).toBe("v0.0.0.0");
     });
   });
 
   describe("version", () => {
-    test("should version release - not versioned because of prepatched snapshot", async () => {
+    test("should version release - not versioned because of pre-patched snapshot", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -199,13 +228,17 @@ describe("maven", () => {
         </project>
       `);
 
+      await hooks.beforeRun.promise({} as any);
+
       await hooks.version.promise(Auto.SEMVER.patch);
+
       const call = exec.mock.calls[1][1];
-      expect(call).toContain("-DreleaseVersion=1.0.0");
-      expect(call).toContain("-Dtag=v1.0.0");
+      expect(call).toContain("tag");
+      expect(call).toContain("v1.0.0");
+      expect(call).toContain('"Update version to v1.0.1"');
     });
 
-    test("should error when failing to increment previous version", async () => {
+    test("should be undefined when failing to increment previous version", async () => {
       mockRead(`
         <project
           xmlns="http://maven.apache.org/POM/4.0.0"
@@ -215,16 +248,19 @@ describe("maven", () => {
         </project>
       `);
 
-      await expect(
-        hooks.version.promise(Auto.SEMVER.minor)
-      ).rejects.toBeInstanceOf(Error);
+      await hooks.beforeRun.promise({} as any);
+
+      expect(await hooks.version.promise(Auto.SEMVER.minor)).toBeUndefined();
     });
   });
 
   describe("publish", () => {
     test("should publish release", async () => {
+      await hooks.beforeRun.promise({} as any);
+
       await hooks.publish.promise(Auto.SEMVER.patch);
-      expect(exec.mock.calls[1][1]).toContain("release:perform");
+
+      expect(exec.mock.calls[1][1]).toContain("deploy");
     });
   });
 });
