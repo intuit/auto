@@ -51,7 +51,7 @@
     "@auto-it/released": "link:../../plugins/released",
     "await-to-js": "^2.1.1",
     "chalk": "^4.0.0",
-    "command-line-application": "^0.9.3",
+    "command-line-application": "^0.10.1",
     "endent": "^2.0.1",
     "module-alias": "^2.2.2",
     "signale": "^1.4.0",
