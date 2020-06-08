@@ -134,7 +134,7 @@ export interface IAutoHooks {
   /** Validate what is in the config. You must return the config in this hook. */
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
-  beforeRun: SyncHook<[LoadedAutoRc]>;
+  beforeRun: AsyncSeriesHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -373,7 +373,7 @@ export default class Auto {
           )}`;
 
           await execPromise("git", ["branch", branch]);
-          this.logger.log.success(`Created old version branch: ${branch}`)
+          this.logger.log.success(`Created old version branch: ${branch}`);
           await execPromise("git", ["push", this.remote, branch]);
         }
       }
@@ -485,7 +485,7 @@ export default class Auto {
     this.config = this.hooks.modifyConfig.call(this.config!);
     this.labels = this.config.labels;
     this.semVerLabels = getVersionMap(this.config.labels);
-    this.hooks.beforeRun.call(this.config);
+    await this.hooks.beforeRun.promise(this.config);
 
     const errors = [
       ...(await validateAutoRc(this.config)),

@@ -14,7 +14,7 @@ import { InteractiveInitHooks } from "../init";
 
 /** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({
-  beforeRun: new SyncHook(["config"]),
+  beforeRun: new AsyncSeriesHook(["config"]),
   modifyConfig: new SyncWaterfallHook(["config"]),
   validateConfig: new AsyncSeriesBailHook(["name", "options"]),
   beforeShipIt: new AsyncSeriesHook(["context"]),

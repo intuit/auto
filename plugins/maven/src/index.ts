@@ -124,7 +124,7 @@ export default class MavenPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    auto.hooks.beforeRun.tap(this.name, async () => {
+    auto.hooks.beforeRun.tapPromise(this.name, async () => {
       auto.logger.verbose.warn(`Running "beforeRun"`);
       this.properties = await MavenPlugin.getProperties();
       const { version = "" } = this.properties;
