@@ -44,7 +44,7 @@
     "file-type": "^14.1.1",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "1.11.1"
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "@octokit/rest": "^17.9.0"
