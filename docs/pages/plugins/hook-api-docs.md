@@ -13,12 +13,9 @@ The categories of hooks available to plugins are:
 The hooks that are called depends on the command is run.
 Some hooks are specific to a single command, such as the "Init" hooks, and others are called for every command.
 
-This is the general flow when any `auto` command is ran:
+Here is a map of all the hooks and when they are called (open in new tab for more detail):
 
-- Call configuration hooks
-- Get `git log` => Pass through `LogParse` hooks
-- If necessary: Create a changelog and => Call `Changelog` hooks
-- Run release lifecycle hooks
+![map of all hooks](../../images/hook-overview.png)
 
 ## Plugin Ideas
 
@@ -29,19 +26,3 @@ Here are a few ideas of what you could do.
 - Use the `afterRelease` hook to communicate changes to consumers (ex: twitter or slack)
 
 The documentation for each hook also lists examples of how the hook is used in various parts of `auto` and its plugins.
-
-## Example Run: `auto latest`
-
-The following details the hooks called in a run of `auto latest` where a new version is published.
-
-1. All configuration hooks called
-2. Get `git log` => Pass through `LogParse` hooks
-3. Create a changelog and in the process call all changelog hooks
-4. [beforeCommitChangelog](./release-lifecycle-hooks.md#beforecommitchangelog)
-5. [afterAddToChangelog](./release-lifecycle-hooks.md#afterAddToChangelog)
-6. [version](./release-lifecycle-hooks.md##version)
-7. [afterVersion](./release-lifecycle-hooks.md##afterversion)
-8. [publish](./release-lifecycle-hooks.md##publish)
-9. [afterPublish](./release-lifecycle-hooks.md##afterpublish)
-10. [makeRelease](./release-lifecycle-hooks.md##makerelease)
-11. [afterRelease](./release-lifecycle-hooks.md##afterrelease)
