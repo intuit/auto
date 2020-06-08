@@ -39,12 +39,11 @@
   },
   "devDependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "@types/xml2js": "^0.4.5",
     "fast-glob": "^3.1.1",
+    "jest-circus": "^25.5.4",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
-    "semver": "^7.0.0",
+
     "tslib": "2.0.0",
-    "xml2js": "^0.4.23"
   }
 }

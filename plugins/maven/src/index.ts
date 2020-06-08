@@ -7,7 +7,6 @@ import * as glob from "fast-glob";
 import { IDeveloper, parse } from "pom-parser";
 import { inc, ReleaseType } from "semver";
 import fs from "fs";
-import * as xml2js from "xml2js";
 import { validatePluginConfiguration } from "@auto-it/core/dist/auto";
 
 const snapshotSuffix = "-SNAPSHOT";
@@ -29,13 +28,16 @@ const writePom = async (
   filePath: string = path.join(process.cwd(), "pom.xml")
 ) => writeFile(filePath, content);
 
-/** Xml to Js **/
-const xmlToJs = (content: string) => xml2js.parseStringPromise(content);
-
-/** Js to Xml **/
-const jsToXml = (content: string) => {
-  const builder = new xml2js.Builder();
-  return builder.buildObject(content);
+/** Get the pom.xml content with a new version **/
+const newVersionContent = (
+  content: string,
+  previousVersion: string,
+  version: string
+) => {
+  const escapedVersion = previousVersion.replace(/\./g, "\\.");
+  const versionReplace = `(\\s+<version>)(${escapedVersion})(<\\/version>)`;
+  const versionReplaceRegex = new RegExp(versionReplace, "gm");
+  return content.replace(versionReplaceRegex, `$1${version}$3`);
 };
 
 const pluginOptions = t.partial({
@@ -176,7 +178,7 @@ export default class MavenPlugin implements IPlugin {
           : inc(previousVersion, version as ReleaseType);
 
       if (releaseVersion) {
-        await this.updatePoms(releaseVersion, auto);
+        await this.updatePoms(previousVersion, releaseVersion, auto);
 
         const newVersion = auto.prefixRelease(releaseVersion);
 
@@ -225,7 +227,7 @@ export default class MavenPlugin implements IPlugin {
       // then we need to set up snapshots on the next version
       const newVersion = `${inc(releaseVersion, "patch")}${snapshotSuffix}`;
 
-      await this.updatePoms(newVersion, auto);
+      await this.updatePoms(releaseVersion, newVersion, auto);
 
       // await execPromise("git", [
       //   "push",
@@ -238,20 +240,26 @@ export default class MavenPlugin implements IPlugin {
   }
 
   /** Find and update all pom.xml files with new versions, and then commit the changes **/
-  private async updatePoms(releaseVersion: string, auto: Auto) {
+  private async updatePoms(
+    previousVersion: string,
+    releaseVersion: string,
+    auto: Auto
+  ) {
     auto.logger.verbose.warn(
       `Running "updatePoms". releaseVersion: ${releaseVersion}`
     );
     /** Get all the poms and update their versions **/
     await Promise.all(
       glob.sync("**/pom.xml").map((pomFile) =>
-        MavenPlugin.updatePomVersion(pomFile, releaseVersion).catch(
-          (reason) => {
-            auto.logger.verbose.error(
-              `There was an error modifying the ${pomFile}: ${reason}`
-            );
-          }
-        )
+        MavenPlugin.updatePomVersion(
+          pomFile,
+          previousVersion,
+          releaseVersion
+        ).catch((reason) => {
+          auto.logger.verbose.error(
+            `There was an error modifying the ${pomFile}: ${reason}`
+          );
+        })
       )
     ).catch((reason) => {
       auto.logger.verbose.error(
@@ -272,18 +280,14 @@ export default class MavenPlugin implements IPlugin {
   }
 
   /** Update the version in the pom.xml file **/
-  private static async updatePomVersion(pomFile: string, version: string) {
+  private static async updatePomVersion(
+    pomFile: string,
+    previousVersion: string,
+    version: string
+  ) {
     const pom = await getPom(pomFile);
-    const pomJson = await xmlToJs(pom.pomXml);
-    if (pomJson?.parent) {
-      pomJson.parent.version = version;
-    }
-
-    if (pomJson?.version) {
-      pomJson.version = version;
-    }
-
-    await writePom(jsToXml(pomJson), pomFile);
+    const content = newVersionContent(pom.pomXml, previousVersion, version);
+    await writePom(content, pomFile);
   }
 
   /** Get the properties from the pom.xml file **/
