@@ -6,7 +6,7 @@ Thank first time contributors for their work right in your release notes.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/first-time-contributor
 # or
 yarn add -D @auto-it/first-time-contributor

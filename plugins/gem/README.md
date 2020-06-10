@@ -14,7 +14,7 @@ This plugin also looks in your `.gemspec` and `lib/**/version.rb` for a version.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/gem
 # or
 yarn add -D @auto-it/gem

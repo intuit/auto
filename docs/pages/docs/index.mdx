@@ -1,0 +1,47 @@
+<div style={{ textAlign: "center" }}>
+  <img alt="Auto Logo" src="auto.gif" width={300} style={{margin: 'auto'}} />
+  <h1>auto</h1>
+</div>
+
+> Automated releases powered by pull request labels
+
+Streamline your release workflow and publish constantly!
+`auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
+
+The two main problems auto is trying to solve are: release automation and pull request interaction.
+With the set of tools we provide you can automate every part of contribution!
+
+<br />
+
+**Release Features:**
+
+- Calculate semantic version bumps from PRs
+- Publish [canaries](./generated/canary.md) (test versions) directly from PRs or locally
+- Generate changelogs with fancy headers, authors, and [detailed release notes](./generated/changelog.md#additional-release-notes)
+- Make GitHub releases
+
+**Pull Request Interaction Features:**
+
+- Get the labels for a PR
+- Set the status of a PR
+- Comment on a PR with markdown
+- Update the PR body with contextual build metadata
+
+
+## Workflow
+
+`auto`'s main use it to automate the release process for your project.
+This can be broken down into three core steps:
+
+```text
+pre: (optional) Check if new version
+
+1. Generate CHANGELOG.md
+2. Publish code
+3. Generate github release notes
+```
+
+`auto` makes no assumptions about your publishing process. 
+Each tool is a function that can be run in isolation and only does one thing really well. 
+For instance, you could just use `auto changelog` to generate the changelog and nothing else or use `auto version` to calculate just the `semver` bump.
+

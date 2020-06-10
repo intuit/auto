@@ -7,15 +7,13 @@ This plugin
 - adds a `released` label to the pull request
 - adds a `released` label to closed issues
 
-::: message is-warning
-Make sure that you create the `released` label on you project
-:::
+> :warning: Make sure that you create the `released` label on you project
 
 ## Installation
 
 This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
-```sh
+```bash
 npm i --save-dev @auto-it/released
 # or
 yarn add -D @auto-it/released

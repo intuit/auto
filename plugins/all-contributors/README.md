@@ -15,7 +15,7 @@ Out of the box the plugin will only detect the following contribution types:
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/all-contributors all-contributors-cli
 # or
 yarn add -D @auto-it/all-contributors all-contributors-cli
@@ -23,7 +23,7 @@ yarn add -D @auto-it/all-contributors all-contributors-cli
 
 ## Prerequisites
 
-```sh
+```bash
 npx all-contributors init
 ```
 
@@ -98,11 +98,9 @@ Maintain contributors lists for sub-packages in a monorepo setup (`lerna`/`yarn`
 
 All you need to do is initialize each sub-package you want contributors tracked in with an `.all-contributorsrc`. If no rc file is found nothing will happen for that package. Any non-code contribution listed in the PR body will also be added to the sub-package contributors list.
 
-```sh
+```bash
 cd packages/your-package
 npx all-contributors init
 ```
 
-::: message is-info
-ℹ️ Tip: If you only want 1 commit for new contributions set `commit` to false in all of your `.all-contributorsrc`. Otherwise a commit will be made for each package's contributor update.
-:::
+> ℹ️ Tip: If you only want 1 commit for new contributions set `commit` to false in all of your `.all-contributorsrc`. Otherwise a commit will be made for each package's contributor update.

@@ -10,7 +10,7 @@ While intended to run in a continuous integration (CI) environment, all `auto` c
 
 `auto` is distributed through npm, but you can use it with a variety of package management platforms.
 
-```sh
+```bash
 npm install auto
 ```
 
@@ -26,7 +26,7 @@ If your project is already published or has releases then you need to make sure 
 
 To tag your last release find the last commit where you bumped the version and run the following commands with your version number.
 
-```sh
+```bash
 git tag v1.2.3
 git push --tags
 ```
@@ -41,7 +41,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
    This command will produce an `.autorc`.
    You can configure most flags and all labels/changelogTitles.
 
-   ```sh
+   ```bash
    auto init
    ```
 
@@ -78,7 +78,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
 
    `PROJECT_ROOT/.env`:
 
-   ```sh
+   ```bash
    GH_TOKEN=YOUR_TOKEN
    NPM_TOKEN=PUBLISH_TOKEN
    ```
@@ -93,7 +93,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
 
    To create the labels for your project on GitHub, run the following command with your `GH_TOKEN`.
 
-   ```sh
+   ```bash
    GH_TOKEN=YOUR_TOKEN auto create-labels
    # or with .env file
    auto create-labels

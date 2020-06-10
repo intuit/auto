@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, jsdoc/require-jsdoc */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -6,13 +7,6 @@ import {
   faAtom,
   faBacon
 } from '@fortawesome/free-solid-svg-icons';
-import openPrImage from './open-pr.png';
-import addLabelImage from './add-label.png';
-import mergeImage from './merge.png';
-import releaseImage from './release.png';
-import changelogExampleImage from './changelog-example.png';
-
-import './tailwind.plugin.css';
 
 const Feature = ({ title, description, icon }) => (
   <div className="mb-8 flex items-start last:mb-0">
@@ -21,7 +15,7 @@ const Feature = ({ title, description, icon }) => (
     </div>
     <div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-lg text-gray-700">{description}</p>
+      <p className="text-lg text-gray-700 dark:text-gray-400">{description}</p>
     </div>
   </div>
 );
@@ -68,7 +62,7 @@ const Label = ({ children, color }) => (
 
 const FrequentlyAskedQuestion = ({ question, answer }) => (
   <div className="mb-10 last:mb-0">
-    <h4 className="font-normal text-xl mb-3 text-gray-700">{question}</h4>
+    <h4 className="font-normal text-xl mb-3 text-gray-700 dark:text-gray-400">{question}</h4>
     <p className="text-grey-800 leading-relaxed">{answer}</p>
   </div>
 );
@@ -90,12 +84,12 @@ const Home = () => (
 
         <div className="mx-10 md:max-w-screen-xl lg:mx-auto">
           <div className="mt-10 mb-16 lg:mb-24 text-center flex items-center flex-col">
-            <h2 className="text-purple-900 text-2xl mb-8 font-semibold">
+            <h2 className="text-purple-900 text-2xl mb-8 font-semibold dark:text-purple-300">
               Adding automated releases shouldn't be hard or require changing
               your workflow
             </h2>
 
-            <p className="max-w-2xl text-lg text-gray-700">
+            <p className="max-w-2xl text-lg text-gray-700 dark:text-gray-400">
               <Emphasize>auto</Emphasize> makes automating releases for your
               project as simple adding a <Label color="yellow">label</Label> to
               a pull request. If you're releasing all the time you can be{' '}
@@ -142,7 +136,7 @@ const Home = () => (
 
             <div className="flex-1 px-12 mb-20 lg:mb-0">
               <img
-                {...getImageProps(changelogExampleImage)}
+                src="changelog-example.png"
                 alt="Changelog example"
                 className="border border-grey-600 rounded-lg p-4 shadow-md"
                 style={{ maxHeight: 500 }}
@@ -157,27 +151,27 @@ const Home = () => (
             What does the workflow look like? How easy is it really?
           </h2>
 
-          <Step number={1} label="Open a Pull Request" image={openPrImage} />
+          <Step number={1} label="Open a Pull Request" image="open-pr.png" />
           <Step
             number={2}
-            image={addLabelImage}
+            image="add-label.png"
             label={
               <>
                 Add a <Label color="blue">label</Label>
               </>
             }
           />
-          <Step number={3} label="Hit that merge button" image={mergeImage} />
+          <Step number={3} label="Hit that merge button" image="merge.png" />
           <Step
             number={4}
-            image={releaseImage}
+            image="release-example.png"
             label="Wait for your continuous integration to make the release for you!"
           />
         </div>
 
         <div className="bg-grey-500">
           <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-24">
-            <h2 className="font-extrabold text-4xl text-center mb-6 text-gray-800">
+            <h2 className="font-extrabold text-4xl text-center mb-6 text-gray-800 dark:text-gray-600">
               Frequently asked questions
             </h2>
 

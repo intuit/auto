@@ -15,7 +15,7 @@ To post tweets to twitter you need the following secrets set in your environment
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/twitter
 # or
 yarn add -D @auto-it/twitter

@@ -11,7 +11,7 @@ Automate publishing to your gh-pages documentation website
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/gh-pages
 # or
 yarn add -D @auto-it/gh-pages

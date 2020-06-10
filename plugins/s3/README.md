@@ -14,7 +14,7 @@ Must have the [aws-cli](https://docs.aws.amazon.com/cli/index.html) on your mach
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/s3
 # or
 yarn add -D @auto-it/s3
