@@ -10,7 +10,7 @@ To publish to npm you will need an `NPM_TOKEN` set in your environment.
 
 This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
-```sh
+```bash
 npm i --save-dev @auto-it/npm
 # or
 yarn add -D @auto-it/npm
@@ -134,9 +134,7 @@ Set `$NPM_TOKEN` to the "Base64 version of username:password".
 Publishing canary versions comes with some security risks.
 If your project is private you have nothing to worry about and can skip these, but if your project is open source there are some security holes.
 
-::: message is-warning
-This feature works pretty easily/well for single packages. In a monorepo we have to deal with a lot more, and this options should be treated as experimental.
-:::
+> :warning: This feature works pretty easily/well for single packages. In a monorepo we have to deal with a lot more, and this options should be treated as experimental.
 
 #### Setup
 

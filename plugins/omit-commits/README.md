@@ -6,7 +6,7 @@ Filter certain commits out of the changelog and version calculation.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/omit-commits
 # or
 yarn add -D @auto-it/omit-commits

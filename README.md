@@ -67,7 +67,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 To get set up, fork and clone the project then run the following command:
 
-```sh
+```bash
 yarn
 ```
 
@@ -75,13 +75,13 @@ yarn
 
 You must build at least once before running the tests or lint.
 
-```sh
+```bash
 yarn build
 ```
 
 In watch mode:
 
-```sh
+```bash
 yarn start
 ```
 
@@ -89,37 +89,37 @@ yarn start
 
 Install the bundled binary onto your system. This requires the project to be built or in watch mode.
 
-```sh
+```bash
 yarn install-mac
 ```
 
 If running this for the first time you may also have to run the following command.
 
-```sh
+```bash
 chmod +x /usr/local/bin/auto
 ```
 
 ### Cleaning
 
-```sh
+```bash
 yarn clean
 ```
 
 ### Linting
 
-```sh
+```bash
 yarn lint
 ```
 
 ### Testing
 
-```sh
+```bash
 yarn test
 ```
 
 ### Run the docs
 
-```sh
+```bash
 yarn docs:watch
 ```
 
@@ -132,7 +132,7 @@ The two arguments are:
 1. A spaced name
 2. A description
 
-```sh
+```bash
 yarn create:plugin "My Plugin" "Do something really cool"
 ```
 
@@ -149,8 +149,6 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 :star: [space-kit](https://github.com/apollographql/space-kit) - Home base for Apollo's design system
 
 :star: [react-glider](https://github.com/hipstersmoothie/react-glider) - A react wrapper for glider.js
-
-:star: [Ignite](https://github.com/intuit/Ignite) - Modern markdown documentation generator
 
 :star: [reaction](https://github.com/artsy/reaction) - Artsy’s React Components
 

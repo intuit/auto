@@ -6,7 +6,7 @@ Release a Java project to a [maven](https://maven.apache.org/) instance.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```shell script
+```bashell script
 npm i --save-dev @auto-it/maven
 # or
 yarn add -D @auto-it/maven
@@ -69,9 +69,7 @@ You will also need all the following configuration blocks for all parts of `auto
 </scm>
 ```
 
-::: message is-info
-Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
-:::
+> :warning: Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
 
 3. Version
 

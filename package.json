@@ -32,10 +32,9 @@
     "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
-    "docs": "yarn docs:build && ignite",
-    "docs:build": "./docs/generate-command-docs.js",
-    "docs:watch": "yarn docs --watch",
-    "docs:publish": "./scripts/publish-docs.sh",
+    "docs": "yarn docs:generate && ignite dev",
+    "docs:generate": "./docs/generate-command-docs.js",
+    "docs:build": "yarn docs:generate && ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
@@ -66,6 +65,7 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
     "lint-staged": "^10.0.7",
+    "next-ignite": "^0.1.10",
     "prettier": "^2.0.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
@@ -121,19 +121,9 @@
     ]
   },
   "ignite": {
-    "title": "auto",
-    "baseURL": "/auto",
-    "logo": "logo.gif",
-    "bulmaTheme": "materia",
-    "githubURL": "https://github.com/intuit/auto",
-    "customHead": "<style>.content p > .header-image { max-width: 200px !important; } .navbar { box-shadow: none !important; border-bottom: 1px solid lightgrey; } .list { font-size: 1.2rem; } .is-purple { background: #870048 !important;  } .has-text-purple { color: #870048 !important;  } .is-red { background: #C5000B !important;  } .is-yellow { background: #F1A60E !important;  } a.navbar-item.is-active, a.navbar-item:hover, a.navbar-link.is-active, a.navbar-link:hover { background-color: #f5f5f5;color: #870048; } .button.is-link.is-inverted.is-outlined:hover { background-color: #fff;color: #870048; } p .image { max-width: 100% !important; }.menu .menu-list a.is-active {background-color: transparent;color: #870048;} .blogPost .mediumImage .image { max-width: 400px !important; }table code {white-space: nowrap;}      </style>",
-    "favicon": "favicon.png",
-    "plugins": [
-      [
-        "home",
-        "./docs/plugins/home"
-      ]
-    ]
+    "repo": "intuit/auto",
+    "name": "auto",
+    "basePath": "/auto"
   },
   "auto": {
     "plugins": [
@@ -177,8 +167,8 @@
       [
         "gh-pages",
         {
-          "buildCommand": "yarn docs",
-          "dir": "_ignite/auto"
+          "buildCommand": "yarn docs:build",
+          "dir": "docs/out"
         }
       ]
     ],

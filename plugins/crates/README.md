@@ -6,7 +6,7 @@ Deploy Rust crates to [crates.io](https://crates.io/).
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/crates
 # or
 yarn add -D @auto-it/crates

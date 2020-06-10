@@ -15,7 +15,7 @@ This plugin only:
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/git-tag
 # or
 yarn add -D @auto-it/git-tag

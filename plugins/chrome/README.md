@@ -2,9 +2,7 @@
 
 This plugin allows you to automate the publishing of chrome extensions
 
-::: message is-success
-Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
-:::
+> Example Repo: [here](https://github.com/hipstersmoothie/auto-chrome)
 
 ## Prerequisites
 
@@ -18,7 +16,7 @@ To publish to the chrome web store you will need the following secrets set in yo
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/chrome
 # or
 yarn add -D @auto-it/chrome
@@ -50,6 +48,4 @@ Or you can set these values in the autorc:
 }
 ```
 
-::: message is-warning
-:warning: You must have a manifest.json for this plugin to work.
-:::
+> :warning: You must have a manifest.json for this plugin to work.

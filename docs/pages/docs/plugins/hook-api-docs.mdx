@@ -1,0 +1,28 @@
+# Hook APIs
+
+Plugins work by "hooking" into various parts of `auto` to control or add to its behavior.
+
+The categories of hooks available to plugins are:
+
+- [Init](./init-hooks.md) - Add functionality to `auto init`
+- [Configuration](./configuration-hooks.md) - Detect, modify and validate `auto`'s configuration
+- [Log Parser](./log-parse-hooks.md) - Extend how `auto` analyzes commits
+- [Changelog](./changelog-hooks.md) - Change how `auto` renders changelogs
+- [Release Lifecycle](./release-lifecycle-hooks.md) - Called during various release commands, these facilitate publishing the package
+
+The hooks that are called depends on the command is run.
+Some hooks are specific to a single command, such as the "Init" hooks, and others are called for every command.
+
+Here is a map of all the hooks and when they are called (open in new tab for more detail):
+
+![map of all hooks](/hook-overview.png)
+
+## Plugin Ideas
+
+Having a plug-able release process means you can automate so many things.
+Here are a few ideas of what you could do.
+
+- `size-changelog`: Every time a `latest` release is made update a `size-changelog.md` with the bundle size
+- Use the `afterRelease` hook to communicate changes to consumers (ex: twitter or slack)
+
+The documentation for each hook also lists examples of how the hook is used in various parts of `auto` and its plugins.

@@ -351,7 +351,7 @@ async function gitReset() {
 const makeMonorepoInstallList = (packageList: string[]) =>
   [
     ":sparkles: Test out this PR locally via:\n",
-    "```sh",
+    "```bash",
     ...packageList.map((p) => `npm install ${p}`),
     "# or ",
     ...packageList.map((p) => `yarn add ${p}`),

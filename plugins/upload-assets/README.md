@@ -6,7 +6,7 @@ Upload assets to the release. Good for executables and extra downloadable files.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/upload-assets
 # or
 yarn add -D @auto-it/upload-assets

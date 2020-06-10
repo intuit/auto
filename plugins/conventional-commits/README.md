@@ -6,7 +6,7 @@ Parse [conventional commit messages](https://www.conventionalcommits.org/en/v1.0
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/conventional-commits
 # or
 yarn add -D @auto-it/conventional-commits

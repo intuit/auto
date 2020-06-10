@@ -6,7 +6,7 @@ Use `auto` to version your [CocoaPod](https://cocoapods.org/), and push to your 
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/cocoapods
 # or
 yarn add -D @auto-it/cocoapods

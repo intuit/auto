@@ -6,7 +6,7 @@ Filter PRs with release notes that shouldn't make it into a release. By default 
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/omit-release-notes
 # or
 yarn add -D @auto-it/omit-release-notes

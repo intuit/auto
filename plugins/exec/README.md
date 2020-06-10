@@ -40,7 +40,7 @@ Other hooks:
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/exec
 # or
 yarn add -D @auto-it/exec
@@ -70,6 +70,4 @@ Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.m
 }
 ```
 
-::: message is-warning
-:warning: If you are tapping into a waterfall or bail hook you will need to return some value (ex: JSON or a boolean). Please refer to the documentation and return the right thing!
-:::
+> :warning: If you are tapping into a waterfall or bail hook you will need to return some value (ex: JSON or a boolean). Please refer to the documentation and return the right thing!

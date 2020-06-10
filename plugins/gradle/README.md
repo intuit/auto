@@ -8,7 +8,7 @@ Release a Java project using [gradle](https://gradle.org/).
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/gradle
 # or
 yarn add -D @auto-it/gradle
