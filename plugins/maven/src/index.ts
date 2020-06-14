@@ -255,12 +255,12 @@ export default class MavenPlugin implements IPlugin {
           throw new Error(reason);
         });
 
-      // await execPromise("git", [
-      //   "commit",
-      //   "-am",
-      //   `"update version: ${version} [skip ci]"`,
-      //   "--no-verify",
-      // ]);
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"update version: ${version} [skip ci]"`,
+        "--no-verify",
+      ]);
     }
   }
 
@@ -354,13 +354,13 @@ export default class MavenPlugin implements IPlugin {
           : "",
       ]);
 
-      // await execPromise("git", [
-      //   "push",
-      //   "--follow-tags",
-      //   "--set-upstream",
-      //   auto.remote,
-      //   auto.baseBranch,
-      // ]);
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
+        auto.remote,
+        auto.baseBranch,
+      ]);
     });
 
     auto.hooks.afterShipIt.tapPromise(this.name, async () => {
@@ -387,13 +387,13 @@ export default class MavenPlugin implements IPlugin {
         await MavenPlugin.updatePoms(newVersion, this.options, auto);
       }
 
-      // await execPromise("git", [
-      //   "push",
-      //   "--follow-tags",
-      //   "--set-upstream",
-      //   auto.remote,
-      //   auto.baseBranch,
-      // ]);
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
+        auto.remote,
+        auto.baseBranch,
+      ]);
     });
   }
 
