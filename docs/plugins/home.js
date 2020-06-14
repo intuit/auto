@@ -10,7 +10,7 @@ import {
 
 const Feature = ({ title, description, icon }) => (
   <div className="mb-8 flex items-start last:mb-0">
-    <div className="rounded bg-yellow-500 p-3 text-yellow-100 mr-5">
+    <div className="rounded bg-yellow-500 dark:bg-yellow-600 p-3 text-yellow-100 mr-5">
       <FontAwesomeIcon height={24} icon={icon} />
     </div>
     <div>
@@ -25,7 +25,7 @@ const Link = props => (
 );
 
 const Emphasize = ({ children }) => (
-  <span className="text-purple-500 font-semibold">{children}</span>
+  <span className="text-primary-500 dark:text-primary-400 font-semibold">{children}</span>
 );
 
 const Divider = ({ style }) => (
@@ -62,7 +62,7 @@ const Label = ({ children, color }) => (
 
 const FrequentlyAskedQuestion = ({ question, answer }) => (
   <div className="mb-10 last:mb-0">
-    <h4 className="font-normal text-xl mb-3 text-gray-700 dark:text-gray-400">{question}</h4>
+    <h4 className="font-normal text-xl mb-3 text-gray-700 dark:text-gray-200">{question}</h4>
     <p className="text-grey-800 leading-relaxed">{answer}</p>
   </div>
 );
@@ -71,10 +71,10 @@ const Home = () => (
   <div className="w-full">
     <main className="w-full">
       <div className="w-full">
-        <div className="bg-purple-600 w-full flex justify-center flex-col items-center py-40 text-center">
+        <div className="bg-primary-500 dark:bg-primary-600 w-full flex justify-center flex-col items-center py-40 text-center">
           <h1 className="text-6xl font-bold text-white">auto</h1>
 
-          <p className="text-2xl text-purple-200 font-light mx-4">
+          <p className="text-2xl text-primary-200 font-light mx-4">
             Streamline your release workflow and{' '}
             <span className="text-yellow-500 font-semibold">
               publish constantly!
@@ -84,7 +84,7 @@ const Home = () => (
 
         <div className="mx-10 md:max-w-screen-xl lg:mx-auto">
           <div className="mt-10 mb-16 lg:mb-24 text-center flex items-center flex-col">
-            <h2 className="text-purple-900 text-2xl mb-8 font-semibold dark:text-purple-300">
+            <h2 className="text-primary-900 text-2xl mb-8 font-semibold dark:text-primary-200">
               Adding automated releases shouldn't be hard or require changing
               your workflow
             </h2>
@@ -93,7 +93,7 @@ const Home = () => (
               <Emphasize>auto</Emphasize> makes automating releases for your
               project as simple adding a <Label color="yellow">label</Label> to
               a pull request. If you're releasing all the time you can be{' '}
-              <span className="text-red-500 font-semibold">more confident</span>{' '}
+              <span className="text-red-500 dark:text-red-600 font-semibold">more confident</span>{' '}
               in your releases. And your users might thank you too 😉
             </p>
           </div>
@@ -171,7 +171,7 @@ const Home = () => (
 
         <div className="bg-grey-500">
           <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-24">
-            <h2 className="font-extrabold text-4xl text-center mb-6 text-gray-800 dark:text-gray-600">
+            <h2 className="font-extrabold text-4xl text-center mb-6 text-gray-800 dark:text-gray-300">
               Frequently asked questions
             </h2>
 
@@ -192,10 +192,10 @@ const Home = () => (
                   </Link>{' '}
                   But if you don't want to do that it's up to you. The tools{' '}
                   <Emphasize>auto</Emphasize> ships with can be used to{' '}
-                  <span className="font-semibold text-red-600">
+                  <span className="font-semibold text-red-500 dark:text-red-600">
                     fit any workflow
                   </span>
-                  ! You can also use <Label color="purple">skip-release</Label>{' '}
+                  ! You can also use <Label color="primary">skip-release</Label>{' '}
                   labels or configure <Emphasize>auto</Emphasize> to only
                   release with a <Label color="blue">release</Label> label.
                 </>
@@ -218,7 +218,7 @@ const Home = () => (
                     built into plugins
                   </Link>
                   . You can also use this plugin system to do{' '}
-                  <span className="font-semibold text-red-600">
+                  <span className="font-semibold text-red-500 dark:text-red-600">
                     almost anything
                   </span>{' '}
                   during your release!
@@ -283,7 +283,7 @@ const Home = () => (
         </div>
       </div>
 
-      <div className="bg-purple-500 text-white text-center">
+      <div className="bg-primary-500 dark:bg-primary-600 text-white text-center">
         <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-16 flex flex-col items-center">
           <h2 className="text-xl mb-8">
             Stop worrying about your release and hit that merge button!
