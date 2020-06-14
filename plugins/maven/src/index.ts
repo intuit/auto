@@ -255,12 +255,12 @@ export default class MavenPlugin implements IPlugin {
           throw new Error(reason);
         });
 
-      await execPromise("git", [
-        "commit",
-        "-am",
-        `"update version: ${version} [skip ci]"`,
-        "--no-verify",
-      ]);
+      // await execPromise("git", [
+      //   "commit",
+      //   "-am",
+      //   `"update version: ${version} [skip ci]"`,
+      //   "--no-verify",
+      // ]);
     }
   }
 
@@ -387,15 +387,15 @@ export default class MavenPlugin implements IPlugin {
         await MavenPlugin.updatePoms(newVersion, this.options, auto);
       }
 
-      await execPromise("git", [
-        "push",
-        "--follow-tags",
-        "--set-upstream",
-        auto.remote,
-        auto.baseBranch,
-      ]);
-    });
-  }
+        await execPromise("mvn", [
+          "versions:set",
+          "-DgenerateBackupPoms=false",
+          `-DnewVersion=${newVersion}`,
+        ]);
+      } else {
+        auto.logger.verbose.warn("Using the auto maven plugin");
+        await MavenPlugin.updatePoms(newVersion, this.options, auto);
+      }
 
   /** Get the version from the current pom.xml **/
   private async getVersion(auto: Auto): Promise<string> {
