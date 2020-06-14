@@ -7106,7 +7106,7 @@ es-abstract@^1.5.1:
     string.prototype.trimleft "^2.1.0"
     string.prototype.trimright "^2.1.0"
 
-es-to-primitive@^1.2.1:
+es-to-primitive@^1.2.0, es-to-primitive@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/es-to-primitive/-/es-to-primitive-1.2.1.tgz#e55cd4c9cdc188bcefb03b366c736323fc5c898a"
   integrity sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
@@ -12189,10 +12189,10 @@ nested-error-stacks@^2.0.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-next-ignite@^0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.10.tgz#dde7deb68df7a64a5bbc3db57f1d14c31d367b3e"
-  integrity sha512-F0ku8RT15LneAaRAvoVjZWj4g0AwsDu01CyJ8LrVf4mXMlEa7j1Q4V57OTtY4gKe5RwS5zeC0ypb2vgC4pgcSw==
+next-ignite@^0.1.16:
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.16.tgz#127eb8fb6daa61349015b4d997036ba3433ac906"
+  integrity sha512-pmBCOZDakpU3ugnwKa1yL0XOGjMcPqS5qO4vN2VM2/ae9TcEv3OatKYgNfY4BpQfqX80c0b5hIOWm2q+RPALRA==
   dependencies:
     "@mapbox/rehype-prism" "^0.4.0"
     clsx "^1.1.0"
@@ -12664,7 +12664,7 @@ object-copy@^0.1.0:
     define-property "^0.2.5"
     kind-of "^3.0.3"
 
-object-inspect@^1.7.0:
+object-inspect@^1.6.0, object-inspect@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.7.0.tgz#f4f6bd181ad77f006b5ece60bd0b6f398ff74a67"
   integrity sha512-a7pEHdh1xKIAgTySUGgLMx/xwDZskN1Ud6egYYN3EdRW4ZMPNEDUTF+hwy2LUC+Bl+SyLXANnwz/jyh/qutKUw==
