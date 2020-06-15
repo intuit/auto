@@ -76,7 +76,11 @@ const Home = () => (
     <main className="w-full">
       <div className="w-full">
         <div className="bg-primary-500 dark:bg-primary-600 w-full flex justify-center flex-col items-center py-40 text-center">
-          <img src="monochrome-logo-large.png" alt="auto" className="w-1/4 mb-10" />
+          <img
+            src="monochrome-logo-large.png"
+            alt="auto"
+            className="w-1/4 mb-10"
+          />
 
           <p className="text-2xl text-primary-200 font-light mx-4">
             Streamline your release workflow and{" "}
@@ -296,7 +300,7 @@ const Home = () => (
           </h2>
 
           <a
-            href="https://intuit.github.io/auto/index.html"
+            href="https://intuit.github.io/auto/docs"
             className="uppercase text-xl lg:text-2xl border-2 border-white rounded px-6 py-3"
           >
             <span className="pr-2">Get Started</span> 🎉
