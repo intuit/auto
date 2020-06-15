@@ -12206,10 +12206,10 @@ nested-error-stacks@^2.0.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-next-ignite@^0.1.27:
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.27.tgz#6e6079e6a83c24365a712e6c063ccbf8cde0cfa6"
-  integrity sha512-N2O4AZwxIwEtHxIZpzwHzSDEDmeajBv3sGoouQEO6DAOo4EUavrCAjtnRXWXdWqW5aaL3ls+l6OsVtBNEl8Fdg==
+next-ignite@^0.1.29:
+  version "0.1.29"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.29.tgz#f09bc7cab2bc0e590e38762a4fb5331b925d3820"
+  integrity sha512-0BOSp/MduNnM+0KLQMi4kNdSlAdBoMFjqWNH0eWVkKezdq2gjARjhpEI99WbWQX9/mt8uYo70s01+TnggYyQyg==
   dependencies:
     "@mapbox/rehype-prism" "^0.4.0"
     "@next/bundle-analyzer" "^9.4.0"
