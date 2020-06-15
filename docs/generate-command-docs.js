@@ -2,26 +2,27 @@
 
 const fs = require("fs");
 const path = require("path");
-const {camelCase} = require('change-case')
+const { camelCase } = require("change-case");
 const endent = require("endent").default;
 const glob = require("fast-glob");
 const docs = require("command-line-docs").default;
 const { commands } = require("../packages/cli/dist/parse-args");
 
-// const initCommands = [
-//   endent`
-//     # Initialization
-
-//     \`auto\` provides some tools to quickly set up your project. If you do not want to use the interactive experience all these options can be configured via the [.autorc](./autorc.md) and most can be configure via CLI options.\n
-//   `,
-// ];
-
 try {
   fs.mkdirSync(path.join(__dirname, "./pages/docs/generated"));
 } catch (error) {}
 
-commands.map((command) => {
-  const lines = [docs(command).replace(/{green \$} /g, "")];
+commands.forEach((command) => {
+  const [title, ...docsForCommand] = docs(command)
+    .replace(/{green \$} /g, "")
+    .split("\n");
+  const frontMatter = endent`
+    ---
+    title: ${title.replace("# ", "")}
+    ---
+  `.replace(/`/g, "\\`");
+
+  const lines = [frontMatter, ...docsForCommand];
   const configOptions = (command.options || []).filter(
     (option) => option.config
   );
@@ -76,14 +77,20 @@ commands.map((command) => {
   );
 });
 
-
-glob.sync(path.join(__dirname, '../plugins/**/README.md')).forEach(readme => {
-  const content = fs.readFileSync(readme, "utf8")
-  const dir = path.dirname(readme).split('/')
-  const name = dir[dir.length - 1]
+glob.sync(path.join(__dirname, "../plugins/**/README.md")).forEach((readme) => {
+  const content = fs.readFileSync(readme, "utf8");
+  const [title, ...readmeDocs] = content.split("\n");
+  const frontMatter = endent`
+    ---
+    title: ${title.replace("# ", "")}
+    ---
+  `.replace(/`/g, "\\`");
+  const lines = [frontMatter, ...readmeDocs];
+  const dir = path.dirname(readme).split("/");
+  const name = dir[dir.length - 1];
 
   fs.writeFileSync(
     path.join(__dirname, `./pages/docs/generated/${name}.mdx`),
-    content
+    lines.join("\n")
   );
-})
+});

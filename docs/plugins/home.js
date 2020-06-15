@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsdoc/require-jsdoc */
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFireAlt,
   faWrench,
   faAtom,
-  faBacon
-} from '@fortawesome/free-solid-svg-icons';
+  faBacon,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Feature = ({ title, description, icon }) => (
   <div className="mb-8 flex items-start last:mb-0">
@@ -20,20 +20,22 @@ const Feature = ({ title, description, icon }) => (
   </div>
 );
 
-const Link = props => (
+const Link = (props) => (
   <a className="text-blue-600 font-semibold underline" {...props} />
 );
 
 const Emphasize = ({ children }) => (
-  <span className="text-primary-500 dark:text-primary-400 font-semibold">{children}</span>
+  <span className="text-primary-500 dark:text-primary-400 font-semibold">
+    {children}
+  </span>
 );
 
 const Divider = ({ style }) => (
   <hr className="mb-8 text-gray-300" style={style} />
 );
 
-const getImageProps = image =>
-  typeof image === 'object'
+const getImageProps = (image) =>
+  typeof image === "object"
     ? { src: image.src.src, srcset: image.src.srcSet }
     : { src: image };
 
@@ -62,7 +64,9 @@ const Label = ({ children, color }) => (
 
 const FrequentlyAskedQuestion = ({ question, answer }) => (
   <div className="mb-10 last:mb-0">
-    <h4 className="font-normal text-xl mb-3 text-gray-700 dark:text-gray-200">{question}</h4>
+    <h4 className="font-normal text-xl mb-3 text-gray-700 dark:text-gray-200">
+      {question}
+    </h4>
     <p className="text-grey-800 leading-relaxed">{answer}</p>
   </div>
 );
@@ -72,10 +76,10 @@ const Home = () => (
     <main className="w-full">
       <div className="w-full">
         <div className="bg-primary-500 dark:bg-primary-600 w-full flex justify-center flex-col items-center py-40 text-center">
-          <h1 className="text-6xl font-bold text-white">auto</h1>
+          <img src="monochrome-logo-large.png" alt="auto" className="w-1/4 mb-10" />
 
           <p className="text-2xl text-primary-200 font-light mx-4">
-            Streamline your release workflow and{' '}
+            Streamline your release workflow and{" "}
             <span className="text-yellow-500 font-semibold">
               publish constantly!
             </span>
@@ -92,8 +96,10 @@ const Home = () => (
             <p className="max-w-2xl text-lg text-gray-700 dark:text-gray-400">
               <Emphasize>auto</Emphasize> makes automating releases for your
               project as simple adding a <Label color="yellow">label</Label> to
-              a pull request. If you're releasing all the time you can be{' '}
-              <span className="text-red-500 dark:text-red-600 font-semibold">more confident</span>{' '}
+              a pull request. If you're releasing all the time you can be{" "}
+              <span className="text-red-500 dark:text-red-600 font-semibold">
+                more confident
+              </span>{" "}
               in your releases. And your users might thank you too 😉
             </p>
           </div>
@@ -106,7 +112,7 @@ const Home = () => (
                 description={
                   <p>
                     Other tools require you to change how any contributor
-                    commits to your project. With <Emphasize>auto</Emphasize>{' '}
+                    commits to your project. With <Emphasize>auto</Emphasize>{" "}
                     leave that baggage behind!
                   </p>
                 }
@@ -180,7 +186,7 @@ const Home = () => (
             <FrequentlyAskedQuestion
               question={
                 <>
-                  Do you really release{' '}
+                  Do you really release{" "}
                   <span className="font-extrabold italic"> every </span> pull
                   request?!
                 </>
@@ -189,13 +195,13 @@ const Home = () => (
                 <>
                   <Link href="https://github.com/intuit/auto/releases">
                     Yup!
-                  </Link>{' '}
-                  But if you don't want to do that it's up to you. The tools{' '}
-                  <Emphasize>auto</Emphasize> ships with can be used to{' '}
+                  </Link>{" "}
+                  But if you don't want to do that it's up to you. The tools{" "}
+                  <Emphasize>auto</Emphasize> ships with can be used to{" "}
                   <span className="font-semibold text-red-500 dark:text-red-600">
                     fit any workflow
                   </span>
-                  ! You can also use <Label color="primary">skip-release</Label>{' '}
+                  ! You can also use <Label color="primary">skip-release</Label>{" "}
                   labels or configure <Emphasize>auto</Emphasize> to only
                   release with a <Label color="blue">release</Label> label.
                 </>
@@ -213,14 +219,14 @@ const Home = () => (
               }
               answer={
                 <>
-                  Many of <Emphasize>auto</Emphasize>'s features are{' '}
+                  Many of <Emphasize>auto</Emphasize>'s features are{" "}
                   <Link href="https://intuit.github.io/auto/pages/plugins.html">
                     built into plugins
                   </Link>
-                  . You can also use this plugin system to do{' '}
+                  . You can also use this plugin system to do{" "}
                   <span className="font-semibold text-red-500 dark:text-red-600">
                     almost anything
-                  </span>{' '}
+                  </span>{" "}
                   during your release!
                 </>
               }
@@ -243,7 +249,7 @@ const Home = () => (
                   </p>
 
                   <p className="mb-2">
-                    Want a test version? Try a{' '}
+                    Want a test version? Try a{" "}
                     <Link href="https://intuit.github.io/auto/pages/generated/canary.html">
                       canary
                     </Link>
@@ -251,16 +257,16 @@ const Home = () => (
 
                   <p className="mb-2">
                     Want a prerelease? Try creating a pre-release branch and
-                    using{' '}
+                    using{" "}
                     <Link href="https://intuit.github.io/auto/pages/generated/next.html">
                       next
                     </Link>
                   </p>
 
                   <p className="mb-2">
-                    Need to patch an old major release?{' '}
+                    Need to patch an old major release?{" "}
                     <Emphasize>auto</Emphasize> can automatically make branches
-                    for{' '}
+                    for{" "}
                     <Link href="https://intuit.github.io/auto/pages/generated/shipit.html#managing-old-major-versions">
                       old major versions
                     </Link>
@@ -269,7 +275,7 @@ const Home = () => (
 
                   <p>
                     Or if you don't want to worry about what command to you
-                    need, just use{' '}
+                    need, just use{" "}
                     <Link href="https://intuit.github.io/auto/pages/generated/shipit.html">
                       shipit
                     </Link>
