@@ -21,7 +21,7 @@ If you don't configure plugins in your `.autorc` configuration file `auto` will 
 
 If you don't want to include the default plugins, you can supply an empty array in the `.autorc` configuration file like the following:
 
-```js
+```json
 {
   "plugins": []
 }
@@ -35,7 +35,7 @@ There are three ways to name and use a plugin.
 
 To use an official plugin all you have to do is supply the name.
 
-```js
+```json
 {
   "plugins": [
     "npm",
@@ -57,14 +57,14 @@ You use them in your `.autorc` by:
 - provide the full package name
 - when named like `auto-plugin-PLUGIN_NAME` just the `PLUGIN_NAME`.
 
-```js
+```json
 {
   "plugins": [
     "my-cool-plugin",
     // or
     "auto-plugin-my-cool-plugin",
     // on a scope
-    "@my-scope/auto-plugin-my-cool-plugin",
+    "@my-scope/auto-plugin-my-cool-plugin"
   ]
 }
 ```
@@ -73,7 +73,7 @@ You use them in your `.autorc` by:
 
 Or if you have a plugin locally supply the path.
 
-```js
+```json
 {
   "plugins": ["../path/to/plugin.js"]
 }
@@ -83,7 +83,7 @@ Or if you have a plugin locally supply the path.
 
 To provide plugin specific config change the following:
 
-```js
+```json
 {
   "plugins": ["chrome"]
 }
@@ -91,7 +91,7 @@ To provide plugin specific config change the following:
 
 To this:
 
-```js
+```json
 {
   "plugins": [
     ["chrome", { "extensionId": "1234", "build": "my-compiled-extension.zip" }]

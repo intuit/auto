@@ -15,6 +15,7 @@ try {
 commands.forEach((command) => {
   const [title, ...docsForCommand] = docs(command)
     .replace(/{green \$} /g, "")
+    .replace(/```sh\n/g, "```bash\n")
     .split("\n");
   const frontMatter = endent`
     ---

@@ -2714,7 +2714,7 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@next/bundle-analyzer@^9.4.4":
+"@next/bundle-analyzer@^9.4.0":
   version "9.4.4"
   resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-9.4.4.tgz#09ac54a3a2c2a0275a36a502b335100f876997ac"
   integrity sha512-MRBk0SYyKvnTet3g6vzMbqTGtcGFIwge7XA+iUpZp45wdePYYPCIdSNz4xv1Dk4iPZRKTEMScLprsUPmtXGXnw==
@@ -12206,13 +12206,13 @@ nested-error-stacks@^2.0.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-next-ignite@^0.1.23:
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.23.tgz#86c739b0978d9aa177d3658810d03fb04490fe19"
-  integrity sha512-Y0W7Y+Y33T5i+esB0ESN9kOGPSyv3sduytcD1RsNzc3DJRtpi5Z65s/ClvKXjguUClDcNtiSTJqiw547oWL6nA==
+next-ignite@^0.1.27:
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.27.tgz#6e6079e6a83c24365a712e6c063ccbf8cde0cfa6"
+  integrity sha512-N2O4AZwxIwEtHxIZpzwHzSDEDmeajBv3sGoouQEO6DAOo4EUavrCAjtnRXWXdWqW5aaL3ls+l6OsVtBNEl8Fdg==
   dependencies:
     "@mapbox/rehype-prism" "^0.4.0"
-    "@next/bundle-analyzer" "^9.4.4"
+    "@next/bundle-analyzer" "^9.4.0"
     clsx "^1.1.0"
     command-line-application "^0.9.6"
     copy-template-dir "^1.4.0"
