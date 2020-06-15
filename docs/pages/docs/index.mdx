@@ -1,6 +1,16 @@
-<div style={{ textAlign: "center" }}>
-  <img alt="Auto Logo" src="auto.gif" width={300} style={{margin: 'auto'}} />
-  <h1>auto</h1>
+<div className="w-full">
+  <picture>
+    <source
+      srcSet="dark-logo-large.png"
+      media="(prefers-color-scheme: dark)"
+      class="mx-auto max-w-md my-10 w-full"
+    />
+    <img
+      src="light-logo-large.png"
+      alt={`Auto Logo`}
+      class="mx-auto max-w-md mt-10 mb-16 w-full"
+    />
+  </picture>
 </div>
 
 > Automated releases powered by pull request labels
@@ -27,7 +37,6 @@ With the set of tools we provide you can automate every part of contribution!
 - Comment on a PR with markdown
 - Update the PR body with contextual build metadata
 
-
 ## Workflow
 
 `auto`'s main use it to automate the release process for your project.
@@ -41,7 +50,6 @@ pre: (optional) Check if new version
 3. Generate github release notes
 ```
 
-`auto` makes no assumptions about your publishing process. 
-Each tool is a function that can be run in isolation and only does one thing really well. 
+`auto` makes no assumptions about your publishing process.
+Each tool is a function that can be run in isolation and only does one thing really well.
 For instance, you could just use `auto changelog` to generate the changelog and nothing else or use `auto version` to calculate just the `semver` bump.
-
