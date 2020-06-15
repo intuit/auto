@@ -2,39 +2,7 @@
 
 Tap into hooks and run scripts on the terminal.
 
-Main hooks, in call order:
-
-- beforeRun
-- getRepository
-- getAuthor
-- beforeShipIt
-- getPreviousVersion
-- afterAddToChangelog
-- beforeCommitChangelog
-- version
-- afterVersion
-- publish
-- afterPublish
-- afterRelease
-- afterShipIt
-
-Other hooks:
-
-- canary
-- next
-- modifyConfig
-- makeRelease
-- onCreateLogParse
-  - parseCommit
-  - omitCommit
-- onCreateChangelog
-  - renderChangelogLine
-  - renderChangelogTitle
-  - renderChangelogAuthor
-  - renderChangelogAuthorLine
-  - omitReleaseNotes
-- onCreateRelease
-  - createChangelogTitle
+[Read more about the available hooks.](https://intuit.github.io/auto/docs/plugins/hook-api-docs)
 
 ## Installation
 

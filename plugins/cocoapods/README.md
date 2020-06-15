@@ -14,7 +14,7 @@ yarn add -D @auto-it/cocoapods
 
 ## Usage
 
-```jsonc
+```json
 {
   "plugins": [
     [
