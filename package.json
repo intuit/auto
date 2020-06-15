@@ -34,7 +34,7 @@
     "contributors:generate": "all-contributors generate",
     "docs": "yarn docs:generate && ignite dev",
     "docs:generate": "./docs/generate-command-docs.js",
-    "docs:build": "yarn docs:generate && ignite build && ignite build",
+    "docs:build": "yarn docs:generate && ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
@@ -65,7 +65,7 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
     "lint-staged": "^10.0.7",
-    "next-ignite": "^0.1.29",
+    "next-ignite": "^0.1.30",
     "prettier": "^2.0.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
