@@ -79,7 +79,7 @@ const Home = () => (
           <img
             src="monochrome-logo-large.png"
             alt="auto"
-            className="w-1/4 mb-10"
+            className="w-1/4 mb-10 max-w-md"
           />
 
           <p className="text-2xl text-primary-200 font-light mx-4">
