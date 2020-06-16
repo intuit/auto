@@ -2883,11 +2883,11 @@
     bottleneck "^2.15.3"
 
 "@octokit/plugin-throttling@^3.2.0":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-3.2.1.tgz#5ed5eaa13444c52e845f52d02974f489e3fda408"
-  integrity sha512-CGr3IagYZLLV3pFgpTQUthQSS5K3BkHLlG8yXK+Op3UKBkYrTf+Y9pCebrDxt60d+VTQ1oxXCx+LVLYY3IhBZQ==
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-3.2.2.tgz#8d397cb763de58d294d761b97070a458b5f156b1"
+  integrity sha512-97YzQ9+dbqaR06I6rNpPHPvLHks472myUXKWMpkzo0S4Y/lBOfpjquMeHCZCAZdyiiSgJ4jdwCUVjbmQRfX86Q==
   dependencies:
-    "@octokit/types" "^4.0.1"
+    "@octokit/types" "^5.0.0"
     bottleneck "^2.15.3"
 
 "@octokit/request-error@^1.0.2":
@@ -2965,6 +2965,13 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-4.0.2.tgz#4e5be1ed1d39532f6b1bc5ad7ce52086a83cf379"
   integrity sha512-+4X6qfhT/fk/5FD66395NrFLxCzD6FsGlpPwfwvnukdyfYbhiZB/FJltiT1XM5Q63rGGBSf9FPaNV3WpNHm54A==
+  dependencies:
+    "@types/node" ">= 8"
+
+"@octokit/types@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-5.0.1.tgz#5459e9a5e9df8565dcc62c17a34491904d71971e"
+  integrity sha512-GorvORVwp244fGKEt3cgt/P+M0MGy4xEDbckw+K5ojEezxyMDgCaYPKVct+/eWQfZXOT7uq0xRpmrl/+hliabA==
   dependencies:
     "@types/node" ">= 8"
 
