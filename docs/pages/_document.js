@@ -6,9 +6,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
-        <body>
-          <script src={formatPath('attach-dark-mode.js')} />
+        <Head>
           <style>{`
             :root {
               --color-primary-100: #F3E6ED;
@@ -33,6 +31,9 @@ class MyDocument extends Document {
               --color-gray-1000: #181617;
             }
           `}</style>
+        </Head>
+        <body>
+          <script src={formatPath("attach-dark-mode.js")} />
           <Main />
           <NextScript />
         </body>
