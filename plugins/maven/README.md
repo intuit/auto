@@ -14,6 +14,12 @@ yarn add -D @auto-it/maven
 
 ## Usage
 
+This plugin makes recursive changes to all `pom.xml` files in the project, with the following assumptions:
+a. The project is a multi-module project.
+b. The parent `pom.xml` file is located in the root directory of the repo.
+c. The parent `pom.xml` contains the version.
+d. Sub-modules have the same version as the parent `pom.xml`.
+
 `auto` will detect if the parent `pom.xml` file has the [`versions-maven-plugin`][versions-maven-plugin] configured, and
 if so, use it to set the version on the parent and all child `pom.xml` files. If not, then `auto` will modify the parent
 and all child `pom.xml` files using a DOM parser and XML serializer. This has the effect of losing formatting. Therefore
