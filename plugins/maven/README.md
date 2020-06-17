@@ -80,6 +80,10 @@ formatter with the following default settings:
 | `MAVEN_USERNAME`      | (DEPRECATED IN 9.38.0 ) The deploy username used to login to the repository. | `null`                      |
 | `MAVEN_PASSWORD`      | (DEPRECATED IN 9.38.0 ) The deploy password used to login to the repository. | `null`                      |
 
+**NOTE:** The MAVEN_USERNAME and MAVEN_PASSWORD environment variables are still supported, and have their counterparts as configuration
+options, but should are deprecated, and will be removed in a later release. This is because MAVEN_SETTINGS or MAVEN_OPTIONS can do the
+same work, but provide a much more flexible solution.
+
 ## Maven Project Configuration
 
 You will need all the following configuration blocks for all parts of `auto` to function:
