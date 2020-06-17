@@ -37,16 +37,18 @@
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
-  "devDependencies": {
+  "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "@types/jest": "^25.2.3",
-    "@types/jsdom": "^16.2.3",
-    "@types/prettier": "^2.0.1",
     "fast-glob": "^3.1.1",
     "jsdom": "^16.2.2",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
-    "prettier": "^2.0.5",
+    "prettier": "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/jsdom": "^16.2.3",
+    "@types/prettier": "^2.0.1",
     "ts-jest": "^25.5.1",
     "tslib": "2.0.0"
   }

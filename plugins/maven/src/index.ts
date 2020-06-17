@@ -98,15 +98,10 @@ export default class MavenPlugin implements IPlugin {
       MAVEN_USERNAME,
     } = process.env;
     this.options = {
-      mavenCommand:
-        MAVEN_COMMAND ||
-        (options?.mavenCommand ? options.mavenCommand : "/usr/bin/mvn"),
+      mavenCommand: MAVEN_COMMAND || options.mavenCommand || "/usr/bin/mvn",
       mavenOptions: MAVEN_OPTIONS?.split(" ") || options.mavenOptions || [],
-      mavenReleaseGoals:
-        MAVEN_RELEASE_GOALS?.split(" ") ||
-        (options?.mavenReleaseGoals
-          ? options.mavenReleaseGoals
-          : ["deploy", "site-deploy"]),
+      mavenReleaseGoals: MAVEN_RELEASE_GOALS?.split(" ") ||
+        options.mavenReleaseGoals || ["deploy", "site-deploy"],
       mavenSettings: MAVEN_SETTINGS || options.mavenSettings || "",
       printWidth: options.printWidth || 120,
       tabWidth: options.tabWidth || 4,
@@ -255,12 +250,12 @@ export default class MavenPlugin implements IPlugin {
           throw new Error(reason);
         });
 
-      // await execPromise("git", [
-      //   "commit",
-      //   "-am",
-      //   `"update version: ${version} [skip ci]"`,
-      //   "--no-verify",
-      // ]);
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"update version: ${version} [skip ci]"`,
+        "--no-verify",
+      ]);
     }
   }
 
@@ -387,15 +382,15 @@ export default class MavenPlugin implements IPlugin {
         await MavenPlugin.updatePoms(newVersion, this.options, auto);
       }
 
-        await execPromise("mvn", [
-          "versions:set",
-          "-DgenerateBackupPoms=false",
-          `-DnewVersion=${newVersion}`,
-        ]);
-      } else {
-        auto.logger.verbose.warn("Using the auto maven plugin");
-        await MavenPlugin.updatePoms(newVersion, this.options, auto);
-      }
+      await execPromise("git", [
+        "push",
+        "--follow-tags",
+        "--set-upstream",
+        auto.remote,
+        auto.baseBranch,
+      ]);
+    });
+  }
 
   /** Get the version from the current pom.xml **/
   private async getVersion(auto: Auto): Promise<string> {
