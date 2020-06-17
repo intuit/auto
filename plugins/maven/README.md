@@ -114,7 +114,7 @@ You will need all the following configuration blocks for all parts of `auto` to 
 
 > :warning: Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
 
-3. Version
+4. Version
 
 ```xml
 <version>1.0.0-SNAPSHOT</version>
