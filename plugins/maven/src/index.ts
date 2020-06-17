@@ -122,7 +122,7 @@ export default class MavenPlugin implements IPlugin {
       "/project/version",
       pomDom.documentElement,
       pomDom.createNSResolver(pomDom.documentElement),
-      9
+      9 // XPathResult.FIRST_ORDERED_NODE_TYPE
     );
 
     if (versionNode?.singleNodeValue) {
@@ -133,7 +133,7 @@ export default class MavenPlugin implements IPlugin {
       "/project/parent/version",
       pomDom.documentElement,
       pomDom.createNSResolver(pomDom.documentElement),
-      9
+      9 // XPathResult.FIRST_ORDERED_NODE_TYPE
     );
 
     if (parentVersionNode?.singleNodeValue) {
@@ -156,7 +156,7 @@ export default class MavenPlugin implements IPlugin {
       "/project/build/plugins/plugin/artifactId[normalize-space(text())='versions-maven-plugin']",
       pomDom.documentElement,
       pomDom.createNSResolver(pomDom.documentElement),
-      9
+      9 // XPathResult.FIRST_ORDERED_NODE_TYPE
     );
 
     if (versionsMavenPluginNode?.singleNodeValue) {
@@ -167,7 +167,7 @@ export default class MavenPlugin implements IPlugin {
       "/project/build/pluginManagement/plugins/plugin/artifactId[normalize-space(text())='versions-maven-plugin']",
       pomDom.documentElement,
       pomDom.createNSResolver(pomDom.documentElement),
-      9
+      9 // XPathResult.FIRST_ORDERED_NODE_TYPE
     );
 
     return Boolean(versionsMavenPluginManagementNode?.singleNodeValue);
