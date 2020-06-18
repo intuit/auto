@@ -8421,9 +8421,9 @@ fragment-cache@^0.2.1:
     map-cache "^0.2.2"
 
 framer-motion@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-1.11.0.tgz#9463a4d8e1be9f25d0f75712a4a835691c028d65"
-  integrity sha512-DkJFWAHIv57L4xu8Ufq9GMs9Ifqpgt5Yi55pc4NQos8TUGomgbLlnwpO1IXK85X5K1dVNKuTZMiqjWZLeOfG/A==
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-1.11.1.tgz#b031d1556a78854e0989b8c7e96418c6e15aa474"
+  integrity sha512-CP6aYLPSivAWkq9UoSurefHBggxG85IT8ObYyWYkcZppgtjHzpwRzhaA8P0ljMGRqtcpeQAIybiGgPioBPlOSw==
   dependencies:
     "@popmotion/easing" "^1.0.2"
     "@popmotion/popcorn" "^0.4.2"
@@ -12979,9 +12979,9 @@ nested-error-stacks@^2.0.0:
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
 next-ignite@^0.1.32:
-  version "0.1.32"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.32.tgz#7df08e9940f5ddb2bc9afd3492a7c7eb059d6977"
-  integrity sha512-aewhQGk44tCxH+o5kb1DAIo2hBEbcjBfvXvgbA6nuF/OinOTUoeQoKtdJTvxlC4bUdhOTfNgr74WV1znoprxCQ==
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.1.33.tgz#153f80a05e6438a848eb465125985657e3424a84"
+  integrity sha512-JYtne1+ofaVXkuZXfqVWQHHkBJWoO2qTddN17mgRqvrSnrYdPRkVpzeHhizbW5L4cmsSJqymo1vNczZvOwmP9g==
   dependencies:
     "@mapbox/rehype-prism" "^0.4.0"
     "@next/bundle-analyzer" "^9.4.0"
