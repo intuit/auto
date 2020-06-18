@@ -1,6 +1,6 @@
 # Maven Plugin
 
-Release a Java project to a [maven](https://maven.apache.org/) repository.
+Release a Java project to a [maven][maven] repository.
 
 ## Installation
 
@@ -13,6 +13,18 @@ yarn add -D @auto-it/maven
 ```
 
 ## Usage
+
+`auto` will detect if the parent `pom.xml` file has the [`versions-maven-plugin`][versions-maven-plugin] configured, and
+if so, use it to set the version on the parent and all child `pom.xml` files. If not, then `auto` will modify the parent
+and all child `pom.xml` files using a DOM parser and XML serializer. This has the effect of losing formatting. Therefore
+it then runs the serialized XML through the `prettier` "html" pretty-printer.
+
+This means that if the `versions-maven-plugin` isn't available, the `pom.xml` files will be pretty-printed using `prettier`
+formatter with the following default settings:
+
+- `printWidth: 120` (configurable - see below)
+- `tabWidth: 4` (configurable - see below)
+- `parser: "html"`
 
 ```jsonc
 {
@@ -35,7 +47,15 @@ yarn add -D @auto-it/maven
 
         // An optional path to a maven settings.xml file
         // @default ""
-        "mavenSettings": "./.github/maven/settings.xml"
+        "mavenSettings": "./.github/maven/settings.xml",
+
+        // An optional printWidth for the prettier pretty-printer
+        // @default 120
+        "printWidth": 80,
+
+        // An optional tabWidth for the prettier pretty-printer
+        // @default 4
+        "tabWidth": 4
       }
     ]
     // other plugins
@@ -62,10 +82,10 @@ You will need all the following configuration blocks for all parts of `auto` to 
 
 ```xml
 <developers>
- <developer>
-   <name>Andrew Lisowski</name>
-   <email>test@email.com</email>
- </developer>
+    <developer>
+        <name>Andrew Lisowski</name>
+        <email>test@email.com</email>
+    </developer>
 </developers>
 ```
 
@@ -73,11 +93,23 @@ You will need all the following configuration blocks for all parts of `auto` to 
 
 ```xml
 <scm>
- <connection>scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</connection>
- <developerConnection>scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</developerConnection>
- <url>https://github.com/Fuego-Tools/java-test-project</url>
- <tag>HEAD</tag>
+    <connection
+  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</connection>
+    <developerConnection
+  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</developerConnection>
+    <url>https://github.com/Fuego-Tools/java-test-project</url>
+    <tag>HEAD</tag>
 </scm>
+```
+
+3. Versions Maven Plugin **RECOMMENDED** (Optional)
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>versions-maven-plugin</artifactId>
+    <version>2.7</version>
+</plugin>
 ```
 
 > :warning: Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
@@ -87,3 +119,6 @@ You will need all the following configuration blocks for all parts of `auto` to 
 ```xml
 <version>1.0.0-SNAPSHOT</version>
 ```
+
+[maven]: https://maven.apache.org/
+[versions-maven-plugin]: https://www.mojohaus.org/versions-maven-plugin/
