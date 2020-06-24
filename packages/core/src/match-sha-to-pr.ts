@@ -40,6 +40,8 @@ export interface ISearchResult {
   edges: ISearchEdge[];
 }
 
+export type ISearchQuery = Record<string, ISearchResult>;
+
 /**
  * Generate a GitHub graphql query to find all the commits related
  * to a PR.

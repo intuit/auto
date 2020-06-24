@@ -32,7 +32,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           return cache[username];
         }
 
-        const response = await auto.git?.graphql(`
+        const response = await auto.git?.graphql<Record<string, any>>(`
           {
             search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${username}") {
               issueCount
