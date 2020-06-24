@@ -78,9 +78,11 @@ function getVersionFromTag(tag: string) {
   return tag;
 }
 
+export const automatedCommentIdentifier = "<!-- GITHUB_RELEASE";
+
 /** Make a comment to build automation in PRs off of. */
 const makeIdentifier = (type: string, context: string) =>
-  `<!-- GITHUB_RELEASE ${type}: ${context} -->`;
+  `${automatedCommentIdentifier} ${type}: ${context} -->`;
 
 /** Make an identifier for `auto comment` */
 const makeCommentIdentifier = (context: string) =>

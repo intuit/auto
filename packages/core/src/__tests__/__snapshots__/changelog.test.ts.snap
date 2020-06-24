@@ -231,6 +231,24 @@ exports[`generateReleaseNotes should merge sections with same changelog title 1`
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should not add automated comments to additional release notes 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+---
+
+#### 🚀 Enhancement
+
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should omit authors with invalid email addresses 1`] = `
 "#### 🚀 Enhancement
 
