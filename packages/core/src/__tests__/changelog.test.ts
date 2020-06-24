@@ -669,6 +669,33 @@ describe("generateReleaseNotes", () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
+  test("should not add automated comments to additional release notes", async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: "2",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
+    ]);
+    commits[0].pullRequest!.body = endent`
+      ## Release Notes
+
+      Here is how you upgrade
+
+      <!-- GITHUB_RELEASE PR BODY: prerelease-version -->
+      Should not show up in notes
+      <!-- GITHUB_RELEASE PR BODY: prerelease-version -->
+    `;
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
   test("additional release notes should be able to contain sub-headers", async () => {
     const changelog = new Changelog(dummyLog(), testOptions());
     changelog.loadDefaultHooks();

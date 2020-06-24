@@ -9,6 +9,7 @@ import { ILogger } from "./utils/logger";
 import { makeChangelogHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
 import SEMVER from "./semver";
+import { automatedCommentIdentifier } from "./git";
 
 export interface IGenerateReleaseNotesOptions {
   /** Github repo owner (user) */
@@ -479,7 +480,10 @@ export default class Changelog {
         const line = lines[index];
         const isTitle = line.match(title);
 
-        if (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) {
+        if (
+          (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) ||
+          line.startsWith(automatedCommentIdentifier)
+        ) {
           break;
         }
 
