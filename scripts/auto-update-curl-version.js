@@ -5,7 +5,7 @@ const path = require("path");
 const { inc } = require("semver");
 const { execSync } = require("child_process");
 
-const filename = path.join(__dirname, "../docs/pages/non-npm.md");
+const filename = path.join(__dirname, "../docs/pages/non-npm.mdx");
 
 module.exports = class TestPlugin {
   /** Initialize */
