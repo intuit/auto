@@ -7,7 +7,7 @@ const getLatestRelease = jest.fn();
 const getUser = jest.fn();
 const getByUsername = jest.fn();
 const getPr = jest.fn();
-const createStatus = jest.fn();
+const createCommitStatus = jest.fn();
 const createComment = jest.fn();
 const updateComment = jest.fn();
 const listComments = jest.fn();
@@ -57,7 +57,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      createStatus,
+      createCommitStatus,
       createRelease,
       getLatestRelease,
       get: getProject,
@@ -204,9 +204,9 @@ describe("github", () => {
 
   test("graphql", async () => {
     const gh = new Git(options);
-    const result = await gh.graphql("{ someQuery }");
+    const result = await gh.graphql<{ data: any }>("{ someQuery }");
 
-    expect(result!.data).not.toBeUndefined();
+    expect(result.data).not.toBeUndefined();
   });
 
   test("getFirstCommit ", async () => {
@@ -313,7 +313,7 @@ describe("github", () => {
   test("createStatus", async () => {
     const gh = new Git(options);
 
-    createStatus.mockReturnValueOnce(true);
+    createCommitStatus.mockReturnValueOnce(true);
 
     expect(
       await gh.createStatus({

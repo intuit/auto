@@ -2013,11 +2013,12 @@ export default class Auto {
       );
 
       if (query) {
-        const result = await this.git.graphql(query);
+        const result = await this.git.graphql<Record<string, ISearchResult>>(
+          query
+        );
 
         if (result?.[`hash_${commit}`]) {
-          const number = (result[`hash_${commit}`] as ISearchResult).edges[0]
-            ?.node?.number;
+          const number = result[`hash_${commit}`].edges[0]?.node?.number;
 
           if (number) {
             pr = String(number);

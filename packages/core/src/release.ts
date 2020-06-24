@@ -21,6 +21,7 @@ import {
   buildSearchQuery,
   ISearchResult,
   processQueryResult,
+  ISearchQuery,
 } from "./match-sha-to-pr";
 import { LoadedAutoRc } from "./types";
 
@@ -264,12 +265,9 @@ export default class Release {
           )
         )
         .filter((q): q is string => Boolean(q))
-        .map((q) => this.git.graphql(q))
+        .map((q) => this.git.graphql<ISearchQuery>(q))
     );
-    type GraphQlQueryResponseData = NonNullable<typeof queries[number]>;
-    const data = queries.filter((q): q is GraphQlQueryResponseData =>
-      Boolean(q)
-    );
+    const data = queries.filter((q): q is ISearchQuery => Boolean(q));
 
     if (!data.length) {
       return uniqueCommits;
@@ -280,18 +278,16 @@ export default class Release {
     ];
     const logParse = await this.createLogParse();
 
-    type QueryEntry = [string, GraphQlQueryResponseData];
+    type QueryEntry = [string, ISearchResult];
 
     const entries = data.reduce<QueryEntry[]>(
-      (acc, result) => [...acc, ...(Object.entries(result) as QueryEntry[])],
+      (acc, result) => [...acc, ...Object.entries(result)],
       []
     );
 
     await Promise.all(
       entries
-        .filter((result): result is [string, ISearchResult] =>
-          Boolean(result[1])
-        )
+        .filter((result): result is QueryEntry => Boolean(result[1]))
         .map(([key, result]) =>
           processQueryResult({
             sha: key,

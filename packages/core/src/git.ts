@@ -18,13 +18,13 @@ import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
 import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
-import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
+import { buildSearchQuery, ISearchQuery } from "./match-sha-to-pr";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
 export type IPRInfo = Omit<
-  RestEndpointMethodTypes["repos"]["createStatus"]["parameters"],
+  RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"],
   "owner" | "repo"
 >;
 
@@ -499,10 +499,10 @@ export default class Git {
   }
 
   /** Run a graphql query on the GitHub project */
-  async graphql(query: string) {
+  async graphql<T>(query: string) {
     this.logger.verbose.info("Querying Github using GraphQL:\n", query);
 
-    const data = await graphql(query, {
+    const data = await graphql<T>(query, {
       baseUrl: this.graphqlBaseUrl,
       request: { agent: this.options.agent },
       headers: {
@@ -524,8 +524,8 @@ export default class Git {
 
     this.logger.verbose.info("Creating status using:\n", args);
 
-    const result = await this.github.repos.createStatus(
-      args as RestEndpointMethodTypes["repos"]["createStatus"]["parameters"]
+    const result = await this.github.repos.createCommitStatus(
+      args as RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"]
     );
 
     this.logger.veryVerbose.info("Got response from createStatues\n", result);
@@ -918,7 +918,7 @@ export default class Git {
     }
 
     const key = `hash_${sha}`;
-    const result = (await this.graphql(query)) as Record<string, ISearchResult>;
+    const result = (await this.graphql<ISearchQuery>(query));
 
     if (!result || !result[key] || !result[key].edges[0]) {
       return;
