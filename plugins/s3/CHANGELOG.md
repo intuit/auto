@@ -1,3 +1,24 @@
+# v9.40.1 (Wed Jun 24 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Snyk bot ([@snyk-bot](https://github.com/snyk-bot)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Update makeRelease to support 'from' and 'useVersion' options with build part of semver [#1315](https://github.com/intuit/auto/pull/1315) ([@bnigh](https://github.com/bnigh))
+
+#### 🔩 Dependency Updates
+
+- [Snyk] Fix for 1 vulnerabilities [#1316](https://github.com/intuit/auto/pull/1316) ([@snyk-bot](https://github.com/snyk-bot))
+
+#### Authors: 2
+
+- [@bnigh](https://github.com/bnigh)
+- Snyk bot ([@snyk-bot](https://github.com/snyk-bot))
+
+---
+
 # v9.40.0 (Wed Jun 24 2020)
 
 ### Release Notes
