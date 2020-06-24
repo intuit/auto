@@ -1,3 +1,77 @@
+# v9.40.0 (Wed Jun 24 2020)
+
+### Release Notes
+
+_From #1295_
+
+This release removes the requirement for the `Maven Release Plugin` from maven projects. This is a breaking change but that maven plugin was quite experimental. This PR makes it a full featured `auto` experience. 
+
+## Remove requirement for "maven-release-plugin" and other improvements
+
+1. Remove requirement for "maven-release-plugin".
+2. Support recursive changes to all `pom.xml` files in the project, with the following assumptions:
+  a. The project is a multi-module project.
+  b. The parent `pom.xml` file is located in the root directory of the repo.
+  c. The parent `pom.xml` contains the version.
+  d. Sub-modules have the same version as the parent `pom.xml`.
+3. Support plugin options, with environment variable overrides:
+  a. `MAVEN_COMMAND || mavenCommand` - the path to the maven executable to use. Defaults to `/usr/bin/mvn`.
+  b. `MAVEN_OPTIONS || mavenOptions` - an array of arbitrary maven options, e.g. `-DskipTests -P some-profile`. No defaults.
+  c. `MAVEN_RELEASE_GOALS || mavenReleaseGoals` - an array of maven goals to run when publishing. Defaults to `["deploy", "site-deploy"]`.
+  d. `MAVEN_SETTINGS || mavenSettings` - the path to the maven settings file. No defaults.
+
+**NOTE:** The `MAVEN_USERNAME` and `MAVEN_PASSWORD` environment variables are still supported, and have their counterparts as configuration options, but should are deprecated, and will be removed in a later release. This is because `MAVEN_SETTINGS` or `MAVEN_OPTIONS` can do the same work, but provide a much more flexible solution.
+
+## Support both "versions-maven-plugin" and auto-native DOM/XML
+
+`auto` will detect if the parent `pom.xml` file has the `versions-maven-plugin` configured, and if so, use it to set the version on the parent and all child `pom.xml` files. If not, then auto will modify the parent and all child `pom.xml` files using a DOM parser and XML serializer. This has the effect of losing formatting. Therefore it then runs the serialized XML through the `prettier` "html" pretty-printer.
+
+This means that if the `versions-maven-plugin` isn't available, the `pom.xml` files will be pretty-printed using the `prettier` formatter with the following default settings:
+
+* `printWidth: 120` (configurable - see below)
+* `tabWidth: 4` (configurable - see below)
+* `parser: "html"`
+
+---
+
+#### 🚀 Enhancement
+
+- Remove maven release plugin requirement [#1295](https://github.com/intuit/auto/pull/1295) ([@rbellamy](https://github.com/rbellamy) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- Uncomment git commit/push commands ([@rbellamy](https://github.com/rbellamy))
+- Add comment describing magic number used by XPath evaluation ([@rbellamy](https://github.com/rbellamy))
+- Update README to describe deprecation of MAVEN_USERNAME and MAVEN_PASSWORD. ([@rbellamy](https://github.com/rbellamy))
+- Update README to describe assumptions. ([@rbellamy](https://github.com/rbellamy))
+- Update for style and move some devDependencies to dependencies. ([@rbellamy](https://github.com/rbellamy))
+- Support both "versions-maven-plugin" and auto-native DOM/XML ([@rbellamy](https://github.com/rbellamy))
+- Update plugins/maven/README.md ([@rbellamy](https://github.com/rbellamy))
+- Update README for grammar and style. ([@rbellamy](https://github.com/rbellamy))
+- Support both "versions-maven-plugin" and auto-native DOM/XML ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Attempt to use regex to find/replace the previous/next version. ([@rbellamy](https://github.com/rbellamy))
+- change beforeRun hook from sync to async ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Remove requirement for "maven-release-plugin" and other improvements ([@rbellamy](https://github.com/rbellamy))
+- switch to next-ignite ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.11.1 to 2.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- switch to next-ignite [#1293](https://github.com/intuit/auto/pull/1293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.9.3 to 3.9.5 [#1288](https://github.com/intuit/auto/pull/1288) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 1.11.1 to 2.0.0 [#1289](https://github.com/intuit/auto/pull/1289) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy))
+
+---
+
 # v9.39.0 (Thu Jun 04 2020)
 
 #### 🐛 Bug Fix

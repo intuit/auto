@@ -1,3 +1,88 @@
+# v9.40.0 (Wed Jun 24 2020)
+
+### Release Notes
+
+_From #1295_
+
+This release removes the requirement for the `Maven Release Plugin` from maven projects. This is a breaking change but that maven plugin was quite experimental. This PR makes it a full featured `auto` experience. 
+
+## Remove requirement for "maven-release-plugin" and other improvements
+
+1. Remove requirement for "maven-release-plugin".
+2. Support recursive changes to all `pom.xml` files in the project, with the following assumptions:
+  a. The project is a multi-module project.
+  b. The parent `pom.xml` file is located in the root directory of the repo.
+  c. The parent `pom.xml` contains the version.
+  d. Sub-modules have the same version as the parent `pom.xml`.
+3. Support plugin options, with environment variable overrides:
+  a. `MAVEN_COMMAND || mavenCommand` - the path to the maven executable to use. Defaults to `/usr/bin/mvn`.
+  b. `MAVEN_OPTIONS || mavenOptions` - an array of arbitrary maven options, e.g. `-DskipTests -P some-profile`. No defaults.
+  c. `MAVEN_RELEASE_GOALS || mavenReleaseGoals` - an array of maven goals to run when publishing. Defaults to `["deploy", "site-deploy"]`.
+  d. `MAVEN_SETTINGS || mavenSettings` - the path to the maven settings file. No defaults.
+
+**NOTE:** The `MAVEN_USERNAME` and `MAVEN_PASSWORD` environment variables are still supported, and have their counterparts as configuration options, but should are deprecated, and will be removed in a later release. This is because `MAVEN_SETTINGS` or `MAVEN_OPTIONS` can do the same work, but provide a much more flexible solution.
+
+## Support both "versions-maven-plugin" and auto-native DOM/XML
+
+`auto` will detect if the parent `pom.xml` file has the `versions-maven-plugin` configured, and if so, use it to set the version on the parent and all child `pom.xml` files. If not, then auto will modify the parent and all child `pom.xml` files using a DOM parser and XML serializer. This has the effect of losing formatting. Therefore it then runs the serialized XML through the `prettier` "html" pretty-printer.
+
+This means that if the `versions-maven-plugin` isn't available, the `pom.xml` files will be pretty-printed using the `prettier` formatter with the following default settings:
+
+* `printWidth: 120` (configurable - see below)
+* `tabWidth: 4` (configurable - see below)
+* `parser: "html"`
+
+---
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/exec`, `@auto-it/maven`, `@auto-it/s3`
+  - Remove maven release plugin requirement [#1295](https://github.com/intuit/auto/pull/1295) ([@rbellamy](https://github.com/rbellamy) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- fix curl version update [#1318](https://github.com/intuit/auto/pull/1318) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️ Pushed to `master`
+
+- actually fix docs path ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- fix home page icons first load [#1308](https://github.com/intuit/auto/pull/1308) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix blog [#1302](https://github.com/intuit/auto/pull/1302) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add image lightboxes and fix some bugs in ignite [#1300](https://github.com/intuit/auto/pull/1300) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix images in docs [#1299](https://github.com/intuit/auto/pull/1299) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add logos and frontmatters to docs [#1297](https://github.com/intuit/auto/pull/1297) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- better docs theming [#1296](https://github.com/intuit/auto/pull/1296) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add hook overview image [#1281](https://github.com/intuit/auto/pull/1281) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/cocoapods`, `@auto-it/exec`, `@auto-it/gradle`, `@auto-it/omit-commits`
+  - docs design review [#1298](https://github.com/intuit/auto/pull/1298) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - switch to next-ignite [#1293](https://github.com/intuit/auto/pull/1293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.9.3 to 3.9.5 [#1288](https://github.com/intuit/auto/pull/1288) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.0.0 to 15.1.0 [#1290](https://github.com/intuit/auto/pull/1290) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tapable from 2.0.0-beta.10 to 2.0.0-beta.11 [#1291](https://github.com/intuit/auto/pull/1291) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 25.2.1 to 25.2.3 [#1286](https://github.com/intuit/auto/pull/1286) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.20.2 to 2.21.1 [#1283](https://github.com/intuit/auto/pull/1283) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Bump tslib from 1.11.1 to 2.0.0 [#1289](https://github.com/intuit/auto/pull/1289) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.15.0 to 6.16.0 [#1284](https://github.com/intuit/auto/pull/1284) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`
+  - Bump command-line-application from 0.9.6 to 0.10.1 [#1282](https://github.com/intuit/auto/pull/1282) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- G. Richard Bellamy ([@rbellamy](https://github.com/rbellamy))
+
+---
+
 # v9.39.0 (Thu Jun 04 2020)
 
 #### 🚀 Enhancement

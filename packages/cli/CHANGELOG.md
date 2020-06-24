@@ -1,3 +1,33 @@
+# v9.40.0 (Wed Jun 24 2020)
+
+#### 🐛 Bug Fix
+
+- switch to next-ignite ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.11.1 to 2.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump command-line-application from 0.9.6 to 0.10.1 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- switch to next-ignite [#1293](https://github.com/intuit/auto/pull/1293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.9.3 to 3.9.5 [#1288](https://github.com/intuit/auto/pull/1288) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 1.11.1 to 2.0.0 [#1289](https://github.com/intuit/auto/pull/1289) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.0.0 to 15.1.0 [#1290](https://github.com/intuit/auto/pull/1290) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tapable from 2.0.0-beta.10 to 2.0.0-beta.11 [#1291](https://github.com/intuit/auto/pull/1291) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 25.2.1 to 25.2.3 [#1286](https://github.com/intuit/auto/pull/1286) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.15.0 to 6.16.0 [#1284](https://github.com/intuit/auto/pull/1284) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.20.2 to 2.21.1 [#1283](https://github.com/intuit/auto/pull/1283) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump command-line-application from 0.9.6 to 0.10.1 [#1282](https://github.com/intuit/auto/pull/1282) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.39.0 (Thu Jun 04 2020)
 
 #### 🐛 Bug Fix
