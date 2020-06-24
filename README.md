@@ -228,6 +228,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://kevinwolf.dev"><img src="https://avatars2.githubusercontent.com/u/3157426?v=4" width="100px;" alt=""/><br /><sub><b>Kevin Wolf</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/10hendersonm"><img src="https://avatars2.githubusercontent.com/u/14095644?v=4" width="100px;" alt=""/><br /><sub><b>Marty Henderson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://snyk.io/"><img src="https://avatars2.githubusercontent.com/u/19733683?v=4" width="100px;" alt=""/><br /><sub><b>Snyk bot</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=snyk-bot" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=snyk-bot" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
