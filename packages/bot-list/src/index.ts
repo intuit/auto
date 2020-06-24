@@ -8,4 +8,5 @@ export default [
   "renovate[bot]",
   "renovate-pro[bot]",
   "renovate-approve",
+  "snyk-bot",
 ];

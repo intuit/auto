@@ -35,9 +35,7 @@
     "build": "tsc -b",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2 --config ../../package.json",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
@@ -45,8 +43,7 @@
     "jsdom": "^16.2.2",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
-    "prettier": "^2.0.5",
-    "snyk": "^1.348.1"
+    "prettier": "^2.0.5"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
@@ -54,6 +51,5 @@
     "@types/prettier": "^2.0.1",
     "ts-jest": "^25.5.1",
     "tslib": "2.0.0"
-  },
-  "snyk": true
+  }
 }
