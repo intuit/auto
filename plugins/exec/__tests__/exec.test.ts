@@ -31,12 +31,12 @@ describe("Exec Plugin", () => {
     ).toMatchSnapshot();
   });
 
-  test("should handle SyncHook hooks", () => {
+  test("should handle SyncHook hooks", async () => {
     const plugins = new Exec({ beforeRun: "echo foo" });
     const hooks = makeHooks();
 
     plugins.apply({ hooks } as Auto);
-    hooks.beforeRun.call({} as any);
+    await hooks.beforeRun.promise({} as any);
 
     expect(execSpy).toHaveBeenCalledWith("echo foo", expect.anything());
   });
