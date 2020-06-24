@@ -6,7 +6,7 @@ import path from "path";
 import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
-import { eq, gt, lte, inc, parse, ReleaseType, major } from "semver";
+import { gt, lte, compareBuild, inc, parse, ReleaseType, major } from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -373,7 +373,7 @@ export default class Auto {
           )}`;
 
           await execPromise("git", ["branch", branch]);
-          this.logger.log.success(`Created old version branch: ${branch}`)
+          this.logger.log.success(`Created old version branch: ${branch}`);
           await execPromise("git", ["push", this.remote, branch]);
         }
       }
@@ -1795,7 +1795,7 @@ export default class Auto {
       !dryRun &&
       parse(newVersion) &&
       parse(lastRelease) &&
-      eq(newVersion, lastRelease)
+      compareBuild(newVersion, lastRelease) === 0
     ) {
       this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
