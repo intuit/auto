@@ -1,3 +1,16 @@
+# v9.40.3 (Wed Jun 24 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/bot-list`, `@auto-it/maven`
+  - Correct some license issues and ignore snyk bot [#1321](https://github.com/intuit/auto/pull/1321) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.2 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix
