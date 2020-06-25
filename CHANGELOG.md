@@ -1,3 +1,20 @@
+# v9.40.5 (Thu Jun 25 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - standardize default label colors [#1324](https://github.com/intuit/auto/pull/1324) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- upgrade next-ignite - adds page titles and favicon [#1325](https://github.com/intuit/auto/pull/1325) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.4 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix

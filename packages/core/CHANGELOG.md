@@ -1,3 +1,17 @@
+# v9.40.5 (Thu Jun 25 2020)
+
+#### 🐛 Bug Fix
+
+- standardize default label colors [#1324](https://github.com/intuit/auto/pull/1324) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- standardize default label colors ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.4 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix
