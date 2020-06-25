@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, jsdoc/require-jsdoc */
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Head from "next/head";
 import {
   faFireAlt,
   faWrench,
@@ -73,6 +74,9 @@ const FrequentlyAskedQuestion = ({ question, answer }) => (
 
 const Home = () => (
   <div className="w-full">
+    <Head>
+      <title>Auto</title>
+    </Head>
     <main className="w-full">
       <div className="w-full">
         <div className="bg-primary-500 dark:bg-primary-600 w-full flex justify-center flex-col items-center py-40 text-center">
@@ -114,11 +118,11 @@ const Home = () => (
                 title="Keep Your Workflow"
                 icon={faWrench}
                 description={
-                  <p>
+                  <>
                     Other tools require you to change how any contributor
-                    commits to your project. With <Emphasize>auto</Emphasize>{" "}
+                    commits to your project. With <Emphasize>auto </Emphasize>
                     leave that baggage behind!
-                  </p>
+                  </>
                 }
               />
 
