@@ -214,6 +214,7 @@ describe("Auto", () => {
     expect(auto.config!.labels.find((l) => l.name === "feature")).toStrictEqual(
       {
         description: "Increment the minor version when merged",
+        color: "#F1A60E",
         name: "feature",
         changelogTitle: "🚀 Enhancement",
         releaseType: SEMVER.minor,
@@ -236,6 +237,7 @@ describe("Auto", () => {
       auto.config!.labels.find((l) => l.description === "This is a test")
     ).toStrictEqual({
       description: "This is a test",
+      color: "#F1A60E",
       name: "minor",
       changelogTitle: "🚀 Enhancement",
       releaseType: SEMVER.minor,
