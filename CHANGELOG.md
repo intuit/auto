@@ -1,3 +1,16 @@
+# v9.40.4 (Wed Jun 24 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Next - Adds intermediary check for newest release before releasing entire history [#1323](https://github.com/intuit/auto/pull/1323) ([@10hendersonm](https://github.com/10hendersonm))
+
+#### Authors: 1
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+
+---
+
 # v9.40.3 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix
