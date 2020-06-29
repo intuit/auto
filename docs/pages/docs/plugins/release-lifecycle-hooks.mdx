@@ -267,8 +267,8 @@ _Other examples:_
 Ran after the `release` command has run, creating a new release on GitHub.
 This async hook gets the following arguments:
 
-- `lastVersion` - the version that existed prior to the current release
-- `nextVersion` - version that was just released
+- `lastRelease` - the version that existed prior to the current release
+- `newVersion` - version that was just released
 - `commits` - the commits in the release
 - `releaseNotes` - generated release notes for the release
 - `response` - the response returned from making the release
@@ -276,7 +276,7 @@ This async hook gets the following arguments:
 ```ts
 auto.hooks.afterRelease.tapPromise(
   "MyPlugin",
-  async ({ lastVersion, nextVersion, commits, releaseNotes, response }) => {
+  async ({ lastRelease, newVersion, commits, releaseNotes, response }) => {
     // do something
   }
 );
