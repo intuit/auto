@@ -12,7 +12,7 @@ The following shows how those flags can effect the workflow.
 ## Managing Old Major Versions
 
 This command also has the ability to help you manage old major versions too!
-This feature is off by default, to enable set `versionBranches` to `true` in your [.autorc](../autorc.md#versionbranches).
+This feature is off by default, to enable set `versionBranches` to `true` in your [.autorc](../configuration/autorc#versionbranches).
 
 With this feature enabled `auto shipit` will:
 
@@ -36,7 +36,7 @@ You can customize what the branch names will be by setting `versionBranches` to 
 
 If you are interested in pre-releases (ex: `alpha`, `beta`, `next`) `auto` has the ability to publish pre-releases in various ways.
 
-Read more about preparing you project for pre-releases [here](../generated/next.md#setting-up-protected-branches).
+Read more about preparing you project for pre-releases [here](./next#setting-up-protected-branches).
 
 ### Strategies
 
@@ -45,7 +45,7 @@ Read more about preparing you project for pre-releases [here](../generated/next.
 The suggested way to create pre-releases is by managing 2 branches for your repo: `master` and `next`.
 `master` contains the `latest` stable version of the code, and `next` contains future updates.
 
-You can change what branches `auto` treats as pre-release branches in your [`.autorc`](../autorc.md#prerelease-branches).
+You can change what branches `auto` treats as pre-release branches in your [`.autorc`](../configuration/autorc#prerelease-branches).
 
 ![Example git tree](/next-branch.png)
 

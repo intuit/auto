@@ -2,7 +2,7 @@
 
 ## Changelog Titles
 
-You can customize the changelog titles and even add custom ones. To see configuration [go here](../autorc.md#changelog-titles).
+You can customize the changelog titles and even add custom ones. To see configuration [go here](../configuration/autorc#changelog-titles).
 
 ## Additional Release notes
 

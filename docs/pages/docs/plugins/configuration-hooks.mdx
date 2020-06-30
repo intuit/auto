@@ -101,7 +101,7 @@ auto.hooks.getRepository.tapPromise('NPM', async () => {
 ## validateConfig
 
 Validate how your plugin is configured.
-Make sure to account for the [different ways you plugin can be included](./plugins.md#plugin-declaration) in an `.autorc`.
+Make sure to account for the [different ways you plugin can be included](../configuration/plugins#plugin-declaration) in an `.autorc`.
 
 ```ts
 auto.hooks.validateConfig.tapPromise("test", (name, options) => {

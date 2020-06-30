@@ -8,6 +8,7 @@ import {
   faAtom,
   faBacon,
 } from "@fortawesome/free-solid-svg-icons";
+import { GetStarted } from "./get-started-button";
 
 const Feature = ({ title, description, icon }) => (
   <div className="mb-8 flex items-start last:mb-0">
@@ -303,12 +304,7 @@ const Home = () => (
             Stop worrying about your release and hit that merge button!
           </h2>
 
-          <a
-            href="https://intuit.github.io/auto/docs"
-            className="uppercase text-xl lg:text-2xl border-2 border-white rounded px-6 py-3"
-          >
-            <span className="pr-2">Get Started</span> 🎉
-          </a>
+          <GetStarted />
         </div>
       </div>
     </main>
