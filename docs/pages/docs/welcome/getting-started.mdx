@@ -88,8 +88,8 @@ https_proxy=<PROXYHOST>:<PROXYPORT>
 
 After that, you need to set up the labels on your github project. The types of labels that `auto` uses are:
 
-- Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](./autorc.md#versioning-labels).
-- Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](./autorc.md#changelog-titles)
+- Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](../configuration/autorc#labels).
+- Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](../configuration/autorc#changelog-titles)
 
 To create the labels for your project on GitHub, run the following command with your `GH_TOKEN`.
 
@@ -108,7 +108,7 @@ auto create-labels
 To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool.
 This tool runs all commands in the default `auto` workflow and puts it into one meta-command.
 It is context aware and will make different type of releases based on where you run it.
-[Read more here.](./generated/shipit.md)
+[Read more here.](../generated/shipit)
 
 ```json
 {
@@ -182,4 +182,4 @@ fi
 
 ## Enterprise
 
-If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](./autorc.md#githubApi), or during `auto init`.
+If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](../configuration/autorc#githubapi), or during `auto init`.

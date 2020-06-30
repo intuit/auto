@@ -6,7 +6,7 @@ If you've ever written a `webpack` plugin it's a lot like that.
 
 A plugin definition is:
 
-- a name for the plugin, should match the [name of the package](../plugins.md#plugin-declaration) (REQUIRED)
+- a name for the plugin, should match the [name of the package](../configuration/plugins#plugin-declaration) (REQUIRED)
 - a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
 
 ```ts
@@ -40,7 +40,7 @@ module.exports = class TestPlugin {
 
 Plugins work by hooking into various actions that `auto` has to do in order to facilitate a release or interact with your GitHub repo.
 
-[Read more about using hooks](./hook-api-docs.md)
+[Read more about using hooks](./hook-api-docs)
 
 ## Adding Options
 
@@ -178,4 +178,4 @@ export default class NPMPlugin {
 }
 ```
 
-[Read more about creating publishing plugins.](./writing-publishing-plugins.md)
+[Read more about creating publishing plugins.](./writing-publishing-plugins)

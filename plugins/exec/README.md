@@ -20,7 +20,7 @@ Here is an example of replacing the `npm` plugins with a light-weight version.
 
 All args to a hook are exposed on the process in environment variables.
 The format looks like `$ARG_0`, `$ARG_1`, and so on.
-Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.md) for more detail on what's available.
+Please look at the docs for [writing plugins](https://intuit.github.io/auto/docs/plugins/writing-plugins) for more detail on what's available.
 
 ```json
 {
