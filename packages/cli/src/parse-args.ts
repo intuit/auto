@@ -364,7 +364,7 @@ export const commands: AutoCommand[] = [
       dryRun,
     ],
     examples: [
-      `{green $} auto pr \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`,
+      `{green $} auto pr-status \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`,
     ],
   },
   {
