@@ -1,3 +1,19 @@
+# v9.40.6 (Thu Jul 02 2020)
+
+#### 🐛 Bug Fix
+
+- fix links in docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Fix docs links [#1336](https://github.com/intuit/auto/pull/1336) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.3 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix

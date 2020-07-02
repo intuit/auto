@@ -1,3 +1,26 @@
+# v9.40.6 (Thu Jul 02 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Spencer Hamm ([@spentacular](https://github.com/spentacular)), for all your work!
+
+#### 🐛 Bug Fix
+
+- log full error [#1341](https://github.com/intuit/auto/pull/1341) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- log full error ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: command example for pr-status ([@spentacular](https://github.com/spentacular))
+
+#### 📝 Documentation
+
+- fix: command example for pr-status [#1339](https://github.com/intuit/auto/pull/1339) ([@spentacular](https://github.com/spentacular))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Spencer Hamm ([@spentacular](https://github.com/spentacular))
+
+---
+
 # v9.40.3 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix

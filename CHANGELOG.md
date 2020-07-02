@@ -1,3 +1,44 @@
+# v9.40.6 (Thu Jul 02 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Spencer Hamm ([@spentacular](https://github.com/spentacular)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - log full error [#1341](https://github.com/intuit/auto/pull/1341) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- update ignite [#1338](https://github.com/intuit/auto/pull/1338) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite + fix open in new tab [#1337](https://github.com/intuit/auto/pull/1337) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Updates afterRelease documented parameters [#1334](https://github.com/intuit/auto/pull/1334) ([@10hendersonm](https://github.com/10hendersonm))
+- better dark mode [#1328](https://github.com/intuit/auto/pull/1328) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add dark mode favicon [#1327](https://github.com/intuit/auto/pull/1327) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix flash of unstyled paragraph + add title to home page [#1326](https://github.com/intuit/auto/pull/1326) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`
+  - fix: command example for pr-status [#1339](https://github.com/intuit/auto/pull/1339) ([@spentacular](https://github.com/spentacular))
+- `@auto-it/exec`
+  - Fix docs links [#1336](https://github.com/intuit/auto/pull/1336) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump lerna from 3.22.0 to 3.22.1 [#1332](https://github.com/intuit/auto/pull/1332) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump io-ts from 2.2.4 to 2.2.7 [#1331](https://github.com/intuit/auto/pull/1331) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.1.0 to 15.2.0 [#1333](https://github.com/intuit/auto/pull/1333) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 2.31.0 to 2.34.0 [#1330](https://github.com/intuit/auto/pull/1330) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 3.2.2 to 3.3.0 [#1329](https://github.com/intuit/auto/pull/1329) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 4
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+- Spencer Hamm ([@spentacular](https://github.com/spentacular))
+
+---
+
 # v9.40.5 (Thu Jun 25 2020)
 
 #### 🐛 Bug Fix
