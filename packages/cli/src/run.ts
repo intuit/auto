@@ -114,7 +114,7 @@ export async function run(command: string, args: ApiOptions) {
         You can check the permission for you token by running "auto info".
       `);
       console.log("");
-      auto.logger.verbose.error(error.request);
+      auto.logger.verbose.error(error);
     } else {
       console.log(error);
     }
