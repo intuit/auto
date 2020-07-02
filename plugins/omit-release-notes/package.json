@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/omit-release-notes",
-  "version": "9.40.5",
+  "version": "9.40.6",
   "main": "dist/index.js",
   "description": "Omit release notes plugin for auto",
   "license": "MIT",
