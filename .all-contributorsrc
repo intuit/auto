@@ -298,6 +298,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "spentacular",
+      "name": "Spencer Hamm",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1043478?v=4",
+      "profile": "https://github.com/spentacular",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
