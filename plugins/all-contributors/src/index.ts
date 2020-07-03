@@ -6,6 +6,7 @@ import {
   inFolder,
   validatePluginConfiguration,
 } from "@auto-it/core";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import envCi from "env-ci";
 import endent from "endent";
 import botList from "@auto-it/bot-list";
@@ -327,6 +328,37 @@ export default class AllContributorsPlugin implements IPlugin {
         }
       }
     );
+
+    auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
+      logParse.hooks.parseCommit.tapPromise(this.name, async (commit) => {
+        const extraContributions = getExtraContributors(commit.rawBody);
+
+        if (!extraContributions) {
+          return commit;
+        }
+
+        const contributors = (
+          await Promise.all(
+            Object.keys(extraContributions).map(async (contributor) =>
+              auto.git?.getUserByUsername(contributor)
+            )
+          )
+        ).filter(
+          (
+            c
+          ): c is RestEndpointMethodTypes["users"]["getByUsername"]["response"]["data"] =>
+            Boolean(c)
+        );
+
+        return {
+          ...commit,
+          authors: [
+            ...commit.authors,
+            ...contributors.map((c) => ({ ...c, username: c.login })),
+          ],
+        };
+      });
+    });
   }
 
   /** Update the contributors rc for a package. */
