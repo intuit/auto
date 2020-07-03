@@ -13,10 +13,12 @@ import fs from "fs";
 import path from "path";
 import match from "anymatch";
 import on from "await-to-js";
-import { execSync } from "child_process";
 import { IExtendedCommit } from "@auto-it/core/src/log-parse";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
+
+import addContributor from "all-contributors-cli/dist/contributors";
+import generateReadme from "all-contributors-cli/dist/generate";
 
 const contributionTypes = [
   "blog",
@@ -63,7 +65,7 @@ function getRcFile() {
       fs.readFileSync(rcFile, "utf8")
     );
 
-    return config;
+    return { ...config, config: rcFile };
   } catch (error) {}
 }
 
@@ -92,6 +94,8 @@ interface Contributor {
 interface AllContributorsRc {
   /** All of the current contributors */
   contributors: Contributor[];
+  /** Files to generate a markdown table of contributors in */
+  files: string[];
 }
 
 const defaultOptions: IAllContributorsPluginOptions = {
@@ -404,32 +408,51 @@ export default class AllContributorsPlugin implements IPlugin {
     auto.logger.verbose.info("Found contributions:", authorContributions);
 
     // 2. Determine if contributor has update
-    Object.entries(authorContributions).forEach(([username, contributions]) => {
-      const { contributions: old = [] } =
-        config.contributors.find(
-          (contributor) =>
-            contributor.login.toLowerCase() === username.toLowerCase()
-        ) || {};
-      const hasNew = [...contributions].find(
-        (contribution) => !old.includes(contribution)
-      );
+    await Promise.all(
+      Object.entries(authorContributions).map(
+        async ([username, contributions]) => {
+          const { contributions: old = [] } =
+            config.contributors.find(
+              (contributor) =>
+                contributor.login.toLowerCase() === username.toLowerCase()
+            ) || {};
+          const hasNew = [...contributions].find(
+            (contribution) => !old.includes(contribution)
+          );
 
-      if (hasNew && !this.options.exclude.includes(username)) {
-        const newContributions = new Set([...old, ...contributions]);
+          if (hasNew && !this.options.exclude.includes(username)) {
+            const newContributions = new Set([...old, ...contributions]);
 
-        didUpdate = true;
-        auto.logger.log.info(`Adding "${username}"'s contributions...`);
+            didUpdate = true;
+            auto.logger.log.info(`Adding "${username}"'s contributions...`);
 
-        execSync(
-          `npx all-contributors-cli add ${username} ${[
-            ...newContributions,
-          ].join(",")}`,
-          { stdio: "inherit" }
-        );
-      } else {
-        auto.logger.verbose.warn(`"${username}" had no new contributions...`);
-      }
-    });
+            // Update/add contributor in RC file
+            const { contributors } = await addContributor(
+              config,
+              username,
+              Array.from(newContributions).join(",")
+            );
+
+            // Update files that contain contributors table
+            await Promise.all(
+              (config.files || ["README.md"]).map(async (file) => {
+                const oldReadMe = fs.readFileSync(file, {
+                  encoding: "utf-8",
+                });
+                const newReadMe = await generateReadme(
+                  { ...config, contributors },
+                  contributors,
+                  oldReadMe
+                );
+                fs.writeFileSync(file, newReadMe);
+              })
+            );
+          }
+
+          auto.logger.verbose.warn(`"${username}" had no new contributions...`);
+        }
+      )
+    );
 
     if (didUpdate) {
       auto.logger.log.success("Updated contributors!");
