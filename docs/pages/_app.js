@@ -44,9 +44,8 @@ const components = {
   },
 };
 
-class MyApp extends App {
-  /** Attach docsearch */
-  componentDidMount() {
+function MyApp({ Component, pageProps }) {
+  React.useEffect(() => {
     if (window.docsearch) {
       window.docsearch({
         apiKey: "9a3222c3fb6678852549109b167d0cef",
@@ -57,17 +56,13 @@ class MyApp extends App {
     } else {
       console.warn("Search has failed to load");
     }
-  }
+  });
 
-  render() {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <MDXProvider components={components}>
-        <Component {...pageProps} />
-      </MDXProvider>
-    );
-  }
+  return (
+    <MDXProvider components={components}>
+      <Component {...pageProps} />
+    </MDXProvider>
+  );
 }
 
 export default MyApp;
