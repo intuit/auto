@@ -31,6 +31,14 @@ class MyDocument extends Document {
               --color-gray-1000: #181617;
             }
           `}</style>
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css"
+          />
+          <script
+            type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"
+          />
         </Head>
         <body>
           <script src={formatPath("attach-dark-mode.js")} />
