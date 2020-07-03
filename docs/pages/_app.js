@@ -45,6 +45,20 @@ const components = {
 };
 
 class MyApp extends App {
+  /** Attach docsearch */
+  componentDidMount() {
+    if (window.docsearch) {
+      window.docsearch({
+        apiKey: "9a3222c3fb6678852549109b167d0cef",
+        indexName: "intuit_auto",
+        inputSelector: "#search",
+        debug: false,
+      });
+    } else {
+      console.warn("Search has failed to load");
+    }
+  }
+
   render() {
     const { Component, pageProps } = this.props;
 
