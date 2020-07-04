@@ -6621,6 +6621,11 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
+date-fns@^2.9.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.14.0.tgz#359a87a265bb34ef2e38f93ecf63ac453f9bc7ba"
+  integrity sha512-1zD+68jhFgDIM0rF05rcwYO8cExdNqxjq4xP1QKM60Q45mnO6zaMWB4tOzrIr4M4GSLntsKeE4c9Bdl2jhL/yw==
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -12914,10 +12919,10 @@ nested-error-stacks@^2.0.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-next-ignite@^0.2.17:
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.2.17.tgz#56ff99cdc8d1745b66ff16fe298c8e56ad180c61"
-  integrity sha512-RiLAZU5DAj3I8Kroda8w3sLZUeTx/AxFriJSRyOtf8YBs90h8ZF6LeVPQ2au69GxUX/TonzPlpzXAOauhYEz2g==
+next-ignite@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.3.2.tgz#1646d78329bfc2bf572af73c23c1e0c31a9eebce"
+  integrity sha512-E8J238PVm5SU8KELOX7bCf8k3+NxsDG+BRyR4tspNrvbqNejoYLvb1YC2FviiR5MtDsYvbroISEi3cTMJy9v0g==
   dependencies:
     "@mapbox/rehype-prism" "^0.4.0"
     "@next/bundle-analyzer" "^9.4.0"
@@ -12933,6 +12938,7 @@ next-ignite@^0.2.17:
     next "^9.4.4"
     next-mdx-enhanced "^3.0.0"
     next-prefixed "^0.0.11"
+    nextjs-sitemap-generator "^1.0.0"
     parse-github-url "^1.0.2"
     push-dir "^0.4.1"
     react "16.13.0"
@@ -13025,6 +13031,13 @@ next@^9.4.4:
     web-vitals "0.2.1"
     webpack "4.43.0"
     webpack-sources "1.4.3"
+
+nextjs-sitemap-generator@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/nextjs-sitemap-generator/-/nextjs-sitemap-generator-1.0.0.tgz#88227fea24a055f0d9031bfe4ce303bf537b24b1"
+  integrity sha512-4M5nC2FA1Mf1sDDPQ+a1OJB5iFXjRUuhfQ+V9wVEl8ydzV2jQU6j0lABy+4cHm6KPmQr7ikq3JwOxusbB9nK1w==
+  dependencies:
+    date-fns "^2.9.0"
 
 ngraph.events@^1.2.1:
   version "1.2.1"
