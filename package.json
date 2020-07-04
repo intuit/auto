@@ -127,7 +127,7 @@
   "ignite": {
     "repo": "intuit/auto",
     "name": "auto",
-    "basePath": "/auto"
+    "url": "https://intuit.github.io/auto"
   },
   "auto": {
     "plugins": [
