@@ -1,3 +1,24 @@
+# v9.41.0 (Mon Jul 06 2020)
+
+#### 🚀 Enhancement
+
+- Enable easier "all-contributors" usage on non-javascript project + add extra contributors to changelogs [#1350](https://github.com/intuit/auto/pull/1350) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add default image size ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix default contributorsPerLine ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add contributors mentioned in PR body to changelogs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- move all-contributors-cli to hard dep from peer dep ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.3 (Wed Jun 24 2020)
 
 #### 🐛 Bug Fix

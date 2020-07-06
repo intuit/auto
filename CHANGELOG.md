@@ -1,3 +1,26 @@
+# v9.41.0 (Mon Jul 06 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/all-contributors`
+  - Enable easier "all-contributors" usage on non-javascript project + add extra contributors to changelogs [#1350](https://github.com/intuit/auto/pull/1350) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- don't generate docs for node_modules [#1348](https://github.com/intuit/auto/pull/1348) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix docs dark mode [#1347](https://github.com/intuit/auto/pull/1347) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite [#1346](https://github.com/intuit/auto/pull/1346) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- docs: fix mobile search [#1345](https://github.com/intuit/auto/pull/1345) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix search breaking on nav [#1344](https://github.com/intuit/auto/pull/1344) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite [#1343](https://github.com/intuit/auto/pull/1343) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add docsearch [#1342](https://github.com/intuit/auto/pull/1342) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.6 (Thu Jul 02 2020)
 
 :tada: This release contains work from a new contributor! :tada:
