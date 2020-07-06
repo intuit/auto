@@ -472,7 +472,7 @@ export default class AllContributorsPlugin implements IPlugin {
                   encoding: "utf-8",
                 });
                 const newReadMe = await generateReadme(
-                  { contributorsPerLine: 7, ...config, contributors },
+                  { contributorsPerLine: 7, imageSize: 100, ...config, contributors },
                   contributors,
                   oldReadMe
                 );
