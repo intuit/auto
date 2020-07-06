@@ -202,6 +202,30 @@ describe("github", () => {
     expect(createRelease).toHaveBeenCalled();
   });
 
+  describe("Name of the group", () => {
+    test("default graphql API", async () => {
+      const gh = new Git(options);
+
+      await gh.publish("releaseNotes", "tag");
+
+      // @ts-ignore
+      expect(gh.baseUrl).toBe("https://api.github.com");
+      // @ts-ignore
+      expect(gh.graphqlBaseUrl).toBe("https://api.github.com");
+    });
+
+    test("override graphql API", async () => {
+      const gh = new Git({ ...options, baseUrl: "https://api.internal.com" });
+
+      await gh.publish("releaseNotes", "tag");
+
+      // @ts-ignore
+      expect(gh.baseUrl).toBe("https://api.internal.com");
+      // @ts-ignore
+      expect(gh.graphqlBaseUrl).toBe("https://api.internal.com/api");
+    });
+  });
+
   test("graphql", async () => {
     const gh = new Git(options);
     const result = await gh.graphql<{ data: any }>("{ someQuery }");

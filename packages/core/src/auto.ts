@@ -539,9 +539,8 @@ export default class Auto {
       ...repository,
       token,
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
-      baseUrl: config.githubApi || "https://api.github.com",
-      graphqlBaseUrl:
-        config.githubGraphqlApi || config.githubApi || "https://api.github.com",
+      baseUrl: config.githubApi,
+      graphqlBaseUrl: config.githubGraphqlApi,
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
