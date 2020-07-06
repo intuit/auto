@@ -1,3 +1,29 @@
+# v9.41.1 (Mon Jul 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - attempt to construct the GitHub graphql root API endpoint if githubApi is provided [#1349](https://github.com/intuit/auto/pull/1349) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @fortawesome/fontawesome-svg-core from 1.2.28 to 1.2.29 [#1360](https://github.com/intuit/auto/pull/1360) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 28.5.1 to 28.6.1 [#1359](https://github.com/intuit/auto/pull/1359) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.9.5 to 3.9.6 [#1358](https://github.com/intuit/auto/pull/1358) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @fortawesome/react-fontawesome from 0.1.9 to 0.1.11 [#1357](https://github.com/intuit/auto/pull/1357) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 7.2.0 to 7.3.1 [#1356](https://github.com/intuit/auto/pull/1356) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.3.0 to 14.6.2 [#1354](https://github.com/intuit/auto/pull/1354) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.2.0 to 15.3.0 [#1353](https://github.com/intuit/auto/pull/1353) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump enquirer from 2.3.5 to 2.3.6 [#1352](https://github.com/intuit/auto/pull/1352) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump simple-react-lightbox from 3.1.2-3 to 3.2.3 [#1351](https://github.com/intuit/auto/pull/1351) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.41.0 (Mon Jul 06 2020)
 
 #### 🚀 Enhancement

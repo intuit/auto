@@ -1,3 +1,15 @@
+# v9.41.1 (Mon Jul 06 2020)
+
+#### 🐛 Bug Fix
+
+- attempt to construct the GitHub graphql root API endpoint if githubApi is provided [#1349](https://github.com/intuit/auto/pull/1349) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.40.6 (Thu Jul 02 2020)
 
 #### 🐛 Bug Fix
