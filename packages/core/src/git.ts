@@ -9,6 +9,7 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
 import endent from "endent";
 import on from "await-to-js";
+import join from "url-join";
 
 import { Memoize as memoize } from "typescript-memoize";
 
@@ -123,7 +124,9 @@ export default class Git {
     this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || "https://api.github.com";
-    this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
+    this.graphqlBaseUrl = this.options.baseUrl
+      ? this.options.graphqlBaseUrl || join(new URL(this.baseUrl).origin, "api")
+      : this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
     const GitHub = Octokit.plugin(enterpriseCompatibility)
       .plugin(retry)
@@ -920,7 +923,7 @@ export default class Git {
     }
 
     const key = `hash_${sha}`;
-    const result = (await this.graphql<ISearchQuery>(query));
+    const result = await this.graphql<ISearchQuery>(query);
 
     if (!result || !result[key] || !result[key].edges[0]) {
       return;
