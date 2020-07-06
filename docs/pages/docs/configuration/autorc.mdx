@@ -69,11 +69,12 @@ If you are using enterprise github, `auto` lets you configure the github API URL
 
 This is used for doing some searches in `auto`.
 
-If you are using enterprise github and your company hosts the graphql at some other URL than the `githubApi`, you can use `githubGraphqlApi` to set the base path for `auto`. The `githubGraphqlApi` get merged with `/graphql` to build the final URL.
+The default behavior will construct the root API url for GitHub Enterprise.
+If you are using enterprise github and your company hosts the graphql at some other URL than the `githubApi`, you can use `githubGraphqlApi` to set the base path for `auto`.
 
 ```json
 {
-  "githubGraphqlApi": "https://github.mine.com/api/"
+  "githubGraphqlApi": "https://github.mine.com/other/api/"
 }
 ```
 
