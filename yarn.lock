@@ -53,10 +53,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.40.6"
+  version "9.41.0"
 
 "@auto-it/core@link:packages/core":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/graphql" "^4.4.0"
@@ -94,7 +94,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -112,7 +112,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -16502,9 +16502,9 @@ simple-git@1.107.0:
     debug "^4.0.1"
 
 simple-react-lightbox@^3.1.2-3:
-  version "3.1.2-3"
-  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.1.2-3.tgz#3f93263b0c02c42bce2622d0c543dd3f7f1a5329"
-  integrity sha512-aynrQm9Fe/M0u/eFp80b9LwvSQPMvVcwx+nipdRF1Y4lqK8uu5WRUAcl5pWqmoQSc4CaZ7W3l5Hs9LeMn81vTQ==
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.2.3.tgz#d134527c644eadb8cee4e5c9aa715f07b5f2ae9d"
+  integrity sha512-T1gWrRqQhmeS+1gowbO8cempT1RuCODGEpEF13sRxKPLXgwxKg3TFAqVisLkbTTt+fSrL0c1CT/jxfC3n0MtoA==
   dependencies:
     fast-deep-equal "^3.1.1"
     framer-motion "^1.11.0"
