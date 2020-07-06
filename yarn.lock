@@ -53,10 +53,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.40.6"
+  version "9.41.0"
 
 "@auto-it/core@link:packages/core":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/graphql" "^4.4.0"
@@ -94,7 +94,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -112,7 +112,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.40.6"
+  version "9.41.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7507,9 +7507,9 @@ eslint-plugin-jest@^23.0.1:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
 eslint-plugin-jsdoc@^28.5.1:
-  version "28.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-28.5.1.tgz#5a95ee8705af389ba2062a1036be6077b5e62f3f"
-  integrity sha512-1XSWu8UnGwqO8mX3XKGofffL83VRt00ptq0m5OrTLFDN3At4x+/pJ8YHJONKhGC35TtjskcS9/RR6F9pjQ8c+w==
+  version "28.6.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-28.6.1.tgz#c9e9da59d0d3cef4fb45ffb91c0acde43af4e418"
+  integrity sha512-Z3y7hcNPDuhL339D1KOf9SY8pMAxYxhaG4QLtu3KVn20k/hNF1u6WQv44wvuSCb6OfPJ4say37RUlSNqIjR+mw==
   dependencies:
     comment-parser "^0.7.5"
     debug "^4.1.1"
