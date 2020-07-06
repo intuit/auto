@@ -194,86 +194,38 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <table>
   <tr>
     <td align="center"><a href="https://adamdierkens.com"><img src="https://avatars1.githubusercontent.com/u/13004162?v=4" width="100px;" alt=""/><br /><sub><b>Adam Dierkens</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=adierkens" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Documentation">📖</a> <a href="#ideas-adierkens" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/intuit/auto/commits?author=adierkens" title="Tests">⚠️</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://hipstersmoothie.com"><img src="https://avatars3.githubusercontent.com/u/1192452?v=4" width="100px;" alt=""/><br /><sub><b>Andrew Lisowski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Documentation">📖</a> <a href="#ideas-hipstersmoothie" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-hipstersmoothie" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=hipstersmoothie" title="Tests">⚠️</a> <a href="#blog-hipstersmoothie" title="Blogposts">📝</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/Aghassi"><img src="https://avatars2.githubusercontent.com/u/3680126?v=4" width="100px;" alt=""/><br /><sub><b>David</b></sub></a><br /><a href="#infra-Aghassi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=Aghassi" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=Aghassi" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=Aghassi" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://orta.io"><img src="https://avatars2.githubusercontent.com/u/49038?v=4" width="100px;" alt=""/><br /><sub><b>Orta</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=orta" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=orta" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/zephraph"><img src="https://avatars1.githubusercontent.com/u/3087225?v=4" width="100px;" alt=""/><br /><sub><b>Justin Bennett</b></sub></a><br /><a href="https://github.com/intuit/auto/issues?q=author%3Azephraph" title="Bug reports">🐛</a> <a href="https://github.com/intuit/auto/commits?author=zephraph" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=zephraph" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://twitter.com/alecdotbiz"><img src="https://avatars2.githubusercontent.com/u/1925840?v=4" width="100px;" alt=""/><br /><sub><b>Alec Larson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=aleclarson" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://tylerkrupicka.com"><img src="https://avatars1.githubusercontent.com/u/5761061?v=4" width="100px;" alt=""/><br /><sub><b>Tyler Krupicka</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=tylerkrupicka" title="Code">💻</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/hello-woof"><img src="https://avatars2.githubusercontent.com/u/48960849?v=4" width="100px;" alt=""/><br /><sub><b>Zachary Sherwin</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hello-woof" title="Tests">⚠️</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/bnigh"><img src="https://avatars3.githubusercontent.com/u/8219313?v=4" width="100px;" alt=""/><br /><sub><b>bnigh</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bnigh" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=bnigh" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=bnigh" title="Tests">⚠️</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/su7edja"><img src="https://avatars0.githubusercontent.com/u/2717065?v=4" width="100px;" alt=""/><br /><sub><b>su7edja</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=su7edja" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/yogikhan"><img src="https://avatars3.githubusercontent.com/u/16071601?v=4" width="100px;" alt=""/><br /><sub><b>Yogesh Khandlewal</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=yogikhan" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/Celeo"><img src="https://avatars1.githubusercontent.com/u/772507?v=4" width="100px;" alt=""/><br /><sub><b>Matt Boulanger</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Celeo" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/karenclo"><img src="https://avatars1.githubusercontent.com/u/8535239?v=4" width="100px;" alt=""/><br /><sub><b>Karen Lo</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=karenclo" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/jrnail23"><img src="https://avatars1.githubusercontent.com/u/392612?v=4" width="100px;" alt=""/><br /><sub><b>James Nail</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jrnail23" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jrnail23" title="Code">💻</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/rdipika"><img src="https://avatars3.githubusercontent.com/u/12812259?v=4" width="100px;" alt=""/><br /><sub><b>rdipika94</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rdipika" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://brianmuenzenmeyer.com"><img src="https://avatars1.githubusercontent.com/u/298435?v=4" width="100px;" alt=""/><br /><sub><b>Brian Muenzenmeyer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=bmuenzenmeyer" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/sarah-vanderlaan"><img src="https://avatars0.githubusercontent.com/u/32620284?v=4" width="100px;" alt=""/><br /><sub><b>Sarah van der Laan</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sarah-vanderlaan" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/reckter"><img src="https://avatars1.githubusercontent.com/u/1771450?v=4" width="100px;" alt=""/><br /><sub><b>Hannes Güdelhöfer</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=reckter" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://ericclemmons.com/"><img src="https://avatars0.githubusercontent.com/u/15182?v=4" width="100px;" alt=""/><br /><sub><b>Eric Clemmons</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ericclemmons" title="Tests">⚠️</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://www.jeremiahzucker.com"><img src="https://avatars1.githubusercontent.com/u/9255651?v=4" width="100px;" alt=""/><br /><sub><b>Jeremiah Zucker</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sugarmanz" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sugarmanz" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sugarmanz" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://www.unconfinedsoftware.com/"><img src="https://avatars2.githubusercontent.com/u/13172697?v=4" width="100px;" alt=""/><br /><sub><b>Brandon Miller</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=unknownerror404" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=unknownerror404" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=unknownerror404" title="Tests">⚠️</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/hborawski"><img src="https://avatars1.githubusercontent.com/u/1325154?v=4" width="100px;" alt=""/><br /><sub><b>Harris Borawski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hborawski" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=hborawski" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/ShelbyCohen"><img src="https://avatars1.githubusercontent.com/u/7768053?v=4" width="100px;" alt=""/><br /><sub><b>Shelby Cohen</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ShelbyCohen" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/krohrsb"><img src="https://avatars1.githubusercontent.com/u/321544?v=4" width="100px;" alt=""/><br /><sub><b>Kyle Brown</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=krohrsb" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/whynotzoidberg"><img src="https://avatars0.githubusercontent.com/u/18683899?v=4" width="100px;" alt=""/><br /><sub><b>Till Weisser</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=whynotzoidberg" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="http://www.terradatum.com"><img src="https://avatars0.githubusercontent.com/u/94763?v=4" width="100px;" alt=""/><br /><sub><b>G. Richard Bellamy</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=rbellamy" title="Tests">⚠️</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://kevinwolf.dev"><img src="https://avatars2.githubusercontent.com/u/3157426?v=4" width="100px;" alt=""/><br /><sub><b>Kevin Wolf</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=kevinwolfdev" title="Code">💻</a></td>
-  </tr>
-  <tr>
     <td align="center"><a href="https://github.com/10hendersonm"><img src="https://avatars2.githubusercontent.com/u/14095644?v=4" width="100px;" alt=""/><br /><sub><b>Marty Henderson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=10hendersonm" title="Code">💻</a></td>
   </tr>
   <tr>
