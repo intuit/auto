@@ -16,12 +16,14 @@ Out of the box the plugin will only detect the following contribution types:
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
 ```bash
-npm i --save-dev @auto-it/all-contributors all-contributors-cli
+npm i --save-dev @auto-it/all-contributors
 # or
-yarn add -D @auto-it/all-contributors all-contributors-cli
+yarn add -D @auto-it/all-contributors
 ```
 
 ## Prerequisites
+
+For this plugin to work your project needs to have initialized an `all-contributors` RC file.
 
 ```bash
 npx all-contributors init
@@ -61,9 +63,10 @@ If you configure an pre-configured contribution type the arrays are not merged, 
 ### Adding Non-Code Contributions
 
 Sometimes you worked with a person that didn't touch the code personally so this plugin would never attribute them with any contributions.
-Since these contributions cannot be automated you can instead just list out another contributor's (name + GitHub username) contributions directly in the PR.
+Since these contributions cannot be automated you can instead just list out another contributor's contributions directly in the PR.
+These contributors will also be added to all changelogs that `auto` outputs.
 
-Add the following to a PR body and auto will try to parse it and add contributors from it.
+Add the following to a PR body and `auto` will try to parse it and add contributors from it.
 
 ```md
 # Contributions
