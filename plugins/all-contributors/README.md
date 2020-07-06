@@ -68,7 +68,7 @@ Add the following to a PR body and auto will try to parse it and add contributor
 ```md
 # Contributions
 
-- Some Guy (@some_guy) - design, doc
+- @some_guy - design, doc
 ```
 
 To ensure you are doing it right `auto` will comment on the PR with the people + contributions you are manually adding.
