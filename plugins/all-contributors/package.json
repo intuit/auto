@@ -40,16 +40,11 @@
     "@auto-it/bot-list": "link:../../packages/bot-list",
     "@auto-it/core": "link:../../packages/core",
     "anymatch": "^3.1.1",
+    "all-contributors-cli": "6.16.0",
     "await-to-js": "^2.1.1",
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
     "tslib": "2.0.0"
-  },
-  "devDependencies": {
-    "all-contributors-cli": "6.16.0"
-  },
-  "peerDependencies": {
-    "all-contributors-cli": ">= 6.x"
   }
 }
