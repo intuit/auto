@@ -78,20 +78,25 @@ commands.forEach((command) => {
   );
 });
 
-glob.sync(path.join(__dirname, "../plugins/**/README.md")).forEach((readme) => {
-  const content = fs.readFileSync(readme, "utf8");
-  const [title, ...readmeDocs] = content.split("\n");
-  const frontMatter = endent`
+glob
+  .sync(path.join(__dirname, "../plugins/**/README.md"), {
+    ignore: "**/node_modules",
+  })
+  .forEach((readme) => {
+    console.log(readme);
+    const content = fs.readFileSync(readme, "utf8");
+    const [title, ...readmeDocs] = content.split("\n");
+    const frontMatter = endent`
     ---
     title: ${title.replace("# ", "")}
     ---
   `.replace(/`/g, "\\`");
-  const lines = [frontMatter, ...readmeDocs];
-  const dir = path.dirname(readme).split("/");
-  const name = dir[dir.length - 1];
+    const lines = [frontMatter, ...readmeDocs];
+    const dir = path.dirname(readme).split("/");
+    const name = dir[dir.length - 1];
 
-  fs.writeFileSync(
-    path.join(__dirname, `./pages/docs/generated/${name}.mdx`),
-    lines.join("\n")
-  );
-});
+    fs.writeFileSync(
+      path.join(__dirname, `./pages/docs/generated/${name}.mdx`),
+      lines.join("\n")
+    );
+  });
