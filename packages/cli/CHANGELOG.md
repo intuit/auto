@@ -1,3 +1,15 @@
+# v9.43.0 (Tue Jul 07 2020)
+
+#### 🚀 Enhancement
+
+- npm: find available canary version [#1361](https://github.com/intuit/auto/pull/1361) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.42.0 (Tue Jul 07 2020)
 
 #### 🚀 Enhancement
