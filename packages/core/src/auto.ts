@@ -1724,7 +1724,7 @@ export default class Auto {
   /** Make a release over a range of commits */
   private async makeRelease(args: IReleaseOptions = {}) {
     const options = { ...this.getCommandDefault("release"), ...args };
-    const { dryRun, from, useVersion, prerelease = false } = options;
+    const { dryRun, from, to, useVersion, prerelease = false } = options;
 
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
@@ -1766,11 +1766,12 @@ export default class Auto {
     this.logger.log.info('Current "Latest Release" on Github:', lastRelease);
 
     const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
+      lastRelease,
+      to
     );
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      undefined,
+      to,
       this.versionBump
     );
 
