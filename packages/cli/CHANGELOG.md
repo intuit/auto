@@ -1,3 +1,19 @@
+# v9.42.0 (Tue Jul 07 2020)
+
+#### 🚀 Enhancement
+
+- add --to flag to "auto release" [#1362](https://github.com/intuit/auto/pull/1362) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add --to flag to "auto release" ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.41.1 (Mon Jul 06 2020)
 
 #### 🐛 Bug Fix
