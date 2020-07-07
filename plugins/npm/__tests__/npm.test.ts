@@ -844,8 +844,41 @@ describe("canary", () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
-    expect(execPromise.mock.calls[0]).toContain("npm");
-    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[1]).toContain("npm");
+    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+  });
+
+  test("finds available canary version", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    // first version exists
+    execPromise.mockReturnValueOnce(true);
+    // second doesn't
+    execPromise.mockReturnValueOnce(false);
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    expect(execPromise.mock.calls[2]).toContain("npm");
+    expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.1");
   });
 
   test("legacy auth work", async () => {
@@ -906,8 +939,8 @@ describe("canary", () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
-    expect(execPromise.mock.calls[0]).toContain("npm");
-    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[1]).toContain("npm");
+    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
   });
 
   test("use lerna for monorepo package", async () => {
@@ -933,23 +966,24 @@ describe("canary", () => {
       }
     `;
 
-    getLernaPackages.mockImplementation(async () =>
-      Promise.resolve([
-        {
-          path: "path/to/package",
-          name: "@foobar/app",
-          version: "1.2.3-canary.0+abcd",
-        },
-        {
-          path: "path/to/package",
-          name: "@foobar/lib",
-          version: "1.2.3-canary.0+abcd",
-        },
-      ])
-    );
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
-    expect(execPromise.mock.calls[0][1]).toContain("lerna");
+    expect(execPromise.mock.calls[1][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
   });
@@ -978,20 +1012,21 @@ describe("canary", () => {
       }
     `;
 
-    getLernaPackages.mockImplementation(async () =>
-      Promise.resolve([
-        {
-          path: "path/to/package",
-          name: "@foobar/app",
-          version: "1.2.3-canary.0+abcd",
-        },
-        {
-          path: "path/to/package",
-          name: "@foobar/lib",
-          version: "1.2.3-canary.0+abcd",
-        },
-      ])
-    );
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
     await hooks.canary.promise(Auto.SEMVER.patch, "");
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -1033,20 +1068,21 @@ describe("canary", () => {
       }
     `;
 
-    getLernaPackages.mockImplementation(async () =>
-      Promise.resolve([
-        {
-          path: "path/to/package",
-          name: "@foobar/app",
-          version: "1.2.3",
-        },
-        {
-          path: "path/to/package",
-          name: "@foobar/lib",
-          version: "1.2.3",
-        },
-      ])
-    );
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
     expect(value).toStrictEqual({
