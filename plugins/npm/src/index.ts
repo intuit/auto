@@ -731,7 +731,7 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info("Detected monorepo, using lerna");
 
         const packagesBefore = await getLernaPackages();
-        const next =
+        let canaryVersion =
           (isIndependent && `pre${bump}`) ||
           determineNextVersion(
             lastRelease,
@@ -747,10 +747,18 @@ export default class NPMPlugin implements IPlugin {
           );
         }
 
+        if (!isIndependent) {
+          const { name } = getMonorepoPackage();
+          // eslint-disable-next-line no-await-in-loop
+          while (await getPublishedVersion(`${name}@${canaryVersion}`)) {
+            canaryVersion = inc(canaryVersion, "prerelease")!;
+          }
+        }
+
         await execPromise("npx", [
           "lerna",
           "publish",
-          next,
+          canaryVersion,
           "--dist-tag",
           "canary",
           !isIndependent && "--force-publish",
@@ -802,12 +810,18 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info("Detected single npm package");
       const current = await auto.getCurrentVersion(lastRelease);
-      const canaryVersion = determineNextVersion(
+      const { name } = await loadPackageJson();
+      let canaryVersion = determineNextVersion(
         lastRelease,
         current,
         bump,
         preid
       );
+
+      // eslint-disable-next-line no-await-in-loop
+      while (await getPublishedVersion(`${name}@${canaryVersion}`)) {
+        canaryVersion = inc(canaryVersion, "prerelease")!;
+      }
 
       if (this.canaryScope) {
         await setCanaryScope(this.canaryScope, ["./"]);
@@ -833,7 +847,6 @@ export default class NPMPlugin implements IPlugin {
         await gitReset();
       }
 
-      const { name } = await loadPackageJson();
       auto.logger.verbose.info("Successfully published canary version");
 
       return {
