@@ -107,6 +107,8 @@ export type IReleaseOptions = BaseBranch &
   Partial<RepoInformation> & {
     /** Commit to start calculating the release from */
     from?: string;
+    /** Commit to calculate the release to */
+    to?: string;
     /** Override the version to release */
     useVersion?: string;
   };

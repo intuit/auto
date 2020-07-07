@@ -462,6 +462,13 @@ export const commands: AutoCommand[] = [
           "Git revision (tag, commit sha, ...) to start release notes from. Defaults to latest tag.",
       },
       {
+        name: "to",
+        type: String,
+        group: "main",
+        description:
+          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD",
+      },
+      {
         name: "use-version",
         type: String,
         group: "main",
