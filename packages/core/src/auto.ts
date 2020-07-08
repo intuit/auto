@@ -396,7 +396,10 @@ export default class Auto {
         ]);
         this.logger.verbose.info("Branch:", currentBranch);
         this.logger.verbose.info("HEADs:", heads);
-        const [, remoteHead] = heads.match(/^(\w+)?/) || [];
+        const baseBranchHeadRef = new RegExp(
+          `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
+        );
+        const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
 
         if (remoteHead) {
           // This will throw if the branch is ahead of the current branch
