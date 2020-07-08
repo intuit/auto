@@ -397,7 +397,7 @@ export default class Auto {
         this.logger.verbose.info("Branch:", currentBranch);
         this.logger.verbose.info("HEADs:", heads);
         const baseBranchHeadRef = new RegExp(
-          `^(w+)refs/heads/${this.baseBranch}$`
+          `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
         );
         const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
 
