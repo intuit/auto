@@ -308,6 +308,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "lshadler",
+      "name": "Lucas Shadler",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/23409677?v=4",
+      "profile": "https://lshadler.github.io/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
