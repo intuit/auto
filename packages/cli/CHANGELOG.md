@@ -1,3 +1,17 @@
+# v9.43.1 (Tue Jul 07 2020)
+
+#### 🐛 Bug Fix
+
+- fix test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: prioritize base branch head ref (lucas_shadler@intuit.com)
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Lucas Shadler (lucas_shadler@intuit.com)
+
+---
+
 # v9.43.0 (Tue Jul 07 2020)
 
 #### 🚀 Enhancement

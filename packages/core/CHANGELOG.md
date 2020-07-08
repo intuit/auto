@@ -1,3 +1,22 @@
+# v9.43.1 (Tue Jul 07 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Lucas Shadler ([@lshadler](https://github.com/lshadler)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: prioritize base branch head ref [#1363](https://github.com/intuit/auto/pull/1363) ([@lshadler](https://github.com/lshadler) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: prioritize base branch head ref ([@lshadler](https://github.com/lshadler))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+---
+
 # v9.42.0 (Tue Jul 07 2020)
 
 #### 🚀 Enhancement
