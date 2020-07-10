@@ -14,6 +14,8 @@ assignees: ''
 **To Reproduce**
 
 <!-- Steps to reproduce the behavior: -->
+<!-- If you are running into trouble with a particular command please -->
+<!-- run that command with the "-vv" flag for easier debugging -->
 
 **Expected behavior**
 
