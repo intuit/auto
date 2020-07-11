@@ -823,7 +823,7 @@ export default class Git {
     return result;
   }
 
-  /** Create a release for the GitHub projecct */
+  /** Create a release for the GitHub project */
   async publish(releaseNotes: string, tag: string, prerelease = false) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
