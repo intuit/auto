@@ -1923,6 +1923,24 @@ export default class Auto {
         await execPromise("git", ["config", "user.name", `"${user.name}"`]);
         this.logger.verbose.warn(`Set git name to ${user.name}`);
       }
+
+      if (!user.name && !user.email) {
+        this.logger.log.error(
+          endent`
+            Could find a git name and email to commit with!
+
+            Name: ${user.name}
+            Email: ${user.email}
+  
+            You must do one of the following: 
+  
+            - configure the author for your package manager (ex: set "author" in package.json)
+            - Set "name" and "email in your .autorc
+          `,
+          ""
+        );
+        process.exit(1);
+      }
     }
   }
 
