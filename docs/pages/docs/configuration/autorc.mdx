@@ -78,9 +78,32 @@ If you are using enterprise github and your company hosts the graphql at some ot
 }
 ```
 
+### author
+
+The name and email to use with git.
+
+```json
+{
+  "author": "Joe Schmo <joe@schmo.com>"
+}
+```
+
+or
+
+```json
+{
+  "author": {
+    "name": "Joe Schmo",
+    "email": "joe@schmo.com"
+  }
+}
+```
+
 ### name
 
 Name to use with git.
+
+> NOTE: Will be deprecated in v10
 
 ```json
 {
@@ -91,6 +114,8 @@ Name to use with git.
 ### email
 
 Email to use with git.
+
+> NOTE: Will be deprecated in v10
 
 ```json
 {

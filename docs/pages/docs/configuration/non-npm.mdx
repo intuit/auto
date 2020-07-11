@@ -46,8 +46,7 @@ Using `auto` with any other package manager than [npm](https://npmjs.com) requir
 
    ```json
    {
-     "name": "Andrew Lisowski",
-     "email": "lisowski54@gmail.com",
+     "author": "Andrew Lisowski <lisowski54@gmail.com>",
      "plugins": []
    }
    ```
@@ -56,13 +55,12 @@ Using `auto` with any other package manager than [npm](https://npmjs.com) requir
 
    ```json
    {
-     "name": "Andrew Lisowski",
-     "email": "lisowski54@gmail.com",
+     "author": "Andrew Lisowski <lisowski54@gmail.com>",
      "plugins": ["git-tag"]
    }
    ```
 
-3. `.autorc` - With package manager plugin. [`shipit`](https://intuit.github.io/auto/pages/generated/shipit.html) works, some configuration picked up from package manager package definition files. In the following `repo`, `owner`, `name`, and `email` are picked up from the `pom.xml`
+3. `.autorc` - With package manager plugin. [`shipit`](https://intuit.github.io/auto/pages/generated/shipit.html) works, some configuration picked up from package manager package definition files. In the following `repo`, `owner`, and `author` are picked up from the `pom.xml`
 
    ```json
    {
