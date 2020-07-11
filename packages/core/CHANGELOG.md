@@ -1,3 +1,16 @@
+# v9.43.2 (Sat Jul 11 2020)
+
+#### 🐛 Bug Fix
+
+- exit in CI when no valid git email + name found [#1369](https://github.com/intuit/auto/pull/1369) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- exit in CI when no valid git email + name found ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.43.1 (Tue Jul 07 2020)
 
 :tada: This release contains work from a new contributor! :tada:

@@ -1,3 +1,21 @@
+# v9.43.2 (Sat Jul 11 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - exit in CI when no valid git email + name found [#1369](https://github.com/intuit/auto/pull/1369) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Update bug_report.md [#1368](https://github.com/intuit/auto/pull/1368) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update contributor count [#1364](https://github.com/intuit/auto/pull/1364) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.43.1 (Tue Jul 07 2020)
 
 :tada: This release contains work from a new contributor! :tada:
