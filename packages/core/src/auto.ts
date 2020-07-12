@@ -6,6 +6,7 @@ import path from "path";
 import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
+import parseAuthor from "parse-author";
 import { gt, lte, compareBuild, inc, parse, ReleaseType, major } from "semver";
 import {
   AsyncParallelHook,
@@ -1876,11 +1877,35 @@ export default class Auto {
         "Could not find git user or email configured in git config"
       );
 
-      if (!this.release) {
-        return;
+      const { author } = this.config || {};
+      let { email, name } = this.config || {};
+
+      if (author) {
+        const parsedAuthor =
+          typeof author === "string" ? parseAuthor(author) : author;
+
+        if (
+          typeof parsedAuthor === "object" &&
+          parsedAuthor.email &&
+          parsedAuthor.name
+        ) {
+          ({ name, email } = parsedAuthor);
+        } else {
+          this.logger.log.error(endent`
+            .autorc author parsing failed!
+  
+            The author must either be in one of the following formats:
+  
+            1. Your Name <your_email@mail.com>
+            2. An object with "name" and "email"
+  
+            But you supplied:
+  
+            ${author}
+          `);
+        }
       }
 
-      let { email, name } = this.release.config;
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );

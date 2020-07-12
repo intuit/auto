@@ -6,7 +6,8 @@ test("throws error for unknown args", async () => {
   process.exit = jest.fn() as any;
   console.log = jest.fn() as any;
 
-  await run("foo", {});
+  // @ts-ignore
+  await run("foo", { foo: 123 });
 
   expect(process.exit).toHaveBeenCalledWith(1);
 });
