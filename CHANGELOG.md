@@ -1,3 +1,16 @@
+# v9.44.0 (Sat Jul 11 2020)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - add .autorc "author" option that combines email + name [#1370](https://github.com/intuit/auto/pull/1370) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.43.2 (Sat Jul 11 2020)
 
 #### 🐛 Bug Fix
