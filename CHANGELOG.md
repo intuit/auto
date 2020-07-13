@@ -1,3 +1,38 @@
+# v9.45.0 (Mon Jul 13 2020)
+
+### Release Notes
+
+_From #1371_
+
+Previously `auto` would mark unlabelled PRs as `patch`. You can now configure what label will be applied as the `default` when calculating SEMVER bumps and adding PRs to changelogs.
+
+To configure a default label add the `default` property and set it to `true`.
+
+```json
+{
+  "labels": [
+    {
+      "name": "Version: Minor",
+      "releaseType": "minor",
+      "default": true
+    }
+  ]
+}
+```
+
+---
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/conventional-commits`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`
+  - allow default SEMVER label to be configured [#1371](https://github.com/intuit/auto/pull/1371) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.44.0 (Sat Jul 11 2020)
 
 #### 🚀 Enhancement
