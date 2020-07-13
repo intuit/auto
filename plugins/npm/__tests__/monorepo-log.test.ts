@@ -4,7 +4,7 @@ import * as Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Changelog from "@auto-it/core/dist/changelog";
 import LogParse from "@auto-it/core/dist/log-parse";
-import { defaultLabels } from "@auto-it/core/dist/release";
+import { defaultLabels } from "@auto-it/core/dist/semver";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 

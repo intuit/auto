@@ -1,11 +1,10 @@
 import endent from "endent";
 import Changelog, { IGenerateReleaseNotesOptions } from "../changelog";
 import LogParse from "../log-parse";
-import { defaultLabels } from "../release";
 import { dummyLog } from "../utils/logger";
 
 import makeCommitFromMsg from "./make-commit-from-msg";
-import SEMVER from "../semver";
+import SEMVER, { defaultLabels } from "../semver";
 import { getCurrentBranch } from "../utils/get-current-branch";
 
 const currentBranchSpy = getCurrentBranch as jest.Mock;
@@ -348,6 +347,36 @@ describe("generateReleaseNotes", () => {
         authorEmail: "adam@dierkens.com",
         subject: "I was a push to master\n\nfoo bar",
         labels: ["pushToBaseBranch"],
+      },
+      {
+        hash: "2",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test("should include PR-less commits as the default label", async () => {
+    const options = testOptions();
+    options.labels[1] = {
+      ...options.labels[1],
+      default: true,
+    };
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: "1",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\nfoo bar",
       },
       {
         hash: "2",

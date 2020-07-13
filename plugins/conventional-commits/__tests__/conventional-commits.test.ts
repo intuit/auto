@@ -2,10 +2,8 @@ import Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Git from "@auto-it/core/dist/git";
 import LogParse from "@auto-it/core/dist/log-parse";
-import Release, {
-  defaultLabels,
-  getVersionMap,
-} from "@auto-it/core/dist/release";
+import Release, { getVersionMap } from "@auto-it/core/dist/release";
+import { defaultLabels } from "@auto-it/core/dist/semver";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import {
   makeHooks,

@@ -5,8 +5,7 @@ import { prompt } from "enquirer";
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
 import { makeInteractiveInitHooks } from "./utils/make-hooks";
-import { defaultLabels, ILabelDefinition } from "./release";
-import SEMVER from "./semver";
+import SEMVER, { defaultLabels, ILabelDefinition } from "./semver";
 import { loadPlugin } from "./utils/load-plugins";
 import { ILogger } from "./utils/logger";
 import { readFileSync, writeFileSync } from "fs";

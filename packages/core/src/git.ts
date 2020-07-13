@@ -10,14 +10,14 @@ import tinyColor from "tinycolor2";
 import endent from "endent";
 import on from "await-to-js";
 import join from "url-join";
+import { gt, lt } from "semver";
 
 import { Memoize as memoize } from "typescript-memoize";
 
-import { ILabelDefinition } from "./release";
+import { ILabelDefinition } from "./semver";
 import verifyAuth from "./utils/verify-auth";
 import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
-import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
 import { buildSearchQuery, ISearchQuery } from "./match-sha-to-pr";
 

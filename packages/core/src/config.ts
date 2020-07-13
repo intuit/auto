@@ -3,10 +3,11 @@ import merge from "deepmerge";
 import fetch from "node-fetch";
 import * as path from "path";
 
-import { defaultLabels, getVersionMap, ILabelDefinition } from "./release";
+import { getVersionMap } from "./release";
 import { ILogger } from "./utils/logger";
 import tryRequire from "./utils/try-require";
 import endent from "endent";
+import { ILabelDefinition, defaultLabels } from "./semver";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
@@ -90,7 +91,8 @@ export default class Config {
       labels,
       prereleaseBranches: rawConfig.prereleaseBranches || ["next"],
       versionBranches:
-        typeof rawConfig.versionBranches === "boolean" && rawConfig.versionBranches
+        typeof rawConfig.versionBranches === "boolean" &&
+        rawConfig.versionBranches
           ? "version-"
           : rawConfig.versionBranches,
     };

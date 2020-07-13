@@ -2,7 +2,7 @@ import Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/src/__tests__/make-commit-from-msg";
 import { dummyLog } from "@auto-it/core/src/utils/logger";
 import { makeHooks } from "@auto-it/core/src/utils/make-hooks";
-import { defaultLabels } from "@auto-it/core/dist/release";
+import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
 
 import SlackPlugin from "../src";
@@ -31,10 +31,10 @@ const nextBranch = execSync("git rev-parse --abbrev-ref HEAD", {
   encoding: "utf8",
 }).trim();
 
-const mockAuto = ({
+const mockAuto = {
   git: {},
   logger: dummyLog(),
-} as any) ;
+} as any;
 
 describe("postToSlack", () => {
   test("doesn't post with no new version", async () => {

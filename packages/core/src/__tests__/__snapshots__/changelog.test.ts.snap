@@ -192,6 +192,17 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`generateReleaseNotes should include PR-less commits as the default label 1`] = `
+"#### 🚀 Enhancement
+
+- I was a push to master (adam@dierkens.com)
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`generateReleaseNotes should include prs with released label 1`] = `
 "#### 🐛 Bug Fix
 
