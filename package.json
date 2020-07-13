@@ -74,7 +74,7 @@
     "simple-react-lightbox": "^3.1.2-3",
     "title-case": "^3.0.2",
     "ts-jest": "^25.0.0",
-    "type-fest": "^0.15.0",
+    "type-fest": "^0.16.0",
     "typescript": "~3.9.3"
   },
   "husky": {
