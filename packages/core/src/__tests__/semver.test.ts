@@ -1,5 +1,9 @@
-import { getVersionMap, defaultLabels } from "../release";
-import SEMVER, { calculateSemVerBump, getHigherSemverTag } from "../semver";
+import { getVersionMap } from "../release";
+import SEMVER, {
+  calculateSemVerBump,
+  getHigherSemverTag,
+  defaultLabels,
+} from "../semver";
 
 const semverMap = getVersionMap([
   ...defaultLabels,
@@ -42,6 +46,14 @@ describe("calculateSemVerBump", () => {
     expect(calculateSemVerBump([[], ["documentation"]], semverMap)).toBe(
       SEMVER.patch
     );
+  });
+
+  test("should be able to configure default label", () => {
+    expect(
+      calculateSemVerBump([[], ["documentation"]], semverMap, {
+        labels: [{ default: true, name: "minor", releaseType: SEMVER.minor }],
+      })
+    ).toBe(SEMVER.minor);
   });
 
   test("should not skip things before none", () => {

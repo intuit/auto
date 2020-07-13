@@ -1,7 +1,7 @@
 import endent from "endent";
 
 import { IExtendedCommit } from "./log-parse";
-import { ILabelDefinition } from "./release";
+import { ILabelDefinition } from "./semver";
 
 interface ISearchEdge {
   /** Graphql search node */

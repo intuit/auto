@@ -4,7 +4,6 @@ import * as fs from "fs";
 import chunk from "lodash.chunk";
 import { inc, ReleaseType } from "semver";
 import { promisify } from "util";
-import * as t from "io-ts";
 
 import { AsyncSeriesBailHook, SyncHook } from "tapable";
 import { Memoize as memoize } from "typescript-memoize";
@@ -12,7 +11,13 @@ import { ICreateLabelsOptions } from "./auto-args";
 import Changelog from "./changelog";
 import Git from "./git";
 import LogParse, { ICommitAuthor, IExtendedCommit } from "./log-parse";
-import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
+import SEMVER, {
+  calculateSemVerBump,
+  IVersionLabels,
+  isVersionLabel,
+  ILabelDefinition,
+  defaultLabels,
+} from "./semver";
 import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
 import { makeReleaseHooks } from "./utils/make-hooks";
@@ -24,124 +29,6 @@ import {
   ISearchQuery,
 } from "./match-sha-to-pr";
 import { LoadedAutoRc } from "./types";
-
-export type VersionLabel =
-  | SEMVER.major
-  | SEMVER.minor
-  | SEMVER.patch
-  | "skip"
-  | "release";
-
-export const releaseLabels: VersionLabel[] = [
-  SEMVER.major,
-  SEMVER.minor,
-  SEMVER.patch,
-  "skip",
-  "release",
-];
-
-/** Determine if a label is a label used for versioning */
-export const isVersionLabel = (label: string): label is VersionLabel =>
-  releaseLabels.includes(label as VersionLabel);
-
-const labelDefinitionRequired = t.type({
-  /** The label text */
-  name: t.string,
-});
-
-const labelDefinitionOptional = t.partial({
-  /** A title to put in the changelog for the label */
-  changelogTitle: t.string,
-  /** The color of the label */
-  color: t.string,
-  /** The description of the label */
-  description: t.string,
-  /** What type of release this label signifies */
-  releaseType: t.union([
-    t.literal("none"),
-    t.literal("skip"),
-    ...releaseLabels.map((l) => t.literal(l)),
-  ]),
-  /** Whether to overwrite the base label */
-  overwrite: t.boolean,
-});
-
-export const labelDefinition = t.intersection([
-  labelDefinitionOptional,
-  labelDefinitionRequired,
-]);
-export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
-
-export const defaultLabels: ILabelDefinition[] = [
-  {
-    name: "major",
-    changelogTitle: "💥 Breaking Change",
-    description: "Increment the major version when merged",
-    releaseType: SEMVER.major,
-    color: "#C5000B",
-  },
-  {
-    name: "minor",
-    changelogTitle: "🚀 Enhancement",
-    description: "Increment the minor version when merged",
-    releaseType: SEMVER.minor,
-    color: "#F1A60E",
-  },
-  {
-    name: "patch",
-    changelogTitle: "🐛 Bug Fix",
-    description: "Increment the patch version when merged",
-    releaseType: SEMVER.patch,
-    color: "#870048",
-  },
-  {
-    name: "skip-release",
-    description: "Preserve the current version when merged",
-    releaseType: "skip",
-    color: "#bf5416",
-  },
-  {
-    name: "release",
-    description: "Create a release when this pr is merged",
-    releaseType: "release",
-    color: "#007f70",
-  },
-  {
-    name: "internal",
-    changelogTitle: "🏠 Internal",
-    description: "Changes only affect the internal API",
-    releaseType: "none",
-    color: "#696969",
-  },
-  {
-    name: "documentation",
-    changelogTitle: "📝 Documentation",
-    description: "Changes only affect the documentation",
-    releaseType: "none",
-    color: "#cfd3d7",
-  },
-  {
-    name: "tests",
-    changelogTitle: "🧪 Tests",
-    description: "Add or improve existing tests",
-    releaseType: "none",
-    color: "#ffd3cc",
-  },
-  {
-    name: "dependencies",
-    changelogTitle: "🔩 Dependency Updates",
-    description: "Update one or more dependencies version",
-    releaseType: "none",
-    color: "#8732bc",
-  },
-  {
-    name: "performance",
-    changelogTitle: "🏎 Performance",
-    description: "Improve performance of an existing feature",
-    releaseType: SEMVER.patch,
-    color: "#f4b2d8",
-  },
-];
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabels) =>
@@ -528,7 +415,10 @@ export default class Release {
       options,
     });
 
-    const result = calculateSemVerBump(labels, this.versionLabels, options);
+    const result = calculateSemVerBump(labels, this.versionLabels, {
+      ...this.config,
+      ...options,
+    });
 
     this.logger.verbose.success("Calculated SEMVER bump:", result);
 

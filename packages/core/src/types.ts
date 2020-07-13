@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-import { labelDefinition } from "./release";
+import { labelDefinition } from "./semver";
 
 const author = t.partial({
   /** The name and email of the author to make commits with */

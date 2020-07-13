@@ -4,7 +4,7 @@ import join from "url-join";
 import botList from "@auto-it/bot-list";
 
 import { ICommitAuthor, IExtendedCommit } from "./log-parse";
-import { ILabelDefinition } from "./release";
+import { ILabelDefinition } from "./semver";
 import { ILogger } from "./utils/logger";
 import { makeChangelogHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
@@ -208,10 +208,10 @@ export default class Changelog {
       })
       .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
 
-    const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
-      this.options.labels,
-      "patch"
-    );
+    const defaultPatchLabelName =
+      this.options.labels.find((l) => l.default)?.name ||
+      this.options.labels.find((l) => l.releaseType === "patch")?.name ||
+      "patch";
 
     commits
       .filter(
@@ -236,14 +236,6 @@ export default class Changelog {
           : { [label.name]: matchedCommits };
       })
     );
-  }
-
-  /** Get the default label for a label key */
-  private getFirstLabelNameFromLabelKey(
-    labels: ILabelDefinition[],
-    labelKey: string
-  ) {
-    return labels.find((l) => l.releaseType === labelKey)?.name || labelKey;
   }
 
   /** Create a list of users */

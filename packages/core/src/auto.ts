@@ -43,8 +43,12 @@ import Config from "./config";
 import Git, { IGitOptions, IPRInfo } from "./git";
 import InteractiveInit from "./init";
 import LogParse, { IExtendedCommit } from "./log-parse";
-import Release, { getVersionMap, ILabelDefinition } from "./release";
-import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
+import Release, { getVersionMap } from "./release";
+import SEMVER, {
+  calculateSemVerBump,
+  IVersionLabels,
+  ILabelDefinition,
+} from "./semver";
 import execPromise from "./utils/exec-promise";
 import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
 import createLog, { ILogger, setLogLevel } from "./utils/logger";
@@ -2099,8 +2103,7 @@ export { IPlugin } from "./utils/load-plugins";
 export { ICommitAuthor, IExtendedCommit } from "./log-parse";
 
 export { default as Auto } from "./auto";
-export { default as SEMVER } from "./semver";
+export { default as SEMVER, VersionLabel } from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export { default as getLernaPackages } from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";
-export { VersionLabel } from "./release";
