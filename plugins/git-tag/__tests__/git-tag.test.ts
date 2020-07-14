@@ -5,6 +5,9 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import GitTag from "../src";
 
 const exec = jest.fn();
+jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+  getCurrentBranch: () => "next",
+}));
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
   // @ts-ignore
   default: (...args) => exec(...args),
@@ -103,7 +106,12 @@ describe("Git Tag Plugin", () => {
         "-m",
         '"Tag pre-release: 1.0.1-next.0"',
       ]);
-      expect(exec).toHaveBeenCalledWith("git", ["push", "origin", "--tags"]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "next",
+        "--tags",
+      ]);
     });
   });
 });
