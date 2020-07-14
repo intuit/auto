@@ -961,7 +961,7 @@ export default class NPMPlugin implements IPlugin {
         preReleaseVersions.push(auto.prefixRelease(version!));
       }
 
-      await execPromise("git", ["push", auto.remote, "--tags"]);
+      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
       return preReleaseVersions;
     });
 
