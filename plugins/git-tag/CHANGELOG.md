@@ -1,3 +1,20 @@
+# v9.46.0 (Tue Jul 14 2020)
+
+#### 🚀 Enhancement
+
+- push prerelease branch in addition to tags [#1382](https://github.com/intuit/auto/pull/1382) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- update tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- push prerelease branch in addition to tags ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.41.1 (Mon Jul 06 2020)
 
 #### 🐛 Bug Fix

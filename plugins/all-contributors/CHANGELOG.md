@@ -1,3 +1,32 @@
+# v9.46.0 (Tue Jul 14 2020)
+
+#### 🚀 Enhancement
+
+- push prerelease branch in addition to tags [#1382](https://github.com/intuit/auto/pull/1382) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- Bump all-contributors-cli from 6.16.0 to 6.16.1 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- Bump next-ignite from 0.3.3 to 0.4.1 [#1376](https://github.com/intuit/auto/pull/1376) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/prettier from 2.0.1 to 2.0.2 [#1379](https://github.com/intuit/auto/pull/1379) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fast-glob from 3.2.2 to 3.2.4 [#1378](https://github.com/intuit/auto/pull/1378) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump type-fest from 0.15.1 to 0.16.0 [#1377](https://github.com/intuit/auto/pull/1377) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jsdom from 16.2.2 to 16.3.0 [#1375](https://github.com/intuit/auto/pull/1375) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.16.0 to 6.16.1 [#1374](https://github.com/intuit/auto/pull/1374) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.41.1 (Mon Jul 06 2020)
 
 #### 🐛 Bug Fix
