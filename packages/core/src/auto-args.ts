@@ -14,6 +14,9 @@ export interface ICreateLabelsOptions {
 export interface ILabelOptions {
   /** PR to get the labels for */
   pr?: number;
+
+  /** Label to check for */
+  exists?: string;
 }
 
 export interface IPRCheckOptions {
