@@ -317,6 +317,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "stabbylambda",
+      "name": "David Stone",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/124668?v=4",
+      "profile": "https://github.com/stabbylambda",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
