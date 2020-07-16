@@ -303,6 +303,17 @@ function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
+/** The Error that gets thrown when a label existence check fails */
+export class LabelExistsError extends Error {
+  /**
+   * @param label - the label we were checking existence for
+   */
+  constructor(label: string) {
+    super(`The label ${label} does not exist`);
+    Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+  }
+}
+
 /**
  * The "auto" node API. Its public interface matches the
  * commands you can run from the CLI
@@ -751,7 +762,7 @@ export default class Auto {
   /**
    * Get the labels on a specific PR. Defaults to the labels of the last merged PR
    */
-  async label({ pr }: ILabelOptions = {}) {
+  async label({ pr, exists }: ILabelOptions = {}) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -777,6 +788,14 @@ export default class Auto {
       if (lastMerged) {
         labels = lastMerged.labels.map((label) => label.name);
       }
+    }
+
+    if (exists) {
+      if (labels.indexOf(exists) === -1) {
+        throw new LabelExistsError(exists);
+      }
+
+      return;
     }
 
     if (labels.length) {

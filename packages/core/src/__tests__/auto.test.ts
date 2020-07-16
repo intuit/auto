@@ -314,6 +314,33 @@ describe("Auto", () => {
       expect(console.log).toHaveBeenCalledWith("foo");
     });
 
+    test("should check for a given label", async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const getLabels = jest.fn();
+      auto.git!.getLabels = getLabels;
+      getLabels.mockReturnValueOnce(["foo"]);
+      jest.spyOn(console, "log").mockImplementation();
+
+      await auto.label({ pr: 13, exists: "foo" });
+      expect(console.log).toHaveBeenCalledWith("foo");
+    });
+
+    test("should throw if a check for a label fails", async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const getLabels = jest.fn();
+      auto.git!.getLabels = getLabels;
+      getLabels.mockReturnValueOnce(["bar"]);
+      jest.spyOn(console, "log").mockImplementation();
+
+      await expect(auto.label({ pr: 13, exists: "foo" })).rejects.toThrow();
+    });
+
     test("should get labels for last merged PR", async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();

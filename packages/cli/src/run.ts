@@ -15,6 +15,7 @@ import Auto, {
   IShipItOptions,
   IVersionOptions,
   INextOptions,
+  LabelExistsError,
 } from "@auto-it/core";
 import endent from "endent";
 import on from "await-to-js";
@@ -115,7 +116,7 @@ export async function run(command: string, args: ApiOptions) {
       `);
       console.log("");
       auto.logger.verbose.error(error);
-    } else {
+    } else if (!(error instanceof LabelExistsError)) {
       console.log(error);
     }
 
