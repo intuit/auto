@@ -1,3 +1,20 @@
+# v9.47.0 (Thu Jul 16 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Stone ([@stabbylambda](https://github.com/stabbylambda)), for all your work!
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add `--exists $LABEL` to label command [#1383](https://github.com/intuit/auto/pull/1383) ([@stabbylambda](https://github.com/stabbylambda))
+
+#### Authors: 1
+
+- David Stone ([@stabbylambda](https://github.com/stabbylambda))
+
+---
+
 # v9.46.0 (Tue Jul 14 2020)
 
 #### 🚀 Enhancement
