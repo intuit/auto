@@ -1,3 +1,16 @@
+# v9.47.1 (Mon Jul 20 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fixes baseBranch from config [#1393](https://github.com/intuit/auto/pull/1393) ([@10hendersonm](https://github.com/10hendersonm))
+
+#### Authors: 1
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+
+---
+
 # v9.47.0 (Thu Jul 16 2020)
 
 :tada: This release contains work from a new contributor! :tada:
