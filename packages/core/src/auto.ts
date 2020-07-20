@@ -538,9 +538,10 @@ export default class Auto {
       // This Line overrides config with args
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...omit(this.options, ["_command", "_all", "main"] as any),
-      baseBranch: this.baseBranch,
+      baseBranch: this.config.baseBranch || this.baseBranch,
     };
     this.config = config;
+    this.baseBranch = config.baseBranch;
     const repository = await this.getRepo(config);
     const token =
       repository?.token || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
