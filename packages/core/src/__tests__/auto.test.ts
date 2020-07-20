@@ -98,6 +98,32 @@ describe("Auto", () => {
     expect(auto.release).toBeDefined();
   });
 
+  test("should set default baseBranch", async () => {
+    search.mockReturnValueOnce({
+      config: defaults,
+    });
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(auto.baseBranch).toBe("master");
+  });
+
+  test("should set custom baseBranch", async () => {
+    search.mockReturnValueOnce({
+      config: {
+        ...defaults,
+        baseBranch: "production",
+      },
+    });
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(auto.baseBranch).toBe("production");
+    expect(auto.config?.baseBranch).toBe("production");
+  });
+
   test("should default to npm in non-pkg", async () => {
     search.mockReturnValueOnce({ config: defaults });
     // @ts-ignore
