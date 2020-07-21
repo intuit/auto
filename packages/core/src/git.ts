@@ -137,6 +137,7 @@ export default class Git {
       previews: ["symmetra-preview"],
       request: { agent: this.options.agent },
       throttle: {
+        /** Add a wait once rate limit is hit */
         onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
@@ -147,8 +148,8 @@ export default class Git {
             return true;
           }
         },
+        /** does not retry, only logs an error */
         onAbuseLimit: (_: number, opts: ThrottleOpts) => {
-          // does not retry, only logs an error
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${opts.url}`
           );
