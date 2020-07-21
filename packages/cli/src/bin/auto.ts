@@ -9,8 +9,8 @@ try {
 
   if (json.name.startsWith("@auto-canary")) {
     moduleAlias.addAliases({
+      /** We want to rewrite all the imports for canary (ex: npm plugin requiring core) */
       "@auto-it": (fromPath: string, request: string) =>
-        // We want to rewrite all the imports for canary (ex: npm plugin requiring core)
         request.startsWith("@auto-it") &&
         // but we also want to be able to require official plugins from a canary
         !fromPath.endsWith("noop.js") &&

@@ -83,6 +83,7 @@ async function getLabel(label?: ILabelDefinition) {
           releaseType: #{releaseType}
         }`,
     // @ts-ignore
+    /** Check if returned config is valid */
     validate: (state: {
       /** The result of the prompt */
       values: ILabelDefinition;
