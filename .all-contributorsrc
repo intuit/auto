@@ -328,6 +328,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "lucascurti",
+      "name": "Lucas Curti",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2811287?v=4",
+      "profile": "https://github.com/lucascurti",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
