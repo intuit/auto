@@ -5,6 +5,7 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import * as fs from "fs";
+import * as path from "path";
 import { inc, ReleaseType, gte } from "semver";
 import { promisify } from "util";
 import * as t from "io-ts";
@@ -164,7 +165,10 @@ export default class ChromeWebStorePlugin implements IPlugin {
         JSON.stringify(manifest, undefined, 2)
       );
 
-      await copyFile(this.options.manifest, this.options.build);
+      await copyFile(
+        this.options.manifest,
+        path.join(this.options.build, "manifest.json")
+      );
 
       // commit new version
       await execPromise("git", ["add", this.options.manifest]);
