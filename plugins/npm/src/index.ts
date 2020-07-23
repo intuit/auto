@@ -810,7 +810,14 @@ export default class NPMPlugin implements IPlugin {
 
       auto.logger.verbose.info("Detected single npm package");
       const current = await auto.getCurrentVersion(lastRelease);
-      const { name } = await loadPackageJson();
+      const { name, private: isPrivate } = await loadPackageJson();
+
+      if (isPrivate) {
+        return {
+          error: 'Package private, cannot make canary release to npm.'
+        }
+      }
+
       let canaryVersion = determineNextVersion(
         lastRelease,
         current,
@@ -941,7 +948,7 @@ export default class NPMPlugin implements IPlugin {
           ...verboseArgs,
         ]);
 
-        const { version } = await loadPackageJson();
+        const { version, private: isPrivate } = await loadPackageJson();
         await execPromise("git", [
           "tag",
           auto.prefixRelease(version!),
@@ -949,13 +956,17 @@ export default class NPMPlugin implements IPlugin {
           `"Update version to ${version}"`,
         ]);
 
-        await execPromise("npm", [
-          "publish",
-          "--tag",
-          prereleaseBranch,
-          ...verboseArgs,
-          ...getLegacyAuthArgs(this.legacyAuth),
-        ]);
+        if (isPrivate) {
+          auto.logger.log.info(`Package private, skipping prerelease publish to npm.`);
+        } else {
+          await execPromise("npm", [
+            "publish",
+            "--tag",
+            prereleaseBranch,
+            ...verboseArgs,
+            ...getLegacyAuthArgs(this.legacyAuth),
+          ]);
+        }
 
         auto.logger.verbose.info("Successfully published next version");
         preReleaseVersions.push(auto.prefixRelease(version!));
@@ -1005,12 +1016,18 @@ export default class NPMPlugin implements IPlugin {
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
         ]);
       } else {
-        await execPromise("npm", [
-          "publish",
-          ...tag,
-          ...verboseArgs,
-          ...getLegacyAuthArgs(this.legacyAuth),
-        ]);
+        const { private: isPrivate } = await loadPackageJson();
+
+        if (isPrivate) {
+          auto.logger.log.info(`Package private, skipping publish to npm.`);
+        } else {
+          await execPromise("npm", [
+            "publish",
+            ...tag,
+            ...verboseArgs,
+            ...getLegacyAuthArgs(this.legacyAuth),
+          ]);
+        }
       }
 
       await execPromise("git", [
