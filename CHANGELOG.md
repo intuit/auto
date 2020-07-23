@@ -1,3 +1,16 @@
+# v9.48.1 (Thu Jul 23 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - add error message around mistmatched auto versions [#1399](https://github.com/intuit/auto/pull/1399) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.48.0 (Thu Jul 23 2020)
 
 #### 🚀 Enhancement
