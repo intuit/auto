@@ -111,6 +111,49 @@ describe("next", () => {
     ]);
   });
 
+  test("skips publish for private package", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0",
+        "private": true
+      }
+    `;
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "next",
+      "--tags",
+    ]);
+    expect(execPromise).not.toHaveBeenCalledWith("npm", [
+      "publish",
+      "--tag",
+      "next",
+    ]);
+  });
+
   test("works with legacy auth", async () => {
     process.env.NPM_TOKEN = "abcd";
     const plugin = new NPMPlugin({ legacyAuth: true });

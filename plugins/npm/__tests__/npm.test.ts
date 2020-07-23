@@ -811,7 +811,14 @@ describe("publish", () => {
     `;
 
     await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(execPromise).toHaveBeenCalledWith("npm", ["publish"]);
+    expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "--follow-tags",
+      "--set-upstream",
+      "origin",
+      "master",
+    ]);
   });
 });
 
@@ -846,6 +853,37 @@ describe("canary", () => {
     await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
     expect(execPromise.mock.calls[1]).toContain("npm");
     expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+  });
+
+  test("doesn't publish private packages", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "private": true
+      }
+    `;
+
+    expect(
+      await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1")
+    ).toStrictEqual({
+      error: "Package private, cannot make canary release to npm.",
+    });
   });
 
   test("finds available canary version", async () => {
