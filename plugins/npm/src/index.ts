@@ -527,6 +527,12 @@ export default class NPMPlugin implements IPlugin {
         return;
       }
 
+      const { private: isPrivate } = await loadPackageJson();
+
+      if (isPrivate) {
+        return;
+      }
+
       auto.checkEnv(this.name, "NPM_TOKEN");
     });
 
@@ -814,8 +820,8 @@ export default class NPMPlugin implements IPlugin {
 
       if (isPrivate) {
         return {
-          error: 'Package private, cannot make canary release to npm.'
-        }
+          error: "Package private, cannot make canary release to npm.",
+        };
       }
 
       let canaryVersion = determineNextVersion(
@@ -957,7 +963,9 @@ export default class NPMPlugin implements IPlugin {
         ]);
 
         if (isPrivate) {
-          auto.logger.log.info(`Package private, skipping prerelease publish to npm.`);
+          auto.logger.log.info(
+            `Package private, skipping prerelease publish to npm.`
+          );
         } else {
           await execPromise("npm", [
             "publish",
