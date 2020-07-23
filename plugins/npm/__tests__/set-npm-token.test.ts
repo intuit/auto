@@ -7,6 +7,7 @@ import * as utils from "../src/utils";
 const loadPackageJson = utils.loadPackageJson as jest.Mock;
 const readFile = utils.readFile as jest.Mock;
 const writeFile = utils.writeFile as jest.Mock;
+const isMonorepo = utils.isMonorepo as jest.Mock;
 
 jest.mock("../src/utils.ts");
 jest.mock("env-ci", () => () => ({
@@ -31,6 +32,23 @@ describe("set npm token", () => {
     );
   });
 
+  test("should not write a new npmrc for single private package", async () => {
+    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
+    isMonorepo.mockReturnValueOnce(false);
+
+    await setNpmToken(dummyLog());
+    expect(writeFile).not.toHaveBeenCalled()
+  });
+
+
+  test("should write a npmrc for monorepo", async () => {
+    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
+    isMonorepo.mockReturnValueOnce(true);
+
+    await setNpmToken(dummyLog());
+    expect(writeFile).toHaveBeenCalled()
+  });
+
   test("should write a new npmrc w/o name", async () => {
     loadPackageJson.mockReturnValueOnce({});
     await setNpmToken(dummyLog());
@@ -52,7 +70,7 @@ describe("set npm token", () => {
     );
   });
 
-  test("should use registry for scoped pacakged", async () => {
+  test("should use registry for scoped packaged", async () => {
     loadPackageJson.mockReturnValueOnce({
       name: "@scope/test",
     });

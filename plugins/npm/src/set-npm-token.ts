@@ -5,7 +5,7 @@ import registryUrl from "registry-url";
 import urlJoin from "url-join";
 import userHome from "user-home";
 
-import { loadPackageJson, readFile, writeFile } from "./utils";
+import { loadPackageJson, readFile, writeFile, isMonorepo } from "./utils";
 
 const { isCi } = envCi();
 
@@ -15,7 +15,13 @@ export default async function setTokenOnCI(logger: ILogger) {
     return;
   }
 
-  const { publishConfig = {}, name } = await loadPackageJson();
+  const { publishConfig = {}, name, private: isPrivate } = await loadPackageJson();
+
+  if (isPrivate && !isMonorepo()) {
+    logger.verbose.info('NPM token not set for private package.')
+    return;
+  }
+
   const rc = path.join(userHome, ".npmrc");
   let contents = "";
 

@@ -26,13 +26,10 @@ import { gt, gte, inc, ReleaseType } from "semver";
 
 import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI from "./set-npm-token";
-import { loadPackageJson, writeFile } from "./utils";
+import { loadPackageJson, writeFile, isMonorepo } from "./utils";
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
-
-/** Check if the project is a monorepo */
-const isMonorepo = () => fs.existsSync("lerna.json");
 
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
