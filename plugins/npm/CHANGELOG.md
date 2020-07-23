@@ -1,3 +1,21 @@
+# v9.48.0 (Thu Jul 23 2020)
+
+#### 🚀 Enhancement
+
+- skip publish for private npm packages [#1397](https://github.com/intuit/auto/pull/1397) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- don't set token for private single npm packages ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- private packages dont need npm token ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- skip publish for private npm pacakges ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.47.2 (Wed Jul 22 2020)
 
 #### 🔩 Dependency Updates

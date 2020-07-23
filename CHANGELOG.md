@@ -1,3 +1,16 @@
+# v9.48.0 (Thu Jul 23 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - skip publish for private npm packages [#1397](https://github.com/intuit/auto/pull/1397) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.47.2 (Wed Jul 22 2020)
 
 :tada: This release contains work from a new contributor! :tada:
