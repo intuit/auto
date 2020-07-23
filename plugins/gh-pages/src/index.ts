@@ -7,6 +7,7 @@ import {
 } from "@auto-it/core";
 import { execSync } from "child_process";
 import * as t from "io-ts";
+import endent from 'endent';
 
 const required = t.interface({
   /** The directory to push to gh-pages */
@@ -117,6 +118,24 @@ export default class GhPagesPlugin implements IPlugin {
       auto.logger.log.error(
         "Oh no! It looks like there was trouble publishing to GitHub Pages 😢"
       );
+
+      if (error.message.includes('git not clean')) {
+        auto.logger.log.error(endent`
+          Your repo currently has uncommitted files in it.
+          For the gh-pages plugin to work your git state must be clean.
+          You can do one of two things to fix this:
+
+          1. Add the files to your gitignore (ex: your built gh-pages website dist files)
+          2. Commit the files (ex: Something you want to track in the repo)
+        `)
+
+        const status = await execPromise("git", ["status", "--porcelain"]);
+
+        if (status) {
+          auto.logger.log.error("Uncomitted Changes:\n", status);
+        }
+      } 
+
       throw error;
     }
 
