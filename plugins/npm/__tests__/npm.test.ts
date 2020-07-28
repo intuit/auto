@@ -27,6 +27,7 @@ exec.mockReturnValue("");
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
+jest.mock("../src/set-npm-token.ts");
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
   // @ts-ignore
   default: (...args) => execPromise(...args),

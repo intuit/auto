@@ -211,7 +211,7 @@ function getLegacyAuthArgs(
 /** Get the args to set the registry. Only used with lerna */
 async function getRegistryArgs() {
   const registry = await getRegistry();
-  return registry === DEFAULT_REGISTRY ? [] : ["--registry", registry];
+  return registry === DEFAULT_REGISTRY || !registry ? [] : ["--registry", registry];
 }
 
 const pluginOptions = t.partial({
