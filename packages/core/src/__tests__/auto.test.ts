@@ -1378,6 +1378,31 @@ describe("Auto", () => {
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
     });
+
+    test("falls back to first commit when there are no tags", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "origin";
+      auto.git!.publish = () => Promise.resolve({} as any);
+      auto.git!.getLastTagNotInBaseBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestRelease = () => Promise.resolve("abcd");
+      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg("Test Commit")]);
+
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap("test", afterRelease);
+      auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.next({});
+      expect(afterRelease).toHaveBeenCalled();
+    });
   });
 
   describe("shipit", () => {

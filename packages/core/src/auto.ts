@@ -1279,10 +1279,18 @@ export default class Auto {
     );
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
+
+    const [, lastTagNotInBaseBranch] = await on(
+      this.git.getLastTagNotInBaseBranch(currentBranch!)
+    );
+    const [, latestTagInBranch] = await on(
+      this.git.getLatestTagInBranch(currentBranch)
+    );
     const lastTag =
-      (await this.git.getLastTagNotInBaseBranch(currentBranch!)) ||
-      (await this.git.getLatestTagInBranch(currentBranch)) ||
+      lastTagNotInBaseBranch ||
+      latestTagInBranch ||
       (await this.git.getFirstCommit());
+
     const fullReleaseNotes = await this.release.generateReleaseNotes(
       lastRelease
     );
