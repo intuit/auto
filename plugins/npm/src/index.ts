@@ -25,7 +25,7 @@ import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
 
 import getConfigFromPackageJson from "./package-config";
-import setTokenOnCI from "./set-npm-token";
+import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import { loadPackageJson, writeFile, isMonorepo } from "./utils";
 
 const { isCi } = envCi();
@@ -206,6 +206,12 @@ function getLegacyAuthArgs(
     options.isMonorepo ? "--legacy-auth" : "--_auth",
     process.env.NPM_TOKEN,
   ];
+}
+
+/** Get the args to set the registry. Only used with lerna */
+async function getRegistryArgs() {
+  const registry = await getRegistry();
+  return registry === DEFAULT_REGISTRY ? [] : ["--registry", registry];
 }
 
 const pluginOptions = t.partial({
@@ -764,6 +770,7 @@ export default class NPMPlugin implements IPlugin {
           canaryVersion,
           "--dist-tag",
           "canary",
+          ...(await getRegistryArgs()),
           !isIndependent && "--force-publish",
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
           "--yes", // skip prompts,
@@ -909,6 +916,7 @@ export default class NPMPlugin implements IPlugin {
           "--no-push",
           // you always want a next version to publish
           !isIndependent && "--force-publish",
+          ...(await getRegistryArgs()),
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
           // skip prompts
           "--yes",
@@ -1018,6 +1026,7 @@ export default class NPMPlugin implements IPlugin {
           "from-package",
           this.exact && "--exact",
           ...verboseArgs,
+          ...(await getRegistryArgs()),
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
         ]);
       } else {
