@@ -32,6 +32,7 @@ export default async function execPromise(
     if (child.stdout) {
       child.stdout.on("data", async (data: Buffer) => {
         const stdout = data.toString();
+        log.veryVerbose.info(stdout);
         allStdout += stdout;
       });
     }
@@ -39,6 +40,7 @@ export default async function execPromise(
     if (child.stderr) {
       child.stderr.on("data", (data: Buffer) => {
         const stderr = data.toString();
+        log.veryVerbose.error(stderr);
         allStderr += stderr;
       });
     }
