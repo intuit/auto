@@ -46,7 +46,7 @@
     "prettier": "^2.0.5"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.7",
     "@types/jsdom": "^16.2.3",
     "@types/prettier": "^2.0.1",
     "ts-jest": "^26.1.3",
