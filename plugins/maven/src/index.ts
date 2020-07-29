@@ -1,4 +1,4 @@
-import { Auto, execPromise, IPlugin } from "@auto-it/core";
+import { Auto, execPromise, IPlugin, IExtendedCommit } from "@auto-it/core";
 import parseGitHubUrl from "parse-github-url";
 import { promisify } from "util";
 import * as t from "io-ts";
@@ -7,7 +7,7 @@ import { inc, ReleaseType } from "semver";
 import { validatePluginConfiguration } from "@auto-it/core/dist/auto";
 import * as jsdom from "jsdom";
 import * as nativeVersionUpdate from "./native-version-update";
-import * as mavenVersionUpdate from "./maven";
+import * as maven from "./maven";
 
 const snapshotSuffix = "-SNAPSHOT";
 
@@ -164,6 +164,15 @@ export default class MavenPlugin implements IPlugin {
     };
   }
 
+  /** Update pom file, using whatever engine is configured */
+  private async updatePoms(version: string, auto: Auto, commitMessage: string) {
+    if (this.versionsMavenPlugin) {
+      await maven.updatePoms(version, this.options, auto, commitMessage);
+    } else {
+      await nativeVersionUpdate.updatePoms(version, this.options, auto);
+    }
+  }
+
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.beforeRun.tapPromise(this.name, async () => {
@@ -180,6 +189,14 @@ export default class MavenPlugin implements IPlugin {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
       }
+    });
+
+    auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
+      logParse.hooks.omitCommit.tap(this.name, (commit: IExtendedCommit) => {
+        if (commit.subject.includes("Prepare version")) {
+          return true;
+        }
+      });
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () =>
@@ -216,20 +233,11 @@ export default class MavenPlugin implements IPlugin {
           : inc(previousVersion, version as ReleaseType);
 
       if (releaseVersion) {
-        if (this.versionsMavenPlugin) {
-          await mavenVersionUpdate.updatePoms(
-            releaseVersion,
-            this.options,
-            auto,
-            `"[auto] prepare release ${releaseVersion}"`
-          );
-        } else {
-          await nativeVersionUpdate.updatePoms(
-            releaseVersion,
-            this.options,
-            auto
-          );
-        }
+        await this.updatePoms(
+          releaseVersion,
+          auto,
+          `"Release ${releaseVersion} [skip ci]"`
+        );
 
         const newVersion = auto.prefixRelease(releaseVersion);
 
@@ -245,17 +253,7 @@ export default class MavenPlugin implements IPlugin {
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.verbose.warn(`Running "publish"`);
-      await execPromise(this.options.mavenCommand, [
-        ...this.options.mavenOptions,
-        ...this.options.mavenReleaseGoals,
-        this.options?.mavenSettings ? `-s=${this.options.mavenSettings}` : "",
-        this.options?.mavenUsername
-          ? `-Dusername=${this.options.mavenUsername}`
-          : "",
-        this.options?.mavenPassword
-          ? `-Dpassword=${this.options.mavenPassword}`
-          : "",
-      ]);
+      await maven.executeReleaseGoals(this.options);
 
       await execPromise("git", [
         "push",
@@ -279,16 +277,11 @@ export default class MavenPlugin implements IPlugin {
       // then we need to set up snapshots on the next version
       const newVersion = `${inc(releaseVersion, "patch")}${snapshotSuffix}`;
 
-      if (this.versionsMavenPlugin) {
-        await mavenVersionUpdate.updatePoms(
-          newVersion,
-          this.options,
-          auto,
-          `"[auto] prepare for development on ${newVersion}"`
-        );
-      } else {
-        await nativeVersionUpdate.updatePoms(newVersion, this.options, auto);
-      }
+      await this.updatePoms(
+        newVersion,
+        auto,
+        `"Prepare version ${newVersion} [skip ci]"`
+      );
 
       await execPromise("git", [
         "push",
@@ -302,6 +295,8 @@ export default class MavenPlugin implements IPlugin {
 
   /** Get the version from the current pom.xml **/
   private async getVersion(auto: Auto): Promise<string> {
+    this.properties = await MavenPlugin.getProperties();
+
     const { version } = this.properties;
 
     if (version) {
