@@ -1,3 +1,21 @@
+# v9.48.3 (Wed Jul 29 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - respect registry set at top level for lerna [#1412](https://github.com/intuit/auto/pull/1412) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/conventional-commits`
+  - add Github Package Registry docs [#1414](https://github.com/intuit/auto/pull/1414) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.48.2 (Tue Jul 28 2020)
 
 #### 🐛 Bug Fix

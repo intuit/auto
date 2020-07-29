@@ -1,3 +1,17 @@
+# v9.48.3 (Wed Jul 29 2020)
+
+#### 🐛 Bug Fix
+
+- respect registry set at top level for lerna [#1412](https://github.com/intuit/auto/pull/1412) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- respect registry set at top level ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.48.0 (Thu Jul 23 2020)
 
 #### 🚀 Enhancement
