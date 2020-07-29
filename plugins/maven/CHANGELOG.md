@@ -1,3 +1,23 @@
+# v9.49.0 (Wed Jul 29 2020)
+
+#### 🚀 Enhancement
+
+- Implement full maven release workflow [#1413](https://github.com/intuit/auto/pull/1413) ([@stabbylambda](https://github.com/stabbylambda) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- clean up promise code ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix tests to account for extra file read ([@stabbylambda](https://github.com/stabbylambda))
+- Fix some workflow issues with maven release plugin ([@stabbylambda](https://github.com/stabbylambda))
+- Fix workflow when using maven-versions-plugin ([@stabbylambda](https://github.com/stabbylambda))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- David Stone ([@stabbylambda](https://github.com/stabbylambda))
+
+---
+
 # v9.48.2 (Tue Jul 28 2020)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,17 @@
+# v9.49.0 (Wed Jul 29 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/maven`
+  - Implement full maven release workflow [#1413](https://github.com/intuit/auto/pull/1413) ([@stabbylambda](https://github.com/stabbylambda) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- David Stone ([@stabbylambda](https://github.com/stabbylambda))
+
+---
+
 # v9.48.3 (Wed Jul 29 2020)
 
 #### 🐛 Bug Fix
