@@ -313,7 +313,7 @@ describe("maven", () => {
       await hooks.beforeRun.promise({} as any);
       await hooks.version.promise(Auto.SEMVER.patch);
 
-      expect(await readFile).toHaveBeenCalledTimes(3);
+      expect(await readFile).toHaveBeenCalledTimes(4);
       expect(await readFile).toHaveBeenLastCalledWith(
         "pom.xml",
         { encoding: "utf8" },
@@ -347,7 +347,7 @@ describe("maven", () => {
       await hooks.beforeRun.promise({} as any);
       await hooks.version.promise(Auto.SEMVER.patch);
 
-      expect(await readFile).toHaveBeenCalledTimes(2);
+      expect(await readFile).toHaveBeenCalledTimes(3);
       expect(await readFile).toHaveBeenLastCalledWith(
         "pom.xml",
         { encoding: "utf8" },
@@ -400,7 +400,7 @@ describe("maven", () => {
       await hooks.beforeRun.promise({} as any);
       await hooks.version.promise(Auto.SEMVER.patch);
 
-      expect(await readFile).toHaveBeenCalledTimes(4);
+      expect(await readFile).toHaveBeenCalledTimes(5);
       expect(await readFile).toHaveBeenLastCalledWith(
         "child/pom.xml",
         { encoding: "utf8" },
