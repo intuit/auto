@@ -30,6 +30,10 @@ export default async function execPromise(
     let allStderr = "";
 
     if (child.stdout) {
+      if (log.logLevel === "veryVerbose") {
+        child.stdout.pipe(process.stdout);
+      }
+
       child.stdout.on("data", async (data: Buffer) => {
         const stdout = data.toString();
         allStdout += stdout;
@@ -37,6 +41,10 @@ export default async function execPromise(
     }
 
     if (child.stderr) {
+      if (log.logLevel === "veryVerbose") {
+        child.stderr.pipe(process.stderr);
+      }
+
       child.stderr.on("data", (data: Buffer) => {
         const stderr = data.toString();
         allStderr += stderr;
