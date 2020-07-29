@@ -25,6 +25,7 @@ describe("set npm token", () => {
 
   test("should write a new npmrc", async () => {
     loadPackageJson.mockReturnValueOnce({ name: "test" });
+    loadPackageJson.mockReturnValueOnce({ name: "test" });
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -40,8 +41,8 @@ describe("set npm token", () => {
     expect(writeFile).not.toHaveBeenCalled()
   });
 
-
   test("should write a npmrc for monorepo", async () => {
+    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
     loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
     isMonorepo.mockReturnValueOnce(true);
 
@@ -51,6 +52,7 @@ describe("set npm token", () => {
 
   test("should write a new npmrc w/o name", async () => {
     loadPackageJson.mockReturnValueOnce({});
+    loadPackageJson.mockReturnValueOnce({});
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -59,6 +61,10 @@ describe("set npm token", () => {
   });
 
   test("should use registry from packageJson", async () => {
+    loadPackageJson.mockReturnValueOnce({
+      name: "test",
+      publishConfig: { registry: "https://my-registry.com" },
+    });
     loadPackageJson.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
@@ -74,6 +80,9 @@ describe("set npm token", () => {
     loadPackageJson.mockReturnValueOnce({
       name: "@scope/test",
     });
+    loadPackageJson.mockReturnValueOnce({
+      name: "@scope/test",
+    });
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -82,6 +91,10 @@ describe("set npm token", () => {
   });
 
   test("should not edit npmrc if it already has the token", async () => {
+    loadPackageJson.mockReturnValueOnce({
+      name: "test",
+      publishConfig: { registry: "https://my-registry.com" },
+    });
     loadPackageJson.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
