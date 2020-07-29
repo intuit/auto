@@ -49,6 +49,25 @@ jobs:
           npx auto shipit
 ```
 
+### NPM: Github Package Registry
+
+If you are publishing to the Github Package Registry you will need to change the `NPM_TOKEN` token secret to match the following:
+
+```yml
+- name: Create Release
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    yarn install --frozen-lockfile
+    yarn build
+    npx auto shipit
+```
+
+This will use your `GITHUB_TOKEN` to publish to the Github Package Registry.
+The `NODE_AUTH_TOKEN` variable is required the `.npmrc` that `actions/setup-node@v1` sets up.
+If you aren't using `actions/setup-node@v1` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
+
 ## Troubleshooting
 
 If you are having problems make sure you have done the following:
