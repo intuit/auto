@@ -1,3 +1,19 @@
+# v9.48.2 (Tue Jul 28 2020)
+
+#### 🐛 Bug Fix
+
+- Stream logs in verbose mode [#1409](https://github.com/intuit/auto/pull/1409) ([@stabbylambda](https://github.com/stabbylambda))
+- add helpful error message when git state isn't clean for gh-pages plugin [#1410](https://github.com/intuit/auto/pull/1410) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add more docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add helpful error message when git state isn't clean for gh-pages plugin ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- David Stone ([@stabbylambda](https://github.com/stabbylambda))
+
+---
+
 # v9.47.2 (Wed Jul 22 2020)
 
 #### 🔩 Dependency Updates
