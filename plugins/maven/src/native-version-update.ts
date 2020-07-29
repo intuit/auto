@@ -50,8 +50,10 @@ export async function updatePomFile(
   auto: Auto
 ) {
   auto.logger.verbose.info(`Updating: ${pomFile}`);
+
   const pom = await getPom(pomFile);
   const content = await updatePomVersion(pom.pomXml, version, options);
+
   fs.writeFile(pomFile, content, { encoding: "utf8" }, (err) => {
     if (err) throw err;
   });
@@ -64,27 +66,29 @@ export async function updatePoms(
   auto: Auto
 ) {
   auto.logger.verbose.info("Using the auto maven plugin");
+
   /** Get all the poms and update their versions **/
-  const pomFiles = await glob.sync("**/pom.xml");
+  const pomFiles = glob.sync("**/pom.xml");
+
   if (pomFiles && pomFiles.length > 0) {
-    const updatedPoms = pomFiles.map((pomFile) => {
-      return updatePomFile(pomFile, version, options, auto);
-    });
-    await Promise.all(updatedPoms)
-      .then(() => {
-        auto.logger.verbose.info(
-          `Updated ${pomFiles.length} pom.xml files with version: ${version}`
-        );
-      })
-      .catch((reason: string) => {
-        auto.logger.verbose.error(
-          `There was an error modifying the pom files. Running 'git checkout -- .' to reset the clone.`
-        );
-        execPromise("git", ["checkout", "--", "."]).catch((reason: string) => {
-          throw new Error(reason);
-        });
-        throw new Error(reason);
-      });
+    try {
+      await Promise.all(
+        pomFiles.map((pomFile) =>
+          updatePomFile(pomFile, version, options, auto)
+        )
+      );
+    } catch (error) {
+      auto.logger.verbose.error(
+        `There was an error modifying the pom files. Running 'git checkout -- .' to reset the clone.`
+      );
+
+      await execPromise("git", ["checkout", "--", "."]);
+      throw error;
+    }
+
+    auto.logger.verbose.info(
+      `Updated ${pomFiles.length} pom.xml files with version: ${version}`
+    );
 
     await execPromise("git", [
       "commit",
