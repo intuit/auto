@@ -1,3 +1,15 @@
+# v9.49.1 (Wed Jul 29 2020)
+
+#### 🐛 Bug Fix
+
+- don't leak GH_TOKEN in exec promise output [#1419](https://github.com/intuit/auto/pull/1419) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.47.2 (Wed Jul 22 2020)
 
 :tada: This release contains work from a new contributor! :tada:
