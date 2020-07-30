@@ -75,16 +75,14 @@ jest.mock("@octokit/rest", () => {
     hook = {
       error: errorHook,
     };
+
+    graphql = () => ({
+      data: [],
+    });
   };
 
   return { Octokit };
 });
-
-jest.mock("@octokit/graphql", () => ({
-  graphql: () => ({
-    data: [],
-  }),
-}));
 
 const options = {
   owner: "Adam Dierkens",

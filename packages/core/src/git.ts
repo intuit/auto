@@ -1,4 +1,3 @@
-import { graphql } from "@octokit/graphql";
 import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibility";
 import path from "path";
 import { retry } from "@octokit/plugin-retry";
@@ -512,10 +511,11 @@ export default class Git {
   }
 
   /** Run a graphql query on the GitHub project */
+  @memoize()
   async graphql<T>(query: string) {
     this.logger.verbose.info("Querying Github using GraphQL:\n", query);
 
-    const data = await graphql<T>(query, {
+    const data = await this.github.graphql<T>(query, {
       baseUrl: this.graphqlBaseUrl,
       request: { agent: this.options.agent },
       headers: {
