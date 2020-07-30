@@ -148,11 +148,12 @@ export default class Git {
             return true;
           }
         },
-        /** does not retry, only logs an error */
-        onAbuseLimit: (_: number, opts: ThrottleOpts) => {
+        /** wait after abuse */
+        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.error(
-            `Went over abuse rate limit ${opts.method} ${opts.url}`
+            `Went over abuse rate limit ${opts.method} ${opts.url}, retrying in ${retryAfter} seconds.`
           );
+          return true;
         },
       },
     });
