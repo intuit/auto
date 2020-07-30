@@ -11,6 +11,7 @@ import endent from "endent";
 import on from "await-to-js";
 import join from "url-join";
 import { gt, lt } from "semver";
+import prettyMs from "pretty-ms";
 
 import { Memoize as memoize } from "typescript-memoize";
 
@@ -144,14 +145,18 @@ export default class Git {
           );
 
           if (opts.request.retryCount < 5) {
-            this.logger.verbose.log(`Retrying after ${retryAfter} seconds!`);
+            this.logger.log.log(
+              `Retrying after ${prettyMs(retryAfter * 1000)}!`
+            );
             return true;
           }
         },
         /** wait after abuse */
         onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.error(
-            `Went over abuse rate limit ${opts.method} ${opts.url}, retrying in ${retryAfter} seconds.`
+            `Went over abuse rate limit ${opts.method} ${
+              opts.url
+            }, retrying in ${prettyMs(retryAfter * 1000)}.`
           );
           return true;
         },
