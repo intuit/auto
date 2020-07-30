@@ -2,20 +2,37 @@
 title: Merging Quickly
 ---
 
-One caveat of `auto` is that you need to be mindful of merging multiple PRs at once. You **must not** merge a PR while another is publishing (ex: `lerna publish`). While this window is small, it exists and you should know about it.
+One caveat of `auto` is that you need to be mindful of merging multiple PRs at once.
+You **must not** merge a PR while another is publishing (ex: during `lerna publish`).
+While this window is small, it exists and you should know about it.
 
-`auto` works by looking at the `git` tree to calculate the version bump then makes commits for the `CHANGELOG.md` and the new version. If you merge a PR while another is publishing:
+`auto` works by looking at the `git` tree to calculate the version bump then makes commits for the `CHANGELOG.md` and the new version.
+If you merge a PR while another is publishing:
 
 - they might try to publish the same version number
 - one will try to push over the other's changes and fail
 
 > If you ensure that the last build on master has finished you shouldn't run into any problems!
 
+### Beware Long Publishes
+
+`auto` will do the following before trying to `publish` and push its commits:
+
+- Check for commits on the remote
+- Run the platform specific `publish` step
+
+If your `publish` step runs a lengthy build, then the window for conflicts is extended.
+The recommended approach is to build your code before running `auto` so the window for errors stays small.
+This may make sense on some platforms and not others.
+
+> Example: When using the `npm` plugin don't use the script `prepublishOnly` to build your code
+
 ## With `skip-release`
 
 The one exception to this rule with when merging a bunch of PRs with `skip-release` labels.
 
-You still can't merge a PR that triggers a release and then merge a PR with `skip-release`. This will result in problem 3 from above.
+You still can't merge a PR that triggers a release and then merge a PR with `skip-release`.
+This will result in problem 3 from above.
 
 ```txt
 1. Merge PR #4 "patch"
