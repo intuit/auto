@@ -569,7 +569,7 @@ export default class Auto {
     this.logger.verbose.info(
       `Using remote: ${this.remote.replace(
         token,
-        `****${token.substring(0, 4)}`
+        `****${token.slice(-4)}`
       )}`
     );
     this.hooks.onCreateRelease.call(this.release);
