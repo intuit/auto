@@ -489,6 +489,7 @@ export default class Git {
   }
 
   /** Search to GitHub project's issue and pull requests */
+  @memoize()
   async searchRepo(
     options: RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"]
   ) {
@@ -688,7 +689,7 @@ export default class Git {
     });
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
-    this.logger.verbose.info(`Got commits for PR #${pr}.`);
+    this.logger.verbose.info(`Got commits for PR #${pr}`);
 
     return result;
   }
