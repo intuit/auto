@@ -66,11 +66,15 @@ export default async function execPromise(
         let appendedStdErr = "";
         appendedStdErr += allStdout.length ? `\n\n${allStdout}` : "";
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : "";
+        const argList = filteredArgs
+          .join(", ")
+          .replace(
+            new RegExp(`${process.env.GH_TOKEN}`, "g"),
+            `****${(process.env.GH_TOKEN || "").slice(-4)}`
+          );
 
         const error = new Error(
-          `Running command '${cmd}' with args [${args.join(
-            ", "
-          )}] failed${appendedStdErr}`
+          `Running command '${cmd}' with args [${argList}] failed${appendedStdErr}`
         );
         error.stack = (error.stack || "") + callSite;
         reject(error);
