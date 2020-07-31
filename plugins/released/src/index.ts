@@ -122,8 +122,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
     const isPrerelease = releases.some((r) => r.data.prerelease);
 
     if (commit.pullRequest) {
-      const branch = (await auto.git?.getPullRequest(commit.pullRequest.number))
-        ?.data.head.ref;
+      const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
+      const branch = pr?.data.head.ref;
 
       if (branch && auto.config?.prereleaseBranches.includes(branch)) {
         return;
@@ -136,7 +136,6 @@ export default class ReleasedLabelPlugin implements IPlugin {
         releases,
       });
 
-      const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
       pr.data.body.split("\n").map((line) => messages.push(line));
 
       const commitsInPr = await auto.git!.getCommitsForPR(
