@@ -1,3 +1,27 @@
+# v9.49.2 (Fri Jul 31 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - don't prefix tags in lerna independent mode [#1427](https://github.com/intuit/auto/pull/1427) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/npm`
+  - add docs about running lengthy builds during publish [#1420](https://github.com/intuit/auto/pull/1420) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- [Security] Bump elliptic from 6.4.1 to 6.5.3 [#1417](https://github.com/intuit/auto/pull/1417) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- update ignite [#1421](https://github.com/intuit/auto/pull/1421) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.1 (Wed Jul 29 2020)
 
 #### 🐛 Bug Fix

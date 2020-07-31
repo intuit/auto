@@ -1,3 +1,25 @@
+# v9.49.2 (Fri Jul 31 2020)
+
+#### 🐛 Bug Fix
+
+- don't prefix tags in lerna independent mode [#1427](https://github.com/intuit/auto/pull/1427) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't prefix tags in lerna independent mode ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add note to npm readme ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- add docs about running lengthy builds during publish [#1420](https://github.com/intuit/auto/pull/1420) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- update ignite [#1421](https://github.com/intuit/auto/pull/1421) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.1 (Wed Jul 29 2020)
 
 #### 🐛 Bug Fix
