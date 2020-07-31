@@ -14,9 +14,6 @@ export default class FirstTimeContributorPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cache: Record<string, Record<string, any>> = {};
-
     auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
       const base = new URL(changelog.options.baseUrl).origin;
 
@@ -26,46 +23,30 @@ export default class FirstTimeContributorPlugin implements IPlugin {
         return `${name}${username ? (name ? ` (${link})` : link) : ""}`;
       };
 
-      /** Get the PRs made by a user */
-      const getContributions = async (username: string) => {
-        if (cache[username]) {
-          return cache[username];
-        }
-
-        const response = await auto.git?.graphql<Record<string, any>>(`
-          {
-            search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${username}") {
-              issueCount
-            }
-          }
-        `);
-
-        if (response) {
-          cache[username] = response;
-        }
-
-        return response;
-      };
-
       changelog.hooks.addToBody.tapPromise(
         this.name,
         async (notes, commits) => {
-          const newContributors = (
-            await Promise.all(
-              flatMap(commits, (c) => c.authors).map(async (author) => {
-                if (!author.username || author.type === "Bot") {
-                  return;
-                }
+          const newContributors: ICommitAuthor[] = [];
 
-                // prettier-ignore
-                const prs = await getContributions(author.username)
+          for (const author of flatMap(commits, (c) => c.authors)) {
+            if (!author.username || author.type === "Bot") {
+              continue;
+            }
 
-                if (prs && prs.search.issueCount <= 1) {
-                  return author;
+            // prettier-ignore
+            // eslint-disable-next-line no-await-in-loop
+            const prs = await auto.git?.graphql<Record<string, any>>(`
+              {
+                search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${author.username}") {
+                  issueCount
                 }
-              })
-            )
-          ).filter((a): a is ICommitAuthor => Boolean(a));
+              }
+            `)
+
+            if (prs && prs.search.issueCount <= 1) {
+              newContributors.push(author);
+            }
+          }
 
           if (!newContributors.length) {
             return notes;
