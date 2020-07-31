@@ -283,6 +283,7 @@ export default class Release {
    * @param from - Tag or SHA to start at
    * @param to - Tag or SHA to end at (defaults to HEAD)
    */
+  @memoize()
   async getCommits(from: string, to = "HEAD"): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 

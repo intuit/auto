@@ -128,9 +128,7 @@ export default class Git {
       ? this.options.graphqlBaseUrl || join(new URL(this.baseUrl).origin, "api")
       : this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const GitHub = Octokit.plugin(enterpriseCompatibility)
-      .plugin(retry)
-      .plugin(throttling);
+    const GitHub = Octokit.plugin(enterpriseCompatibility, retry, throttling);
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
