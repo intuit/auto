@@ -611,12 +611,9 @@ export default class Release {
           hash: commit.hash,
         });
       } else if (commit.authorEmail) {
-        const author = await this.git.getUserByEmail(commit.authorEmail);
-
         resolvedAuthors.push({
           email: commit.authorEmail,
           name: commit.authorName,
-          ...author,
           hash: commit.hash,
         });
       }
