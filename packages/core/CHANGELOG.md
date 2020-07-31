@@ -1,3 +1,22 @@
+# v9.49.3 (Fri Jul 31 2020)
+
+#### 🐛 Bug Fix
+
+- Fix various rate limiting issues [#1424](https://github.com/intuit/auto/pull/1424) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- memoize getCommits ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- remove author email match, easily hits rate limit ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- return only commits in the canary release instead of all commits since last tag. getting all commits can trigger rate limits and canaries should be lightweight ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use graphql api on octokit instance ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- pretty print time left on rate limit ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- memoize searchRepo ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- retry after abuse limit ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.1 (Wed Jul 29 2020)
 
 #### 🐛 Bug Fix

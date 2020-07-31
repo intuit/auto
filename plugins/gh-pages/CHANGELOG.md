@@ -1,3 +1,15 @@
+# v9.49.3 (Fri Jul 31 2020)
+
+#### 🐛 Bug Fix
+
+- Fix various rate limiting issues [#1424](https://github.com/intuit/auto/pull/1424) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.1 (Wed Jul 29 2020)
 
 #### 🐛 Bug Fix
