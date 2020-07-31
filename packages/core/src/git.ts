@@ -1,4 +1,3 @@
-import { graphql } from "@octokit/graphql";
 import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibility";
 import path from "path";
 import { retry } from "@octokit/plugin-retry";
@@ -11,6 +10,7 @@ import endent from "endent";
 import on from "await-to-js";
 import join from "url-join";
 import { gt, lt } from "semver";
+import prettyMs from "pretty-ms";
 
 import { Memoize as memoize } from "typescript-memoize";
 
@@ -128,9 +128,7 @@ export default class Git {
       ? this.options.graphqlBaseUrl || join(new URL(this.baseUrl).origin, "api")
       : this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const GitHub = Octokit.plugin(enterpriseCompatibility)
-      .plugin(retry)
-      .plugin(throttling);
+    const GitHub = Octokit.plugin(enterpriseCompatibility, retry, throttling);
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
@@ -144,15 +142,20 @@ export default class Git {
           );
 
           if (opts.request.retryCount < 5) {
-            this.logger.verbose.log(`Retrying after ${retryAfter} seconds!`);
+            this.logger.log.log(
+              `Retrying after ${prettyMs(retryAfter * 1000)}!`
+            );
             return true;
           }
         },
-        /** does not retry, only logs an error */
-        onAbuseLimit: (_: number, opts: ThrottleOpts) => {
+        /** wait after abuse */
+        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.error(
-            `Went over abuse rate limit ${opts.method} ${opts.url}`
+            `Went over abuse rate limit ${opts.method} ${
+              opts.url
+            }, retrying in ${prettyMs(retryAfter * 1000)}.`
           );
+          return true;
         },
       },
     });
@@ -488,6 +491,7 @@ export default class Git {
   }
 
   /** Search to GitHub project's issue and pull requests */
+  @memoize()
   async searchRepo(
     options: RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"]
   ) {
@@ -505,10 +509,11 @@ export default class Git {
   }
 
   /** Run a graphql query on the GitHub project */
+  @memoize()
   async graphql<T>(query: string) {
     this.logger.verbose.info("Querying Github using GraphQL:\n", query);
 
-    const data = await graphql<T>(query, {
+    const data = await this.github.graphql<T>(query, {
       baseUrl: this.graphqlBaseUrl,
       request: { agent: this.options.agent },
       headers: {
@@ -687,7 +692,7 @@ export default class Git {
     });
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
-    this.logger.verbose.info(`Got commits for PR #${pr}.`);
+    this.logger.verbose.info(`Got commits for PR #${pr}`);
 
     return result;
   }

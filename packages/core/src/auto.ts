@@ -1107,8 +1107,8 @@ export default class Auto {
     this.logger.verbose.info("Canary info found:", { pr, build });
 
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
-    const head = await this.release.getCommitsInRelease(from);
-    const labels = head.map((commit) => commit.labels);
+    const commitsInRelease = await this.release.getCommitsInRelease(from);
+    const labels = commitsInRelease.map((commit) => commit.labels);
     let version = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
     if (version === SEMVER.noVersion) {
@@ -1210,15 +1210,6 @@ export default class Auto {
       await gitReset();
     }
 
-    let latestTag: string;
-
-    try {
-      latestTag = await this.git.getLatestTagInBranch();
-    } catch (error) {
-      latestTag = await this.git.getFirstCommit();
-    }
-
-    const commitsInRelease = await this.release.getCommits(latestTag);
     return { newVersion, commitsInRelease, context: "canary" };
   }
 

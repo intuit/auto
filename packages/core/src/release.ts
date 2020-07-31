@@ -283,6 +283,7 @@ export default class Release {
    * @param from - Tag or SHA to start at
    * @param to - Tag or SHA to end at (defaults to HEAD)
    */
+  @memoize()
   async getCommits(from: string, to = "HEAD"): Promise<IExtendedCommit[]> {
     this.logger.verbose.info(`Getting commits from ${from} to ${to}`);
 
@@ -611,12 +612,9 @@ export default class Release {
           hash: commit.hash,
         });
       } else if (commit.authorEmail) {
-        const author = await this.git.getUserByEmail(commit.authorEmail);
-
         resolvedAuthors.push({
           email: commit.authorEmail,
           name: commit.authorName,
-          ...author,
           hash: commit.hash,
         });
       }

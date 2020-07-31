@@ -1049,7 +1049,7 @@ describe("Release", () => {
       expect(await gh.getSemverBump("1234", "123")).toBe(SEMVER.minor);
     });
 
-    test("should be able to configure labels", async () => {
+    test("should be able to configure labels - no release", async () => {
       const customLabels = [
         ...defaultLabels,
         { name: "Version: Major", releaseType: SEMVER.major },
@@ -1083,7 +1083,30 @@ describe("Release", () => {
       );
 
       expect(await gh.getSemverBump("1234", "123")).toBe("");
+    });
 
+    test("should be able to configure labels", async () => {
+      const customLabels = [
+        ...defaultLabels,
+        { name: "Version: Major", releaseType: SEMVER.major },
+        { name: "Version: Minor", releaseType: SEMVER.minor },
+        { name: "Version: Patch", releaseType: SEMVER.patch },
+        { name: "Deploy", releaseType: "release" },
+      ] as ILabelDefinition[];
+
+      const gh = new Release(git, {
+        onlyPublishWithReleaseLabel: true,
+        prereleaseBranches: ["next"],
+        labels: customLabels,
+        baseBranch: "master",
+      });
+      const commits = [
+        makeCommitFromMsg("First (#1234)"),
+        makeCommitFromMsg("Second (#1235)"),
+        makeCommitFromMsg("Third (#1236)"),
+      ];
+
+      // Test deploy label creates release
       getGitLog.mockReturnValueOnce(commits);
       getPr.mockReturnValueOnce(
         Promise.resolve(mockLabels(["Version: Minor", "Deploy"]))
