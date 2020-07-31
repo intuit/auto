@@ -313,7 +313,7 @@ describe("next", () => {
       remote: "origin",
       baseBranch: "master",
       logger: dummyLog(),
-      prefixRelease: (v: string) => v,
+      prefixRelease: (v: string) => `v${v}`,
       git: {
         getLatestRelease: () => "@foo/1@0.1.0",
         getLastTagNotInBaseBranch: () => "@foo/1@1.0.0-next.0",

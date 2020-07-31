@@ -211,7 +211,9 @@ function getLegacyAuthArgs(
 /** Get the args to set the registry. Only used with lerna */
 async function getRegistryArgs() {
   const registry = await getRegistry();
-  return registry === DEFAULT_REGISTRY || !registry ? [] : ["--registry", registry];
+  return registry === DEFAULT_REGISTRY || !registry
+    ? []
+    : ["--registry", registry];
 }
 
 const pluginOptions = t.partial({
@@ -945,7 +947,7 @@ export default class NPMPlugin implements IPlugin {
 
         preReleaseVersions = [
           ...preReleaseVersions,
-          ...tags.map(auto.prefixRelease),
+          ...(isIndependent ? tags : tags.map(auto.prefixRelease)),
         ];
       } else {
         auto.logger.verbose.info("Detected single npm package");
