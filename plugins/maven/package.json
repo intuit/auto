@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/maven",
-  "version": "9.49.2",
+  "version": "9.49.3",
   "main": "dist/index.js",
   "description": "Maven publishing plugin for auto",
   "license": "MIT",
