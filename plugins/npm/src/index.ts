@@ -20,6 +20,7 @@ import {
   InteractiveInit,
   SEMVER,
   validatePluginConfiguration,
+  ShipitRelease,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
@@ -80,11 +81,8 @@ interface GetChangedPackagesArgs {
   sha: string;
   /** All of the packages in the monorepo */
   packages: IMonorepoPackage[];
-  /** The lerna.json for the monorepo */
-  lernaJson: {
-    /** The version of the monorepo */
-    version?: string;
-  };
+  /** Whether to add the version to the package name */
+  addVersion: boolean;
   /** An "auto" logger to use for loggin */
   logger: ILogger;
   /** The semver bump being applied */
@@ -100,7 +98,7 @@ interface GetChangedPackagesArgs {
 export async function getChangedPackages({
   sha,
   packages,
-  lernaJson,
+  addVersion,
   logger,
   version,
 }: GetChangedPackagesArgs) {
@@ -120,7 +118,7 @@ export async function getChangedPackages({
     }
 
     changed.add(
-      lernaJson.version === "independent"
+      addVersion
         ? `${monorepoPackage.name}@${inc(
             monorepoPackage.version,
             version as ReleaseType
@@ -460,6 +458,8 @@ export default class NPMPlugin implements IPlugin {
 
   /** Whether to render a changelog like a monorepo's */
   private renderMonorepoChangelog: boolean;
+  /** the type of release shipit is making */
+  private releaseType?: ShipitRelease;
 
   /** Whether to create sub-package changelogs */
   private readonly subPackageChangelogs: boolean;
@@ -601,7 +601,8 @@ export default class NPMPlugin implements IPlugin {
       return config;
     });
 
-    auto.hooks.beforeShipIt.tap(this.name, async () => {
+    auto.hooks.beforeShipIt.tap(this.name, async ({ releaseType }) => {
+      this.releaseType = releaseType;
       const isIndependent = getLernaJson().version === "independent";
 
       // In independent mode it's possible that no changes to packages have been
@@ -687,11 +688,12 @@ export default class NPMPlugin implements IPlugin {
             }
 
             const lernaPackages = await this.getLernaPackages();
-            const lernaJson = getLernaJson();
             const changedPackages = await getChangedPackages({
               sha: commit.hash,
               packages: lernaPackages,
-              lernaJson,
+              // If we are making a next release it's hard to get the independent next
+              // versions to put in the changelog so we just omit them
+              addVersion: this.releaseType !== "next",
               logger: auto.logger,
               version,
             });

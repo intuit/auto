@@ -115,7 +115,7 @@ const makeDetail = (summary: string, body: string) => endent`
   </details>
 `;
 
-type ShipitRelease = "latest" | "old" | "next" | "canary";
+export type ShipitRelease = "latest" | "old" | "next" | "canary";
 
 interface BeforeShipitContext {
   /** The type of release that will be made when shipit runs. */
