@@ -693,7 +693,9 @@ export default class NPMPlugin implements IPlugin {
               packages: lernaPackages,
               // If we are making a next release it's hard to get the independent next
               // versions to put in the changelog so we just omit them
-              addVersion: this.releaseType !== "next",
+              addVersion:
+                this.releaseType !== "next" &&
+                getLernaJson().version === "independent",
               logger: auto.logger,
               version,
             });

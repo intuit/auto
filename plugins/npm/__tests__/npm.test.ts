@@ -75,7 +75,7 @@ describe("getChangedPackages ", () => {
       await getChangedPackages({
         sha: "sha",
         packages: [],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual([]);
@@ -101,7 +101,7 @@ describe("getChangedPackages ", () => {
             version: "1.0.0",
           },
         ],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual(["foo", "bar"]);
@@ -127,7 +127,7 @@ describe("getChangedPackages ", () => {
             version: "1.0.0",
           },
         ],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual(["@scope/foo", "@scope/bar"]);

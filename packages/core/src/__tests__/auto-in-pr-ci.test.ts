@@ -177,7 +177,7 @@ describe("next in ci", () => {
     auto.prBody = prBody;
     auto.logger = dummyLog();
     await auto.loadConfig();
-    auto.git!.publish = () => Promise.resolve({} as any);
+    auto.git!.publish = () => Promise.resolve({ data: {} } as any);
     auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.3");
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
