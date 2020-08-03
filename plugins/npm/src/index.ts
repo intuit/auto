@@ -938,7 +938,9 @@ export default class NPMPlugin implements IPlugin {
         ).split("\n");
         await Promise.all(
           // Move tags back one commit
-          tags.map((tag) => execPromise("git", ["tag", tag, "-f", "HEAD^"]))
+          tags.map((tag) =>
+            execPromise("git", ["tag", tag, "-f", "HEAD^", "-am", tag])
+          )
         );
         // Move branch back one commit
         await execPromise("git", ["reset", "--hard", "HEAD~1"]);
