@@ -567,10 +567,7 @@ export default class Auto {
     this.release = new Release(this.git, config, this.logger);
     this.remote = await this.getRemote();
     this.logger.verbose.info(
-      `Using remote: ${this.remote.replace(
-        token,
-        `****${token.slice(-4)}`
-      )}`
+      `Using remote: ${this.remote.replace(token, `****${token.slice(-4)}`)}`
     );
     this.hooks.onCreateRelease.call(this.release);
 
@@ -1345,22 +1342,25 @@ export default class Auto {
       releaseNotes,
     });
     const newVersion = result.join(", ");
+    const release = await this.hooks.makeRelease.promise({
+      commits,
+      from: lastTag,
+      isPrerelease: true,
+      newVersion,
+      fullReleaseNotes,
+    });
 
-    await Promise.all(
-      result.map(async (prerelease) => {
-        const release = await this.git?.publish(releaseNotes, prerelease, true);
+    this.logger.verbose.info(release);
 
-        this.logger.verbose.info(release);
-
-        await this.hooks.afterRelease.promise({
-          lastRelease: lastTag,
-          newVersion: prerelease,
-          commits,
-          releaseNotes,
-          response: release,
-        });
-      })
-    );
+    if (release) {
+      await this.hooks.afterRelease.promise({
+        lastRelease: lastTag,
+        newVersion,
+        commits,
+        releaseNotes,
+        response: release,
+      });
+    }
 
     this.logger.log.success(
       `Published next version${result.length > 1 ? `s` : ""}: ${newVersion}`
