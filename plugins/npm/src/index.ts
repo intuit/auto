@@ -26,7 +26,7 @@ import { gt, gte, inc, ReleaseType } from "semver";
 
 import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
-import { loadPackageJson, writeFile, isMonorepo } from "./utils";
+import { loadPackageJson, writeFile, isMonorepo, readFile } from "./utils";
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -362,6 +362,96 @@ const makeMonorepoInstallList = (packageList: string[]) =>
     ...packageList.map((p) => `yarn add ${p}`),
     "```",
   ].join("\n");
+
+/** Find changed packages and create a tag for the current next release. */
+const tagIndependentNextReleases = async (
+  bump: SEMVER,
+  prereleaseBranch: string
+) => {
+  const packages = await getLernaPackages();
+  const [, changedPackagesResult = ""] = await on(
+    execPromise("yarn", ["lerna", "changed"])
+  );
+  const changedPackages = changedPackagesResult
+    .split("\n")
+    .filter((changedPackage) =>
+      packages.some((p) => p.name === changedPackage)
+    );
+  const allTags = (await execPromise("git", ["tag", "--sort='creatordate'"]))
+    .split("\n")
+    .reverse();
+
+  if (!changedPackages.length) {
+    return;
+  }
+
+  // Get all version updates
+  const updates = await Promise.all(
+    changedPackages.map(async (p) => {
+      const lernaPackage = packages.find((pack) => pack.name === p);
+
+      if (!lernaPackage) {
+        return;
+      }
+
+      const currentVersion = lernaPackage?.version || "0.0.0";
+      const lastTag =
+        allTags.find((tag) => tag.startsWith(p)) || currentVersion;
+      const lastVersion = lastTag.replace(`${p}@`, "");
+
+      return {
+        ...lernaPackage,
+        newVersion: determineNextVersion(
+          currentVersion,
+          lastVersion,
+          bump,
+          prereleaseBranch
+        ),
+      };
+    })
+  );
+
+  // Update package.json
+  await Promise.all(
+    updates.map(async (lernaPackage) => {
+      if (!lernaPackage) {
+        return;
+      }
+
+      const packageJsonPath = path.join(lernaPackage.path, "package.json");
+      const packageJson = JSON.parse(
+        await readFile(packageJsonPath, {
+          encoding: "utf-8",
+        })
+      );
+
+      packageJson.version = lernaPackage.newVersion;
+
+      await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    })
+  );
+
+  // Commit work
+  await execPromise("git", ["commit", "-am", "'TEMP COMMIT'"]);
+
+  // Create tags will be rolled back in the next hook
+  await Promise.all(
+    updates.map(async (lernaPackage) => {
+      if (!lernaPackage) {
+        return;
+      }
+
+      const newTag = `${lernaPackage.name}@${lernaPackage.newVersion}`;
+      await execPromise("git", [
+        "tag",
+        "-a",
+        "-m",
+        `"Update version to ${newTag}"`,
+        newTag,
+      ]);
+    })
+  );
+};
 
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
@@ -889,9 +979,9 @@ export default class NPMPlugin implements IPlugin {
         auto.logger.verbose.info("Detected monorepo, using lerna");
         const isIndependent = getLernaJson().version === "independent";
         // It's hard to accurately predict how we should bump independent versions.
-        // So we just prerelease most of the time. (independent only)
+        // So we manually make all the tags. (independent only)
         const next = isIndependent
-          ? "prerelease"
+          ? "from-git"
           : determineNextVersion(
               lastRelease,
               latestTag,
@@ -906,6 +996,10 @@ export default class NPMPlugin implements IPlugin {
           prereleaseBranch,
           next,
         });
+
+        if (isIndependent) {
+          await tagIndependentNextReleases(bump, prereleaseBranch);
+        }
 
         await execPromise("npx", [
           "lerna",
