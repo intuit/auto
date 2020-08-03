@@ -1108,9 +1108,7 @@ export default class NPMPlugin implements IPlugin {
             auto.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
             // 2. make a release for just that package
-            if (releaseNotes.trim()) {
-              return auto.git?.publish(releaseNotes, tag, options.isPrerelease);
-            }
+            return auto.git?.publish(releaseNotes, tag, options.isPrerelease);
           })
         );
 
