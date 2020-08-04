@@ -53,10 +53,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.49.1"
+  version "9.49.3"
 
 "@auto-it/core@link:packages/core":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/graphql" "^4.4.0"
@@ -85,6 +85,7 @@
     node-fetch "2.6.0"
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
+    pretty-ms "^7.0.0"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
@@ -95,7 +96,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -113,7 +114,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -17393,9 +17394,9 @@ typescript-memoize@^1.0.0-alpha.3:
     core-js "2.4.1"
 
 typescript@~3.9.3:
-  version "3.9.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.6.tgz#8f3e0198a34c3ae17091b35571d3afd31999365a"
-  integrity sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
+  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 typical@^2.6.1:
   version "2.6.1"
