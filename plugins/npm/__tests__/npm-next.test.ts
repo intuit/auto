@@ -17,6 +17,7 @@ jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
+execPromise.mockResolvedValue("");
 
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
@@ -217,8 +218,8 @@ describe("next", () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "1.2.3" }');
-    execPromise.mockReturnValueOnce("");
-    execPromise.mockReturnValueOnce("1.2.4-next.0");
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
     plugin.apply(({
       config: { prereleaseBranches: ["next"] },
@@ -258,8 +259,8 @@ describe("next", () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "1.2.3" }');
-    execPromise.mockReturnValueOnce("");
-    execPromise.mockReturnValueOnce("1.2.4-next.0");
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
     plugin.apply(({
       config: { prereleaseBranches: ["next"] },
@@ -304,8 +305,27 @@ describe("next", () => {
     // isMonorepo
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValue('{ "version": "independent" }');
-    execPromise.mockReturnValueOnce("");
-    execPromise.mockReturnValueOnce("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
+    getLernaPackages.mockResolvedValueOnce([
+      {
+        name: "@foo/1",
+        path: "/path/to/1",
+      },
+      {
+        name: "@foo/2",
+        path: "/path/to/2",
+      },
+    ]);
+    execPromise.mockImplementation((command, args) => {
+      if (command === "git" && args[0] === "tag") {
+        return Promise.resolve("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
+      }
+
+      if (command === "yarn" && args[0] === "lerna" && args[0] === "changed") {
+        return Promise.resolve("@foo/1\n@foo/2");
+      }
+
+      return Promise.resolve("");
+    });
 
     plugin.apply(({
       config: { prereleaseBranches: ["next"] },
@@ -326,7 +346,7 @@ describe("next", () => {
 
     expect(execPromise).toHaveBeenCalledWith(
       "npx",
-      expect.arrayContaining(["lerna", "publish", "prerelease"])
+      expect.arrayContaining(["lerna", "publish", "from-git"])
     );
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",

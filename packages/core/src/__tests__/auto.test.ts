@@ -1335,7 +1335,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.remote = "origin";
-      auto.git!.publish = () => Promise.resolve({} as any);
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
       auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.3");
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
@@ -1359,8 +1359,9 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.remote = "origin";
-      auto.git!.publish = () => Promise.resolve({} as any);
-      auto.git!.getLastTagNotInBaseBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLastTagNotInBaseBranch = () =>
+        Promise.reject(new Error("Test"));
       auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
       auto.git!.getLatestRelease = () => Promise.resolve("abcd");
       auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
