@@ -1,3 +1,33 @@
+# v9.49.4 (Tue Aug 04 2020)
+
+### Release Notes
+
+_From #1429_
+
+This PR fixes a few issues around `next` releases and lerna independent monorepos:
+
+- implement a lerna-like versioning function for independent next releases. Allows us more control of how the repo gets versioned. this function will tag+commit the next version, relying on the previously implemented "tag-juggling" so we can rely on lerna as much as possible.
+- rely on `makeRelease` hook to create `next` releases. This enables changelogs in the prerelease for each package
+- keep tags annotated while moving. This makes lerna's package publishing logic work better. `lerna changed` only works on annotated tags.
+- remove version from "Full Changelog"s in prerelease PRs. hard to calculate correct version so it's easier to just omit it
+
+---
+
+#### 🐛 Bug Fix
+
+- Fix lerna independent "next" releases [#1429](https://github.com/intuit/auto/pull/1429) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- remove version from independent next Full Changelogs. hard to calculate correct version ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- implement a lerna-like versioning function for independent next releases. Allows us more control of how the repo gets versioned ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- always create release ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- keep tags annotated while moving ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.3 (Fri Jul 31 2020)
 
 #### 🐛 Bug Fix

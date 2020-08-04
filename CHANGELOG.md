@@ -1,3 +1,39 @@
+# v9.49.4 (Tue Aug 04 2020)
+
+### Release Notes
+
+_From #1429_
+
+This PR fixes a few issues around `next` releases and lerna independent monorepos:
+
+- implement a lerna-like versioning function for independent next releases. Allows us more control of how the repo gets versioned. this function will tag+commit the next version, relying on the previously implemented "tag-juggling" so we can rely on lerna as much as possible.
+- rely on `makeRelease` hook to create `next` releases. This enables changelogs in the prerelease for each package
+- keep tags annotated while moving. This makes lerna's package publishing logic work better. `lerna changed` only works on annotated tags.
+- remove version from "Full Changelog"s in prerelease PRs. hard to calculate correct version so it's easier to just omit it
+
+---
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/maven`, `@auto-it/npm`
+  - Fix lerna independent "next" releases [#1429](https://github.com/intuit/auto/pull/1429) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump io-ts from 2.2.7 to 2.2.9 [#1430](https://github.com/intuit/auto/pull/1430) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.6.2 to 14.7.0 [#1432](https://github.com/intuit/auto/pull/1432) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 3.9.6 to 3.9.7 [#1433](https://github.com/intuit/auto/pull/1433) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.0.2 to 30.1.0 [#1434](https://github.com/intuit/auto/pull/1434) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.19.0 to 23.20.0 [#1435](https://github.com/intuit/auto/pull/1435) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest-circus from 26.1.0 to 26.2.2 [#1436](https://github.com/intuit/auto/pull/1436) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.3 (Fri Jul 31 2020)
 
 #### 🐛 Bug Fix
