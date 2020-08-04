@@ -53,10 +53,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.49.1"
+  version "9.49.3"
 
 "@auto-it/core@link:packages/core":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/graphql" "^4.4.0"
@@ -85,6 +85,7 @@
     node-fetch "2.6.0"
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
+    pretty-ms "^7.0.0"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
@@ -95,7 +96,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -113,7 +114,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.49.1"
+  version "9.49.3"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -7219,9 +7220,9 @@ eslint-plugin-import@^2.18.2:
     tsconfig-paths "^3.9.0"
 
 eslint-plugin-jest@^23.0.1:
-  version "23.19.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.19.0.tgz#da9c45a629bf3180269c7d5033afd7f8b910bde5"
-  integrity sha512-l5PLflALqnODl8Yy0H5hDs18aKJS1KTf66VZGXRpIhmbLbPLaTuMB2P+65fBpkdseSpnTVcIlBYvTvJSBi/itg==
+  version "23.20.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.20.0.tgz#e1d69c75f639e99d836642453c4e75ed22da4099"
+  integrity sha512-+6BGQt85OREevBDWCvhqj1yYA4+BFK4XnRZSGJionuEYmcglMZYLNNBBemwzbqUAckURaHdJSBcjHPyrtypZOw==
   dependencies:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
