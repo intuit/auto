@@ -9729,9 +9729,9 @@ invert-kv@^1.0.0:
   integrity sha1-EEqOSqym09jNFXqO+L+rLXo//bY=
 
 io-ts@^2.1.2:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.7.tgz#5c05477580bff4c0154b474316c8916253e87c44"
-  integrity sha512-kCusyu/Fa0oax5ue2Id/ZqVLEk5JOWyrXHcLbD4kHoVM50MhDEWUtcHlN7RrD94I8OrWILcVltM6OllnZiHJmg==
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.9.tgz#9a427512926462f20415099917a31dbf409ff2b0"
+  integrity sha512-Q9ob1VnpwyNoMam/BO6hm2dF4uu+to8NWSZNsRW6Q2Ni38PadgLZSQDo0hW7CJFgpJkQw4BXGwXzjr7c47c+fw==
 
 ip-regex@^1.0.1:
   version "1.0.3"
