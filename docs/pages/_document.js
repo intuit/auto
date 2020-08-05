@@ -39,6 +39,22 @@ class MyDocument extends Document {
             type="text/javascript"
             src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"
           />
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=UA-142981718-4"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() { dataLayer.push(arguments) }
+
+                gtag('js', new Date());
+                gtag('config', 'UA-142981718-4');
+              `,
+            }}
+          />
         </Head>
         <body>
           <script src={formatPath("attach-dark-mode.js")} />
