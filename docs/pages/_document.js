@@ -51,7 +51,10 @@ class MyDocument extends Document {
                 function gtag() { dataLayer.push(arguments) }
 
                 gtag('js', new Date());
-                gtag('config', 'UA-142981718-4');
+                gtag('config', 'UA-142981718-4', {
+                  anonymize_ip: true,
+                  page_path: window.location.pathname,
+                });
               `,
             }}
           />
