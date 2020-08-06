@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gradle",
-  "version": "9.49.4",
+  "version": "9.49.5",
   "main": "dist/index.js",
   "description": "A plugin that calls gradle-release-plugin with versioning information.",
   "license": "MIT",
@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "tslib": "2.0.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "semver": "^7.0.0"
+    "semver": "^7.0.0",
+    "tslib": "2.0.0"
   }
 }
