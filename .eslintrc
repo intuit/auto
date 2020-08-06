@@ -10,17 +10,22 @@
     "xo",
     "plugin:jest/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier",
     "prettier/@typescript-eslint"
   ],
 
-  "plugins": ["prettier", "jest", "@typescript-eslint", "eslint-plugin-jsdoc"],
+  "plugins": ["prettier", "jest", "@typescript-eslint", "eslint-plugin-jsdoc", "import"],
 
   "rules": {
+    "import/no-extraneous-dependencies": 2,
     /* xo config */
 
     // makes commenting out lines quickly a hassle
     "capitalized-comments": 0,
+    "camelcase": 0,
     "default-param-last": 0,
     "complexity": ["error", { "max": 25 }],
 
@@ -39,6 +44,8 @@
     /* typescript */
 
     "no-undef": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/ban-ts-comment": 0,
     "@typescript-eslint/no-unnecessary-type-arguments": 2,
     "@typescript-eslint/no-unnecessary-type-assertion": 2,
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": 2,
@@ -89,6 +96,7 @@
     {
       "files": ["*.test.*"],
       "rules": {
+        "import/namespace": 0,
         "no-import-assign": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-non-null-assertion": 0,

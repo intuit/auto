@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
+/* eslint-disable no-await-in-loop */
 
 import endent from "endent";
 import { prompt } from "enquirer";

@@ -49,7 +49,7 @@ export interface IGitOptions {
 /** An error originating from the GitHub */
 class GitAPIError extends Error {
   /** Extend the base error */
-  constructor(api: string, args: object, origError: Error) {
+  constructor(api: string, args: Record<string, unknown> | unknown[], origError: Error) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
         origError.message

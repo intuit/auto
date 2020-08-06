@@ -1,4 +1,3 @@
-import { getAutoVersion } from "@auto-it/core";
 import chalk from "chalk";
 import { app, Command, Option } from "command-line-application";
 import endent from "endent";
@@ -17,6 +16,7 @@ import {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
+  getAutoVersion,
 } from "@auto-it/core";
 
 export type Flags =

@@ -29,6 +29,7 @@ import {
   ISearchQuery,
 } from "./match-sha-to-pr";
 import { LoadedAutoRc } from "./types";
+import { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabels) =>
@@ -74,7 +75,7 @@ export default class Release {
     git: Git,
     config: LoadedAutoRc = {
       baseBranch: "master",
-      prereleaseBranches: ["next"],
+      prereleaseBranches: DEFAULT_PRERELEASE_BRANCHES,
       labels: defaultLabels,
     },
     logger: ILogger = dummyLog()

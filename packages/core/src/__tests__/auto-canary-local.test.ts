@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 

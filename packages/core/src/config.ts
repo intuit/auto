@@ -9,6 +9,8 @@ import tryRequire from "./utils/try-require";
 import endent from "endent";
 import { ILabelDefinition, defaultLabels } from "./semver";
 
+export const DEFAULT_PRERELEASE_BRANCHES = ["next"];
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigObject = any;
 
@@ -89,7 +91,7 @@ export default class Config {
     return {
       ...rawConfig,
       labels,
-      prereleaseBranches: rawConfig.prereleaseBranches || ["next"],
+      prereleaseBranches: rawConfig.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES,
       versionBranches:
         typeof rawConfig.versionBranches === "boolean" &&
         rawConfig.versionBranches

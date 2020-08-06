@@ -24,7 +24,7 @@ import on from "await-to-js";
 import link from "terminal-link";
 
 /** Spin up the "auto" node API and provide it the parsed CLI args. */
-export async function run(command: string, args: ApiOptions) {
+export async function execute(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
   try {
@@ -140,6 +140,6 @@ export async function run(command: string, args: ApiOptions) {
 }
 
 /** Run "auto" for a given command. */
-export default async function main(command: string, args: ApiOptions) {
-  await run(command, args);
+export async function runCli(command: string, args: ApiOptions) {
+  await execute(command, args);
 }

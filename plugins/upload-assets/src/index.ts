@@ -1,6 +1,6 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import endent from "endent";
-import FileType from "file-type";
+import * as FileType from "file-type";
 import fs from "fs";
 import glob from "fast-glob";
 import path from "path";
@@ -67,7 +67,7 @@ export default class UploadAssetsPlugin implements IPlugin {
           const type = await FileType.fromBuffer(file);
 
           const options = {
-            data: file as any,
+            data: (file as unknown) as string,
             name: path.basename(asset),
             owner: auto.git.options.owner,
             repo: auto.git.options.repo,

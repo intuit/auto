@@ -5,6 +5,11 @@ import endent from "endent";
 import urlJoin from "url-join";
 import { URL } from "url";
 
+interface IssueCount {
+  /** Number of issues that match the query */
+  issueCount: number;
+}
+
 /**
  * Thank first time contributors for their work right in your release notes.
  */
@@ -35,7 +40,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
 
             // prettier-ignore
             // eslint-disable-next-line no-await-in-loop
-            const prs = await auto.git?.graphql<Record<string, any>>(`
+            const prs = await auto.git?.graphql<Record<string, IssueCount>>(`
               {
                 search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${author.username}") {
                   issueCount
