@@ -40,16 +40,19 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "fast-glob": "^3.1.1",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
     "jsdom": "^16.2.2",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "semver": "^7.0.0",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
     "@types/jsdom": "^16.2.3",
     "@types/prettier": "^2.0.1",
-    "ts-jest": "^26.1.3",
-    "tslib": "2.0.0"
+    "ts-jest": "^26.1.3"
   }
 }

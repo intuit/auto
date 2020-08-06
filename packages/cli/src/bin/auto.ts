@@ -24,12 +24,12 @@ try {
 
 import chalk from "chalk";
 import parseArgs from "../parse-args";
-import run from "../run";
+import { runCli } from "../run";
 
 const [command, args] = parseArgs();
 
 if (command && args) {
-  run(command, args).catch((e: Error) => {
+  runCli(command, args).catch((e: Error) => {
     console.error(chalk.redBright("Error: "), e.message);
     process.exit(1);
   });

@@ -5,7 +5,7 @@ import endent from "endent";
 import glob from "fast-glob";
 
 import * as path from "path";
-import Auto from "../auto";
+import { Auto } from "../auto";
 import { ILogger } from "./logger";
 import tryRequire from "./try-require";
 import InteractiveInit from "../init";

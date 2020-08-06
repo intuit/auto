@@ -38,8 +38,7 @@ import {
   ILatestOptions,
 } from "./auto-args";
 import Changelog from "./changelog";
-import { preVersionMap } from "./semver";
-import Config from "./config";
+import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 import Git, { IGitOptions, IPRInfo } from "./git";
 import InteractiveInit from "./init";
 import LogParse, { IExtendedCommit } from "./log-parse";
@@ -48,6 +47,7 @@ import SEMVER, {
   calculateSemVerBump,
   IVersionLabels,
   ILabelDefinition,
+  preVersionMap,
 } from "./semver";
 import execPromise from "./utils/exec-promise";
 import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
@@ -635,7 +635,10 @@ export default class Auto {
     const [, gitVersion = ""] = await on(execPromise("git", ["--version"]));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
-    const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
+    const repoLink = link(
+      `${repo.owner}/${repo.repo}`,
+      project?.html_url ?? ""
+    );
     const author = (await this.getGitUser()) || ({} as IAuthor);
     const [, lastRelease = "0.0.0"] = await on(this.git.getLatestRelease());
     const version = await this.getCurrentVersion(lastRelease);
@@ -727,7 +730,8 @@ export default class Auto {
   /** Determine if the repo is currently in a prerelease branch */
   inPrereleaseBranch(): boolean {
     const branch = getCurrentBranch();
-    const prereleaseBranches = this.config?.prereleaseBranches!;
+    const prereleaseBranches =
+      this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
 
     return Boolean(branch && prereleaseBranches.includes(branch));
   }
@@ -1304,7 +1308,8 @@ export default class Auto {
       const current = await this.getCurrentVersion(lastRelease);
 
       if (parse(current)) {
-        const prereleaseBranches = this.config?.prereleaseBranches!;
+        const prereleaseBranches =
+          this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
@@ -2115,6 +2120,7 @@ export default class Auto {
 
 export * from "./auto-args";
 export { default as InteractiveInit } from "./init";
+export { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 export { getCurrentBranch } from "./utils/get-current-branch";
 export { validatePluginConfiguration } from "./validate-config";
 export { ILogger } from "./utils/logger";

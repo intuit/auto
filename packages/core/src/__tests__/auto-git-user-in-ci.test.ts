@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import execPromise from "../utils/exec-promise";
 
 const exec = jest.fn();

@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 
 jest.mock("child_process");
 

@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
 
 const defaultRemote = "git@github.foo.com";

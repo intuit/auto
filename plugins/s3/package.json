@@ -39,6 +39,7 @@
     "@auto-it/core": "link:../../packages/core",
     "aws-cli-js": "^2.0.6",
     "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2"
+    "io-ts": "^2.1.2",
+    "tslib": "^2.0.0"
   }
 }

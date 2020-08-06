@@ -28,6 +28,7 @@ import { gt, gte, inc, ReleaseType } from "semver";
 import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import { loadPackageJson, writeFile, isMonorepo, readFile } from "./utils";
+import { DEFAULT_PRERELEASE_BRANCHES } from '@auto-it/core/dist/config';
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -571,7 +572,7 @@ export default class NPMPlugin implements IPlugin {
       : isVerbose
       ? ["--loglevel", "silly"]
       : [];
-    const prereleaseBranches = auto.config?.prereleaseBranches!;
+    const prereleaseBranches = auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
     const branch = getCurrentBranch();
     // if ran from master we publish the prerelease to the first
     // configured prerelease branch
