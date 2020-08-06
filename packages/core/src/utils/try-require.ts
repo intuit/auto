@@ -24,7 +24,9 @@ export default function tryRequire(tryPath: string, from?: string) {
     try {
       // Require from __dirname. Needed for npx and global installs
       return require(tryPath);
-    } catch (error) {}
+    } catch (error) {
+      logger.veryVerbose.warn(error.message);
+    }
 
     if (from) {
       try {
