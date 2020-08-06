@@ -1,3 +1,27 @@
+# v9.49.5 (Thu Aug 06 2020)
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/upload-assets`
+  - upgrade eslint + ensure all imported packages are in package.json [#1442](https://github.com/intuit/auto/pull/1442) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- upgrade ignite for purgeCSS [#1439](https://github.com/intuit/auto/pull/1439) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- anonimize IPs for analytics [#1438](https://github.com/intuit/auto/pull/1438) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Make non-npm docs clearer [#1437](https://github.com/intuit/auto/pull/1437) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 26.1.0 to 26.2.2 [#1431](https://github.com/intuit/auto/pull/1431) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.4 (Tue Aug 04 2020)
 
 ### Release Notes

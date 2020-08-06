@@ -1,3 +1,15 @@
+# v9.49.5 (Thu Aug 06 2020)
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 26.1.0 to 26.2.2 [#1431](https://github.com/intuit/auto/pull/1431) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.49.3 (Fri Jul 31 2020)
 
 #### 🐛 Bug Fix
