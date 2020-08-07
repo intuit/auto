@@ -1,3 +1,17 @@
+# v9.49.6 (Fri Aug 07 2020)
+
+#### 🐛 Bug Fix
+
+- Fix Independent `next` versioning [#1445](https://github.com/intuit/auto/pull/1445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- change getFirstCommit so -vv doesn't print every commit hash ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix printing GHE version ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.5 (Thu Aug 06 2020)
 
 #### 🐛 Bug Fix

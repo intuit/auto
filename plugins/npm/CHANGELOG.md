@@ -1,3 +1,16 @@
+# v9.49.6 (Fri Aug 07 2020)
+
+#### 🐛 Bug Fix
+
+- Fix Independent `next` versioning [#1445](https://github.com/intuit/auto/pull/1445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- match full package name in tag ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.5 (Thu Aug 06 2020)
 
 #### 🐛 Bug Fix

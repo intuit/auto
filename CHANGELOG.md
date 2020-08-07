@@ -1,3 +1,21 @@
+# v9.49.6 (Fri Aug 07 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Fix Independent `next` versioning [#1445](https://github.com/intuit/auto/pull/1445) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Revert "Merge pull request #1439 from intuit/docss" [#1444](https://github.com/intuit/auto/pull/1444) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- upgrade ignite for purgeCSS [#1439](https://github.com/intuit/auto/pull/1439) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.5 (Thu Aug 06 2020)
 
 #### 🐛 Bug Fix
