@@ -32,6 +32,17 @@ pipeline {
         }
       }
     }
+    stage('Prepare repository') {
+      steps {
+        // Jenkins will do weird things to "origin" in PR and branch build
+        // To get around this reset the "origin" back to normal
+        // This is only necessary if you are making next/pre-releases
+        sh 'git config --unset-all remote.origin.fetch'
+        sh 'git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/*'
+        // Ensure you have all branches and tags
+        sh 'git fetch origin --tags'
+      }
+    }
     stage('Install') {
       steps {
         sh 'yarn install --frozen-lockfile'
@@ -43,15 +54,37 @@ pipeline {
       }
     }
     stage('Publish') {
-        when { branch 'master' }
-        steps {
-          // Jenkins will leave you in a detatched HEAD state during builds
-          // Make sure to checkout your baseBranch here or the push will fail!
-          // The error will look like the following:
-          // error: src refspec master does not match any
-          sh 'git checkout master'
-          sh 'auto shipit'
+      parallel {
+        stage('Canary') {
+          when {
+            allOf {
+              changeRequest();
+              expression { env.CHANGE_BRANCH != 'next' }
+            }
+          }
+          steps {
+            sh "auto shipit"
+          }
         }
+        stage('Next') {
+          when { branch 'next' }
+          steps {
+            sh 'git checkout next'
+            sh "auto shipit"
+          }
+        }
+        stage('Latest') {
+          when { branch 'master' }
+          steps {
+            // Jenkins will leave you in a detached HEAD state during builds
+            // Make sure to checkout your baseBranch here or the push will fail!
+            // The error will look like the following:
+            // error: src refspec master does not match any
+            sh 'git checkout master'
+            sh 'auto shipit'
+          }
+        }
+      }
     }
     stage('Canary') {
       when { changeRequest() }
