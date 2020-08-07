@@ -307,21 +307,21 @@ describe("next", () => {
     readFileSync.mockReturnValue('{ "version": "independent" }');
     getLernaPackages.mockResolvedValueOnce([
       {
-        name: "@foo/1",
+        name: "@foo/foo",
         path: "/path/to/1",
       },
       {
-        name: "@foo/2",
+        name: "@foo/foo-bar",
         path: "/path/to/2",
       },
     ]);
     execPromise.mockImplementation((command, args) => {
       if (command === "git" && args[0] === "tag") {
-        return Promise.resolve("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
+        return Promise.resolve("@foo/foo@1.0.0-next.0\n@foo/foo-bar@2.0.0-next.0");
       }
 
-      if (command === "yarn" && args[0] === "lerna" && args[0] === "changed") {
-        return Promise.resolve("@foo/1\n@foo/2");
+      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+        return Promise.resolve("@foo/foo\n@foo/foo-bar");
       }
 
       return Promise.resolve("");
@@ -335,14 +335,14 @@ describe("next", () => {
       logger: dummyLog(),
       prefixRelease: (v: string) => `v${v}`,
       git: {
-        getLatestRelease: () => "@foo/1@0.1.0",
-        getLastTagNotInBaseBranch: () => "@foo/1@1.0.0-next.0",
+        getLatestRelease: () => "@foo/foo@0.1.0",
+        getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
       },
     } as unknown) as Auto.Auto);
 
     expect(
       await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
-    ).toStrictEqual(["@foo/1@1.0.0-next.0", "@foo/2@2.0.0-next.0"]);
+    ).toStrictEqual(["@foo/foo@1.0.0-next.0", "@foo/foo-bar@2.0.0-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
       "npx",

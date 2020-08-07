@@ -697,7 +697,7 @@ export default class Auto {
       "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
         access['x-github-enterprise-version'] 
-          ? `GHE version:    v${access['x-github-enterprise-version']}\n`
+          ? `\nGHE version:    v${access['x-github-enterprise-version']}\n`
           : '\n'}
       ${chalk.underline.white('Project Information:')}
 

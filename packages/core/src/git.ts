@@ -219,7 +219,7 @@ export default class Git {
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise("git", ["rev-list", "HEAD"]);
+    const list = await execPromise("git", ["rev-list", "--max-parents=0", "HEAD"]);
     return list.split("\n").pop() as string;
   }
 
