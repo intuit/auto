@@ -1,3 +1,19 @@
+# v9.50.0 (Fri Aug 07 2020)
+
+#### 🚀 Enhancement
+
+- fix: use GH_TOKEN if PRIVATE_TOKEN is not set [#1446](https://github.com/intuit/auto/pull/1446) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- fix: use GH_TOKEN if PRIVATE_TOKEN is not set ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.49.5 (Thu Aug 06 2020)
 
 #### 🐛 Bug Fix

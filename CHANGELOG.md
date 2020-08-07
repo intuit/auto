@@ -1,3 +1,16 @@
+# v9.50.0 (Fri Aug 07 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/all-contributors`
+  - fix: use GH_TOKEN if PRIVATE_TOKEN is not set [#1446](https://github.com/intuit/auto/pull/1446) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.49.6 (Fri Aug 07 2020)
 
 #### 🐛 Bug Fix
