@@ -458,6 +458,12 @@ export default class AllContributorsPlugin implements IPlugin {
             didUpdate = true;
             auto.logger.log.info(`Adding "${username}"'s contributions...`);
 
+            // If a PRIVATE_TOKEN is not set for all-contributors-cli
+            // use the GH_TOKEN
+            if (process.env.PRIVATE_TOKEN === undefined) {
+              process.env.PRIVATE_TOKEN = process.env.GH_TOKEN
+            }
+
             // Update/add contributor in RC file
             const { contributors } = await addContributor(
               config,
