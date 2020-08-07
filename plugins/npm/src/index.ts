@@ -394,9 +394,10 @@ const tagIndependentNextReleases = async (
       }
 
       const currentVersion = lernaPackage?.version || "0.0.0";
+      const name = `${p}@`;
       const lastTag =
-        allTags.find((tag) => tag.startsWith(p)) || currentVersion;
-      const lastVersion = lastTag.replace(`${p}@`, "");
+        allTags.find((tag) => tag.startsWith(name)) || currentVersion;
+      const lastVersion = lastTag.replace(name, "");
 
       return {
         ...lernaPackage,
@@ -572,7 +573,8 @@ export default class NPMPlugin implements IPlugin {
       : isVerbose
       ? ["--loglevel", "silly"]
       : [];
-    const prereleaseBranches = auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
+    const prereleaseBranches =
+      auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
     const branch = getCurrentBranch();
     // if ran from master we publish the prerelease to the first
     // configured prerelease branch
