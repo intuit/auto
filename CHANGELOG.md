@@ -1,3 +1,19 @@
+# v9.50.1 (Mon Aug 10 2020)
+
+#### 🐛 Bug Fix
+
+- publish auto with 'exact' versioning [#1450](https://github.com/intuit/auto/pull/1450) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- improve jenkins docs [#1447](https://github.com/intuit/auto/pull/1447) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.0 (Fri Aug 07 2020)
 
 #### 🚀 Enhancement
