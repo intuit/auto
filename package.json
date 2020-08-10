@@ -133,6 +133,7 @@
       [
         "npm",
         {
+          "exact": true,
           "canaryScope": "@auto-canary"
         }
       ],
