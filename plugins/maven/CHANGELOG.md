@@ -1,3 +1,15 @@
+# v9.50.2 (Tue Aug 11 2020)
+
+#### 🐛 Bug Fix
+
+- Fix finding available canary version and add logging [#1460](https://github.com/intuit/auto/pull/1460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.5 (Thu Aug 06 2020)
 
 #### 🐛 Bug Fix

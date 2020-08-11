@@ -1,3 +1,25 @@
+# v9.50.2 (Tue Aug 11 2020)
+
+#### 🐛 Bug Fix
+
+- Fix finding available canary version and add logging [#1460](https://github.com/intuit/auto/pull/1460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 2.0.0 to 2.0.1 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump cosmiconfig from 6.0.0 to 7.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/rest from 18.0.1 to 18.0.3 [#1455](https://github.com/intuit/auto/pull/1455) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump jest from 26.2.2 to 26.3.0 [#1452](https://github.com/intuit/auto/pull/1452) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 2.0.0 to 2.0.1 [#1457](https://github.com/intuit/auto/pull/1457) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump cosmiconfig from 6.0.0 to 7.0.0 [#1454](https://github.com/intuit/auto/pull/1454) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.49.6 (Fri Aug 07 2020)
 
 #### 🐛 Bug Fix

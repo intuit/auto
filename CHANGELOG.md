@@ -1,3 +1,30 @@
+# v9.50.2 (Tue Aug 11 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - Fix finding available canary version and add logging [#1460](https://github.com/intuit/auto/pull/1460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/rest from 18.0.1 to 18.0.3 [#1455](https://github.com/intuit/auto/pull/1455) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump jest from 26.2.2 to 26.3.0 [#1452](https://github.com/intuit/auto/pull/1452) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 26.0.7 to 26.0.9 [#1459](https://github.com/intuit/auto/pull/1459) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.7.0 to 2.8.1 [#1458](https://github.com/intuit/auto/pull/1458) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.7.0 to 14.7.1 [#1456](https://github.com/intuit/auto/pull/1456) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest-circus from 26.2.2 to 26.3.0 [#1451](https://github.com/intuit/auto/pull/1451) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Bump tslib from 2.0.0 to 2.0.1 [#1457](https://github.com/intuit/auto/pull/1457) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump cosmiconfig from 6.0.0 to 7.0.0 [#1454](https://github.com/intuit/auto/pull/1454) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.1 (Mon Aug 10 2020)
 
 #### 🐛 Bug Fix
