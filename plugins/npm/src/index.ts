@@ -21,6 +21,7 @@ import {
   SEMVER,
   validatePluginConfiguration,
   ShipitRelease,
+  DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
@@ -28,7 +29,6 @@ import { gt, gte, inc, ReleaseType } from "semver";
 import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import { loadPackageJson, writeFile, isMonorepo, readFile } from "./utils";
-import { DEFAULT_PRERELEASE_BRANCHES } from '@auto-it/core/dist/config';
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -36,7 +36,13 @@ const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
   try {
-    return await execPromise("npm", ["view", name, "version"]);
+    return await execPromise("npm", [
+      "view",
+      name,
+      "version",
+      "--registry",
+      await getRegistry(),
+    ]);
   } catch (error) {}
 }
 
@@ -453,6 +459,26 @@ const tagIndependentNextReleases = async (
   );
 };
 
+/** Find an available canary version to publish */
+const findAvailableCanaryVersion = async (
+  auto: Auto,
+  packageName: string,
+  startVersion: string
+) => {
+  let canaryVersion = startVersion;
+
+  // eslint-disable-next-line no-await-in-loop
+  while (await getPublishedVersion(`${packageName}@${canaryVersion}`)) {
+    auto.logger.verbose.info(
+      `Version "${canaryVersion}" is taken! Trying another...`
+    );
+    canaryVersion = inc(canaryVersion, "prerelease")!;
+  }
+
+  auto.logger.verbose.info(`Version "${canaryVersion}" is available!`);
+  return canaryVersion;
+};
+
 /** Publish to NPM. Works in both a monorepo setting and for a single package. */
 export default class NPMPlugin implements IPlugin {
   /** The name of the plugin */
@@ -857,10 +883,11 @@ export default class NPMPlugin implements IPlugin {
 
         if (!isIndependent) {
           const { name } = getMonorepoPackage();
-          // eslint-disable-next-line no-await-in-loop
-          while (await getPublishedVersion(`${name}@${canaryVersion}`)) {
-            canaryVersion = inc(canaryVersion, "prerelease")!;
-          }
+          canaryVersion = await findAvailableCanaryVersion(
+            auto,
+            name,
+            canaryVersion
+          );
         }
 
         await execPromise("npx", [
@@ -927,17 +954,11 @@ export default class NPMPlugin implements IPlugin {
         };
       }
 
-      let canaryVersion = determineNextVersion(
-        lastRelease,
-        current,
-        bump,
-        preid
+      const canaryVersion = await findAvailableCanaryVersion(
+        auto,
+        name,
+        determineNextVersion(lastRelease, current, bump, preid)
       );
-
-      // eslint-disable-next-line no-await-in-loop
-      while (await getPublishedVersion(`${name}@${canaryVersion}`)) {
-        canaryVersion = inc(canaryVersion, "prerelease")!;
-      }
 
       if (this.canaryScope) {
         await setCanaryScope(this.canaryScope, ["./"]);
