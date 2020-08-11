@@ -45,7 +45,7 @@
     "@octokit/rest": "^18.0.0",
     "await-to-js": "^2.1.1",
     "chalk": "^4.0.0",
-    "cosmiconfig": "6.0.0",
+    "cosmiconfig": "7.0.0",
     "deepmerge": "^4.0.0",
     "dotenv": "^8.0.0",
     "endent": "^2.0.1",
