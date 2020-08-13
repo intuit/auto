@@ -1,5 +1,6 @@
 import { Auto, IPlugin } from "@auto-it/core";
 import { ICommitAuthor } from "@auto-it/core/dist/log-parse";
+import botList from "@auto-it/bot-list";
 import flatMap from "array.prototype.flatmap";
 import endent from "endent";
 import urlJoin from "url-join";
@@ -34,7 +35,12 @@ export default class FirstTimeContributorPlugin implements IPlugin {
           const newContributors: ICommitAuthor[] = [];
 
           for (const author of flatMap(commits, (c) => c.authors)) {
-            if (!author.username || author.type === "Bot") {
+            if (
+              !author.username ||
+              author.type === "Bot" ||
+              botList.includes(author.username) ||
+              (author.name && botList.includes(author.name))
+            ) {
               continue;
             }
 
