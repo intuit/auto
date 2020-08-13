@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/first-time-contributor",
-  "version": "9.50.4",
+  "version": "9.50.5",
   "main": "dist/index.js",
   "description": "Thank first time contributors for their work right in your release notes.",
   "license": "MIT",
@@ -36,8 +36,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
     "@auto-it/bot-list": "link:../../packages/bot-list",
+    "@auto-it/core": "link:../../packages/core",
     "array.prototype.flatmap": "^1.2.2",
     "endent": "^2.0.1",
     "tslib": "2.0.1",
