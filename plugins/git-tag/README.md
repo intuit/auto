@@ -1,6 +1,7 @@
 # Git Tag Plugin
 
-Manage your projects version through just a git tag. This plugin is loaded by default when `auto` is installed through the binaries released on GitHub.
+Manage your projects version through just a git tag.
+This plugin is loaded by default when `auto` is installed through the binaries released on GitHub.
 
 If you're using this plugin you aren't releasing your code to any platform (npm, maven, etc). Instead you version calculations is done entirely though git tags.
 
@@ -10,6 +11,11 @@ This plugin only:
 2. bump it to new version
 3. create new tags
 4. push to github
+
+It will not:
+
+1. Publish to a specific platform
+2. Use any platform specific project information (ex: `author` or `repo` from a `package.json`)
 
 ## Installation
 
