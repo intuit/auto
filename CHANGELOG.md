@@ -1,3 +1,16 @@
+# v9.50.5 (Thu Aug 13 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - 🤖 don't thank any of the bots in bot-list [#1467](https://github.com/intuit/auto/pull/1467) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.4 (Thu Aug 13 2020)
 
 #### 🐛 Bug Fix
