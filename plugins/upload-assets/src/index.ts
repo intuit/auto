@@ -66,11 +66,15 @@ export default class UploadAssetsPlugin implements IPlugin {
           const stats = await stat(asset);
           const type = await FileType.fromBuffer(file);
 
-          const options = {
+          const DEFAULT_BASE_URL = "https://api.github.com"
+          const baseUrl = auto.git.options.baseUrl || DEFAULT_BASE_URL;
+          const { origin } = new URL(baseUrl)
+          const options= {
             data: (file as unknown) as string,
             name: path.basename(asset),
             owner: auto.git.options.owner,
             repo: auto.git.options.repo,
+            baseUrl: baseUrl === DEFAULT_BASE_URL ? undefined : `${origin}/api/uploads`,
             headers: {
               "content-length": stats.size,
               "content-type": type ? type.mime : "application/octet-stream",

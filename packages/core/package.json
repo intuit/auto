@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@octokit/graphql": "^4.4.0",
     "@octokit/plugin-enterprise-compatibility": "^1.2.2",
     "@octokit/plugin-retry": "^3.0.1",
     "@octokit/plugin-throttling": "^3.2.0",
