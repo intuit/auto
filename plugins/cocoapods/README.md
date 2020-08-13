@@ -23,7 +23,12 @@ yarn add -D @auto-it/cocoapods
         // Required, the relative path to your podspec file
         "podspecPath": "./Test.podspec",
         // Optional, the specs repo to push to
-        "specsRepo": "https://github.com/intuit/TestSpecs.git"
+        "specsRepo": "https://github.com/intuit/TestSpecs.git",
+        // Optional, flags to pass to the `pod repo push` command
+        "flags": [
+          "--sources",
+          "https://github.com/SpecRepo.git"
+        ]
       }
     ]
     // other plugins
