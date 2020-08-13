@@ -31,6 +31,9 @@ const required = t.interface({
 const optional = t.partial({
   /** The Cocoapods repo to publish to */
   specsRepo: t.string,
+
+  /** Any additional command line flags to pass to `pod repo push` */
+  flags: t.array(t.string)
 });
 
 const pluginOptions = t.intersection([required, optional]);
@@ -162,7 +165,7 @@ export default class CocoapodsPlugin implements IPlugin {
 
       if (!this.options.specsRepo) {
         auto.logger.log.info(logMessage(`Pushing to Cocoapods trunk`));
-        await execPromise("pod", ["trunk", "push", this.options.podspecPath]);
+        await execPromise("pod", ["trunk", "push", ...(this.options.flags || []), this.options.podspecPath]);
         return;
       }
 
@@ -198,6 +201,7 @@ export default class CocoapodsPlugin implements IPlugin {
         await execPromise("pod", [
           "repo",
           "push",
+          ...(this.options.flags || []),
           "autoPublishRepo",
           this.options.podspecPath,
         ]);

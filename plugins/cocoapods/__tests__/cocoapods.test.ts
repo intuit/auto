@@ -207,6 +207,23 @@ describe("Cocoapods Plugin", () => {
       expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
     });
 
+    test("should push to trunk if no specsRepo in options with flags", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin({ ...options, flags: ["--sources", "someOtherSpecsRepo"]});
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise(Auto.SEMVER.patch);
+
+      expect(exec).toBeCalledTimes(2);
+      expect(exec).lastCalledWith("pod", ["trunk", "push", "--sources", "someOtherSpecsRepo", "./Test.podspec"]);
+    });
+
     test("should push to specs repo if specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
@@ -237,6 +254,52 @@ describe("Cocoapods Plugin", () => {
       expect(exec).toHaveBeenNthCalledWith(4, "pod", [
         "repo",
         "push",
+        "autoPublishRepo",
+        "./Test.podspec",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(5, "pod", [
+        "repo",
+        "remove",
+        "autoPublishRepo",
+      ]);
+    });
+
+    test("should push to specs repo if specsRepo in options with flags", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin({
+        ...options,
+        specsRepo: "someSpecsRepo",
+        flags: [
+          "--sources",
+          "someOtherSpecsRepo"
+        ]
+      });
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise(Auto.SEMVER.patch);
+
+      expect(exec).toBeCalledTimes(5);
+      expect(exec).toHaveBeenNthCalledWith(2, "pod", [
+        "repo",
+        "list"
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
+        "repo",
+        "add",
+        "autoPublishRepo",
+        "someSpecsRepo",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(4, "pod", [
+        "repo",
+        "push",
+        "--sources",
+        "someOtherSpecsRepo",
         "autoPublishRepo",
         "./Test.podspec",
       ]);
