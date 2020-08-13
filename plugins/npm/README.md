@@ -22,6 +22,9 @@ npm i --save-dev @auto-it/npm
 yarn add -D @auto-it/npm
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 ```json
@@ -40,7 +43,12 @@ yarn add -D @auto-it/npm
 
 ## Monorepo Usage
 
-The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode. `auto` works on a repo basis and should be run from the root of the repo, not on each sub-package. No additional setup is required.
+The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode. 
+`auto` works on a repo basis and should be run from the root of the repo, not on each sub-package.
+No additional setup is required.
+
+> Do you have a package in your monorepo you don't want to publish but still want versioned?
+> Just set that `"private": true` you that package's `package.json`!
 
 ## Options
 

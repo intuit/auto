@@ -14,6 +14,9 @@ npm i --save-dev @auto-it/gradle
 yarn add -D @auto-it/gradle
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 ```json

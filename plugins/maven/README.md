@@ -6,11 +6,14 @@ Release a Java project to a [maven][maven] repository.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```bashell script
+```bash
 npm i --save-dev @auto-it/maven
 # or
 yarn add -D @auto-it/maven
 ```
+
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
 
 ## Usage
 
