@@ -22,6 +22,9 @@ npm i --save-dev @auto-it/chrome
 yarn add -D @auto-it/chrome
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 You must first pack/zip your plugin before running `auto`.

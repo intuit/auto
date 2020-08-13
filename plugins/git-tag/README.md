@@ -27,6 +27,9 @@ npm i --save-dev @auto-it/git-tag
 yarn add -D @auto-it/git-tag
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 Simply add the plugins to your auto configuration.

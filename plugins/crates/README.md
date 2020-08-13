@@ -12,6 +12,9 @@ npm i --save-dev @auto-it/crates
 yarn add -D @auto-it/crates
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 ```json

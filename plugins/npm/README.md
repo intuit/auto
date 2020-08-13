@@ -22,6 +22,9 @@ npm i --save-dev @auto-it/npm
 yarn add -D @auto-it/npm
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 ```json

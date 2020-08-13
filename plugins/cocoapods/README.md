@@ -12,6 +12,9 @@ npm i --save-dev @auto-it/cocoapods
 yarn add -D @auto-it/cocoapods
 ```
 
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
+
 ## Usage
 
 ```json
