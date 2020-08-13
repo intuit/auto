@@ -1,3 +1,15 @@
+# v9.50.4 (Thu Aug 13 2020)
+
+#### 📝 Documentation
+
+- Improve package manager plugin docs [#1465](https://github.com/intuit/auto/pull/1465) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.2 (Tue Aug 11 2020)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,20 @@
+# v9.50.4 (Thu Aug 13 2020)
+
+#### 🐛 Bug Fix
+
+- correct enterprise upload assets baseUrl [#1466](https://github.com/intuit/auto/pull/1466) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add note in each package manager plugin that it should not be used with other package manager plugins ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Improve package manager plugin docs [#1465](https://github.com/intuit/auto/pull/1465) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.2 (Tue Aug 11 2020)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,21 @@
+# v9.50.4 (Thu Aug 13 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/upload-assets`
+  - correct enterprise upload assets baseUrl [#1466](https://github.com/intuit/auto/pull/1466) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/gem`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`
+  - Improve package manager plugin docs [#1465](https://github.com/intuit/auto/pull/1465) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.3 (Thu Aug 13 2020)
 
 #### 🐛 Bug Fix
