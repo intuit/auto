@@ -1,3 +1,16 @@
+# v9.50.3 (Thu Aug 13 2020)
+
+#### 🐛 Bug Fix
+
+- feat: add option to pass additional flags to pod repo push [#1464](https://github.com/intuit/auto/pull/1464) ([@hborawski](https://github.com/hborawski))
+- feat: add option to pass additional flags to pod repo push ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.50.2 (Tue Aug 11 2020)
 
 #### 🐛 Bug Fix
