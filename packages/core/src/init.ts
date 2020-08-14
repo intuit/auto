@@ -169,11 +169,15 @@ async function getCustomizedDefaultLabels() {
 /** Get the plugins the user wants to use */
 async function getPlugins() {
   const releasePlugins = {
+    Homebrew: "brew",
     "Chrome Web Store": "chrome",
+    Cocoapod: "cocoapod",
     "Rust Crate": "crates",
+    "Ruby Gem": "gem",
     "Git Tag": "git-tag",
-    "npm Package": "npm",
+    Gradle: "Gradle",
     Maven: "maven",
+    npm: "npm",
   };
 
   const releasePlugin = await prompt<InputResponse>({
