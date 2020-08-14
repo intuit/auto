@@ -229,7 +229,7 @@ const Home = () => (
               answer={
                 <>
                   Many of <Emphasize>auto</Emphasize>'s features are{" "}
-                  <Link href="https://intuit.github.io/auto/pages/plugins.html">
+                  <Link href="https://intuit.github.io/auto/docs/configuration/plugins">
                     built into plugins
                   </Link>
                   . You can also use this plugin system to do{" "}
@@ -259,7 +259,7 @@ const Home = () => (
 
                   <p className="mb-2">
                     Want a test version? Try a{" "}
-                    <Link href="https://intuit.github.io/auto/pages/generated/canary.html">
+                    <Link href="https://intuit.github.io/auto/docs/generated/canary">
                       canary
                     </Link>
                   </p>
@@ -267,7 +267,7 @@ const Home = () => (
                   <p className="mb-2">
                     Want a prerelease? Try creating a pre-release branch and
                     using{" "}
-                    <Link href="https://intuit.github.io/auto/pages/generated/next.html">
+                    <Link href="https://intuit.github.io/auto/docs/generated/next">
                       next
                     </Link>
                   </p>
@@ -276,7 +276,7 @@ const Home = () => (
                     Need to patch an old major release?{" "}
                     <Emphasize>auto</Emphasize> can automatically make branches
                     for{" "}
-                    <Link href="https://intuit.github.io/auto/pages/generated/shipit.html#managing-old-major-versions">
+                    <Link href="https://intuit.github.io/auto/docs/generated/shipit#managing-old-major-versions">
                       old major versions
                     </Link>
                     !
@@ -285,7 +285,7 @@ const Home = () => (
                   <p>
                     Or if you don't want to worry about what command to you
                     need, just use{" "}
-                    <Link href="https://intuit.github.io/auto/pages/generated/shipit.html">
+                    <Link href="https://intuit.github.io/auto/docs/generated/shipit">
                       shipit
                     </Link>
                     ! This command determines what type of release to make based

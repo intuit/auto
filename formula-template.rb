@@ -1,6 +1,6 @@
 class Auto < Formula
   desc "Generate releases based on semantic version labels on pull requests."
-  homepage "https://intuit.github.io/auto/home.html"
+  homepage "https://intuit.github.io/auto"
   url "https://github.com/intuit/auto/releases/download/$VERSION/auto-macos.gz"
   version "$VERSION"
   sha256 "$SHA"
