@@ -1352,7 +1352,7 @@ export default class Auto {
       from: lastTag,
       isPrerelease: true,
       newVersion,
-      fullReleaseNotes,
+      fullReleaseNotes: releaseNotes,
     });
 
     this.logger.verbose.info(release);
