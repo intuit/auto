@@ -294,11 +294,11 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   }
 }
 
-type SnippetResponse<Key extends string, ReponseValue> = Record<
+type SnippetResponse<Key extends string, ResponseValue> = Record<
   Key,
   {
     /** The response from the user */
-    values: ReponseValue;
+    values: ResponseValue;
   }
 >;
 
@@ -436,9 +436,7 @@ export default class InteractiveInit {
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
-        template: endent`
-          GitHub API:  #{githubApi}
-          Graphql API: #{githubGraphqlApi}`,
+        template: `GitHub API:  #{githubApi}`,
       });
 
       autoRc = { ...autoRc, ...response.repoInfo.values };
