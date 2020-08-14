@@ -1,3 +1,16 @@
+# v9.50.6 (Thu Aug 13 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - don't set baseUrl for public asset upload [#1468](https://github.com/intuit/auto/pull/1468) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.5 (Thu Aug 13 2020)
 
 #### 🐛 Bug Fix
