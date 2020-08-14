@@ -375,10 +375,11 @@ const tagIndependentNextReleases = async (
 ) => {
   const packages = await getLernaPackages();
   const [, changedPackagesResult = ""] = await on(
-    execPromise("yarn", ["lerna", "changed"])
+    execPromise("yarn", ["lerna", "changed", "-a"])
   );
   const changedPackages = changedPackagesResult
     .split("\n")
+    .map((changedPackage) => changedPackage.replace(" (PRIVATE)", ""))
     .filter((changedPackage) =>
       packages.some((p) => p.name === changedPackage)
     );
@@ -638,7 +639,7 @@ export default class NPMPlugin implements IPlugin {
       // made, so no release will be made.
       if (isIndependent) {
         try {
-          await execPromise("yarn", ["lerna", "updated"]);
+          await execPromise("yarn", ["lerna", "updated", "-a"]);
         } catch (error) {
           auto.logger.log.warn(
             "Lerna detected no changes in project. Aborting release since nothing would be published."
