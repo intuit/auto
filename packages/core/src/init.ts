@@ -57,7 +57,7 @@ async function getLabel(label?: ILabelDefinition) {
     /** Response value */
     value: {
       /** Snippet values */
-      values: [ILabelDefinition];
+      values: ILabelDefinition;
     };
   }
 
@@ -75,12 +75,14 @@ async function getLabel(label?: ILabelDefinition) {
           }
           description: #{description:${label.description}},
           releaseType: #{releaseType:${label.releaseType}}
+          color: #{color:${label.color}}
         }`
       : endent`{
           name: #{name},
           changelogTitle: #{changelogTitle},
           description: #{description},
-          releaseType: #{releaseType}
+          releaseType: #{releaseType},
+          color: #{color}
         }`,
     /** Check if returned config is valid */
     // @ts-ignore
@@ -114,7 +116,7 @@ async function getLabel(label?: ILabelDefinition) {
     },
   });
 
-  return response.value.values[0];
+  return response.value.values;
 }
 
 /** Get any custom labels from the user */
@@ -169,11 +171,15 @@ async function getCustomizedDefaultLabels() {
 /** Get the plugins the user wants to use */
 async function getPlugins() {
   const releasePlugins = {
+    Homebrew: "brew",
     "Chrome Web Store": "chrome",
+    Cocoapod: "cocoapod",
     "Rust Crate": "crates",
+    "Ruby Gem": "gem",
     "Git Tag": "git-tag",
-    "npm Package": "npm",
+    Gradle: "Gradle",
     Maven: "maven",
+    npm: "npm",
   };
 
   const releasePlugin = await prompt<InputResponse>({
@@ -290,11 +296,11 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   }
 }
 
-type SnippetResponse<Key extends string, ReponseValue> = Record<
+type SnippetResponse<Key extends string, ResponseValue> = Record<
   Key,
   {
     /** The response from the user */
-    values: ReponseValue;
+    values: ResponseValue;
   }
 >;
 
@@ -432,9 +438,7 @@ export default class InteractiveInit {
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
-        template: endent`
-          GitHub API:  #{githubApi}
-          Graphql API: #{githubGraphqlApi}`,
+        template: `GitHub API:  #{githubApi}`,
       });
 
       autoRc = { ...autoRc, ...response.repoInfo.values };
