@@ -1,3 +1,17 @@
+# v9.50.8 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- correct behavior for lerna project with private packages [#1472](https://github.com/intuit/auto/pull/1472) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- correct behavior for lerna project with private packages ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.7 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
