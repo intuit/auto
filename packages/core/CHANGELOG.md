@@ -1,3 +1,19 @@
+# v9.50.9 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- Fix label initialization [#1473](https://github.com/intuit/auto/pull/1473) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add color to label prompt so we can detect differences between base label ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix getting label from user ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- no need to init enterprise graphql api ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add more release plugins to init ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.8 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
