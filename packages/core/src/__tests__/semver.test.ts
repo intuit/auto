@@ -12,9 +12,9 @@ const semverMap = getVersionMap([
 ]);
 
 test("ranks releases right", () => {
-  expect(getHigherSemverTag(SEMVER.major, "minor")).toBe("major");
-  expect(getHigherSemverTag(SEMVER.noVersion, "bar")).toBe("patch");
-  expect(getHigherSemverTag(SEMVER.minor, "patch")).toBe("minor");
+  expect(getHigherSemverTag(SEMVER.major, SEMVER.minor)).toBe("major");
+  expect(getHigherSemverTag(SEMVER.noVersion, SEMVER.patch)).toBe("patch");
+  expect(getHigherSemverTag(SEMVER.minor, SEMVER.patch)).toBe("minor");
 });
 
 describe("calculateSemVerBump", () => {
@@ -54,6 +54,14 @@ describe("calculateSemVerBump", () => {
         labels: [{ default: true, name: "minor", releaseType: SEMVER.minor }],
       })
     ).toBe(SEMVER.minor);
+  });
+
+  test("should be able to configure default no-version clean", () => {
+    expect(
+      calculateSemVerBump([[], []], semverMap, {
+        labels: [{ default: true, name: "docs", releaseType: "none" }],
+      })
+    ).toBe(SEMVER.noVersion);
   });
 
   test("should not skip things before none", () => {

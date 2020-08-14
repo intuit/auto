@@ -45,6 +45,13 @@ const labelDefinitionRequired = t.type({
   name: t.string,
 });
 
+const releaseType = t.union([
+  t.literal("none"),
+  t.literal("skip"),
+  ...releaseLabels.map((l) => t.literal(l)),
+]);
+type ReleaseType = t.TypeOf<typeof releaseType>;
+
 const labelDefinitionOptional = t.partial({
   /** A title to put in the changelog for the label */
   changelogTitle: t.string,
@@ -53,11 +60,7 @@ const labelDefinitionOptional = t.partial({
   /** The description of the label */
   description: t.string,
   /** What type of release this label signifies */
-  releaseType: t.union([
-    t.literal("none"),
-    t.literal("skip"),
-    ...releaseLabels.map((l) => t.literal(l)),
-  ]),
+  releaseType,
   /** Whether to overwrite the base label */
   overwrite: t.boolean,
   /** Marks this label as the default label for unlabelled PRs */
@@ -69,6 +72,14 @@ export const labelDefinition = t.intersection([
   labelDefinitionRequired,
 ]);
 export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
+
+const patchLabel: ILabelDefinition = {
+  name: "patch",
+  changelogTitle: "🐛 Bug Fix",
+  description: "Increment the patch version when merged",
+  releaseType: SEMVER.patch,
+  color: "#870048",
+};
 
 export const defaultLabels: ILabelDefinition[] = [
   {
@@ -85,13 +96,7 @@ export const defaultLabels: ILabelDefinition[] = [
     releaseType: SEMVER.minor,
     color: "#F1A60E",
   },
-  {
-    name: "patch",
-    changelogTitle: "🐛 Bug Fix",
-    description: "Increment the patch version when merged",
-    releaseType: SEMVER.patch,
-    color: "#870048",
-  },
+  patchLabel,
   {
     name: "skip-release",
     description: "Preserve the current version when merged",
@@ -142,7 +147,7 @@ export const defaultLabels: ILabelDefinition[] = [
 ];
 
 /** Given two labels determine the next SEMVER bump. */
-export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
+export function getHigherSemverTag(left: SEMVER, right: SEMVER): SEMVER {
   if (left === SEMVER.major || right === SEMVER.major) {
     return SEMVER.major;
   }
@@ -151,8 +156,20 @@ export function getHigherSemverTag(left: SEMVER, right: string): SEMVER {
     return SEMVER.minor;
   }
 
-  return SEMVER.patch;
+  if (left === SEMVER.patch || right === SEMVER.patch) {
+    return SEMVER.patch;
+  }
+
+  return SEMVER.noVersion;
 }
+
+/** Get the semver bump for a release type */
+const getBump = (releaseType?: ReleaseType) =>
+  releaseType === "none" || releaseType === "skip"
+    ? SEMVER.noVersion
+    : releaseType === "release"
+    ? SEMVER.patch
+    : releaseType || SEMVER.patch;
 
 /**
  * Determine the version bump from the labels on merged PRs.
@@ -170,15 +187,15 @@ export function calculateSemVerBump(
     labels?: ILabelDefinition[];
   } = {}
 ) {
-  const defaultLabel =
-    labels.find((l) => l.default)?.releaseType || SEMVER.patch;
-  const labelSet = new Set<string>();
+  const defaultLabel = labels.find((l) => l.default) || patchLabel;
+  const defaultReleaseType = defaultLabel.releaseType || SEMVER.patch;
+  const releaseTypes = new Set<ReleaseType>();
   const skipReleaseLabels = labelMap.get("skip") || [];
 
   prLabels.forEach((pr, index) => {
     // If the head pr has no labels we default to a patch
     if (pr.length === 0 && index === 0) {
-      labelSet.add(defaultLabel);
+      releaseTypes.add(defaultReleaseType);
     }
 
     pr.forEach((label) => {
@@ -187,7 +204,7 @@ export function calculateSemVerBump(
       );
 
       if (userLabel) {
-        labelSet.add(userLabel[0]);
+        releaseTypes.add(userLabel[0]);
       }
     });
   });
@@ -198,22 +215,22 @@ export function calculateSemVerBump(
     ? !lastMergedCommitLabels.some((label) => releaseLabels.includes(label))
     : lastMergedCommitLabels.some((label) => skipReleaseLabels.includes(label));
 
+  if (skipRelease) {
+    return SEMVER.noVersion;
+  }
+
   // If PRs only have none or skip labels, skip the release
-  const onlyNoReleaseLabels = [...labelSet].reduce(
+  const onlyNoReleaseLabels = [...releaseTypes].reduce(
     (condition, releaseType) =>
       condition && (releaseType === "none" || releaseType === "skip"),
     true
   );
 
-  if (labelSet.size > 0 && onlyNoReleaseLabels) {
+  if (releaseTypes.size > 0 && onlyNoReleaseLabels) {
     return SEMVER.noVersion;
   }
 
-  const version = [...labelSet].reduce(getHigherSemverTag, SEMVER.patch);
-
-  if (skipRelease) {
-    return SEMVER.noVersion;
-  }
-
-  return version;
+  return [...releaseTypes]
+    .map(getBump)
+    .reduce(getHigherSemverTag, getBump(defaultReleaseType));
 }
