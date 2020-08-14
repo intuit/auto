@@ -57,7 +57,7 @@ async function getLabel(label?: ILabelDefinition) {
     /** Response value */
     value: {
       /** Snippet values */
-      values: [ILabelDefinition];
+      values: ILabelDefinition;
     };
   }
 
@@ -114,7 +114,7 @@ async function getLabel(label?: ILabelDefinition) {
     },
   });
 
-  return response.value.values[0];
+  return response.value.values;
 }
 
 /** Get any custom labels from the user */
