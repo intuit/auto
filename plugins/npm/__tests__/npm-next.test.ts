@@ -355,4 +355,47 @@ describe("next", () => {
       "--tags",
     ]);
   });
+
+  test("works in monorepo - independent - private package", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+    getLernaPackages.mockResolvedValueOnce([
+      {
+        name: "@foo/foo",
+        path: "/path/to/1",
+      }
+    ]);
+    execPromise.mockImplementation((command, args) => {
+      if (command === "git" && args[0] === "tag") {
+        return Promise.resolve("@foo/foo@1.0.0-next.0");
+      }
+
+      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+        return Promise.resolve("@foo/foo (PRIVATE)");
+      }
+
+      return Promise.resolve("");
+    });
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      prefixRelease: (v: string) => `v${v}`,
+      git: {
+        getLatestRelease: () => "@foo/foo@0.1.0",
+        getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+    ).toStrictEqual(["@foo/foo@1.0.0-next.0"]);
+  });
 });
