@@ -75,12 +75,14 @@ async function getLabel(label?: ILabelDefinition) {
           }
           description: #{description:${label.description}},
           releaseType: #{releaseType:${label.releaseType}}
+          color: #{color:${label.color}}
         }`
       : endent`{
           name: #{name},
           changelogTitle: #{changelogTitle},
           description: #{description},
-          releaseType: #{releaseType}
+          releaseType: #{releaseType},
+          color: #{color}
         }`,
     /** Check if returned config is valid */
     // @ts-ignore
