@@ -1,3 +1,15 @@
+# v9.50.7 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- fix default bump type [#1470](https://github.com/intuit/auto/pull/1470) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.4 (Thu Aug 13 2020)
 
 #### 📝 Documentation
