@@ -1,3 +1,16 @@
+# v9.50.10 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- only post partial release notes to next releases [#1474](https://github.com/intuit/auto/pull/1474) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- only post partial release notes to next releases ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
