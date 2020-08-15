@@ -440,57 +440,60 @@ export default class AllContributorsPlugin implements IPlugin {
     auto.logger.verbose.info("Found contributions:", authorContributions);
 
     // 2. Determine if contributor has update
-    await Promise.all(
-      Object.entries(authorContributions).map(
-        async ([username, contributions]) => {
-          const { contributions: old = [] } =
-            config.contributors.find(
-              (contributor) =>
-                contributor.login.toLowerCase() === username.toLowerCase()
-            ) || {};
-          const hasNew = [...contributions].find(
-            (contribution) => !old.includes(contribution)
-          );
+    for await (const [username, contributions] of Object.entries(
+      authorContributions
+    )) {
+      const { contributions: old = [] } =
+        config.contributors.find(
+          (contributor) =>
+            contributor.login.toLowerCase() === username.toLowerCase()
+        ) || {};
+      const hasNew = [...contributions].find(
+        (contribution) => !old.includes(contribution)
+      );
 
-          if (hasNew && !this.options.exclude.includes(username)) {
-            const newContributions = new Set([...old, ...contributions]);
+      if (hasNew && !this.options.exclude.includes(username)) {
+        const newContributions = new Set([...old, ...contributions]);
 
-            didUpdate = true;
-            auto.logger.log.info(`Adding "${username}"'s contributions...`);
+        didUpdate = true;
+        auto.logger.log.info(`Adding "${username}"'s contributions...`);
 
-            // If a PRIVATE_TOKEN is not set for all-contributors-cli
-            // use the GH_TOKEN
-            if (process.env.PRIVATE_TOKEN === undefined) {
-              process.env.PRIVATE_TOKEN = process.env.GH_TOKEN
-            }
-
-            // Update/add contributor in RC file
-            const { contributors } = await addContributor(
-              config,
-              username,
-              Array.from(newContributions).join(",")
-            );
-
-            // Update files that contain contributors table
-            await Promise.all(
-              (config.files || ["README.md"]).map(async (file) => {
-                const oldReadMe = fs.readFileSync(file, {
-                  encoding: "utf-8",
-                });
-                const newReadMe = await generateReadme(
-                  { contributorsPerLine: 7, imageSize: 100, ...config, contributors },
-                  contributors,
-                  oldReadMe
-                );
-                fs.writeFileSync(file, newReadMe);
-              })
-            );
-          }
-
-          auto.logger.verbose.warn(`"${username}" had no new contributions...`);
+        // If a PRIVATE_TOKEN is not set for all-contributors-cli
+        // use the GH_TOKEN
+        if (process.env.PRIVATE_TOKEN === undefined) {
+          process.env.PRIVATE_TOKEN = process.env.GH_TOKEN;
         }
-      )
-    );
+
+        // Update/add contributor in RC file
+        const { contributors } = await addContributor(
+          config,
+          username,
+          Array.from(newContributions).join(",")
+        );
+
+        // Update files that contain contributors table
+        await Promise.all(
+          (config.files || ["README.md"]).map(async (file) => {
+            const oldReadMe = fs.readFileSync(file, {
+              encoding: "utf-8",
+            });
+            const newReadMe = await generateReadme(
+              {
+                contributorsPerLine: 7,
+                imageSize: 100,
+                ...config,
+                contributors,
+              },
+              contributors,
+              oldReadMe
+            );
+            fs.writeFileSync(file, newReadMe);
+          })
+        );
+      }
+
+      auto.logger.verbose.warn(`"${username}" had no new contributions...`);
+    }
 
     if (didUpdate) {
       auto.logger.log.success("Updated contributors!");
