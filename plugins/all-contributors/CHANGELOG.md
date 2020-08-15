@@ -1,3 +1,16 @@
+# v9.50.11 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- Fix adding multiple contributors at once [#1476](https://github.com/intuit/auto/pull/1476) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add contributors serially instead of in parallel. fixes adding multiple contributors at once ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
