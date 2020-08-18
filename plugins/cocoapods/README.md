@@ -29,9 +29,10 @@ yarn add -D @auto-it/cocoapods
         "specsRepo": "https://github.com/intuit/TestSpecs.git",
         // Optional, flags to pass to the `pod repo push` command
         "flags": [
-          "--sources",
-          "https://github.com/SpecRepo.git"
-        ]
+          "--sources=https://github.com/SpecRepo.git"
+        ],
+        // Optional, specify a different executable for `pod`
+        "podCommand": "bundle exec pod"
       }
     ]
     // other plugins
