@@ -36,7 +36,7 @@ const optional = t.partial({
   flags: t.array(t.string),
 
   /** The command to use for `pod` if it needs to be separate like `bundle exec pod` */
-  podCommand: t.string
+  podCommand: t.string,
 });
 
 const pluginOptions = t.intersection([required, optional]);
@@ -158,7 +158,8 @@ export default class CocoapodsPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      const [pod, ...commands] = this.options.podCommand?.split(' ') || ["pod"]
+      const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
+
       await execPromise("git", [
         "push",
         "--follow-tags",
@@ -169,46 +170,58 @@ export default class CocoapodsPlugin implements IPlugin {
 
       if (!this.options.specsRepo) {
         auto.logger.log.info(logMessage(`Pushing to Cocoapods trunk`));
-        await execPromise(pod, commands.concat(["trunk", "push", ...(this.options.flags || []), this.options.podspecPath]));
+        await execPromise(pod, [
+          ...commands,
+          "trunk",
+          "push",
+          ...(this.options.flags || []),
+          this.options.podspecPath,
+        ]);
         return;
       }
 
       try {
-        const existingRepos = await execPromise(pod, commands.concat([
+        const existingRepos = await execPromise(pod, [
+          ...commands,
           "repo",
-          "list"
-        ]));
-        if (existingRepos.indexOf('autoPublishRepo') !== -1) {
-          auto.logger.log.info('Removing existing autoPublishRepo')
-          await execPromise(pod, commands.concat([
+          "list",
+        ]);
+        if (existingRepos.indexOf("autoPublishRepo") !== -1) {
+          auto.logger.log.info("Removing existing autoPublishRepo");
+          await execPromise(pod, [
+            ...commands,
             "repo",
             "remove",
-            "autoPublishRepo"
-          ]))
+            "autoPublishRepo",
+          ]);
         }
       } catch (error) {
-        auto.logger.log.warn(`Error Checking for existing Specs repositories: ${error}`)
+        auto.logger.log.warn(
+          `Error Checking for existing Specs repositories: ${error}`
+        );
       }
 
       try {
-        await execPromise(pod, commands.concat([
+        await execPromise(pod, [
+          ...commands,
           "repo",
           "add",
           "autoPublishRepo",
           this.options.specsRepo,
-        ]));
+        ]);
 
         auto.logger.log.info(
           logMessage(`Pushing to specs repo: ${this.options.specsRepo}`)
         );
 
-        await execPromise(pod, commands.concat([
+        await execPromise(pod, [
+          ...commands,
           "repo",
           "push",
           ...(this.options.flags || []),
           "autoPublishRepo",
           this.options.podspecPath,
-        ]));
+        ]);
       } catch (error) {
         auto.logger.log.error(
           logMessage(
@@ -217,7 +230,12 @@ export default class CocoapodsPlugin implements IPlugin {
         );
         process.exit(1);
       } finally {
-        await execPromise(pod, commands.concat(["repo", "remove", "autoPublishRepo"]));
+        await execPromise(pod, [
+          ...commands,
+          "repo",
+          "remove",
+          "autoPublishRepo",
+        ]);
       }
     });
   }
