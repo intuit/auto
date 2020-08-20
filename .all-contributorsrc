@@ -337,6 +337,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rachanamamillapalli",
+      "name": "rachana",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9112473?v=4",
+      "profile": "https://github.com/rachanamamillapalli",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
