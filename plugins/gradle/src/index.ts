@@ -69,15 +69,11 @@ async function getVersion(
   gradleOptions: string[]
 ): Promise<string> {
   const {
-    version,
+    version = "0.0.0",
     snapshotSuffix = defaultSnapshotSuffix,
   } = await getProperties(gradleCommand, gradleOptions);
 
-  if (version) {
-    return version.replace(snapshotSuffix, "");
-  }
-
-  throw new Error("No version was found in gradle properties.");
+  return version.replace(snapshotSuffix, "");
 }
 
 /** A plugin to release java projects with gradle */

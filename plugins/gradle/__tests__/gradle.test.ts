@@ -37,13 +37,6 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce("version: 1.0.0-SNAPSHOT");
       expect(await hooks.getPreviousVersion.promise()).toBe("v1.0.0");
     });
-
-    test("should throw when no version", async () => {
-      exec.mockReturnValueOnce("");
-      await expect(hooks.getPreviousVersion.promise()).rejects.toThrowError(
-        "No version was found in gradle properties."
-      );
-    });
   });
 
   describe("beforeRun & version", () => {
