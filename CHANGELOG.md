@@ -1,3 +1,32 @@
+# v9.50.12 (Thu Aug 20 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, rachana ([@rachanamamillapalli](https://github.com/rachanamamillapalli)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - return 0.0.0 as default when no version found in gradle properties [#1396](https://github.com/intuit/auto/pull/1396) ([@rachanamamillapalli](https://github.com/rachanamamillapalli))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/array.prototype.flatmap from 1.2.1 to 1.2.2 [#1477](https://github.com/intuit/auto/pull/1477) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 3.8.0 to 3.9.1 [#1478](https://github.com/intuit/auto/pull/1478) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 7.3.1 to 7.3.3 [#1479](https://github.com/intuit/auto/pull/1479) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest-circus from 26.3.0 to 26.4.0 [#1481](https://github.com/intuit/auto/pull/1481) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 3.8.0 to 3.9.1 [#1482](https://github.com/intuit/auto/pull/1482) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.1.3 to 26.2.0 [#1484](https://github.com/intuit/auto/pull/1484) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.17.0 to 6.17.2 [#1485](https://github.com/intuit/auto/pull/1485) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- rachana ([@rachanamamillapalli](https://github.com/rachanamamillapalli))
+
+---
+
 # v9.50.11 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix

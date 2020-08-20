@@ -1,3 +1,20 @@
+# v9.50.12 (Thu Aug 20 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, rachana ([@rachanamamillapalli](https://github.com/rachanamamillapalli)), for all your work!
+
+#### 🐛 Bug Fix
+
+- return 0.0.0 as default when no version found in gradle properties [#1396](https://github.com/intuit/auto/pull/1396) ([@rachanamamillapalli](https://github.com/rachanamamillapalli))
+- return 0.0.0 as default when no version found in gradle properties ([@rachanamamillapalli](https://github.com/rachanamamillapalli))
+
+#### Authors: 1
+
+- rachana ([@rachanamamillapalli](https://github.com/rachanamamillapalli))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
