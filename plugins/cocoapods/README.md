@@ -29,9 +29,10 @@ yarn add -D @auto-it/cocoapods
         "specsRepo": "https://github.com/intuit/TestSpecs.git",
         // Optional, flags to pass to the `pod repo push` command
         "flags": [
-          "--sources",
-          "https://github.com/SpecRepo.git"
-        ]
+          "--sources=https://github.com/SpecRepo.git"
+        ],
+        // Optional, specify a different executable for `pod`
+        "podCommand": "bundle exec pod"
       }
     ]
     // other plugins
@@ -43,7 +44,7 @@ yarn add -D @auto-it/cocoapods
 
 ### General
 
-- The machine running this plugin must have the [CocoaPods](https://cocoapods.org/) `pod` CLI installed already.
+- The machine running this plugin must have the [CocoaPods](https://cocoapods.org/) `pod` CLI installed already, or `podCommand` specified in your plugin configuration.
 - Your `podspec` file must pass `pod lib lint` in order for publishing to a Specs repository to work.
   - All warnings and errors must be addressed before attempting to push to a Specs repository.
 

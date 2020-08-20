@@ -207,6 +207,40 @@ describe("Cocoapods Plugin", () => {
       expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
     });
 
+    test("should push with different pod command if in options", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin({...options, podCommand: 'notpod'});
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise(Auto.SEMVER.patch);
+
+      expect(exec).toBeCalledTimes(2);
+      expect(exec).lastCalledWith("notpod", ["trunk", "push", "./Test.podspec"]);
+    });
+
+    test("should push with different pod command with spaces if in options", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin({...options, podCommand: 'bundle exec pod'});
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise(Auto.SEMVER.patch);
+
+      expect(exec).toBeCalledTimes(2);
+      expect(exec).lastCalledWith("bundle", ["exec", "pod", "trunk", "push", "./Test.podspec"]);
+    });
+
     test("should push to trunk if no specsRepo in options with flags", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
