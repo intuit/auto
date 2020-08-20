@@ -1,3 +1,22 @@
+# v9.51.0 (Thu Aug 20 2020)
+
+#### 🚀 Enhancement
+
+- feat: option to specify a different command to use for pod [#1487](https://github.com/intuit/auto/pull/1487) ([@hborawski](https://github.com/hborawski) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- use array spread instead of concat ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: fix docs that say you need to have pod installed ([@hborawski](https://github.com/hborawski))
+- feat: option to specify a different command to use for pod ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix

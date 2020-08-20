@@ -1,3 +1,17 @@
+# v9.51.0 (Thu Aug 20 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/cocoapods`
+  - feat: option to specify a different command to use for pod [#1487](https://github.com/intuit/auto/pull/1487) ([@hborawski](https://github.com/hborawski) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.50.12 (Thu Aug 20 2020)
 
 :tada: This release contains work from a new contributor! :tada:
