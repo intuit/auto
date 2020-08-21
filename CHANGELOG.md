@@ -1,3 +1,16 @@
+# v9.52.0 (Fri Aug 21 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - expose option to disable monorepo package aware changelog [#1489](https://github.com/intuit/auto/pull/1489) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.51.0 (Thu Aug 20 2020)
 
 #### 🚀 Enhancement

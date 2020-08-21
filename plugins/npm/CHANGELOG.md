@@ -1,3 +1,21 @@
+# v9.52.0 (Fri Aug 21 2020)
+
+#### 🚀 Enhancement
+
+- expose option to disable monorepo package aware changelog [#1489](https://github.com/intuit/auto/pull/1489) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- render monorepoChangelog by default ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- expose option to disable monorepo package aware changelog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
