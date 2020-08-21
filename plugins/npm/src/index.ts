@@ -238,6 +238,8 @@ const pluginOptions = t.partial({
    * the same as the NPM publish _auth flag.
    */
   legacyAuth: t.boolean,
+  /** Whether to add package information to monorepo changelogs */
+  monorepoChangelog: t.boolean,
 });
 
 export type INpmConfig = t.TypeOf<typeof pluginOptions>;
@@ -486,7 +488,7 @@ export default class NPMPlugin implements IPlugin {
   name = "npm";
 
   /** Whether to render a changelog like a monorepo's */
-  private renderMonorepoChangelog: boolean;
+  private monorepoChangelog: boolean;
   /** the type of release shipit is making */
   private releaseType?: ShipitRelease;
 
@@ -507,7 +509,7 @@ export default class NPMPlugin implements IPlugin {
   constructor(config: INpmConfig = {}) {
     this.legacyAuth = Boolean(config.legacyAuth);
     this.exact = Boolean(config.exact);
-    this.renderMonorepoChangelog = true;
+    this.monorepoChangelog = Boolean(config.monorepoChangelog);
     this.subPackageChangelogs =
       typeof config.subPackageChangelogs === "boolean"
         ? config.subPackageChangelogs
@@ -713,7 +715,7 @@ export default class NPMPlugin implements IPlugin {
         changelog.hooks.renderChangelogLine.tapPromise(
           "NPM - Monorepo",
           async ([commit, line]) => {
-            if (!isMonorepo() || !this.renderMonorepoChangelog) {
+            if (!isMonorepo() || !this.monorepoChangelog) {
               return [commit, line];
             }
 
@@ -763,7 +765,8 @@ export default class NPMPlugin implements IPlugin {
         const lernaPackages = await getLernaPackages();
         const changelog = await auto.release.makeChangelog(bump);
 
-        this.renderMonorepoChangelog = false;
+        const monorepoChangelogSetting = this.monorepoChangelog;
+        this.monorepoChangelog = false;
 
         // Cannot run git operations in parallel
         await lernaPackages.reduce(async (last, lernaPackage) => {
@@ -798,7 +801,7 @@ export default class NPMPlugin implements IPlugin {
           }
         }, Promise.resolve());
 
-        this.renderMonorepoChangelog = true;
+        this.monorepoChangelog = monorepoChangelogSetting;
       }
     );
 
@@ -1197,7 +1200,7 @@ export default class NPMPlugin implements IPlugin {
           await execPromise("git", ["tag", "--points-at", "HEAD"])
         ).split("\n");
 
-        this.renderMonorepoChangelog = false;
+        this.monorepoChangelog = false;
 
         const packagePaths = lernaPackages.map((p) => p.path);
         const commitsAtRoot = options.commits.filter(
@@ -1235,7 +1238,7 @@ export default class NPMPlugin implements IPlugin {
           })
         );
 
-        this.renderMonorepoChangelog = false;
+        this.monorepoChangelog = false;
 
         return releases.filter(
           (
