@@ -43,7 +43,7 @@ yarn add -D @auto-it/npm
 
 ## Monorepo Usage
 
-The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode. 
+The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode.
 `auto` works on a repo basis and should be run from the root of the repo, not on each sub-package.
 No additional setup is required.
 
@@ -115,6 +115,24 @@ You can disable this behavior by using the `subPackageChangelogs` option.
       "npm",
       {
         "subPackageChangelogs": false
+      }
+    ]
+  ]
+}
+```
+
+### monorepoChangelog
+
+`auto` will group changelog lines by sub-packages in a monorepo.
+You can disable this behavior by using the `monorepoChangelog` option.
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "monorepoChangelog": false
       }
     ]
   ]
