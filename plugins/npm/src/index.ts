@@ -509,15 +509,10 @@ export default class NPMPlugin implements IPlugin {
   constructor(config: INpmConfig = {}) {
     this.legacyAuth = Boolean(config.legacyAuth);
     this.exact = Boolean(config.exact);
-    this.monorepoChangelog = Boolean(config.monorepoChangelog);
-    this.subPackageChangelogs =
-      typeof config.subPackageChangelogs === "boolean"
-        ? config.subPackageChangelogs
-        : true;
-    this.setRcToken =
-      typeof config.setRcToken === "boolean" ? config.setRcToken : true;
-    this.forcePublish =
-      typeof config.forcePublish === "boolean" ? config.forcePublish : true;
+    this.monorepoChangelog = config.monorepoChangelog ?? true;
+    this.subPackageChangelogs = config.subPackageChangelogs ?? true;
+    this.setRcToken = config.setRcToken ?? true;
+    this.forcePublish = config.forcePublish ?? true;
     this.canaryScope = config.canaryScope || undefined;
   }
 
