@@ -53,10 +53,10 @@
   integrity sha512-m2OzlTDbhvzK4hgswH9Lx0cdpq1AntXu53Klz5RGkFfuoDvKsnlU7tmtVfNWtUiP0zZbGtrb/BZYH7aB6TRnMA==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.50.11"
+  version "9.52.0"
 
 "@auto-it/core@link:packages/core":
-  version "9.50.11"
+  version "9.52.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -96,7 +96,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.50.11"
+  version "9.52.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -114,7 +114,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.50.11"
+  version "9.52.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -2886,22 +2886,6 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@popmotion/easing@^1.0.1", "@popmotion/easing@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@popmotion/easing/-/easing-1.0.2.tgz#17d925c45b4bf44189e5a38038d149df42d8c0b4"
-  integrity sha512-IkdW0TNmRnWTeWI7aGQIVDbKXPWHVEYdGgd5ZR4SH/Ty/61p63jCjrPxX1XrR7IGkl08bjhJROStD7j+RKgoIw==
-
-"@popmotion/popcorn@^0.4.2", "@popmotion/popcorn@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@popmotion/popcorn/-/popcorn-0.4.4.tgz#a5f906fccdff84526e3fcb892712d7d8a98d6adc"
-  integrity sha512-jYO/8319fKoNLMlY4ZJPiPu8Ea8occYwRZhxpaNn/kZsK4QG2E7XFlXZMJBsTWDw7I1i0uaqyC4zn1nwEezLzg==
-  dependencies:
-    "@popmotion/easing" "^1.0.1"
-    framesync "^4.0.1"
-    hey-listen "^1.0.8"
-    style-value-types "^3.1.7"
-    tslib "^1.10.0"
-
 "@react-hook/passive-layout-effect@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@react-hook/passive-layout-effect/-/passive-layout-effect-1.2.0.tgz#1232f0b08f9bfd9f87a2898a3ae50d5f7731d806"
@@ -3333,17 +3317,6 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@typescript-eslint/experimental-utils@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-3.8.0.tgz#ac1f7c88322dcfb7635ece6f0441516dd951099a"
-  integrity sha512-o8T1blo1lAJE0QDsW7nSyvZHbiDzQDjINJKyB44Z3sSL39qBy5L10ScI/XwDtaiunoyKGLiY9bzRk4YjsUZl8w==
-  dependencies:
-    "@types/json-schema" "^7.0.3"
-    "@typescript-eslint/types" "3.8.0"
-    "@typescript-eslint/typescript-estree" "3.8.0"
-    eslint-scope "^5.0.0"
-    eslint-utils "^2.0.0"
-
 "@typescript-eslint/experimental-utils@3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-3.9.1.tgz#b140b2dc7a7554a44f8a86fb6fe7cbfe57ca059e"
@@ -3376,11 +3349,6 @@
     "@typescript-eslint/typescript-estree" "3.9.1"
     eslint-visitor-keys "^1.1.0"
 
-"@typescript-eslint/types@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-3.8.0.tgz#58581dd863f86e0cd23353d94362bb90b4bea796"
-  integrity sha512-8kROmEQkv6ss9kdQ44vCN1dTrgu4Qxrd2kXr10kz2NP5T8/7JnEfYNxCpPkArbLIhhkGLZV3aVMplH1RXQRF7Q==
-
 "@typescript-eslint/types@3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-3.9.1.tgz#b2a6eaac843cf2f2777b3f2464fb1fbce5111416"
@@ -3393,20 +3361,6 @@
   dependencies:
     debug "^4.1.1"
     eslint-visitor-keys "^1.1.0"
-    glob "^7.1.6"
-    is-glob "^4.0.1"
-    lodash "^4.17.15"
-    semver "^7.3.2"
-    tsutils "^3.17.1"
-
-"@typescript-eslint/typescript-estree@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-3.8.0.tgz#0606d19f629f813dbdd5a34c7a1e895d6191cac6"
-  integrity sha512-MTv9nPDhlKfclwnplRNDL44mP2SY96YmPGxmMbMy6x12I+pERcxpIUht7DXZaj4mOKKtet53wYYXU0ABaiXrLw==
-  dependencies:
-    "@typescript-eslint/types" "3.8.0"
-    "@typescript-eslint/visitor-keys" "3.8.0"
-    debug "^4.1.1"
     glob "^7.1.6"
     is-glob "^4.0.1"
     lodash "^4.17.15"
@@ -3426,13 +3380,6 @@
     lodash "^4.17.15"
     semver "^7.3.2"
     tsutils "^3.17.1"
-
-"@typescript-eslint/visitor-keys@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-3.8.0.tgz#ad35110249fb3fc30a36bfcbfeea93e710cfaab1"
-  integrity sha512-gfqQWyVPpT9NpLREXNR820AYwgz+Kr1GuF3nf1wxpHD6hdxI62tq03ToomFnDxY0m3pUB39IF7sil7D5TQexLA==
-  dependencies:
-    eslint-visitor-keys "^1.1.0"
 
 "@typescript-eslint/visitor-keys@3.9.1":
   version "3.9.1"
@@ -8206,23 +8153,20 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framer-motion@^1.11.0:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-1.11.1.tgz#b031d1556a78854e0989b8c7e96418c6e15aa474"
-  integrity sha512-CP6aYLPSivAWkq9UoSurefHBggxG85IT8ObYyWYkcZppgtjHzpwRzhaA8P0ljMGRqtcpeQAIybiGgPioBPlOSw==
+framer-motion@^2.3.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-2.6.0.tgz#0434bb1f4f15d06c0a61872649b47712957d1efb"
+  integrity sha512-burXD+3V+bE0PsIopS7+EKiqtBv0bxCi0mK/y1mXCMlN8LqHnaiNFbgaVGPEYb8gcPtSeHW9Cu/8yb8kNxukiQ==
   dependencies:
-    "@popmotion/easing" "^1.0.2"
-    "@popmotion/popcorn" "^0.4.2"
     framesync "^4.0.4"
     hey-listen "^1.0.8"
-    popmotion "9.0.0-beta-8"
-    style-value-types "^3.1.6"
-    stylefire "^7.0.2"
+    popmotion "9.0.0-rc.7"
+    style-value-types "^3.1.9"
     tslib "^1.10.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
-framesync@^4.0.0, framesync@^4.0.1, framesync@^4.0.4:
+framesync@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/framesync/-/framesync-4.0.4.tgz#79c42c0118f26821c078570db0ff81fb863516a2"
   integrity sha512-mdP0WvVHe0/qA62KG2LFUAOiWLng5GLpscRlwzBxu2VXOp6B8hNs5C5XlFigsMgrfDrr2YbqTsgdWZTc4RXRMQ==
@@ -8314,11 +8258,6 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
-
-fscreen@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/fscreen/-/fscreen-1.0.2.tgz#c4c51d96d819d75a19d728e0df445f9be9bb984f"
-  integrity sha1-xMUdltgZ11oZ1yjg30Rfm+m7mE8=
 
 fsevents@^1.2.7:
   version "1.2.9"
@@ -13935,16 +13874,14 @@ pom-parser@^1.1.1:
     traverse "^0.6.6"
     xml2js "^0.4.9"
 
-popmotion@9.0.0-beta-8:
-  version "9.0.0-beta-8"
-  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-9.0.0-beta-8.tgz#f5a709f11737734e84f2a6b73f9bcf25ee30c388"
-  integrity sha512-6eQzqursPvnP7ePvdfPeY4wFHmS3OLzNP8rJRvmfFfEIfpFqrQgLsM50Gd9AOvGKJtYJOFknNG+dsnzCpgIdAA==
+popmotion@9.0.0-rc.7:
+  version "9.0.0-rc.7"
+  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-9.0.0-rc.7.tgz#b9f8ceddc322bc7489dd443355889d46be0ce211"
+  integrity sha512-sjPhOJtrQAQsSKsn5KKi0Q1E2pjnLozZ08m0zWX1OqPX3ERPH0txG2zwwHMnDoAHGHAkVujlAdFZ4ERLbKGMDA==
   dependencies:
-    "@popmotion/easing" "^1.0.1"
-    "@popmotion/popcorn" "^0.4.2"
     framesync "^4.0.4"
     hey-listen "^1.0.8"
-    style-value-types "^3.1.6"
+    style-value-types "^3.1.9"
     tslib "^1.10.0"
 
 posix-character-classes@^0.1.0:
@@ -16083,15 +16020,14 @@ simple-git@1.107.0:
     debug "^4.0.1"
 
 simple-react-lightbox@^3.1.2-3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.2.3.tgz#d134527c644eadb8cee4e5c9aa715f07b5f2ae9d"
-  integrity sha512-T1gWrRqQhmeS+1gowbO8cempT1RuCODGEpEF13sRxKPLXgwxKg3TFAqVisLkbTTt+fSrL0c1CT/jxfC3n0MtoA==
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/simple-react-lightbox/-/simple-react-lightbox-3.3.4.tgz#1a0df830a9a8852edd7a4ec9fa7ef1646f8ae5ca"
+  integrity sha512-cQR/GI85jYuo9J342D1fKw3zf42FUsWctvBJ9YJQRgRwmAe7qjfH7bPVfP9Z8hYh5/4l+iRdrg8DXhGEQp0Glg==
   dependencies:
     fast-deep-equal "^3.1.1"
-    framer-motion "^1.11.0"
-    fscreen "^1.0.2"
+    framer-motion "^2.3.0"
     imagesloaded "^4.1.4"
-    lodash "^4.17.15"
+    lodash "^4.17.19"
     panzoom "^9.2.4"
     react-swipeable "^5.5.1"
     react-use "^15.1.0"
@@ -16857,10 +16793,10 @@ style-to-object@^0.2.1:
   dependencies:
     inline-style-parser "0.1.1"
 
-style-value-types@^3.1.6, style-value-types@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.1.7.tgz#3d7d3cf9cb9f9ee86c00e19ba65d6a181a0db33a"
-  integrity sha512-jPaG5HcAPs3vetSwOJozrBXxuHo9tjZVnbRyBjxqb00c2saIoeuBJc1/2MtvB8eRZy41u/BBDH0CpfzWixftKg==
+style-value-types@^3.1.9:
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.1.9.tgz#faf7da660d3f284ed695cff61ea197d85b9122cc"
+  integrity sha512-050uqgB7WdvtgacoQKm+4EgKzJExVq0sieKBQQtJiU3Muh6MYcCp4T3M8+dfl6VOF2LR0NNwXBP1QYEed8DfIw==
   dependencies:
     hey-listen "^1.0.8"
     tslib "^1.10.0"
@@ -16878,17 +16814,6 @@ styled-jsx@3.3.0:
     string-hash "1.1.3"
     stylis "3.5.4"
     stylis-rule-sheet "0.0.10"
-
-stylefire@^7.0.2:
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/stylefire/-/stylefire-7.0.3.tgz#9120ecbb084111788e0ddaa04074799750f20d1d"
-  integrity sha512-Q0l7NSeFz/OkX+o6/7Zg3VZxSAZeQzQpYomWmIpOehFM/rJNMSLVX5fgg6Q48ut2ETNKwdhm97mPNU643EBCoQ==
-  dependencies:
-    "@popmotion/popcorn" "^0.4.4"
-    framesync "^4.0.0"
-    hey-listen "^1.0.8"
-    style-value-types "^3.1.7"
-    tslib "^1.10.0"
 
 stylehacks@^4.0.0:
   version "4.0.3"
