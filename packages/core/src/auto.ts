@@ -218,7 +218,7 @@ export interface IAutoHooks {
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<[SEMVER]>;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncParallelHook<[]>;
+  afterVersion: AsyncSeriesHook<[]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncParallelHook<[SEMVER]>;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
@@ -244,7 +244,7 @@ export interface IAutoHooks {
    */
   next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
   /** Ran after the package has been published. */
-  afterPublish: AsyncParallelHook<[]>;
+  afterPublish: AsyncSeriesHook<[]>;
 }
 
 /** Load the .env file into process.env. Useful for local usage. */

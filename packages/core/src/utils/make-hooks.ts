@@ -30,9 +30,9 @@ export const makeHooks = (): IAutoHooks => ({
   getPreviousVersion: new AsyncSeriesBailHook(),
   getRepository: new AsyncSeriesBailHook(),
   version: new AsyncParallelHook(["version"]),
-  afterVersion: new AsyncParallelHook(),
+  afterVersion: new AsyncSeriesHook(),
   publish: new AsyncParallelHook(["version"]),
-  afterPublish: new AsyncParallelHook(),
+  afterPublish: new AsyncSeriesHook(),
   canary: new AsyncSeriesBailHook(["canaryVersion", "postFix"]),
   next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "bump", "context"]),
 });
