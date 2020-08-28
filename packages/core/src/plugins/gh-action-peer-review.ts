@@ -38,7 +38,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           ("enabled" in prReviewSettings &&
             (prReviewSettings as any).enabled === false)
         ) {
-          auto.logger.log.warn(
+          auto.logger.verbose.warn(
             `Could not find peer review settings for '${auto.baseBranch}' branch.`
           );
 
@@ -62,7 +62,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           error.message.includes("Resource not accessible by integration")
         ) {
           auto.logger.log.error(endent`
-            To use this plugin you will not be able to use the "GITHUB_TOKEN" in the action.
+            To use "auto" in a GitHub Action with "required peer reviews" you will not be able to use the "GITHUB_TOKEN" in the action.
             This token does not have access to toggling these settings.
             You *must* create a personal access token with "repo" access.
           `);
