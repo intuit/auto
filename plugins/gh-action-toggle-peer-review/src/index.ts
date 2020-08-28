@@ -7,7 +7,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
   name = "gh-action-toggle-peer-review";
 
   /** The review protection options we disabled */
-  private protectionOptions?: RestEndpointMethodTypes["repos"]["getPullRequestReviewProtection"]["response"]["data"];
+  private protectionOptions?: RestEndpointMethodTypes["repos"]["getBranchProtection"]["response"]["data"]["required_pull_request_reviews"];
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
@@ -17,14 +17,16 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
       }
 
       try {
-        const response = await auto.git.github.repos.getPullRequestReviewProtection(
-          {
-            owner: auto.git.options.owner,
-            repo: auto.git.options.repo,
-            branch: auto.baseBranch,
-          }
-        );
-        const prReviewSettings = response.data;
+        const response = await auto.git.github.repos.getBranchProtection({
+          owner: auto.git.options.owner,
+          repo: auto.git.options.repo,
+          branch: auto.baseBranch,
+        });
+        const prReviewSettings = response.data.required_pull_request_reviews;
+
+        if (!prReviewSettings) {
+          return;
+        }
 
         if (
           "enabled" in prReviewSettings &&
@@ -50,6 +52,9 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
         return;
       }
 
+      const { users = [], teams = [] } =
+        this.protectionOptions.dismissal_restrictions || {};
+
       await auto.git.github.repos.updatePullRequestReviewProtection({
         owner: auto.git.options.owner,
         repo: auto.git.options.repo,
@@ -60,12 +65,8 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
         required_approving_review_count: this.protectionOptions
           .required_approving_review_count,
         dismissal_restrictions: {
-          users: this.protectionOptions.dismissal_restrictions.users.map(
-            (user) => user.login
-          ),
-          teams: this.protectionOptions.dismissal_restrictions.teams.map(
-            (team) => team.slug
-          ),
+          users: (users || []).map((user) => user.login),
+          teams: (teams || []).map((team) => team.slug),
         },
       });
     });
