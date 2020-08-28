@@ -61,6 +61,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [exec](./plugins/exec) - Tap into hooks and run scripts on the terminal
 - [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
 - [gh-pages](./plugins/gh-pages) - Automate publishing to your gh-pages documentation website
+- [github-action-toggle-peer-review](./plugins/github-action-toggle-peer-review) - Toggle 'Require pull request reviews before merging' when creating 'latest' release from a GitHub Action.
 - [jira](./plugins/jira) - Include Jira story links in the changelog
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
