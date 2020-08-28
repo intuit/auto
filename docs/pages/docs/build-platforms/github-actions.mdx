@@ -68,6 +68,22 @@ This will use your `GITHUB_TOKEN` to publish to the Github Package Registry.
 The `NODE_AUTH_TOKEN` variable is required the `.npmrc` that `actions/setup-node@v1` sets up.
 If you aren't using `actions/setup-node@v1` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
 
+### Peer Reviews
+
+If you have 'Require pull request reviews before merging' you will not be able to use the `GITHUB_TOKEN` available in the action.
+This token does not have access to toggling these settings.
+You _must_ create a personal access token (PAT) with `repo` access.
+
+In the following example we have added a PAT as `GH_TOKEN` and use that with the GitHub API.
+
+```yml
+- name: Create Release
+  env:
+    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  run: auto shipit
+```
+
 ## Troubleshooting
 
 If you are having problems make sure you have done the following:

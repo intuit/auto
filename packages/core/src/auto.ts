@@ -2048,6 +2048,7 @@ export default class Auto {
     const pluginsPaths = [
       require.resolve("./plugins/filter-non-pull-request"),
       ...config.plugins,
+      require.resolve("./plugins/gh-action-peer-review"),
     ];
 
     pluginsPaths

@@ -67,9 +67,6 @@
     },
     {
       "path": "plugins/gem"
-    },
-    {
-      "path": "plugins/gh-action-toggle-peer-review"
     }
   ]
 }

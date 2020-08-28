@@ -1,8 +1,7 @@
-import Auto from "@auto-it/core";
-import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
-import { dummyLog } from "@auto-it/core/dist/utils/logger";
-
-import GithubActionTogglePeerReview from "../src";
+import { Auto } from "../auto";
+import GithubActionTogglePeerReview from "../plugins/gh-action-peer-review";
+import { dummyLog } from "../utils/logger";
+import { makeHooks } from "../utils/make-hooks";
 
 const getBranchProtection = jest.fn();
 const deletePullRequestReviewProtection = jest.fn();

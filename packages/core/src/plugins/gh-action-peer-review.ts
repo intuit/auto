@@ -1,6 +1,10 @@
 import { RestEndpointMethodTypes } from "@octokit/rest";
-import { Auto, IPlugin } from "@auto-it/core";
 import endent from "endent";
+import envCi from "env-ci";
+
+import { Auto, IPlugin } from "../auto";
+
+const env = envCi();
 
 /** Toggle 'Require pull request reviews before merging' when creating 'latest' release from a GitHub Action */
 export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
@@ -13,7 +17,11 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.afterVersion.tapPromise(this.name, async () => {
-      if (!auto.git) {
+      if (
+        !auto.git ||
+        !("name" in env) ||
+        (env.name as any) !== "GitHub Actions"
+      ) {
         return;
       }
 
