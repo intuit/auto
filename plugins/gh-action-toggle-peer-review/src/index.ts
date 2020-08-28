@@ -7,7 +7,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
   name = "gh-action-toggle-peer-review";
 
   /** The review protection options we disabled */
-  private protectionOptions?: RestEndpointMethodTypes["repos"]["getBranchProtection"]["response"]["data"]["required_pull_request_reviews"];
+  private protectionOptions?: RestEndpointMethodTypes["repos"]["getPullRequestReviewProtection"]["response"]["data"];
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
@@ -17,12 +17,14 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
       }
 
       try {
-        const response = await auto.git.github.repos.getBranchProtection({
-          owner: auto.git.options.owner,
-          repo: auto.git.options.repo,
-          branch: auto.baseBranch,
-        });
-        const prReviewSettings = response.data.required_pull_request_reviews;
+        const response = await auto.git.github.repos.getPullRequestReviewProtection(
+          {
+            owner: auto.git.options.owner,
+            repo: auto.git.options.repo,
+            branch: auto.baseBranch,
+          }
+        );
+        const prReviewSettings = response.data;
 
         if (
           "enabled" in prReviewSettings &&
@@ -33,7 +35,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
 
         this.protectionOptions = prReviewSettings;
 
-        await auto.git.github.repos.deleteBranchProtection({
+        await auto.git.github.repos.deletePullRequestReviewProtection({
           owner: auto.git.options.owner,
           repo: auto.git.options.repo,
           branch: auto.baseBranch,
