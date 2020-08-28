@@ -58,6 +58,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
             This token does not have access to toggling these settings.
             You *must* create a personal access token with "repo" access.
           `)
+          process.exit(1);
         } else {
           // There is no branch protection settings, do nothing.
           auto.logger.verbose.error(error);
