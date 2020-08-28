@@ -42,6 +42,10 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           repo: auto.git.options.repo,
           branch: auto.baseBranch,
         });
+
+        auto.logger.log.info(
+          `Turned off peer review for '${auto.baseBranch}' branch. Will re-enable after publish.`
+        );
       } catch (error) {
         // There is no branch protection settings, do nothing.
       }
@@ -70,5 +74,9 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
         },
       });
     });
+
+    auto.logger.log.info(
+      `Re-enabled peer review for '${auto.baseBranch}' branch!`
+    );
   }
 }
