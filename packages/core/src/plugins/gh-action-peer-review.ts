@@ -4,8 +4,6 @@ import envCi from "env-ci";
 
 import { Auto, IPlugin } from "../auto";
 
-const env = envCi();
-
 /** Toggle 'Require pull request reviews before merging' when creating 'latest' release from a GitHub Action */
 export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
   /** The name of the plugin */
@@ -16,12 +14,14 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const env = envCi();
+
+    if (!("name" in env) || (env.name as any) !== "GitHub Actions") {
+      return;
+    }
+
     auto.hooks.afterVersion.tapPromise(this.name, async () => {
-      if (
-        !auto.git ||
-        !("name" in env) ||
-        (env.name as any) !== "GitHub Actions"
-      ) {
+      if (!auto.git) {
         return;
       }
 

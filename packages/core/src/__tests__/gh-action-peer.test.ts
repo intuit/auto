@@ -1,3 +1,5 @@
+import env from "env-ci";
+
 import { Auto } from "../auto";
 import GithubActionTogglePeerReview from "../plugins/gh-action-peer-review";
 import { dummyLog } from "../utils/logger";
@@ -21,15 +23,32 @@ const git = {
   },
 } as any;
 
+jest.mock("env-ci");
+
 describe("GH-Action-Toggle-Peer-Review Plugin", () => {
   beforeEach(() => {
     jest.resetAllMocks();
+  });
+
+  test("should do nothing when not on github actions", async () => {
+    const plugin = new GithubActionTogglePeerReview();
+    const hooks = makeHooks();
+
+    (env as jest.Mock).mockReturnValueOnce({});
+    plugin.apply({ hooks, logger: dummyLog(), git } as Auto);
+
+    await hooks.afterVersion.promise();
+    await hooks.afterPublish.promise();
+
+    expect(deletePullRequestReviewProtection).not.toHaveBeenCalled();
+    expect(updatePullRequestReviewProtection).not.toHaveBeenCalled();
   });
 
   test("should do nothing when branch protection isn't enabled", async () => {
     const plugin = new GithubActionTogglePeerReview();
     const hooks = makeHooks();
 
+    (env as jest.Mock).mockReturnValueOnce({ name: "GitHub Actions" });
     plugin.apply({ hooks, logger: dummyLog(), git } as Auto);
 
     await hooks.afterVersion.promise();
@@ -44,6 +63,7 @@ describe("GH-Action-Toggle-Peer-Review Plugin", () => {
     const hooks = makeHooks();
     const protectionSettings = { dismiss_stale_reviews: true };
 
+    (env as jest.Mock).mockReturnValueOnce({ name: "GitHub Actions" });
     plugin.apply({ hooks, logger: dummyLog(), git } as Auto);
     getBranchProtection.mockResolvedValueOnce({
       data: { required_pull_request_reviews: protectionSettings },
@@ -68,6 +88,7 @@ describe("GH-Action-Toggle-Peer-Review Plugin", () => {
       },
     };
 
+    (env as jest.Mock).mockReturnValueOnce({ name: "GitHub Actions" });
     plugin.apply({ hooks, logger: dummyLog(), git } as Auto);
     getBranchProtection.mockResolvedValueOnce({
       data: { required_pull_request_reviews: protectionSettings },
