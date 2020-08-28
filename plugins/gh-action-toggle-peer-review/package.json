@@ -38,6 +38,7 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "@octokit/rest": "^18.0.0",
+    "endent": "^2.0.1",
     "tslib": "1.10.0"
   }
 }

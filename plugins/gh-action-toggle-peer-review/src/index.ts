@@ -1,5 +1,6 @@
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import { Auto, IPlugin } from "@auto-it/core";
+import endent from 'endent';
 
 /** Toggle 'Require pull request reviews before merging' when creating 'latest' release from a GitHub Action */
 export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
@@ -48,8 +49,19 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           `Turned off peer review for '${auto.baseBranch}' branch. Will re-enable after publish.`
         );
       } catch (error) {
-        // There is no branch protection settings, do nothing.
-        auto.logger.verbose.error(error);
+        if (
+          typeof error === "object" &&
+          error.message.includes("Resource not accessible by integration")
+        ) {
+          auto.logger.log.error(endent`
+            To use this plugin you will not be able to use the "GITHUB_TOKEN" in the action.
+            This token does not have access to toggling these settings.
+            You *must* create a personal access token with "repo" access.
+          `)
+        } else {
+          // There is no branch protection settings, do nothing.
+          auto.logger.verbose.error(error);
+        }
       }
     });
 
