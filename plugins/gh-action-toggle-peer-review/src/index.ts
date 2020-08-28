@@ -24,14 +24,15 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
         });
         const prReviewSettings = response.data.required_pull_request_reviews;
 
-        if (!prReviewSettings) {
-          return;
-        }
-
         if (
-          "enabled" in prReviewSettings &&
-          (prReviewSettings as any).enabled === false
+          !prReviewSettings ||
+          ("enabled" in prReviewSettings &&
+            (prReviewSettings as any).enabled === false)
         ) {
+          auto.logger.log.warn(
+            `Could not find peer review settings for '${auto.baseBranch}' branch.`
+          );
+
           return;
         }
 
@@ -48,6 +49,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
         );
       } catch (error) {
         // There is no branch protection settings, do nothing.
+        auto.logger.verbose.error(error);
       }
     });
 
@@ -73,10 +75,10 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           teams: (teams || []).map((team) => team.slug),
         },
       });
-    });
 
-    auto.logger.log.info(
-      `Re-enabled peer review for '${auto.baseBranch}' branch!`
-    );
+      auto.logger.log.info(
+        `Re-enabled peer review for '${auto.baseBranch}' branch!`
+      );
+    });
   }
 }
