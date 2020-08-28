@@ -223,12 +223,11 @@ export default class CocoapodsPlugin implements IPlugin {
           this.options.podspecPath,
         ]);
       } catch (error) {
-        auto.logger.log.error(
+        throw new Error(
           logMessage(
             `Error pushing to specs repo: ${this.options.specsRepo}. Error: ${error}`
           )
         );
-        process.exit(1);
       } finally {
         await execPromise(pod, [
           ...commands,

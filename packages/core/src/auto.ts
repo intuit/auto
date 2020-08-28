@@ -245,6 +245,8 @@ export interface IAutoHooks {
   next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncSeriesHook<[]>;
+  /** Ran when the application errors out. Should be used to revert changes made */
+  cleanUp: AsyncSeriesHook<[]>;
 }
 
 /** Load the .env file into process.env. Useful for local usage. */
@@ -512,14 +514,6 @@ export default class Auto {
     ];
 
     if (errors.length) {
-      this.logger.log.error(
-        endent`
-          Found configuration errors:
-          
-          ${errors.map(formatError).join("\n")}
-        `,
-        "\n"
-      );
       this.logger.log.warn(
         "These errors are for the fully loaded configuration (this is why some paths might seem off)."
       );
@@ -530,7 +524,13 @@ export default class Auto {
         );
       }
 
-      process.exit(1);
+      throw new Error(
+        endent`
+          Found configuration errors:
+          
+          ${errors.map(formatError).join("\n")}
+        `
+      );
     }
 
     const config = {
@@ -1621,15 +1621,13 @@ export default class Auto {
     const prNumber = getPrNumberFromEnv(pr);
 
     if (!prNumber) {
-      this.logger.log.error(
+      throw new Error(
         endent`
           Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.
           
           In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
         `
       );
-
-      process.exit(1);
     }
 
     return prNumber;
@@ -1768,18 +1766,17 @@ export default class Auto {
     // If its a dry run we want to show what would happen. Otherwise no
     // tags indicates that something would definitely go wrong.
     if (err?.message.includes("No names found") && !args.dryRun) {
-      this.logger.log.error(
+      this.logger.verbose.error(err);
+
+      throw new Error(
         endent`
           Could not find any tags in the local repository. Exiting early.
 
           The "release" command creates GitHub releases for tags that have already been created in your repo.
           
           If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
-        `,
-        "\n"
+        `
       );
-      this.logger.verbose.error(err);
-      return process.exit(1);
     }
 
     const isPrerelease = prerelease || this.inPrereleaseBranch();
@@ -1978,7 +1975,7 @@ export default class Auto {
       }
 
       if (!user.name && !user.email) {
-        this.logger.log.error(
+        throw new Error(
           endent`
             Could find a git name and email to commit with!
 
@@ -1989,10 +1986,8 @@ export default class Auto {
   
             - configure the author for your package manager (ex: set "author" in package.json)
             - Set "name" and "email in your .autorc
-          `,
-          ""
+          `
         );
-        process.exit(1);
       }
     }
   }
@@ -2003,10 +1998,10 @@ export default class Auto {
       return config as RepoInformation & TestingToken;
     }
 
-    const author = await this.hooks.getRepository.promise();
+    const project = await this.hooks.getRepository.promise();
 
-    if (!author || !author.owner || !author.repo) {
-      this.logger.log.error(
+    if (!project || !project.owner || !project.repo) {
+      throw new Error(
         endent`
           Cannot find project owner and repository name!
 
@@ -2014,13 +2009,11 @@ export default class Auto {
 
           - configure the repo for your package manager (ex: set "repository" in package.json)
           - configure your git remote 'origin' to point to your project on GitHub.
-        `,
-        ""
+        `
       );
-      process.exit(1);
     }
 
-    return author;
+    return project;
   }
 
   /** Find the location of the extended configuration */

@@ -61,12 +61,11 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           typeof error === "object" &&
           error.message.includes("Resource not accessible by integration")
         ) {
-          auto.logger.log.error(endent`
+          throw new Error(endent`
             To use "auto" in a GitHub Action with "required peer reviews" you will not be able to use the "GITHUB_TOKEN" in the action.
             This token does not have access to toggling these settings.
             You *must* create a personal access token with "repo" access.
           `);
-          process.exit(1);
         } else {
           // There is no branch protection settings, do nothing.
           auto.logger.verbose.error(error);
@@ -74,36 +73,40 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.afterPublish.tapPromise(this.name, async () => {
-      if (!auto.git || !this.protectionOptions) {
-        return;
-      }
+    auto.hooks.afterPublish.tapPromise(this.name, () => this.reEnable(auto));
+    auto.hooks.cleanUp.tapPromise(this.name, () => this.reEnable(auto));
+  }
 
-      const { users = [], teams = [] } =
-        this.protectionOptions.dismissal_restrictions || {};
-      const options: RestEndpointMethodTypes["repos"]["updatePullRequestReviewProtection"]["parameters"] = {
-        owner: auto.git.options.owner,
-        repo: auto.git.options.repo,
-        branch: auto.baseBranch,
-        dismiss_stale_reviews: this.protectionOptions.dismiss_stale_reviews,
-        require_code_owner_reviews: this.protectionOptions
-          .require_code_owner_reviews,
-        required_approving_review_count: this.protectionOptions
-          .required_approving_review_count,
+  /** Re-enable the PR review settings */
+  private async reEnable(auto: Auto) {
+    if (!auto.git || !this.protectionOptions) {
+      return;
+    }
+
+    const { users = [], teams = [] } =
+      this.protectionOptions.dismissal_restrictions || {};
+    const options: RestEndpointMethodTypes["repos"]["updatePullRequestReviewProtection"]["parameters"] = {
+      owner: auto.git.options.owner,
+      repo: auto.git.options.repo,
+      branch: auto.baseBranch,
+      dismiss_stale_reviews: this.protectionOptions.dismiss_stale_reviews,
+      require_code_owner_reviews: this.protectionOptions
+        .require_code_owner_reviews,
+      required_approving_review_count: this.protectionOptions
+        .required_approving_review_count,
+    };
+
+    if (users.length || teams.length) {
+      options.dismissal_restrictions = {
+        users: (users || []).map((user) => user.login),
+        teams: (teams || []).map((team) => team.slug),
       };
+    }
 
-      if (users.length || teams.length) {
-        options.dismissal_restrictions = {
-          users: (users || []).map((user) => user.login),
-          teams: (teams || []).map((team) => team.slug),
-        };
-      }
+    await auto.git.github.repos.updatePullRequestReviewProtection(options);
 
-      await auto.git.github.repos.updatePullRequestReviewProtection(options);
-
-      auto.logger.log.info(
-        `Re-enabled peer review for '${auto.baseBranch}' branch!`
-      );
-    });
+    auto.logger.log.info(
+      `Re-enabled peer review for '${auto.baseBranch}' branch!`
+    );
   }
 }

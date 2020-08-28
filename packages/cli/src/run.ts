@@ -100,6 +100,8 @@ export async function execute(command: string, args: ApiOptions) {
         throw new Error(`idk what i'm doing.`);
     }
   } catch (error) {
+    await auto.hooks.cleanUp.promise();
+
     if (error.status === 404) {
       const [, project] = await on(auto.git!.getProject());
       const repoLink = link(
@@ -132,7 +134,14 @@ export async function execute(command: string, args: ApiOptions) {
       `);
       auto.logger.log.error(error);
     } else if (!(error instanceof LabelExistsError)) {
-      console.log(error);
+      if (
+        auto.logger.logLevel === "verbose" ||
+        auto.logger.logLevel === "veryVerbose"
+      ) {
+        auto.logger.verbose.error(error.stack);
+      } else {
+        auto.logger.log.error(error.message);
+      }
     }
 
     process.exit(1);

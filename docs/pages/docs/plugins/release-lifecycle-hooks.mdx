@@ -311,3 +311,13 @@ auto.hooks.afterShipIt.tap(
 _Other examples:_
 
 - [gradle](../generated/gradle) - Uses hook to setup next snapshot version
+
+## cleanUp
+
+Ran when the application errors out.
+
+```ts
+auto.hooks.cleanUp.tap("MyPlugin", async () => {
+  // do something
+});
+```

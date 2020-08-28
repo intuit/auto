@@ -57,41 +57,34 @@ export default class BrewPlugin implements IPlugin {
       return;
     }
 
-    try {
-      const { executable, name, formula = "formula-template.rb" } = config;
-      const version = await auto.git.getLatestTagInBranch();
-      const sha = execSync(`shasum --algorithm 256 ${executable}`, {
-        encoding: "utf8",
-      }).split(" ")[0];
+    const { executable, name, formula = "formula-template.rb" } = config;
+    const version = await auto.git.getLatestTagInBranch();
+    const sha = execSync(`shasum --algorithm 256 ${executable}`, {
+      encoding: "utf8",
+    }).split(" ")[0];
 
-      auto.logger.log.info(
-        `Updating "${name}" brew formula: ${version}#${sha}`
-      );
+    auto.logger.log.info(`Updating "${name}" brew formula: ${version}#${sha}`);
 
-      const template = fs.readFileSync(formula, {
-        encoding: "utf8",
-      });
-      const newFormula = template
-        .replace(/\$VERSION/g, version)
-        .replace(/\$SHA/g, sha);
+    const template = fs.readFileSync(formula, {
+      encoding: "utf8",
+    });
+    const newFormula = template
+      .replace(/\$VERSION/g, version)
+      .replace(/\$SHA/g, sha);
 
-      if (!fs.existsSync("./Formula")) {
-        fs.mkdirSync("./Formula");
-      }
-
-      const output = `./Formula/${name}.rb`;
-
-      fs.writeFileSync(output, newFormula);
-      auto.logger.verbose.info(`Wrote new formula to: ${output}`);
-
-      execSync(`git add ${output}`);
-      execSync(
-        `git commit -m "Bump "${name}" brew formula [skip ci]" --no-verify`
-      );
-      auto.logger.verbose.info("Committed new formula");
-    } catch (error) {
-      auto.logger.log.error(error);
-      process.exit(1);
+    if (!fs.existsSync("./Formula")) {
+      fs.mkdirSync("./Formula");
     }
+
+    const output = `./Formula/${name}.rb`;
+
+    fs.writeFileSync(output, newFormula);
+    auto.logger.verbose.info(`Wrote new formula to: ${output}`);
+
+    execSync(`git add ${output}`);
+    execSync(
+      `git commit -m "Bump "${name}" brew formula [skip ci]" --no-verify`
+    );
+    auto.logger.verbose.info("Committed new formula");
   }
 }

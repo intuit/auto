@@ -183,7 +183,7 @@ export default class Config {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private checkDeprecated(config: Record<string, any>) {
     if (config.labels && !Array.isArray(config.labels)) {
-      this.logger.log.error(endent`
+      throw new Error(endent`
         You're using a deprecated configuration option!
 
         The "labels" option no longer supports configuration with an object.
@@ -201,12 +201,10 @@ export default class Config {
         |    ]
         |  }
       `);
-
-      process.exit(1);
     }
 
     if (config.skipReleaseLabels) {
-      this.logger.log.error(endent`
+      throw new Error(endent`
         You're using a deprecated configuration option!
 
         The "skipReleaseLabels" option no longer exists.
@@ -224,8 +222,6 @@ export default class Config {
         |    ]
         |  }
       `);
-
-      process.exit(1);
     }
   }
 }

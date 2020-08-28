@@ -49,7 +49,11 @@ export interface IGitOptions {
 /** An error originating from the GitHub */
 class GitAPIError extends Error {
   /** Extend the base error */
-  constructor(api: string, args: Record<string, unknown> | unknown[], origError: Error) {
+  constructor(
+    api: string,
+    args: Record<string, unknown> | unknown[],
+    origError: Error
+  ) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
         origError.message
@@ -219,7 +223,11 @@ export default class Git {
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise("git", ["rev-list", "--max-parents=0", "HEAD"]);
+    const list = await execPromise("git", [
+      "rev-list",
+      "--max-parents=0",
+      "HEAD",
+    ]);
     return list.split("\n").pop() as string;
   }
 
@@ -392,11 +400,10 @@ export default class Git {
           return all;
         }, []);
     } catch (error) {
-      console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {
-        this.logger.log.error(
+        throw new Error(
           endent`
             Missing tag "${tag[1]}" so the command could not run.
 
@@ -405,7 +412,6 @@ export default class Git {
             git fetch --tags\n
           `
         );
-        process.exit(1);
       }
 
       throw new Error(error);
