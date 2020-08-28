@@ -1,6 +1,6 @@
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import { Auto, IPlugin } from "@auto-it/core";
-import endent from 'endent';
+import endent from "endent";
 
 /** Toggle 'Require pull request reviews before merging' when creating 'latest' release from a GitHub Action */
 export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
@@ -57,7 +57,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
             To use this plugin you will not be able to use the "GITHUB_TOKEN" in the action.
             This token does not have access to toggling these settings.
             You *must* create a personal access token with "repo" access.
-          `)
+          `);
           process.exit(1);
         } else {
           // There is no branch protection settings, do nothing.
@@ -73,8 +73,7 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
 
       const { users = [], teams = [] } =
         this.protectionOptions.dismissal_restrictions || {};
-
-      await auto.git.github.repos.updatePullRequestReviewProtection({
+      const options: RestEndpointMethodTypes["repos"]["updatePullRequestReviewProtection"]["parameters"] = {
         owner: auto.git.options.owner,
         repo: auto.git.options.repo,
         branch: auto.baseBranch,
@@ -83,11 +82,16 @@ export default class GithubActionTogglePeerReviewPlugin implements IPlugin {
           .require_code_owner_reviews,
         required_approving_review_count: this.protectionOptions
           .required_approving_review_count,
-        dismissal_restrictions: {
+      };
+
+      if (users.length || teams.length) {
+        options.dismissal_restrictions = {
           users: (users || []).map((user) => user.login),
           teams: (teams || []).map((team) => team.slug),
-        },
-      });
+        };
+      }
+
+      await auto.git.github.repos.updatePullRequestReviewProtection(options);
 
       auto.logger.log.info(
         `Re-enabled peer review for '${auto.baseBranch}' branch!`
