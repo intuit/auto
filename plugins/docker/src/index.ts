@@ -116,7 +116,11 @@ export default class DockerPlugin implements IPlugin {
     });
 
     auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
-      const lastRelease = await auto.git!.getLatestRelease();
+      if (!auto.git) {
+        return;
+      }
+
+      const lastRelease = await auto.git.getLatestRelease();
       const current = await auto.getCurrentVersion(lastRelease);
       const nextVersion = inc(current, version as ReleaseType);
       const canaryVersion = `${nextVersion}-canary${postFix}`;

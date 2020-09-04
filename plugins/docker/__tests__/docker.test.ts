@@ -15,11 +15,16 @@ jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
 
 const registry = "registry.io/app";
 
-const setup = (mockGit?: any, options?: IDockerPluginOptions) => {
+const setup = (
+  mockGit?: any,
+  options?: IDockerPluginOptions,
+  checkEnv?: jest.SpyInstance
+) => {
   const plugin = new DockerPlugin(options || { registry });
   const hooks = makeHooks();
 
   plugin.apply(({
+    checkEnv,
     hooks,
     git: mockGit,
     remote: "origin",
@@ -50,6 +55,26 @@ describe("Docker Plugin", () => {
       await expect(
         hooks.validateConfig.promise("docker", { registry: registry })
       ).resolves.toHaveLength(0);
+    });
+  });
+
+  describe("beforeRun", () => {
+    test("should check env without image", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { registry }]],
+      } as any);
+      expect(checkEnv).toBeCalled();
+    });
+
+    test("shouldn't check env with image", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { registry, image: "test" }]],
+      } as any);
+      expect(checkEnv).not.toBeCalled();
     });
   });
 
@@ -108,6 +133,36 @@ describe("Docker Plugin", () => {
         "tag",
         sourceImage,
         `${registry}:1.0.1`,
+      ]);
+    });
+  });
+
+  describe("canary", () => {
+    test("should do nothing without git", async () => {
+      const hooks = setup();
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      expect(exec).not.toHaveBeenCalled();
+    });
+
+    test("should tag canary version", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v1.0.0",
+          getCurrentVersion: () => "v1.0.0",
+        },
+        { registry, image: sourceImage }
+      );
+
+      await hooks.canary.promise(Auto.SEMVER.patch, ".123.1");
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1-canary.123.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1-canary.123.1`,
       ]);
     });
   });
