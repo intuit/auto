@@ -135,6 +135,31 @@ describe("Docker Plugin", () => {
         `${registry}:1.0.1`,
       ]);
     });
+
+    test("should tag latest", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        { getLatestTagInBranch: () => "v1.0.0" },
+        { registry, image: sourceImage, tagLatest: true }
+      );
+      await hooks.version.promise(Auto.SEMVER.patch);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "1.0.1",
+        "-m",
+        '"Update version to 1.0.1"',
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:latest`,
+      ]);
+    });
   });
 
   describe("canary", () => {
@@ -206,6 +231,50 @@ describe("Docker Plugin", () => {
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1-next.0`,
+      ]);
+    });
+  });
+
+  describe("publish", () => {
+    test("should publish next version", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestTagInBranch: () => "v1.0.0",
+          getCurrentBranch: () => "master",
+          remote: "github.com",
+        },
+        { registry, image: sourceImage, tagLatest: false }
+      );
+      await hooks.version.promise(Auto.SEMVER.patch);
+
+      await hooks.publish.promise(Auto.SEMVER.patch);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1`,
+      ]);
+    });
+
+    test("should publish latest", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestTagInBranch: () => "v1.0.0",
+          getCurrentBranch: () => "master",
+          remote: "github.com",
+        },
+        { registry, image: sourceImage, tagLatest: true }
+      );
+      await hooks.version.promise(Auto.SEMVER.patch);
+
+      await hooks.publish.promise(Auto.SEMVER.patch);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:latest`,
       ]);
     });
   });

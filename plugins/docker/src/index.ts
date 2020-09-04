@@ -174,7 +174,9 @@ export default class DockerPlugin implements IPlugin {
       auto.logger.log.info("Pushing new tag to GitHub");
 
       await Promise.all(
-        this.calculatedTags!.map((tag) => execPromise("docker", ["push", tag]))
+        this.calculatedTags!.map((tag) =>
+          execPromise("docker", ["push", `${this.options.registry}:${tag}`])
+        )
       );
 
       await execPromise("git", [
