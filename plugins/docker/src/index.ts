@@ -51,16 +51,6 @@ export default class DockerPlugin implements IPlugin {
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
-        if (Array.isArray(options)) {
-          const errors = await Promise.all(
-            options.map((o) =>
-              validatePluginConfiguration(this.name, pluginOptions, o)
-            )
-          );
-
-          return errors.reduce((acc, item) => [...acc, ...item], []);
-        }
-
         return validatePluginConfiguration(this.name, pluginOptions, options);
       }
     });
@@ -110,7 +100,7 @@ export default class DockerPlugin implements IPlugin {
 
       await execPromise("docker", [
         "tag",
-        process.env.IMAGE,
+        this.options.image,
         `${this.options.registry}:${newTag}`,
       ]);
       this.calculatedTags = [newTag];
@@ -118,7 +108,7 @@ export default class DockerPlugin implements IPlugin {
       if (this.options.tagLatest === true && !version.startsWith("pre")) {
         await execPromise("docker", [
           "tag",
-          process.env.IMAGE,
+          this.options.image,
           `${this.options.registry}:latest`,
         ]);
         this.calculatedTags.push("latest");
@@ -132,7 +122,7 @@ export default class DockerPlugin implements IPlugin {
       const canaryVersion = `${nextVersion}-canary${postFix}`;
       const targetImage = `${this.options.registry}:${canaryVersion}`;
 
-      await execPromise("docker", ["tag", process.env.IMAGE, targetImage]);
+      await execPromise("docker", ["tag", this.options.image, targetImage]);
       await execPromise("docker", ["push", targetImage]);
 
       auto.logger.verbose.info("Successfully published canary version");
@@ -168,7 +158,7 @@ export default class DockerPlugin implements IPlugin {
         "-m",
         `"Tag pre-release: ${prerelease}"`,
       ]);
-      await execPromise("docker", ["tag", process.env.IMAGE, targetImage]);
+      await execPromise("docker", ["tag", this.options.image, targetImage]);
       await execPromise("docker", ["push", targetImage]);
       await execPromise("git", ["push", auto.remote, branch, "--tags"]);
 

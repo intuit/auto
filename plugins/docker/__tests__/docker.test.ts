@@ -16,7 +16,7 @@ jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
 const registry = "registry.io/app";
 
 const setup = (mockGit?: any, options?: IDockerPluginOptions) => {
-  const plugin = new DockerPlugin(options);
+  const plugin = new DockerPlugin(options || { registry });
   const hooks = makeHooks();
 
   plugin.apply(({
@@ -32,7 +32,7 @@ const setup = (mockGit?: any, options?: IDockerPluginOptions) => {
   return hooks;
 };
 
-describe("Git Tag Plugin", () => {
+describe("Docker Plugin", () => {
   beforeEach(() => {
     exec.mockClear();
   });
@@ -49,7 +49,7 @@ describe("Git Tag Plugin", () => {
       const hooks = setup();
       await expect(
         hooks.validateConfig.promise("docker", { registry: registry })
-      ).resolves.toHaveLength(1);
+      ).resolves.toHaveLength(0);
     });
   });
 
