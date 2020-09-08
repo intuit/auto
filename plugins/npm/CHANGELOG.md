@@ -1,3 +1,25 @@
+# v9.53.0 (Tue Sep 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add Docker Publish Plugin [#1510](https://github.com/intuit/auto/pull/1510) ([@RichiCoder1](https://github.com/RichiCoder1))
+
+#### 🐛 Bug Fix
+
+- respect registry set in lerna publish command [#1519](https://github.com/intuit/auto/pull/1519) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- respect registry set in lerna publish command ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1))
+
+---
+
 # v9.52.0 (Fri Aug 21 2020)
 
 #### 🚀 Enhancement

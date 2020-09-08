@@ -1,3 +1,45 @@
+# v9.53.0 (Tue Sep 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1)), for all your work!
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/docker`
+  - Add Docker Publish Plugin [#1510](https://github.com/intuit/auto/pull/1510) ([@RichiCoder1](https://github.com/RichiCoder1))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - respect registry set in lerna publish command [#1519](https://github.com/intuit/auto/pull/1519) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/parser from 3.9.1 to 3.10.1 [#1505](https://github.com/intuit/auto/pull/1505) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.3.0 to 30.3.3 [#1518](https://github.com/intuit/auto/pull/1518) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.8.1 to 2.8.2 [#1513](https://github.com/intuit/auto/pull/1513) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jsdom from 16.2.3 to 16.2.4 [#1515](https://github.com/intuit/auto/pull/1515) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump io-ts from 2.2.9 to 2.2.10 [#1495](https://github.com/intuit/auto/pull/1495) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 3.9.1 to 4.0.0 [#1506](https://github.com/intuit/auto/pull/1506) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest-circus from 26.4.0 to 26.4.2 [#1499](https://github.com/intuit/auto/pull/1499) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.2.5 to 4.3.0 [#1517](https://github.com/intuit/auto/pull/1517) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 7.6.0 to 7.8.0 [#1502](https://github.com/intuit/auto/pull/1502) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.2.1 to 30.3.0 [#1504](https://github.com/intuit/auto/pull/1504) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump simple-react-lightbox from 3.2.3 to 3.3.4 [#1497](https://github.com/intuit/auto/pull/1497) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jsdom from 16.3.0 to 16.4.0 [#1496](https://github.com/intuit/auto/pull/1496) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest from 26.3.0 to 26.4.2 [#1494](https://github.com/intuit/auto/pull/1494) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/upload-assets`
+  - Bump file-type from 14.7.1 to 15.0.0 [#1512](https://github.com/intuit/auto/pull/1512) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1))
+
+---
+
 # v9.52.0 (Fri Aug 21 2020)
 
 #### 🚀 Enhancement

@@ -1,3 +1,32 @@
+# v9.53.0 (Tue Sep 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add Docker Publish Plugin [#1510](https://github.com/intuit/auto/pull/1510) ([@RichiCoder1](https://github.com/RichiCoder1))
+
+#### 🐛 Bug Fix
+
+- Bump file-type from 14.7.1 to 15.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-jsdoc from 30.3.0 to 30.3.3 [#1518](https://github.com/intuit/auto/pull/1518) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.2.5 to 4.3.0 [#1517](https://github.com/intuit/auto/pull/1517) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.8.1 to 2.8.2 [#1513](https://github.com/intuit/auto/pull/1513) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jsdom from 16.2.3 to 16.2.4 [#1515](https://github.com/intuit/auto/pull/1515) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 14.7.1 to 15.0.0 [#1512](https://github.com/intuit/auto/pull/1512) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1))
+
+---
+
 # v9.50.9 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix
