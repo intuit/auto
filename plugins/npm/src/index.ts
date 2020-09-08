@@ -28,7 +28,13 @@ import { gt, gte, inc, ReleaseType } from "semver";
 
 import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
-import { loadPackageJson, writeFile, isMonorepo, readFile } from "./utils";
+import {
+  loadPackageJson,
+  writeFile,
+  isMonorepo,
+  readFile,
+  getLernaJson,
+} from "./utils";
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -243,15 +249,6 @@ const pluginOptions = t.partial({
 });
 
 export type INpmConfig = t.TypeOf<typeof pluginOptions>;
-
-/** Parse the lerna.json file. */
-const getLernaJson = () => {
-  try {
-    return JSON.parse(fs.readFileSync("lerna.json", "utf8"));
-  } catch (error) {
-    return {};
-  }
-};
 
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>
