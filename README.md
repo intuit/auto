@@ -48,6 +48,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
 - [crates](./plugins/crates) - Publish Rust crates
 - [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+- [docker](./plugins/docker) - Publish images with Docker
 - [gem](./plugins/gem) - Publish ruby gems
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag (`default` when used with binary)
 - [gradle](./plugins/gradle) - Publish code with gradle
@@ -239,6 +240,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
