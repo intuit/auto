@@ -11,7 +11,6 @@ import path from "path";
 import { inc, ReleaseType } from "semver";
 
 /** Global functions for usage in module */
-const logPrefix = "[Gradle-Release-Plugin]";
 const defaultSnapshotSuffix = "-SNAPSHOT";
 
 const pluginOptions = t.partial({
@@ -143,12 +142,11 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.beforeRun.tap(this.name, async () => {
-      auto.logger.log.warn(`${logPrefix} BeforeRun`);
-
       this.properties = await getProperties(
         this.options.gradleCommand,
         this.options.gradleOptions
       );
+
       const {
         version = "",
         snapshotSuffix = defaultSnapshotSuffix,
