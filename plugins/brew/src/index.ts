@@ -1,5 +1,5 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import fs from "fs";
 import * as t from "io-ts";
 
@@ -60,7 +60,7 @@ export default class BrewPlugin implements IPlugin {
     try {
       const { executable, name, formula = "formula-template.rb" } = config;
       const version = await auto.git.getLatestTagInBranch();
-      const sha = execSync(`shasum --algorithm 256 ${executable}`, {
+      const sha = execFileSync('shasum', ['--algorithm', '256', executable], {
         encoding: "utf8",
       }).split(" ")[0];
 
@@ -84,9 +84,9 @@ export default class BrewPlugin implements IPlugin {
       fs.writeFileSync(output, newFormula);
       auto.logger.verbose.info(`Wrote new formula to: ${output}`);
 
-      execSync(`git add ${output}`);
-      execSync(
-        `git commit -m "Bump "${name}" brew formula [skip ci]" --no-verify`
+      execFileSync('git', ['add', output]);
+      execFileSync(
+        'git', ['commit', '-m', `Bump "${name}" brew formula [skip ci]`, '--no-verify']
       );
       auto.logger.verbose.info("Committed new formula");
     } catch (error) {
