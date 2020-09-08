@@ -348,6 +348,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "RichiCoder1",
+      "name": "Richard Simpson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/2391878?v=4",
+      "profile": "https://github.com/RichiCoder1",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
