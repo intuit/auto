@@ -1,3 +1,16 @@
+# v9.53.1 (Tue Sep 08 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - remove log from beforeRun so `version` command only prints version [#1520](https://github.com/intuit/auto/pull/1520) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.53.0 (Tue Sep 08 2020)
 
 :tada: This release contains work from a new contributor! :tada:
