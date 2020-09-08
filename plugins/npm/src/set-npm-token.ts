@@ -5,19 +5,28 @@ import registryUrl from "registry-url";
 import urlJoin from "url-join";
 import userHome from "user-home";
 
-import { loadPackageJson, readFile, writeFile, isMonorepo } from "./utils";
+import {
+  loadPackageJson,
+  readFile,
+  writeFile,
+  isMonorepo,
+  getLernaJson,
+} from "./utils";
 
 const { isCi } = envCi();
 
-export const DEFAULT_REGISTRY = 'https://registry.npmjs.org';
+export const DEFAULT_REGISTRY = "https://registry.npmjs.org";
 
 /** Get the registry for the project */
 export const getRegistry = async () => {
   const { publishConfig = {}, name } = await loadPackageJson();
+  const lernaJson = isMonorepo() ? getLernaJson() : undefined;
   let registry;
 
   if (publishConfig.registry) {
     registry = publishConfig.registry;
+  } else if (lernaJson?.command?.publish?.registry) {
+    registry = lernaJson.command.publish.registry;
   } else if (name?.startsWith("@")) {
     const scope = name.split(`/`)[0];
     registry = registryUrl(scope);

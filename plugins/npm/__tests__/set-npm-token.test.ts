@@ -1,13 +1,14 @@
 /* eslint-disable no-template-curly-in-string */
 
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
-import setNpmToken from "../src/set-npm-token";
+import setNpmToken, { getRegistry } from "../src/set-npm-token";
 import * as utils from "../src/utils";
 
 const loadPackageJson = utils.loadPackageJson as jest.Mock;
 const readFile = utils.readFile as jest.Mock;
 const writeFile = utils.writeFile as jest.Mock;
 const isMonorepo = utils.isMonorepo as jest.Mock;
+const getLernaJson = utils.getLernaJson as jest.Mock;
 
 jest.mock("../src/utils.ts");
 jest.mock("env-ci", () => () => ({
@@ -38,7 +39,7 @@ describe("set npm token", () => {
     isMonorepo.mockReturnValueOnce(false);
 
     await setNpmToken(dummyLog());
-    expect(writeFile).not.toHaveBeenCalled()
+    expect(writeFile).not.toHaveBeenCalled();
   });
 
   test("should write a npmrc for monorepo", async () => {
@@ -47,7 +48,17 @@ describe("set npm token", () => {
     isMonorepo.mockReturnValueOnce(true);
 
     await setNpmToken(dummyLog());
-    expect(writeFile).toHaveBeenCalled()
+    expect(writeFile).toHaveBeenCalled();
+  });
+
+  test("should get command publish registry", async () => {
+    loadPackageJson.mockReturnValueOnce({ name: "test" });
+    isMonorepo.mockReturnValueOnce(true);
+    getLernaJson.mockReturnValue({
+      command: { publish: { registry: "https://my.registry" } },
+    });
+
+    expect(await getRegistry()).toBe("https://my.registry");
   });
 
   test("should write a new npmrc w/o name", async () => {
