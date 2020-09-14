@@ -7,7 +7,7 @@ const getLatestRelease = jest.fn();
 const getUser = jest.fn();
 const getByUsername = jest.fn();
 const getPr = jest.fn();
-const createStatus = jest.fn();
+const createCommitStatus = jest.fn();
 const createComment = jest.fn();
 const updateComment = jest.fn();
 const listComments = jest.fn();
@@ -57,7 +57,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      createStatus,
+      createCommitStatus,
       createRelease,
       getLatestRelease,
       get: getProject,
@@ -75,16 +75,14 @@ jest.mock("@octokit/rest", () => {
     hook = {
       error: errorHook,
     };
+
+    graphql = () => ({
+      data: [],
+    });
   };
 
   return { Octokit };
 });
-
-jest.mock("@octokit/graphql", () => ({
-  graphql: () => ({
-    data: [],
-  }),
-}));
 
 const options = {
   owner: "Adam Dierkens",
@@ -126,6 +124,74 @@ describe("github", () => {
     });
   });
 
+  describe("getTagNotInBaseBranch", () => {
+    test("finds greatest tag not in base branch", async () => {
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
+        }
+
+        return Promise.resolve([
+          "1.0.0",
+          "1.2.3",
+          "1.4.0",
+          "1.4.0-next",
+          "1.4.1-next",
+        ]);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch")).toBe("1.4.1-next");
+    });
+
+    test("finds first tag not in base branch", async () => {
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
+        }
+
+        return Promise.resolve([
+          "1.0.0",
+          "1.2.3",
+          "1.4.0",
+          "1.4.0-next",
+          "1.4.1-next",
+        ]);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch", { first: true })).toBe(
+        "1.4.0-next"
+      );
+    });
+
+    test("handles tags with package names", async () => {
+      const baseTags = ["@monorepo/models@2.0.0", "@monorepo/core@2.0.0"];
+      const branchTags = [
+        "@monorepo/models@2.0.0",
+        "@monorepo/core@1.0.0",
+        "@monorepo/models@6.0.1-next.0",
+        "@monorepo/core@6.0.1-next.0",
+      ];
+
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/master") {
+          return Promise.resolve(baseTags);
+        }
+
+        return Promise.resolve(branchTags);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("branch")).toBe(
+        "@monorepo/core@6.0.1-next.0"
+      );
+    });
+  });
+
   test("publish", async () => {
     const gh = new Git(options);
 
@@ -134,11 +200,35 @@ describe("github", () => {
     expect(createRelease).toHaveBeenCalled();
   });
 
+  describe("Name of the group", () => {
+    test("default graphql API", async () => {
+      const gh = new Git(options);
+
+      await gh.publish("releaseNotes", "tag");
+
+      // @ts-ignore
+      expect(gh.baseUrl).toBe("https://api.github.com");
+      // @ts-ignore
+      expect(gh.graphqlBaseUrl).toBe("https://api.github.com");
+    });
+
+    test("override graphql API", async () => {
+      const gh = new Git({ ...options, baseUrl: "https://api.internal.com" });
+
+      await gh.publish("releaseNotes", "tag");
+
+      // @ts-ignore
+      expect(gh.baseUrl).toBe("https://api.internal.com");
+      // @ts-ignore
+      expect(gh.graphqlBaseUrl).toBe("https://api.internal.com/api");
+    });
+  });
+
   test("graphql", async () => {
     const gh = new Git(options);
-    const result = await gh.graphql("{ someQuery }");
+    const result = await gh.graphql<{ data: any }>("{ someQuery }");
 
-    expect(result!.data).not.toBeUndefined();
+    expect(result.data).not.toBeUndefined();
   });
 
   test("getFirstCommit ", async () => {
@@ -245,7 +335,7 @@ describe("github", () => {
   test("createStatus", async () => {
     const gh = new Git(options);
 
-    createStatus.mockReturnValueOnce(true);
+    createCommitStatus.mockReturnValueOnce(true);
 
     expect(
       await gh.createStatus({

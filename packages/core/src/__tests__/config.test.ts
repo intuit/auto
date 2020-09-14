@@ -1,7 +1,6 @@
 import Config, { normalizeLabel, normalizeLabels } from "../config";
 import { dummyLog } from "../utils/logger";
-import SEMVER from "../semver";
-import { ILabelDefinition } from "../release";
+import SEMVER, { ILabelDefinition } from "../semver";
 
 const fetchSpy = jest.fn();
 
@@ -26,6 +25,7 @@ describe("normalizeLabel", () => {
 
     expect(normalizeLabel(label)).toStrictEqual({
       description: "Increment the major version when merged",
+      color: "#C5000B",
       name: "foo",
       changelogTitle: "💥 Breaking Change",
       releaseType: SEMVER.major,
@@ -37,6 +37,7 @@ describe("normalizeLabels", () => {
   test("user labels should override defaults", () => {
     expect(normalizeLabels({}).find((l) => l.name === "minor")).toStrictEqual({
       description: "Increment the minor version when merged",
+      color: "#F1A60E",
       name: "minor",
       changelogTitle: "🚀 Enhancement",
       releaseType: SEMVER.minor,
@@ -48,6 +49,7 @@ describe("normalizeLabels", () => {
       )
     ).toStrictEqual({
       description: "Increment the minor version when merged",
+      color: "#F1A60E",
       name: "foo",
       changelogTitle: "🚀 Enhancement",
       releaseType: SEMVER.minor,

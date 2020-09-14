@@ -1,0 +1,313 @@
+---
+title: Release Lifecycle Hooks
+---
+
+The following hooks are all called during various release commands (ex: `latest`, `next`, `canary`, `shipit`).
+These hooks is where the publishing of your package actually happens.
+
+- [beforeShipIt](#beforeshipit)
+- [beforeCommitChangelog](#beforecommitchangelog)
+- [afterAddToChangelog](#afteraddtochangelog)
+- [version](#version)
+- [afterVersion](#afterversion)
+- [publish](#publish)
+- [afterPublish](#afterpublish)
+- [canary](#canary)
+- [next](#next)
+- [makeRelease](#makerelease)
+- [afterRelease](#afterrelease)
+- [afterShipIt](#aftershipit)
+
+## beforeShipIt
+
+Happens before `shipit` is run.
+This is a great way to throw an error if a token or key is not present.
+
+Context Object:
+
+- `releaseType` (`latest` | `old` | `next` | `canary`) - The type of release `shipit` will attempt to make.
+
+```ts
+auto.hooks.beforeShipIt.tapPromise("NPM", async (context) => {
+  if (!process.env.NPM_TOKEN) {
+    throw new Error("NPM Token is needed for the NPM plugin!");
+  }
+});
+```
+
+_Other examples:_
+
+- [all-contributors](../generated/all-contributors) - Manage manual contribution additions in PRs
+- [gh-pages](../generated/gh-pages) - Publishes your docs to GitHub pages on a `latest` release
+- [npm](../generated/npm) - Exits early when lerna won't need to make a release
+
+## beforeCommitChangelog
+
+Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`.
+Useful for modifying the changelog as a whole or creating extra `changelog` files.
+These files can be apart of the commit that updates the changelog.
+
+- `bump` - the semver bump
+- `commits` - the commits in the changelog
+- `currentVersion` - version that was just released
+- `lastRelease` - the version before the current version
+- `releaseNotes` - generated release notes for the release
+
+```ts
+auto.hooks.beforeCommitChangelog.tap(
+  "MyPlugin",
+  async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
+    // do something
+  }
+);
+```
+
+_Other examples:_
+
+- In Core: Create major version branches when `major` happens
+- [npm](../generated/npm) - Create sub-package changelogs
+
+## afterAddToChangelog
+
+Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`.
+Useful for getting extra commits into a release before publishing.
+
+- `bump` - the semver bump
+- `commits` - the commits in the changelog
+- `currentVersion` - version that was just released
+- `lastRelease` - the version before the current version
+- `releaseNotes` - generated release notes for the release
+
+```ts
+auto.hooks.afterAddToChangelog.tap(
+  "MyPlugin",
+  async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
+    // do something
+  }
+);
+```
+
+_Other examples:_
+
+- [all-contributors](../generated/all-contributors) - Make a commit for new contributions
+
+## version
+
+Increment the version the package.
+This is a good opportunity to `git tag` the release also.
+This hooks is required for plugin that facilitate publishing.
+
+Here `npm` does it for us.
+
+```ts
+auto.hooks.version.tapPromise("NPM", async (version: SEMVER) => {
+  await execPromise("npm", [
+    "version",
+    version,
+    "-m",
+    "Bump version to: %s [skip ci]",
+  ]);
+});
+```
+
+> If you're implementing this hook for a publishing plugin you **must** commit (with `[skip ci]` in the message) and tag the version.
+
+## afterVersion
+
+Ran after the package has been versioned.
+
+_Examples:_
+
+- In Core: Used to exit early is new commits are detected on the remote
+- [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
+
+## publish
+
+Publish the package to some package distributor.
+You must push the tags to github!
+This hooks is required for plugin that facilitate publishing.
+
+```ts
+auto.hooks.publish.tapPromise("NPM", async (version: SEMVER) => {
+  await execPromise("npm", [
+    "version",
+    version,
+    "-m",
+    "Bump version to: %s [skip ci]",
+  ]);
+  await execPromise("npm", ["publish"]);
+  await execPromise("git", [
+    "push",
+    "--follow-tags",
+    "--set-upstream",
+    auto.remote,
+    "$branch",
+  ]);
+});
+```
+
+## afterPublish
+
+Ran after the package has been published.
+
+## canary
+
+Used to publish a `canary` release.
+In this hook you get the semver bump and the unique `canary` postfix ID.
+
+You can either return a string value of just the version or an object containing the following which will be rendered within and HTML details element.
+
+- `newVersion` - The version published in the `canary` release or a header for the details element.
+- `details` - The body of the details element
+
+```ts
+auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
+  const lastRelease = await auto.git!.getLatestRelease();
+  const current = await auto.getCurrentVersion(lastRelease);
+  const nextVersion = inc(current, version as ReleaseType);
+  const isScopedPackage = name.match(/@\S+\/\S+/);
+  const canaryVersion = `${nextVersion}-canary${postFix}`;
+
+  await execPromise("npm", ["version", canaryVersion, "--no-git-tag-version"]);
+  await execPromise("npm", ["publish", "--tag", "canary"]);
+
+  auto.logger.verbose.info("Successfully published canary version");
+  return canaryVersion;
+});
+```
+
+`canary` version should not produce any of the following:
+
+- a new tag
+- any commits
+- a new release
+- any changes to changelogs
+
+It is "test" release and has no impact on any of your real releases.
+
+## next
+
+Used to publish a `next` release.
+In this hook you get the semver bump and a list of all pre-releases made.
+
+This hook **must** add the version it published to `preReleaseVersions` and return it.
+
+- `preReleaseVersions` - A list of prerelease version publish during the current run
+- `bump` - The version bump to apply
+
+```ts
+import {
+  determineNextVersion,
+  execPromise,
+  getCurrentBranch,
+} from "@auto-it/core";
+
+auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
+  const branch = getCurrentBranch() || "";
+  const lastRelease = await auto.git.getLatestRelease();
+  const current =
+    (await auto.git.getLastTagNotInBaseBranch(branch)) ||
+    (await auto.getCurrentVersion(lastRelease));
+  // Use this helper function to determine the next prerelease version
+  const prerelease = determineNextVersion(lastRelease, current, bump, "next");
+
+  // Create a new tag for it
+  await execPromise("git", [
+    "tag",
+    prerelease,
+    "-m",
+    `"Tag pre-release: ${prerelease}"`,
+  ]);
+  // Push the tag
+  await execPromise("git", ["push", auto.remote, "--tags"]);
+
+  // Make sure to add the version to the list
+  preReleaseVersions.push(prerelease);
+  return preReleaseVersions;
+});
+```
+
+`next` version should not produce any of the following:
+
+- any commits
+- any changes to changelogs
+
+## makeRelease
+
+Ran when trying to make a release during the `release` command has run.
+This async hook gets the following arguments:
+
+- `dryRun` - Whether this is a dry run
+- `from` - Commit to start calculating the version from
+- `newVersion` - The version being released
+- `isPrerelease` - Whether the release being made is a prerelease
+- `fullReleaseNotes` - The generated release notes for all of the commits
+- `commits` - The commits included in the release
+
+```ts
+auto.hooks.makeRelease.tapPromise("MyPlugin", async (options) => {
+  if (!options.dryRun) {
+    this.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
+
+    return this.git!.publish(
+      options.fullReleaseNotes,
+      options.newVersion,
+      options.isPrerelease
+    );
+  }
+});
+```
+
+_Other examples:_
+
+- [npm](../generated/npm) - Create GitHub releases for sub-packages
+
+## afterRelease
+
+Ran after the `release` command has run, creating a new release on GitHub.
+This async hook gets the following arguments:
+
+- `lastRelease` - the version that existed prior to the current release
+- `newVersion` - version that was just released
+- `commits` - the commits in the release
+- `releaseNotes` - generated release notes for the release
+- `response` - the response returned from making the release
+
+```ts
+auto.hooks.afterRelease.tapPromise(
+  "MyPlugin",
+  async ({ lastRelease, newVersion, commits, releaseNotes, response }) => {
+    // do something
+  }
+);
+```
+
+_Other examples:_
+
+- [release](../generated/release) - Post comment on issues and PRs about release version
+- [s3](../generated/s3) - Upload release assets to s3
+- [slack](../generated/slack) - Post the release notes to slack
+- [twitter](../generated/twitter) - Create a tweet about the new release
+- [upload-assets](../generated/upload-assets) - Uses hook to upload files to newly created release
+
+## afterShipIt
+
+Ran after the `shipit` command has run.
+
+- `newVersion` - The new version that was release
+- `commits` - the commits in the release
+- `data`
+  - `context` - The type of release that was created (`latest`, `next`, `canary`, or `old`)
+
+```ts
+auto.hooks.afterShipIt.tap(
+  "MyPlugin",
+  async (newVersion, commits, { context }) => {
+    // do something
+  }
+);
+```
+
+_Other examples:_
+
+- [gradle](../generated/gradle) - Uses hook to setup next snapshot version

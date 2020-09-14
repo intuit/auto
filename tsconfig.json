@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs", // Resolve modules the node way
-    "lib": ["es2017"], // Use newest ecma script features
+    "lib": ["dom", "es2017"], // Use newest ecma script features
     /* Outputs: */
     "sourceMap": true,
     "declaration": true,

@@ -29,6 +29,14 @@ test("fails correctly", async () => {
   );
 });
 
+test("fails correctly with GH_TOKEN", async () => {
+  process.env.GH_TOKEN = '1234567890'
+  expect.assertions(1);
+  return expect(exec("false", [process.env.GH_TOKEN])).rejects.toMatchInlineSnapshot(
+    `[Error: Running command 'false' with args [****7890] failed]`
+  );
+});
+
 test("appends stdout and stderr", async () => {
   expect.assertions(1);
   return expect(

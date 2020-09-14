@@ -2,16 +2,24 @@
 
 Automate publishing to your gh-pages documentation website
 
-`auto` will push a directory to your `gh-pages` branch:
+`auto` will push a directory to your project's `gh-pages` branch:
 
 1. on every release
 2. if the `documentation` label is on the pull request
+
+**What is a `gh-pages` branch?**
+
+The `gh-pages` branch is a special branch in your repository that you can use to store your built website.
+This branch will not track any of the source files for your project, but will have things like an `index.html` and all the other files needed to render your website.
+The benefit of this is that you don't have to store any dist files in your `baseBranch`.
+
+[Take a look at `auto`'s `gh-pages` branch/](https://github.com/intuit/auto/tree/gh-pages)
 
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/gh-pages
 # or
 yarn add -D @auto-it/gh-pages
@@ -47,6 +55,15 @@ If you also want `auto` to run the build for you docs site provide the `buildCom
     // other plugins
   ]
 }
+```
+
+You *must* also make sure that your built website is in your `.gitignore`.
+Otherwise your release will fail because of uncommitted changes.
+
+**.gitignore:**
+
+```sh
+./path/to/built/docs/website
 ```
 
 ### Pages Branch

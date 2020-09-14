@@ -9,8 +9,8 @@ try {
 
   if (json.name.startsWith("@auto-canary")) {
     moduleAlias.addAliases({
+      /** We want to rewrite all the imports for canary (ex: npm plugin requiring core) */
       "@auto-it": (fromPath: string, request: string) =>
-        // We want to rewrite all the imports for canary (ex: npm plugin requiring core)
         request.startsWith("@auto-it") &&
         // but we also want to be able to require official plugins from a canary
         !fromPath.endsWith("noop.js") &&
@@ -24,12 +24,12 @@ try {
 
 import chalk from "chalk";
 import parseArgs from "../parse-args";
-import run from "../run";
+import { runCli } from "../run";
 
 const [command, args] = parseArgs();
 
 if (command && args) {
-  run(command, args).catch((e: Error) => {
+  runCli(command, args).catch((e: Error) => {
     console.error(chalk.redBright("Error: "), e.message);
     process.exit(1);
   });

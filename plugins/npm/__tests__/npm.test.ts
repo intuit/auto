@@ -24,14 +24,21 @@ jest.mock("child_process");
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 
-jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("master");
-
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
-// @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(execPromise);
-jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
+jest.mock("../src/set-npm-token.ts");
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => execPromise(...args),
+}));
+jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+  getCurrentBranch: () => "master",
+}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  // @ts-ignore
+  default: (...args) => getLernaPackages(...args),
+}));
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({
@@ -68,7 +75,7 @@ describe("getChangedPackages ", () => {
       await getChangedPackages({
         sha: "sha",
         packages: [],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual([]);
@@ -94,7 +101,7 @@ describe("getChangedPackages ", () => {
             version: "1.0.0",
           },
         ],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual(["foo", "bar"]);
@@ -120,7 +127,7 @@ describe("getChangedPackages ", () => {
             version: "1.0.0",
           },
         ],
-        lernaJson: {},
+        addVersion: false,
         logger: dummyLog(),
       })
     ).toStrictEqual(["@scope/foo", "@scope/bar"]);
@@ -660,6 +667,63 @@ describe("publish", () => {
     ]);
   });
 
+  test("monorepo - should use legacy", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    existsSync.mockReturnValueOnce(true);
+
+    await hooks.publish.promise(Auto.SEMVER.patch);
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "--yes",
+      "from-package",
+      false,
+      "--legacy-auth",
+      "abcd",
+    ]);
+  });
+
+  test("should use legacy", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    execPromise.mockReturnValueOnce("1.0.0");
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "0.0.0"
+      }
+    `;
+
+    await hooks.publish.promise(Auto.SEMVER.patch);
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--_auth",
+      "abcd",
+    ]);
+  });
+
   test("should bump published version", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -748,7 +812,14 @@ describe("publish", () => {
     `;
 
     await hooks.publish.promise(Auto.SEMVER.patch);
-    expect(execPromise).toHaveBeenCalledWith("npm", ["publish"]);
+    expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "--follow-tags",
+      "--set-upstream",
+      "origin",
+      "master",
+    ]);
   });
 });
 
@@ -781,8 +852,106 @@ describe("canary", () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
-    expect(execPromise.mock.calls[0]).toContain("npm");
-    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[1]).toContain("npm");
+    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+  });
+
+  test("doesn't publish private packages", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "private": true
+      }
+    `;
+
+    expect(
+      await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1")
+    ).toStrictEqual({
+      error: "Package private, cannot make canary release to npm.",
+    });
+  });
+
+  test("finds available canary version", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    // first version exists
+    execPromise.mockReturnValueOnce(true);
+    // second doesn't
+    execPromise.mockReturnValueOnce(false);
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    expect(execPromise.mock.calls[2]).toContain("npm");
+    expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.1");
+  });
+
+  test("legacy auth work", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "--tag",
+      "canary",
+      "--_auth",
+      "abcd",
+    ]);
   });
 
   test("use handles repos with no tags", async () => {
@@ -809,8 +978,8 @@ describe("canary", () => {
     `;
 
     await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
-    expect(execPromise.mock.calls[0]).toContain("npm");
-    expect(execPromise.mock.calls[0][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[1]).toContain("npm");
+    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
   });
 
   test("use lerna for monorepo package", async () => {
@@ -836,25 +1005,83 @@ describe("canary", () => {
       }
     `;
 
-    getLernaPackages.mockImplementation(async () =>
-      Promise.resolve([
-        {
-          path: "path/to/package",
-          name: "@foobar/app",
-          version: "1.2.3-canary.0+abcd",
-        },
-        {
-          path: "path/to/package",
-          name: "@foobar/lib",
-          version: "1.2.3-canary.0+abcd",
-        },
-      ])
-    );
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
-    expect(execPromise.mock.calls[0][1]).toContain("lerna");
+    expect(execPromise.mock.calls[1][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
+  });
+
+  test("legacy auth works in monorepo", async () => {
+    process.env.NPM_TOKEN = "abcd";
+    const plugin = new NPMPlugin({ legacyAuth: true });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      git: {
+        getLatestRelease: () => Promise.resolve("1.2.3"),
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as any);
+    existsSync.mockReturnValueOnce(true);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
+
+    await hooks.canary.promise(Auto.SEMVER.patch, "");
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "1.2.4-0",
+      "--dist-tag",
+      "canary",
+      "--force-publish",
+      "--legacy-auth",
+      "abcd",
+      "--yes",
+      "--no-git-reset",
+      "--no-git-tag-version",
+      "--exact",
+    ]);
   });
 
   test("error when no canary release found", async () => {
@@ -880,20 +1107,21 @@ describe("canary", () => {
       }
     `;
 
-    getLernaPackages.mockImplementation(async () =>
-      Promise.resolve([
-        {
-          path: "path/to/package",
-          name: "@foobar/app",
-          version: "1.2.3",
-        },
-        {
-          path: "path/to/package",
-          name: "@foobar/lib",
-          version: "1.2.3",
-        },
-      ])
-    );
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
     const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
     expect(value).toStrictEqual({
@@ -951,7 +1179,7 @@ describe("canary", () => {
     ]);
   });
 
-  test("dont force publish canaries", async () => {
+  test("don't force publish canaries", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1036,142 +1264,6 @@ describe("canary", () => {
     expect(value).toStrictEqual({
       error: "No packages were changed. No canary published.",
     });
-  });
-});
-
-describe("next", () => {
-  beforeEach(() => {
-    execPromise.mockClear();
-  });
-
-  test("works in single package", async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    plugin.apply(({
-      config: { prereleaseBranches: ["next"] },
-      hooks,
-      remote: "origin",
-      baseBranch: "master",
-      logger: dummyLog(),
-      getCurrentVersion: () => "1.2.3",
-      prefixRelease: (v: string) => v,
-      git: {
-        getLatestRelease: () => "1.0.0",
-        getLastTagNotInBaseBranch: () => "1.2.3",
-      },
-    } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.2.4-next.0"
-      }
-    `;
-
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "1.2.4-next.0",
-    ]);
-
-    expect(execPromise).toHaveBeenCalledWith("npm", [
-      "version",
-      "1.2.4-next.0",
-      "--no-git-tag-version",
-    ]);
-    expect(execPromise).toHaveBeenCalledWith("git", [
-      "tag",
-      "1.2.4-next.0",
-      "-m",
-      '"Update version to 1.2.4-next.0"',
-    ]);
-    expect(execPromise).toHaveBeenCalledWith("git", [
-      "push",
-      "origin",
-      "--tags",
-    ]);
-    expect(execPromise).toHaveBeenCalledWith("npm", [
-      "publish",
-      "--tag",
-      "next",
-    ]);
-  });
-
-  test("works in monorepo", async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
-    execPromise.mockReturnValueOnce("");
-    execPromise.mockReturnValueOnce("1.2.4-next.0");
-
-    plugin.apply(({
-      config: { prereleaseBranches: ["next"] },
-      hooks,
-      remote: "origin",
-      baseBranch: "master",
-      logger: dummyLog(),
-      getCurrentVersion: () => "1.2.3",
-      prefixRelease: (v: string) => v,
-      git: {
-        getLatestRelease: () => "1.0.0",
-        getLastTagNotInBaseBranch: () => "1.2.3",
-      },
-    } as unknown) as Auto.Auto);
-
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "1.2.4-next.0",
-    ]);
-
-    expect(execPromise).toHaveBeenCalledWith(
-      "npx",
-      expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
-    );
-    expect(execPromise).toHaveBeenCalledWith("git", [
-      "push",
-      "origin",
-      "--tags",
-    ]);
-  });
-
-  test("works in monorepo - independent", async () => {
-    const plugin = new NPMPlugin();
-    const hooks = makeHooks();
-
-    // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
-    execPromise.mockReturnValueOnce("");
-    execPromise.mockReturnValueOnce("@foo/1@1.0.0-next.0\n@foo/2@2.0.0-next.0");
-
-    plugin.apply(({
-      config: { prereleaseBranches: ["next"] },
-      hooks,
-      remote: "origin",
-      baseBranch: "master",
-      logger: dummyLog(),
-      prefixRelease: (v: string) => v,
-      git: {
-        getLatestRelease: () => "@foo/1@0.1.0",
-        getLastTagNotInBaseBranch: () => "@foo/1@1.0.0-next.0",
-      },
-    } as unknown) as Auto.Auto);
-
-    expect(await hooks.next.promise([], Auto.SEMVER.patch)).toStrictEqual([
-      "@foo/1@1.0.0-next.0",
-      "@foo/2@2.0.0-next.0",
-    ]);
-
-    expect(execPromise).toHaveBeenCalledWith(
-      "npx",
-      expect.arrayContaining(["lerna", "publish", "prerelease"])
-    );
-    expect(execPromise).toHaveBeenCalledWith("git", [
-      "push",
-      "origin",
-      "--tags",
-    ]);
   });
 });
 

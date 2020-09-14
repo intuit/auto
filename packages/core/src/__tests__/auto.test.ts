@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import { IPRStatusOptions } from "../auto-args";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
@@ -98,6 +98,32 @@ describe("Auto", () => {
     expect(auto.release).toBeDefined();
   });
 
+  test("should set default baseBranch", async () => {
+    search.mockReturnValueOnce({
+      config: defaults,
+    });
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(auto.baseBranch).toBe("master");
+  });
+
+  test("should set custom baseBranch", async () => {
+    search.mockReturnValueOnce({
+      config: {
+        ...defaults,
+        baseBranch: "production",
+      },
+    });
+
+    const auto = new Auto();
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    expect(auto.baseBranch).toBe("production");
+    expect(auto.config?.baseBranch).toBe("production");
+  });
+
   test("should default to npm in non-pkg", async () => {
     search.mockReturnValueOnce({ config: defaults });
     // @ts-ignore
@@ -190,7 +216,7 @@ describe("Auto", () => {
       ["Version: Minor"],
       ["skip-release"],
       ["release"],
-      ["internal", "documentation"],
+      ["internal", "documentation", "tests", "dependencies"],
     ]);
   });
 
@@ -214,6 +240,7 @@ describe("Auto", () => {
     expect(auto.config!.labels.find((l) => l.name === "feature")).toStrictEqual(
       {
         description: "Increment the minor version when merged",
+        color: "#F1A60E",
         name: "feature",
         changelogTitle: "🚀 Enhancement",
         releaseType: SEMVER.minor,
@@ -236,6 +263,7 @@ describe("Auto", () => {
       auto.config!.labels.find((l) => l.description === "This is a test")
     ).toStrictEqual({
       description: "This is a test",
+      color: "#F1A60E",
       name: "minor",
       changelogTitle: "🚀 Enhancement",
       releaseType: SEMVER.minor,
@@ -310,6 +338,33 @@ describe("Auto", () => {
 
       await auto.label({ pr: 13 });
       expect(console.log).toHaveBeenCalledWith("foo");
+    });
+
+    test("should check for a given label", async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const getLabels = jest.fn();
+      auto.git!.getLabels = getLabels;
+      getLabels.mockReturnValueOnce(["foo"]);
+      jest.spyOn(console, "log").mockImplementation();
+
+      await auto.label({ pr: 13, exists: "foo" });
+      expect(console.log).toHaveBeenCalledWith("foo");
+    });
+
+    test("should throw if a check for a label fails", async () => {
+      const auto = new Auto(defaults);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const getLabels = jest.fn();
+      auto.git!.getLabels = getLabels;
+      getLabels.mockReturnValueOnce(["bar"]);
+      jest.spyOn(console, "log").mockImplementation();
+
+      await expect(auto.label({ pr: 13, exists: "foo" })).rejects.toThrow();
     });
 
     test("should get labels for last merged PR", async () => {
@@ -903,6 +958,32 @@ describe("Auto", () => {
       );
     });
 
+    test("should publish to a tag", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+
+      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      jest
+        .spyOn(auto.release!, "generateReleaseNotes")
+        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg("Test Commit")]);
+
+      auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap("test", afterRelease);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.runRelease({ to: "v1.2.5" });
+      expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
+        "v1.2.3",
+        "v1.2.5",
+        undefined
+      );
+    });
+
     test("should a prerelease", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -1019,6 +1100,45 @@ describe("Auto", () => {
         })
       );
     });
+
+    test("should publish with newVersion using useVersion option with semver build part", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+
+      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      jest
+        .spyOn(auto.release!, "generateReleaseNotes")
+        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg("Test Commit")]);
+
+      auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap("test", afterRelease);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.runRelease({
+        useVersion: "1.2.3+1",
+      });
+      expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
+        "v1.2.3",
+        undefined,
+        undefined
+      );
+      expect(auto.git!.publish).toHaveBeenCalledWith(
+        "releaseNotes",
+        "v1.2.3+1",
+        false
+      );
+      expect(afterRelease).toHaveBeenCalledWith(
+        expect.objectContaining({
+          lastRelease: "v1.2.3",
+          newVersion: "v1.2.3+1",
+        })
+      );
+    });
   });
 
   describe("canary", () => {
@@ -1069,34 +1189,6 @@ describe("Auto", () => {
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
-    });
-
-    test("falls back to first commit", async () => {
-      const auto = new Auto({ ...defaults, plugins: [] });
-      // @ts-ignore
-      auto.checkClean = () => Promise.resolve(true);
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestTagInBranch = () => {
-        throw new Error();
-      };
-
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      auto.git!.getSha = () => Promise.resolve("abc");
-      auto.release!.getCommits = () => Promise.resolve([]);
-      auto.git!.getFirstCommit = () => Promise.resolve("abcd");
-      jest.spyOn(auto.git!, "addToPrBody").mockImplementation();
-      jest
-        .spyOn(auto.release!, "getCommitsInRelease")
-        .mockImplementation()
-        .mockReturnValue(Promise.resolve([makeCommitFromMsg("Test Commit")]));
-      const canary = jest.fn();
-      canary.mockReturnValue("abcd");
-      auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.canary({ pr: 123, build: 1 });
-      expect(auto.release!.getCommits).toHaveBeenCalledWith("abcd");
     });
 
     test("adds sha if no pr or build number is found", async () => {
@@ -1178,6 +1270,28 @@ describe("Auto", () => {
       await auto.canary();
       expect(canary).not.toHaveBeenCalled();
     });
+
+    test("should publish with --force and skip-release label", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      auto.git!.getSha = () => Promise.resolve("abcd");
+      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg("Test Commit", {
+            labels: ["skip-release"],
+          }),
+        ]);
+      const canary = jest.fn();
+      auto.hooks.canary.tap("test", canary);
+
+      await auto.canary({ force: true });
+      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+    });
   });
 
   describe("next", () => {
@@ -1221,9 +1335,35 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.remote = "origin";
-      auto.git!.publish = () => Promise.resolve({} as any);
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
       auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.3");
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([makeCommitFromMsg("Test Commit")]);
+
+      const afterRelease = jest.fn();
+      auto.hooks.afterRelease.tap("test", afterRelease);
+      auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.next({});
+      expect(afterRelease).toHaveBeenCalled();
+    });
+
+    test("falls back to first commit when there are no tags", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "origin";
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLastTagNotInBaseBranch = () =>
+        Promise.reject(new Error("Test"));
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestRelease = () => Promise.resolve("abcd");
       auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
@@ -1305,7 +1445,7 @@ describe("Auto", () => {
       const afterAddToChangelog = jest.fn();
       auto.hooks.afterAddToChangelog.tap("test", afterAddToChangelog);
 
-      await auto.shipit({noChangelog: true});
+      await auto.shipit({ noChangelog: true });
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
       expect(afterAddToChangelog).toHaveBeenCalled();
     });

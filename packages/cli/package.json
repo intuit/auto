@@ -2,7 +2,7 @@
   "name": "auto",
   "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "9.34.1",
+  "version": "9.53.1",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
@@ -51,12 +51,12 @@
     "@auto-it/released": "link:../../plugins/released",
     "await-to-js": "^2.1.1",
     "chalk": "^4.0.0",
-    "command-line-application": "^0.9.3",
+    "command-line-application": "^0.10.1",
     "endent": "^2.0.1",
     "module-alias": "^2.2.2",
     "signale": "^1.4.0",
     "terminal-link": "^2.1.1",
-    "tslib": "1.11.1"
+    "tslib": "2.0.1"
   },
   "devDependencies": {
     "@types/signale": "^1.2.1",

@@ -5,9 +5,37 @@ import registryUrl from "registry-url";
 import urlJoin from "url-join";
 import userHome from "user-home";
 
-import { loadPackageJson, readFile, writeFile } from "./utils";
+import {
+  loadPackageJson,
+  readFile,
+  writeFile,
+  isMonorepo,
+  getLernaJson,
+} from "./utils";
 
 const { isCi } = envCi();
+
+export const DEFAULT_REGISTRY = "https://registry.npmjs.org";
+
+/** Get the registry for the project */
+export const getRegistry = async () => {
+  const { publishConfig = {}, name } = await loadPackageJson();
+  const lernaJson = isMonorepo() ? getLernaJson() : undefined;
+  let registry;
+
+  if (publishConfig.registry) {
+    registry = publishConfig.registry;
+  } else if (lernaJson?.command?.publish?.registry) {
+    registry = lernaJson.command.publish.registry;
+  } else if (name?.startsWith("@")) {
+    const scope = name.split(`/`)[0];
+    registry = registryUrl(scope);
+  } else {
+    registry = registryUrl();
+  }
+
+  return registry;
+};
 
 /** Set the .npmrc only when in a continuos integration environment */
 export default async function setTokenOnCI(logger: ILogger) {
@@ -15,7 +43,13 @@ export default async function setTokenOnCI(logger: ILogger) {
     return;
   }
 
-  const { publishConfig = {}, name } = await loadPackageJson();
+  const { private: isPrivate } = await loadPackageJson();
+
+  if (isPrivate && !isMonorepo()) {
+    logger.verbose.info("NPM token not set for private package.");
+    return;
+  }
+
   const rc = path.join(userHome, ".npmrc");
   let contents = "";
 
@@ -25,16 +59,7 @@ export default async function setTokenOnCI(logger: ILogger) {
     // No ~/.npmrc set up
   }
 
-  let registry;
-
-  if (publishConfig.registry) {
-    registry = publishConfig.registry;
-  } else if (name?.startsWith("@")) {
-    const scope = name.split(`/`)[0];
-    registry = registryUrl(scope);
-  } else {
-    registry = registryUrl();
-  }
+  const registry = await getRegistry();
 
   logger.verbose.note(`Using ${registry} registry for package`);
 

@@ -14,11 +14,14 @@ This plugin also looks in your `.gemspec` and `lib/**/version.rb` for a version.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/gem
 # or
 yarn add -D @auto-it/gem
 ```
+
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
 
 ## Usage
 

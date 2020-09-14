@@ -2,45 +2,13 @@
 
 Tap into hooks and run scripts on the terminal.
 
-Main hooks, in call order:
-
-- beforeRun
-- getRepository
-- getAuthor
-- beforeShipIt
-- getPreviousVersion
-- afterAddToChangelog
-- beforeCommitChangelog
-- version
-- afterVersion
-- publish
-- afterPublish
-- afterRelease
-- afterShipIt
-
-Other hooks:
-
-- canary
-- next
-- modifyConfig
-- makeRelease
-- onCreateLogParse
-  - parseCommit
-  - omitCommit
-- onCreateChangelog
-  - renderChangelogLine
-  - renderChangelogTitle
-  - renderChangelogAuthor
-  - renderChangelogAuthorLine
-  - omitReleaseNotes
-- onCreateRelease
-  - createChangelogTitle
+[Read more about the available hooks.](https://intuit.github.io/auto/docs/plugins/hook-api-docs)
 
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/exec
 # or
 yarn add -D @auto-it/exec
@@ -52,7 +20,7 @@ Here is an example of replacing the `npm` plugins with a light-weight version.
 
 All args to a hook are exposed on the process in environment variables.
 The format looks like `$ARG_0`, `$ARG_1`, and so on.
-Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.md) for more detail on what's available.
+Please look at the docs for [writing plugins](https://intuit.github.io/auto/docs/plugins/writing-plugins) for more detail on what's available.
 
 ```json
 {
@@ -70,6 +38,4 @@ Please look at the docs for [writing plugins](../../docs/pages/writing-plugins.m
 }
 ```
 
-::: message is-warning
-:warning: If you are tapping into a waterfall or bail hook you will need to return some value (ex: JSON or a boolean). Please refer to the documentation and return the right thing!
-:::
+> :warning: If you are tapping into a waterfall or bail hook you will need to return some value (ex: JSON or a boolean). Please refer to the documentation and return the right thing!

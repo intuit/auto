@@ -1,20 +1,29 @@
 # NPM Plugin
 
-Publish to NPM. Works in both a monorepo setting and for a single package. This plugin is loaded by default when `auto` is installed through `npm`. If you configure `auto` to use any other plugin this will be lost. So you must add the `npm` plugin to your plugins array if you still want NPM functionality.
+Publish to NPM.
+Works in both a monorepo setting and for a single package.
+This plugin is loaded by default when `auto` is installed through `npm`.
+If you configure `auto` to use any other plugin this will be lost.
+So you must add the `npm` plugin to your plugins array if you still want NPM functionality.
 
 ## Prerequisites
 
 To publish to npm you will need an `NPM_TOKEN` set in your environment.
 
+> Warning! Avoid using the `prepublishOnly` script as it can lead to errors. [Read more here.](https://intuit.github.io/auto/docs/welcome/quick-merge#beware-long-publishes)
+
 ## Installation
 
 This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
-```sh
+```bash
 npm i --save-dev @auto-it/npm
 # or
 yarn add -D @auto-it/npm
 ```
+
+> WARNING: You can only use one "package manager" at a time!
+> Mixing them will lead to undesired results.
 
 ## Usage
 
@@ -34,7 +43,12 @@ yarn add -D @auto-it/npm
 
 ## Monorepo Usage
 
-The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode. `auto` works on a repo basis and should be run from the root of the repo, not on each sub-package. No additional setup is required.
+The `npm` plugin works out of the box with `lerna` in both [`independent`](https://github.com/lerna/lerna#independent-mode) and [`fixed`](https://github.com/lerna/lerna#fixedlocked-mode-default) mode.
+`auto` works on a repo basis and should be run from the root of the repo, not on each sub-package.
+No additional setup is required.
+
+> Do you have a package in your monorepo you don't want to publish but still want versioned?
+> Just set that `"private": true` you that package's `package.json`!
 
 ## Options
 
@@ -107,14 +121,52 @@ You can disable this behavior by using the `subPackageChangelogs` option.
 }
 ```
 
+### monorepoChangelog
+
+`auto` will group changelog lines by sub-packages in a monorepo.
+You can disable this behavior by using the `monorepoChangelog` option.
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "monorepoChangelog": false
+      }
+    ]
+  ]
+}
+```
+
+### legacyAuth
+
+When publishing packages that require authentication but you are working with an internally hosted npm registry that only uses the legacy Base64 version of username:password.
+This is the same as the NPM publish \_auth flag.
+
+For security this option only accepts a boolean.
+When this option is set true `auto` will pass `--_auth $NPM_TOKEN` to the publish command.
+Set `$NPM_TOKEN` to the "Base64 version of username:password".
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "legacyAuth": true
+      }
+    ]
+  ]
+}
+```
+
 ### canaryScope
 
 Publishing canary versions comes with some security risks.
 If your project is private you have nothing to worry about and can skip these, but if your project is open source there are some security holes.
 
-::: message is-warning
-This feature works pretty easily/well for single packages. In a monorepo we have to deal with a lot more, and this options should be treated as experimental.
-:::
+> :warning: This feature works pretty easily/well for single packages. In a monorepo we have to deal with a lot more, and this options should be treated as experimental.
 
 #### Setup
 

@@ -14,7 +14,7 @@ import { InteractiveInitHooks } from "../init";
 
 /** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({
-  beforeRun: new SyncHook(["config"]),
+  beforeRun: new AsyncSeriesHook(["config"]),
   modifyConfig: new SyncWaterfallHook(["config"]),
   validateConfig: new AsyncSeriesBailHook(["name", "options"]),
   beforeShipIt: new AsyncSeriesHook(["context"]),
@@ -34,7 +34,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncParallelHook(["version"]),
   afterPublish: new AsyncParallelHook(),
   canary: new AsyncSeriesBailHook(["canaryVersion", "postFix"]),
-  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "bump"]),
+  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "bump", "context"]),
 });
 
 /** Make the hooks for "Release" */

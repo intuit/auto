@@ -6,10 +6,12 @@ import GradleReleasePlugin, {
   getProperties,
 } from "../src";
 
-const mockProperties = (properties: string) =>
-  jest
-    .spyOn(Auto, "execPromise")
-    .mockReturnValueOnce(Promise.resolve(properties));
+const exec = jest.fn();
+
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
 
 describe("Gradle Plugin", () => {
   let hooks: Auto.IAutoHooks;
@@ -19,6 +21,7 @@ describe("Gradle Plugin", () => {
   const options: IGradleReleasePluginPluginOptions = {};
 
   beforeEach(() => {
+    exec.mockClear();
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
     plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
@@ -26,31 +29,24 @@ describe("Gradle Plugin", () => {
 
   describe("getPreviousVersion", () => {
     test("should get previous version from gradle properties", async () => {
-      mockProperties("version: 1.0.0");
+      exec.mockReturnValueOnce("version: 1.0.0");
       expect(await hooks.getPreviousVersion.promise()).toBe("v1.0.0");
     });
 
     test("should get previous version snapshot from gradle properties", async () => {
-      mockProperties("version: 1.0.0-SNAPSHOT");
+      exec.mockReturnValueOnce("version: 1.0.0-SNAPSHOT");
       expect(await hooks.getPreviousVersion.promise()).toBe("v1.0.0");
-    });
-
-    test("should throw when no version", async () => {
-      mockProperties("");
-      await expect(hooks.getPreviousVersion.promise()).rejects.toThrowError(
-        "No version was found in gradle properties."
-      );
     });
   });
 
   describe("beforeRun & version", () => {
     test("should version release - patch version", async () => {
       const properties = "version: 1.0.0";
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
@@ -66,11 +62,11 @@ describe("Gradle Plugin", () => {
 
     test("should version release - major version", async () => {
       const properties = "version: 1.0.0";
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.major);
 
@@ -87,11 +83,11 @@ describe("Gradle Plugin", () => {
     test("should version release - major version - w/build", async () => {
       const properties = `version: 1.0.0`;
 
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.major);
 
@@ -107,11 +103,11 @@ describe("Gradle Plugin", () => {
 
     test("should version release - minor version", async () => {
       const properties = "version: 1.1.0";
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.minor);
 
@@ -127,11 +123,11 @@ describe("Gradle Plugin", () => {
 
     test("should version release - patch w/ default snapshot", async () => {
       const properties = "version: 1.0.0-SNAPSHOT";
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
@@ -151,11 +147,11 @@ describe("Gradle Plugin", () => {
       snapshotSuffix: .SNAP
       `;
 
-      mockProperties(properties);
+      exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
       const spy = jest.fn();
-      mockProperties(properties).mockImplementation(spy);
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
@@ -190,7 +186,7 @@ describe("Gradle Plugin - Custom Command", () => {
   describe("version", () => {
     test("should version release - patch version - with custom gradle command", async () => {
       const spy = jest.fn();
-      mockProperties("version: 1.0.0").mockImplementation(spy);
+      exec.mockReturnValueOnce("version: 1.0.0").mockImplementation(spy);
 
       await hooks.version.promise(Auto.SEMVER.patch);
 
@@ -209,7 +205,7 @@ describe("Gradle Plugin - Custom Command", () => {
 
 describe("getProperties", () => {
   test("should read properties from file", async () => {
-    mockProperties(`
+    exec.mockReturnValueOnce(`
       version: 1.0.0
       snapshotSuffix: :SNAPSHOT
     `);
@@ -220,13 +216,12 @@ describe("getProperties", () => {
   });
 
   test("should read properties from file with options", async () => {
-    const spy = jest.fn(() => Promise.resolve("version: 1.0.0"));
-    jest.spyOn(Auto, "execPromise").mockImplementation(spy);
+    exec.mockResolvedValueOnce("version: 1.0.0");
 
     expect(await getProperties("gradle", ["-someOpt"])).toStrictEqual({
       version: "1.0.0",
     });
-    expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+    expect(exec).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
       "-q",
       "properties",
       "-someOpt",
@@ -234,7 +229,7 @@ describe("getProperties", () => {
   });
 
   test("should read nothing from empty file", async () => {
-    mockProperties("");
+    exec.mockReturnValueOnce("");
     expect(await getProperties("", [])).toStrictEqual({});
   });
 });

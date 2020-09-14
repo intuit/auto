@@ -1,4 +1,3 @@
-import * as Auto from "@auto-it/core";
 import glob from "fast-glob";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
@@ -18,8 +17,12 @@ execSync.mockImplementation(execSyncSpy);
 
 const execSpy = jest.fn();
 execSpy.mockReturnValue("");
+
 // @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(execSpy);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => execSpy(...args),
+}));
 
 const globSpy = jest.fn();
 jest.mock("fast-glob");

@@ -1,6 +1,9 @@
 import * as Auto from "@auto-it/core";
-import { execSync } from "child_process";
-import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
+import addContributor from "all-contributors-cli/dist/contributors";
+import {
+  makeHooks,
+  makeLogParseHooks,
+} from "@auto-it/core/dist/utils/make-hooks";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import fs from "fs";
@@ -8,25 +11,33 @@ import env from "env-ci";
 
 import AllContributors from "../src";
 
+const addContributorMock = jest.fn();
 const envMock = jest.fn();
-const exec = jest.fn();
 const gitShow = jest.fn();
+const writeMock = jest.fn();
 const getLernaPackages = jest.fn();
 
 envMock.mockReturnValue({});
 getLernaPackages.mockReturnValue(Promise.resolve([]));
 gitShow.mockReturnValue(Promise.resolve(""));
-exec.mockReturnValue("");
 
 jest.mock("env-ci");
 jest.mock("child_process");
+jest.mock("all-contributors-cli/dist/contributors");
+jest.mock("all-contributors-cli/dist/generate");
 // @ts-ignore
-execSync.mockImplementation(exec);
+addContributor.mockImplementation(addContributorMock);
 // @ts-ignore
 env.mockImplementation(envMock);
 // @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(gitShow);
-jest.spyOn(Auto, "getLernaPackages").mockImplementation(getLernaPackages);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => gitShow(...args),
+}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  // @ts-ignore
+  default: (...args) => getLernaPackages(...args),
+}));
 jest.spyOn(process, "chdir").mockReturnValue();
 
 const mockRead = (result: string) =>
@@ -34,6 +45,8 @@ const mockRead = (result: string) =>
     .spyOn(fs, "readFileSync")
     // @ts-ignore
     .mockReturnValueOnce(result);
+
+jest.spyOn(fs, "writeFileSync").mockImplementation(writeMock);
 
 describe("All Contributors Plugin", () => {
   afterEach(() => {
@@ -263,13 +276,22 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec).not.toHaveBeenCalled();
+    expect(addContributorMock).not.toHaveBeenCalled();
   });
 
   test("should find a single contribution", async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();
+
     mockRead('{ "contributors": [] }');
+    addContributorMock.mockResolvedValue({
+      contributors: [
+        {
+          login: "Jeff",
+          contributions: ["code"],
+        },
+      ],
+    });
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
@@ -289,9 +311,8 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff code"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("code");
   });
 
   test("should work for single package", async () => {
@@ -319,9 +340,8 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff code"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("code");
   });
 
   test("should find contributions from merge commit", async () => {
@@ -348,9 +368,8 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff code"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("code");
   });
 
   test("should find a multiple contributions", async () => {
@@ -384,9 +403,8 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff code,test"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("code,test");
   });
 
   test("should update sub-packages", async () => {
@@ -434,15 +452,14 @@ describe("All Contributors Plugin", () => {
     });
 
     // root contributors
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff code,doc"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("code,doc");
     // app contributors
-    expect(exec.mock.calls[1][0]).toBe(
-      "npx all-contributors-cli add Jeff code"
-    );
+    expect(addContributorMock.mock.calls[1][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[1][2]).toBe("code");
     // lib contributors
-    expect(exec.mock.calls[2][0]).toBe("npx all-contributors-cli add Jeff doc");
+    expect(addContributorMock.mock.calls[2][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[2][2]).toBe("doc");
   });
 
   test("should update old contributors", async () => {
@@ -470,9 +487,8 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff infra,code"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("infra,code");
   });
 
   test("should include sub-commit contributors", async () => {
@@ -503,12 +519,10 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec.mock.calls[0][0]).toBe(
-      "npx all-contributors-cli add Jeff infra,code"
-    );
-    expect(exec.mock.calls[1][0]).toBe(
-      "npx all-contributors-cli add Adam code"
-    );
+    expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+    expect(addContributorMock.mock.calls[0][2]).toBe("infra,code");
+    expect(addContributorMock.mock.calls[1][1]).toBe("Adam");
+    expect(addContributorMock.mock.calls[1][2]).toBe("code");
   });
 
   test("should not update if no new contribution types", async () => {
@@ -533,6 +547,60 @@ describe("All Contributors Plugin", () => {
       ],
     });
 
-    expect(exec).not.toHaveBeenCalled();
+    expect(addContributorMock).not.toHaveBeenCalled();
+  });
+
+  describe("parseCommit", () => {
+    test("should do nothing if no extra contributions are found", async () => {
+      const releasedLabel = new AllContributors();
+      const hooks = makeHooks();
+      const logParseHooks = makeLogParseHooks();
+
+      mockRead('{ "contributors": [] }');
+
+      releasedLabel.apply({ hooks } as any);
+      hooks.onCreateLogParse.call({ hooks: logParseHooks } as any);
+
+      const parsed = await logParseHooks.parseCommit.promise({
+        subject: "test",
+        files: [],
+        hash: "123",
+        labels: [],
+        authors: [],
+      });
+
+      expect(parsed.authors).toHaveLength(0);
+    });
+
+    test("should add contributors mentioned in PR body", async () => {
+      const releasedLabel = new AllContributors();
+      const hooks = makeHooks();
+      const logParseHooks = makeLogParseHooks();
+      const getUserByUsername = jest.fn();
+      getUserByUsername.mockReturnValueOnce({ login: "some_guy" });
+      getUserByUsername.mockReturnValueOnce({ login: "other_guy" });
+
+      mockRead('{ "contributors": [] }');
+
+      releasedLabel.apply({ hooks, git: { getUserByUsername } } as any);
+      hooks.onCreateLogParse.call({ hooks: logParseHooks } as any);
+
+      const parsed = await logParseHooks.parseCommit.promise({
+        subject: "test",
+        rawBody: `# Contributions\n\n- @some_guy - design, doc\n- @other_guy - infra`,
+        files: [],
+        hash: "123",
+        labels: [],
+        authors: [],
+      });
+
+      expect(parsed.authors).toHaveLength(2);
+      expect(parsed.authors[0]).toStrictEqual(
+        expect.objectContaining({ username: "some_guy" })
+      );
+      expect(parsed.authors[1]).toStrictEqual(
+        expect.objectContaining({ username: "other_guy" })
+      );
+    });
   });
 });

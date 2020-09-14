@@ -1,6 +1,7 @@
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import endent from "endent";
-import FileType from "file-type";
+import * as FileType from "file-type";
 import fs from "fs";
 import glob from "fast-glob";
 import path from "path";
@@ -66,8 +67,12 @@ export default class UploadAssetsPlugin implements IPlugin {
           const stats = await stat(asset);
           const type = await FileType.fromBuffer(file);
 
-          const options = {
-            data: file as any,
+          const DEFAULT_BASE_URL = "https://api.github.com";
+          const baseUrl = auto.git.options.baseUrl || DEFAULT_BASE_URL;
+          const options: RestEndpointMethodTypes['repos']['uploadReleaseAsset']['parameters'] = {
+            // placeholder to appease typescript
+            release_id: -1,
+            data: (file as unknown) as string,
             name: path.basename(asset),
             owner: auto.git.options.owner,
             repo: auto.git.options.repo,
@@ -76,6 +81,11 @@ export default class UploadAssetsPlugin implements IPlugin {
               "content-type": type ? type.mime : "application/octet-stream",
             },
           };
+
+          if (baseUrl !== DEFAULT_BASE_URL) {
+            const { origin } = new URL(baseUrl);
+            options.baseUrl = `${origin}/api/uploads`;
+          }
 
           // Multiple releases were made
           if (Array.isArray(response)) {

@@ -4,11 +4,11 @@ import join from "url-join";
 import botList from "@auto-it/bot-list";
 
 import { ICommitAuthor, IExtendedCommit } from "./log-parse";
-import { ILabelDefinition } from "./release";
+import SEMVER, { ILabelDefinition } from "./semver";
 import { ILogger } from "./utils/logger";
 import { makeChangelogHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
-import SEMVER from "./semver";
+import { automatedCommentIdentifier } from "./git";
 
 export interface IGenerateReleaseNotesOptions {
   /** Github repo owner (user) */
@@ -99,7 +99,7 @@ export default class Changelog {
         ...this.options.labels,
         {
           name: "pushToBaseBranch",
-          changelogTitle: `⚠️  Pushed to \`${branch}\``,
+          changelogTitle: `⚠️ Pushed to \`${branch}\``,
           description: "N/A",
           releaseType: SEMVER.patch,
         },
@@ -194,14 +194,23 @@ export default class Changelog {
           order.indexOf(b.releaseType || "") + 1 || order.length + 1;
         const aIndex =
           order.indexOf(a.releaseType || "") + 1 || order.length + 1;
+
+        if (aIndex === bIndex) {
+          // If the labels are the same release type order by user defined order
+          return (
+            this.options.labels.findIndex((l) => l.name === a.name) -
+            this.options.labels.findIndex((l) => l.name === b.name)
+          );
+        }
+
         return aIndex - bIndex;
       })
       .reduce<ILabelDefinition[]>((acc, item) => [...acc, item], []);
 
-    const defaultPatchLabelName = this.getFirstLabelNameFromLabelKey(
-      this.options.labels,
-      "patch"
-    );
+    const defaultPatchLabelName =
+      this.options.labels.find((l) => l.default)?.name ||
+      this.options.labels.find((l) => l.releaseType === "patch")?.name ||
+      "patch";
 
     commits
       .filter(
@@ -226,14 +235,6 @@ export default class Changelog {
           : { [label.name]: matchedCommits };
       })
     );
-  }
-
-  /** Get the default label for a label key */
-  private getFirstLabelNameFromLabelKey(
-    labels: ILabelDefinition[],
-    labelKey: string
-  ) {
-    return labels.find((l) => l.releaseType === labelKey)?.name || labelKey;
   }
 
   /** Create a list of users */
@@ -360,13 +361,16 @@ export default class Changelog {
 
   /** Create a section in the changelog to with all of the changelog notes organized by change type */
   private async createLabelSection(split: ICommitSplit, sections: string[]) {
-    const changelogTitles = this.options.labels.reduce((titles, label) => {
-      if (label.changelogTitle) {
-        titles[label.name] = label.changelogTitle;
-      }
+    const changelogTitles = this.options.labels.reduce<Record<string, string>>(
+      (titles, label) => {
+        if (label.changelogTitle) {
+          titles[label.name] = label.changelogTitle;
+        }
 
-      return titles;
-    }, {} as { [label: string]: string });
+        return titles;
+      },
+      {}
+    );
 
     const labelSections = await Promise.all(
       Object.entries(split).map(async ([label, labelCommits]) => {
@@ -406,12 +410,12 @@ export default class Changelog {
       })
     );
 
-    const mergedSections = labelSections.reduce(
+    const mergedSections = labelSections.reduce<Record<string, string[]>>(
       (acc, [title, commits]) => ({
         ...acc,
         [title]: [...(acc[title] || []), ...commits],
       }),
-      {} as Record<string, string[]>
+      {}
     );
 
     Object.entries(mergedSections)
@@ -467,7 +471,10 @@ export default class Changelog {
         const line = lines[index];
         const isTitle = line.match(title);
 
-        if (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) {
+        if (
+          (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) ||
+          line.startsWith(automatedCommentIdentifier)
+        ) {
           break;
         }
 

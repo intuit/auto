@@ -4,6 +4,7 @@ import {
   execPromise,
   IPlugin,
   getCurrentBranch,
+  DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import { inc, ReleaseType } from "semver";
 
@@ -70,7 +71,8 @@ export default class GitTagPlugin implements IPlugin {
         return preReleaseVersions;
       }
 
-      const prereleaseBranches = auto.config?.prereleaseBranches!;
+      const prereleaseBranches =
+        auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
       const branch = getCurrentBranch() || "";
       const prereleaseBranch = prereleaseBranches.includes(branch)
         ? branch
@@ -92,7 +94,7 @@ export default class GitTagPlugin implements IPlugin {
         "-m",
         `"Tag pre-release: ${prerelease}"`,
       ]);
-      await execPromise("git", ["push", auto.remote, "--tags"]);
+      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
 
       preReleaseVersions.push(prerelease);
       return preReleaseVersions;

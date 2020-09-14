@@ -1,4 +1,3 @@
-import { getAutoVersion } from "@auto-it/core";
 import chalk from "chalk";
 import { app, Command, Option } from "command-line-application";
 import endent from "endent";
@@ -17,6 +16,7 @@ import {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
+  getAutoVersion,
 } from "@auto-it/core";
 
 export type Flags =
@@ -272,6 +272,12 @@ export const commands: AutoCommand[] = [
       "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!",
     options: [
       { ...pr, description: `${pr.description} (defaults to last merged PR)` },
+      {
+        name: "exists",
+        type: String,
+        group: "main",
+        description: "Checks for existence of a specific label",
+      },
     ],
     examples: ["{green $} auto label --pr 123"],
   },
@@ -364,7 +370,7 @@ export const commands: AutoCommand[] = [
       dryRun,
     ],
     examples: [
-      `{green $} auto pr \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`,
+      `{green $} auto pr-status \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`,
     ],
   },
   {
@@ -460,6 +466,13 @@ export const commands: AutoCommand[] = [
         group: "main",
         description:
           "Git revision (tag, commit sha, ...) to start release notes from. Defaults to latest tag.",
+      },
+      {
+        name: "to",
+        type: String,
+        group: "main",
+        description:
+          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD",
       },
       {
         name: "use-version",

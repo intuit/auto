@@ -70,6 +70,45 @@ describe("Upload Assets Plugin", () => {
     );
   });
 
+  test("should upload to enterprise", async () => {
+    const plugin = new UploadAssets([
+      path.join(__dirname, "./test-assets/macos"),
+    ]);
+    const hooks = makeHooks();
+    const uploadReleaseAsset = jest.fn();
+
+    plugin.apply(({
+      hooks,
+      logger: dummyLog(),
+      git: {
+        options: { ...options, baseUrl: "https://github.my.com/api/v3" },
+        github: { repos: { uploadReleaseAsset } },
+      },
+    } as unknown) as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: [],
+      releaseNotes: "",
+      response: {
+        data: { id: "123" },
+      } as any,
+    });
+
+    expect(uploadReleaseAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headers: {
+          "content-length": 14044,
+          "content-type": "application/octet-stream",
+        },
+        baseUrl: "https://github.my.com/api/uploads",
+        name: "macos",
+        release_id: "123",
+      })
+    );
+  });
+
   test("should upload multiple assets", async () => {
     const plugin = new UploadAssets({
       assets: [

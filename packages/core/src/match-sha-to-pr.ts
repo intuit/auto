@@ -1,7 +1,7 @@
 import endent from "endent";
 
 import { IExtendedCommit } from "./log-parse";
-import { ILabelDefinition } from "./release";
+import { ILabelDefinition } from "./semver";
 
 interface ISearchEdge {
   /** Graphql search node */
@@ -39,6 +39,8 @@ export interface ISearchResult {
   /** Results in the search */
   edges: ISearchEdge[];
 }
+
+export type ISearchQuery = Record<string, ISearchResult>;
 
 /**
  * Generate a GitHub graphql query to find all the commits related

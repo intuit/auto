@@ -1,0 +1,151 @@
+---
+title: Changelog Hooks
+---
+
+One of the main outputs from `auto` is the changelogs it produces.
+The changelog is created from a set of commits that has been parsed using the [log parser](./log-parse-hooks).
+The hooks it provides allow you to customize everything about how the changelog renders.
+
+- [onCreateChangelog](#oncreatechangelog)
+- [addToBody](#addtobody)
+- [renderChangelogLine](#renderchangelogline)
+- [renderChangelogTitle](#renderchangelogtitle)
+- [renderChangelogAuthor](#renderchangelogauthor)
+- [renderChangelogAuthorLine](#renderchangelogauthorline)
+- [createChangelogTitle](#createchangelogtitle)
+- [omitReleaseNotes](#omitreleasenotes)
+
+## onCreateChangelog
+
+This is where you hook into the changelog's hooks.
+See examples below.
+
+## addToBody
+
+Add extra content to your changelogs.
+This hook provide all the current "extra" notes and all of the commits for the changelog.
+You must return the notes array.
+
+The following adds a random GIF from [giphy](https://giphy.com) to each new changelog.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Giphy',
+    async (notes, commits) => {
+      const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_KEY}`);
+      const json = await response.json();
+      const { data: gif } = json;
+
+      return [...notes, `![${gif.title}](${gif.url})\n`]
+    }
+  );
+);
+```
+
+_Other examples:_
+
+- [first-time-contributor](../generated/first-time-contributor) - Add new contributor announcements to changelogs
+
+## renderChangelogLine
+
+Change how the changelog renders lines.
+This hook provides the commit and the current state of the line render.
+You must return the commit and the line string state as a tuple ([commit, line]).
+
+The following plugin would change all the bullet points in the changelog to star emojis.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async (commit, line) =>
+      [commit, `${line.replace('-', ':star:')}\n`]
+  );
+);
+```
+
+_Other examples:_
+
+- [jira](../generated/jira) - Render JIRA story information in the changelog
+- [npm](../generated/npm) - Render monorepo information in the changelog
+
+## renderChangelogTitle
+
+Change how the changelog renders titles.
+The hook provides the current label for the section and all the configured changelog titles.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogTitle.tap(
+    'My Titles',
+    (label, changelogTitles) => `:heart: ${changelogTitles[label]} :heart:`
+  );
+);
+```
+
+## renderChangelogAuthor
+
+Change how the changelog renders author accounts (ex: linking to GitHub accounts).
+This is both the author on each commit note and the user in the author section (the part between parentheses).
+This is generally a link to some profile.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthor.tap(
+    'test',
+    (author, commit) => `:heart: ${author.name}/${commit.authorEmail} :heart:`
+  );
+);
+```
+
+## renderChangelogAuthorLine
+
+Change how the changelog renders each line in the authors section.
+The hook provides the author object and the user created with `renderChangelogAuthor`.
+Here is where you might display extra info about the author, such as their full name.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogAuthorLine.tap(
+    'test',
+    (author, user) => `:shipit: ${author.name} (${user})\n`
+  );
+);
+```
+
+## createChangelogTitle
+
+Control the titles in the `CHANGELOG.md`
+
+```ts
+// Render only the date in the title
+auto.hooks.onCreateRelease.tap(this.name, (release) => {
+  release.hooks.createChangelogTitle.tap(
+    `${this.name} - lerna independent`,
+    () => ""
+  );
+});
+```
+
+_Other examples:_
+
+- In Core: Powers the `auto changelog --title` flag
+- [npm](../generated/npm) - Gives independent monorepo a different title
+
+## omitReleaseNotes
+
+Control what commits get into the additional release notes section.
+
+```ts
+auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
+  changelog.hooks.omitReleaseNotes.tap(this.name, (commit) =>
+    commit.subject.includes("WIP")
+  );
+});
+```
+
+_Other examples:_
+
+- In Core: Ignore release notes in PRs from common bot accounts
+- [omit-release-notes](../generated/omit-release-notes) - Omit release notes from authors, labels, and more

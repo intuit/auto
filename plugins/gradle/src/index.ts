@@ -11,7 +11,6 @@ import path from "path";
 import { inc, ReleaseType } from "semver";
 
 /** Global functions for usage in module */
-const logPrefix = "[Gradle-Release-Plugin]";
 const defaultSnapshotSuffix = "-SNAPSHOT";
 
 const pluginOptions = t.partial({
@@ -69,15 +68,11 @@ async function getVersion(
   gradleOptions: string[]
 ): Promise<string> {
   const {
-    version,
+    version = "0.0.0",
     snapshotSuffix = defaultSnapshotSuffix,
   } = await getProperties(gradleCommand, gradleOptions);
 
-  if (version) {
-    return version.replace(snapshotSuffix, "");
-  }
-
-  throw new Error("No version was found in gradle properties.");
+  return version.replace(snapshotSuffix, "");
 }
 
 /** A plugin to release java projects with gradle */
@@ -147,12 +142,11 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     });
 
     auto.hooks.beforeRun.tap(this.name, async () => {
-      auto.logger.log.warn(`${logPrefix} BeforeRun`);
-
       this.properties = await getProperties(
         this.options.gradleCommand,
         this.options.gradleOptions
       );
+
       const {
         version = "",
         snapshotSuffix = defaultSnapshotSuffix,

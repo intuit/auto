@@ -1,11 +1,10 @@
 import endent from "endent";
 import Changelog, { IGenerateReleaseNotesOptions } from "../changelog";
 import LogParse from "../log-parse";
-import { defaultLabels } from "../release";
 import { dummyLog } from "../utils/logger";
 
 import makeCommitFromMsg from "./make-commit-from-msg";
-import SEMVER from "../semver";
+import SEMVER, { defaultLabels } from "../semver";
 import { getCurrentBranch } from "../utils/get-current-branch";
 
 const currentBranchSpy = getCurrentBranch as jest.Mock;
@@ -362,6 +361,36 @@ describe("generateReleaseNotes", () => {
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
   });
 
+  test("should include PR-less commits as the default label", async () => {
+    const options = testOptions();
+    options.labels[1] = {
+      ...options.labels[1],
+      default: true,
+    };
+    const changelog = new Changelog(dummyLog(), options);
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: "1",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "I was a push to master\n\nfoo bar",
+      },
+      {
+        hash: "2",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
+    ]);
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
   test('should add "Push to Next"', async () => {
     currentBranchSpy.mockReturnValueOnce("next");
     const changelog = new Changelog(dummyLog(), testOptions());
@@ -664,6 +693,33 @@ describe("generateReleaseNotes", () => {
       ## Todo
 
       - [ ] add tests
+    `;
+
+    expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+  });
+
+  test("should not add automated comments to additional release notes", async () => {
+    const changelog = new Changelog(dummyLog(), testOptions());
+    changelog.loadDefaultHooks();
+
+    const commits = await logParse.normalizeCommits([
+      {
+        hash: "2",
+        files: [],
+        authorName: "Adam Dierkens",
+        authorEmail: "adam@dierkens.com",
+        subject: "First Feature (#1235)",
+        labels: ["minor"],
+      },
+    ]);
+    commits[0].pullRequest!.body = endent`
+      ## Release Notes
+
+      Here is how you upgrade
+
+      <!-- GITHUB_RELEASE PR BODY: prerelease-version -->
+      Should not show up in notes
+      <!-- GITHUB_RELEASE PR BODY: prerelease-version -->
     `;
 
     expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();

@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "9.34.1",
+  "version": "9.53.1",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
   "license": "MIT",
@@ -39,17 +39,15 @@
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
     "@auto-it/core": "link:../../packages/core",
+    "@octokit/rest": "^18.0.0",
+    "all-contributors-cli": "6.17.2",
     "anymatch": "^3.1.1",
     "await-to-js": "^2.1.1",
+    "endent": "^2.0.1",
+    "env-ci": "^5.0.1",
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
-    "tslib": "1.11.1"
-  },
-  "devDependencies": {
-    "all-contributors-cli": "6.14.2"
-  },
-  "peerDependencies": {
-    "all-contributors-cli": ">= 6.x"
+    "tslib": "2.0.1"
   }
 }

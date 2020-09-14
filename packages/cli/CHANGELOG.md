@@ -1,3 +1,476 @@
+# v9.53.0 (Tue Sep 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add Docker Publish Plugin [#1510](https://github.com/intuit/auto/pull/1510) ([@RichiCoder1](https://github.com/RichiCoder1))
+
+#### 🐛 Bug Fix
+
+- add docker plugin ([@RichiCoder1](https://github.com/RichiCoder1))
+
+#### Authors: 1
+
+- Richard Simpson ([@RichiCoder1](https://github.com/RichiCoder1))
+
+---
+
+# v9.50.9 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- Fix label initialization [#1473](https://github.com/intuit/auto/pull/1473) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.50.8 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- correct behavior for lerna project with private packages [#1472](https://github.com/intuit/auto/pull/1472) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.50.7 (Fri Aug 14 2020)
+
+#### 🐛 Bug Fix
+
+- fix default bump type [#1470](https://github.com/intuit/auto/pull/1470) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix default bump ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.50.4 (Thu Aug 13 2020)
+
+#### 📝 Documentation
+
+- Improve package manager plugin docs [#1465](https://github.com/intuit/auto/pull/1465) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.50.2 (Tue Aug 11 2020)
+
+#### 🐛 Bug Fix
+
+- Fix finding available canary version and add logging [#1460](https://github.com/intuit/auto/pull/1460) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 2.0.0 to 2.0.1 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/rest from 18.0.1 to 18.0.3 [#1455](https://github.com/intuit/auto/pull/1455) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump jest from 26.2.2 to 26.3.0 [#1452](https://github.com/intuit/auto/pull/1452) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 2.0.0 to 2.0.1 [#1457](https://github.com/intuit/auto/pull/1457) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.49.5 (Thu Aug 06 2020)
+
+#### 🐛 Bug Fix
+
+- upgrade eslint + ensure all imported packages are in package.json [#1442](https://github.com/intuit/auto/pull/1442) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- upgrade eslint + ensure all imported packages are in package.json ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 26.1.0 to 26.2.2 [#1431](https://github.com/intuit/auto/pull/1431) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.49.3 (Fri Jul 31 2020)
+
+#### 🐛 Bug Fix
+
+- Fix various rate limiting issues [#1424](https://github.com/intuit/auto/pull/1424) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- mock octokit in cli tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.49.2 (Fri Jul 31 2020)
+
+#### 📝 Documentation
+
+- add docs about running lengthy builds during publish [#1420](https://github.com/intuit/auto/pull/1420) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- update ignite [#1421](https://github.com/intuit/auto/pull/1421) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.49.1 (Wed Jul 29 2020)
+
+#### 🐛 Bug Fix
+
+- don't leak GH_TOKEN in exec promise output [#1419](https://github.com/intuit/auto/pull/1419) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.48.3 (Wed Jul 29 2020)
+
+#### 🐛 Bug Fix
+
+- respect registry set at top level for lerna [#1412](https://github.com/intuit/auto/pull/1412) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.48.1 (Thu Jul 23 2020)
+
+#### 🐛 Bug Fix
+
+- add error message around mistmatched auto versions [#1399](https://github.com/intuit/auto/pull/1399) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add error message around mistmatched auto versions ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.47.2 (Wed Jul 22 2020)
+
+#### 🐛 Bug Fix
+
+- fix lint ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-jsdoc from 28.6.1 to 30.0.2 [#1385](https://github.com/intuit/auto/pull/1385) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/rest from 18.0.0 to 18.0.1 [#1390](https://github.com/intuit/auto/pull/1390) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump ts-jest from 25.5.1 to 26.1.3 [#1392](https://github.com/intuit/auto/pull/1392) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/graphql from 4.5.1 to 4.5.2 [#1391](https://github.com/intuit/auto/pull/1391) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pkg from 4.4.8 to 4.4.9 [#1389](https://github.com/intuit/auto/pull/1389) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.6.1 to 2.7.0 [#1388](https://github.com/intuit/auto/pull/1388) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fromentries from 1.2.0 to 1.2.1 [#1387](https://github.com/intuit/auto/pull/1387) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.21.1 to 2.22.0 [#1386](https://github.com/intuit/auto/pull/1386) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @fortawesome/free-solid-svg-icons from 5.13.0 to 5.14.0 [#1384](https://github.com/intuit/auto/pull/1384) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.47.0 (Thu Jul 16 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Stone ([@stabbylambda](https://github.com/stabbylambda)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add `--exists $LABEL` to label command [#1383](https://github.com/intuit/auto/pull/1383) ([@stabbylambda](https://github.com/stabbylambda))
+
+#### 🐛 Bug Fix
+
+- Add `--exists $LABEL` to label command ([@stabbylambda](https://github.com/stabbylambda))
+
+#### Authors: 1
+
+- David Stone ([@stabbylambda](https://github.com/stabbylambda))
+
+---
+
+# v9.46.0 (Tue Jul 14 2020)
+
+#### 🚀 Enhancement
+
+- push prerelease branch in addition to tags [#1382](https://github.com/intuit/auto/pull/1382) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.44.0 (Sat Jul 11 2020)
+
+#### 🚀 Enhancement
+
+- add .autorc "author" option that combines email + name [#1370](https://github.com/intuit/auto/pull/1370) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add .autorc "author" option that combines email + name ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.43.1 (Tue Jul 07 2020)
+
+#### 🐛 Bug Fix
+
+- fix test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: prioritize base branch head ref (lucas_shadler@intuit.com)
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Lucas Shadler (lucas_shadler@intuit.com)
+
+---
+
+# v9.43.0 (Tue Jul 07 2020)
+
+#### 🚀 Enhancement
+
+- npm: find available canary version [#1361](https://github.com/intuit/auto/pull/1361) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.42.0 (Tue Jul 07 2020)
+
+#### 🚀 Enhancement
+
+- add --to flag to "auto release" [#1362](https://github.com/intuit/auto/pull/1362) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add --to flag to "auto release" ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.41.1 (Mon Jul 06 2020)
+
+#### 🐛 Bug Fix
+
+- attempt to construct the GitHub graphql root API endpoint if githubApi is provided [#1349](https://github.com/intuit/auto/pull/1349) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.40.6 (Thu Jul 02 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Spencer Hamm ([@spentacular](https://github.com/spentacular)), for all your work!
+
+#### 🐛 Bug Fix
+
+- log full error [#1341](https://github.com/intuit/auto/pull/1341) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- log full error ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix: command example for pr-status ([@spentacular](https://github.com/spentacular))
+
+#### 📝 Documentation
+
+- fix: command example for pr-status [#1339](https://github.com/intuit/auto/pull/1339) ([@spentacular](https://github.com/spentacular))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Spencer Hamm ([@spentacular](https://github.com/spentacular))
+
+---
+
+# v9.40.3 (Wed Jun 24 2020)
+
+#### 🐛 Bug Fix
+
+- Correct some license issues and ignore snyk bot [#1321](https://github.com/intuit/auto/pull/1321) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.40.2 (Wed Jun 24 2020)
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/plugin-retry from 3.0.1 to 3.0.3 [#1304](https://github.com/intuit/auto/pull/1304) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 3.2.1 to 3.2.2 [#1309](https://github.com/intuit/auto/pull/1309) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 25.4.2 to 27.0.7 [#1311](https://github.com/intuit/auto/pull/1311) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.2.6 to 10.2.11 [#1314](https://github.com/intuit/auto/pull/1314) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.15.0 to 6.16.0 [#1306](https://github.com/intuit/auto/pull/1306) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump type-fest from 0.15.0 to 0.15.1 [#1307](https://github.com/intuit/auto/pull/1307) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump chalk from 4.0.0 to 4.1.0 [#1310](https://github.com/intuit/auto/pull/1310) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-prettier from 3.1.3 to 3.1.4 [#1305](https://github.com/intuit/auto/pull/1305) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
+# v9.40.1 (Wed Jun 24 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Snyk bot ([@snyk-bot](https://github.com/snyk-bot)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Update makeRelease to support 'from' and 'useVersion' options with build part of semver [#1315](https://github.com/intuit/auto/pull/1315) ([@bnigh](https://github.com/bnigh))
+
+#### 🔩 Dependency Updates
+
+- [Snyk] Fix for 1 vulnerabilities [#1316](https://github.com/intuit/auto/pull/1316) ([@snyk-bot](https://github.com/snyk-bot))
+
+#### Authors: 2
+
+- [@bnigh](https://github.com/bnigh)
+- Snyk bot ([@snyk-bot](https://github.com/snyk-bot))
+
+---
+
+# v9.40.0 (Wed Jun 24 2020)
+
+#### 🐛 Bug Fix
+
+- switch to next-ignite ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump tslib from 1.11.1 to 2.0.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump command-line-application from 0.9.6 to 0.10.1 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- switch to next-ignite [#1293](https://github.com/intuit/auto/pull/1293) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 3.9.3 to 3.9.5 [#1288](https://github.com/intuit/auto/pull/1288) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 1.11.1 to 2.0.0 [#1289](https://github.com/intuit/auto/pull/1289) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.0.0 to 15.1.0 [#1290](https://github.com/intuit/auto/pull/1290) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tapable from 2.0.0-beta.10 to 2.0.0-beta.11 [#1291](https://github.com/intuit/auto/pull/1291) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 25.2.1 to 25.2.3 [#1286](https://github.com/intuit/auto/pull/1286) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.15.0 to 6.16.0 [#1284](https://github.com/intuit/auto/pull/1284) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.20.2 to 2.21.1 [#1283](https://github.com/intuit/auto/pull/1283) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump command-line-application from 0.9.6 to 0.10.1 [#1282](https://github.com/intuit/auto/pull/1282) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.39.0 (Thu Jun 04 2020)
+
+#### 🐛 Bug Fix
+
+- fix automated old branch creation [#1278](https://github.com/intuit/auto/pull/1278) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.36.4 (Thu May 28 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Marty Henderson ([@10hendersonm](https://github.com/10hendersonm)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(git): Prevents getLastTagNotInBaseBranch from returning a commit hash [#1262](https://github.com/intuit/auto/pull/1262) ([@10hendersonm](https://github.com/10hendersonm))
+
+#### Authors: 1
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+
+---
+
+# v9.36.1 (Fri May 22 2020)
+
+#### 🐛 Bug Fix
+
+- fix reduce without initial value [#1249](https://github.com/intuit/auto/pull/1249) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.35.3 (Fri May 22 2020)
+
+#### 🐛 Bug Fix
+
+- Changelog formatting [#1246](https://github.com/intuit/auto/pull/1246) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v9.35.2 (Fri May 22 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Merge branch 'master' into extend-default-labels ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+#### Authors: 1
+
+- Kevin Wolf ([@kevinwolfdev](https://github.com/kevinwolfdev))
+
+---
+
 # v9.34.0 (Tue May 19 2020)
 
 #### 🐛 Bug Fix

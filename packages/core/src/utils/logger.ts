@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
-
 import signale from "signale";
 
 export type LogLevel = undefined | "verbose" | "veryVerbose" | "quiet";

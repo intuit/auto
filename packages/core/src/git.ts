@@ -1,4 +1,3 @@
-import { graphql } from "@octokit/graphql";
 import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibility";
 import path from "path";
 import { retry } from "@octokit/plugin-retry";
@@ -9,22 +8,24 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
 import endent from "endent";
 import on from "await-to-js";
+import join from "url-join";
+import { gt, lt } from "semver";
+import prettyMs from "pretty-ms";
 
 import { Memoize as memoize } from "typescript-memoize";
 
-import { ILabelDefinition } from "./release";
+import { ILabelDefinition } from "./semver";
 import verifyAuth from "./utils/verify-auth";
 import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
-import { gt, lt } from "semver";
 import { ICommit } from "./log-parse";
-import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
+import { buildSearchQuery, ISearchQuery } from "./match-sha-to-pr";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
 
 export type IPRInfo = Omit<
-  RestEndpointMethodTypes["repos"]["createStatus"]["parameters"],
+  RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"],
   "owner" | "repo"
 >;
 
@@ -48,7 +49,7 @@ export interface IGitOptions {
 /** An error originating from the GitHub */
 class GitAPIError extends Error {
   /** Extend the base error */
-  constructor(api: string, args: object, origError: Error) {
+  constructor(api: string, args: Record<string, unknown> | unknown[], origError: Error) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
         origError.message
@@ -57,9 +58,32 @@ class GitAPIError extends Error {
   }
 }
 
+const taggedPackageRegex = /(\S+)@(\S+)/;
+
+/**
+ * Extract a version from a tag.
+ *
+ * Supports tags like:
+ *
+ * - 1.2.3
+ * - 1.2.3-beta.0
+ * - package@1.2.3-beta.0
+ * - @scope/package@1.2.3-beta.0
+ */
+function getVersionFromTag(tag: string) {
+  if (taggedPackageRegex.test(tag)) {
+    const [, , version] = tag.match(taggedPackageRegex)!;
+    return version;
+  }
+
+  return tag;
+}
+
+export const automatedCommentIdentifier = "<!-- GITHUB_RELEASE";
+
 /** Make a comment to build automation in PRs off of. */
 const makeIdentifier = (type: string, context: string) =>
-  `<!-- GITHUB_RELEASE ${type}: ${context} -->`;
+  `${automatedCommentIdentifier} ${type}: ${context} -->`;
 
 /** Make an identifier for `auto comment` */
 const makeCommentIdentifier = (context: string) =>
@@ -100,32 +124,38 @@ export default class Git {
     this.logger = logger;
     this.options = options;
     this.baseUrl = this.options.baseUrl || "https://api.github.com";
-    this.graphqlBaseUrl = this.options.graphqlBaseUrl || this.baseUrl;
+    this.graphqlBaseUrl = this.options.baseUrl
+      ? this.options.graphqlBaseUrl || join(new URL(this.baseUrl).origin, "api")
+      : this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
-    const GitHub = Octokit.plugin(enterpriseCompatibility)
-      .plugin(retry)
-      .plugin(throttling);
+    const GitHub = Octokit.plugin(enterpriseCompatibility, retry, throttling);
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
       previews: ["symmetra-preview"],
       request: { agent: this.options.agent },
       throttle: {
+        /** Add a wait once rate limit is hit */
         onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
 
           if (opts.request.retryCount < 5) {
-            this.logger.verbose.log(`Retrying after ${retryAfter} seconds!`);
+            this.logger.log.log(
+              `Retrying after ${prettyMs(retryAfter * 1000)}!`
+            );
             return true;
           }
         },
-        onAbuseLimit: (_: number, opts: ThrottleOpts) => {
-          // does not retry, only logs an error
+        /** wait after abuse */
+        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.error(
-            `Went over abuse rate limit ${opts.method} ${opts.url}`
+            `Went over abuse rate limit ${opts.method} ${
+              opts.url
+            }, retrying in ${prettyMs(retryAfter * 1000)}.`
           );
+          return true;
         },
       },
     });
@@ -189,7 +219,7 @@ export default class Git {
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise("git", ["rev-list", "HEAD"]);
+    const list = await execPromise("git", ["rev-list", "--max-parents=0", "HEAD"]);
     return list.split("\n").pop() as string;
   }
 
@@ -346,7 +376,7 @@ export default class Git {
           subject: commit.rawBody!,
           files: (commit.files || []).map((file) => path.resolve(file)),
         }))
-        .reduce((all, commit) => {
+        .reduce<ICommit[]>((all, commit) => {
           // The -m option will list a commit for each merge parent. This
           // means two items will have the same hash. We are using -m to get all the changed files
           // in a merge commit. The following code combines these repeated hashes into
@@ -360,7 +390,7 @@ export default class Git {
           }
 
           return all;
-        }, [] as ICommit[]);
+        }, []);
     } catch (error) {
       console.log(error);
       const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
@@ -461,6 +491,7 @@ export default class Git {
   }
 
   /** Search to GitHub project's issue and pull requests */
+  @memoize()
   async searchRepo(
     options: RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"]
   ) {
@@ -478,10 +509,11 @@ export default class Git {
   }
 
   /** Run a graphql query on the GitHub project */
-  async graphql(query: string) {
+  @memoize()
+  async graphql<T>(query: string) {
     this.logger.verbose.info("Querying Github using GraphQL:\n", query);
 
-    const data = await graphql(query, {
+    const data = await this.github.graphql<T>(query, {
       baseUrl: this.graphqlBaseUrl,
       request: { agent: this.options.agent },
       headers: {
@@ -503,8 +535,8 @@ export default class Git {
 
     this.logger.verbose.info("Creating status using:\n", args);
 
-    const result = await this.github.repos.createStatus(
-      args as RestEndpointMethodTypes["repos"]["createStatus"]["parameters"]
+    const result = await this.github.repos.createCommitStatus(
+      args as RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"]
     );
 
     this.logger.veryVerbose.info("Got response from createStatues\n", result);
@@ -660,7 +692,7 @@ export default class Git {
     });
 
     this.logger.veryVerbose.info(`Got response from PR #${pr}\n`, result);
-    this.logger.verbose.info(`Got commits for PR #${pr}.`);
+    this.logger.verbose.info(`Got commits for PR #${pr}`);
 
     return result;
   }
@@ -797,7 +829,7 @@ export default class Git {
     return result;
   }
 
-  /** Create a release for the GitHub projecct */
+  /** Create a release for the GitHub project */
   async publish(releaseNotes: string, tag: string, prerelease = false) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
@@ -855,19 +887,27 @@ export default class Git {
     ).reverse();
     const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
     const comparator = options.first ? lt : gt;
-    const firstGreatestUnique = branchTags.reduce((result, tag) => {
-      if (!baseTags.includes(tag) && (!result || comparator(tag, result))) {
-        return tag;
-      }
+    let firstGreatestUnique: string | undefined;
 
-      return result;
+    branchTags.forEach((tag) => {
+      const tagVersion = getVersionFromTag(tag);
+      const greatestVersion = firstGreatestUnique
+        ? getVersionFromTag(firstGreatestUnique)
+        : undefined;
+
+      if (
+        !baseTags.includes(tag) &&
+        (!greatestVersion || comparator(tagVersion, greatestVersion))
+      ) {
+        firstGreatestUnique = tag;
+      }
     });
 
     this.logger.verbose.info("Tags found in base branch:", baseTags);
     this.logger.verbose.info("Tags found in branch:", branchTags);
     this.logger.verbose.info(
       `${options.first ? "First" : "Latest"} tag in branch:`,
-      firstGreatestUnique
+      firstGreatestUnique || "Not Found"
     );
 
     return firstGreatestUnique;
@@ -889,7 +929,7 @@ export default class Git {
     }
 
     const key = `hash_${sha}`;
-    const result = (await this.graphql(query)) as Record<string, ISearchResult>;
+    const result = await this.graphql<ISearchQuery>(query);
 
     if (!result || !result[key] || !result[key].edges[0]) {
       return;

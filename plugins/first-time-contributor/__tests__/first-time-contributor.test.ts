@@ -13,7 +13,10 @@ const graphql = jest.fn();
 const exec = jest.fn();
 exec.mockReturnValue("");
 // @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
 
 const setup = (
   contributors: Array<

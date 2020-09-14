@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable complexity */
+
 import Auto, {
   ApiOptions,
   IInfoOptions,
@@ -15,13 +17,14 @@ import Auto, {
   IShipItOptions,
   IVersionOptions,
   INextOptions,
+  LabelExistsError,
 } from "@auto-it/core";
 import endent from "endent";
 import on from "await-to-js";
 import link from "terminal-link";
 
 /** Spin up the "auto" node API and provide it the parsed CLI args. */
-export async function run(command: string, args: ApiOptions) {
+export async function execute(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
   try {
@@ -114,8 +117,21 @@ export async function run(command: string, args: ApiOptions) {
         You can check the permission for you token by running "auto info".
       `);
       console.log("");
-      auto.logger.verbose.error(error.request);
-    } else {
+      auto.logger.verbose.error(error);
+    } else if (error.message.includes("TypeError: Cannot read property 'tap")) {
+      auto.logger.log.error(endent`
+        One of the plugins you're using calls an unknown hook!
+
+        This usually because your project is trying to use mismatched plugin + core version.
+        
+        To fix this do one of the following:
+
+        1. Ensure that you have the same version of auto and it's plugins installed
+        2. Ensure that any non-official plugins use the same version of @auto-it/core
+        3. Ensure your environment's version of auto matches the plugins you're using
+      `);
+      auto.logger.log.error(error);
+    } else if (!(error instanceof LabelExistsError)) {
       console.log(error);
     }
 
@@ -124,6 +140,6 @@ export async function run(command: string, args: ApiOptions) {
 }
 
 /** Run "auto" for a given command. */
-export default async function main(command: string, args: ApiOptions) {
-  await run(command, args);
+export async function runCli(command: string, args: ApiOptions) {
+  await execute(command, args);
 }

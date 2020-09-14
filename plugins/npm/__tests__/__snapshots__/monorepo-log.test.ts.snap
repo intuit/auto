@@ -19,6 +19,22 @@ exports[`should add versions for independent packages 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
+exports[`should be able to disable sections for packages 1`] = `
+"#### 💥 Breaking Change
+
+- [PLAYA-5052] - Some Feature [#12345](https://github.custom.com/pull/12345) (adam@dierkens.com)
+- [PLAYA-5052] - Some Feature - Revert [#12345](https://github.custom.com/pull/12345) (adam@dierkens.com)
+- woot [#12343](https://github.custom.com/pull/12343) (adam@dierkens.com)
+
+#### 🏠 Internal
+
+- Another Feature [#1234](https://github.custom.com/pull/1234) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
 exports[`should create sections for packages 1`] = `
 "#### 💥 Breaking Change
 

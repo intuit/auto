@@ -1,12 +1,15 @@
-import main, { run } from "../src/run";
+import { runCli, execute } from "../src/run";
 
 process.env.GH_TOKEN = "XXXX";
+
+jest.mock("@octokit/rest");
 
 test("throws error for unknown args", async () => {
   process.exit = jest.fn() as any;
   console.log = jest.fn() as any;
 
-  await run("foo", {});
+  // @ts-ignore
+  await execute("foo", { foo: 123 });
 
   expect(process.exit).toHaveBeenCalledWith(1);
 });
@@ -15,7 +18,7 @@ test("throws exits for caught error", async () => {
   console.log = jest.fn() as any;
   process.exit = jest.fn() as any;
 
-  await main("foo", {});
+  await runCli("foo", {});
 
   expect(process.exit).toHaveBeenCalledWith(1);
 });

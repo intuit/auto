@@ -1,5 +1,5 @@
 import makeCommitFromMsg from "../../__tests__/make-commit-from-msg";
-import Auto from "../../auto";
+import { Auto } from "../../auto";
 import Git from "../../git";
 import LogParse from "../../log-parse";
 import { makeHooks, makeLogParseHooks } from "../../utils/make-hooks";

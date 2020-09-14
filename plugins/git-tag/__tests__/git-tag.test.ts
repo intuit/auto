@@ -5,7 +5,13 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import GitTag from "../src";
 
 const exec = jest.fn();
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+  getCurrentBranch: () => "next",
+}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args),
+}));
 
 const setup = (mockGit?: any) => {
   const plugin = new GitTag();
@@ -82,7 +88,7 @@ describe("Git Tag Plugin", () => {
   describe("next", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch);
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -92,7 +98,7 @@ describe("Git Tag Plugin", () => {
         getLastTagNotInBaseBranch: () => "v1.0.0",
       });
 
-      await hooks.next.promise([], Auto.SEMVER.patch);
+      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
 
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
@@ -100,7 +106,12 @@ describe("Git Tag Plugin", () => {
         "-m",
         '"Tag pre-release: 1.0.1-next.0"',
       ]);
-      expect(exec).toHaveBeenCalledWith("git", ["push", "origin", "--tags"]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "next",
+        "--tags",
+      ]);
     });
   });
 });

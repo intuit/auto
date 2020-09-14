@@ -31,7 +31,8 @@
         "doc",
         "ideas",
         "infra",
-        "test"
+        "test",
+        "blog"
       ]
     },
     {
@@ -260,6 +261,99 @@
       "name": "Till Weisser",
       "avatar_url": "https://avatars0.githubusercontent.com/u/18683899?v=4",
       "profile": "https://github.com/whynotzoidberg",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "rbellamy",
+      "name": "G. Richard Bellamy",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/94763?v=4",
+      "profile": "http://www.terradatum.com",
+      "contributions": [
+        "doc",
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "kevinwolfdev",
+      "name": "Kevin Wolf",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3157426?v=4",
+      "profile": "https://kevinwolf.dev",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "10hendersonm",
+      "name": "Marty Henderson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/14095644?v=4",
+      "profile": "https://github.com/10hendersonm",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "spentacular",
+      "name": "Spencer Hamm",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1043478?v=4",
+      "profile": "https://github.com/spentacular",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "lshadler",
+      "name": "Lucas Shadler",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/23409677?v=4",
+      "profile": "https://lshadler.github.io/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "stabbylambda",
+      "name": "David Stone",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/124668?v=4",
+      "profile": "https://github.com/stabbylambda",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "lucascurti",
+      "name": "Lucas Curti",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2811287?v=4",
+      "profile": "https://github.com/lucascurti",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "rachanamamillapalli",
+      "name": "rachana",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9112473?v=4",
+      "profile": "https://github.com/rachanamamillapalli",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "RichiCoder1",
+      "name": "Richard Simpson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/2391878?v=4",
+      "profile": "https://github.com/RichiCoder1",
       "contributions": [
         "doc",
         "test",

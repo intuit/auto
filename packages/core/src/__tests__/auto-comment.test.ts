@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
 
 jest.mock("env-ci", () => () => ({ pr: 123 }));

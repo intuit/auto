@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/jira",
-  "version": "9.34.1",
+  "version": "9.53.1",
   "main": "dist/index.js",
   "description": "Jira plugin for auto",
   "license": "MIT",
@@ -38,9 +38,10 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "enquirer": "^2.3.4",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "1.11.1",
+    "tslib": "2.0.1",
     "url-join": "^4.0.0"
   },
   "devDependencies": {

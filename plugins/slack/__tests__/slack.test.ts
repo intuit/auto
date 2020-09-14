@@ -2,7 +2,7 @@ import Auto from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/src/__tests__/make-commit-from-msg";
 import { dummyLog } from "@auto-it/core/src/utils/logger";
 import { makeHooks } from "@auto-it/core/src/utils/make-hooks";
-import { defaultLabels } from "@auto-it/core/dist/release";
+import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
 
 import SlackPlugin from "../src";
@@ -31,10 +31,10 @@ const nextBranch = execSync("git rev-parse --abbrev-ref HEAD", {
   encoding: "utf8",
 }).trim();
 
-const mockAuto = ({
+const mockAuto = {
   git: {},
   logger: dummyLog(),
-} as unknown) as Auto;
+} as any;
 
 describe("postToSlack", () => {
   test("doesn't post with no new version", async () => {
@@ -231,14 +231,14 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       "https://custom-slack-url?token=MY_TOKEN"
     );
-    expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined()
+    expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api through http proxy", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
-    process.env.http_proxy = "http-proxy"
+    process.env.http_proxy = "http-proxy";
 
     await plugin.postToSlack(
       mockAuto,
@@ -252,13 +252,29 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       "https://custom-slack-url?token=MY_TOKEN"
     );
-    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined()
+    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
+
+  test("should remove markdown code types from block", async () => {
+    const plugin = new SlackPlugin("https://custom-slack-url");
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+
+    await plugin.postToSlack(
+      mockAuto,
+      "1.0.0",
+      `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`,
+      // @ts-ignore
+      mockResponse
+    );
+
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+
   test("should call slack api through https proxy", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
-    process.env.https_proxy = "https-proxy"
+    process.env.https_proxy = "https-proxy";
 
     await plugin.postToSlack(
       mockAuto,
@@ -272,7 +288,7 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       "https://custom-slack-url?token=MY_TOKEN"
     );
-    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined()
+    expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 

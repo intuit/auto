@@ -1,4 +1,4 @@
-import Auto from "../auto";
+import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
 import child from "child_process";
 

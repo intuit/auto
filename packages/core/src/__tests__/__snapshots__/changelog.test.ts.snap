@@ -76,7 +76,7 @@ exports[`generateReleaseNotes should add "Push to Next" 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`next\`
+#### ⚠️ Pushed to \`next\`
 
 - I was a push to master (adam@dierkens.com)
 
@@ -183,9 +183,20 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️  Pushed to \`master\`
+#### ⚠️ Pushed to \`master\`
 
 - I was a push to master (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should include PR-less commits as the default label 1`] = `
+"#### 🚀 Enhancement
+
+- I was a push to master (adam@dierkens.com)
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -224,6 +235,24 @@ exports[`generateReleaseNotes should merge sections with same changelog title 1`
 "#### Enhancement
 
 - Second Feature [#1236](https://github.custom.com/foobar/auto/pull/1236) (adam@dierkens.com)
+- First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
+
+#### Authors: 1
+
+- Adam Dierkens (adam@dierkens.com)"
+`;
+
+exports[`generateReleaseNotes should not add automated comments to additional release notes 1`] = `
+"### Release Notes
+
+_From #1235_
+
+Here is how you upgrade
+
+---
+
+#### 🚀 Enhancement
+
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Authors: 1

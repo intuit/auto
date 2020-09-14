@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/s3",
-  "version": "9.34.1",
+  "version": "9.53.1",
   "main": "dist/index.js",
   "description": "Post your built artifacts to s3",
   "license": "MIT",
@@ -39,6 +39,7 @@
     "@auto-it/core": "link:../../packages/core",
     "aws-cli-js": "^2.0.6",
     "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2"
+    "io-ts": "^2.1.2",
+    "tslib": "^2.0.0"
   }
 }

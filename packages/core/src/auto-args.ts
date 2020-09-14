@@ -14,6 +14,9 @@ export interface ICreateLabelsOptions {
 export interface ILabelOptions {
   /** PR to get the labels for */
   pr?: number;
+
+  /** Label to check for */
+  exists?: string;
 }
 
 export interface IPRCheckOptions {
@@ -107,6 +110,8 @@ export type IReleaseOptions = BaseBranch &
   Partial<RepoInformation> & {
     /** Commit to start calculating the release from */
     from?: string;
+    /** Commit to calculate the release to */
+    to?: string;
     /** Override the version to release */
     useVersion?: string;
   };

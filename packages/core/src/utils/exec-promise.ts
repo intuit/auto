@@ -30,6 +30,10 @@ export default async function execPromise(
     let allStderr = "";
 
     if (child.stdout) {
+      if (log.logLevel === "veryVerbose") {
+        child.stdout.pipe(process.stdout);
+      }
+
       child.stdout.on("data", async (data: Buffer) => {
         const stdout = data.toString();
         allStdout += stdout;
@@ -37,6 +41,10 @@ export default async function execPromise(
     }
 
     if (child.stderr) {
+      if (log.logLevel === "veryVerbose") {
+        child.stderr.pipe(process.stderr);
+      }
+
       child.stderr.on("data", (data: Buffer) => {
         const stderr = data.toString();
         allStderr += stderr;
@@ -58,11 +66,15 @@ export default async function execPromise(
         let appendedStdErr = "";
         appendedStdErr += allStdout.length ? `\n\n${allStdout}` : "";
         appendedStdErr += allStderr.length ? `\n\n${allStderr}` : "";
+        const argList = filteredArgs
+          .join(", ")
+          .replace(
+            new RegExp(`${process.env.GH_TOKEN}`, "g"),
+            `****${(process.env.GH_TOKEN || "").slice(-4)}`
+          );
 
         const error = new Error(
-          `Running command '${cmd}' with args [${args.join(
-            ", "
-          )}] failed${appendedStdErr}`
+          `Running command '${cmd}' with args [${argList}] failed${appendedStdErr}`
         );
         error.stack = (error.stack || "") + callSite;
         reject(error);

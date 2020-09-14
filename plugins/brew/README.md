@@ -9,7 +9,7 @@ This plugin can be use with any other package manager plugin.
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
 
-```sh
+```bash
 npm i --save-dev @auto-it/brew
 # or
 yarn add -D @auto-it/brew

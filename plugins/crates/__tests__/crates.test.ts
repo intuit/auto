@@ -41,8 +41,10 @@ const writeFile = jest.fn();
 const writeFileSync = jest.fn();
 const readResult = "{}";
 
-// @ts-ignore
-jest.spyOn(Auto, "execPromise").mockImplementation(exec);
+jest.mock('../../../packages/core/dist/utils/exec-promise', () => ({
+  // @ts-ignore
+  default: (...args) => exec(...args)
+}))
 // @ts-ignore
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("fs", () => ({

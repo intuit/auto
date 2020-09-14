@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`canary dont force publish canaries 1`] = `
+exports[`canary don't force publish canaries 1`] = `
 Object {
   "details": ":sparkles: Test out this PR locally via:
 
-\`\`\`sh
+\`\`\`bash
 npm install @foobar/lib@1.1.0.canary
 # or 
 yarn add @foobar/lib@1.1.0.canary

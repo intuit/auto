@@ -1,12 +1,11 @@
-/* eslint-disable no-await-in-loop, @typescript-eslint/ban-ts-ignore */
+/* eslint-disable no-await-in-loop */
 
 import endent from "endent";
 import { prompt } from "enquirer";
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
 import { makeInteractiveInitHooks } from "./utils/make-hooks";
-import { defaultLabels, ILabelDefinition } from "./release";
-import SEMVER from "./semver";
+import SEMVER, { defaultLabels, ILabelDefinition } from "./semver";
 import { loadPlugin } from "./utils/load-plugins";
 import { ILogger } from "./utils/logger";
 import { readFileSync, writeFileSync } from "fs";
@@ -58,7 +57,7 @@ async function getLabel(label?: ILabelDefinition) {
     /** Response value */
     value: {
       /** Snippet values */
-      values: [ILabelDefinition];
+      values: ILabelDefinition;
     };
   }
 
@@ -76,13 +75,16 @@ async function getLabel(label?: ILabelDefinition) {
           }
           description: #{description:${label.description}},
           releaseType: #{releaseType:${label.releaseType}}
+          color: #{color:${label.color}}
         }`
       : endent`{
           name: #{name},
           changelogTitle: #{changelogTitle},
           description: #{description},
-          releaseType: #{releaseType}
+          releaseType: #{releaseType},
+          color: #{color}
         }`,
+    /** Check if returned config is valid */
     // @ts-ignore
     validate: (state: {
       /** The result of the prompt */
@@ -114,13 +116,7 @@ async function getLabel(label?: ILabelDefinition) {
     },
   });
 
-  const {
-    name,
-    changelogTitle,
-    description,
-    releaseType,
-  } = response.value.values;
-  return { name, changelogTitle, description, releaseType };
+  return response.value.values;
 }
 
 /** Get any custom labels from the user */
@@ -175,11 +171,15 @@ async function getCustomizedDefaultLabels() {
 /** Get the plugins the user wants to use */
 async function getPlugins() {
   const releasePlugins = {
+    Homebrew: "brew",
     "Chrome Web Store": "chrome",
+    Cocoapod: "cocoapod",
     "Rust Crate": "crates",
+    "Ruby Gem": "gem",
     "Git Tag": "git-tag",
-    "npm Package": "npm",
+    Gradle: "Gradle",
     Maven: "maven",
+    npm: "npm",
   };
 
   const releasePlugin = await prompt<InputResponse>({
@@ -296,11 +296,11 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   }
 }
 
-type SnippetResponse<Key extends string, ReponseValue> = Record<
+type SnippetResponse<Key extends string, ResponseValue> = Record<
   Key,
   {
     /** The response from the user */
-    values: ReponseValue;
+    values: ResponseValue;
   }
 >;
 
@@ -438,9 +438,7 @@ export default class InteractiveInit {
         message: `What are the api URLs for your GitHub enterprise instance?`,
         required: true,
         // @ts-ignore
-        template: endent`
-          GitHub API:  #{githubApi}
-          Graphql API: #{githubGraphqlApi}`,
+        template: `GitHub API:  #{githubApi}`,
       });
 
       autoRc = { ...autoRc, ...response.repoInfo.values };

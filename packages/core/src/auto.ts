@@ -6,7 +6,8 @@ import path from "path";
 import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
-import { eq, gt, lte, inc, parse, ReleaseType, major } from "semver";
+import parseAuthor from "parse-author";
+import { gt, lte, compareBuild, inc, parse, ReleaseType, major } from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -37,13 +38,17 @@ import {
   ILatestOptions,
 } from "./auto-args";
 import Changelog from "./changelog";
-import { preVersionMap } from "./semver";
-import Config from "./config";
+import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 import Git, { IGitOptions, IPRInfo } from "./git";
 import InteractiveInit from "./init";
 import LogParse, { IExtendedCommit } from "./log-parse";
-import Release, { getVersionMap, ILabelDefinition } from "./release";
-import SEMVER, { calculateSemVerBump, IVersionLabels } from "./semver";
+import Release, { getVersionMap } from "./release";
+import SEMVER, {
+  calculateSemVerBump,
+  IVersionLabels,
+  ILabelDefinition,
+  preVersionMap,
+} from "./semver";
 import execPromise from "./utils/exec-promise";
 import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
 import createLog, { ILogger, setLogLevel } from "./utils/logger";
@@ -110,11 +115,20 @@ const makeDetail = (summary: string, body: string) => endent`
   </details>
 `;
 
-type ShipitRelease = "latest" | "old" | "next" | "canary";
+export type ShipitRelease = "latest" | "old" | "next" | "canary";
 
 interface BeforeShipitContext {
   /** The type of release that will be made when shipit runs. */
   releaseType: ShipitRelease;
+}
+
+interface NextContext {
+  /** The commits in the next release */
+  commits: IExtendedCommit[];
+  /** The release notes for all the commits in the next release */
+  fullReleaseNotes: string;
+  /** The release notes for the last change merged to the next release */
+  releaseNotes: string;
 }
 
 type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
@@ -125,7 +139,7 @@ export interface IAutoHooks {
   /** Validate what is in the config. You must return the config in this hook. */
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
-  beforeRun: SyncHook<[LoadedAutoRc]>;
+  beforeRun: AsyncSeriesHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -228,7 +242,7 @@ export interface IAutoHooks {
    * and an array of next versions that been released. If you make another
    * next release be sure to add it the the array.
    */
-  next: AsyncSeriesWaterfallHook<[string[], SEMVER]>;
+  next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
 }
@@ -287,6 +301,17 @@ export function getAutoVersion() {
 /** Escape a string for use in a Regex */
 function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+/** The Error that gets thrown when a label existence check fails */
+export class LabelExistsError extends Error {
+  /**
+   * @param label - the label we were checking existence for
+   */
+  constructor(label: string) {
+    super(`The label ${label} does not exist`);
+    Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+  }
 }
 
 /**
@@ -363,10 +388,8 @@ export default class Auto {
             await this.hooks.getPreviousVersion.promise()
           )}`;
 
-          await execPromise("git", [
-            "branch",
-            await this.git?.getLatestTagInBranch(),
-          ]);
+          await execPromise("git", ["branch", branch]);
+          this.logger.log.success(`Created old version branch: ${branch}`);
           await execPromise("git", ["push", this.remote, branch]);
         }
       }
@@ -389,7 +412,10 @@ export default class Auto {
         ]);
         this.logger.verbose.info("Branch:", currentBranch);
         this.logger.verbose.info("HEADs:", heads);
-        const [, remoteHead] = heads.match(/^(\w+)?/) || [];
+        const baseBranchHeadRef = new RegExp(
+          `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
+        );
+        const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
 
         if (remoteHead) {
           // This will throw if the branch is ahead of the current branch
@@ -478,7 +504,7 @@ export default class Auto {
     this.config = this.hooks.modifyConfig.call(this.config!);
     this.labels = this.config.labels;
     this.semVerLabels = getVersionMap(this.config.labels);
-    this.hooks.beforeRun.call(this.config);
+    await this.hooks.beforeRun.promise(this.config);
 
     const errors = [
       ...(await validateAutoRc(this.config)),
@@ -512,9 +538,10 @@ export default class Auto {
       // This Line overrides config with args
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...omit(this.options, ["_command", "_all", "main"] as any),
-      baseBranch: this.baseBranch,
+      baseBranch: this.config.baseBranch || this.baseBranch,
     };
     this.config = config;
+    this.baseBranch = config.baseBranch;
     const repository = await this.getRepo(config);
     const token =
       repository?.token || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
@@ -532,19 +559,15 @@ export default class Auto {
       ...repository,
       token,
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
-      baseUrl: config.githubApi || "https://api.github.com",
-      graphqlBaseUrl:
-        config.githubGraphqlApi || config.githubApi || "https://api.github.com",
+      baseUrl: config.githubApi,
+      graphqlBaseUrl: config.githubGraphqlApi,
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
     this.release = new Release(this.git, config, this.logger);
     this.remote = await this.getRemote();
     this.logger.verbose.info(
-      `Using remote: ${this.remote.replace(
-        token,
-        `****${token.substring(0, 4)}`
-      )}`
+      `Using remote: ${this.remote.replace(token, `****${token.slice(-4)}`)}`
     );
     this.hooks.onCreateRelease.call(this.release);
 
@@ -612,7 +635,10 @@ export default class Auto {
     const [, gitVersion = ""] = await on(execPromise("git", ["--version"]));
     const [noProject, project] = await on(this.git.getProject());
     const repo = (await this.getRepo(this.config!)) || {};
-    const repoLink = link(`${repo.owner}/${repo.repo}`, project?.html_url!);
+    const repoLink = link(
+      `${repo.owner}/${repo.repo}`,
+      project?.html_url ?? ""
+    );
     const author = (await this.getGitUser()) || ({} as IAuthor);
     const [, lastRelease = "0.0.0"] = await on(this.git.getLatestRelease());
     const version = await this.getCurrentVersion(lastRelease);
@@ -671,7 +697,7 @@ export default class Auto {
       "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
         access['x-github-enterprise-version'] 
-          ? `GHE version:    v${access['x-github-enterprise-version']}\n`
+          ? `\nGHE version:    v${access['x-github-enterprise-version']}\n`
           : '\n'}
       ${chalk.underline.white('Project Information:')}
 
@@ -704,7 +730,8 @@ export default class Auto {
   /** Determine if the repo is currently in a prerelease branch */
   inPrereleaseBranch(): boolean {
     const branch = getCurrentBranch();
-    const prereleaseBranches = this.config?.prereleaseBranches!;
+    const prereleaseBranches =
+      this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
 
     return Boolean(branch && prereleaseBranches.includes(branch));
   }
@@ -712,14 +739,14 @@ export default class Auto {
   /** Determine if the repo is currently in a old-version branch */
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
-    const prereleaseBranchPrefix = this.config?.versionBranches as
+    const oldVersionBranchPrefix = this.config?.versionBranches as
       | string
       | undefined;
 
     return Boolean(
-      prereleaseBranchPrefix &&
+      oldVersionBranchPrefix &&
         branch &&
-        new RegExp(`^${escapeRegExp(prereleaseBranchPrefix)}`).test(branch)
+        new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
     );
   }
 
@@ -737,7 +764,7 @@ export default class Auto {
   /**
    * Get the labels on a specific PR. Defaults to the labels of the last merged PR
    */
-  async label({ pr }: ILabelOptions = {}) {
+  async label({ pr, exists }: ILabelOptions = {}) {
     if (!this.git) {
       throw this.createErrorMessage();
     }
@@ -763,6 +790,14 @@ export default class Auto {
       if (lastMerged) {
         labels = lastMerged.labels.map((label) => label.name);
       }
+    }
+
+    if (exists) {
+      if (labels.indexOf(exists) === -1) {
+        throw new LabelExistsError(exists);
+      }
+
+      return;
     }
 
     if (labels.length) {
@@ -1073,19 +1108,19 @@ export default class Auto {
     this.logger.verbose.info("Canary info found:", { pr, build });
 
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
-    const head = await this.release.getCommitsInRelease(from);
-    const labels = head.map((commit) => commit.labels);
-    const version = calculateSemVerBump(
-      labels,
-      this.semVerLabels!,
-      this.config
-    );
+    const commitsInRelease = await this.release.getCommitsInRelease(from);
+    const labels = commitsInRelease.map((commit) => commit.labels);
+    let version = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
-    if (version === SEMVER.noVersion && !options.force) {
-      this.logger.log.info(
-        "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
-      );
-      return;
+    if (version === SEMVER.noVersion) {
+      if (options.force) {
+        version = SEMVER.patch;
+      } else {
+        this.logger.log.info(
+          "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
+        );
+        return;
+      }
     }
 
     let canaryVersion = "";
@@ -1176,15 +1211,6 @@ export default class Auto {
       await gitReset();
     }
 
-    let latestTag: string;
-
-    try {
-      latestTag = await this.git.getLatestTagInBranch();
-    } catch (error) {
-      latestTag = await this.git.getFirstCommit();
-    }
-
-    const commitsInRelease = await this.release.getCommits(latestTag);
     return { newVersion, commitsInRelease, context: "canary" };
   }
 
@@ -1219,32 +1245,44 @@ export default class Auto {
     this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
       logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
         const shouldOmit = commit.subject.match(/^Merge (?:\S+\/)*master/);
-        this.logger.verbose.info(
-          `Omit merges from master?" ${shouldOmit}: ${commit.subject}`
-        );
 
         if (shouldOmit) {
+          this.logger.verbose.info(
+            `Omitting merge commit from master: ${commit.subject}`
+          );
           return true;
         }
       });
     });
 
     const currentBranch = getCurrentBranch();
-    const initialForkCommit = (
-      (
-        await execPromise("git", [
-          "rev-list",
-          "--boundary",
-          `${currentBranch}...origin/${this.baseBranch}`,
-          "--left-only",
-        ])
-      )
-        .split("\n")
-        .filter((line) => line.startsWith("-"))[0] || ""
-    ).slice(1);
+    const forkPoints = (
+      await execPromise("git", [
+        "rev-list",
+        "--boundary",
+        `${currentBranch}...origin/${this.baseBranch}`,
+        "--left-only",
+      ])
+    )
+      .split("\n")
+      .filter((line) => line.startsWith("-"));
+    const initialForkCommit = (forkPoints[forkPoints.length - 1] || "").slice(
+      1
+    );
     const lastRelease =
       initialForkCommit || (await this.git.getLatestRelease());
-    const lastTag = await this.git.getLastTagNotInBaseBranch(currentBranch!);
+
+    const [, lastTagNotInBaseBranch] = await on(
+      this.git.getLastTagNotInBaseBranch(currentBranch!)
+    );
+    const [, latestTagInBranch] = await on(
+      this.git.getLatestTagInBranch(currentBranch)
+    );
+    const lastTag =
+      lastTagNotInBaseBranch ||
+      latestTagInBranch ||
+      (await this.git.getFirstCommit());
+
     const fullReleaseNotes = await this.release.generateReleaseNotes(
       lastRelease
     );
@@ -1270,7 +1308,8 @@ export default class Auto {
       const current = await this.getCurrentVersion(lastRelease);
 
       if (parse(current)) {
-        const prereleaseBranches = this.config?.prereleaseBranches!;
+        const prereleaseBranches =
+          this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
@@ -1302,24 +1341,31 @@ export default class Auto {
     }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
-    const result = await this.hooks.next.promise([], bump);
+    const result = await this.hooks.next.promise([], bump, {
+      commits,
+      fullReleaseNotes,
+      releaseNotes,
+    });
     const newVersion = result.join(", ");
+    const release = await this.hooks.makeRelease.promise({
+      commits,
+      from: lastTag,
+      isPrerelease: true,
+      newVersion,
+      fullReleaseNotes: releaseNotes,
+    });
 
-    await Promise.all(
-      result.map(async (prerelease) => {
-        const release = await this.git?.publish(releaseNotes, prerelease, true);
+    this.logger.verbose.info(release);
 
-        this.logger.verbose.info(release);
-
-        await this.hooks.afterRelease.promise({
-          lastRelease: lastTag,
-          newVersion: prerelease,
-          commits,
-          releaseNotes,
-          response: release,
-        });
-      })
-    );
+    if (release) {
+      await this.hooks.afterRelease.promise({
+        lastRelease: lastTag,
+        newVersion,
+        commits,
+        releaseNotes,
+        response: release,
+      });
+    }
 
     this.logger.log.success(
       `Published next version${result.length > 1 ? `s` : ""}: ${newVersion}`
@@ -1710,7 +1756,7 @@ export default class Auto {
   /** Make a release over a range of commits */
   private async makeRelease(args: IReleaseOptions = {}) {
     const options = { ...this.getCommandDefault("release"), ...args };
-    const { dryRun, from, useVersion, prerelease = false } = options;
+    const { dryRun, from, to, useVersion, prerelease = false } = options;
 
     if (!this.release || !this.git) {
       throw this.createErrorMessage();
@@ -1752,11 +1798,12 @@ export default class Auto {
     this.logger.log.info('Current "Latest Release" on Github:', lastRelease);
 
     const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
+      lastRelease,
+      to
     );
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
-      undefined,
+      to,
       this.versionBump
     );
 
@@ -1781,7 +1828,7 @@ export default class Auto {
       !dryRun &&
       parse(newVersion) &&
       parse(lastRelease) &&
-      eq(newVersion, lastRelease)
+      compareBuild(newVersion, lastRelease) === 0
     ) {
       this.logger.log.warn(
         `Nothing released to Github. Version to be released is the same as the latest release on Github: ${newVersion}`
@@ -1858,11 +1905,35 @@ export default class Auto {
         "Could not find git user or email configured in git config"
       );
 
-      if (!this.release) {
-        return;
+      const { author } = this.config || {};
+      let { email, name } = this.config || {};
+
+      if (author) {
+        const parsedAuthor =
+          typeof author === "string" ? parseAuthor(author) : author;
+
+        if (
+          typeof parsedAuthor === "object" &&
+          parsedAuthor.email &&
+          parsedAuthor.name
+        ) {
+          ({ name, email } = parsedAuthor);
+        } else {
+          this.logger.log.error(endent`
+            .autorc author parsing failed!
+  
+            The author must either be in one of the following formats:
+  
+            1. Your Name <your_email@mail.com>
+            2. An object with "name" and "email"
+  
+            But you supplied:
+  
+            ${author}
+          `);
+        }
       }
 
-      let { email, name } = this.release.config;
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );
@@ -1904,6 +1975,24 @@ export default class Auto {
       if (user.name) {
         await execPromise("git", ["config", "user.name", `"${user.name}"`]);
         this.logger.verbose.warn(`Set git name to ${user.name}`);
+      }
+
+      if (!user.name && !user.email) {
+        this.logger.log.error(
+          endent`
+            Could find a git name and email to commit with!
+
+            Name: ${user.name}
+            Email: ${user.email}
+  
+            You must do one of the following: 
+  
+            - configure the author for your package manager (ex: set "author" in package.json)
+            - Set "name" and "email in your .autorc
+          `,
+          ""
+        );
+        process.exit(1);
       }
     }
   }
@@ -1999,11 +2088,12 @@ export default class Auto {
       );
 
       if (query) {
-        const result = await this.git.graphql(query);
+        const result = await this.git.graphql<Record<string, ISearchResult>>(
+          query
+        );
 
         if (result?.[`hash_${commit}`]) {
-          const number = (result[`hash_${commit}`] as ISearchResult).edges[0]
-            ?.node?.number;
+          const number = result[`hash_${commit}`].edges[0]?.node?.number;
 
           if (number) {
             pr = String(number);
@@ -2030,13 +2120,15 @@ export default class Auto {
 
 export * from "./auto-args";
 export { default as InteractiveInit } from "./init";
+export { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 export { getCurrentBranch } from "./utils/get-current-branch";
 export { validatePluginConfiguration } from "./validate-config";
 export { ILogger } from "./utils/logger";
 export { IPlugin } from "./utils/load-plugins";
+export { ICommitAuthor, IExtendedCommit } from "./log-parse";
+
 export { default as Auto } from "./auto";
-export { default as SEMVER } from "./semver";
+export { default as SEMVER, VersionLabel } from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export { default as getLernaPackages } from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";
-export { VersionLabel } from "./release";
