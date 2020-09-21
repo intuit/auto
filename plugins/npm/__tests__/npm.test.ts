@@ -28,17 +28,17 @@ let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
 jest.mock("../src/set-npm-token.ts");
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => execPromise(...args),
-}));
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => execPromise(...args)
+);
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "master",
 }));
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
-  // @ts-ignore
-  default: (...args) => getLernaPackages(...args),
-}));
+jest.mock(
+  "../../../packages/core/dist/utils/get-lerna-packages",
+  () => (...args: any[]) => getLernaPackages(...args)
+);
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({
@@ -67,7 +67,7 @@ const monorepoPackagesResult = [
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
 ];
 
-describe("getChangedPackages ", () => {
+describe("getChangedPackages", () => {
   test("should return nothing without a package directory", async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
@@ -1389,12 +1389,12 @@ describe("beforeCommitChangelog", () => {
     });
   }
 
-  test("should create sub-package changelogs ", async () => {
+  test("should create sub-package changelogs", async () => {
     await subPackageChangelogTest();
     expect(updateChangelogFile).toHaveBeenCalled();
   });
 
-  test("should not create sub-package changelogs ", async () => {
+  test("should not create sub-package changelogs", async () => {
     await subPackageChangelogTest({ subPackageChangelogs: false });
     expect(updateChangelogFile).not.toHaveBeenCalled();
   });

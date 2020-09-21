@@ -28,6 +28,7 @@
     "camelcase": 0,
     "default-param-last": 0,
     "complexity": ["error", { "max": 25 }],
+    "no-unused-vars": "off",
 
     /* jest plugin */
 
@@ -59,6 +60,7 @@
     "@typescript-eslint/prefer-optional-chain": 2,
     "@typescript-eslint/prefer-readonly": 2,
     "@typescript-eslint/array-type": [2, { "default": "array-simple" }],
+    "@typescript-eslint/no-unused-vars": ["error"],
 
     // just rely on typescript inference
     "@typescript-eslint/explicit-function-return-type": 0,

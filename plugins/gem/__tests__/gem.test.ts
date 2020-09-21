@@ -19,10 +19,9 @@ const execSpy = jest.fn();
 execSpy.mockReturnValue("");
 
 // @ts-ignore
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => execSpy(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
+  execSpy(...args)
+);
 
 const globSpy = jest.fn();
 jest.mock("fast-glob");

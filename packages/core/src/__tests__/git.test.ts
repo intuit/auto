@@ -231,7 +231,7 @@ describe("github", () => {
     expect(result.data).not.toBeUndefined();
   });
 
-  test("getFirstCommit ", async () => {
+  test("getFirstCommit", async () => {
     const gh = new Git(options);
 
     expect(await gh.getFirstCommit()).toBe(
@@ -239,25 +239,25 @@ describe("github", () => {
     );
   });
 
-  test("addLabelToPr ", async () => {
+  test("addLabelToPr", async () => {
     const gh = new Git(options);
     await gh.addLabelToPr(123, "foo bar");
     expect(addLabels).toHaveBeenCalled();
   });
 
-  test("removeLabel ", async () => {
+  test("removeLabel", async () => {
     const gh = new Git(options);
     await gh.removeLabel(123, "foo bar");
     expect(removeLabel).toHaveBeenCalled();
   });
 
-  test("lockIssue ", async () => {
+  test("lockIssue", async () => {
     const gh = new Git(options);
     await gh.lockIssue(123);
     expect(lock).toHaveBeenCalled();
   });
 
-  test("getCommitDate ", async () => {
+  test("getCommitDate", async () => {
     const gh = new Git(options);
 
     expect(
@@ -655,7 +655,7 @@ describe("github", () => {
   });
 
   describe("getLatestRelease", () => {
-    test("has tag ", async () => {
+    test("has tag", async () => {
       const gh = new Git(options);
 
       getLatestRelease.mockReturnValueOnce({ data: { tag_name: "1.0.0" } });
@@ -680,7 +680,7 @@ describe("github", () => {
     });
   });
 
-  describe("getProjectLabels ", () => {
+  describe("getProjectLabels", () => {
     test("return labels", async () => {
       const gh = new Git(options);
 
@@ -701,7 +701,7 @@ describe("github", () => {
     });
   });
 
-  describe("getPr ", () => {
+  describe("getPr", () => {
     test("return pr", async () => {
       const gh = new Git(options);
       get.mockReturnValueOnce({ success: true });

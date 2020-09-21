@@ -8,10 +8,9 @@ const exec = jest.fn();
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => exec(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
+  exec(...args)
+);
 
 const registry = "registry.io/app";
 

@@ -46,10 +46,9 @@ const mockReadFile = (result: string) =>
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => exec(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
+  exec(...args)
+);
 
 describe("maven", () => {
   let hooks: Auto.IAutoHooks;
