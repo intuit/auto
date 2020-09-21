@@ -19,14 +19,10 @@ jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
-  // @ts-ignore
-  default: (...args) => getLernaPackages(...args),
-}));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => execPromise(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
+  execPromise(...args)
+);
 jest.mock("fs", () => ({
   // @ts-ignore
   existsSync: jest.fn().mockReturnValue(true),

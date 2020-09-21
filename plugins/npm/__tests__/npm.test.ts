@@ -28,17 +28,17 @@ let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
 jest.mock("../src/set-npm-token.ts");
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => execPromise(...args),
-}));
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => execPromise(...args)
+);
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "master",
 }));
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
-  // @ts-ignore
-  default: (...args) => getLernaPackages(...args),
-}));
+jest.mock(
+  "../../../packages/core/dist/utils/get-lerna-packages",
+  () => (...args: any[]) => getLernaPackages(...args)
+);
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({

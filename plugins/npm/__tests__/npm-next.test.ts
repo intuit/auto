@@ -22,17 +22,11 @@ execPromise.mockResolvedValue("");
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => execPromise(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) => execPromise(...args));
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
-  // @ts-ignore
-  default: (...args) => getLernaPackages(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({

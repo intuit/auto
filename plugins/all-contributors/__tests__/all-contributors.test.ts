@@ -30,14 +30,10 @@ addContributor.mockImplementation(addContributorMock);
 // @ts-ignore
 env.mockImplementation(envMock);
 // @ts-ignore
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => ({
-  // @ts-ignore
-  default: (...args) => gitShow(...args),
-}));
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
-  // @ts-ignore
-  default: (...args) => getLernaPackages(...args),
-}));
+jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
+  gitShow(...args)
+);
+jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
 jest.spyOn(process, "chdir").mockReturnValue();
 
 const mockRead = (result: string) =>
