@@ -22,7 +22,7 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
 const logParse = new LogParse();
 
 describe("createUserLink", () => {
-  test("should ", () => {
+  test("should", () => {
     const changelog = new Changelog(dummyLog(), {
       owner: "",
       repo: "",

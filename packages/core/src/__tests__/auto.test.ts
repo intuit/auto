@@ -441,7 +441,7 @@ describe("Auto", () => {
       expect(createStatus).toHaveBeenCalled();
     });
 
-    test("should do nothing ", async () => {
+    test("should do nothing", async () => {
       const auto = new Auto(defaults);
       auto.logger = dummyLog();
 

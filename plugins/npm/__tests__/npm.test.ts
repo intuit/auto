@@ -67,7 +67,7 @@ const monorepoPackagesResult = [
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
 ];
 
-describe("getChangedPackages ", () => {
+describe("getChangedPackages", () => {
   test("should return nothing without a package directory", async () => {
     exec.mockReturnValueOnce(`packages/README.md\npackage.json`);
 
@@ -1389,12 +1389,12 @@ describe("beforeCommitChangelog", () => {
     });
   }
 
-  test("should create sub-package changelogs ", async () => {
+  test("should create sub-package changelogs", async () => {
     await subPackageChangelogTest();
     expect(updateChangelogFile).toHaveBeenCalled();
   });
 
-  test("should not create sub-package changelogs ", async () => {
+  test("should not create sub-package changelogs", async () => {
     await subPackageChangelogTest({ subPackageChangelogs: false });
     expect(updateChangelogFile).not.toHaveBeenCalled();
   });
