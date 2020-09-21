@@ -5320,7 +5320,7 @@ cli-spinners@^0.1.2:
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-0.1.2.tgz#bb764d88e185fb9e1e6a2a1f19772318f605e31c"
   integrity sha1-u3ZNiOGF+54eaiofGXcjGPYF4xw=
 
-cli-truncate@2.1.0, cli-truncate@^2.1.0:
+cli-truncate@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cli-truncate/-/cli-truncate-2.1.0.tgz#c39e28bf05edcde5be3b98992a22deed5a2b93c7"
   integrity sha512-n8fOixwDD6b/ObinzTrp1ZKFzbgvKZvuz/TvejnLn1aQfC6r52XEx85FmuC+3HI+JM7coBRXUvNqEU2PHVrHpg==
@@ -5589,10 +5589,10 @@ commander@^2.18.0, commander@^2.20.0, commander@^2.8.1, commander@~2.20.3:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-commander@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
-  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+commander@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.1.0.tgz#f8d722b78103141006b66f4c7ba1e97315ba75bc"
+  integrity sha512-wl7PNrYWd2y5mp1OK/LhTlv8Ff4kQJQRXXAvF+uU/TPNiVJUxZLRYGj/B0y/lPGAVcSbJqH2Za/cvHmrPMC8mA==
 
 commander@~2.19.0:
   version "2.19.0"
@@ -7081,7 +7081,7 @@ enhanced-resolve@^4.1.0:
     memory-fs "^0.4.0"
     tapable "^1.0.0"
 
-enquirer@^2.3.4, enquirer@^2.3.5:
+enquirer@^2.3.4, enquirer@^2.3.5, enquirer@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/enquirer/-/enquirer-2.3.6.tgz#2a7fe5dd634a1e4125a975ec994ff5456dc3734d"
   integrity sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg==
@@ -7562,10 +7562,10 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-execa@^4.0.0, execa@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/execa/-/execa-4.0.2.tgz#ad87fb7b2d9d564f70d2b62d511bee41d5cbb240"
-  integrity sha512-QI2zLa6CjGWdiQsmSkZoGtDx2N+cQIGb3yNolGTdjSQzydzLgYYf8LRuagp7S7fPimjcrzUDSUFd/MgzELMi4Q==
+execa@^4.0.0, execa@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-4.0.3.tgz#0a34dabbad6d66100bd6f2c576c8669403f317f2"
+  integrity sha512-WFDXGHckXPWZX19t1kCsXzOpqX9LWYNqn4C+HqZlk/V0imTkzJZqf87ZBhvpHaftERYknpk0fjSylnXVlVgI0A==
   dependencies:
     cross-spawn "^7.0.0"
     get-stream "^5.0.0"
@@ -11159,19 +11159,19 @@ linkify-it@^2.0.0:
     uc.micro "^1.0.1"
 
 lint-staged@^10.0.7:
-  version "10.2.11"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.2.11.tgz#713c80877f2dc8b609b05bc59020234e766c9720"
-  integrity sha512-LRRrSogzbixYaZItE2APaS4l2eJMjjf5MbclRZpLJtcQJShcvUzKXsNeZgsLIZ0H0+fg2tL4B59fU9wHIHtFIA==
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.3.0.tgz#388c3d440590c45c339e7163f669ea69ae90b1e0"
+  integrity sha512-an3VgjHqmJk0TORB/sdQl0CTkRg4E5ybYCXTTCSJ5h9jFwZbcgKIx5oVma5e7wp/uKt17s1QYFmYqT9MGVosGw==
   dependencies:
-    chalk "^4.0.0"
-    cli-truncate "2.1.0"
-    commander "^5.1.0"
-    cosmiconfig "^6.0.0"
+    chalk "^4.1.0"
+    cli-truncate "^2.1.0"
+    commander "^6.0.0"
+    cosmiconfig "^7.0.0"
     debug "^4.1.1"
     dedent "^0.7.0"
-    enquirer "^2.3.5"
-    execa "^4.0.1"
-    listr2 "^2.1.0"
+    enquirer "^2.3.6"
+    execa "^4.0.3"
+    listr2 "^2.6.0"
     log-symbols "^4.0.0"
     micromatch "^4.0.2"
     normalize-path "^3.0.0"
@@ -11179,18 +11179,18 @@ lint-staged@^10.0.7:
     string-argv "0.3.1"
     stringify-object "^3.3.0"
 
-listr2@^2.1.0:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.1.8.tgz#8af7ebc70cdbe866ddbb6c80909142bd45758f1f"
-  integrity sha512-Op+hheiChfAphkJ5qUxZtHgyjlX9iNnAeFS/S134xw7mVSg0YVrQo1IY4/K+ElY6XgOPg2Ij4z07urUXR+YEew==
+listr2@^2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/listr2/-/listr2-2.6.2.tgz#4912eb01e1e2dd72ec37f3895a56bf2622d6f36a"
+  integrity sha512-6x6pKEMs8DSIpA/tixiYY2m/GcbgMplMVmhQAaLFxEtNSKLeWTGjtmU57xvv6QCm2XcqzyNXL/cTSVf4IChCRA==
   dependencies:
-    chalk "^4.0.0"
+    chalk "^4.1.0"
     cli-truncate "^2.1.0"
     figures "^3.2.0"
     indent-string "^4.0.0"
     log-update "^4.0.0"
     p-map "^4.0.0"
-    rxjs "^6.5.5"
+    rxjs "^6.6.2"
     through "^2.3.8"
 
 load-bmfont@^1.2.3, load-bmfont@^1.3.1:
@@ -15575,10 +15575,10 @@ rxjs@^6.5.3:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^6.5.5:
-  version "6.5.5"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
-  integrity sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
+rxjs@^6.6.2:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
+  integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
   dependencies:
     tslib "^1.9.0"
 
