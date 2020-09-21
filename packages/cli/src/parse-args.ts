@@ -393,8 +393,13 @@ export const commands: AutoCommand[] = [
   {
     name: "version",
     group: "Release Commands",
-    description:
-      "Get the semantic version bump for the given changes. Requires all PRs to have labels for the change type. If a PR does not have a label associated with it, it will default to `patch`.",
+    description: endent`
+      Calculate a semantic version bump for the given changes.
+      Requires all PRs to have labels for the change type.
+      If a PR does not have a label associated with it, it will default to \`patch\` or whatever you configure the default label to.
+
+      NOTE: This does not change the version of your project or anything in your repo. It just returns \`patch\`, \`minor\`, or \`major\`.
+    `,
     options: [
       onlyPublishWithReleaseLabel,
       {
