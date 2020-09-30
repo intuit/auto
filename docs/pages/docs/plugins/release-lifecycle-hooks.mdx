@@ -5,6 +5,7 @@ title: Release Lifecycle Hooks
 The following hooks are all called during various release commands (ex: `latest`, `next`, `canary`, `shipit`).
 These hooks is where the publishing of your package actually happens.
 
+- [prCheck](#prCheck)
 - [beforeShipIt](#beforeshipit)
 - [beforeCommitChangelog](#beforecommitchangelog)
 - [afterAddToChangelog](#afteraddtochangelog)
@@ -17,6 +18,20 @@ These hooks is where the publishing of your package actually happens.
 - [makeRelease](#makerelease)
 - [afterRelease](#afterrelease)
 - [afterShipIt](#aftershipit)
+
+## prCheck
+
+Called before `auto pr-check` is ran/
+
+Context Object:
+
+- `pr` - All github information related to the PR
+
+```ts
+auto.hooks.prCheck.tapPromise("NPM", async ({ pr }) => {
+  // Do stuff
+});
+```
 
 ## beforeShipIt
 

@@ -70,6 +70,9 @@
     },
     {
       "path": "plugins/docker"
+    },
+    {
+      "path": "plugins/pr-body-labels"
     }
   ]
 }

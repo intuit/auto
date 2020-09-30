@@ -139,6 +139,7 @@
       ],
       "released",
       "first-time-contributor",
+      "pr-body-labels",
       "./scripts/auto-update-curl-version.js",
       [
         "all-contributors",
