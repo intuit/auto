@@ -8,16 +8,14 @@ export default class PrBodyLabelsPlugin implements IPlugin {
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
     auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
-      if (!auto.git) {
+      if (!auto.git || !auto.labels) {
         return;
       }
 
-      const projectLabels = await auto.git.getProjectLabels();
-
       await Promise.all(
-        projectLabels.map(async (label) => {
-          if (pr.body.includes(`- [x] \`${label}\``)) {
-            await auto.git?.addLabelToPr(pr.number, label);
+        auto.labels.map(async (label) => {
+          if (pr.body.includes(`- [x] \`${label.name}\``)) {
+            await auto.git?.addLabelToPr(pr.number, label.name);
           }
         })
       );

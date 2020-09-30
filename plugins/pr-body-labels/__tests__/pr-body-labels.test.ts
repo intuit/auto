@@ -10,10 +10,13 @@ describe("Pr-Body-Labels Plugin", () => {
 
     plugin.apply({
       hooks,
-      git: { getProjectLabels: () => Promise.resolve([]), addLabelToPr },
+      labels: [],
+      git: { addLabelToPr },
     } as any);
 
-    await hooks.prCheck.promise({ pr: { body: "- [x] `unknown-label`" } } as any);
+    await hooks.prCheck.promise({
+      pr: { body: "- [x] `unknown-label`" },
+    } as any);
     expect(addLabelToPr).not.toHaveBeenCalled();
   });
 
@@ -24,10 +27,13 @@ describe("Pr-Body-Labels Plugin", () => {
 
     plugin.apply({
       hooks,
-      git: { getProjectLabels: () => Promise.resolve(["patch"]), addLabelToPr },
+      labels: [{ name: "patch" }],
+      git: { addLabelToPr },
     } as any);
 
-    await hooks.prCheck.promise({ pr: { body: "- [x] `patch`", number: 1 } } as any);
+    await hooks.prCheck.promise({
+      pr: { body: "- [x] `patch`", number: 1 },
+    } as any);
     expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
   });
 });
