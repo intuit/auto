@@ -37,3 +37,15 @@ Indicate the type of change your pull request is:
 - [ ] `minor`
 - [ ] `major`
 ```
+
+## Options
+
+### `disabledLabels`
+
+Labels the user cannot apply through the PR.
+
+```json
+{
+  "plugins": [["pr-body-labels", { "disabledLabels": ["release"] }]]
+}
+```

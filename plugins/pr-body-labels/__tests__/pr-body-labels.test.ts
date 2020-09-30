@@ -36,4 +36,21 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
     expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
   });
+
+  test("not add labels in disabledLabels list", async () => {
+    const plugin = new PrBodyLabels({ disabledLabels: ["patch"] });
+    const hooks = makeHooks();
+    const addLabelToPr = jest.fn();
+
+    plugin.apply({
+      hooks,
+      labels: [{ name: "patch" }],
+      git: { addLabelToPr },
+    } as any);
+
+    await hooks.prCheck.promise({
+      pr: { body: "- [x] `patch`", number: 1 },
+    } as any);
+    expect(addLabelToPr).not.toHaveBeenCalled();
+  });
 });
