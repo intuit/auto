@@ -70,6 +70,23 @@ jobs:
       - attach_workspace:
           at: ~/auto
       - run: *lint
+      - run:
+          name: Release
+          command: yarn auto pr-check --url $CIRCLE_PULL_REQUEST
+
+  pr-check:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/auto
+      - run:
+          name: Check for SemVer Label
+          command: | 
+            if [ ! -z "$CIRCLE_PR_NUMBER" ]; then
+              yarn auto pr-check --url $CIRCLE_PULL_REQUEST
+            else
+              echo "No pull request, not checking for semver label"
+            fi
 
   test:
     <<: *defaults
@@ -99,6 +116,10 @@ workflows:
       - build:
           requires:
             - install
+
+      - pr-check:
+          requires:
+            - build
 
       - lint:
           requires:
