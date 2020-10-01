@@ -245,6 +245,15 @@ export interface IAutoHooks {
   next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
+  /** Ran after the package has been published. */
+  prCheck: AsyncSeriesHook<
+    [
+      {
+        /** The complete information about the PR */
+        pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
+      }
+    ]
+  >;
 }
 
 /** Load the .env file into process.env. Useful for local usage. */
@@ -875,6 +884,8 @@ export default class Auto {
 
     try {
       const res = await this.git.getPullRequest(prNumber);
+      await this.hooks.prCheck.promise({ pr: res.data });
+
       sha = res.data.head.sha;
 
       const labels = await this.git.getLabels(prNumber);
