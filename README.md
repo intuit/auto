@@ -237,11 +237,13 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/lucascurti"><img src="https://avatars3.githubusercontent.com/u/2811287?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Curti</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=lucascurti" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/rachanamamillapalli"><img src="https://avatars1.githubusercontent.com/u/9112473?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rachana</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rachanamamillapalli" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=rachanamamillapalli" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=rachanamamillapalli" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/RichiCoder1"><img src="https://avatars2.githubusercontent.com/u/2391878?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Richard Simpson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Code">💻</a></td>
+    <td align="center"><a href="https://artmsilva.com/"><img src="https://avatars2.githubusercontent.com/u/347490?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Arturo Silva</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=artmsilva" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

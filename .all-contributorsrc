@@ -359,6 +359,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "artmsilva",
+      "name": "Arturo Silva",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/347490?v=4",
+      "profile": "https://artmsilva.com/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
