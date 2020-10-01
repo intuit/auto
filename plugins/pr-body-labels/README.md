@@ -1,6 +1,7 @@
 # Pr-Body-Labels Plugin
 
 Allow outside contributors to indicate what semver label should be applied to the Pull Request.
+If you run `auto pr-check` from your CI this plugin will look at the PR body to find what label to apply.
 
 ## Installation
 
