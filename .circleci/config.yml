@@ -70,9 +70,6 @@ jobs:
       - attach_workspace:
           at: ~/auto
       - run: *lint
-      - run:
-          name: Release
-          command: yarn auto pr-check --url $CIRCLE_PULL_REQUEST
 
   pr-check:
     <<: *defaults
