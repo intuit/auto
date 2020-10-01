@@ -1,3 +1,31 @@
+# v9.54.0 (Thu Oct 01 2020)
+
+#### 🐛 Bug Fix
+
+- try to make "auto version" docs clearer ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Fix docs [#1548](https://github.com/intuit/auto/pull/1548) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump all-contributors-cli from 6.17.2 to 6.17.4 [#1545](https://github.com/intuit/auto/pull/1545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.2.0 to 26.4.0 [#1543](https://github.com/intuit/auto/pull/1543) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/prettier from 2.0.2 to 2.1.1 [#1542](https://github.com/intuit/auto/pull/1542) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 26.0.13 to 26.0.14 [#1539](https://github.com/intuit/auto/pull/1539) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.0.1 to 24.0.2 [#1538](https://github.com/intuit/auto/pull/1538) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.20.0 to 24.0.1 [#1532](https://github.com/intuit/auto/pull/1532) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @types/jest from 26.0.10 to 26.0.13 [#1516](https://github.com/intuit/auto/pull/1516) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.53.0 (Tue Sep 08 2020)
 
 :tada: This release contains work from a new contributor! :tada:

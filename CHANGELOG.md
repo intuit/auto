@@ -1,3 +1,65 @@
+# v9.54.0 (Thu Oct 01 2020)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@agarwali4411](https://github.com/agarwali4411)
+
+:heart: Arturo Silva ([@artmsilva](https://github.com/artmsilva))
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/pr-body-labels`
+  - Add pr-body-labels plugin [#1554](https://github.com/intuit/auto/pull/1554) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Improved Docs [#1555](https://github.com/intuit/auto/pull/1555) ([@agarwali4411](https://github.com/agarwali4411))
+- docs: fix typo [#1547](https://github.com/intuit/auto/pull/1547) ([@artmsilva](https://github.com/artmsilva))
+- `@auto-it/pr-body-labels`
+  - Pr label body Docs update [#1556](https://github.com/intuit/auto/pull/1556) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`
+  - Fix docs [#1548](https://github.com/intuit/auto/pull/1548) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/rest from 18.0.3 to 18.0.6 [#1528](https://github.com/intuit/auto/pull/1528) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @typescript-eslint/eslint-plugin from 4.1.1 to 4.3.0 [#1549](https://github.com/intuit/auto/pull/1549) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pretty-ms from 7.0.0 to 7.0.1 [#1550](https://github.com/intuit/auto/pull/1550) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 7.8.0 to 7.9.0 [#1529](https://github.com/intuit/auto/pull/1529) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.0.5 to 2.1.2 [#1544](https://github.com/intuit/auto/pull/1544) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.2.0 to 26.4.0 [#1543](https://github.com/intuit/auto/pull/1543) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/prettier from 2.0.2 to 2.1.1 [#1542](https://github.com/intuit/auto/pull/1542) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 26.0.13 to 26.0.14 [#1539](https://github.com/intuit/auto/pull/1539) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.0.1 to 24.0.2 [#1538](https://github.com/intuit/auto/pull/1538) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.2.11 to 10.3.0 [#1530](https://github.com/intuit/auto/pull/1530) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.1.1 to 4.3.0 [#1551](https://github.com/intuit/auto/pull/1551) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump node-fetch from 2.6.0 to 2.6.1 [#1522](https://github.com/intuit/auto/pull/1522) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump @types/jest from 26.0.10 to 26.0.13 [#1516](https://github.com/intuit/auto/pull/1516) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump next-ignite from 0.4.2 to 0.6.6 [#1531](https://github.com/intuit/auto/pull/1531) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/semver from 7.3.3 to 7.3.4 [#1533](https://github.com/intuit/auto/pull/1533) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 15.0.0 to 15.0.1 [#1534](https://github.com/intuit/auto/pull/1534) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump bl from 1.2.2 to 1.2.3 [#1526](https://github.com/intuit/auto/pull/1526) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/slack`
+  - Bump node-fetch from 2.6.0 to 2.6.1 in /plugins/slack [#1524](https://github.com/intuit/auto/pull/1524) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- `@auto-it/core`
+  - Bump node-fetch from 2.6.0 to 2.6.1 in /packages/core [#1523](https://github.com/intuit/auto/pull/1523) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`
+  - Bump eslint-plugin-jest from 23.20.0 to 24.0.1 [#1532](https://github.com/intuit/auto/pull/1532) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.17.2 to 6.17.4 [#1545](https://github.com/intuit/auto/pull/1545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 5
+
+- [@agarwali4411](https://github.com/agarwali4411)
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Arturo Silva ([@artmsilva](https://github.com/artmsilva))
+
+---
+
 # v9.53.1 (Tue Sep 08 2020)
 
 #### 🐛 Bug Fix

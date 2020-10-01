@@ -1,3 +1,38 @@
+# v9.54.0 (Thu Oct 01 2020)
+
+#### 🚀 Enhancement
+
+- Add pr-body-labels plugin [#1554](https://github.com/intuit/auto/pull/1554) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- Add pr-body-labels plugin ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix lint ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump node-fetch from 2.6.0 to 2.6.1 in /packages/core ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/prettier from 2.0.2 to 2.1.1 [#1542](https://github.com/intuit/auto/pull/1542) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.1.1 to 4.3.0 [#1549](https://github.com/intuit/auto/pull/1549) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pretty-ms from 7.0.0 to 7.0.1 [#1550](https://github.com/intuit/auto/pull/1550) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.17.2 to 6.17.4 [#1545](https://github.com/intuit/auto/pull/1545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.0.5 to 2.1.2 [#1544](https://github.com/intuit/auto/pull/1544) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.2.0 to 26.4.0 [#1543](https://github.com/intuit/auto/pull/1543) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.1.1 to 4.3.0 [#1551](https://github.com/intuit/auto/pull/1551) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 26.0.13 to 26.0.14 [#1539](https://github.com/intuit/auto/pull/1539) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.0.1 to 24.0.2 [#1538](https://github.com/intuit/auto/pull/1538) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.20.0 to 24.0.1 [#1532](https://github.com/intuit/auto/pull/1532) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @types/jest from 26.0.10 to 26.0.13 [#1516](https://github.com/intuit/auto/pull/1516) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump node-fetch from 2.6.0 to 2.6.1 in /packages/core [#1523](https://github.com/intuit/auto/pull/1523) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.10 (Fri Aug 14 2020)
 
 #### 🐛 Bug Fix

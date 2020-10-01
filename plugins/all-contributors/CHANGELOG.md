@@ -1,3 +1,26 @@
+# v9.54.0 (Thu Oct 01 2020)
+
+#### 🐛 Bug Fix
+
+- Bump all-contributors-cli from 6.17.2 to 6.17.4 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- update tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 4.1.1 to 4.3.0 [#1549](https://github.com/intuit/auto/pull/1549) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.1.1 to 4.3.0 [#1551](https://github.com/intuit/auto/pull/1551) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump pretty-ms from 7.0.0 to 7.0.1 [#1550](https://github.com/intuit/auto/pull/1550) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.17.2 to 6.17.4 [#1545](https://github.com/intuit/auto/pull/1545) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 23.20.0 to 24.0.1 [#1532](https://github.com/intuit/auto/pull/1532) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @types/jest from 26.0.10 to 26.0.13 [#1516](https://github.com/intuit/auto/pull/1516) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.50.12 (Thu Aug 20 2020)
 
 :tada: This release contains work from a new contributor! :tada:
