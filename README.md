@@ -129,7 +129,7 @@ yarn test
 ### Run the docs
 
 ```bash
-yarn docs:watch
+yarn docs
 ```
 
 ### Create a new plugin
