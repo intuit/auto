@@ -34,7 +34,6 @@
     "docs": "yarn docs:generate && ignite dev",
     "docs:generate": "./docs/generate-command-docs.js",
     "docs:build": "yarn docs:generate && ignite build",
-    "docs:watch": "ignite dev",
     "create:plugin": "./scripts/create-plugin.js",
     "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
