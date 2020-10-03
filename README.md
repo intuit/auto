@@ -38,7 +38,7 @@ Pull Request Interaction Features:
 
 Visit [the docs](https://intuit.github.io/auto/) for more information.
 
-## Plugins
+## :pushpin: Plugins :pushpin:
 
 Auto has an extensive plugin system and wide variety of official plugins. Make a PR to add yours!
 
@@ -72,7 +72,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [twitter](./plugins/twitter) - Post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - Add extra assets to the release
 
-## Start Developing
+## :hammer: Start Developing :hammer:
 
 To get set up, fork and clone the project then run the following command:
 
@@ -145,7 +145,7 @@ The two arguments are:
 yarn create:plugin "My Plugin" "Do something really cool"
 ```
 
-## Contributing
+## :beers: Contributing :beers:
 
 Feel free to make an [issue](https://github.com/intuit/auto/issues) or open a [pull request](https://github.com/intuit/auto/pulls)!
 
