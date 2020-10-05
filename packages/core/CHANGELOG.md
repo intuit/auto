@@ -1,3 +1,16 @@
+# v9.54.1 (Mon Oct 05 2020)
+
+#### 🐛 Bug Fix
+
+- upgrade gitlog [#1561](https://github.com/intuit/auto/pull/1561) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- upgrade gitlog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.0 (Thu Oct 01 2020)
 
 #### 🚀 Enhancement

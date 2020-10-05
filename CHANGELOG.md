@@ -1,3 +1,25 @@
+# v9.54.1 (Mon Oct 05 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Christy Jacob ([@christyjacob4](https://github.com/christyjacob4)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - upgrade gitlog [#1561](https://github.com/intuit/auto/pull/1561) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- chore: updated docs:watch script [#1557](https://github.com/intuit/auto/pull/1557) ([@christyjacob4](https://github.com/christyjacob4))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Christy Jacob ([@christyjacob4](https://github.com/christyjacob4))
+
+---
+
 # v9.54.0 (Thu Oct 01 2020)
 
 :tada: This release contains work from new contributors! :tada:
