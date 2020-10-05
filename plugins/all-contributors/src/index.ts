@@ -381,6 +381,7 @@ export default class AllContributorsPlugin implements IPlugin {
           "--first-parent",
           "-m",
           commit.hash,
+          "-l0",
         ]);
 
         commit.files = [...new Set([...commit.files, ...extra.split("\n")])];
