@@ -239,6 +239,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/RichiCoder1"><img src="https://avatars2.githubusercontent.com/u/2391878?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Richard Simpson</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=RichiCoder1" title="Code">💻</a></td>
     <td align="center"><a href="https://artmsilva.com/"><img src="https://avatars2.githubusercontent.com/u/347490?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Arturo Silva</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=artmsilva" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://christyjacob4.github.io/"><img src="https://avatars1.githubusercontent.com/u/20852629?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Christy Jacob</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=christyjacob4" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
