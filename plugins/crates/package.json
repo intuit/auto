@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/crates",
-  "version": "9.54.1",
+  "version": "9.54.2",
   "main": "dist/index.js",
   "description": "Deploy Rust crates to crates.io",
   "license": "MIT",
