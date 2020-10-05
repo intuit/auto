@@ -80,7 +80,7 @@
     fast-glob "^3.1.1"
     fp-ts "^2.5.3"
     fromentries "^1.2.0"
-    gitlog "^4.0.0"
+    gitlog "^4.0.3"
     https-proxy-agent "^5.0.0"
     import-cwd "^3.0.0"
     import-from "^3.0.0"
@@ -9132,10 +9132,10 @@ github-slugger@^1.1.1:
   dependencies:
     emoji-regex ">=6.0.0 <=6.1.1"
 
-gitlog@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/gitlog/-/gitlog-4.0.0.tgz#c4f440c822cc3fe1b32366d0662918871d3c7249"
-  integrity sha512-N6ZcvvbHsqhmM09wtzbL8v3FPwBK3EQ1xnv/2nj9JGH/YsYVn+ZkmMCxzkEjHnSFcpUk2HN2LBp76PGj3TkPag==
+gitlog@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/gitlog/-/gitlog-4.0.3.tgz#36422e6910fccaa1e5d8413f62245797161743cc"
+  integrity sha512-rWejI3r/UXo2egYMJRwI3w/lTVNjP8yT9oz29hkv69qlatKj3Y0PmUYU1x+3fILx+qJJBKjEEHgYTFygOV3a+Q==
   dependencies:
     debug "^4.1.1"
     tslib "^1.11.1"
