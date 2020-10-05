@@ -1,3 +1,16 @@
+# v9.54.2 (Mon Oct 05 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - fix diff limit warning in all-contributors plugin [#1562](https://github.com/intuit/auto/pull/1562) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.1 (Mon Oct 05 2020)
 
 :tada: This release contains work from a new contributor! :tada:
