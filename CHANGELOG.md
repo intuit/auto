@@ -1,3 +1,16 @@
+# v9.54.4 (Tue Oct 06 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/git-tag`
+  - fix `next` release prefixing in git-tag plugin [#1568](https://github.com/intuit/auto/pull/1568) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.3 (Tue Oct 06 2020)
 
 :tada: This release contains work from new contributors! :tada:
