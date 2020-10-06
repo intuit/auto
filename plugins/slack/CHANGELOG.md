@@ -1,3 +1,25 @@
+# v9.54.3 (Tue Oct 06 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Sanjay Johny ([@san45](https://github.com/san45)), for all your work!
+
+#### 🐛 Bug Fix
+
+- add extra padding to nested lists in slack message [#1566](https://github.com/intuit/auto/pull/1566) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add extra padding to nested lists in slack message ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Added emojis to README.md [#1559](https://github.com/intuit/auto/pull/1559) ([@san45](https://github.com/san45))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Sanjay Johny ([@san45](https://github.com/san45))
+
+---
+
 # v9.54.0 (Thu Oct 01 2020)
 
 #### 🐛 Bug Fix
