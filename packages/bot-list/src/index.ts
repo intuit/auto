@@ -8,5 +8,6 @@ export default [
   "renovate[bot]",
   "renovate-pro[bot]",
   "renovate-approve",
+  "invalid-email-address",
   "snyk-bot",
 ];
