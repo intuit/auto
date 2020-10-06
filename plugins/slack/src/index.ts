@@ -24,6 +24,11 @@ const sanitizeMarkdown = (markdown: string) =>
         return `*${line.replace(/^[#]+/, "")}*`;
       }
 
+      // Give extra padding to nested lists
+      if (line.match(/^\s+•/)) {
+        return line.replace(/^\s+•/, "   •");
+      }
+
       // Strip markdown code block type. Slack does not render them correctly.
       if (line.match(MARKDOWN_LANGUAGE)) {
         return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
