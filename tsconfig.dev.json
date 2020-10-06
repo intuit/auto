@@ -73,6 +73,9 @@
     },
     {
       "path": "plugins/pr-body-labels"
+    },
+    {
+      "path": "plugins/microsoft-teams"
     }
   ]
 }
