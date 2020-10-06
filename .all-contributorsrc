@@ -377,6 +377,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "invalid-email-address",
+      "name": "Check your git settings!",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/148100?v=4",
+      "profile": "https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

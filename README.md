@@ -241,6 +241,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   </tr>
   <tr>
     <td align="center"><a href="https://christyjacob4.github.io/"><img src="https://avatars1.githubusercontent.com/u/20852629?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Christy Jacob</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=christyjacob4" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user"><img src="https://avatars0.githubusercontent.com/u/148100?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Check your git settings!</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=invalid-email-address" title="Documentation">📖</a></td>
   </tr>
 </table>
 
