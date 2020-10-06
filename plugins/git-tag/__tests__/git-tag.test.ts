@@ -21,7 +21,7 @@ const setup = (mockGit?: any) => {
     git: mockGit,
     remote: "origin",
     logger: dummyLog(),
-    prefixRelease: (r: string) => r,
+    prefixRelease: (r: string) => `v${r}`,
     config: { prereleaseBranches: ["next"] },
     getCurrentVersion: () => "v1.0.0",
   } as unknown) as Auto.Auto);
@@ -55,7 +55,7 @@ describe("Git Tag Plugin", () => {
         },
       });
       const previousVersion = await hooks.getPreviousVersion.promise();
-      expect(previousVersion).toBe("0.0.0");
+      expect(previousVersion).toBe("v0.0.0");
     });
   });
 
@@ -77,9 +77,9 @@ describe("Git Tag Plugin", () => {
       await hooks.version.promise(Auto.SEMVER.patch);
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
-        "1.0.1",
+        "v1.0.1",
         "-m",
-        '"Update version to 1.0.1"',
+        '"Update version to v1.0.1"',
       ]);
     });
   });
@@ -101,9 +101,9 @@ describe("Git Tag Plugin", () => {
 
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
-        "1.0.1-next.0",
+        "v1.0.1-next.0",
         "-m",
-        '"Tag pre-release: 1.0.1-next.0"',
+        '"Tag pre-release: v1.0.1-next.0"',
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
         "push",

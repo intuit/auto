@@ -73,11 +73,8 @@ export default class GitTagPlugin implements IPlugin {
       const current =
         (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
         (await auto.getCurrentVersion(lastRelease));
-      const prerelease = determineNextVersion(
-        lastRelease,
-        current,
-        bump,
-        prereleaseBranch
+      const prerelease = auto.prefixRelease(
+        determineNextVersion(lastRelease, current, bump, prereleaseBranch)
       );
 
       await execPromise("git", [
