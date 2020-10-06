@@ -1,3 +1,15 @@
+# v9.54.5 (Tue Oct 06 2020)
+
+#### 🐛 Bug Fix
+
+- add invalid-email-address to botlist [#1569](https://github.com/intuit/auto/pull/1569) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.1 (Mon Oct 05 2020)
 
 #### 🐛 Bug Fix
