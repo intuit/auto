@@ -36,7 +36,7 @@ import * as t from "io-ts";
 
 const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
 
-/** Transform markdown into slack friendly text */
+/** Transform markdown into microsoft teams friendly text */
 const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
     .split("\n")
@@ -61,7 +61,7 @@ const sanitizeMarkdown = (markdown: string) =>
     .join("\n");
 
 const pluginOptions = t.partial({
-  /** URL of the slack to post to */
+  /** URL of the microsoft teams to post to */
   url: t.string,
   /** Who to bother when posting to the channel */
   atTarget: t.string,
@@ -71,7 +71,7 @@ const pluginOptions = t.partial({
 
 export type IMicrosoftTeamsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-/** Post your release notes to Slack during `auto release` */
+/** Post your release notes to Microsof during `auto release` */
 export default class MicrosoftTeamsPlugin implements IPlugin {
   /** The name of the plugin */
   name = "microsoft-teams";
@@ -149,10 +149,10 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
         }
 
         if (!this.options.url) {
-          throw new Error("Slack url must be set to post a message to slack.");
+          throw new Error("Microsoft Teams url must be set to post a message to microsoft teams.");
         }
 
-        await this.postToSlack(
+        await this.postToMicrosoftTeams(
           auto,
           newVersion,
           releaseNotes,
@@ -164,8 +164,8 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
     );
   }
 
-  /** Post the release notes to slack */
-  async postToSlack(
+  /** Post the release notes to microsoft teams */
+  async postToMicrosoftTeams(
     auto: Auto,
     newVersion: string,
     releaseNotes: string,
@@ -177,7 +177,7 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
       return;
     }
 
-    auto.logger.verbose.info("Posting release notes to slack.");
+    auto.logger.verbose.info("Posting release notes to microsoft teams.");
 
     const body = sanitizeMarkdown(releaseNotes);
     // const token = process.env.SLACK_TOKEN;
@@ -207,6 +207,6 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
     });
 
-    auto.logger.verbose.info("Posted release notes to slack.");
+    auto.logger.verbose.info("Posted release notes to microsoft teams.");
   }
 }

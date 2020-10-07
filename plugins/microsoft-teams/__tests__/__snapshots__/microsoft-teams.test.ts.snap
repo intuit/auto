@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`postToMicrosoftTeams should add more indents to nested lists - 2 spaces 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\"}"`;
+
+exports[`postToMicrosoftTeams should add more indents to nested lists 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api in env var 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api through http proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api through https proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api with custom atTarget 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@here: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should call slack api with minimal config 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToMicrosoftTeams should remove markdown code types from block 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n\`json\`:\\\\n\\\\n\`\`\`\\\\n{ \\\\\\"foo\\\\\\": \\\\\\"bar\\\\\\" }\`\`\`\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\"}"`;
+
+exports[`postToSlack should add more indents to nested lists 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\"}"`;
+
+exports[`postToSlack should call slack api 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should call slack api in env var 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should call slack api through http proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should call slack api through https proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should call slack api with custom atTarget 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@here: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should call slack api with minimal config 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+
+exports[`postToSlack should remove markdown code types from block 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<[v1.0.0](https://git.hub/some/project/releases/v1.0.0)>*\\\\n* My Notes*\\\\n\`json\`:\\\\n\\\\n\`\`\`\\\\n{ \\\\\\"foo\\\\\\": \\\\\\"bar\\\\\\" }\`\`\`\\\\n• PR <google.com|some link>\\"}"`;
