@@ -59,15 +59,28 @@ const isContribution = (
   contributionTypes.includes(contribution as Contribution);
 
 /** Get an rc file if there is one. */
-function getRcFile() {
+function getRcFile(auto: Auto) {
+  const rcFile = path.join(process.cwd(), ".all-contributorsrc");
+
+  if (!fs.existsSync(rcFile)) {
+    auto.logger.verbose.warn(
+      `No all-contributors configuration file found at: ${rcFile}`
+    );
+    return;
+  }
+
   try {
-    const rcFile = path.join(process.cwd(), ".all-contributorsrc");
     const config: AllContributorsRc = JSON.parse(
       fs.readFileSync(rcFile, "utf8")
     );
 
     return { ...config, config: rcFile };
-  } catch (error) {}
+  } catch (error) {
+    auto.logger.log.error(
+      `Encountered errors loading all-contributors configuration at ${rcFile}`,
+      error
+    );
+  }
 }
 
 const pattern = t.union([t.string, t.array(t.string)]);
@@ -363,7 +376,7 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** Update the contributors rc for a package. */
   private async updateContributors(auto: Auto, commits: IExtendedCommit[]) {
-    const config = getRcFile();
+    const config = getRcFile(auto);
 
     if (!config) {
       return;
