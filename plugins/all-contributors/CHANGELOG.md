@@ -1,3 +1,21 @@
+# v9.55.0 (Wed Oct 07 2020)
+
+#### 🚀 Enhancement
+
+- add dryRun to BeforeShipItContext [#1572](https://github.com/intuit/auto/pull/1572) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- fix erroneous log [#1573](https://github.com/intuit/auto/pull/1573) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix erroneous log ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add dryRun to BeforeShipItContext ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.6 (Wed Oct 07 2020)
 
 #### 🐛 Bug Fix

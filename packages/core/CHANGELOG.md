@@ -1,3 +1,19 @@
+# v9.55.0 (Wed Oct 07 2020)
+
+#### 🚀 Enhancement
+
+- add dryRun to BeforeShipItContext [#1572](https://github.com/intuit/auto/pull/1572) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add dryRun to BeforeShipItContext ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.5 (Tue Oct 06 2020)
 
 #### 🐛 Bug Fix
