@@ -120,6 +120,8 @@ export type ShipitRelease = "latest" | "old" | "next" | "canary";
 interface BeforeShipitContext {
   /** The type of release that will be made when shipit runs. */
   releaseType: ShipitRelease;
+  /** Whether the run is a dry run */
+  dryRun?: boolean;
 }
 
 interface NextContext {
@@ -1485,7 +1487,7 @@ export default class Auto {
       releaseType = "next";
     }
 
-    await this.hooks.beforeShipIt.promise({ releaseType });
+    await this.hooks.beforeShipIt.promise({ releaseType, dryRun: options.dryRun });
 
     if (releaseType === "latest") {
       publishInfo = await this.latest(options);

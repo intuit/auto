@@ -41,6 +41,7 @@ This is a great way to throw an error if a token or key is not present.
 Context Object:
 
 - `releaseType` (`latest` | `old` | `next` | `canary`) - The type of release `shipit` will attempt to make.
+- `dryRun` - Whether the run is a dry run
 
 ```ts
 auto.hooks.beforeShipIt.tapPromise("NPM", async (context) => {
