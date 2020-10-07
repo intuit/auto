@@ -1,3 +1,16 @@
+# v9.54.6 (Wed Oct 07 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - add logging if all-contributors rc isn't found or has errors [#1571](https://github.com/intuit/auto/pull/1571) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.54.5 (Tue Oct 06 2020)
 
 #### 🐛 Bug Fix
