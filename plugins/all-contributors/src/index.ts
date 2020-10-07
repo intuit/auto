@@ -505,9 +505,9 @@ export default class AllContributorsPlugin implements IPlugin {
             fs.writeFileSync(file, newReadMe);
           })
         );
+      } else {
+        auto.logger.verbose.warn(`"${username}" had no new contributions...`);
       }
-
-      auto.logger.verbose.warn(`"${username}" had no new contributions...`);
     }
 
     if (didUpdate) {
