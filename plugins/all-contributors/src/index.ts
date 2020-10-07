@@ -53,6 +53,8 @@ interface Contributor {
 interface AllContributorsRc {
   /** All of the current contributors */
   contributors: Contributor[];
+  /** The list of files to add all-contributors to */
+  files: string[];
 }
 
 const defaultOptions: IAllContributorsPluginOptions = {
@@ -144,6 +146,23 @@ export default class AllContributorsPlugin implements IPlugin {
               ].join(',')}`,
               { stdio: 'inherit' }
             );
+          }
+
+          // if the all-contributors has not been generated ... generate it
+          if (config.contributors.length && config.files) {
+            try {
+              // test if the first file in the list of files has been init
+              const file = path.join(process.cwd(), config.files[0]);
+              const displayFile = fs.readFileSync(file, 'utf8');
+
+              const notInitalized = displayFile.indexOf(
+                '<!-- markdownlint-disable -->\n<!-- markdownlint-restore -->'
+              );
+
+              if (notInitalized) {
+                execSync(`npx all-contributors generate`, { stdio: 'inherit' });
+              }
+            } catch {}
           }
         }
       );

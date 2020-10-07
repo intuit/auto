@@ -145,4 +145,32 @@ describe('All Contributors Plugin', () => {
 
     expect(exec).not.toHaveBeenCalled();
   });
+
+  test('should initialize contributors if not already initialized', async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+    mockRead(
+      '{ "contributors": [ { "login": "Jeff", "contributions": ["code"] } ], "files": ["README.md"]}'
+    );
+
+    mockRead(
+      '<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section --><!-- prettier-ignore-start -->\n<!-- markdownlint-disable -->\n<!-- markdownlint-restore -->\n<!-- prettier-ignore-end -->\n<!-- ALL-CONTRIBUTORS-LIST:END -->'
+    );
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      currentVersion: '0.0.0',
+      lastRelease: '0.0.0',
+      releaseNotes: '',
+      commits: [
+        makeCommitFromMsg('Do the thing', {
+          files: ['src/index.ts'],
+          username: 'Jeff'
+        })
+      ]
+    });
+
+    expect(exec.mock.calls[0][0]).toBe('npx all-contributors generate');
+  });
 });
