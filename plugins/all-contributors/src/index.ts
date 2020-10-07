@@ -80,6 +80,7 @@ function getRcFile(auto: Auto) {
       `Encountered errors loading all-contributors configuration at ${rcFile}`,
       error
     );
+    process.exit(1)
   }
 }
 
