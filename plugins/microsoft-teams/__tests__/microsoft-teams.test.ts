@@ -198,26 +198,8 @@ describe("postToMicrosoftTeams", () => {
     expect(plugin.postToMicrosoftTeams).toHaveBeenCalledTimes(1);
   });
 
-  test("should warn when no token", async () => {
-    const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    const logger = dummyLog();
-    jest.spyOn(logger.verbose, "warn").mockImplementation();
-    // process.env.SLACK_TOKEN = "";
-
-    await plugin.postToMicrosoftTeams(
-      { ...mockAuto, logger } as Auto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      mockResponse
-    );
-
-    // expect(logger.verbose.warn).toHaveBeenCalled();
-  });
-
   test("should call slack api with minimal config", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
 
     await plugin.postToMicrosoftTeams(
       mockAuto,
@@ -237,7 +219,6 @@ describe("postToMicrosoftTeams", () => {
 
   test("should add more indents to nested lists", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
 
     await plugin.postToMicrosoftTeams(
       mockAuto,
@@ -257,7 +238,6 @@ describe("postToMicrosoftTeams", () => {
 
   test("should add more indents to nested lists - 2 spaces", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
 
     await plugin.postToMicrosoftTeams(
       mockAuto,
@@ -277,7 +257,6 @@ describe("postToMicrosoftTeams", () => {
 
   test("should call slack api through http proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
     process.env.http_proxy = "http-proxy";
 
     await plugin.postToMicrosoftTeams(
@@ -298,7 +277,6 @@ describe("postToMicrosoftTeams", () => {
 
   test("should remove markdown code types from block", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
 
     await plugin.postToMicrosoftTeams(
       mockAuto,
@@ -313,7 +291,6 @@ describe("postToMicrosoftTeams", () => {
 
   test("should call slack api through https proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-slack-url");
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
     process.env.https_proxy = "https-proxy";
 
     await plugin.postToMicrosoftTeams(
@@ -335,7 +312,6 @@ describe("postToMicrosoftTeams", () => {
   test("should call slack api", async () => {
     const plugin = new MicrosoftTeamsPlugin({ url: "https://custom-slack-url" });
     const hooks = makeHooks();
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -360,7 +336,6 @@ describe("postToMicrosoftTeams", () => {
       atTarget: "here",
     });
     const hooks = makeHooks();
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -384,7 +359,6 @@ describe("postToMicrosoftTeams", () => {
     process.env.MICROSOFT_TEAMS_WEBHOOK_URL = "https://foo.bar";
     const plugin = new MicrosoftTeamsPlugin();
     const hooks = makeHooks();
-    // process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({

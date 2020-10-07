@@ -1,25 +1,3 @@
-// import { Auto, IPlugin } from '@auto-it/core';
-
-// interface IMicrosoftTeamsPluginOptions {}
-
-// /** Microsoft Teams plugin for auto */
-// export default class MicrosoftTeamsPlugin implements IPlugin {
-//   /** The name of the plugin */
-//   name = 'microsoft-teams';
-
-//   /** The options of the plugin */
-//   readonly options: IMicrosoftTeamsPluginOptions;
-
-//   /** Initialize the plugin with it's options */
-//   constructor(options: IMicrosoftTeamsPluginOptions) {
-//     this.options = options;
-//   }
-
-//   /** Tap into auto plugin points. */
-//   apply(auto: Auto) {}
-// }
-
-
 import { githubToSlack } from "@atomist/slack-messages";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import createHttpsProxyAgent from "https-proxy-agent";
@@ -180,7 +158,6 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
     auto.logger.verbose.info("Posting release notes to microsoft teams.");
 
     const body = sanitizeMarkdown(releaseNotes);
-    // const token = process.env.SLACK_TOKEN;
     const proxyUrl = process.env.https_proxy || process.env.http_proxy;
     const atTarget = this.options.atTarget;
     const urls = releases.map(
@@ -190,11 +167,6 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
           }](${release.data.html_url})>*`
     );
     const releaseUrl = urls.length ? urls.join(", ") : newVersion;
-
-    // if (!token) {
-    //   auto.logger.verbose.warn("Slack may need a token to send a message");
-    // }
-    // ${token ? `?token=${token}` : ""}
 
     await fetch(`${this.options.url}`, {
       method: "POST",
