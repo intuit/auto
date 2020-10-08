@@ -173,7 +173,7 @@ function getExtraContributors(body?: string) {
   return authorContributions;
 }
 
-
+/** Determine which files need to display contributors and generate contributors */
 function generateContributorReadme(config: AllContributorsRc, contributors: any) {
   return (config.files || ["README.md"]).map(async (file) => {
     const oldReadMe = fs.readFileSync(file, {
@@ -200,7 +200,9 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** The options of the plugin */
   readonly options: Required<IAllContributorsPluginOptions>;
+  /** Has the Readme been initialized */
   private generatedReadme: boolean;
+
   /** Initialize the plugin with it's options */
   constructor(options: IAllContributorsPluginOptions = {}) {
     this.options = {
@@ -518,7 +520,7 @@ export default class AllContributorsPlugin implements IPlugin {
       }
     }
 
-     if (config.contributors.length && this.generatedReadme === false) {
+     if (config.contributors.length && !this.generatedReadme) {
       // if the all-contributors has not been generated ... generate it
       try {
         // test if the first file in the list of files has been init
