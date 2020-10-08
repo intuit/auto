@@ -1,3 +1,25 @@
+# v9.57.0 (Thu Oct 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kendall Gassner ([@kendallgassner](https://github.com/kendallgassner)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/all-contributors`
+  - auto generate contributors if a contributors list exists but none are… [#1575](https://github.com/intuit/auto/pull/1575) ([@kendallgassner](https://github.com/kendallgassner) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- add noVersionPrefix to docs [#1577](https://github.com/intuit/auto/pull/1577) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Kendall Gassner ([@kendallgassner](https://github.com/kendallgassner))
+
+---
+
 # v9.56.0 (Thu Oct 08 2020)
 
 #### 🚀 Enhancement

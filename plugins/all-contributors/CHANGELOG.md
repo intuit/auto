@@ -1,3 +1,33 @@
+# v9.57.0 (Thu Oct 08 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kendall Gassner ([@kendallgassner](https://github.com/kendallgassner)), for all your work!
+
+#### 🚀 Enhancement
+
+- auto generate contributors if a contributors list exists but none are… [#1575](https://github.com/intuit/auto/pull/1575) ([@kendallgassner](https://github.com/kendallgassner) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- format code ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- adding config.contributors ([@kendallgassner](https://github.com/kendallgassner))
+- move promise all into function ([@kendallgassner](https://github.com/kendallgassner))
+- lint fixes ([@kendallgassner](https://github.com/kendallgassner))
+- cleaning up format and reorganizing code ([@kendallgassner](https://github.com/kendallgassner))
+- auto generate contributors if a contributors list exists but none are displayed yet ([@kendallgassner](https://github.com/kendallgassner))
+
+#### 📝 Documentation
+
+- add noVersionPrefix to docs [#1577](https://github.com/intuit/auto/pull/1577) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Kendall Gassner ([@kendallgassner](https://github.com/kendallgassner))
+
+---
+
 # v9.55.0 (Wed Oct 07 2020)
 
 #### 🚀 Enhancement
