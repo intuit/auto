@@ -175,7 +175,7 @@ function getExtraContributors(body?: string) {
 
 /** Determine which files need to display contributors and generate contributors */
 function generateContributorReadme(config: AllContributorsRc, contributors: any) {
-  return (config.files || ["README.md"]).map(async (file) => {
+  return Promise.all((config.files || ["README.md"]).map(async (file) => {
     const oldReadMe = fs.readFileSync(file, {
       encoding: "utf-8",
     });
@@ -190,7 +190,7 @@ function generateContributorReadme(config: AllContributorsRc, contributors: any)
       oldReadMe
     );
     fs.writeFileSync(file, newReadMe);
-  })
+  }));
 } 
 
 /** Automatically add contributors as changelogs are produced. */
@@ -511,9 +511,8 @@ export default class AllContributorsPlugin implements IPlugin {
         );
         this.generatedReadme = true;
         // Update files that contain contributors table
-        await Promise.all(
-           generateContributorReadme(config, contributors)
-        );
+        await generateContributorReadme(config, contributors)
+        
       }
       else {
         auto.logger.verbose.warn(`"${username}" had no new contributions...`);
@@ -533,9 +532,8 @@ export default class AllContributorsPlugin implements IPlugin {
         );
 
         if (notInitalized && file) {
-          await Promise.all(
-            generateContributorReadme(config, undefined)
-         );
+            await generateContributorReadme(config, undefined)
+         
         }
       } catch { }
     }
