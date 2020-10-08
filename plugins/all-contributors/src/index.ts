@@ -80,7 +80,7 @@ function getRcFile(auto: Auto) {
       `Encountered errors loading all-contributors configuration at ${rcFile}`,
       error
     );
-    process.exit(1)
+    process.exit(1);
   }
 }
 
@@ -110,7 +110,7 @@ interface AllContributorsRc {
   /** All of the current contributors */
   contributors: Contributor[];
   /** Files to generate a markdown table of contributors in */
-  files: string[];
+  files?: string[];
 }
 
 const defaultOptions: IAllContributorsPluginOptions = {
@@ -173,6 +173,31 @@ function getExtraContributors(body?: string) {
   return authorContributions;
 }
 
+/** Determine which files need to display contributors and generate contributors */
+function generateContributorReadme(
+  config: AllContributorsRc,
+  contributors: any
+) {
+  return Promise.all(
+    (config.files || ["README.md"]).map(async (file) => {
+      const oldReadMe = fs.readFileSync(file, {
+        encoding: "utf-8",
+      });
+      const newReadMe = await generateReadme(
+        {
+          contributorsPerLine: 7,
+          imageSize: 100,
+          ...config,
+          contributors,
+        },
+        contributors,
+        oldReadMe
+      );
+      fs.writeFileSync(file, newReadMe);
+    })
+  );
+}
+
 /** Automatically add contributors as changelogs are produced. */
 export default class AllContributorsPlugin implements IPlugin {
   /** The name of the plugin */
@@ -180,6 +205,8 @@ export default class AllContributorsPlugin implements IPlugin {
 
   /** The options of the plugin */
   readonly options: Required<IAllContributorsPluginOptions>;
+  /** Has the Readme been initialized */
+  private generatedReadme: boolean;
 
   /** Initialize the plugin with it's options */
   constructor(options: IAllContributorsPluginOptions = {}) {
@@ -187,6 +214,8 @@ export default class AllContributorsPlugin implements IPlugin {
       exclude: [...(defaultOptions.exclude || []), ...(options.exclude || [])],
       types: { ...defaultOptions.types, ...options.types },
     };
+
+    this.generatedReadme = false;
   }
 
   /** Tap into auto plugin points. */
@@ -485,29 +514,33 @@ export default class AllContributorsPlugin implements IPlugin {
           username,
           Array.from(newContributions).join(",")
         );
-
+        this.generatedReadme = true;
         // Update files that contain contributors table
-        await Promise.all(
-          (config.files || ["README.md"]).map(async (file) => {
-            const oldReadMe = fs.readFileSync(file, {
-              encoding: "utf-8",
-            });
-            const newReadMe = await generateReadme(
-              {
-                contributorsPerLine: 7,
-                imageSize: 100,
-                ...config,
-                contributors,
-              },
-              contributors,
-              oldReadMe
-            );
-            fs.writeFileSync(file, newReadMe);
-          })
-        );
+        await generateContributorReadme(config, contributors);
       } else {
         auto.logger.verbose.warn(`"${username}" had no new contributions...`);
       }
+    }
+
+    if (config.contributors.length && !this.generatedReadme) {
+      // if the all-contributors has not been generated ... generate it
+      try {
+        // test if the first file in the list of files has been init
+        const file = path.join(
+          process.cwd(),
+          config.files ? config.files[0] : "README.md"
+        );
+
+        const displayFile = file ? fs.readFileSync(file, "utf8") : "";
+
+        const notInitalized = displayFile.indexOf(
+          "<!-- markdownlint-disable -->\n<!-- markdownlint-restore -->"
+        );
+
+        if (notInitalized && file) {
+          await generateContributorReadme(config, config.contributors);
+        }
+      } catch {}
     }
 
     if (didUpdate) {

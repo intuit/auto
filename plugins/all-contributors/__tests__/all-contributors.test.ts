@@ -1,4 +1,5 @@
 import * as Auto from "@auto-it/core";
+import generateReadme from "all-contributors-cli/dist/generate";
 import addContributor from "all-contributors-cli/dist/contributors";
 import {
   makeHooks,
@@ -11,6 +12,7 @@ import env from "env-ci";
 
 import AllContributors from "../src";
 
+const generateMock = jest.fn();
 const addContributorMock = jest.fn();
 const envMock = jest.fn();
 const gitShow = jest.fn();
@@ -25,6 +27,9 @@ jest.mock("env-ci");
 jest.mock("child_process");
 jest.mock("all-contributors-cli/dist/contributors");
 jest.mock("all-contributors-cli/dist/generate");
+
+// @ts-ignore 
+generateReadme.mockImplementation(generateMock);
 // @ts-ignore
 addContributor.mockImplementation(addContributorMock);
 // @ts-ignore
@@ -544,6 +549,35 @@ describe("All Contributors Plugin", () => {
     });
 
     expect(addContributorMock).not.toHaveBeenCalled();
+  });
+
+  test("should initialize contributors if not already initialized", async () => {
+    const releasedLabel = new AllContributors();
+    const autoHooks = makeHooks();
+    mockRead(
+      '{ "contributors": [ { "login": "Jeff", "contributions": ["code"] } ], "files": ["README.md"]}'
+    );
+
+    mockRead(
+      "<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section --><!-- prettier-ignore-start -->\n<!-- markdownlint-disable -->\n<!-- markdownlint-restore -->\n<!-- prettier-ignore-end -->\n<!-- ALL-CONTRIBUTORS-LIST:END -->"
+    );
+
+    releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
+
+    await autoHooks.afterAddToChangelog.promise({
+      bump: Auto.SEMVER.patch,
+      currentVersion: "0.0.0",
+      lastRelease: "0.0.0",
+      releaseNotes: "",
+      commits: [
+        makeCommitFromMsg("Do the thing", {
+          files: ["src/index.ts"],
+          username: "Jeff",
+        }),
+      ],
+    });
+
+    expect(generateMock).toHaveBeenCalled();
   });
 
   describe("parseCommit", () => {
