@@ -60,11 +60,11 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
   /** Initialize the plugin with it's options */
   constructor(options: IMicrosoftTeamsPluginOptions | string = {}) {
     if (typeof options === "string") {
-      this.options = { url: options, atTarget: "channel" };
+      this.options = { url: options, atTarget: "" };
     } else {
       this.options = {
         url: process.env.MICROSOFT_TEAMS_WEBHOOK_URL || options.url || "",
-        atTarget: options.atTarget ? options.atTarget : "channel",
+        atTarget: options.atTarget ? options.atTarget : "",
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
           : false,
@@ -159,7 +159,7 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
 
     const body = sanitizeMarkdown(releaseNotes);
     const proxyUrl = process.env.https_proxy || process.env.http_proxy;
-    const atTarget = this.options.atTarget;
+    const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
     const urls = releases.map(
       (release) =>
         `*<[${
@@ -173,7 +173,7 @@ export default class MicrosoftTeamsPlugin implements IPlugin {
       body: JSON.stringify({
         "@context": "http://schema.org/extensions",
         "@type": "MessageCard",
-        text: [`@${atTarget}: New release ${releaseUrl}`, body].join("\n"),
+        text: [`${atTarget}New release ${releaseUrl}`, body].join("\n"),
       }),
       headers: { "Content-Type": "application/json" },
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,

@@ -24,6 +24,11 @@ To generate incoming webhook in microsoft teams, checkout [this blog](https://me
     ["microsoft-teams", { "url": "https://url-to-your-hook.com" }],
     // or
     ["microsoft-teams", "https://url-to-your-hook.com"],
+    // or
+    [
+      "microsoft-teams",
+      { "url": "https://url-to-your--hook.com", "atTarget": "username" }
+    ]
     // Below: Uses microsoft-teams hook set in process.env.MICROSOFT_TEAMS_WEBHOOK_URL
     "microsoft-teams"
   ]
