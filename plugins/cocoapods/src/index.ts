@@ -157,6 +157,22 @@ export default class CocoapodsPlugin implements IPlugin {
       ]);
     });
 
+    auto.hooks.beforeShipIt.tapPromise(this.name, async ({ dryRun }) => {
+      if (dryRun) {
+        auto.logger.log.info(logMessage('dryRun - running "pod lib lint"'));
+        const [pod, ...commands] = this.options.podCommand?.split(" ") || [
+          "pod",
+        ];
+        await execPromise(pod, [
+          ...commands,
+          "lib",
+          "lint",
+          ...(this.options.flags || []),
+          this.options.podspecPath,
+        ]);
+      }
+    });
+
     auto.hooks.publish.tapPromise(this.name, async () => {
       const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
 

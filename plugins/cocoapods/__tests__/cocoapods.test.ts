@@ -189,6 +189,52 @@ describe("Cocoapods Plugin", () => {
     });
   });
 
+  describe("beforeShipit hook", () => {
+    test("should call pod lib lint with dryRun flag", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin(options);
+      const hook = makeHooks();
+
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
+
+      expect(exec).toBeCalledTimes(1);
+      expect(exec).lastCalledWith("pod", ["lib", "lint", "./Test.podspec"]);
+    });
+    test("should call pod lib lint with options with dryRun flag", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin({
+        ...options,
+        flags: ["--flag"],
+        podCommand: "notpod",
+      });
+      const hook = makeHooks();
+
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
+
+      expect(exec).toBeCalledTimes(1);
+      expect(exec).lastCalledWith("notpod", [
+        "lib",
+        "lint",
+        "--flag",
+        "./Test.podspec",
+      ]);
+    });
+  });
+
   describe("publish hook", () => {
     test("should push to trunk if no specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
