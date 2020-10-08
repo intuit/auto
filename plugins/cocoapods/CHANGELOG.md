@@ -1,3 +1,19 @@
+# v9.56.0 (Thu Oct 08 2020)
+
+#### 🚀 Enhancement
+
+- feat: run pod lib lint during dryrun [#1576](https://github.com/intuit/auto/pull/1576) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- feat: run pod lib lint during dryrun ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.54.5 (Tue Oct 06 2020)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,16 @@
+# v9.56.0 (Thu Oct 08 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/cocoapods`
+  - feat: run pod lib lint during dryrun [#1576](https://github.com/intuit/auto/pull/1576) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v9.55.0 (Wed Oct 07 2020)
 
 #### 🚀 Enhancement
