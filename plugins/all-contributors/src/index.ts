@@ -110,7 +110,7 @@ interface AllContributorsRc {
   /** All of the current contributors */
   contributors: Contributor[];
   /** Files to generate a markdown table of contributors in */
-  files: string[];
+  files?: string[];
 }
 
 const defaultOptions: IAllContributorsPluginOptions = {
@@ -505,7 +505,38 @@ export default class AllContributorsPlugin implements IPlugin {
             fs.writeFileSync(file, newReadMe);
           })
         );
-      } else {
+      }      else if (config.contributors.length)  {
+        // if the all-contributors has not been generated ... generate it
+          try {
+            // test if the first file in the list of files has been init
+            const file = path.join(process.cwd(), (config.files? config.files[0] : "README.md"));
+            
+            const displayFile = file? fs.readFileSync(file, 'utf8'): '';
+
+            const notInitalized = displayFile.indexOf(
+              '<!-- markdownlint-disable -->\n<!-- markdownlint-restore -->'
+            );
+
+            if (notInitalized && file) {
+              (config.files || ["README.md"]).map(async (file) => {
+                const oldReadMe = fs.readFileSync(file, {
+                  encoding: "utf-8",
+                });
+                const newReadMe = await generateReadme(
+                  {
+                    contributorsPerLine: 7,
+                    imageSize: 100,
+                    ...config,
+                  },
+                  config.contributors,
+                  oldReadMe
+                );
+                fs.writeFileSync(file, newReadMe);
+              });
+            }
+          } catch {}
+      }
+      else {
         auto.logger.verbose.warn(`"${username}" had no new contributions...`);
       }
     }
