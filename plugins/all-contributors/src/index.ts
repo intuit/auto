@@ -532,7 +532,7 @@ export default class AllContributorsPlugin implements IPlugin {
         );
 
         if (notInitalized && file) {
-            await generateContributorReadme(config, undefined)
+            await generateContributorReadme(config, config.contributors)
          
         }
       } catch { }
