@@ -28,9 +28,7 @@ yarn add -D @auto-it/cocoapods
         // Optional, the specs repo to push to
         "specsRepo": "https://github.com/intuit/TestSpecs.git",
         // Optional, flags to pass to the `pod repo push` command
-        "flags": [
-          "--sources=https://github.com/SpecRepo.git"
-        ],
+        "flags": ["--sources=https://github.com/SpecRepo.git"],
         // Optional, specify a different executable for `pod`
         "podCommand": "bundle exec pod"
       }
@@ -47,6 +45,7 @@ yarn add -D @auto-it/cocoapods
 - The machine running this plugin must have the [CocoaPods](https://cocoapods.org/) `pod` CLI installed already, or `podCommand` specified in your plugin configuration.
 - Your `podspec` file must pass `pod lib lint` in order for publishing to a Specs repository to work.
   - All warnings and errors must be addressed before attempting to push to a Specs repository.
+- Using the logging flags with Auto (`auto -v`, `auto -vv`, `auto -q`) will also add the verbose or silent flags to the CocoaPod commands.
 
 ### Pushing to the CocoaPods Trunk
 
