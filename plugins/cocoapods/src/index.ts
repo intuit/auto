@@ -123,6 +123,12 @@ export default class CocoapodsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const isQuiet = auto.logger.logLevel === "quiet";
+    const isVerbose =
+      auto.logger.logLevel === "verbose" ||
+      auto.logger.logLevel === "veryVerbose";
+    const podLogLevel = isQuiet ? ["--silent"] : isVerbose ? ["--verbose"] : [];
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
@@ -176,6 +182,7 @@ export default class CocoapodsPlugin implements IPlugin {
           "push",
           ...(this.options.flags || []),
           this.options.podspecPath,
+          ...podLogLevel,
         ]);
         return;
       }
@@ -193,6 +200,7 @@ export default class CocoapodsPlugin implements IPlugin {
             "repo",
             "remove",
             "autoPublishRepo",
+            ...podLogLevel,
           ]);
         }
       } catch (error) {
@@ -208,6 +216,7 @@ export default class CocoapodsPlugin implements IPlugin {
           "add",
           "autoPublishRepo",
           this.options.specsRepo,
+          ...podLogLevel,
         ]);
 
         auto.logger.log.info(
@@ -221,6 +230,7 @@ export default class CocoapodsPlugin implements IPlugin {
           ...(this.options.flags || []),
           "autoPublishRepo",
           this.options.podspecPath,
+          ...podLogLevel,
         ]);
       } catch (error) {
         auto.logger.log.error(
@@ -235,6 +245,7 @@ export default class CocoapodsPlugin implements IPlugin {
           "repo",
           "remove",
           "autoPublishRepo",
+          ...podLogLevel,
         ]);
       }
     });

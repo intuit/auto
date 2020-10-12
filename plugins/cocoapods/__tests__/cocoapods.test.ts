@@ -257,6 +257,9 @@ describe("Cocoapods Plugin", () => {
     test("should push to trunk if no specsRepo in options with flags", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
+      const logger = dummyLog();
+      logger.logLevel = "verbose";
+
       const plugin = new CocoapodsPlugin({
         ...options,
         flags: ["--sources", "someOtherSpecsRepo"],
@@ -264,7 +267,7 @@ describe("Cocoapods Plugin", () => {
       const hook = makeHooks();
       plugin.apply({
         hooks: hook,
-        logger: dummyLog(),
+        logger,
         prefixRelease,
       } as Auto.Auto);
 
@@ -277,11 +280,15 @@ describe("Cocoapods Plugin", () => {
         "--sources",
         "someOtherSpecsRepo",
         "./Test.podspec",
+        "--verbose",
       ]);
     });
 
     test("should push to specs repo if specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
+
+      const logger = dummyLog();
+      logger.logLevel = "quiet";
 
       const plugin = new CocoapodsPlugin({
         ...options,
@@ -290,7 +297,7 @@ describe("Cocoapods Plugin", () => {
       const hook = makeHooks();
       plugin.apply({
         hooks: hook,
-        logger: dummyLog(),
+        logger,
         prefixRelease,
       } as Auto.Auto);
 
@@ -303,22 +310,28 @@ describe("Cocoapods Plugin", () => {
         "add",
         "autoPublishRepo",
         "someSpecsRepo",
+        "--silent",
       ]);
       expect(exec).toHaveBeenNthCalledWith(4, "pod", [
         "repo",
         "push",
         "autoPublishRepo",
         "./Test.podspec",
+        "--silent",
       ]);
       expect(exec).toHaveBeenNthCalledWith(5, "pod", [
         "repo",
         "remove",
         "autoPublishRepo",
+        "--silent",
       ]);
     });
 
     test("should push to specs repo if specsRepo in options with flags", async () => {
       mockPodspec(specWithVersion("0.0.1"));
+
+      const logger = dummyLog();
+      logger.logLevel = "veryVerbose";
 
       const plugin = new CocoapodsPlugin({
         ...options,
@@ -328,7 +341,7 @@ describe("Cocoapods Plugin", () => {
       const hook = makeHooks();
       plugin.apply({
         hooks: hook,
-        logger: dummyLog(),
+        logger,
         prefixRelease,
       } as Auto.Auto);
 
@@ -341,6 +354,7 @@ describe("Cocoapods Plugin", () => {
         "add",
         "autoPublishRepo",
         "someSpecsRepo",
+        "--verbose",
       ]);
       expect(exec).toHaveBeenNthCalledWith(4, "pod", [
         "repo",
@@ -349,13 +363,16 @@ describe("Cocoapods Plugin", () => {
         "someOtherSpecsRepo",
         "autoPublishRepo",
         "./Test.podspec",
+        "--verbose",
       ]);
       expect(exec).toHaveBeenNthCalledWith(5, "pod", [
         "repo",
         "remove",
         "autoPublishRepo",
+        "--verbose",
       ]);
     });
+
     test("should delete autoPublishRepo if it exists and push to specs repo if specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
