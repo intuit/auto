@@ -20,7 +20,6 @@ To generate incoming webhook in microsoft teams, checkout [this blog](https://me
 ```json
 {
   "plugins": [
-    // or
     ["microsoft-teams", { "url": "https://url-to-your-hook.com" }],
     // or
     ["microsoft-teams", "https://url-to-your-hook.com"],
