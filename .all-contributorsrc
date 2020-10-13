@@ -397,6 +397,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "dcortright",
+      "name": "Drew Cortright",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/14990112?v=4",
+      "profile": "https://github.com/dcortright",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
