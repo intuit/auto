@@ -1,3 +1,24 @@
+# v9.58.0 (Tue Oct 13 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Drew Cortright ([@dcortright](https://github.com/dcortright)), for all your work!
+
+#### 🚀 Enhancement
+
+- feat: adding cocoapod verbose logging [#1580](https://github.com/intuit/auto/pull/1580) ([@dcortright](https://github.com/dcortright))
+
+#### 🐛 Bug Fix
+
+- docs: updating README.md for CocoaPod plugin ([@dcortright](https://github.com/dcortright))
+- feat: adding cocoapod verbose logging ([@dcortright](https://github.com/dcortright))
+
+#### Authors: 1
+
+- Drew Cortright ([@dcortright](https://github.com/dcortright))
+
+---
+
 # v9.56.0 (Thu Oct 08 2020)
 
 #### 🚀 Enhancement

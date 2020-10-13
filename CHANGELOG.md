@@ -1,3 +1,20 @@
+# v9.58.0 (Tue Oct 13 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Drew Cortright ([@dcortright](https://github.com/dcortright)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/cocoapods`
+  - feat: adding cocoapod verbose logging [#1580](https://github.com/intuit/auto/pull/1580) ([@dcortright](https://github.com/dcortright))
+
+#### Authors: 1
+
+- Drew Cortright ([@dcortright](https://github.com/dcortright))
+
+---
+
 # v9.57.0 (Thu Oct 08 2020)
 
 :tada: This release contains work from a new contributor! :tada:
