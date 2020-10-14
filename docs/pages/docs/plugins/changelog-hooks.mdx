@@ -9,6 +9,7 @@ The hooks it provides allow you to customize everything about how the changelog 
 - [onCreateChangelog](#oncreatechangelog)
 - [addToBody](#addtobody)
 - [renderChangelogLine](#renderchangelogline)
+- [sortChangelogLines](#sortchangeloglines)
 - [renderChangelogTitle](#renderchangelogtitle)
 - [renderChangelogAuthor](#renderchangelogauthor)
 - [renderChangelogAuthorLine](#renderchangelogauthorline)
@@ -61,6 +62,22 @@ auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
     'Stars',
     async (commit, line) =>
       [commit, `${line.replace('-', ':star:')}\n`]
+  );
+);
+```
+
+## sortChangelogLines
+
+Change how the changelog lines are sorted
+You must return the lines from this hook.
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.sortChangelogLines.tapPromise(
+    'Stars',
+    async (lines) => {
+      // sorting logic
+    }
   );
 );
 ```

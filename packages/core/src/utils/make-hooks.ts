@@ -29,7 +29,7 @@ export const makeHooks = (): IAutoHooks => ({
   getAuthor: new AsyncSeriesBailHook(),
   getPreviousVersion: new AsyncSeriesBailHook(),
   getRepository: new AsyncSeriesBailHook(),
-  prCheck: new AsyncSeriesBailHook(['prInformation']),
+  prCheck: new AsyncSeriesBailHook(["prInformation"]),
   version: new AsyncParallelHook(["version"]),
   afterVersion: new AsyncParallelHook(),
   publish: new AsyncParallelHook(["version"]),
@@ -63,6 +63,7 @@ export const makeInteractiveInitHooks = (): InteractiveInitHooks => ({
 /** Make the hooks for "Changelog" */
 export const makeChangelogHooks = (): IChangelogHooks => ({
   addToBody: new AsyncSeriesWaterfallHook(["notes", "commits"]),
+  sortChangelogLines: new AsyncSeriesWaterfallHook(["lines"]),
   renderChangelogLine: new AsyncSeriesWaterfallHook(["lineData"]),
   renderChangelogTitle: new AsyncSeriesBailHook(["commits", "lineRender"]),
   renderChangelogAuthor: new AsyncSeriesBailHook([
