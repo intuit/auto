@@ -19,9 +19,13 @@ jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  execPromise(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/get-lerna-packages",
+  () => (...args: any[]) => getLernaPackages(...args)
+);
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => execPromise(...args)
 );
 jest.mock("fs", () => ({
   // @ts-ignore
@@ -55,7 +59,7 @@ const commitsPromise = logParse.normalizeCommits([
   }),
 ]);
 
-test("should create sections for packages", async () => {
+test("should group sections for packages", async () => {
   let changed = 0;
 
   getLernaPackages.mockImplementation(async () =>
@@ -88,6 +92,70 @@ test("should create sections for packages", async () => {
     }
 
     return "packages/@foobar/release/README.md\npackages/@foobar/party/package.jso";
+  });
+
+  readFileSync.mockReturnValue("{}");
+
+  const plugin = new NpmPlugin();
+  const hooks = makeHooks();
+  const changelog = new Changelog(dummyLog(), {
+    owner: "andrew",
+    repo: "test",
+    baseUrl: "https://github.custom.com/",
+    labels: defaultLabels,
+    baseBranch: "master",
+    prereleaseBranches: ["next"],
+  });
+
+  plugin.apply({
+    config: { prereleaseBranches: ["next"] },
+    hooks,
+    logger: dummyLog(),
+  } as Auto.Auto);
+  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
+  changelog.loadDefaultHooks();
+
+  const commits = await commitsPromise;
+  expect(await changelog.generateReleaseNotes(commits)).toMatchSnapshot();
+});
+
+test("should create sections for packages", async () => {
+  let changed = 0;
+
+  getLernaPackages.mockImplementation(async () =>
+    Promise.resolve([
+      {
+        path: "packages/@foobar/release",
+        name: "@foobar/release",
+        version: "1.0.0",
+      },
+      {
+        path: "packages/@foobar/party",
+        name: "@foobar/party",
+        version: "1.0.0",
+      },
+    ])
+  );
+  exec.mockImplementation((cmd: string) => {
+    if (!cmd.startsWith("git --no-pager show")) {
+      return;
+    }
+
+    changed++;
+
+    if (changed === 3) {
+      return "";
+    }
+
+    if (changed === 4) {
+      return "packages/@foobar/release/README.md";
+    }
+
+    if (changed === 2) {
+      return "packages/@foobar/release/README.md";
+    }
+
+    return "packages/@foobar/party/package.json";
   });
 
   readFileSync.mockReturnValue("{}");
