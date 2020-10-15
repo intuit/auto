@@ -1,3 +1,19 @@
+# v9.59.0 (Wed Oct 14 2020)
+
+#### 🚀 Enhancement
+
+- Group monorepo changelog lines if possivle [#1589](https://github.com/intuit/auto/pull/1589) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add sortChangelogLines hook ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.55.0 (Wed Oct 07 2020)
 
 #### 🚀 Enhancement

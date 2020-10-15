@@ -1,3 +1,16 @@
+# v9.59.0 (Wed Oct 14 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Group monorepo changelog lines if possivle [#1589](https://github.com/intuit/auto/pull/1589) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.58.0 (Tue Oct 13 2020)
 
 :tada: This release contains work from a new contributor! :tada:

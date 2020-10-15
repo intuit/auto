@@ -1,3 +1,15 @@
+# v9.59.0 (Wed Oct 14 2020)
+
+#### 🚀 Enhancement
+
+- Group monorepo changelog lines if possivle [#1589](https://github.com/intuit/auto/pull/1589) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.57.0 (Thu Oct 08 2020)
 
 :tada: This release contains work from a new contributor! :tada:
