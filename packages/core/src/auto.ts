@@ -595,7 +595,10 @@ export default class Auto {
       return configuredRemote;
     }
 
-    const { html_url } = (await this.git.getProject()) || { html_url: "" };
+    const { html_url, ssh_url } = (await this.git.getProject()) || {
+      html_url: "",
+      ssh_url: "",
+    };
 
     const GIT_TOKENS: Record<string, string | undefined> = {
       // GitHub Actions require the "x-access-token:" prefix for git access
@@ -625,6 +628,11 @@ export default class Auto {
     if (html_url && (await this.git.verifyAuth(html_url))) {
       this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
+    }
+
+    if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
+      this.logger.veryVerbose.note("Using ssh URL as remote");
+      return ssh_url;
     }
 
     this.logger.veryVerbose.note("Using remote set in environment");
@@ -1487,7 +1495,10 @@ export default class Auto {
       releaseType = "next";
     }
 
-    await this.hooks.beforeShipIt.promise({ releaseType, dryRun: options.dryRun });
+    await this.hooks.beforeShipIt.promise({
+      releaseType,
+      dryRun: options.dryRun,
+    });
 
     if (releaseType === "latest") {
       publishInfo = await this.latest(options);
