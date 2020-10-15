@@ -1,3 +1,16 @@
+# v9.59.1 (Thu Oct 15 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gh-pages`
+  - Add better verbose logging in gh-pages plugin [#1591](https://github.com/intuit/auto/pull/1591) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.59.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement
