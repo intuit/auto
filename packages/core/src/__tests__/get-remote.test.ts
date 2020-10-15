@@ -23,6 +23,8 @@ describe("getRemote", () => {
   test("should use ssh_url if we can push", async () => {
     const auto = new Auto();
     const ssh_url = "git@github.com:fake/remote.git";
+    process.env.GH_TOKEN = undefined;
+    process.env.GITHUB_ACTION = undefined;
     auto.git = {
       verifyAuth: (url: string) => url === ssh_url,
       getProject: () => Promise.resolve({ ssh_url }),
