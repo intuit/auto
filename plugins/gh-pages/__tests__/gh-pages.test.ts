@@ -130,6 +130,25 @@ describe("Gh-Pages Plugin", () => {
       expect(execSpy).toHaveBeenCalledWith("npx", [
         "push-dir",
         "--cleanup",
+        false,
+        "--remote=undefined",
+        "--dir=test",
+        "--branch=gh-pages",
+        '--message="Update docs [skip ci]"',
+      ]);
+    });
+
+    test("should use verbose logs", async () => {
+      const logger = dummyLog();
+      logger.logLevel = "verbose";
+      const hooks = createTest({ dir: "test" }, { logger });
+      await hooks.afterRelease.promise({
+        response: { data: { prerelease: false } },
+      } as any);
+      expect(execSpy).toHaveBeenCalledWith("npx", [
+        "push-dir",
+        "--cleanup",
+        "--verbose",
         "--remote=undefined",
         "--dir=test",
         "--branch=gh-pages",
