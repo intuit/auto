@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/exec",
-  "version": "9.58.0",
+  "version": "9.59.0",
   "main": "dist/index.js",
   "description": "Tap into select hooks and run a command on the terminal",
   "license": "MIT",
