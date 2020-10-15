@@ -735,6 +735,45 @@ export default class NPMPlugin implements IPlugin {
             return [commit, [`- ${section}`, `  ${line}`].join("\n")];
           }
         );
+
+        changelog.hooks.sortChangelogLines.tap(
+          "NPM - Monorepo Grouping",
+          (lines) => {
+            if (!isMonorepo() || !this.monorepoChangelog) {
+              return lines;
+            }
+
+            const lineMap: Record<string, string[]> = {};
+
+            lines.forEach((line) => {
+              const monoRepoLine = line.split("\n");
+
+              if (monoRepoLine.length === 1) {
+                if (!lineMap.root) {
+                  lineMap.root = [];
+                }
+
+                lineMap.root.push(line);
+              } else {
+                const [packageName, change] = monoRepoLine;
+
+                if (!lineMap[packageName]) {
+                  lineMap[packageName] = [];
+                }
+
+                lineMap[packageName].push(change);
+              }
+            });
+
+            return Object.entries(lineMap).map(([packageName, changes]) => {
+              if (packageName === "root") {
+                return changes.join("\n");
+              }
+
+              return [packageName, ...changes].join("\n");
+            });
+          }
+        );
       }
     );
 

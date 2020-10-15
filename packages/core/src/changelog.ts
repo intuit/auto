@@ -32,6 +32,8 @@ interface ICommitSplit {
 export interface IChangelogHooks {
   /** Change how the changelog renders lines. */
   renderChangelogLine: AsyncSeriesWaterfallHook<[[IExtendedCommit, string]]>;
+  /** Sort the lines in a changelog section. */
+  sortChangelogLines: AsyncSeriesWaterfallHook<[string[]]>;
   /** Change how the changelog renders titles */
   renderChangelogTitle: AsyncSeriesBailHook<
     [string, { [label: string]: string }],
@@ -401,12 +403,11 @@ export default class Changelog {
           })
         );
 
-        return [
-          title as string,
-          [...lines].sort(
-            (a, b) => a.split("\n").length - b.split("\n").length
-          ),
-        ] as [string, string[]];
+        const sortedLines = await this.hooks.sortChangelogLines.promise(
+          [...lines].sort((a, b) => a.split("\n").length - b.split("\n").length)
+        );
+
+        return [title || "", sortedLines] as const;
       })
     );
 
