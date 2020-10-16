@@ -46,10 +46,13 @@ describe("getRemote", () => {
   test("should put token in url", async () => {
     const auto = new Auto();
     const html_url = "https://github.com/fake/remote";
+    const permissions = {
+      push: true,
+    };
     process.env.GH_TOKEN = "XXXX";
     auto.git = {
       verifyAuth: (url: string) => url.includes("XXXX"),
-      getProject: () => Promise.resolve({ html_url }),
+      getProject: () => Promise.resolve({ html_url, permissions }),
     } as any;
     // @ts-ignore
     expect(await auto.getRemote()).toBe("https://XXXX@github.com/fake/remote");
@@ -58,11 +61,14 @@ describe("getRemote", () => {
   test("should GitHub action user in url", async () => {
     const auto = new Auto();
     const html_url = "https://github.com/fake/remote";
+    const permissions = {
+      push: true,
+    };
     process.env.GITHUB_TOKEN = "XXXX";
     process.env.GITHUB_ACTION = "true";
     auto.git = {
       verifyAuth: (url: string) => url.includes("x-access-token:"),
-      getProject: () => Promise.resolve({ html_url }),
+      getProject: () => Promise.resolve({ html_url, permissions }),
     } as any;
     // @ts-ignore
     expect(await auto.getRemote()).toBe(
