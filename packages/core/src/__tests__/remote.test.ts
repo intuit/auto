@@ -106,7 +106,7 @@ describe("remote parsing", () => {
 
     execSpy.mockReturnValue(Promise.resolve(defaultRemote));
     auto.git = {
-      getProject: () => ({ html_url }),
+      getProject: () => ({ html_url, permissions: { push: true } }),
       verifyAuth: (url: string) => url !== html_url,
     } as any;
 
