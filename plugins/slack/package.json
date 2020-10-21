@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@atomist/slack-messages": "~1.1.0",
+    "@atomist/slack-messages": "~1.2.0",
     "@auto-it/core": "link:../../packages/core",
     "@octokit/rest": "^18.0.0",
     "fp-ts": "^2.5.3",
