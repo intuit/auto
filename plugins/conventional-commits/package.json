@@ -38,7 +38,16 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "parse-commit-message": "4.0.0",
+    "conventional-changelog-core": "^4.2.0",
+    "conventional-changelog-preset-loader": "^2.3.4",
+    "conventional-commits-parser": "^3.1.0",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
     "tslib": "2.0.1"
+  },
+  "devDependencies": {
+    "@types/conventional-changelog-core": "^4.1.1",
+    "@types/conventional-changelog-preset-loader": "^2.3.1",
+    "@types/conventional-commits-parser": "^3.0.0"
   }
 }

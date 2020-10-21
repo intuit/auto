@@ -52,7 +52,29 @@ test("should add correct semver label to commit", async () => {
   const commit = makeCommitFromMsg("fix: normal commit with no bump");
   expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
     ...commit,
-    labels: ["patch", "performance"],
+    labels: ["patch"],
+  });
+});
+
+test("should add correct semver label to commit - feat", async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+  } as Auto);
+
+  const logParseHooks = makeLogParseHooks();
+  autoHooks.onCreateLogParse.call({
+    hooks: logParseHooks,
+  } as LogParse);
+
+  const commit = makeCommitFromMsg("feat: normal commit with no bump");
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
+    ...commit,
+    labels: ["minor"],
   });
 });
 
@@ -72,6 +94,28 @@ test("should add major semver label to commit", async () => {
   } as LogParse);
 
   const commit = makeCommitFromMsg("BREAKING: normal commit with no bump");
+  expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
+    ...commit,
+    labels: ["major"],
+  });
+});
+
+test("should add major semver label to commit - !", async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  conventionalCommitsPlugin.apply({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+  } as Auto);
+
+  const logParseHooks = makeLogParseHooks();
+  autoHooks.onCreateLogParse.call({
+    hooks: logParseHooks,
+  } as LogParse);
+
+  const commit = makeCommitFromMsg("feat!: normal commit with no bump");
   expect(await logParseHooks.parseCommit.promise({ ...commit })).toStrictEqual({
     ...commit,
     labels: ["major"],
@@ -207,12 +251,7 @@ test("should add conventional commit label if none/skip", async () => {
   autoHooks.onCreateLogParse.call(logParse);
 
   const result = await logParse.normalizeCommit(commit);
-  expect(result?.labels).toStrictEqual([
-    "skip-release",
-    "internal",
-    "patch",
-    "performance",
-  ]);
+  expect(result?.labels).toStrictEqual(["skip-release", "internal", "patch"]);
 });
 
 test("should not add skip when a non skip commit is present with a skip commit", async () => {
@@ -244,7 +283,7 @@ test("should not add skip when a non skip commit is present with a skip commit",
   autoHooks.onCreateLogParse.call(logParse);
 
   const result = await logParse.normalizeCommit(commit);
-  expect(result?.labels).toStrictEqual(["patch", "performance"]);
+  expect(result?.labels).toStrictEqual(["patch"]);
 });
 
 test("should skip when not a fix/feat/breaking change commit", async () => {
