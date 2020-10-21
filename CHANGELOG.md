@@ -1,3 +1,28 @@
+# v9.60.0 (Wed Oct 21 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/conventional-commits`
+  - Support `!` for conventional commits and allow for any conventional-changelog preset [#1599](https://github.com/intuit/auto/pull/1599) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump tinycolor2 from 1.4.1 to 1.4.2 [#1582](https://github.com/intuit/auto/pull/1582) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.11.0 to 6.13.0 [#1594](https://github.com/intuit/auto/pull/1594) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.3.0 to 4.5.0 [#1595](https://github.com/intuit/auto/pull/1595) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.3.0 to 10.4.2 [#1596](https://github.com/intuit/auto/pull/1596) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.3.3 to 30.7.3 [#1598](https://github.com/intuit/auto/pull/1598) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.3.0 to 4.4.0 [#1565](https://github.com/intuit/auto/pull/1565) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/slack`
+  - Bump @atomist/slack-messages from 1.1.1 to 1.2.0 [#1583](https://github.com/intuit/auto/pull/1583) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.59.1 (Thu Oct 15 2020)
 
 #### 🐛 Bug Fix

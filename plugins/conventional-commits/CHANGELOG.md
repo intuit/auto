@@ -1,3 +1,24 @@
+# v9.60.0 (Wed Oct 21 2020)
+
+#### 🚀 Enhancement
+
+- Support `!` for conventional commits and allow for any conventional-changelog preset [#1599](https://github.com/intuit/auto/pull/1599) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- match conventional commit spec more and allow for conventional changelog presets ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/parser from 4.3.0 to 4.4.0 [#1565](https://github.com/intuit/auto/pull/1565) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.59.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement

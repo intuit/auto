@@ -1,3 +1,21 @@
+# v9.60.0 (Wed Oct 21 2020)
+
+#### 🐛 Bug Fix
+
+- Bump @atomist/slack-messages from 1.1.1 to 1.2.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump tinycolor2 from 1.4.1 to 1.4.2 [#1582](https://github.com/intuit/auto/pull/1582) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @atomist/slack-messages from 1.1.1 to 1.2.0 [#1583](https://github.com/intuit/auto/pull/1583) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.3.0 to 4.4.0 [#1565](https://github.com/intuit/auto/pull/1565) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v9.59.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement
