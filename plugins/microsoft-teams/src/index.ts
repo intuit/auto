@@ -1,7 +1,7 @@
 import { HttpsProxyAgent } from "https-proxy-agent";
 
 import { Auto, InteractiveInit } from "@auto-it/core";
-import SlackPlugin from "@auto-it/slack";
+import SlackPlugin, { ISlackPluginOptions } from "@auto-it/slack";
 import fetch from "node-fetch";
 
 /** Post your release notes to Slack during `auto release` */
@@ -9,12 +9,24 @@ export default class MicrosoftTeamsPlugin extends SlackPlugin {
   /** The name of the plugin */
   name = "microsoft-teams";
 
+  /** Initialize the plugin with it's options */
+  constructor(options: ISlackPluginOptions | string = {}) {
+    super(
+      typeof options === "string"
+        ? options
+        : {
+            ...options,
+            url: process.env.MICROSOFT_TEAMS_WEBHOOK_URL || options.url || "",
+          }
+    );
+  }
+
   /** Custom initialization for this plugin */
   init(initializer: InteractiveInit) {
     initializer.hooks.createEnv.tapPromise(this.name, async (vars) => [
       ...vars,
       {
-        variable: "SLACK_WEBHOOK_URL",
+        variable: "MICROSOFT_TEAMS_WEBHOOK_URL",
         message: "What is the root url of your slack hook? ()",
       },
     ]);
