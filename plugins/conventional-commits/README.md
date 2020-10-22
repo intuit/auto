@@ -6,7 +6,7 @@ The default behavior extends the [conventional commits spec](https://www.convent
 
 - Type `fix:` => `patch`
 - Type `feat:` => `minor`
-- Type `BREAKING:` => `minor`
+- Type `BREAKING:` => `major`
 - A `!` in the type indicated a breaking change
 - `BREAKING CHANGE` in the footer indicates a breaking change
 - All other types are considered `skip-release`
