@@ -1,3 +1,16 @@
+# v9.60.1 (Fri Oct 23 2020)
+
+#### 🐛 Bug Fix
+
+- fix parsing PR body when it's empty [#1603](https://github.com/intuit/auto/pull/1603) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix parsing PR body when it's empty ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.59.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement

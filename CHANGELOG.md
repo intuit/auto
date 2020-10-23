@@ -1,3 +1,26 @@
+# v9.60.1 (Fri Oct 23 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Philippe Boyd ([@philippeboyd](https://github.com/philippeboyd)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/released`
+  - fix parsing PR body when it's empty [#1603](https://github.com/intuit/auto/pull/1603) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- `@auto-it/conventional-commits`
+  - doc: breaking change should bump major not minor [#1601](https://github.com/intuit/auto/pull/1601) ([@philippeboyd](https://github.com/philippeboyd))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Philippe Boyd ([@philippeboyd](https://github.com/philippeboyd))
+
+---
+
 # v9.60.0 (Wed Oct 21 2020)
 
 #### 🚀 Enhancement
