@@ -220,6 +220,37 @@ describe("release label plugin", () => {
     );
   });
 
+  test("should work with a null PR body", async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    getPr.mockReturnValueOnce({ data: { body: null, head: { ref: "next" } } });
+    const commit = makeCommitFromMsg("normal commit with no bump (#123)");
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(comment).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message:
+          ":rocket: PR was released in [`v1.0.0`](https://git.hub/some/project/releases/v1.0.0) :rocket:",
+      })
+    );
+  });
+
   test("should comment and label PRs with custom message", async () => {
     const releasedLabel = new ReleasedLabelPlugin({
       message:
