@@ -136,7 +136,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
         releases,
       });
 
-      pr.data.body.split("\n").map((line) => messages.push(line));
+      pr.data.body?.split("\n").map((line) => messages.push(line));
 
       const commitsInPr = await auto.git!.getCommitsForPR(
         commit.pullRequest.number
