@@ -315,62 +315,56 @@ export default class AllContributorsPlugin implements IPlugin {
       });
     });
 
-    auto.hooks.afterAddToChangelog.tapPromise(
-      this.name,
-      async ({ commits }) => {
-        const rootDir = process.cwd();
-        // Always do the root package
-        let packages = [{ path: rootDir, name: "root-package" }];
+    auto.hooks.afterChangelog.tapPromise(this.name, async ({ commits }) => {
+      const rootDir = process.cwd();
+      // Always do the root package
+      let packages = [{ path: rootDir, name: "root-package" }];
 
-        try {
-          // Try to get sub-packages
-          packages = [...packages, ...(await getLernaPackages())];
-        } catch (error) {}
+      try {
+        // Try to get sub-packages
+        packages = [...packages, ...(await getLernaPackages())];
+      } catch (error) {}
 
-        // Go through each package and update code contributions
-        await packages.reduce(async (last, { name, path }) => {
-          // Cannot run git operations in parallel
-          await last;
+      // Go through each package and update code contributions
+      await packages.reduce(async (last, { name, path }) => {
+        // Cannot run git operations in parallel
+        await last;
 
-          auto.logger.verbose.info(`Updating contributors for: ${name}`);
+        auto.logger.verbose.info(`Updating contributors for: ${name}`);
 
-          const includedCommits = commits.filter((commit) =>
-            commit.files.some((file) => inFolder(path, file))
+        const includedCommits = commits.filter((commit) =>
+          commit.files.some((file) => inFolder(path, file))
+        );
+
+        if (includedCommits.length > 0) {
+          auto.logger.verbose.success(
+            `${name} has ${includedCommits.length} new commits.`
+          );
+          auto.logger.veryVerbose.info(
+            `With commits: ${JSON.stringify(includedCommits, null, 2)}`
           );
 
-          if (includedCommits.length > 0) {
-            auto.logger.verbose.success(
-              `${name} has ${includedCommits.length} new commits.`
-            );
-            auto.logger.veryVerbose.info(
-              `With commits: ${JSON.stringify(includedCommits, null, 2)}`
-            );
-
-            process.chdir(path);
-            await this.updateContributors(auto, includedCommits);
-          }
-        }, Promise.resolve());
-
-        process.chdir(rootDir);
-        const changedFiles = await execPromise("git", [
-          "status",
-          "--porcelain",
-        ]);
-
-        if (changedFiles) {
-          await execPromise("git", ["add", "README.md"]);
-          await execPromise("git", ["add", ".all-contributorsrc"]);
-          await on(execPromise("git", ["add", "**/README.md"]));
-          await on(execPromise("git", ["add", "**/.all-contributorsrc"]));
-          await execPromise("git", [
-            "commit",
-            "--no-verify",
-            "-m",
-            '"Update contributors [skip ci]"',
-          ]);
+          process.chdir(path);
+          await this.updateContributors(auto, includedCommits);
         }
+      }, Promise.resolve());
+
+      process.chdir(rootDir);
+      const changedFiles = await execPromise("git", ["status", "--porcelain"]);
+
+      if (changedFiles) {
+        await execPromise("git", ["add", "README.md"]);
+        await execPromise("git", ["add", ".all-contributorsrc"]);
+        await on(execPromise("git", ["add", "**/README.md"]));
+        await on(execPromise("git", ["add", "**/.all-contributorsrc"]));
+        await execPromise("git", [
+          "commit",
+          "--no-verify",
+          "-m",
+          '"Update contributors [skip ci]"',
+        ]);
       }
-    );
+    });
 
     auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
       logParse.hooks.parseCommit.tapPromise(this.name, async (commit) => {

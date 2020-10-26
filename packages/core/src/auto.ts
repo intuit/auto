@@ -147,7 +147,7 @@ export interface IAutoHooks {
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
   beforeCommitChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`. */
-  afterAddToChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
+  afterChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<
     [
@@ -1763,7 +1763,7 @@ export default class Auto {
       this.logger.verbose.info("Committed new changelog.");
     }
 
-    await this.hooks.afterAddToChangelog.promise(context);
+    await this.hooks.afterChangelog.promise(context);
   }
 
   /** Make a release over a range of commits */

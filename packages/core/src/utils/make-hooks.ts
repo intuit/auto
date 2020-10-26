@@ -18,7 +18,7 @@ export const makeHooks = (): IAutoHooks => ({
   modifyConfig: new SyncWaterfallHook(["config"]),
   validateConfig: new AsyncSeriesBailHook(["name", "options"]),
   beforeShipIt: new AsyncSeriesHook(["context"]),
-  afterAddToChangelog: new AsyncSeriesHook(["context"]),
+  afterChangelog: new AsyncSeriesHook(["context"]),
   beforeCommitChangelog: new AsyncSeriesHook(["context"]),
   afterShipIt: new AsyncParallelHook(["version", "commits", "context"]),
   makeRelease: new AsyncSeriesBailHook(["releaseInfo"]),
