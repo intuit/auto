@@ -1323,17 +1323,34 @@ export default class NPMPlugin implements IPlugin {
       // Independent mode will create multiple releases on Github.
       // Each release will only contain the release notes for the
       // package + global changes.
-      if (!options.dryRun && isIndependent) {
-        auto.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
-
-        const changelog = await auto.release!.makeChangelog();
+      if (isIndependent) {
         const lernaPackages = await getLernaPackages();
         // Go through each new tag:
         const newTags = (
           await execPromise("git", ["tag", "--points-at", "HEAD"])
         ).split("\n");
 
-        this.monorepoChangelog = false;
+        if (options.dryRun) {
+          newTags.map(async (tag) => {
+            const lernaPackage = lernaPackages.find((p) =>
+              tag.includes(p.name)
+            );
+
+            if (!lernaPackage) {
+              return;
+            }
+
+            auto.logger.log.info(
+              `Would have created a release on GitHub for: ${tag}`
+            );
+          });
+
+          auto.logger.log.note(
+            "The above versions reflect the current git tags pointing at the HEAD commit. During the normal release flow these tags would reflect the latest released version."
+          );
+
+          return [];
+        }
 
         const packagePaths = lernaPackages.map((p) => p.path);
         const commitsAtRoot = options.commits.filter(
@@ -1342,6 +1359,9 @@ export default class NPMPlugin implements IPlugin {
               packagePaths.some((p) => inFolder(p, file))
             )
         );
+        auto.logger.log.info(`Releasing ${options.newVersion} to GitHub.`);
+        const changelog = await auto.release!.makeChangelog();
+        this.monorepoChangelog = false;
 
         const releases = await Promise.all(
           newTags.map(async (tag) => {

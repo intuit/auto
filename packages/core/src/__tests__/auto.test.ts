@@ -903,24 +903,6 @@ describe("Auto", () => {
       expect(exit).toHaveBeenCalled();
     });
 
-    test("doesn't try to overwrite releases", async () => {
-      const auto = new Auto({ ...defaults, plugins: [] });
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-
-      auto.hooks.getPreviousVersion.tap("test", () => "1.2.3");
-      const afterRelease = jest.fn();
-      auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.runRelease();
-      expect(afterRelease).not.toHaveBeenCalled();
-    });
-
     test("should publish with default options", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -1395,7 +1377,10 @@ describe("Auto", () => {
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
+      auto.git!.publish = () =>
+        Promise.resolve({
+          data: { html_url: "https://github.com/my/repo/release" },
+        } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
@@ -1415,7 +1400,10 @@ describe("Auto", () => {
       auto.remote = "https://github.com/intuit/auto";
 
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
+      auto.git!.publish = () =>
+        Promise.resolve({
+          data: { html_url: "https://github.com/my/repo/release" },
+        } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
