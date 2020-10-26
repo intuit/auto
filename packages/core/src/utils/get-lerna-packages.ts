@@ -1,6 +1,6 @@
 import execPromise from "./exec-promise";
 
-interface LernaPackage {
+export interface LernaPackage {
   /** Path to package */
   path: string;
   /** Name of package */

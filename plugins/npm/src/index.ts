@@ -13,6 +13,7 @@ import {
   determineNextVersion,
   getCurrentBranch,
   getLernaPackages,
+  LernaPackage,
   inFolder,
   execPromise,
   ILogger,
@@ -367,8 +368,13 @@ const makeMonorepoInstallList = (packageList: string[]) =>
     "```",
   ].join("\n");
 
-/** Find changed packages and create a tag for the current next release. */
-const tagIndependentNextReleases = async (
+interface IndependentPackageUpdate extends LernaPackage {
+  /** The packages new version */
+  newVersion: string;
+}
+
+/** Get an array of independent next version package updates */
+const getIndependentNextReleases = async (
   bump: SEMVER,
   prereleaseBranch: string
 ) => {
@@ -416,6 +422,21 @@ const tagIndependentNextReleases = async (
       };
     })
   );
+
+  return updates.filter((p): p is IndependentPackageUpdate => Boolean(p));
+};
+
+/** Find changed packages and create a tag for the current next release. */
+const tagIndependentNextReleases = async (
+  bump: SEMVER,
+  prereleaseBranch: string
+) => {
+  // Get all version updates
+  const updates = await getIndependentNextReleases(bump, prereleaseBranch);
+
+  if (!updates || !updates.length) {
+    return;
+  }
 
   // Update package.json
   await Promise.all(
@@ -1068,128 +1089,168 @@ export default class NPMPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
-      if (this.setRcToken) {
-        await setTokenOnCI(auto.logger);
-        auto.logger.verbose.info("Set CI NPM_TOKEN");
-      }
-
-      const lastRelease = await auto.git!.getLatestRelease();
-      const latestTag =
-        (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
-        (await getPreviousVersion(auto, prereleaseBranch));
-
-      if (isMonorepo()) {
-        auto.logger.verbose.info("Detected monorepo, using lerna");
-        const isIndependent = getLernaJson().version === "independent";
-        // It's hard to accurately predict how we should bump independent versions.
-        // So we manually make all the tags. (independent only)
-        const next = isIndependent
-          ? "from-git"
-          : determineNextVersion(
-              lastRelease,
-              latestTag,
-              bump,
-              prereleaseBranch
-            );
-
-        auto.logger.verbose.info({
-          lastRelease,
-          latestTag,
-          bump,
-          prereleaseBranch,
-          next,
-        });
-
-        if (isIndependent) {
-          await tagIndependentNextReleases(bump, prereleaseBranch);
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, bump, { dryRun }) => {
+        if (this.setRcToken) {
+          await setTokenOnCI(auto.logger);
+          auto.logger.verbose.info("Set CI NPM_TOKEN");
         }
 
-        await execPromise("npx", [
-          "lerna",
-          "publish",
-          next,
-          "--dist-tag",
-          prereleaseBranch,
-          "--preid",
-          prereleaseBranch,
-          "--no-push",
-          // you always want a next version to publish
-          !isIndependent && "--force-publish",
-          ...(await getRegistryArgs()),
-          ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
-          // skip prompts
-          "--yes",
-          // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
-          "--exact",
-          "--no-commit-hooks",
-          ...verboseArgs,
-        ]);
+        const lastRelease = await auto.git!.getLatestRelease();
+        const latestTag =
+          (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await getPreviousVersion(auto, prereleaseBranch));
 
-        // we do not want to commit the next version. this causes
-        // merge conflicts when merged into master. We also do not want
-        // to re-implement the magic lerna does. So instead we let lerna
-        // commit+tag the new version and roll back all the tags to the
-        // previous commit.
-        const tags = (
-          await execPromise("git", ["tag", "--points-at", "HEAD"])
-        ).split("\n");
-        await Promise.all(
-          // Move tags back one commit
-          tags.map((tag) =>
-            execPromise("git", ["tag", tag, "-f", "HEAD^", "-am", tag])
-          )
-        );
-        // Move branch back one commit
-        await execPromise("git", ["reset", "--hard", "HEAD~1"]);
+        if (isMonorepo()) {
+          auto.logger.verbose.info("Detected monorepo, using lerna");
+          const isIndependent = getLernaJson().version === "independent";
+          // It's hard to accurately predict how we should bump independent versions.
+          // So we manually make all the tags. (independent only)
+          const next = isIndependent
+            ? "from-git"
+            : determineNextVersion(
+                lastRelease,
+                latestTag,
+                bump,
+                prereleaseBranch
+              );
 
-        auto.logger.verbose.info("Successfully published next version");
-
-        preReleaseVersions = [
-          ...preReleaseVersions,
-          ...(isIndependent ? tags : tags.map(auto.prefixRelease)),
-        ];
-      } else {
-        auto.logger.verbose.info("Detected single npm package");
-
-        await execPromise("npm", [
-          "version",
-          determineNextVersion(lastRelease, latestTag, bump, prereleaseBranch),
-          // we do not want to commit the next version. this causes
-          // merge conflicts when merged into master
-          "--no-git-tag-version",
-          ...verboseArgs,
-        ]);
-
-        const { version, private: isPrivate } = await loadPackageJson();
-        await execPromise("git", [
-          "tag",
-          auto.prefixRelease(version!),
-          "-m",
-          `"Update version to ${version}"`,
-        ]);
-
-        if (isPrivate) {
-          auto.logger.log.info(
-            `Package private, skipping prerelease publish to npm.`
-          );
-        } else {
-          await execPromise("npm", [
-            "publish",
-            "--tag",
+          auto.logger.verbose.info({
+            lastRelease,
+            latestTag,
+            bump,
             prereleaseBranch,
+            next,
+          });
+
+          if (dryRun) {
+            if (isIndependent) {
+              const packageUpdates = await getIndependentNextReleases(
+                bump,
+                prereleaseBranch
+              );
+
+              if (!packageUpdates || !packageUpdates.length) {
+                auto.logger.log.warn(
+                  "No independent package version updates found. No canary releases would be made"
+                );
+              } else {
+                packageUpdates.forEach((p) =>
+                  preReleaseVersions.push(`${p.name}@${p.newVersion}`)
+                );
+              }
+            } else {
+              preReleaseVersions.push(next);
+            }
+
+            return preReleaseVersions;
+          }
+
+          if (isIndependent) {
+            await tagIndependentNextReleases(bump, prereleaseBranch);
+          }
+
+          await execPromise("npx", [
+            "lerna",
+            "publish",
+            next,
+            "--dist-tag",
+            prereleaseBranch,
+            "--preid",
+            prereleaseBranch,
+            "--no-push",
+            // you always want a next version to publish
+            !isIndependent && "--force-publish",
+            ...(await getRegistryArgs()),
+            ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+            // skip prompts
+            "--yes",
+            // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
+            "--exact",
+            "--no-commit-hooks",
             ...verboseArgs,
-            ...getLegacyAuthArgs(this.legacyAuth),
           ]);
+
+          // we do not want to commit the next version. this causes
+          // merge conflicts when merged into master. We also do not want
+          // to re-implement the magic lerna does. So instead we let lerna
+          // commit+tag the new version and roll back all the tags to the
+          // previous commit.
+          const tags = (
+            await execPromise("git", ["tag", "--points-at", "HEAD"])
+          ).split("\n");
+          await Promise.all(
+            // Move tags back one commit
+            tags.map((tag) =>
+              execPromise("git", ["tag", tag, "-f", "HEAD^", "-am", tag])
+            )
+          );
+          // Move branch back one commit
+          await execPromise("git", ["reset", "--hard", "HEAD~1"]);
+
+          auto.logger.verbose.info("Successfully published next version");
+
+          preReleaseVersions = [
+            ...preReleaseVersions,
+            ...(isIndependent ? tags : tags.map(auto.prefixRelease)),
+          ];
+        } else {
+          auto.logger.verbose.info("Detected single npm package");
+          const newVersion = determineNextVersion(
+            lastRelease,
+            latestTag,
+            bump,
+            prereleaseBranch
+          );
+
+          await execPromise("npm", [
+            "version",
+            newVersion,
+            // we do not want to commit the next version. this causes
+            // merge conflicts when merged into master
+            "--no-git-tag-version",
+            ...verboseArgs,
+          ]);
+
+          const { version, private: isPrivate } = await loadPackageJson();
+          const prefixedVersion = auto.prefixRelease(version!);
+
+          preReleaseVersions.push(prefixedVersion);
+
+          if (dryRun) {
+            await gitReset();
+            return preReleaseVersions;
+          }
+
+          await execPromise("git", [
+            "tag",
+            prefixedVersion,
+            "-m",
+            `"Update version to ${version}"`,
+          ]);
+
+          if (isPrivate) {
+            auto.logger.log.info(
+              `Package private, skipping prerelease publish to npm.`
+            );
+          } else {
+            await execPromise("npm", [
+              "publish",
+              "--tag",
+              prereleaseBranch,
+              ...verboseArgs,
+              ...getLegacyAuthArgs(this.legacyAuth),
+            ]);
+          }
+
+          auto.logger.verbose.info("Successfully published next version");
         }
 
-        auto.logger.verbose.info("Successfully published next version");
-        preReleaseVersions.push(auto.prefixRelease(version!));
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+        return preReleaseVersions;
       }
-
-      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
-      return preReleaseVersions;
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       const status = await execPromise("git", ["status", "--porcelain"]);

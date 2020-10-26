@@ -131,6 +131,8 @@ interface NextContext {
   fullReleaseNotes: string;
   /** The release notes for the last change merged to the next release */
   releaseNotes: string;
+  /** Do not actually do anything */
+  dryRun?: boolean;
 }
 
 type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
@@ -1305,49 +1307,19 @@ export default class Auto {
       }
     }
 
-    if (options.dryRun) {
-      const lastRelease = await this.git.getLatestRelease();
-      const current = await this.getCurrentVersion(lastRelease);
-
-      if (parse(current)) {
-        const prereleaseBranches =
-          this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
-        const branch = getCurrentBranch() || "";
-        const prereleaseBranch = prereleaseBranches.includes(branch)
-          ? branch
-          : prereleaseBranches[0];
-        const prerelease = determineNextVersion(
-          lastRelease,
-          current,
-          bump,
-          prereleaseBranch
-        );
-
-        if (options.quiet) {
-          console.log(prerelease);
-        } else {
-          this.logger.log.success(
-            `Would have created prerelease version: ${prerelease}`
-          );
-        }
-      } else if (options.quiet) {
-        // The following cases could use some work. They are really just there for lerna independent
-        console.log(`${bump} on ${lastTag}`);
-      } else {
-        this.logger.log.success(
-          `Would have created prerelease version with: ${bump} on ${lastTag}`
-        );
-      }
-
-      return { newVersion: "", commitsInRelease: commits, context: "next" };
-    }
-
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
     const result = await this.hooks.next.promise([], bump, {
       commits,
       fullReleaseNotes,
       releaseNotes,
+      dryRun: args.dryRun,
     });
+
+    if (args.dryRun) {
+      console.log(result.join("\n"));
+      return;
+    }
+
     const newVersion = result.join(", ");
     const release = await this.hooks.makeRelease.promise({
       commits,
@@ -2135,5 +2107,8 @@ export { ICommitAuthor, IExtendedCommit } from "./log-parse";
 export { default as Auto } from "./auto";
 export { default as SEMVER, VersionLabel } from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
-export { default as getLernaPackages } from "./utils/get-lerna-packages";
+export {
+  default as getLernaPackages,
+  LernaPackage,
+} from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";

@@ -218,7 +218,7 @@ import {
   getCurrentBranch,
 } from "@auto-it/core";
 
-auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
+auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump, { dryRun }) => {
   const branch = getCurrentBranch() || "";
   const lastRelease = await auto.git.getLatestRelease();
   const current =
@@ -226,6 +226,13 @@ auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
     (await auto.getCurrentVersion(lastRelease));
   // Use this helper function to determine the next prerelease version
   const prerelease = determineNextVersion(lastRelease, current, bump, "next");
+
+  // Make sure to add the version to the list
+  preReleaseVersions.push(prerelease);
+
+  if (dryRun) {
+    return preReleaseVersions;
+  }
 
   // Create a new tag for it
   await execPromise("git", [
@@ -237,8 +244,6 @@ auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
   // Push the tag
   await execPromise("git", ["push", auto.remote, "--tags"]);
 
-  // Make sure to add the version to the list
-  preReleaseVersions.push(prerelease);
   return preReleaseVersions;
 });
 ```

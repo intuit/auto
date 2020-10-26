@@ -58,36 +58,44 @@ export default class GitTagPlugin implements IPlugin {
       ]);
     });
 
-    auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
-      if (!auto.git) {
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, bump, { dryRun }) => {
+        if (!auto.git) {
+          return preReleaseVersions;
+        }
+
+        const prereleaseBranches =
+          auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const lastRelease = await auto.git.getLatestRelease();
+        const current =
+          (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await auto.getCurrentVersion(lastRelease));
+        const prerelease = auto.prefixRelease(
+          determineNextVersion(lastRelease, current, bump, prereleaseBranch)
+        );
+
+        preReleaseVersions.push(prerelease);
+
+        if (dryRun) {
+          return preReleaseVersions;
+        }
+
+        await execPromise("git", [
+          "tag",
+          prerelease,
+          "-m",
+          `"Tag pre-release: ${prerelease}"`,
+        ]);
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
         return preReleaseVersions;
       }
-
-      const prereleaseBranches =
-        auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
-      const branch = getCurrentBranch() || "";
-      const prereleaseBranch = prereleaseBranches.includes(branch)
-        ? branch
-        : prereleaseBranches[0];
-      const lastRelease = await auto.git.getLatestRelease();
-      const current =
-        (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
-        (await auto.getCurrentVersion(lastRelease));
-      const prerelease = auto.prefixRelease(
-        determineNextVersion(lastRelease, current, bump, prereleaseBranch)
-      );
-
-      await execPromise("git", [
-        "tag",
-        prerelease,
-        "-m",
-        `"Tag pre-release: ${prerelease}"`,
-      ]);
-      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
-
-      preReleaseVersions.push(prerelease);
-      return preReleaseVersions;
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.log.info("Pushing new tag to GitHub");

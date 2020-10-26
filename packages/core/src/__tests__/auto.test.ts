@@ -1306,29 +1306,6 @@ describe("Auto", () => {
       await expect(auto.next({})).rejects.not.toBeUndefined();
     });
 
-    test("does not call next hook in dry-run", async () => {
-      const auto = new Auto(defaults);
-
-      // @ts-ignore
-      auto.checkClean = () => Promise.resolve(true);
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.remote = "origin";
-      auto.git!.getProject = () => Promise.resolve({ data: {} } as any);
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
-      auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.3");
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-
-      const next = jest.fn();
-      auto.hooks.next.tap("test", next);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.next({ dryRun: true });
-      expect(next).not.toHaveBeenCalled();
-    });
-
     test("calls the next hook with the release info", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
 

@@ -260,6 +260,22 @@ describe("Docker Plugin", () => {
         `${registry}:1.0.1-next.0`,
       ]);
     });
+
+    test("return next version in dry run", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v0.1.0",
+          getLastTagNotInBaseBranch: () => "v1.0.0",
+        },
+        { registry, image: sourceImage }
+      );
+
+      expect(
+        await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+      ).toStrictEqual(["1.0.1-next.0"]);
+      expect(exec).not.toHaveBeenCalled();
+    });
   });
 
   describe("publish", () => {
