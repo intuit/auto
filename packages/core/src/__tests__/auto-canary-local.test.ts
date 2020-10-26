@@ -47,5 +47,10 @@ test("shipit should publish canary in locally when not on master", async () => {
   auto.hooks.canary.tap("test", canary);
 
   await auto.shipit();
-  expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abc");
+  expect(canary).toHaveBeenCalledWith(
+    expect.objectContaining({
+      bump: SEMVER.patch,
+      canaryIdentifier: "canary.abc",
+    })
+  );
 });

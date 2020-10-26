@@ -8,8 +8,9 @@ const exec = jest.fn();
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 const registry = "registry.io/app";
@@ -178,7 +179,10 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage }
       );
 
-      await hooks.canary.promise(Auto.SEMVER.patch, ".123.1");
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.123.1",
+      });
       expect(exec).toHaveBeenCalledWith("docker", [
         "tag",
         sourceImage,
@@ -188,6 +192,30 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:1.0.1-canary.123.1`,
       ]);
+    });
+
+    test("should print canary version in dry run", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v1.0.0",
+          getCurrentVersion: () => "",
+        },
+        { registry, image: sourceImage }
+      );
+
+      const log = jest.fn();
+      jest.spyOn(console, "log").mockImplementation(log);
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.123.1",
+        dryRun: true,
+      });
+
+      expect(log).toHaveBeenCalledWith("1.0.1-canary.123.1");
+
+      expect(exec).not.toHaveBeenCalled();
     });
   });
 

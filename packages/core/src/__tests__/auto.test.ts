@@ -1151,24 +1151,6 @@ describe("Auto", () => {
       await expect(auto.canary()).rejects.not.toBeUndefined();
     });
 
-    test("does not call canary hook in dry-run", async () => {
-      const auto = new Auto(defaults);
-      // @ts-ignore
-      auto.checkClean = () => Promise.resolve(true);
-
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-      const canary = jest.fn();
-      auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.canary({ pr: 123, build: 1, dryRun: true });
-      expect(canary).not.toHaveBeenCalled();
-    });
-
     test("calls the canary hook with the pr info", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       // @ts-ignore
@@ -1187,7 +1169,12 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.123.1",
+        })
+      );
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
@@ -1207,7 +1194,12 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abc");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abc",
+        })
+      );
     });
 
     test("doesn't comment if there is an error", async () => {
@@ -1246,7 +1238,12 @@ describe("Auto", () => {
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abcd",
+        })
+      );
     });
 
     test('should not publish when is present "skip-release" label', async () => {
@@ -1290,7 +1287,12 @@ describe("Auto", () => {
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary({ force: true });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abcd",
+        })
+      );
     });
   });
 

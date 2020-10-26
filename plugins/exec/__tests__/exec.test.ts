@@ -92,9 +92,12 @@ describe("Exec Plugin", () => {
       execSpy.mockReturnValueOnce(canaryVersion);
       plugins.apply({ hooks } as Auto);
 
-      expect(await hooks.canary.promise(SEMVER.patch, "-canary")).toBe(
-        canaryVersion
-      );
+      expect(
+        await hooks.canary.promise({
+          bump: SEMVER.patch,
+          canaryIdentifier: "-canary",
+        })
+      ).toBe(canaryVersion);
     });
 
     test("should handle object return values", async () => {
@@ -107,9 +110,12 @@ describe("Exec Plugin", () => {
       execSpy.mockReturnValueOnce(JSON.stringify(canaryVersion));
       plugins.apply({ hooks } as Auto);
 
-      expect(await hooks.canary.promise(SEMVER.patch, "-canary")).toStrictEqual(
-        canaryVersion
-      );
+      expect(
+        await hooks.canary.promise({
+          bump: SEMVER.patch,
+          canaryIdentifier: "-canary",
+        })
+      ).toStrictEqual(canaryVersion);
     });
   });
 

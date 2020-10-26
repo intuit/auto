@@ -115,23 +115,32 @@ export default class DockerPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
-      if (!auto.git) {
-        return;
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ bump, canaryIdentifier, dryRun }) => {
+        if (!auto.git) {
+          return;
+        }
+
+        const lastRelease = await auto.git.getLatestRelease();
+        const current = await auto.getCurrentVersion(lastRelease);
+        const nextVersion = inc(current, bump as ReleaseType);
+        const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
+
+        if (dryRun) {
+          console.log(canaryVersion);
+          return;
+        }
+
+        const targetImage = `${this.options.registry}:${canaryVersion}`;
+
+        await execPromise("docker", ["tag", this.options.image, targetImage]);
+        await execPromise("docker", ["push", targetImage]);
+
+        auto.logger.verbose.info("Successfully published canary version");
+        return canaryVersion;
       }
-
-      const lastRelease = await auto.git.getLatestRelease();
-      const current = await auto.getCurrentVersion(lastRelease);
-      const nextVersion = inc(current, version as ReleaseType);
-      const canaryVersion = `${nextVersion}-canary${postFix}`;
-      const targetImage = `${this.options.registry}:${canaryVersion}`;
-
-      await execPromise("docker", ["tag", this.options.image, targetImage]);
-      await execPromise("docker", ["push", targetImage]);
-
-      auto.logger.verbose.info("Successfully published canary version");
-      return canaryVersion;
-    });
+    );
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
       if (!auto.git) {

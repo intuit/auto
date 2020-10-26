@@ -177,12 +177,12 @@ You can either return a string value of just the version or an object containing
 - `details` - The body of the details element
 
 ```ts
-auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
+auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier }) => {
   const lastRelease = await auto.git!.getLatestRelease();
   const current = await auto.getCurrentVersion(lastRelease);
-  const nextVersion = inc(current, version as ReleaseType);
+  const nextVersion = inc(current, bump as ReleaseType);
   const isScopedPackage = name.match(/@\S+\/\S+/);
-  const canaryVersion = `${nextVersion}-canary${postFix}`;
+  const canaryVersion = `${nextVersion}-canary${canaryIdentifier}`;
 
   await execPromise("npm", ["version", canaryVersion, "--no-git-tag-version"]);
   await execPromise("npm", ["publish", "--tag", "canary"]);

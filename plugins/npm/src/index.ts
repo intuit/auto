@@ -881,151 +881,192 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info("Successfully versioned repo");
     });
 
-    auto.hooks.canary.tapPromise(this.name, async (bump, preid) => {
-      if (this.setRcToken) {
-        await setTokenOnCI(auto.logger);
-        auto.logger.verbose.info("Set CI NPM_TOKEN");
-      }
-
-      const lastRelease = await auto.git!.getLatestRelease();
-      const [, latestTag = lastRelease] = await on(
-        auto.git!.getLatestTagInBranch()
-      );
-      const inPrerelease = prereleaseBranches.some((b) =>
-        latestTag.includes(`-${b}.`)
-      );
-
-      if (isMonorepo()) {
-        const isIndependent = getLernaJson().version === "independent";
-        auto.logger.verbose.info("Detected monorepo, using lerna");
-
-        const packagesBefore = await getLernaPackages();
-        let canaryVersion =
-          (isIndependent && `pre${bump}`) ||
-          determineNextVersion(
-            lastRelease,
-            inPrerelease ? latestTag : packagesBefore[0].version,
-            bump,
-            preid
-          );
-
-        if (this.canaryScope) {
-          await setCanaryScope(
-            this.canaryScope,
-            packagesBefore.map((p) => p.path)
-          );
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ bump, canaryIdentifier, dryRun }) => {
+        if (this.setRcToken) {
+          await setTokenOnCI(auto.logger);
+          auto.logger.verbose.info("Set CI NPM_TOKEN");
         }
 
-        if (!isIndependent) {
-          const { name } = getMonorepoPackage();
-          canaryVersion = await findAvailableCanaryVersion(
-            auto,
-            name,
-            canaryVersion
-          );
-        }
+        const lastRelease = await auto.git!.getLatestRelease();
+        const [, latestTag = lastRelease] = await on(
+          auto.git!.getLatestTagInBranch()
+        );
+        const inPrerelease = prereleaseBranches.some((b) =>
+          latestTag.includes(`-${b}.`)
+        );
 
-        await execPromise("npx", [
-          "lerna",
-          "publish",
-          canaryVersion,
-          "--dist-tag",
-          "canary",
-          ...(await getRegistryArgs()),
-          !isIndependent && "--force-publish",
-          ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
-          "--yes", // skip prompts,
-          "--no-git-reset", // so we can get the version that just published
-          "--no-git-tag-version", // no need to tag and commit,
-          "--exact", // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
-          ...(isIndependent ? ["--preid", preid] : []),
-          ...verboseArgs,
-        ]);
+        if (isMonorepo()) {
+          const isIndependent = getLernaJson().version === "independent";
+          auto.logger.verbose.info("Detected monorepo, using lerna");
 
-        auto.logger.verbose.info("Successfully published canary version");
-        const packages = await getLernaPackages();
-        const packageList = await getPackageList();
-        // Reset after we read the packages from the system!
-        await gitReset();
+          const packagesBefore = await getLernaPackages();
+          let canaryVersion =
+            (isIndependent && `pre${bump}`) ||
+            determineNextVersion(
+              lastRelease,
+              inPrerelease ? latestTag : packagesBefore[0].version,
+              bump,
+              canaryIdentifier
+            );
 
-        if (isIndependent) {
-          if (!packageList.some((p) => p.includes("canary"))) {
+          if (this.canaryScope && !dryRun) {
+            await setCanaryScope(
+              this.canaryScope,
+              packagesBefore.map((p) => p.path)
+            );
+          }
+
+          if (!isIndependent) {
+            const { name } = getMonorepoPackage();
+
+            canaryVersion = await findAvailableCanaryVersion(
+              auto,
+              name,
+              canaryVersion
+            );
+
+            if (dryRun) {
+              console.log(canaryVersion);
+              return;
+            }
+            // Is independent and a dry run
+          } else if (dryRun) {
+            await execPromise("npx", [
+              "lerna",
+              "version",
+              canaryVersion,
+              ...(await getRegistryArgs()),
+              ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+              "--yes",
+              "--no-push",
+              "--no-git-tag-version",
+              "--no-commit-hooks",
+              "--exact",
+              "--ignore-scripts",
+              "--preid",
+              canaryIdentifier,
+              ...verboseArgs,
+            ]);
+
+            const canaryPackageList = await getPackageList();
+            // Reset after we read the packages from the system!
+            await gitReset();
+
+            console.log(canaryPackageList.join("\n"));
+            return;
+          }
+
+          await execPromise("npx", [
+            "lerna",
+            "publish",
+            canaryVersion,
+            "--dist-tag",
+            "canary",
+            ...(await getRegistryArgs()),
+            !isIndependent && "--force-publish",
+            ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+            "--yes", // skip prompts,
+            "--no-git-reset", // so we can get the version that just published
+            "--no-git-tag-version", // no need to tag and commit,
+            "--exact", // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
+            ...(isIndependent ? ["--preid", canaryIdentifier] : []),
+            ...verboseArgs,
+          ]);
+
+          auto.logger.verbose.info("Successfully published canary version");
+          const packages = await getLernaPackages();
+          const packageList = await getPackageList();
+          // Reset after we read the packages from the system!
+          await gitReset();
+
+          if (isIndependent) {
+            if (!packageList.some((p) => p.includes("canary"))) {
+              return {
+                error: "No packages were changed. No canary published.",
+              };
+            }
+
+            return {
+              newVersion: "Canary Versions",
+              details: makeMonorepoInstallList(
+                packageList.filter((p) => p.includes("canary"))
+              ),
+            };
+          }
+
+          const versioned = packages.find((p) => p.version.includes("canary"));
+
+          if (!versioned) {
             return { error: "No packages were changed. No canary published." };
           }
 
+          const version = versioned.version.split("+")[0];
+
           return {
-            newVersion: "Canary Versions",
-            details: makeMonorepoInstallList(
-              packageList.filter((p) => p.includes("canary"))
-            ),
+            newVersion: this.canaryScope
+              ? `under canary scope @${sanitizeScope(
+                  this.canaryScope
+                )}@${version}`
+              : version,
+            details: makeMonorepoInstallList(packageList),
           };
         }
 
-        const versioned = packages.find((p) => p.version.includes("canary"));
+        auto.logger.verbose.info("Detected single npm package");
+        const current = await auto.getCurrentVersion(lastRelease);
+        const { name, private: isPrivate } = await loadPackageJson();
 
-        if (!versioned) {
-          return { error: "No packages were changed. No canary published." };
+        if (isPrivate) {
+          return {
+            error: "Package private, cannot make canary release to npm.",
+          };
         }
 
-        const version = versioned.version.split("+")[0];
+        const canaryVersion = await findAvailableCanaryVersion(
+          auto,
+          name,
+          determineNextVersion(lastRelease, current, bump, canaryIdentifier)
+        );
+
+        if (dryRun) {
+          console.log(canaryVersion);
+          return;
+        }
+
+        if (this.canaryScope) {
+          await setCanaryScope(this.canaryScope, ["./"]);
+        }
+
+        await execPromise("npm", [
+          "version",
+          canaryVersion,
+          "--no-git-tag-version",
+          "--no-commit-hooks",
+          ...verboseArgs,
+        ]);
+
+        const publishArgs = ["--tag", "canary"];
+        await execPromise("npm", [
+          "publish",
+          ...publishArgs,
+          ...verboseArgs,
+          ...getLegacyAuthArgs(this.legacyAuth),
+        ]);
+
+        if (this.canaryScope) {
+          await gitReset();
+        }
+
+        auto.logger.verbose.info("Successfully published canary version");
 
         return {
-          newVersion: this.canaryScope
-            ? `under canary scope @${sanitizeScope(
-                this.canaryScope
-              )}@${version}`
-            : version,
-          details: makeMonorepoInstallList(packageList),
+          newVersion: canaryVersion,
+          details: makeMonorepoInstallList([`${name}@${canaryVersion}`]),
         };
       }
-
-      auto.logger.verbose.info("Detected single npm package");
-      const current = await auto.getCurrentVersion(lastRelease);
-      const { name, private: isPrivate } = await loadPackageJson();
-
-      if (isPrivate) {
-        return {
-          error: "Package private, cannot make canary release to npm.",
-        };
-      }
-
-      const canaryVersion = await findAvailableCanaryVersion(
-        auto,
-        name,
-        determineNextVersion(lastRelease, current, bump, preid)
-      );
-
-      if (this.canaryScope) {
-        await setCanaryScope(this.canaryScope, ["./"]);
-      }
-
-      await execPromise("npm", [
-        "version",
-        canaryVersion,
-        "--no-git-tag-version",
-        "--no-commit-hooks",
-        ...verboseArgs,
-      ]);
-
-      const publishArgs = ["--tag", "canary"];
-      await execPromise("npm", [
-        "publish",
-        ...publishArgs,
-        ...verboseArgs,
-        ...getLegacyAuthArgs(this.legacyAuth),
-      ]);
-
-      if (this.canaryScope) {
-        await gitReset();
-      }
-
-      auto.logger.verbose.info("Successfully published canary version");
-
-      return {
-        newVersion: canaryVersion,
-        details: makeMonorepoInstallList([`${name}@${canaryVersion}`]),
-      };
-    });
+    );
 
     auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
       if (this.setRcToken) {

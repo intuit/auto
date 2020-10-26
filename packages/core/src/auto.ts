@@ -225,7 +225,16 @@ export interface IAutoHooks {
   publish: AsyncParallelHook<[SEMVER]>;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
   canary: AsyncSeriesBailHook<
-    [SEMVER, string],
+    [
+      {
+        /** The bump to apply to the version */
+        bump: SEMVER;
+        /** The post-version identifier to add to the version */
+        canaryIdentifier: string;
+        /** Do not actually do anything */
+        dryRun?: boolean;
+      }
+    ],
     | string
     | {
         /** A summary to use in a details html element */
@@ -1125,11 +1134,11 @@ export default class Auto {
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
     const labels = commitsInRelease.map((commit) => commit.labels);
-    let version = calculateSemVerBump(labels, this.semVerLabels!, this.config);
+    let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
-    if (version === SEMVER.noVersion) {
+    if (bump === SEMVER.noVersion) {
       if (options.force) {
-        version = SEMVER.patch;
+        bump = SEMVER.patch;
       } else {
         this.logger.log.info(
           "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
@@ -1138,93 +1147,71 @@ export default class Auto {
       }
     }
 
-    let canaryVersion = "";
+    let canaryIdentifier = "";
     let newVersion = "";
 
     if (pr) {
-      canaryVersion = `${canaryVersion}.${pr}`;
+      canaryIdentifier = `${canaryIdentifier}.${pr}`;
     }
 
     if (build) {
-      canaryVersion = `${canaryVersion}.${build}`;
+      canaryIdentifier = `${canaryIdentifier}.${build}`;
     }
 
     if (!pr || !build) {
-      canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
+      canaryIdentifier = `${canaryIdentifier}.${await this.git.getSha(true)}`;
     }
 
-    canaryVersion = `canary${canaryVersion}`;
+    canaryIdentifier = `canary${canaryIdentifier}`;
 
-    if (options.dryRun) {
-      const lastRelease = await this.git.getLatestRelease();
-      const current = await this.getCurrentVersion(lastRelease);
+    this.logger.verbose.info("Calling canary hook");
+    const result = await this.hooks.canary.promise({
+      bump,
+      canaryIdentifier,
+      dryRun: args.dryRun,
+    });
 
-      if (parse(current)) {
-        const next = determineNextVersion(
-          lastRelease,
-          current,
-          version,
-          canaryVersion
-        );
-
-        if (options.quiet) {
-          console.log(next);
-        } else {
-          this.logger.log.warn(`Published canary identifier would be: ${next}`);
-        }
-      } else if (options.quiet) {
-        console.log(`-${canaryVersion}`);
-      } else {
-        this.logger.log.warn(
-          `Published canary identifier would be: "-${canaryVersion}"`
-        );
-      }
-    } else {
-      this.logger.verbose.info("Calling canary hook");
-      const result = await this.hooks.canary.promise(version, canaryVersion);
-
-      if (typeof result === "object" && "error" in result) {
-        this.logger.log.warn(result.error);
-        return;
-      }
-
-      if (!result) {
-        return;
-      }
-
-      newVersion = typeof result === "string" ? result : result.newVersion;
-      const messageHeader = (
-        options.message || "📦 Published PR as canary version: %v"
-      ).replace(
-        "%v",
-        !newVersion || newVersion.includes("\n")
-          ? newVersion
-          : `<code>${newVersion}</code>`
-      );
-
-      if (options.message !== "false" && pr) {
-        const message =
-          typeof result === "string"
-            ? messageHeader
-            : makeDetail(messageHeader, result.details);
-
-        await this.prBody({
-          pr: Number(pr),
-          context: "canary-version",
-          message,
-        });
-      }
-
-      this.logger.log.success(
-        `Published canary version${newVersion ? `: ${newVersion}` : ""}`
-      );
-
-      if (args.quiet) {
-        console.log(newVersion);
-      }
-
-      await gitReset();
+    if (typeof result === "object" && "error" in result) {
+      this.logger.log.warn(result.error);
+      return;
     }
+
+    if (!result) {
+      return;
+    }
+
+    newVersion = typeof result === "string" ? result : result.newVersion;
+    const messageHeader = (
+      options.message || "📦 Published PR as canary version: %v"
+    ).replace(
+      "%v",
+      !newVersion || newVersion.includes("\n")
+        ? newVersion
+        : `<code>${newVersion}</code>`
+    );
+
+    if (options.message !== "false" && pr) {
+      const message =
+        typeof result === "string"
+          ? messageHeader
+          : makeDetail(messageHeader, result.details);
+
+      await this.prBody({
+        pr: Number(pr),
+        context: "canary-version",
+        message,
+      });
+    }
+
+    this.logger.log.success(
+      `Published canary version${newVersion ? `: ${newVersion}` : ""}`
+    );
+
+    if (args.quiet) {
+      console.log(newVersion);
+    }
+
+    await gitReset();
 
     return { newVersion, commitsInRelease, context: "canary" };
   }
@@ -1489,7 +1476,10 @@ export default class Auto {
       releaseType = "next";
     }
 
-    await this.hooks.beforeShipIt.promise({ releaseType, dryRun: options.dryRun });
+    await this.hooks.beforeShipIt.promise({
+      releaseType,
+      dryRun: options.dryRun,
+    });
 
     if (releaseType === "latest") {
       publishInfo = await this.latest(options);
