@@ -253,6 +253,8 @@ export interface IAutoHooks {
       {
         /** The complete information about the PR */
         pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
+        /** Do not actually do anything */
+        dryRun?: boolean;
       }
     ]
   >;
@@ -886,7 +888,7 @@ export default class Auto {
 
     try {
       const res = await this.git.getPullRequest(prNumber);
-      await this.hooks.prCheck.promise({ pr: res.data });
+      await this.hooks.prCheck.promise({ pr: res.data, dryRun });
 
       sha = res.data.head.sha;
 
