@@ -81,7 +81,7 @@ describe("render jira", () => {
     );
 
     expect(
-      (await changelogHooks.renderChangelogLine.promise([commit, "Add log"]))[1]
+      await changelogHooks.renderChangelogLine.promise("Add log", commit)
     ).toBe("Add log");
   });
 
@@ -96,10 +96,10 @@ describe("render jira", () => {
       SEMVER.patch
     );
 
-    const [, line] = await changelogHooks.renderChangelogLine.promise([
-      makeCommitFromMsg("[PLAYA-5052] Add log"),
+    const line = await changelogHooks.renderChangelogLine.promise(
       "[PLAYA-5052] Add log [author](link/to/author)",
-    ]);
+      makeCommitFromMsg("[PLAYA-5052] Add log")
+    );
 
     expect(line).toBe(
       "[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)"

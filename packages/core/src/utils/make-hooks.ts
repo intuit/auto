@@ -64,7 +64,7 @@ export const makeInteractiveInitHooks = (): InteractiveInitHooks => ({
 export const makeChangelogHooks = (): IChangelogHooks => ({
   addToBody: new AsyncSeriesWaterfallHook(["notes", "commits"]),
   sortChangelogLines: new AsyncSeriesWaterfallHook(["lines"]),
-  renderChangelogLine: new AsyncSeriesWaterfallHook(["lineData"]),
+  renderChangelogLine: new AsyncSeriesWaterfallHook(["line", "commit"]),
   renderChangelogTitle: new AsyncSeriesBailHook(["commits", "lineRender"]),
   renderChangelogAuthor: new AsyncSeriesBailHook([
     "author",
