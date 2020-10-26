@@ -31,7 +31,7 @@ interface ICommitSplit {
 
 export interface IChangelogHooks {
   /** Change how the changelog renders lines. */
-  renderChangelogLine: AsyncSeriesWaterfallHook<[[IExtendedCommit, string]]>;
+  renderChangelogLine: AsyncSeriesWaterfallHook<[string, IExtendedCommit]>;
   /** Sort the lines in a changelog section. */
   sortChangelogLines: AsyncSeriesWaterfallHook<[string[]]>;
   /** Change how the changelog renders titles */
@@ -119,10 +119,7 @@ export default class Changelog {
         author.name && user ? `${author.name} (${user})` : user;
       return authorString ? `- ${authorString}` : undefined;
     });
-    this.hooks.renderChangelogLine.tap("Default", ([commit, line]) => [
-      commit,
-      line,
-    ]);
+    this.hooks.renderChangelogLine.tap("Default", (line) => line);
     this.hooks.renderChangelogTitle.tap(
       "Default",
       (label, changelogTitles) => `#### ${changelogTitles[label]}\n`
@@ -394,10 +391,10 @@ export default class Changelog {
               return true;
             }
 
-            const [, line] = await this.hooks.renderChangelogLine.promise([
-              commit,
+            const line = await this.hooks.renderChangelogLine.promise(
               await this.generateCommitNote(commit),
-            ]);
+              commit
+            );
 
             lines.add(line);
           })

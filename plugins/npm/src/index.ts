@@ -706,9 +706,9 @@ export default class NPMPlugin implements IPlugin {
       (changelog, version = SEMVER.patch) => {
         changelog.hooks.renderChangelogLine.tapPromise(
           "NPM - Monorepo",
-          async ([commit, line]) => {
+          async (line, commit) => {
             if (!isMonorepo() || !this.monorepoChangelog) {
-              return [commit, line];
+              return line;
             }
 
             const lernaPackages = await this.getLernaPackages();
@@ -729,10 +729,10 @@ export default class NPMPlugin implements IPlugin {
               : "monorepo";
 
             if (section === "monorepo") {
-              return [commit, line];
+              return line;
             }
 
-            return [commit, [`- ${section}`, `  ${line}`].join("\n")];
+            return [`- ${section}`, `  ${line}`].join("\n");
           }
         );
 

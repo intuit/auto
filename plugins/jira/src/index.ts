@@ -110,7 +110,7 @@ export default class JiraPlugin implements IPlugin {
     auto.hooks.onCreateChangelog.tap(this.name, (changelog) => {
       changelog.hooks.renderChangelogLine.tap(
         this.name,
-        ([commit, currentRender]) => {
+        (currentRender, commit) => {
           let line = currentRender;
           const jiraCommit = parseJira(commit);
 
@@ -124,7 +124,7 @@ export default class JiraPlugin implements IPlugin {
             );
           }
 
-          return [commit, line];
+          return line;
         }
       );
     });
