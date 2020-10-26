@@ -50,7 +50,7 @@ describe("Brew Plugin", () => {
 
     brewPlugin.apply({ hooks: autoHooks, logger: dummyLog() } as Auto);
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(exec).not.toHaveBeenCalled();
   });
@@ -73,7 +73,7 @@ describe("Brew Plugin", () => {
       },
     } as unknown) as Auto);
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(exit).toHaveBeenCalled();
   });
@@ -118,7 +118,7 @@ describe("Brew Plugin", () => {
     readFileSync.mockReturnValueOnce("");
     exec.mockReturnValueOnce("1234 1234");
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(mkdirSync).toHaveBeenCalled();
   });
@@ -137,7 +137,7 @@ describe("Brew Plugin", () => {
     readFileSync.mockReturnValueOnce("");
     exec.mockReturnValueOnce("1234 1234");
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(mkdirSync).not.toHaveBeenCalled();
   });
@@ -155,7 +155,7 @@ describe("Brew Plugin", () => {
     readFileSync.mockReturnValueOnce("$VERSION $SHA");
     exec.mockReturnValueOnce("1234 1234");
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(writeFileSync).toHaveBeenCalledWith(
       "./Formula/foo.rb",
@@ -179,7 +179,7 @@ describe("Brew Plugin", () => {
     readFileSync.mockReturnValue("$VERSION $SHA");
     exec.mockReturnValue("1234 1234");
 
-    await autoHooks.afterVersion.promise();
+    await autoHooks.afterVersion.promise({});
 
     expect(writeFileSync).toHaveBeenCalledWith(
       "./Formula/foo.rb",

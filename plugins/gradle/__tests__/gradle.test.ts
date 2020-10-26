@@ -8,8 +8,9 @@ import GradleReleasePlugin, {
 
 const exec = jest.fn();
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 describe("Gradle Plugin", () => {
@@ -47,7 +48,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -67,7 +68,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.major);
+      await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -88,7 +89,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.major);
+      await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -108,7 +109,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.minor);
+      await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -128,7 +129,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -152,7 +153,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "release",
@@ -187,7 +188,7 @@ describe("Gradle Plugin - Custom Command", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce("version: 1.0.0").mockImplementation(spy);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradlew"), [
         "release",

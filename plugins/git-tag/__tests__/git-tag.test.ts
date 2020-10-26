@@ -8,8 +8,9 @@ const exec = jest.fn();
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 const setup = (mockGit?: any) => {
@@ -62,19 +63,19 @@ describe("Git Tag Plugin", () => {
   describe("version", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).not.toHaveBeenCalled();
     });
 
     test("should do nothing with a bad version bump", async () => {
       const hooks = setup({ getLatestTagInBranch: () => "v1.0.0" });
-      await hooks.version.promise("wrong" as Auto.SEMVER);
+      await hooks.version.promise({ bump: "wrong" as Auto.SEMVER });
       expect(exec).not.toHaveBeenCalled();
     });
 
     test("should tag next version", async () => {
       const hooks = setup({ getLatestTagInBranch: () => "v1.0.0" });
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
         "v1.0.1",
@@ -111,6 +112,19 @@ describe("Git Tag Plugin", () => {
         "next",
         "--tags",
       ]);
+    });
+
+    test("return next version in dry run", async () => {
+      const hooks = setup({
+        getLatestRelease: () => "v0.1.0",
+        getLastTagNotInBaseBranch: () => "v1.0.0",
+      });
+
+      expect(
+        await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+      ).toStrictEqual(["v1.0.1-next.0"]);
+
+      expect(exec).not.toHaveBeenCalled();
     });
   });
 });

@@ -93,19 +93,32 @@ export default class GemPlugin implements IPlugin {
       };
     });
 
-    auto.hooks.version.tapPromise(this.name, async (bump) => {
-      const [version, versionFile] = await this.getVersion(auto);
-      const newTag = inc(version, bump as ReleaseType);
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        const [version, versionFile] = await this.getVersion(auto);
+        const newTag = inc(version, bump as ReleaseType);
 
-      if (!newTag) {
-        throw new Error(
-          `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
-        );
+        if (dryRun && newTag) {
+          if (quiet) {
+            console.log(newTag);
+          } else {
+            auto.logger.log.info(`Would have published: ${newTag}`);
+          }
+
+          return;
+        }
+
+        if (!newTag) {
+          throw new Error(
+            `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
+          );
+        }
+
+        const content = await readFile(versionFile, { encoding: "utf8" });
+        await writeFile(versionFile, content.replace(version, newTag));
       }
-
-      const content = await readFile(versionFile, { encoding: "utf8" });
-      await writeFile(versionFile, content.replace(version, newTag));
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       if (

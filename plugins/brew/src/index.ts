@@ -46,8 +46,12 @@ export default class BrewPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.afterVersion.tapPromise("Update brew", async () => {
-      this.formulas.map((formula) => this.createFormula(auto, formula));
+    auto.hooks.afterVersion.tapPromise("Update brew", async ({ dryRun }) => {
+      if (!dryRun) {
+        await Promise.all(
+          this.formulas.map((formula) => this.createFormula(auto, formula))
+        );
+      }
     });
   }
 

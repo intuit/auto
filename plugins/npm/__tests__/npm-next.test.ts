@@ -22,11 +22,17 @@ execPromise.mockResolvedValue("");
 let readResult = "{}";
 readFileSync.mockReturnValue("{}");
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) => execPromise(...args));
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => execPromise(...args)
+);
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
+jest.mock(
+  "../../../packages/core/dist/utils/get-lerna-packages",
+  () => (...args: any[]) => getLernaPackages(...args)
+);
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
 jest.mock("fs", () => ({
@@ -104,6 +110,37 @@ describe("next", () => {
       "--tag",
       "next",
     ]);
+  });
+
+  test("works for dry run in single package", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+    `;
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+    expect(execPromise).not.toHaveBeenCalledWith("npm");
   });
 
   test("skips publish for private package", async () => {
@@ -245,6 +282,46 @@ describe("next", () => {
     ]);
   });
 
+  test("works in dry run in monorepo", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("1.2.4-next.0");
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).not.toHaveBeenCalledWith(
+      "npx",
+      expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
+    );
+    expect(execPromise).not.toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "next",
+      "--tags",
+    ]);
+  });
+
   test("legacy auth works in monorepo", async () => {
     process.env.NPM_TOKEN = "abcd";
     const plugin = new NPMPlugin({ legacyAuth: true });
@@ -311,7 +388,9 @@ describe("next", () => {
     ]);
     execPromise.mockImplementation((command, args) => {
       if (command === "git" && args[0] === "tag") {
-        return Promise.resolve("@foo/foo@1.0.0-next.0\n@foo/foo-bar@2.0.0-next.0");
+        return Promise.resolve(
+          "@foo/foo@1.0.0-next.0\n@foo/foo-bar@2.0.0-next.0"
+        );
       }
 
       if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
@@ -350,6 +429,66 @@ describe("next", () => {
     ]);
   });
 
+  test("works in dry run in monorepo - independent", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "independent" }');
+    getLernaPackages.mockResolvedValueOnce([
+      {
+        name: "@foo/foo",
+        path: "/path/to/1",
+      },
+      {
+        name: "@foo/foo-bar",
+        path: "/path/to/2",
+      },
+    ]);
+    execPromise.mockImplementation((command, args) => {
+      if (command === "git" && args[0] === "tag") {
+        return Promise.resolve(
+          "@foo/foo@1.0.0-next.0\n@foo/foo-bar@2.0.0-next.0"
+        );
+      }
+
+      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+        return Promise.resolve("@foo/foo\n@foo/foo-bar");
+      }
+
+      return Promise.resolve("");
+    });
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      prefixRelease: (v: string) => `v${v}`,
+      git: {
+        getLatestRelease: () => "@foo/foo@0.1.0",
+        getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+    ).toStrictEqual(["@foo/foo@1.0.0-next.1", "@foo/foo-bar@2.0.0-next.1"]);
+
+    expect(execPromise).not.toHaveBeenCalledWith(
+      "npx",
+      expect.arrayContaining(["lerna", "publish", "from-git"])
+    );
+    expect(execPromise).not.toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "next",
+      "--tags",
+    ]);
+  });
+
   test("works in monorepo - independent - private package", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
@@ -361,7 +500,7 @@ describe("next", () => {
       {
         name: "@foo/foo",
         path: "/path/to/1",
-      }
+      },
     ]);
     execPromise.mockImplementation((command, args) => {
       if (command === "git" && args[0] === "tag") {
