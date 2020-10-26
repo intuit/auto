@@ -1442,12 +1442,12 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
       const beforeCommitChangelog = jest.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
-      const afterAddToChangelog = jest.fn();
-      auto.hooks.afterAddToChangelog.tap("test", afterAddToChangelog);
+      const afterChangelog = jest.fn();
+      auto.hooks.afterChangelog.tap("test", afterChangelog);
 
       await auto.shipit({ noChangelog: true });
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
-      expect(afterAddToChangelog).toHaveBeenCalled();
+      expect(afterChangelog).toHaveBeenCalled();
     });
 
     test("should not publish when behind remote", async () => {
