@@ -36,6 +36,8 @@ import {
   IVersionOptions,
   INextOptions,
   ILatestOptions,
+  QuietOption,
+  DryRunOption,
 } from "./auto-args";
 import Changelog from "./changelog";
 import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
@@ -117,22 +119,18 @@ const makeDetail = (summary: string, body: string) => endent`
 
 export type ShipitRelease = "latest" | "old" | "next" | "canary";
 
-interface BeforeShipitContext {
+interface BeforeShipitContext extends DryRunOption {
   /** The type of release that will be made when shipit runs. */
   releaseType: ShipitRelease;
-  /** Whether the run is a dry run */
-  dryRun?: boolean;
 }
 
-interface NextContext {
+interface NextContext extends DryRunOption {
   /** The commits in the next release */
   commits: IExtendedCommit[];
   /** The release notes for all the commits in the next release */
   fullReleaseNotes: string;
   /** The release notes for the last change merged to the next release */
   releaseNotes: string;
-  /** Do not actually do anything */
-  dryRun?: boolean;
 }
 
 type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
@@ -181,9 +179,7 @@ export interface IAutoHooks {
   /** Override what happens when "releasing" code to a Github release */
   makeRelease: AsyncSeriesBailHook<
     [
-      {
-        /** Do not actually do anything */
-        dryRun?: boolean;
+      DryRunOption & {
         /** Commit to start calculating the version from */
         from: string;
         /** The version being released */
@@ -222,35 +218,24 @@ export interface IAutoHooks {
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<
     [
-      {
+      DryRunOption & {
         /** The semver bump to apply */
         bump: SEMVER;
-        /** Do not actually do anything */
-        dryRun?: boolean;
       }
     ]
   >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncParallelHook<
-    [
-      {
-        /** Do not actually do anything */
-        dryRun?: boolean;
-      }
-    ]
-  >;
+  afterVersion: AsyncParallelHook<[DryRunOption]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncParallelHook<[SEMVER]>;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
   canary: AsyncSeriesBailHook<
     [
-      {
+      DryRunOption & {
         /** The bump to apply to the version */
         bump: SEMVER;
         /** The post-version identifier to add to the version */
         canaryIdentifier: string;
-        /** Do not actually do anything */
-        dryRun?: boolean;
       }
     ],
     | string
@@ -277,11 +262,9 @@ export interface IAutoHooks {
   /** Ran after the package has been published. */
   prCheck: AsyncSeriesHook<
     [
-      {
+      DryRunOption & {
         /** The complete information about the PR */
         pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
-        /** Do not actually do anything */
-        dryRun?: boolean;
       }
     ]
   >;

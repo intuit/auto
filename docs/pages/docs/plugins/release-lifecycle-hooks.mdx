@@ -144,9 +144,7 @@ _Examples:_
 - [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
 
 ```ts
-auto.hooks.version.tapPromise("NPM", async ({ dryRun }) => {
-
-});
+auto.hooks.version.tapPromise("NPM", async ({ dryRun }) => {});
 ```
 
 ## publish
@@ -230,34 +228,37 @@ import {
   getCurrentBranch,
 } from "@auto-it/core";
 
-auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump, { dryRun }) => {
-  const branch = getCurrentBranch() || "";
-  const lastRelease = await auto.git.getLatestRelease();
-  const current =
-    (await auto.git.getLastTagNotInBaseBranch(branch)) ||
-    (await auto.getCurrentVersion(lastRelease));
-  // Use this helper function to determine the next prerelease version
-  const prerelease = determineNextVersion(lastRelease, current, bump, "next");
+auto.hooks.next.tapPromise(
+  this.name,
+  async (preReleaseVersions, bump, { dryRun }) => {
+    const branch = getCurrentBranch() || "";
+    const lastRelease = await auto.git.getLatestRelease();
+    const current =
+      (await auto.git.getLastTagNotInBaseBranch(branch)) ||
+      (await auto.getCurrentVersion(lastRelease));
+    // Use this helper function to determine the next prerelease version
+    const prerelease = determineNextVersion(lastRelease, current, bump, "next");
 
-  // Make sure to add the version to the list
-  preReleaseVersions.push(prerelease);
+    // Make sure to add the version to the list
+    preReleaseVersions.push(prerelease);
 
-  if (dryRun) {
+    if (dryRun) {
+      return preReleaseVersions;
+    }
+
+    // Create a new tag for it
+    await execPromise("git", [
+      "tag",
+      prerelease,
+      "-m",
+      `"Tag pre-release: ${prerelease}"`,
+    ]);
+    // Push the tag
+    await execPromise("git", ["push", auto.remote, "--tags"]);
+
     return preReleaseVersions;
   }
-
-  // Create a new tag for it
-  await execPromise("git", [
-    "tag",
-    prerelease,
-    "-m",
-    `"Tag pre-release: ${prerelease}"`,
-  ]);
-  // Push the tag
-  await execPromise("git", ["push", auto.remote, "--tags"]);
-
-  return preReleaseVersions;
-});
+);
 ```
 
 `next` version should not produce any of the following:
