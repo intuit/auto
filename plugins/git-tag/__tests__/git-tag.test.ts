@@ -63,19 +63,19 @@ describe("Git Tag Plugin", () => {
   describe("version", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).not.toHaveBeenCalled();
     });
 
     test("should do nothing with a bad version bump", async () => {
       const hooks = setup({ getLatestTagInBranch: () => "v1.0.0" });
-      await hooks.version.promise("wrong" as Auto.SEMVER);
+      await hooks.version.promise({ bump: "wrong" as Auto.SEMVER });
       expect(exec).not.toHaveBeenCalled();
     });
 
     test("should tag next version", async () => {
       const hooks = setup({ getLatestTagInBranch: () => "v1.0.0" });
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
         "v1.0.1",

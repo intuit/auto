@@ -483,7 +483,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
@@ -513,7 +513,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
@@ -544,7 +544,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -580,7 +580,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -616,7 +616,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -745,7 +745,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       "1.0.1",
@@ -777,7 +777,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
       "lerna",
       "version",
@@ -889,6 +889,7 @@ describe("canary", () => {
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "canary.123.1",
       dryRun: true,
+      quiet: true,
     });
     expect(log).toHaveBeenCalledWith("1.2.4-canary.123.1.0");
   });
@@ -1124,6 +1125,7 @@ describe("canary", () => {
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "canary.123.1",
       dryRun: true,
+      quiet: true,
     });
 
     expect(log).toHaveBeenCalledWith("1.2.4-canary.123.1.0");
@@ -1272,7 +1274,7 @@ describe("canary", () => {
       ])
     );
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenNthCalledWith(1, "npx", [
       "lerna",
       "version",

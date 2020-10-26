@@ -1574,7 +1574,11 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Calling version hook");
-    await this.hooks.version.promise({ bump, dryRun: options.dryRun, quiet: options.quiet });
+    await this.hooks.version.promise({
+      bump,
+      dryRun: options.dryRun,
+      quiet: options.quiet,
+    });
     this.logger.verbose.info("Calling after version hook");
     await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
 

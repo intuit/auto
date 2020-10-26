@@ -46,7 +46,7 @@ describe("Exec Plugin", () => {
     const hooks = makeHooks();
 
     plugins.apply({ hooks } as Auto);
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise({ bump: SEMVER.patch });
 
     expect(execSpy).toHaveBeenCalledWith("echo bar", expect.anything());
   });

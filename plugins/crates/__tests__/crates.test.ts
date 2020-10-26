@@ -41,8 +41,9 @@ const writeFile = jest.fn();
 const writeFileSync = jest.fn();
 const readResult = "{}";
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 // @ts-ignore
 jest.mock("env-ci", () => () => ({ isCi: false }));
@@ -199,7 +200,7 @@ describe("CratesPlugin", () => {
 
         const hooks = makeHooks();
         plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
-        await hooks.version.promise(Auto.SEMVER.patch);
+        await hooks.version.promise({ bump: Auto.SEMVER.patch });
         expect(exec).toHaveBeenCalledWith("cargo", ["build"]);
         expect(exec).toHaveBeenCalledWith("git", [
           "add",
