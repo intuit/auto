@@ -75,54 +75,62 @@ export default class DockerPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
-      if (!auto.git) {
-        return;
-      }
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        if (!auto.git) {
+          return;
+        }
 
-      const lastTag = await getTag();
-      const newTag = inc(lastTag, bump as ReleaseType);
+        const lastTag = await getTag();
+        const newTag = inc(lastTag, bump as ReleaseType);
 
-      if (dryRun && newTag) {
-        console.log(newTag);
-        return;
-      }
+        if (dryRun && newTag) {
+          if (quiet) {
+            console.log(newTag);
+          } else {
+            auto.logger.log.info(`Would have published: ${newTag}`);
+          }
 
-      if (!newTag) {
-        auto.logger.log.info("No release found, doing nothing");
-        return;
-      }
+          return;
+        }
 
-      const prefixedTag = auto.prefixRelease(newTag);
+        if (!newTag) {
+          auto.logger.log.info("No release found, doing nothing");
+          return;
+        }
 
-      auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
-      await execPromise("git", [
-        "tag",
-        prefixedTag,
-        "-m",
-        `"Update version to ${prefixedTag}"`,
-      ]);
+        const prefixedTag = auto.prefixRelease(newTag);
 
-      await execPromise("docker", [
-        "tag",
-        this.options.image,
-        `${this.options.registry}:${newTag}`,
-      ]);
-      this.calculatedTags = [newTag];
+        auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
+        await execPromise("git", [
+          "tag",
+          prefixedTag,
+          "-m",
+          `"Update version to ${prefixedTag}"`,
+        ]);
 
-      if (this.options.tagLatest === true && !bump.startsWith("pre")) {
         await execPromise("docker", [
           "tag",
           this.options.image,
-          `${this.options.registry}:latest`,
+          `${this.options.registry}:${newTag}`,
         ]);
-        this.calculatedTags.push("latest");
+        this.calculatedTags = [newTag];
+
+        if (this.options.tagLatest === true && !bump.startsWith("pre")) {
+          await execPromise("docker", [
+            "tag",
+            this.options.image,
+            `${this.options.registry}:latest`,
+          ]);
+          this.calculatedTags.push("latest");
+        }
       }
-    });
+    );
 
     auto.hooks.canary.tapPromise(
       this.name,
-      async ({ bump, canaryIdentifier, dryRun }) => {
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
         if (!auto.git) {
           return;
         }
@@ -133,7 +141,12 @@ export default class DockerPlugin implements IPlugin {
         const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
         if (dryRun) {
-          console.log(canaryVersion);
+          if (quiet) {
+            console.log(canaryVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${canaryVersion}`);
+          }
+
           return;
         }
 

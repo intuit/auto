@@ -218,10 +218,11 @@ export interface IAutoHooks {
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<
     [
-      DryRunOption & {
-        /** The semver bump to apply */
-        bump: SEMVER;
-      }
+      DryRunOption &
+        QuietOption & {
+          /** The semver bump to apply */
+          bump: SEMVER;
+        }
     ]
   >;
   /** Ran after the package has been versioned. */
@@ -231,12 +232,13 @@ export interface IAutoHooks {
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
   canary: AsyncSeriesBailHook<
     [
-      DryRunOption & {
-        /** The bump to apply to the version */
-        bump: SEMVER;
-        /** The post-version identifier to add to the version */
-        canaryIdentifier: string;
-      }
+      DryRunOption &
+        QuietOption & {
+          /** The bump to apply to the version */
+          bump: SEMVER;
+          /** The post-version identifier to add to the version */
+          canaryIdentifier: string;
+        }
     ],
     | string
     | {
@@ -1177,6 +1179,7 @@ export default class Auto {
       bump,
       canaryIdentifier,
       dryRun: args.dryRun,
+      quiet: args.quiet,
     });
 
     if (typeof result === "object" && "error" in result) {
@@ -1571,7 +1574,7 @@ export default class Auto {
     }
 
     this.logger.verbose.info("Calling version hook");
-    await this.hooks.version.promise({ bump, dryRun: options.dryRun });
+    await this.hooks.version.promise({ bump, dryRun: options.dryRun, quiet: options.quiet });
     this.logger.verbose.info("Calling after version hook");
     await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
 

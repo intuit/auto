@@ -34,34 +34,42 @@ export default class GitTagPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
-      if (!auto.git) {
-        return;
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        if (!auto.git) {
+          return;
+        }
+
+        const lastTag = await getTag();
+        const newTag = inc(lastTag, bump as ReleaseType);
+
+        if (dryRun && newTag) {
+          if (quiet) {
+            console.log(newTag);
+          } else {
+            auto.logger.log.info(`Would have published: ${newTag}`);
+          }
+
+          return;
+        }
+
+        if (!newTag) {
+          auto.logger.log.info("No release found, doing nothing");
+          return;
+        }
+
+        const prefixedTag = auto.prefixRelease(newTag);
+
+        auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
+        await execPromise("git", [
+          "tag",
+          prefixedTag,
+          "-m",
+          `"Update version to ${prefixedTag}"`,
+        ]);
       }
-
-      const lastTag = await getTag();
-      const newTag = inc(lastTag, bump as ReleaseType);
-
-      if (dryRun && newTag) {
-        console.log(newTag);
-        return;
-      }
-
-      if (!newTag) {
-        auto.logger.log.info("No release found, doing nothing");
-        return;
-      }
-
-      const prefixedTag = auto.prefixRelease(newTag);
-
-      auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
-      await execPromise("git", [
-        "tag",
-        prefixedTag,
-        "-m",
-        `"Update version to ${prefixedTag}"`,
-      ]);
-    });
+    );
 
     auto.hooks.next.tapPromise(
       this.name,

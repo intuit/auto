@@ -857,90 +857,102 @@ export default class NPMPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
-      const isBaseBranch = branch === auto.baseBranch;
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        const isBaseBranch = branch === auto.baseBranch;
 
-      if (isMonorepo()) {
-        auto.logger.verbose.info("Detected monorepo, using lerna");
-        const monorepoVersion = getLernaJson().version;
-        const isIndependent = monorepoVersion === "independent";
-
-        if (dryRun) {
-          if (isIndependent) {
-            await execPromise("npx", [
-              "lerna",
-              "version",
-              bump,
-              ...(await getRegistryArgs()),
-              ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
-              "--yes",
-              "--no-push",
-              "--no-git-tag-version",
-              "--no-commit-hooks",
-              "--exact",
-              "--ignore-scripts",
-              ...verboseArgs,
-            ]);
-
-            const canaryPackageList = await getPackageList();
-            // Reset after we read the packages from the system!
-            await gitReset();
-
-            console.log(canaryPackageList.join("\n"));
+        /** Log the version */
+        const logVersion = (version: string) => {
+          if (quiet) {
+            console.log(version);
           } else {
-            console.log(inc(monorepoVersion, bump as ReleaseType));
+            auto.logger.log.info(`Would have published: ${version}`);
+          }
+        };
+
+        if (isMonorepo()) {
+          auto.logger.verbose.info("Detected monorepo, using lerna");
+          const monorepoVersion = getLernaJson().version;
+          const isIndependent = monorepoVersion === "independent";
+
+          if (dryRun) {
+            if (isIndependent) {
+              await execPromise("npx", [
+                "lerna",
+                "version",
+                bump,
+                ...(await getRegistryArgs()),
+                ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+                "--yes",
+                "--no-push",
+                "--no-git-tag-version",
+                "--no-commit-hooks",
+                "--exact",
+                "--ignore-scripts",
+                ...verboseArgs,
+              ]);
+
+              const canaryPackageList = await getPackageList();
+              // Reset after we read the packages from the system!
+              await gitReset();
+
+              logVersion(canaryPackageList.join("\n"));
+            } else {
+              logVersion(inc(monorepoVersion, bump as ReleaseType) || bump);
+            }
+
+            return;
           }
 
+          const monorepoBump =
+            isIndependent || !isBaseBranch
+              ? bump
+              : (await bumpLatest(getMonorepoPackage(), bump)) || bump;
+
+          await execPromise("npx", [
+            "lerna",
+            "version",
+            monorepoBump,
+            !isIndependent && this.forcePublish && "--force-publish",
+            "--no-commit-hooks",
+            "--yes",
+            "--no-push",
+            "-m",
+            isIndependent
+              ? '"Bump independent versions [skip ci]"'
+              : VERSION_COMMIT_MESSAGE,
+            this.exact && "--exact",
+            ...verboseArgs,
+          ]);
+          auto.logger.verbose.info("Successfully versioned repo");
           return;
         }
 
-        const monorepoBump =
-          isIndependent || !isBaseBranch
-            ? bump
-            : (await bumpLatest(getMonorepoPackage(), bump)) || bump;
+        const latestBump = isBaseBranch
+          ? (await bumpLatest(await loadPackageJson(), bump)) || bump
+          : bump;
 
-        await execPromise("npx", [
-          "lerna",
+        if (dryRun) {
+          logVersion(latestBump);
+          return;
+        }
+
+        await execPromise("npm", [
           "version",
-          monorepoBump,
-          !isIndependent && this.forcePublish && "--force-publish",
+          latestBump,
           "--no-commit-hooks",
-          "--yes",
-          "--no-push",
           "-m",
-          isIndependent
-            ? '"Bump independent versions [skip ci]"'
-            : VERSION_COMMIT_MESSAGE,
-          this.exact && "--exact",
+          VERSION_COMMIT_MESSAGE,
           ...verboseArgs,
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
-        return;
       }
-
-      const latestBump = isBaseBranch
-        ? (await bumpLatest(await loadPackageJson(), bump)) || bump
-        : bump;
-
-      if (dryRun) {
-        console.log(latestBump);
-        return;
-      }
-
-      await execPromise("npm", [
-        "version",
-        latestBump,
-        "--no-commit-hooks",
-        "-m",
-        VERSION_COMMIT_MESSAGE,
-        ...verboseArgs,
-      ]);
-      auto.logger.verbose.info("Successfully versioned repo");
-    });
+    );
 
     auto.hooks.canary.tapPromise(
       this.name,
-      async ({ bump, canaryIdentifier, dryRun }) => {
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
         if (this.setRcToken) {
           await setTokenOnCI(auto.logger);
           auto.logger.verbose.info("Set CI NPM_TOKEN");
@@ -953,6 +965,15 @@ export default class NPMPlugin implements IPlugin {
         const inPrerelease = prereleaseBranches.some((b) =>
           latestTag.includes(`-${b}.`)
         );
+
+        /** Log the version */
+        const logVersion = (version: string) => {
+          if (quiet) {
+            console.log(version);
+          } else {
+            auto.logger.log.info(`Would have published: ${version}`);
+          }
+        };
 
         if (isMonorepo()) {
           const isIndependent = getLernaJson().version === "independent";
@@ -985,7 +1006,7 @@ export default class NPMPlugin implements IPlugin {
             );
 
             if (dryRun) {
-              console.log(canaryVersion);
+              logVersion(canaryVersion);
               return;
             }
             // Is independent and a dry run
@@ -1011,7 +1032,7 @@ export default class NPMPlugin implements IPlugin {
             // Reset after we read the packages from the system!
             await gitReset();
 
-            console.log(canaryPackageList.join("\n"));
+            logVersion(canaryPackageList.join("\n"));
             return;
           }
 
@@ -1088,7 +1109,7 @@ export default class NPMPlugin implements IPlugin {
         );
 
         if (dryRun) {
-          console.log(canaryVersion);
+          logVersion(canaryVersion);
           return;
         }
 

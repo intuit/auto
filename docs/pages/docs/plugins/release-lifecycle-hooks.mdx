@@ -116,7 +116,7 @@ This hooks is required for plugin that facilitate publishing.
 Here `npm` does it for us.
 
 ```ts
-auto.hooks.version.tapPromise("NPM", async ({ bump, dryRun }) => {
+auto.hooks.version.tapPromise("NPM", async ({ bump, dryRun, quiet }) => {
   if (dryRun) {
     const { version } = await loadPackageJson();
     console.log(inc(version, bump));
@@ -144,7 +144,7 @@ _Examples:_
 - [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
 
 ```ts
-auto.hooks.version.tapPromise("NPM", async ({ dryRun }) => {});
+auto.hooks.afterVersion.tapPromise("NPM", async ({ dryRun }) => {});
 ```
 
 ## publish
@@ -187,7 +187,7 @@ You can either return a string value of just the version or an object containing
 - `details` - The body of the details element
 
 ```ts
-auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier }) => {
+auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier, dryRun, quiet }) => {
   const lastRelease = await auto.git!.getLatestRelease();
   const current = await auto.getCurrentVersion(lastRelease);
   const nextVersion = inc(current, bump as ReleaseType);

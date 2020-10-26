@@ -154,44 +154,52 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
-      const version = await getVersion();
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        const version = await getVersion();
 
-      // increment version
-      const manifest = await getManifest(this.options.manifest);
-      manifest.version = inc(version, bump as ReleaseType);
+        // increment version
+        const manifest = await getManifest(this.options.manifest);
+        manifest.version = inc(version, bump as ReleaseType);
 
-      if (dryRun) {
-        console.log(manifest.version);
-        return;
+        if (dryRun) {
+          if (quiet) {
+            console.log(manifest.version);
+          } else {
+            auto.logger.log.info(`Would have published: ${manifest.version}`);
+          }
+
+          return;
+        }
+
+        await writeFile(
+          this.options.manifest,
+          JSON.stringify(manifest, undefined, 2)
+        );
+
+        await copyFile(
+          this.options.manifest,
+          path.join(this.options.build, "manifest.json")
+        );
+
+        // commit new version
+        await execPromise("git", ["add", this.options.manifest]);
+        await execPromise("git", [
+          "commit",
+          "-m",
+          `"Bump version to ${manifest.version} [skip ci]"`,
+          "--no-verify",
+        ]);
+
+        await execPromise("git", [
+          "tag",
+          manifest.version,
+          "-m",
+          `"Update version to ${manifest.version}"`,
+        ]);
       }
-
-      await writeFile(
-        this.options.manifest,
-        JSON.stringify(manifest, undefined, 2)
-      );
-
-      await copyFile(
-        this.options.manifest,
-        path.join(this.options.build, "manifest.json")
-      );
-
-      // commit new version
-      await execPromise("git", ["add", this.options.manifest]);
-      await execPromise("git", [
-        "commit",
-        "-m",
-        `"Bump version to ${manifest.version} [skip ci]"`,
-        "--no-verify",
-      ]);
-
-      await execPromise("git", [
-        "tag",
-        manifest.version,
-        "-m",
-        `"Update version to ${manifest.version}"`,
-      ]);
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       // publish extension

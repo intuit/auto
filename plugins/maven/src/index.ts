@@ -222,39 +222,47 @@ export default class MavenPlugin implements IPlugin {
       };
     });
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
-      const previousVersion = await this.getVersion(auto);
-      const releaseVersion =
-        // After release we bump the version by a patch and add -SNAPSHOT
-        // Given that we do not need to increment when versioning, since
-        // it has already been done
-        this.snapshotRelease && bump === "patch"
-          ? previousVersion
-          : inc(previousVersion, bump as ReleaseType);
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        const previousVersion = await this.getVersion(auto);
+        const releaseVersion =
+          // After release we bump the version by a patch and add -SNAPSHOT
+          // Given that we do not need to increment when versioning, since
+          // it has already been done
+          this.snapshotRelease && bump === "patch"
+            ? previousVersion
+            : inc(previousVersion, bump as ReleaseType);
 
-      if (dryRun && releaseVersion) {
-        console.log(releaseVersion);
-        return;
+        if (dryRun && releaseVersion) {
+          if (quiet) {
+            console.log(releaseVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${releaseVersion}`);
+          }
+
+          return;
+        }
+
+        if (releaseVersion) {
+          await this.updatePoms(
+            releaseVersion,
+            auto,
+            `"Release ${releaseVersion} [skip ci]"`
+          );
+
+          const newVersion = auto.prefixRelease(releaseVersion);
+
+          // Ensure tag is on this commit, changelog will be added automatically
+          await execPromise("git", [
+            "tag",
+            newVersion,
+            "-m",
+            `"Update version to ${newVersion}"`,
+          ]);
+        }
       }
-
-      if (releaseVersion) {
-        await this.updatePoms(
-          releaseVersion,
-          auto,
-          `"Release ${releaseVersion} [skip ci]"`
-        );
-
-        const newVersion = auto.prefixRelease(releaseVersion);
-
-        // Ensure tag is on this commit, changelog will be added automatically
-        await execPromise("git", [
-          "tag",
-          newVersion,
-          "-m",
-          `"Update version to ${newVersion}"`,
-        ]);
-      }
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.verbose.warn(`Running "publish"`);
