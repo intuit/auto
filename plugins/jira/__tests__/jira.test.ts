@@ -77,7 +77,7 @@ describe("render jira", () => {
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
     await hooks.onCreateChangelog.promise(
       { hooks: changelogHooks } as Changelog,
-      SEMVER.patch
+      { bump: SEMVER.patch }
     );
 
     expect(
@@ -93,7 +93,7 @@ describe("render jira", () => {
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
     await hooks.onCreateChangelog.promise(
       { hooks: changelogHooks } as Changelog,
-      SEMVER.patch
+      { bump: SEMVER.patch }
     );
 
     const [, line] = await changelogHooks.renderChangelogLine.promise([
@@ -123,7 +123,7 @@ test("should create note for jira commits without PR title", async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  await autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
+  await autoHooks.onCreateChangelog.promise(changelog, { bump: SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([
@@ -139,7 +139,7 @@ test("should create note for JIRA commits", async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  await autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
+  await autoHooks.onCreateChangelog.promise(changelog, { bump: SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([

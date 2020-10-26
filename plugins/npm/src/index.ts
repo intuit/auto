@@ -724,7 +724,7 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.onCreateChangelog.tap(
       this.name,
-      (changelog, version = SEMVER.patch) => {
+      (changelog, { bump = SEMVER.patch }) => {
         changelog.hooks.renderChangelogLine.tapPromise(
           "NPM - Monorepo",
           async ([commit, line]) => {
@@ -742,7 +742,7 @@ export default class NPMPlugin implements IPlugin {
                 this.releaseType !== "next" &&
                 getLernaJson().version === "independent",
               logger: auto.logger,
-              version,
+              version: bump,
             });
 
             const section = changedPackages?.length
@@ -1148,7 +1148,7 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.next.tapPromise(
       this.name,
-      async (preReleaseVersions, bump, { dryRun }) => {
+      async (preReleaseVersions, { bump, dryRun }) => {
         if (this.setRcToken) {
           await setTokenOnCI(auto.logger);
           auto.logger.verbose.info("Set CI NPM_TOKEN");

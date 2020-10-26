@@ -125,6 +125,8 @@ interface BeforeShipitContext extends DryRunOption {
 }
 
 interface NextContext extends DryRunOption {
+  /** The bump to apply to the version */
+  bump: SEMVER;
   /** The commits in the next release */
   commits: IExtendedCommit[];
   /** The release notes for all the commits in the next release */
@@ -151,9 +153,11 @@ export interface IAutoHooks {
   /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<
     [
-      string | undefined,
-      IExtendedCommit[],
       {
+        /** The version published in the shipit run */
+        newVersion: string | undefined;
+        /** The commits the version was published for */
+        commitsInRelease: IExtendedCommit[];
         /** The type of release made by shipit */
         context: ShipitContext;
       }
@@ -214,7 +218,15 @@ export interface IAutoHooks {
    * This is where you hook into the changelog's hooks.
    * This hook is exposed for convenience during `this.hooks.onCreateRelease` and at the root `this.hooks`
    */
-  onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
+  onCreateChangelog: SyncHook<
+    [
+      Changelog,
+      {
+        /** The bump the changelog will make */
+        bump: SEMVER | undefined;
+      }
+    ]
+  >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncParallelHook<
     [
@@ -228,13 +240,20 @@ export interface IAutoHooks {
   /** Ran after the package has been versioned. */
   afterVersion: AsyncParallelHook<[DryRunOption]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
-  publish: AsyncParallelHook<[SEMVER]>;
+  publish: AsyncParallelHook<
+    [
+      {
+        /** The semver bump that was applied in the version hook */
+        bump: SEMVER;
+      }
+    ]
+  >;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
   canary: AsyncSeriesBailHook<
     [
       DryRunOption &
         QuietOption & {
-          /** The bump to apply to the version */
+          /** The bump being applied to the version */
           bump: SEMVER;
           /** The post-version identifier to add to the version */
           canaryIdentifier: string;
@@ -258,7 +277,7 @@ export interface IAutoHooks {
    * and an array of next versions that been released. If you make another
    * next release be sure to add it the the array.
    */
-  next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
+  next: AsyncSeriesWaterfallHook<[string[], NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
   /** Ran after the package has been published. */
@@ -392,8 +411,8 @@ export default class Auto {
     this.hooks.onCreateRelease.tap("Link onCreateChangelog", (release) => {
       release.hooks.onCreateChangelog.tap(
         "Link onCreateChangelog",
-        (changelog, version) => {
-          this.hooks.onCreateChangelog.call(changelog, version);
+        (changelog, bump) => {
+          this.hooks.onCreateChangelog.call(changelog, { bump });
         }
       );
     });
@@ -1317,7 +1336,8 @@ export default class Auto {
     }
 
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
-    const result = await this.hooks.next.promise([], bump, {
+    const result = await this.hooks.next.promise([], {
+      bump,
       commits,
       fullReleaseNotes,
       releaseNotes,
@@ -1484,7 +1504,9 @@ export default class Auto {
     }
 
     const { newVersion, commitsInRelease, context } = publishInfo;
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease, {
+    await this.hooks.afterShipIt.promise({
+      newVersion,
+      commitsInRelease,
       context,
     });
   }
@@ -1584,7 +1606,7 @@ export default class Auto {
 
     if (!options.dryRun) {
       this.logger.verbose.info("Calling publish hook");
-      await this.hooks.publish.promise(bump);
+      await this.hooks.publish.promise({ bump });
       this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
     }

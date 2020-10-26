@@ -20,7 +20,7 @@ export const makeHooks = (): IAutoHooks => ({
   beforeShipIt: new AsyncSeriesHook(["context"]),
   afterAddToChangelog: new AsyncSeriesHook(["context"]),
   beforeCommitChangelog: new AsyncSeriesHook(["context"]),
-  afterShipIt: new AsyncParallelHook(["version", "commits", "context"]),
+  afterShipIt: new AsyncParallelHook(["context"]),
   makeRelease: new AsyncSeriesBailHook(["releaseInfo"]),
   afterRelease: new AsyncParallelHook(["releaseInfo"]),
   onCreateRelease: new SyncHook(["options"]),
@@ -35,7 +35,7 @@ export const makeHooks = (): IAutoHooks => ({
   publish: new AsyncParallelHook(["version"]),
   afterPublish: new AsyncParallelHook(),
   canary: new AsyncSeriesBailHook(["canaryContext"]),
-  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "bump", "context"]),
+  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "context"]),
 });
 
 /** Make the hooks for "Release" */
