@@ -220,9 +220,25 @@ export interface IAutoHooks {
    */
   onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
-  version: AsyncParallelHook<[SEMVER]>;
+  version: AsyncParallelHook<
+    [
+      {
+        /** The semver bump to apply */
+        bump: SEMVER;
+        /** Do not actually do anything */
+        dryRun?: boolean;
+      }
+    ]
+  >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncParallelHook<[]>;
+  afterVersion: AsyncParallelHook<
+    [
+      {
+        /** Do not actually do anything */
+        dryRun?: boolean;
+      }
+    ]
+  >;
   /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncParallelHook<[SEMVER]>;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
@@ -423,43 +439,50 @@ export default class Auto {
      * Determine if repo is behind HEAD of current branch. We do this in
      * the "afterVersion" hook so the check happens as late as possible.
      */
-    this.hooks.afterVersion.tapPromise("Check remote for commits", async () => {
-      // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
-      // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
-      try {
-        const currentBranch = getCurrentBranch();
-        const heads = await execPromise("git", [
-          "ls-remote",
-          "--heads",
-          this.remote,
-          currentBranch,
-        ]);
-        this.logger.verbose.info("Branch:", currentBranch);
-        this.logger.verbose.info("HEADs:", heads);
-        const baseBranchHeadRef = new RegExp(
-          `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
-        );
-        const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
-
-        if (remoteHead) {
-          // This will throw if the branch is ahead of the current branch
-          execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`, {
-            stdio: "ignore",
-          });
+    this.hooks.afterVersion.tapPromise(
+      "Check remote for commits",
+      async ({ dryRun }) => {
+        if (dryRun) {
+          return;
         }
 
-        this.logger.verbose.info(
-          "Current branch is up to date, proceeding with release"
-        );
-      } catch (error) {
-        // If we are behind or there is no match, exit and skip the release
-        this.logger.log.warn(
-          "Current commit is behind, skipping the release to avoid collisions."
-        );
-        this.logger.verbose.warn(error);
-        process.exit(0);
+        // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
+        // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
+        try {
+          const currentBranch = getCurrentBranch();
+          const heads = await execPromise("git", [
+            "ls-remote",
+            "--heads",
+            this.remote,
+            currentBranch,
+          ]);
+          this.logger.verbose.info("Branch:", currentBranch);
+          this.logger.verbose.info("HEADs:", heads);
+          const baseBranchHeadRef = new RegExp(
+            `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
+          );
+          const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
+
+          if (remoteHead) {
+            // This will throw if the branch is ahead of the current branch
+            execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`, {
+              stdio: "ignore",
+            });
+          }
+
+          this.logger.verbose.info(
+            "Current branch is up to date, proceeding with release"
+          );
+        } catch (error) {
+          // If we are behind or there is no match, exit and skip the release
+          this.logger.log.warn(
+            "Current commit is behind, skipping the release to avoid collisions."
+          );
+          this.logger.verbose.warn(error);
+          process.exit(0);
+        }
       }
-    });
+    );
 
     loadEnv();
 
@@ -1540,11 +1563,11 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const version = await this.getVersion(options);
+    const bump = await this.getVersion(options);
 
-    this.logger.log.success(`Calculated version bump: ${version || "none"}`);
+    this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
 
-    if (version === "") {
+    if (bump === "") {
       this.logger.log.info("No version published.");
       return;
     }
@@ -1562,35 +1585,25 @@ export default class Auto {
 
     if (!options.dryRun) {
       await this.checkClean();
-      this.logger.verbose.info("Calling version hook");
-      await this.hooks.version.promise(version);
-      this.logger.verbose.info("Calling after version hook");
-      await this.hooks.afterVersion.promise();
+    }
+
+    this.logger.verbose.info("Calling version hook");
+    await this.hooks.version.promise({ bump, dryRun: options.dryRun });
+    this.logger.verbose.info("Calling after version hook");
+    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+
+    if (!options.dryRun) {
       this.logger.verbose.info("Calling publish hook");
-      await this.hooks.publish.promise(version);
+      await this.hooks.publish.promise(bump);
       this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
     }
 
-    const newVersion = await this.makeRelease(options);
-
-    if (options.dryRun) {
-      const current = await this.getCurrentVersion(lastRelease);
-
-      if (parse(current)) {
-        const next = inc(current, version as ReleaseType);
-
-        if (options.quiet) {
-          console.log(next);
-        } else {
-          this.logger.log.warn(`Published version would be: ${next}`);
-        }
-      }
-    } else if (options.quiet) {
-      console.log(newVersion);
-    }
-
-    return { newVersion, commitsInRelease, context: "latest" };
+    return {
+      newVersion: await this.makeRelease(options),
+      commitsInRelease,
+      context: "latest",
+    };
   }
 
   /** Get a pr number from user input or the env */

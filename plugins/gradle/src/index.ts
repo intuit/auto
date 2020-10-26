@@ -170,7 +170,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version: string) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       const previousVersion = await getVersion(
         this.options.gradleCommand,
         this.options.gradleOptions
@@ -180,9 +180,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         // After release we bump the version by a patch and add -SNAPSHOT
         // Given that we do not need to increment when versioning, since
         // it has already been done
-        this.snapshotRelease && version === "patch"
+        this.snapshotRelease && bump === "patch"
           ? previousVersion
-          : inc(previousVersion, version as ReleaseType);
+          : inc(previousVersion, bump as ReleaseType);
+
+      if (dryRun && releaseVersion) {
+        console.log(releaseVersion);
+        return;
+      }
 
       if (!releaseVersion) {
         throw new Error(

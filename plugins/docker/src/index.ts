@@ -75,13 +75,18 @@ export default class DockerPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       if (!auto.git) {
         return;
       }
 
       const lastTag = await getTag();
-      const newTag = inc(lastTag, version as ReleaseType);
+      const newTag = inc(lastTag, bump as ReleaseType);
+
+      if (dryRun && newTag) {
+        console.log(newTag);
+        return;
+      }
 
       if (!newTag) {
         auto.logger.log.info("No release found, doing nothing");
@@ -105,7 +110,7 @@ export default class DockerPlugin implements IPlugin {
       ]);
       this.calculatedTags = [newTag];
 
-      if (this.options.tagLatest === true && !version.startsWith("pre")) {
+      if (this.options.tagLatest === true && !bump.startsWith("pre")) {
         await execPromise("docker", [
           "tag",
           this.options.image,

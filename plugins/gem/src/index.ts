@@ -93,9 +93,14 @@ export default class GemPlugin implements IPlugin {
       };
     });
 
-    auto.hooks.version.tapPromise(this.name, async (bump) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       const [version, versionFile] = await this.getVersion(auto);
       const newTag = inc(version, bump as ReleaseType);
+
+      if (dryRun && newTag) {
+        console.log(newTag);
+        return;
+      }
 
       if (!newTag) {
         throw new Error(

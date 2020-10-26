@@ -857,21 +857,52 @@ export default class NPMPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       const isBaseBranch = branch === auto.baseBranch;
 
       if (isMonorepo()) {
         auto.logger.verbose.info("Detected monorepo, using lerna");
-        const isIndependent = getLernaJson().version === "independent";
+        const monorepoVersion = getLernaJson().version;
+        const isIndependent = monorepoVersion === "independent";
+
+        if (dryRun) {
+          if (isIndependent) {
+            await execPromise("npx", [
+              "lerna",
+              "version",
+              bump,
+              ...(await getRegistryArgs()),
+              ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+              "--yes",
+              "--no-push",
+              "--no-git-tag-version",
+              "--no-commit-hooks",
+              "--exact",
+              "--ignore-scripts",
+              ...verboseArgs,
+            ]);
+
+            const canaryPackageList = await getPackageList();
+            // Reset after we read the packages from the system!
+            await gitReset();
+
+            console.log(canaryPackageList.join("\n"));
+          } else {
+            console.log(inc(monorepoVersion, bump as ReleaseType));
+          }
+
+          return;
+        }
+
         const monorepoBump =
           isIndependent || !isBaseBranch
-            ? undefined
-            : await bumpLatest(getMonorepoPackage(), version);
+            ? bump
+            : (await bumpLatest(getMonorepoPackage(), bump)) || bump;
 
         await execPromise("npx", [
           "lerna",
           "version",
-          monorepoBump || version,
+          monorepoBump,
           !isIndependent && this.forcePublish && "--force-publish",
           "--no-commit-hooks",
           "--yes",
@@ -888,12 +919,17 @@ export default class NPMPlugin implements IPlugin {
       }
 
       const latestBump = isBaseBranch
-        ? await bumpLatest(await loadPackageJson(), version)
-        : version;
+        ? (await bumpLatest(await loadPackageJson(), bump)) || bump
+        : bump;
+
+      if (dryRun) {
+        console.log(latestBump);
+        return;
+      }
 
       await execPromise("npm", [
         "version",
-        latestBump || version,
+        latestBump,
         "--no-commit-hooks",
         "-m",
         VERSION_COMMIT_MESSAGE,

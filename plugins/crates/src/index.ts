@@ -72,8 +72,14 @@ export default class CratesPlugin implements IPlugin {
       return version;
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
-      const versionNew = bumpVersion(version);
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
+      const versionNew = bumpVersion(bump);
+
+      if (dryRun) {
+        console.log(versionNew);
+        return;
+      }
+
       auto.logger.log.info(`Bumped version to: ${versionNew}`);
       auto.logger.log.info("Building to update Cargo.lock");
       await execPromise("cargo", ["build"]);

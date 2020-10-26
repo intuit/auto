@@ -154,12 +154,18 @@ export default class ChromeWebStorePlugin implements IPlugin {
       );
     });
 
-    auto.hooks.version.tapPromise(this.name, async (bump) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       const version = await getVersion();
 
       // increment version
       const manifest = await getManifest(this.options.manifest);
       manifest.version = inc(version, bump as ReleaseType);
+
+      if (dryRun) {
+        console.log(manifest.version);
+        return;
+      }
+
       await writeFile(
         this.options.manifest,
         JSON.stringify(manifest, undefined, 2)

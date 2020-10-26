@@ -34,13 +34,18 @@ export default class GitTagPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       if (!auto.git) {
         return;
       }
 
       const lastTag = await getTag();
-      const newTag = inc(lastTag, version as ReleaseType);
+      const newTag = inc(lastTag, bump as ReleaseType);
+
+      if (dryRun && newTag) {
+        console.log(newTag);
+        return;
+      }
 
       if (!newTag) {
         auto.logger.log.info("No release found, doing nothing");

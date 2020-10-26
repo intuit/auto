@@ -31,7 +31,7 @@ export const makeHooks = (): IAutoHooks => ({
   getRepository: new AsyncSeriesBailHook(),
   prCheck: new AsyncSeriesBailHook(["prInformation"]),
   version: new AsyncParallelHook(["version"]),
-  afterVersion: new AsyncParallelHook(),
+  afterVersion: new AsyncParallelHook(["context"]),
   publish: new AsyncParallelHook(["version"]),
   afterPublish: new AsyncParallelHook(),
   canary: new AsyncSeriesBailHook(["canaryContext"]),

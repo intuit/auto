@@ -144,9 +144,14 @@ export default class CocoapodsPlugin implements IPlugin {
       auto.prefixRelease(getVersion(this.options.podspecPath))
     );
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
+    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun }) => {
       const previousVersion = getVersion(this.options.podspecPath);
-      const releaseVersion = inc(previousVersion, version as ReleaseType);
+      const releaseVersion = inc(previousVersion, bump as ReleaseType);
+
+      if (dryRun && releaseVersion) {
+        console.log(releaseVersion);
+        return;
+      }
 
       if (!releaseVersion) {
         throw new Error(

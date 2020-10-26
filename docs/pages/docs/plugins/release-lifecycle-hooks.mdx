@@ -116,10 +116,16 @@ This hooks is required for plugin that facilitate publishing.
 Here `npm` does it for us.
 
 ```ts
-auto.hooks.version.tapPromise("NPM", async (version: SEMVER) => {
+auto.hooks.version.tapPromise("NPM", async ({ bump, dryRun }) => {
+  if (dryRun) {
+    const { version } = await loadPackageJson();
+    console.log(inc(version, bump));
+    return;
+  }
+
   await execPromise("npm", [
     "version",
-    version,
+    bump,
     "-m",
     "Bump version to: %s [skip ci]",
   ]);
@@ -136,6 +142,12 @@ _Examples:_
 
 - In Core: Used to exit early is new commits are detected on the remote
 - [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
+
+```ts
+auto.hooks.version.tapPromise("NPM", async ({ dryRun }) => {
+
+});
+```
 
 ## publish
 
