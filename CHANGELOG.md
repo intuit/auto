@@ -1,3 +1,21 @@
+# v9.61.0 (Tue Oct 27 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Mukul Chaware ([@mukul13](https://github.com/mukul13)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/microsoft-teams`, `@auto-it/slack`
+  - Microsoft Teams plugin for auto [#1570](https://github.com/intuit/auto/pull/1570) ([@mukul13](https://github.com/mukul13) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Mukul Chaware ([@mukul13](https://github.com/mukul13))
+
+---
+
 # v9.60.1 (Fri Oct 23 2020)
 
 :tada: This release contains work from a new contributor! :tada:
