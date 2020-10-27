@@ -4,8 +4,9 @@ import { dummyLog } from "@auto-it/core/src/utils/logger";
 import { makeHooks } from "@auto-it/core/src/utils/make-hooks";
 import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
+import createHttpsProxyAgent from "https-proxy-agent";
 
-import SlackPlugin from "../src";
+import SlackPlugin, { sanitizeMarkdown } from "../src";
 
 const fetchSpy = jest.fn();
 // @ts-ignore
@@ -41,7 +42,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
@@ -51,14 +52,14 @@ describe("postToSlack", () => {
       releaseNotes: "# My Notes",
     });
 
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
+    expect(plugin.createPost).not.toHaveBeenCalled();
   });
 
   test("doesn't post with no commits", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -69,14 +70,14 @@ describe("postToSlack", () => {
       releaseNotes: "# My Notes",
     });
 
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
+    expect(plugin.createPost).not.toHaveBeenCalled();
   });
 
   test("doesn't post with skip release label", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({
       hooks,
@@ -91,7 +92,7 @@ describe("postToSlack", () => {
       releaseNotes: "# My Notes",
     });
 
-    expect(plugin.postToSlack).not.toHaveBeenCalled();
+    expect(plugin.createPost).not.toHaveBeenCalled();
   });
 
   test("doesn't post without url", async () => {
@@ -99,7 +100,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin({ url: undefined });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -120,7 +121,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -149,7 +150,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -178,7 +179,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "postToSlack").mockImplementation();
+    jest.spyOn(plugin, "createPost").mockImplementation();
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -195,7 +196,7 @@ describe("postToSlack", () => {
       // @ts-ignore
       response: mockResponse,
     });
-    expect(plugin.postToSlack).toHaveBeenCalledTimes(1);
+    expect(plugin.createPost).toHaveBeenCalledTimes(1);
   });
 
   test("should warn when no token", async () => {
@@ -204,12 +205,11 @@ describe("postToSlack", () => {
     jest.spyOn(logger.verbose, "warn").mockImplementation();
     process.env.SLACK_TOKEN = "";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       { ...mockAuto, logger } as Auto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      '',
+      undefined
     );
 
     expect(logger.verbose.warn).toHaveBeenCalled();
@@ -219,12 +219,11 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -239,12 +238,11 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)\n - Another note",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)\n - Another note"),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -259,12 +257,11 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)\n  - Another note",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)\n  - Another note"),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -280,12 +277,11 @@ describe("postToSlack", () => {
     process.env.SLACK_TOKEN = "MY_TOKEN";
     process.env.http_proxy = "http-proxy";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      createHttpsProxyAgent('mock-url')
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -300,12 +296,11 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`,
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown(`# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      undefined
     );
 
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
@@ -316,12 +311,11 @@ describe("postToSlack", () => {
     process.env.SLACK_TOKEN = "MY_TOKEN";
     process.env.https_proxy = "https-proxy";
 
-    await plugin.postToSlack(
+    await plugin.createPost(
       mockAuto,
-      "1.0.0",
-      "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      mockResponse
+      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      createHttpsProxyAgent('mock-url')
     );
 
     expect(fetchSpy).toHaveBeenCalled();

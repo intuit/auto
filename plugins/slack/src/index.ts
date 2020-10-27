@@ -1,6 +1,5 @@
 import { githubToSlack } from "@atomist/slack-messages";
-import { RestEndpointMethodTypes } from "@octokit/rest";
-import createHttpsProxyAgent from "https-proxy-agent";
+import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
   Auto,
@@ -15,7 +14,7 @@ import * as t from "io-ts";
 const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
 
 /** Transform markdown into slack friendly text */
-const sanitizeMarkdown = (markdown: string) =>
+export const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
     .split("\n")
     .map((line) => {
@@ -127,29 +126,41 @@ export default class SlackPlugin implements IPlugin {
         }
 
         if (!this.options.url) {
-          throw new Error("Slack url must be set to post a message to slack.");
+          throw new Error(
+            `${this.name} url must be set to post a message to ${this.name}.`
+          );
         }
 
-        await this.postToSlack(
-          auto,
-          newVersion,
-          releaseNotes,
+        const releases =
           (Array.isArray(response) && response) ||
-            (response && [response]) ||
-            []
+          (response && [response]) ||
+          [];
+        const urls = releases.map(
+          (release) =>
+            `*<${release.data.html_url}|${
+              release.data.name || release.data.tag_name
+            }>*`
+        );
+        const releaseUrl = urls.length ? urls.join(", ") : newVersion;
+        const proxyUrl = process.env.https_proxy || process.env.http_proxy;
+        const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
+
+        await this.createPost(
+          auto,
+          sanitizeMarkdown(releaseNotes),
+          releaseUrl,
+          agent
         );
       }
     );
   }
 
   /** Post the release notes to slack */
-  async postToSlack(
+  async createPost(
     auto: Auto,
-    newVersion: string,
     releaseNotes: string,
-    releases: Array<
-      RestEndpointMethodTypes["repos"]["createRelease"]["response"]
-    >
+    releaseUrl: string,
+    agent: HttpsProxyAgent | undefined
   ) {
     if (!auto.git) {
       return;
@@ -157,17 +168,7 @@ export default class SlackPlugin implements IPlugin {
 
     auto.logger.verbose.info("Posting release notes to slack.");
 
-    const body = sanitizeMarkdown(releaseNotes);
     const token = process.env.SLACK_TOKEN;
-    const proxyUrl = process.env.https_proxy || process.env.http_proxy;
-    const atTarget = this.options.atTarget;
-    const urls = releases.map(
-      (release) =>
-        `*<${release.data.html_url}|${
-          release.data.name || release.data.tag_name
-        }>*`
-    );
-    const releaseUrl = urls.length ? urls.join(", ") : newVersion;
 
     if (!token) {
       auto.logger.verbose.warn("Slack may need a token to send a message");
@@ -176,11 +177,14 @@ export default class SlackPlugin implements IPlugin {
     await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
       method: "POST",
       body: JSON.stringify({
-        text: [`@${atTarget}: New release ${releaseUrl}`, body].join("\n"),
+        text: [
+          `@${this.options.atTarget}: New release ${releaseUrl}`,
+          releaseNotes,
+        ].join("\n"),
         link_names: 1,
       }),
       headers: { "Content-Type": "application/json" },
-      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
+      agent,
     });
 
     auto.logger.verbose.info("Posted release notes to slack.");
