@@ -417,6 +417,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "mukul13",
+      "name": "Mukul Chaware",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/8403230?v=4",
+      "profile": "https://changelogg.io/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
