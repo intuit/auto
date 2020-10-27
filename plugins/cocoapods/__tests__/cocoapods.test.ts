@@ -247,7 +247,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
@@ -264,7 +264,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("notpod", [
@@ -288,7 +288,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("bundle", [
@@ -317,7 +317,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("pod", [
@@ -347,7 +347,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
@@ -391,7 +391,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
@@ -454,7 +454,7 @@ trunk
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(6);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);

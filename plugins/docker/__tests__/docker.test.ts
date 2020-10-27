@@ -165,7 +165,7 @@ describe("Docker Plugin", () => {
   describe("canary", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -223,7 +223,7 @@ describe("Docker Plugin", () => {
   describe("next", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -237,7 +237,7 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage }
       );
 
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
 
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
@@ -273,7 +273,8 @@ describe("Docker Plugin", () => {
       );
 
       expect(
-        await hooks.next.promise([], Auto.SEMVER.patch, {
+        await hooks.next.promise([], {
+          bump: Auto.SEMVER.patch,
           dryRun: true,
           quiet: true,
         } as any)
@@ -295,7 +296,7 @@ describe("Docker Plugin", () => {
       );
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1`,
@@ -314,7 +315,7 @@ describe("Docker Plugin", () => {
       );
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1`,

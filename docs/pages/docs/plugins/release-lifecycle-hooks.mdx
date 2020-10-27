@@ -154,10 +154,10 @@ You must push the tags to github!
 This hooks is required for plugin that facilitate publishing.
 
 ```ts
-auto.hooks.publish.tapPromise("NPM", async (version: SEMVER) => {
+auto.hooks.publish.tapPromise("NPM", async ({ bump }) => {
   await execPromise("npm", [
     "version",
-    version,
+    bump,
     "-m",
     "Bump version to: %s [skip ci]",
   ]);
@@ -187,19 +187,26 @@ You can either return a string value of just the version or an object containing
 - `details` - The body of the details element
 
 ```ts
-auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier, dryRun, quiet }) => {
-  const lastRelease = await auto.git!.getLatestRelease();
-  const current = await auto.getCurrentVersion(lastRelease);
-  const nextVersion = inc(current, bump as ReleaseType);
-  const isScopedPackage = name.match(/@\S+\/\S+/);
-  const canaryVersion = `${nextVersion}-canary${canaryIdentifier}`;
+auto.hooks.canary.tapPromise(
+  this.name,
+  async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+    const lastRelease = await auto.git!.getLatestRelease();
+    const current = await auto.getCurrentVersion(lastRelease);
+    const nextVersion = inc(current, bump as ReleaseType);
+    const isScopedPackage = name.match(/@\S+\/\S+/);
+    const canaryVersion = `${nextVersion}-canary${canaryIdentifier}`;
 
-  await execPromise("npm", ["version", canaryVersion, "--no-git-tag-version"]);
-  await execPromise("npm", ["publish", "--tag", "canary"]);
+    await execPromise("npm", [
+      "version",
+      canaryVersion,
+      "--no-git-tag-version",
+    ]);
+    await execPromise("npm", ["publish", "--tag", "canary"]);
 
-  auto.logger.verbose.info("Successfully published canary version");
-  return canaryVersion;
-});
+    auto.logger.verbose.info("Successfully published canary version");
+    return canaryVersion;
+  }
+);
 ```
 
 `canary` version should not produce any of the following:
@@ -230,7 +237,7 @@ import {
 
 auto.hooks.next.tapPromise(
   this.name,
-  async (preReleaseVersions, bump, { dryRun }) => {
+  async (preReleaseVersions, { bump, dryRun }) => {
     const branch = getCurrentBranch() || "";
     const lastRelease = await auto.git.getLatestRelease();
     const current =
@@ -328,18 +335,15 @@ _Other examples:_
 
 Ran after the `shipit` command has run.
 
-- `newVersion` - The new version that was release
-- `commits` - the commits in the release
 - `data`
+  - `newVersion` - The new version that was release
+  - `commits` - the commits in the release
   - `context` - The type of release that was created (`latest`, `next`, `canary`, or `old`)
 
 ```ts
-auto.hooks.afterShipIt.tap(
-  "MyPlugin",
-  async (newVersion, commits, { context }) => {
-    // do something
-  }
-);
+auto.hooks.afterShipIt.tap("MyPlugin", async ({ context }) => {
+  // do something
+});
 ```
 
 _Other examples:_

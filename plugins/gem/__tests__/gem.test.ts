@@ -277,7 +277,7 @@ describe("Gem Plugin", () => {
       const hooks = makeHooks();
 
       plugin.apply({ hooks, logger } as any);
-      await hooks.publish.promise(SEMVER.minor);
+      await hooks.publish.promise({ bump: SEMVER.minor });
 
       expect(execSpy).toHaveBeenCalledWith("bundle", ["exec", "rake", "build"]);
     });
@@ -296,7 +296,7 @@ describe("Gem Plugin", () => {
       const hooks = makeHooks();
 
       plugin.apply({ hooks, logger } as any);
-      await hooks.publish.promise(SEMVER.minor);
+      await hooks.publish.promise({ bump: SEMVER.minor });
 
       expect(execSyncSpy).toHaveBeenCalledWith("gem release --tag --push", {
         stdio: "inherit",

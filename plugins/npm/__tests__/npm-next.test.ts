@@ -85,7 +85,7 @@ describe("next", () => {
     `;
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith("npm", [
@@ -138,7 +138,10 @@ describe("next", () => {
     `;
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+      await hooks.next.promise([], {
+        bump: Auto.SEMVER.patch,
+        dryRun: true,
+      } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
     expect(execPromise).not.toHaveBeenCalledWith("npm");
   });
@@ -170,7 +173,7 @@ describe("next", () => {
     `;
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith("git", [
@@ -213,7 +216,7 @@ describe("next", () => {
     `;
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith("npm", [
@@ -267,7 +270,7 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
@@ -307,7 +310,10 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+      await hooks.next.promise([], {
+        bump: Auto.SEMVER.patch,
+        dryRun: true,
+      } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).not.toHaveBeenCalledWith(
@@ -348,7 +354,7 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["1.2.4-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
@@ -414,7 +420,7 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["@foo/foo@1.0.0-next.0", "@foo/foo-bar@2.0.0-next.0"]);
 
     expect(execPromise).toHaveBeenCalledWith(
@@ -474,7 +480,10 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, { dryRun: true } as any)
+      await hooks.next.promise([], {
+        bump: Auto.SEMVER.patch,
+        dryRun: true,
+      } as any)
     ).toStrictEqual(["@foo/foo@1.0.0-next.1", "@foo/foo-bar@2.0.0-next.1"]);
 
     expect(execPromise).not.toHaveBeenCalledWith(
@@ -528,7 +537,7 @@ describe("next", () => {
     } as unknown) as Auto.Auto);
 
     expect(
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any)
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["@foo/foo@1.0.0-next.0"]);
   });
 });

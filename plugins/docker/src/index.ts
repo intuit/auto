@@ -162,7 +162,7 @@ export default class DockerPlugin implements IPlugin {
 
     auto.hooks.next.tapPromise(
       this.name,
-      async (preReleaseVersions, bump, { dryRun }) => {
+      async (preReleaseVersions, { bump, dryRun }) => {
         if (!auto.git) {
           return preReleaseVersions;
         }

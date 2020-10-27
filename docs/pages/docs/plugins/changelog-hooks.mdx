@@ -21,6 +21,10 @@ The hooks it provides allow you to customize everything about how the changelog 
 This is where you hook into the changelog's hooks.
 See examples below.
 
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Giphy', (changelog, { bump }) => {});
+```
+
 ## addToBody
 
 Add extra content to your changelogs.

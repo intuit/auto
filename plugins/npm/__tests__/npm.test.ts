@@ -633,7 +633,7 @@ describe("publish", () => {
     execPromise.mockClear();
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -657,7 +657,7 @@ describe("publish", () => {
 
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -682,7 +682,7 @@ describe("publish", () => {
 
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -716,7 +716,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
       "--_auth",
@@ -811,7 +811,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",

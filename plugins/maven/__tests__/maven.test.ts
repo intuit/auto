@@ -462,7 +462,7 @@ describe("maven", () => {
 
       await hooks.beforeRun.promise({} as any);
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec.mock.calls[0][1]).toContain("deploy");
     });

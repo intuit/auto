@@ -226,7 +226,7 @@ describe("CratesPlugin", () => {
           remote: "origin",
           baseBranch: "master",
         } as Auto.Auto);
-        await hooks.publish.promise(Auto.SEMVER.patch);
+        await hooks.publish.promise({ bump: Auto.SEMVER.patch });
         expect(exec).toHaveBeenCalledWith("cargo", ["publish"]);
         expect(exec).toHaveBeenCalledWith("git", [
           "push",

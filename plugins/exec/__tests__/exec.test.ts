@@ -192,7 +192,7 @@ describe("Exec Plugin", () => {
       plugins.apply({ hooks } as Auto);
       hooks.onCreateChangelog.call(
         { hooks: changelogHooks } as any,
-        SEMVER.patch
+        { bump: SEMVER.patch }
       );
 
       expect(

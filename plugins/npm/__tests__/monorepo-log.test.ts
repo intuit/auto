@@ -112,7 +112,7 @@ test("should group sections for packages", async () => {
     hooks,
     logger: dummyLog(),
   } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
+  hooks.onCreateChangelog.call(changelog, { bump: Auto.SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
@@ -176,7 +176,7 @@ test("should create sections for packages", async () => {
     hooks,
     logger: dummyLog(),
   } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
+  hooks.onCreateChangelog.call(changelog, { bump: Auto.SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
@@ -236,7 +236,7 @@ test("should be able to disable sections for packages", async () => {
     hooks,
     logger: dummyLog(),
   } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
+  hooks.onCreateChangelog.call(changelog, { bump: Auto.SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
@@ -296,7 +296,7 @@ test("should add versions for independent packages", async () => {
     hooks,
     logger: dummyLog(),
   } as Auto.Auto);
-  hooks.onCreateChangelog.call(changelog, Auto.SEMVER.patch);
+  hooks.onCreateChangelog.call(changelog, { bump: Auto.SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const commits = await commitsPromise;
