@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@artsy/update-repo": "^0.1.0",
+    "@artsy/update-repo": "^0.2.0",
     "@auto-it/core": "link:../../packages/core",
     "parse-github-url": "1.0.2",
     "fp-ts": "^2.5.3",

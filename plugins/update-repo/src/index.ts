@@ -168,13 +168,6 @@ export default class UpdateRepoPlugin implements IPlugin {
           return;
         }
 
-        const releases = Array.isArray(response) ? response : [response];
-
-        if (releases.some((release) => release.data.prerelease)) {
-          auto.logger.verbose.warn("In prerelease, no PRs generated.");
-          return;
-        }
-
         for await (const config of this.options) {
           await this.updateRepo(auto, newVersion, releaseNotes, config);
         }

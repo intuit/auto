@@ -228,7 +228,7 @@ describe("github", () => {
     const gh = new Git(options);
     const result = await gh.graphql<{ data: any }>("{ someQuery }");
 
-    expect(result.data).not.toBeUndefined();
+    expect(result?.data).not.toBeUndefined();
   });
 
   test("getFirstCommit", async () => {

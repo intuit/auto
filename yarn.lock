@@ -53,10 +53,10 @@
   dependencies:
     cross-fetch "3.0.5"
 
-"@artsy/update-repo@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@artsy/update-repo/-/update-repo-0.1.0.tgz#055682f36bd38068c3fe415d20e45dd4d854fa38"
-  integrity sha512-7H1QqQHTzYiyCL20x5lAuuYQyUITUMvd9uYk9fQMhGzGZfVInfgXd0srMmcb+hha3VEIpENstSVcmSQWytGyRQ==
+"@artsy/update-repo@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@artsy/update-repo/-/update-repo-0.2.0.tgz#c978d475fa4e2e1be0cc40fe57a7581f0d8f690b"
+  integrity sha512-S7pM46T6/pAaHVD5R5nCc4UXIQQo3kG4KQk2B75RYbOb8LMk7dyFKwsm36R3nriv7Xhb4E2jEN6J/srpataLFQ==
   dependencies:
     "@octokit/rest" "^17.2.0"
     kleur "^3.0.3"
