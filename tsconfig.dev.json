@@ -76,6 +76,9 @@
     },
     {
       "path": "plugins/microsoft-teams"
+    },
+    {
+      "path": "plugins/update-repo"
     }
   ]
 }

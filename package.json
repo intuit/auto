@@ -154,6 +154,12 @@
         }
       ],
       [
+        "update-repo",
+        {
+          "repo": "my/project"
+        }
+      ],
+      [
         "upload-assets",
         [
           "./packages/cli/binary/auto-linux.gz",
