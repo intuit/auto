@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/conventional-commits",
-  "version": "9.60.1",
+  "version": "9.61.0",
   "main": "dist/index.js",
   "description": "Conventional commit plugin for auto",
   "license": "MIT",

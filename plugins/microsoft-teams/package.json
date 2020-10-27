@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/microsoft-teams",
-  "version": "9.54.3",
+  "version": "9.61.0",
   "main": "dist/index.js",
   "description": "Microsoft Teams plugin for auto",
   "license": "MIT",
