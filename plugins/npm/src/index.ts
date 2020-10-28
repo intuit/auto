@@ -1254,12 +1254,20 @@ export default class NPMPlugin implements IPlugin {
           ];
         } else {
           auto.logger.verbose.info("Detected single npm package");
+          
           const newVersion = determineNextVersion(
             lastRelease,
             latestTag,
             bump,
             prereleaseBranch
           );
+          const prefixedVersion = auto.prefixRelease(newVersion);
+
+          preReleaseVersions.push(prefixedVersion);
+
+          if (dryRun) {
+            return preReleaseVersions;
+          }
 
           await execPromise("npm", [
             "version",
@@ -1270,21 +1278,13 @@ export default class NPMPlugin implements IPlugin {
             ...verboseArgs,
           ]);
 
-          const { version, private: isPrivate } = await loadPackageJson();
-          const prefixedVersion = auto.prefixRelease(version!);
-
-          preReleaseVersions.push(prefixedVersion);
-
-          if (dryRun) {
-            await gitReset();
-            return preReleaseVersions;
-          }
+          const { private: isPrivate } = await loadPackageJson();
 
           await execPromise("git", [
             "tag",
             prefixedVersion,
             "-m",
-            `"Update version to ${version}"`,
+            `"Update version to ${prefixedVersion}"`,
           ]);
 
           if (isPrivate) {
