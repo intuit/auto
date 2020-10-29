@@ -18,9 +18,9 @@ export const makeHooks = (): IAutoHooks => ({
   modifyConfig: new SyncWaterfallHook(["config"]),
   validateConfig: new AsyncSeriesBailHook(["name", "options"]),
   beforeShipIt: new AsyncSeriesHook(["context"]),
-  afterAddToChangelog: new AsyncSeriesHook(["context"]),
+  afterChangelog: new AsyncSeriesHook(["context"]),
   beforeCommitChangelog: new AsyncSeriesHook(["context"]),
-  afterShipIt: new AsyncParallelHook(["version", "commits", "context"]),
+  afterShipIt: new AsyncParallelHook(["context"]),
   makeRelease: new AsyncSeriesBailHook(["releaseInfo"]),
   afterRelease: new AsyncParallelHook(["releaseInfo"]),
   onCreateRelease: new SyncHook(["options"]),
@@ -31,11 +31,11 @@ export const makeHooks = (): IAutoHooks => ({
   getRepository: new AsyncSeriesBailHook(),
   prCheck: new AsyncSeriesBailHook(["prInformation"]),
   version: new AsyncParallelHook(["version"]),
-  afterVersion: new AsyncParallelHook(),
+  afterVersion: new AsyncParallelHook(["context"]),
   publish: new AsyncParallelHook(["version"]),
   afterPublish: new AsyncParallelHook(),
-  canary: new AsyncSeriesBailHook(["canaryVersion", "postFix"]),
-  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "bump", "context"]),
+  canary: new AsyncSeriesBailHook(["canaryContext"]),
+  next: new AsyncSeriesWaterfallHook(["preReleaseVersions", "context"]),
 });
 
 /** Make the hooks for "Release" */
@@ -64,7 +64,7 @@ export const makeInteractiveInitHooks = (): InteractiveInitHooks => ({
 export const makeChangelogHooks = (): IChangelogHooks => ({
   addToBody: new AsyncSeriesWaterfallHook(["notes", "commits"]),
   sortChangelogLines: new AsyncSeriesWaterfallHook(["lines"]),
-  renderChangelogLine: new AsyncSeriesWaterfallHook(["lineData"]),
+  renderChangelogLine: new AsyncSeriesWaterfallHook(["line", "commit"]),
   renderChangelogTitle: new AsyncSeriesBailHook(["commits", "lineRender"]),
   renderChangelogAuthor: new AsyncSeriesBailHook([
     "author",

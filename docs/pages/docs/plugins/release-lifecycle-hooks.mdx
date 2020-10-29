@@ -8,7 +8,7 @@ These hooks is where the publishing of your package actually happens.
 - [prCheck](#prCheck)
 - [beforeShipIt](#beforeshipit)
 - [beforeCommitChangelog](#beforecommitchangelog)
-- [afterAddToChangelog](#afteraddtochangelog)
+- [afterChangelog](#afterchangelog)
 - [version](#version)
 - [afterVersion](#afterversion)
 - [publish](#publish)
@@ -116,10 +116,16 @@ This hooks is required for plugin that facilitate publishing.
 Here `npm` does it for us.
 
 ```ts
-auto.hooks.version.tapPromise("NPM", async (version: SEMVER) => {
+auto.hooks.version.tapPromise("NPM", async ({ bump, dryRun, quiet }) => {
+  if (dryRun) {
+    const { version } = await loadPackageJson();
+    console.log(inc(version, bump));
+    return;
+  }
+
   await execPromise("npm", [
     "version",
-    version,
+    bump,
     "-m",
     "Bump version to: %s [skip ci]",
   ]);
@@ -137,6 +143,10 @@ _Examples:_
 - In Core: Used to exit early is new commits are detected on the remote
 - [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
 
+```ts
+auto.hooks.afterVersion.tapPromise("NPM", async ({ dryRun }) => {});
+```
+
 ## publish
 
 Publish the package to some package distributor.
@@ -144,10 +154,10 @@ You must push the tags to github!
 This hooks is required for plugin that facilitate publishing.
 
 ```ts
-auto.hooks.publish.tapPromise("NPM", async (version: SEMVER) => {
+auto.hooks.publish.tapPromise("NPM", async ({ bump }) => {
   await execPromise("npm", [
     "version",
-    version,
+    bump,
     "-m",
     "Bump version to: %s [skip ci]",
   ]);
@@ -177,19 +187,26 @@ You can either return a string value of just the version or an object containing
 - `details` - The body of the details element
 
 ```ts
-auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
-  const lastRelease = await auto.git!.getLatestRelease();
-  const current = await auto.getCurrentVersion(lastRelease);
-  const nextVersion = inc(current, version as ReleaseType);
-  const isScopedPackage = name.match(/@\S+\/\S+/);
-  const canaryVersion = `${nextVersion}-canary${postFix}`;
+auto.hooks.canary.tapPromise(
+  this.name,
+  async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+    const lastRelease = await auto.git!.getLatestRelease();
+    const current = await auto.getCurrentVersion(lastRelease);
+    const nextVersion = inc(current, bump as ReleaseType);
+    const isScopedPackage = name.match(/@\S+\/\S+/);
+    const canaryVersion = `${nextVersion}-canary${canaryIdentifier}`;
 
-  await execPromise("npm", ["version", canaryVersion, "--no-git-tag-version"]);
-  await execPromise("npm", ["publish", "--tag", "canary"]);
+    await execPromise("npm", [
+      "version",
+      canaryVersion,
+      "--no-git-tag-version",
+    ]);
+    await execPromise("npm", ["publish", "--tag", "canary"]);
 
-  auto.logger.verbose.info("Successfully published canary version");
-  return canaryVersion;
-});
+    auto.logger.verbose.info("Successfully published canary version");
+    return canaryVersion;
+  }
+);
 ```
 
 `canary` version should not produce any of the following:
@@ -218,29 +235,37 @@ import {
   getCurrentBranch,
 } from "@auto-it/core";
 
-auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
-  const branch = getCurrentBranch() || "";
-  const lastRelease = await auto.git.getLatestRelease();
-  const current =
-    (await auto.git.getLastTagNotInBaseBranch(branch)) ||
-    (await auto.getCurrentVersion(lastRelease));
-  // Use this helper function to determine the next prerelease version
-  const prerelease = determineNextVersion(lastRelease, current, bump, "next");
+auto.hooks.next.tapPromise(
+  this.name,
+  async (preReleaseVersions, { bump, dryRun }) => {
+    const branch = getCurrentBranch() || "";
+    const lastRelease = await auto.git.getLatestRelease();
+    const current =
+      (await auto.git.getLastTagNotInBaseBranch(branch)) ||
+      (await auto.getCurrentVersion(lastRelease));
+    // Use this helper function to determine the next prerelease version
+    const prerelease = determineNextVersion(lastRelease, current, bump, "next");
 
-  // Create a new tag for it
-  await execPromise("git", [
-    "tag",
-    prerelease,
-    "-m",
-    `"Tag pre-release: ${prerelease}"`,
-  ]);
-  // Push the tag
-  await execPromise("git", ["push", auto.remote, "--tags"]);
+    // Make sure to add the version to the list
+    preReleaseVersions.push(prerelease);
 
-  // Make sure to add the version to the list
-  preReleaseVersions.push(prerelease);
-  return preReleaseVersions;
-});
+    if (dryRun) {
+      return preReleaseVersions;
+    }
+
+    // Create a new tag for it
+    await execPromise("git", [
+      "tag",
+      prerelease,
+      "-m",
+      `"Tag pre-release: ${prerelease}"`,
+    ]);
+    // Push the tag
+    await execPromise("git", ["push", auto.remote, "--tags"]);
+
+    return preReleaseVersions;
+  }
+);
 ```
 
 `next` version should not produce any of the following:
@@ -310,18 +335,15 @@ _Other examples:_
 
 Ran after the `shipit` command has run.
 
-- `newVersion` - The new version that was release
-- `commits` - the commits in the release
 - `data`
+  - `newVersion` - The new version that was release
+  - `commits` - the commits in the release
   - `context` - The type of release that was created (`latest`, `next`, `canary`, or `old`)
 
 ```ts
-auto.hooks.afterShipIt.tap(
-  "MyPlugin",
-  async (newVersion, commits, { context }) => {
-    // do something
-  }
-);
+auto.hooks.afterShipIt.tap("MyPlugin", async ({ context }) => {
+  // do something
+});
 ```
 
 _Other examples:_

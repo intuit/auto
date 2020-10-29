@@ -75,100 +75,135 @@ export default class DockerPlugin implements IPlugin {
       return getTag();
     });
 
-    auto.hooks.version.tapPromise(this.name, async (version) => {
-      if (!auto.git) {
-        return;
-      }
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        if (!auto.git) {
+          return;
+        }
 
-      const lastTag = await getTag();
-      const newTag = inc(lastTag, version as ReleaseType);
+        const lastTag = await getTag();
+        const newTag = inc(lastTag, bump as ReleaseType);
 
-      if (!newTag) {
-        auto.logger.log.info("No release found, doing nothing");
-        return;
-      }
+        if (dryRun && newTag) {
+          if (quiet) {
+            console.log(newTag);
+          } else {
+            auto.logger.log.info(`Would have published: ${newTag}`);
+          }
 
-      const prefixedTag = auto.prefixRelease(newTag);
+          return;
+        }
 
-      auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
-      await execPromise("git", [
-        "tag",
-        prefixedTag,
-        "-m",
-        `"Update version to ${prefixedTag}"`,
-      ]);
+        if (!newTag) {
+          auto.logger.log.info("No release found, doing nothing");
+          return;
+        }
 
-      await execPromise("docker", [
-        "tag",
-        this.options.image,
-        `${this.options.registry}:${newTag}`,
-      ]);
-      this.calculatedTags = [newTag];
+        const prefixedTag = auto.prefixRelease(newTag);
 
-      if (this.options.tagLatest === true && !version.startsWith("pre")) {
+        auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
+        await execPromise("git", [
+          "tag",
+          prefixedTag,
+          "-m",
+          `"Update version to ${prefixedTag}"`,
+        ]);
+
         await execPromise("docker", [
           "tag",
           this.options.image,
-          `${this.options.registry}:latest`,
+          `${this.options.registry}:${newTag}`,
         ]);
-        this.calculatedTags.push("latest");
+        this.calculatedTags = [newTag];
+
+        if (this.options.tagLatest === true && !bump.startsWith("pre")) {
+          await execPromise("docker", [
+            "tag",
+            this.options.image,
+            `${this.options.registry}:latest`,
+          ]);
+          this.calculatedTags.push("latest");
+        }
       }
-    });
+    );
 
-    auto.hooks.canary.tapPromise(this.name, async (version, postFix) => {
-      if (!auto.git) {
-        return;
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+        if (!auto.git) {
+          return;
+        }
+
+        const lastRelease = await auto.git.getLatestRelease();
+        const current = await auto.getCurrentVersion(lastRelease);
+        const nextVersion = inc(current, bump as ReleaseType);
+        const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
+
+        if (dryRun) {
+          if (quiet) {
+            console.log(canaryVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${canaryVersion}`);
+          }
+
+          return;
+        }
+
+        const targetImage = `${this.options.registry}:${canaryVersion}`;
+
+        await execPromise("docker", ["tag", this.options.image, targetImage]);
+        await execPromise("docker", ["push", targetImage]);
+
+        auto.logger.verbose.info("Successfully published canary version");
+        return canaryVersion;
       }
+    );
 
-      const lastRelease = await auto.git.getLatestRelease();
-      const current = await auto.getCurrentVersion(lastRelease);
-      const nextVersion = inc(current, version as ReleaseType);
-      const canaryVersion = `${nextVersion}-canary${postFix}`;
-      const targetImage = `${this.options.registry}:${canaryVersion}`;
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, { bump, dryRun }) => {
+        if (!auto.git) {
+          return preReleaseVersions;
+        }
 
-      await execPromise("docker", ["tag", this.options.image, targetImage]);
-      await execPromise("docker", ["push", targetImage]);
+        const prereleaseBranches =
+          auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const lastRelease = await auto.git.getLatestRelease();
+        const current =
+          (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await auto.getCurrentVersion(lastRelease));
+        const prerelease = determineNextVersion(
+          lastRelease,
+          current,
+          bump,
+          prereleaseBranch
+        );
+        const targetImage = `${this.options.registry}:${prerelease}`;
 
-      auto.logger.verbose.info("Successfully published canary version");
-      return canaryVersion;
-    });
+        preReleaseVersions.push(prerelease);
 
-    auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, bump) => {
-      if (!auto.git) {
+        if (dryRun) {
+          return preReleaseVersions;
+        }
+
+        await execPromise("git", [
+          "tag",
+          prerelease,
+          "-m",
+          `"Tag pre-release: ${prerelease}"`,
+        ]);
+        await execPromise("docker", ["tag", this.options.image, targetImage]);
+        await execPromise("docker", ["push", targetImage]);
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
         return preReleaseVersions;
       }
-
-      const prereleaseBranches =
-        auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
-      const branch = getCurrentBranch() || "";
-      const prereleaseBranch = prereleaseBranches.includes(branch)
-        ? branch
-        : prereleaseBranches[0];
-      const lastRelease = await auto.git.getLatestRelease();
-      const current =
-        (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
-        (await auto.getCurrentVersion(lastRelease));
-      const prerelease = determineNextVersion(
-        lastRelease,
-        current,
-        bump,
-        prereleaseBranch
-      );
-      const targetImage = `${this.options.registry}:${prerelease}`;
-
-      await execPromise("git", [
-        "tag",
-        prerelease,
-        "-m",
-        `"Tag pre-release: ${prerelease}"`,
-      ]);
-      await execPromise("docker", ["tag", this.options.image, targetImage]);
-      await execPromise("docker", ["push", targetImage]);
-      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
-
-      preReleaseVersions.push(prerelease);
-      return preReleaseVersions;
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.log.info("Pushing new tag to GitHub");

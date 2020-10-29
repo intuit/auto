@@ -13,8 +13,9 @@ const graphql = jest.fn();
 const exec = jest.fn();
 exec.mockReturnValue("");
 // @ts-ignore
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 const setup = (
@@ -45,7 +46,7 @@ const setup = (
       hooks: changelogHooks,
       options: { baseUrl: "https://github.com" },
     } as Changelog,
-    Auto.SEMVER.patch
+    { bump: Auto.SEMVER.patch }
   );
 
   return changelogHooks;

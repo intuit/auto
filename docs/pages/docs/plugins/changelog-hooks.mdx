@@ -21,6 +21,10 @@ The hooks it provides allow you to customize everything about how the changelog 
 This is where you hook into the changelog's hooks.
 See examples below.
 
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Giphy', (changelog, { bump }) => {});
+```
+
 ## addToBody
 
 Add extra content to your changelogs.
@@ -31,7 +35,7 @@ The following adds a random GIF from [giphy](https://giphy.com) to each new chan
 
 ```ts
 auto.hooks.onCreateChangelog.tapPromise('Giphy', changelog =>
-  changelog.hooks.renderChangelogLine.tapPromise(
+  changelog.hooks.addToBody.tapPromise(
     'Giphy',
     async (notes, commits) => {
       const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_KEY}`);
@@ -60,8 +64,7 @@ The following plugin would change all the bullet points in the changelog to star
 auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
   changelog.hooks.renderChangelogLine.tapPromise(
     'Stars',
-    async (commit, line) =>
-      [commit, `${line.replace('-', ':star:')}\n`]
+    async (line, commit) => `${line.replace('-', ':star:')}\n`
   );
 );
 ```

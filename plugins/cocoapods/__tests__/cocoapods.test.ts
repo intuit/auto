@@ -148,7 +148,7 @@ describe("Cocoapods Plugin", () => {
 
       const mock = jest.spyOn(utilities, "writePodspecContents");
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.0.2"));
     });
@@ -157,7 +157,7 @@ describe("Cocoapods Plugin", () => {
 
       const mock = jest.spyOn(utilities, "writePodspecContents");
 
-      await hooks.version.promise(Auto.SEMVER.minor);
+      await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.1.0"));
     });
@@ -166,7 +166,7 @@ describe("Cocoapods Plugin", () => {
 
       const mock = jest.spyOn(utilities, "writePodspecContents");
 
-      await hooks.version.promise(Auto.SEMVER.major);
+      await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("1.0.0"));
     });
@@ -180,7 +180,7 @@ describe("Cocoapods Plugin", () => {
         });
 
       await expect(
-        hooks.version.promise(Auto.SEMVER.major)
+        hooks.version.promise({ bump: Auto.SEMVER.major })
       ).rejects.toThrowError(
         "Error updating version in podspec: ./Test.podspec"
       );
@@ -247,7 +247,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
@@ -264,7 +264,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("notpod", [
@@ -288,7 +288,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("bundle", [
@@ -317,7 +317,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("pod", [
@@ -347,7 +347,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
@@ -391,7 +391,7 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
@@ -454,7 +454,7 @@ trunk
         prefixRelease,
       } as Auto.Auto);
 
-      await hook.publish.promise(Auto.SEMVER.patch);
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec).toBeCalledTimes(6);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);

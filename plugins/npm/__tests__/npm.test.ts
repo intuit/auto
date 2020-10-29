@@ -483,7 +483,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
@@ -513,7 +513,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       Auto.SEMVER.patch,
@@ -544,7 +544,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -580,7 +580,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -616,7 +616,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "version",
@@ -633,7 +633,7 @@ describe("publish", () => {
     execPromise.mockClear();
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -657,7 +657,7 @@ describe("publish", () => {
 
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -682,7 +682,7 @@ describe("publish", () => {
 
     existsSync.mockReturnValueOnce(true);
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -716,7 +716,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
       "--_auth",
@@ -745,7 +745,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "version",
       "1.0.1",
@@ -777,7 +777,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
       "lerna",
       "version",
@@ -811,7 +811,7 @@ describe("publish", () => {
       }
     `;
 
-    await hooks.publish.promise(Auto.SEMVER.patch);
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
@@ -851,9 +851,47 @@ describe("canary", () => {
       }
     `;
 
-    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+    });
     expect(execPromise.mock.calls[1]).toContain("npm");
     expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+  });
+
+  test("prints canary version in dry run", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    const log = jest.fn();
+    jest.spyOn(console, "log").mockImplementation(log);
+
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+      dryRun: true,
+      quiet: true,
+    });
+    expect(log).toHaveBeenCalledWith("1.2.4-canary.123.1.0");
   });
 
   test("doesn't publish private packages", async () => {
@@ -881,7 +919,10 @@ describe("canary", () => {
     `;
 
     expect(
-      await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1")
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.123.1",
+      })
     ).toStrictEqual({
       error: "Package private, cannot make canary release to npm.",
     });
@@ -915,7 +956,10 @@ describe("canary", () => {
     // second doesn't
     execPromise.mockReturnValueOnce(false);
 
-    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+    });
     expect(execPromise.mock.calls[2]).toContain("npm");
     expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.1");
   });
@@ -944,7 +988,10 @@ describe("canary", () => {
       }
     `;
 
-    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+    });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
       "--tag",
@@ -977,7 +1024,10 @@ describe("canary", () => {
       }
     `;
 
-    await hooks.canary.promise(Auto.SEMVER.patch, "canary.123.1");
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+    });
     expect(execPromise.mock.calls[1]).toContain("npm");
     expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
   });
@@ -1021,10 +1071,64 @@ describe("canary", () => {
     monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
     getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
-    const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
+    const value = await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "",
+    });
     expect(execPromise.mock.calls[1][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
+  });
+
+  test("prints version monorepo dry run", async () => {
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      git: {
+        getLatestRelease: () => Promise.resolve("1.2.3"),
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as any);
+    existsSync.mockReturnValueOnce(true);
+
+    readResult = `
+      {
+        "name": "test"
+      }
+    `;
+
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    const log = jest.fn();
+    jest.spyOn(console, "log").mockImplementation(log);
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
+
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+      dryRun: true,
+      quiet: true,
+    });
+
+    expect(log).toHaveBeenCalledWith("1.2.4-canary.123.1.0");
   });
 
   test("legacy auth works in monorepo", async () => {
@@ -1067,7 +1171,10 @@ describe("canary", () => {
     monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
     getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
-    await hooks.canary.promise(Auto.SEMVER.patch, "");
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "",
+    });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
       "publish",
@@ -1123,7 +1230,10 @@ describe("canary", () => {
     monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
     getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
-    const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
+    const value = await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "",
+    });
     expect(value).toStrictEqual({
       error: "No packages were changed. No canary published.",
     });
@@ -1164,7 +1274,7 @@ describe("canary", () => {
       ])
     );
 
-    await hooks.version.promise(Auto.SEMVER.patch);
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenNthCalledWith(1, "npx", [
       "lerna",
       "version",
@@ -1218,7 +1328,12 @@ describe("canary", () => {
       ])
     );
 
-    expect(await hooks.canary.promise(Auto.SEMVER.patch, "")).toMatchSnapshot();
+    expect(
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "",
+      })
+    ).toMatchSnapshot();
   });
 
   test("error when no canary release found - independent", async () => {
@@ -1260,7 +1375,10 @@ describe("canary", () => {
       ])
     );
 
-    const value = await hooks.canary.promise(Auto.SEMVER.patch, "");
+    const value = await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "",
+    });
     expect(value).toStrictEqual({
       error: "No packages were changed. No canary published.",
     });

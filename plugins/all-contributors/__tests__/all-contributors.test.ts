@@ -28,7 +28,7 @@ jest.mock("child_process");
 jest.mock("all-contributors-cli/dist/contributors");
 jest.mock("all-contributors-cli/dist/generate");
 
-// @ts-ignore 
+// @ts-ignore
 generateReadme.mockImplementation(generateMock);
 // @ts-ignore
 addContributor.mockImplementation(addContributorMock);
@@ -38,7 +38,10 @@ env.mockImplementation(envMock);
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
   gitShow(...args)
 );
-jest.mock("../../../packages/core/dist/utils/get-lerna-packages", () => (...args: any[]) => getLernaPackages(...args));
+jest.mock(
+  "../../../packages/core/dist/utils/get-lerna-packages",
+  () => (...args: any[]) => getLernaPackages(...args)
+);
 jest.spyOn(process, "chdir").mockReturnValue();
 
 const mockRead = (result: string) =>
@@ -264,7 +267,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -296,7 +299,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -325,7 +328,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -353,7 +356,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -380,7 +383,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -429,7 +432,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -472,7 +475,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -501,7 +504,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -535,7 +538,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",
@@ -564,7 +567,7 @@ describe("All Contributors Plugin", () => {
 
     releasedLabel.apply({ hooks: autoHooks, logger: dummyLog() } as Auto.Auto);
 
-    await autoHooks.afterAddToChangelog.promise({
+    await autoHooks.afterChangelog.promise({
       bump: Auto.SEMVER.patch,
       currentVersion: "0.0.0",
       lastRelease: "0.0.0",

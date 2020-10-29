@@ -46,8 +46,9 @@ const mockReadFile = (result: string) =>
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 describe("maven", () => {
@@ -262,7 +263,7 @@ describe("maven", () => {
 
       await hooks.beforeRun.promise({} as any);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       const call = exec.mock.calls[0][1];
       expect(call).toContain("tag");
@@ -282,7 +283,7 @@ describe("maven", () => {
 
       await hooks.beforeRun.promise({} as any);
 
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       const call = exec.mock.calls[0][1];
       expect(call).toContain("tag");
@@ -310,7 +311,7 @@ describe("maven", () => {
       mockReadFile(oldPomXml);
 
       await hooks.beforeRun.promise({} as any);
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(await readFile).toHaveBeenCalledTimes(4);
       expect(await readFile).toHaveBeenLastCalledWith(
@@ -344,7 +345,7 @@ describe("maven", () => {
                 </project>`);
 
       await hooks.beforeRun.promise({} as any);
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(await readFile).toHaveBeenCalledTimes(3);
       expect(await readFile).toHaveBeenLastCalledWith(
@@ -398,7 +399,7 @@ describe("maven", () => {
       });
 
       await hooks.beforeRun.promise({} as any);
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(await readFile).toHaveBeenCalledTimes(5);
       expect(await readFile).toHaveBeenLastCalledWith(
@@ -427,7 +428,9 @@ describe("maven", () => {
 
       await hooks.beforeRun.promise({} as any);
 
-      expect(await hooks.version.promise(Auto.SEMVER.minor)).toBeUndefined();
+      expect(
+        await hooks.version.promise({ bump: Auto.SEMVER.minor })
+      ).toBeUndefined();
     });
   });
 
@@ -459,7 +462,7 @@ describe("maven", () => {
 
       await hooks.beforeRun.promise({} as any);
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
 
       expect(exec.mock.calls[0][1]).toContain("deploy");
     });

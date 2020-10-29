@@ -903,24 +903,6 @@ describe("Auto", () => {
       expect(exit).toHaveBeenCalled();
     });
 
-    test("doesn't try to overwrite releases", async () => {
-      const auto = new Auto({ ...defaults, plugins: [] });
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-
-      auto.hooks.getPreviousVersion.tap("test", () => "1.2.3");
-      const afterRelease = jest.fn();
-      auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.runRelease();
-      expect(afterRelease).not.toHaveBeenCalled();
-    });
-
     test("should publish with default options", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -1151,24 +1133,6 @@ describe("Auto", () => {
       await expect(auto.canary()).rejects.not.toBeUndefined();
     });
 
-    test("does not call canary hook in dry-run", async () => {
-      const auto = new Auto(defaults);
-      // @ts-ignore
-      auto.checkClean = () => Promise.resolve(true);
-
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-      const canary = jest.fn();
-      auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.canary({ pr: 123, build: 1, dryRun: true });
-      expect(canary).not.toHaveBeenCalled();
-    });
-
     test("calls the canary hook with the pr info", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       // @ts-ignore
@@ -1187,7 +1151,12 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary({ pr: 123, build: 1 });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.123.1");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.123.1",
+        })
+      );
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
     });
 
@@ -1207,7 +1176,12 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abc");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abc",
+        })
+      );
     });
 
     test("doesn't comment if there is an error", async () => {
@@ -1246,7 +1220,12 @@ describe("Auto", () => {
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary();
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abcd",
+        })
+      );
     });
 
     test('should not publish when is present "skip-release" label', async () => {
@@ -1290,7 +1269,12 @@ describe("Auto", () => {
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary({ force: true });
-      expect(canary).toHaveBeenCalledWith(SEMVER.patch, "canary.abcd");
+      expect(canary).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bump: SEMVER.patch,
+          canaryIdentifier: "canary.abcd",
+        })
+      );
     });
   });
 
@@ -1302,29 +1286,6 @@ describe("Auto", () => {
       auto.logger = dummyLog();
 
       await expect(auto.next({})).rejects.not.toBeUndefined();
-    });
-
-    test("does not call next hook in dry-run", async () => {
-      const auto = new Auto(defaults);
-
-      // @ts-ignore
-      auto.checkClean = () => Promise.resolve(true);
-      auto.logger = dummyLog();
-      await auto.loadConfig();
-      auto.remote = "origin";
-      auto.git!.getProject = () => Promise.resolve({ data: {} } as any);
-      auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
-      auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.3");
-      auto.release!.getCommitsInRelease = () =>
-        Promise.resolve([makeCommitFromMsg("Test Commit")]);
-
-      const next = jest.fn();
-      auto.hooks.next.tap("test", next);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
-
-      await auto.next({ dryRun: true });
-      expect(next).not.toHaveBeenCalled();
     });
 
     test("calls the next hook with the release info", async () => {
@@ -1416,7 +1377,10 @@ describe("Auto", () => {
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
+      auto.git!.publish = () =>
+        Promise.resolve({
+          data: { html_url: "https://github.com/my/repo/release" },
+        } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
@@ -1436,18 +1400,21 @@ describe("Auto", () => {
       auto.remote = "https://github.com/intuit/auto";
 
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
+      auto.git!.publish = () =>
+        Promise.resolve({
+          data: { html_url: "https://github.com/my/repo/release" },
+        } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
       const beforeCommitChangelog = jest.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
-      const afterAddToChangelog = jest.fn();
-      auto.hooks.afterAddToChangelog.tap("test", afterAddToChangelog);
+      const afterChangelog = jest.fn();
+      auto.hooks.afterChangelog.tap("test", afterChangelog);
 
       await auto.shipit({ noChangelog: true });
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
-      expect(afterAddToChangelog).toHaveBeenCalled();
+      expect(afterChangelog).toHaveBeenCalled();
     });
 
     test("should not publish when behind remote", async () => {
@@ -1497,8 +1464,7 @@ describe("Auto", () => {
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
       jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
       const spy = jest.fn();
-      auto.hooks.version.tap("test", spy);
-      auto.hooks.afterRelease.tap("test", spy);
+      auto.hooks.publish.tap("test", spy);
 
       await auto.shipit({ dryRun: true });
       expect(spy).not.toHaveBeenCalled();

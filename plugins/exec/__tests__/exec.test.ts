@@ -46,7 +46,7 @@ describe("Exec Plugin", () => {
     const hooks = makeHooks();
 
     plugins.apply({ hooks } as Auto);
-    await hooks.version.promise(SEMVER.patch);
+    await hooks.version.promise({ bump: SEMVER.patch });
 
     expect(execSpy).toHaveBeenCalledWith("echo bar", expect.anything());
   });
@@ -92,9 +92,12 @@ describe("Exec Plugin", () => {
       execSpy.mockReturnValueOnce(canaryVersion);
       plugins.apply({ hooks } as Auto);
 
-      expect(await hooks.canary.promise(SEMVER.patch, "-canary")).toBe(
-        canaryVersion
-      );
+      expect(
+        await hooks.canary.promise({
+          bump: SEMVER.patch,
+          canaryIdentifier: "-canary",
+        })
+      ).toBe(canaryVersion);
     });
 
     test("should handle object return values", async () => {
@@ -107,9 +110,12 @@ describe("Exec Plugin", () => {
       execSpy.mockReturnValueOnce(JSON.stringify(canaryVersion));
       plugins.apply({ hooks } as Auto);
 
-      expect(await hooks.canary.promise(SEMVER.patch, "-canary")).toStrictEqual(
-        canaryVersion
-      );
+      expect(
+        await hooks.canary.promise({
+          bump: SEMVER.patch,
+          canaryIdentifier: "-canary",
+        })
+      ).toStrictEqual(canaryVersion);
     });
   });
 
@@ -186,7 +192,7 @@ describe("Exec Plugin", () => {
       plugins.apply({ hooks } as Auto);
       hooks.onCreateChangelog.call(
         { hooks: changelogHooks } as any,
-        SEMVER.patch
+        { bump: SEMVER.patch }
       );
 
       expect(

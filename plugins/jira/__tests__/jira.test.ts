@@ -77,11 +77,11 @@ describe("render jira", () => {
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
     await hooks.onCreateChangelog.promise(
       { hooks: changelogHooks } as Changelog,
-      SEMVER.patch
+      { bump: SEMVER.patch }
     );
 
     expect(
-      (await changelogHooks.renderChangelogLine.promise([commit, "Add log"]))[1]
+      await changelogHooks.renderChangelogLine.promise("Add log", commit)
     ).toBe("Add log");
   });
 
@@ -93,13 +93,13 @@ describe("render jira", () => {
     plugin.apply({ hooks, logger: dummyLog() } as Auto);
     await hooks.onCreateChangelog.promise(
       { hooks: changelogHooks } as Changelog,
-      SEMVER.patch
+      { bump: SEMVER.patch }
     );
 
-    const [, line] = await changelogHooks.renderChangelogLine.promise([
-      makeCommitFromMsg("[PLAYA-5052] Add log"),
+    const line = await changelogHooks.renderChangelogLine.promise(
       "[PLAYA-5052] Add log [author](link/to/author)",
-    ]);
+      makeCommitFromMsg("[PLAYA-5052] Add log")
+    );
 
     expect(line).toBe(
       "[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)"
@@ -123,7 +123,7 @@ test("should create note for jira commits without PR title", async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  await autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
+  await autoHooks.onCreateChangelog.promise(changelog, { bump: SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([
@@ -139,7 +139,7 @@ test("should create note for JIRA commits", async () => {
   const autoHooks = makeHooks();
 
   plugin.apply({ hooks: autoHooks } as Auto);
-  await autoHooks.onCreateChangelog.promise(changelog, SEMVER.patch);
+  await autoHooks.onCreateChangelog.promise(changelog, { bump: SEMVER.patch });
   changelog.loadDefaultHooks();
 
   const normalized = await logParse.normalizeCommits([

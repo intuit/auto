@@ -8,8 +8,9 @@ const exec = jest.fn();
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args: any[]) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => exec(...args)
 );
 
 const registry = "registry.io/app";
@@ -105,13 +106,13 @@ describe("Docker Plugin", () => {
   describe("version", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).not.toHaveBeenCalled();
     });
 
     test("should do nothing with a bad version bump", async () => {
       const hooks = setup({ getLatestTagInBranch: () => "v1.0.0" });
-      await hooks.version.promise("wrong" as Auto.SEMVER);
+      await hooks.version.promise({ bump: "wrong" as Auto.SEMVER });
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -121,7 +122,7 @@ describe("Docker Plugin", () => {
         { getLatestTagInBranch: () => "v1.0.0" },
         { registry, image: sourceImage }
       );
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
         "1.0.1",
@@ -141,7 +142,7 @@ describe("Docker Plugin", () => {
         { getLatestTagInBranch: () => "v1.0.0" },
         { registry, image: sourceImage, tagLatest: true }
       );
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
         "1.0.1",
@@ -164,7 +165,7 @@ describe("Docker Plugin", () => {
   describe("canary", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -178,7 +179,10 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage }
       );
 
-      await hooks.canary.promise(Auto.SEMVER.patch, ".123.1");
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.123.1",
+      });
       expect(exec).toHaveBeenCalledWith("docker", [
         "tag",
         sourceImage,
@@ -189,12 +193,37 @@ describe("Docker Plugin", () => {
         `${registry}:1.0.1-canary.123.1`,
       ]);
     });
+
+    test("should print canary version in dry run", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v1.0.0",
+          getCurrentVersion: () => "",
+        },
+        { registry, image: sourceImage }
+      );
+
+      const log = jest.fn();
+      jest.spyOn(console, "log").mockImplementation(log);
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.123.1",
+        dryRun: true,
+        quiet: true,
+      });
+
+      expect(log).toHaveBeenCalledWith("1.0.1-canary.123.1");
+
+      expect(exec).not.toHaveBeenCalled();
+    });
   });
 
   describe("next", () => {
     test("should do nothing without git", async () => {
       const hooks = setup();
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
       expect(exec).not.toHaveBeenCalled();
     });
 
@@ -208,7 +237,7 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage }
       );
 
-      await hooks.next.promise([], Auto.SEMVER.patch, {} as any);
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
 
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
@@ -232,6 +261,26 @@ describe("Docker Plugin", () => {
         `${registry}:1.0.1-next.0`,
       ]);
     });
+
+    test("return next version in dry run", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v0.1.0",
+          getLastTagNotInBaseBranch: () => "v1.0.0",
+        },
+        { registry, image: sourceImage }
+      );
+
+      expect(
+        await hooks.next.promise([], {
+          bump: Auto.SEMVER.patch,
+          dryRun: true,
+          quiet: true,
+        } as any)
+      ).toStrictEqual(["1.0.1-next.0"]);
+      expect(exec).not.toHaveBeenCalled();
+    });
   });
 
   describe("publish", () => {
@@ -245,9 +294,9 @@ describe("Docker Plugin", () => {
         },
         { registry, image: sourceImage, tagLatest: false }
       );
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1`,
@@ -264,9 +313,9 @@ describe("Docker Plugin", () => {
         },
         { registry, image: sourceImage, tagLatest: true }
       );
-      await hooks.version.promise(Auto.SEMVER.patch);
+      await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
-      await hooks.publish.promise(Auto.SEMVER.patch);
+      await hooks.publish.promise({ bump: Auto.SEMVER.patch });
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1`,

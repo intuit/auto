@@ -13,10 +13,9 @@ const setup = (options: IReleaseNotesPluginOptions) => {
   const changelogHooks = makeChangelogHooks();
 
   plugin.apply({ hooks } as Auto);
-  hooks.onCreateChangelog.call(
-    { hooks: changelogHooks } as Changelog,
-    SEMVER.patch
-  );
+  hooks.onCreateChangelog.call({ hooks: changelogHooks } as Changelog, {
+    bump: SEMVER.patch,
+  });
 
   return changelogHooks;
 };

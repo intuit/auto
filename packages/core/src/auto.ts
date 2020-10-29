@@ -36,6 +36,8 @@ import {
   IVersionOptions,
   INextOptions,
   ILatestOptions,
+  QuietOption,
+  DryRunOption,
 } from "./auto-args";
 import Changelog from "./changelog";
 import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
@@ -117,14 +119,14 @@ const makeDetail = (summary: string, body: string) => endent`
 
 export type ShipitRelease = "latest" | "old" | "next" | "canary";
 
-interface BeforeShipitContext {
+interface BeforeShipitContext extends DryRunOption {
   /** The type of release that will be made when shipit runs. */
   releaseType: ShipitRelease;
-  /** Whether the run is a dry run */
-  dryRun?: boolean;
 }
 
-interface NextContext {
+interface NextContext extends DryRunOption {
+  /** The bump to apply to the version */
+  bump: SEMVER;
   /** The commits in the next release */
   commits: IExtendedCommit[];
   /** The release notes for all the commits in the next release */
@@ -147,13 +149,15 @@ export interface IAutoHooks {
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
   beforeCommitChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`. */
-  afterAddToChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
+  afterChangelog: AsyncSeriesHook<[ChangelogLifecycle]>;
   /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<
     [
-      string | undefined,
-      IExtendedCommit[],
       {
+        /** The version published in the shipit run */
+        newVersion: string | undefined;
+        /** The commits the version was published for */
+        commitsInRelease: IExtendedCommit[];
         /** The type of release made by shipit */
         context: ShipitContext;
       }
@@ -179,9 +183,7 @@ export interface IAutoHooks {
   /** Override what happens when "releasing" code to a Github release */
   makeRelease: AsyncSeriesBailHook<
     [
-      {
-        /** Do not actually do anything */
-        dryRun?: boolean;
+      DryRunOption & {
         /** Commit to start calculating the version from */
         from: string;
         /** The version being released */
@@ -216,16 +218,47 @@ export interface IAutoHooks {
    * This is where you hook into the changelog's hooks.
    * This hook is exposed for convenience during `this.hooks.onCreateRelease` and at the root `this.hooks`
    */
-  onCreateChangelog: SyncHook<[Changelog, SEMVER | undefined]>;
+  onCreateChangelog: SyncHook<
+    [
+      Changelog,
+      {
+        /** The bump the changelog will make */
+        bump: SEMVER | undefined;
+      }
+    ]
+  >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
-  version: AsyncParallelHook<[SEMVER]>;
+  version: AsyncParallelHook<
+    [
+      DryRunOption &
+        QuietOption & {
+          /** The semver bump to apply */
+          bump: SEMVER;
+        }
+    ]
+  >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncParallelHook<[]>;
+  afterVersion: AsyncParallelHook<[DryRunOption]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
-  publish: AsyncParallelHook<[SEMVER]>;
+  publish: AsyncParallelHook<
+    [
+      {
+        /** The semver bump that was applied in the version hook */
+        bump: SEMVER;
+      }
+    ]
+  >;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
   canary: AsyncSeriesBailHook<
-    [SEMVER, string],
+    [
+      DryRunOption &
+        QuietOption & {
+          /** The bump being applied to the version */
+          bump: SEMVER;
+          /** The post-version identifier to add to the version */
+          canaryIdentifier: string;
+        }
+    ],
     | string
     | {
         /** A summary to use in a details html element */
@@ -244,13 +277,13 @@ export interface IAutoHooks {
    * and an array of next versions that been released. If you make another
    * next release be sure to add it the the array.
    */
-  next: AsyncSeriesWaterfallHook<[string[], SEMVER, NextContext]>;
+  next: AsyncSeriesWaterfallHook<[string[], NextContext]>;
   /** Ran after the package has been published. */
   afterPublish: AsyncParallelHook<[]>;
   /** Ran after the package has been published. */
   prCheck: AsyncSeriesHook<
     [
-      {
+      DryRunOption & {
         /** The complete information about the PR */
         pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
       }
@@ -378,8 +411,8 @@ export default class Auto {
     this.hooks.onCreateRelease.tap("Link onCreateChangelog", (release) => {
       release.hooks.onCreateChangelog.tap(
         "Link onCreateChangelog",
-        (changelog, version) => {
-          this.hooks.onCreateChangelog.call(changelog, version);
+        (changelog, bump) => {
+          this.hooks.onCreateChangelog.call(changelog, { bump });
         }
       );
     });
@@ -410,43 +443,50 @@ export default class Auto {
      * Determine if repo is behind HEAD of current branch. We do this in
      * the "afterVersion" hook so the check happens as late as possible.
      */
-    this.hooks.afterVersion.tapPromise("Check remote for commits", async () => {
-      // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
-      // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
-      try {
-        const currentBranch = getCurrentBranch();
-        const heads = await execPromise("git", [
-          "ls-remote",
-          "--heads",
-          this.remote,
-          currentBranch,
-        ]);
-        this.logger.verbose.info("Branch:", currentBranch);
-        this.logger.verbose.info("HEADs:", heads);
-        const baseBranchHeadRef = new RegExp(
-          `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
-        );
-        const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
-
-        if (remoteHead) {
-          // This will throw if the branch is ahead of the current branch
-          execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`, {
-            stdio: "ignore",
-          });
+    this.hooks.afterVersion.tapPromise(
+      "Check remote for commits",
+      async ({ dryRun }) => {
+        if (dryRun) {
+          return;
         }
 
-        this.logger.verbose.info(
-          "Current branch is up to date, proceeding with release"
-        );
-      } catch (error) {
-        // If we are behind or there is no match, exit and skip the release
-        this.logger.log.warn(
-          "Current commit is behind, skipping the release to avoid collisions."
-        );
-        this.logger.verbose.warn(error);
-        process.exit(0);
+        // Credit from https://github.com/semantic-release/semantic-release/blob/b2b7b57fbd51af3fe25accdd6cd8499beb9005e5/lib/git.js#L179
+        // `true` is the HEAD of the current local branch is the same as the HEAD of the remote branch, falsy otherwise.
+        try {
+          const currentBranch = getCurrentBranch();
+          const heads = await execPromise("git", [
+            "ls-remote",
+            "--heads",
+            this.remote,
+            currentBranch,
+          ]);
+          this.logger.verbose.info("Branch:", currentBranch);
+          this.logger.verbose.info("HEADs:", heads);
+          const baseBranchHeadRef = new RegExp(
+            `^(\\w+)\\s+refs/heads/${this.baseBranch}$`
+          );
+          const [, remoteHead] = heads.match(baseBranchHeadRef) || [];
+
+          if (remoteHead) {
+            // This will throw if the branch is ahead of the current branch
+            execSync(`git merge-base --is-ancestor ${remoteHead} HEAD`, {
+              stdio: "ignore",
+            });
+          }
+
+          this.logger.verbose.info(
+            "Current branch is up to date, proceeding with release"
+          );
+        } catch (error) {
+          // If we are behind or there is no match, exit and skip the release
+          this.logger.log.warn(
+            "Current commit is behind, skipping the release to avoid collisions."
+          );
+          this.logger.verbose.warn(error);
+          process.exit(0);
+        }
       }
-    });
+    );
 
     loadEnv();
 
@@ -886,7 +926,7 @@ export default class Auto {
 
     try {
       const res = await this.git.getPullRequest(prNumber);
-      await this.hooks.prCheck.promise({ pr: res.data });
+      await this.hooks.prCheck.promise({ pr: res.data, dryRun });
 
       sha = res.data.head.sha;
 
@@ -1110,9 +1150,7 @@ export default class Auto {
       process.exit(0);
     }
 
-    if (!args.dryRun) {
-      await this.checkClean();
-    }
+    await this.checkClean();
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -1123,11 +1161,11 @@ export default class Auto {
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
     const labels = commitsInRelease.map((commit) => commit.labels);
-    let version = calculateSemVerBump(labels, this.semVerLabels!, this.config);
+    let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
-    if (version === SEMVER.noVersion) {
+    if (bump === SEMVER.noVersion) {
       if (options.force) {
-        version = SEMVER.patch;
+        bump = SEMVER.patch;
       } else {
         this.logger.log.info(
           "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
@@ -1136,93 +1174,72 @@ export default class Auto {
       }
     }
 
-    let canaryVersion = "";
+    let canaryIdentifier = "";
     let newVersion = "";
 
     if (pr) {
-      canaryVersion = `${canaryVersion}.${pr}`;
+      canaryIdentifier = `${canaryIdentifier}.${pr}`;
     }
 
     if (build) {
-      canaryVersion = `${canaryVersion}.${build}`;
+      canaryIdentifier = `${canaryIdentifier}.${build}`;
     }
 
     if (!pr || !build) {
-      canaryVersion = `${canaryVersion}.${await this.git.getSha(true)}`;
+      canaryIdentifier = `${canaryIdentifier}.${await this.git.getSha(true)}`;
     }
 
-    canaryVersion = `canary${canaryVersion}`;
+    canaryIdentifier = `canary${canaryIdentifier}`;
 
-    if (options.dryRun) {
-      const lastRelease = await this.git.getLatestRelease();
-      const current = await this.getCurrentVersion(lastRelease);
+    this.logger.verbose.info("Calling canary hook");
+    const result = await this.hooks.canary.promise({
+      bump,
+      canaryIdentifier,
+      dryRun: args.dryRun,
+      quiet: args.quiet,
+    });
 
-      if (parse(current)) {
-        const next = determineNextVersion(
-          lastRelease,
-          current,
-          version,
-          canaryVersion
-        );
-
-        if (options.quiet) {
-          console.log(next);
-        } else {
-          this.logger.log.warn(`Published canary identifier would be: ${next}`);
-        }
-      } else if (options.quiet) {
-        console.log(`-${canaryVersion}`);
-      } else {
-        this.logger.log.warn(
-          `Published canary identifier would be: "-${canaryVersion}"`
-        );
-      }
-    } else {
-      this.logger.verbose.info("Calling canary hook");
-      const result = await this.hooks.canary.promise(version, canaryVersion);
-
-      if (typeof result === "object" && "error" in result) {
-        this.logger.log.warn(result.error);
-        return;
-      }
-
-      if (!result) {
-        return;
-      }
-
-      newVersion = typeof result === "string" ? result : result.newVersion;
-      const messageHeader = (
-        options.message || "📦 Published PR as canary version: %v"
-      ).replace(
-        "%v",
-        !newVersion || newVersion.includes("\n")
-          ? newVersion
-          : `<code>${newVersion}</code>`
-      );
-
-      if (options.message !== "false" && pr) {
-        const message =
-          typeof result === "string"
-            ? messageHeader
-            : makeDetail(messageHeader, result.details);
-
-        await this.prBody({
-          pr: Number(pr),
-          context: "canary-version",
-          message,
-        });
-      }
-
-      this.logger.log.success(
-        `Published canary version${newVersion ? `: ${newVersion}` : ""}`
-      );
-
-      if (args.quiet) {
-        console.log(newVersion);
-      }
-
-      await gitReset();
+    if (typeof result === "object" && "error" in result) {
+      this.logger.log.warn(result.error);
+      return;
     }
+
+    if (!result) {
+      return;
+    }
+
+    newVersion = typeof result === "string" ? result : result.newVersion;
+    const messageHeader = (
+      options.message || "📦 Published PR as canary version: %v"
+    ).replace(
+      "%v",
+      !newVersion || newVersion.includes("\n")
+        ? newVersion
+        : `<code>${newVersion}</code>`
+    );
+
+    if (options.message !== "false" && pr) {
+      const message =
+        typeof result === "string"
+          ? messageHeader
+          : makeDetail(messageHeader, result.details);
+
+      await this.prBody({
+        pr: Number(pr),
+        context: "canary-version",
+        message,
+      });
+    }
+
+    this.logger.log.success(
+      `Published canary version${newVersion ? `: ${newVersion}` : ""}`
+    );
+
+    if (args.quiet) {
+      console.log(newVersion);
+    }
+
+    await gitReset();
 
     return { newVersion, commitsInRelease, context: "canary" };
   }
@@ -1249,10 +1266,7 @@ export default class Auto {
       process.exit(0);
     }
 
-    if (!args.dryRun) {
-      await this.checkClean();
-    }
-
+    await this.checkClean();
     await this.setGitUser();
 
     this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
@@ -1316,49 +1330,20 @@ export default class Auto {
       }
     }
 
-    if (options.dryRun) {
-      const lastRelease = await this.git.getLatestRelease();
-      const current = await this.getCurrentVersion(lastRelease);
-
-      if (parse(current)) {
-        const prereleaseBranches =
-          this.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
-        const branch = getCurrentBranch() || "";
-        const prereleaseBranch = prereleaseBranches.includes(branch)
-          ? branch
-          : prereleaseBranches[0];
-        const prerelease = determineNextVersion(
-          lastRelease,
-          current,
-          bump,
-          prereleaseBranch
-        );
-
-        if (options.quiet) {
-          console.log(prerelease);
-        } else {
-          this.logger.log.success(
-            `Would have created prerelease version: ${prerelease}`
-          );
-        }
-      } else if (options.quiet) {
-        // The following cases could use some work. They are really just there for lerna independent
-        console.log(`${bump} on ${lastTag}`);
-      } else {
-        this.logger.log.success(
-          `Would have created prerelease version with: ${bump} on ${lastTag}`
-        );
-      }
-
-      return { newVersion: "", commitsInRelease: commits, context: "next" };
-    }
-
     this.logger.verbose.info(`Calling "next" hook with: ${bump}`);
-    const result = await this.hooks.next.promise([], bump, {
+    const result = await this.hooks.next.promise([], {
+      bump,
       commits,
       fullReleaseNotes,
       releaseNotes,
+      dryRun: args.dryRun,
     });
+
+    if (args.dryRun) {
+      console.log(result.join("\n"));
+      return;
+    }
+
     const newVersion = result.join(", ");
     const release = await this.hooks.makeRelease.promise({
       commits,
@@ -1487,7 +1472,10 @@ export default class Auto {
       releaseType = "next";
     }
 
-    await this.hooks.beforeShipIt.promise({ releaseType, dryRun: options.dryRun });
+    await this.hooks.beforeShipIt.promise({
+      releaseType,
+      dryRun: options.dryRun,
+    });
 
     if (releaseType === "latest") {
       publishInfo = await this.latest(options);
@@ -1511,7 +1499,9 @@ export default class Auto {
     }
 
     const { newVersion, commitsInRelease, context } = publishInfo;
-    await this.hooks.afterShipIt.promise(newVersion, commitsInRelease, {
+    await this.hooks.afterShipIt.promise({
+      newVersion,
+      commitsInRelease,
       context,
     });
   }
@@ -1576,11 +1566,11 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
-    const version = await this.getVersion(options);
+    const bump = await this.getVersion(options);
 
-    this.logger.log.success(`Calculated version bump: ${version || "none"}`);
+    this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
 
-    if (version === "") {
+    if (bump === "") {
       this.logger.log.info("No version published.");
       return;
     }
@@ -1596,37 +1586,29 @@ export default class Auto {
       noCommit: options.noChangelog,
     });
 
+    await this.checkClean();
+
+    this.logger.verbose.info("Calling version hook");
+    await this.hooks.version.promise({
+      bump,
+      dryRun: options.dryRun,
+      quiet: options.quiet,
+    });
+    this.logger.verbose.info("Calling after version hook");
+    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+
     if (!options.dryRun) {
-      await this.checkClean();
-      this.logger.verbose.info("Calling version hook");
-      await this.hooks.version.promise(version);
-      this.logger.verbose.info("Calling after version hook");
-      await this.hooks.afterVersion.promise();
       this.logger.verbose.info("Calling publish hook");
-      await this.hooks.publish.promise(version);
+      await this.hooks.publish.promise({ bump });
       this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
     }
 
-    const newVersion = await this.makeRelease(options);
-
-    if (options.dryRun) {
-      const current = await this.getCurrentVersion(lastRelease);
-
-      if (parse(current)) {
-        const next = inc(current, version as ReleaseType);
-
-        if (options.quiet) {
-          console.log(next);
-        } else {
-          this.logger.log.warn(`Published version would be: ${next}`);
-        }
-      }
-    } else if (options.quiet) {
-      console.log(newVersion);
-    }
-
-    return { newVersion, commitsInRelease, context: "latest" };
+    return {
+      newVersion: await this.makeRelease(options),
+      commitsInRelease,
+      context: "latest",
+    };
   }
 
   /** Get a pr number from user input or the env */
@@ -1763,7 +1745,7 @@ export default class Auto {
       this.logger.verbose.info("Committed new changelog.");
     }
 
-    await this.hooks.afterAddToChangelog.promise(context);
+    await this.hooks.afterChangelog.promise(context);
   }
 
   /** Make a release over a range of commits */
@@ -2143,5 +2125,8 @@ export { ICommitAuthor, IExtendedCommit } from "./log-parse";
 export { default as Auto } from "./auto";
 export { default as SEMVER, VersionLabel } from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
-export { default as getLernaPackages } from "./utils/get-lerna-packages";
+export {
+  default as getLernaPackages,
+  LernaPackage,
+} from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";

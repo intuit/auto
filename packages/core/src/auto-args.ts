@@ -52,7 +52,7 @@ export type IVersionOptions = ReleaseCalculationOptions & {
   from?: string;
 };
 
-interface Quiet {
+export interface QuietOption {
   /** Print **only** the result of the command */
   quiet?: boolean;
 }
@@ -62,7 +62,7 @@ interface NoVersionPrefix {
   noVersionPrefix?: boolean;
 }
 
-interface DryRun {
+export interface DryRunOption {
   /** Do not actually do anything */
   dryRun?: boolean;
 }
@@ -90,8 +90,8 @@ interface BaseBranch {
 export type IChangelogOptions = BaseBranch &
   ChangelogTitle &
   ChangelogMessage &
-  Quiet &
-  DryRun &
+  QuietOption &
+  DryRunOption &
   NoVersionPrefix &
   Partial<AuthorInformation> & {
     /** Commit to start calculating the changelog from */
@@ -104,7 +104,7 @@ export type IChangelogOptions = BaseBranch &
 
 export type IReleaseOptions = BaseBranch &
   Prerelease &
-  DryRun &
+  DryRunOption &
   NoVersionPrefix &
   Partial<AuthorInformation> &
   Partial<RepoInformation> & {
@@ -116,7 +116,7 @@ export type IReleaseOptions = BaseBranch &
     useVersion?: string;
   };
 
-export type ICommentOptions = DryRun & {
+export type ICommentOptions = DryRunOption & {
   /** The message to use when commenting */
   message?: string;
   /** THe PR to comment on */
@@ -132,13 +132,13 @@ export type ICommentOptions = DryRun & {
 export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
 export type ILatestOptions = BaseBranch &
-  DryRun &
+  DryRunOption &
   Partial<AuthorInformation> &
   Prerelease &
   NoVersionPrefix &
   ChangelogTitle &
   ChangelogMessage &
-  Quiet &
+  QuietOption &
   ReleaseCalculationOptions & {
     /** Skip creating the changelog */
     noChangelog?: boolean;
@@ -154,7 +154,7 @@ export type IShipItOptions = ILatestOptions & {
   onlyGraduateWithReleaseLabel?: boolean;
 };
 
-export type ICanaryOptions = Quiet & {
+export type ICanaryOptions = QuietOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** THe PR to attach the canary to */
@@ -167,7 +167,7 @@ export type ICanaryOptions = Quiet & {
   force?: boolean;
 };
 
-export type INextOptions = Quiet & {
+export type INextOptions = QuietOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** The message used when attaching the prerelease version to a PR */
