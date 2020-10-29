@@ -74,7 +74,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                 repository(name: "${auto.git?.options.repo}", owner: "${auto.git?.options.owner}") {
                   object(expression: "${getCurrentBranch()}") {
                     ... on Commit {
-                      history(after: "${commits[0].hash} 0", first: 1, author: { id: "${user.id}" }) {
+                      history(after: "${commits[commits.length - 1].hash} 0", first: 1, author: { id: "${user.node_id}" }) {
                         edges {
                           node {
                             message
