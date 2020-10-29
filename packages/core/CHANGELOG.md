@@ -1,3 +1,94 @@
+# v10.0.0 (Thu Oct 29 2020)
+
+### Release Notes
+
+_From #1609_
+
+This release simplifies some of the hooks arguements to allow for easier future extensibility.
+
+The following hooks have had their second argument converted to an object that takes a "context" of pertinent information:
+
+- `afterShipIt`
+- `onCreateChangelog`
+- `publish`
+-  `next`
+
+Please consult the docs or plugin implementations for further detail.
+
+_From #1604_
+
+Previously a lot of the hooks would not run during a dry run and `auto` would try to guess what they would do. This lead to the output versions of some commands to be off.
+
+With the release of v10 `auto` will call to the plugins for various hooks so they can control that.
+
+_From #1607_
+
+We were implementing the `renderChangelogLine` in a way that was more complex than needed
+
+Previously the hook took a tuple and had to return a tuple
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async ([commit, line]) =>
+      [commit, `${line.replace('-', ':star:')}\n`]
+  );
+);
+```
+
+Now it can just return the rendered changelog line
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async (line, commit) => `${line.replace('-', ':star:')}\n`
+  );
+);
+```
+
+---
+
+#### 💥 Breaking Change
+
+- simplify hook APIs for easier future extensibility [#1609](https://github.com/intuit/auto/pull/1609) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Run various hooks in a --dry-run [#1604](https://github.com/intuit/auto/pull/1604) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- correct renderChangelogLine hook usage [#1607](https://github.com/intuit/auto/pull/1607) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- rename afterAddToChangelog hook to afterChangelog [#1606](https://github.com/intuit/auto/pull/1606) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add quiet functionality to version hook ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Git reset bugs on canary/next [#1618](https://github.com/intuit/auto/pull/1618) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- simplify hook APIs for easier future extensibility ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- correct renderChangelogLine hook usage ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- rename afterAddToChangelog hook to afterChangelog ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- check clean status during dry run too ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use shared dry run interface ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- call version and afterVersion hook during dryRun ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- improve npm lerna independent makeRelease dry run ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- call next hook during dry run ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- call canary hook during dry-run ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add dryrun to prCheck hook ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-config-prettier from 6.13.0 to 6.14.0 [#1610](https://github.com/intuit/auto/pull/1610) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.22.0 to 2.22.1 [#1611](https://github.com/intuit/auto/pull/1611) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.0.2 to 24.1.0 [#1612](https://github.com/intuit/auto/pull/1612) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 7.9.0 to 7.12.1 [#1613](https://github.com/intuit/auto/pull/1613) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.5.0 to 4.6.0 [#1614](https://github.com/intuit/auto/pull/1614) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 15.0.1 to 16.0.0 [#1616](https://github.com/intuit/auto/pull/1616) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.59.0 (Wed Oct 14 2020)
 
 #### 🚀 Enhancement

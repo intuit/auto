@@ -1,3 +1,90 @@
+# v10.0.0 (Thu Oct 29 2020)
+
+### Release Notes
+
+_From #1609_
+
+This release simplifies some of the hooks arguements to allow for easier future extensibility.
+
+The following hooks have had their second argument converted to an object that takes a "context" of pertinent information:
+
+- `afterShipIt`
+- `onCreateChangelog`
+- `publish`
+-  `next`
+
+Please consult the docs or plugin implementations for further detail.
+
+_From #1604_
+
+Previously a lot of the hooks would not run during a dry run and `auto` would try to guess what they would do. This lead to the output versions of some commands to be off.
+
+With the release of v10 `auto` will call to the plugins for various hooks so they can control that.
+
+_From #1607_
+
+We were implementing the `renderChangelogLine` in a way that was more complex than needed
+
+Previously the hook took a tuple and had to return a tuple
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async ([commit, line]) =>
+      [commit, `${line.replace('-', ':star:')}\n`]
+  );
+);
+```
+
+Now it can just return the rendered changelog line
+
+```ts
+auto.hooks.onCreateChangelog.tapPromise('Stars', changelog =>
+  changelog.hooks.renderChangelogLine.tapPromise(
+    'Stars',
+    async (line, commit) => `${line.replace('-', ':star:')}\n`
+  );
+);
+```
+
+---
+
+#### 💥 Breaking Change
+
+- `@auto-it/core`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/git-tag`, `@auto-it/jira`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/omit-release-notes`
+  - simplify hook APIs for easier future extensibility [#1609](https://github.com/intuit/auto/pull/1609) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/gem`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`
+  - Run various hooks in a --dry-run [#1604](https://github.com/intuit/auto/pull/1604) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/jira`, `@auto-it/npm`
+  - correct renderChangelogLine hook usage [#1607](https://github.com/intuit/auto/pull/1607) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`, `@auto-it/all-contributors`
+  - rename afterAddToChangelog hook to afterChangelog [#1606](https://github.com/intuit/auto/pull/1606) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - Git reset bugs on canary/next [#1618](https://github.com/intuit/auto/pull/1618) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump tapable from 2.0.0-beta.11 to 2.0.0 [#1615](https://github.com/intuit/auto/pull/1615) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump next-ignite from 0.6.7 to 0.7.1 [#1585](https://github.com/intuit/auto/pull/1585) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.13.0 to 6.14.0 [#1610](https://github.com/intuit/auto/pull/1610) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-import from 2.22.0 to 2.22.1 [#1611](https://github.com/intuit/auto/pull/1611) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.0.2 to 24.1.0 [#1612](https://github.com/intuit/auto/pull/1612) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 7.9.0 to 7.12.1 [#1613](https://github.com/intuit/auto/pull/1613) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.5.0 to 4.6.0 [#1614](https://github.com/intuit/auto/pull/1614) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/upload-assets`
+  - Bump file-type from 15.0.1 to 16.0.0 [#1616](https://github.com/intuit/auto/pull/1616) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v9.61.0 (Tue Oct 27 2020)
 
 :tada: This release contains work from a new contributor! :tada:
