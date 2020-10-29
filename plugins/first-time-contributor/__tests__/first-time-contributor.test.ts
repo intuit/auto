@@ -34,6 +34,7 @@ const setup = (
     git: {
       graphql,
       options: { repo: "repo", owner: "test" },
+      getUserByUsername: jest.fn().mockReturnValue({}),
       github: {
         repos: {
           listContributors: () => Promise.resolve({ data: contributors }),
@@ -65,10 +66,10 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValueOnce({
-      search: { issueCount: 0 },
+      repository: { object: { history: { edges: [] } } },
     });
     graphql.mockReturnValueOnce({
-      search: { issueCount: 0 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -82,7 +83,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValueOnce({
-      search: { issueCount: 1 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -96,7 +97,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValueOnce({
-      search: { issueCount: 1 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -110,7 +111,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValue({
-      search: { issueCount: 2 },
+      repository: { object: { history: { edges: [{}] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -124,7 +125,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValue({
-      search: { issueCount: 1 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -137,7 +138,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValue({
-      search: { issueCount: 1 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
@@ -154,7 +155,7 @@ describe("First Time Contributor Plugin", () => {
     ];
 
     graphql.mockReturnValue({
-      search: { issueCount: 1 },
+      repository: { object: { history: { edges: [] } } },
     });
 
     expect(await hooks.addToBody.promise([], commits)).toMatchSnapshot();
