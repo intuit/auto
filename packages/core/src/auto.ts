@@ -228,7 +228,7 @@ export interface IAutoHooks {
     ]
   >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
-  version: AsyncParallelHook<
+  version: AsyncSeriesHook<
     [
       DryRunOption &
         QuietOption & {
@@ -238,9 +238,9 @@ export interface IAutoHooks {
     ]
   >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncParallelHook<[DryRunOption]>;
+  afterVersion: AsyncSeriesHook<[DryRunOption]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
-  publish: AsyncParallelHook<
+  publish: AsyncSeriesHook<
     [
       {
         /** The semver bump that was applied in the version hook */
@@ -279,7 +279,7 @@ export interface IAutoHooks {
    */
   next: AsyncSeriesWaterfallHook<[string[], NextContext]>;
   /** Ran after the package has been published. */
-  afterPublish: AsyncParallelHook<[]>;
+  afterPublish: AsyncSeriesHook<[]>;
   /** Ran after the package has been published. */
   prCheck: AsyncSeriesHook<
     [
