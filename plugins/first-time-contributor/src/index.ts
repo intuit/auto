@@ -1,4 +1,5 @@
-import { Auto, IPlugin } from "@auto-it/core";
+/* eslint-disable no-await-in-loop */
+import { Auto, getCurrentBranch, IPlugin } from "@auto-it/core";
 import { ICommitAuthor } from "@auto-it/core/dist/log-parse";
 import botList from "@auto-it/bot-list";
 import flatMap from "array.prototype.flatmap";
@@ -6,9 +7,26 @@ import endent from "endent";
 import urlJoin from "url-join";
 import { URL } from "url";
 
-interface IssueCount {
-  /** Number of issues that match the query */
-  issueCount: number;
+interface QueryNode {
+  /** The query node */
+  node: {
+    /** The commit message */
+    message: "remove canary context";
+  };
+}
+
+interface QueryResponse {
+  /** The repo queried */
+  repository: {
+    /** The object queried */
+    object: {
+      /** The commit history */
+      history: {
+        /** The edges in the query */
+        edges: QueryNode[];
+      };
+    };
+  };
 }
 
 /**
@@ -44,17 +62,35 @@ export default class FirstTimeContributorPlugin implements IPlugin {
               continue;
             }
 
+            const user = await auto.git?.getUserByUsername(author.username);
+
+            if (!user) {
+              continue;
+            }
+
             // prettier-ignore
-            // eslint-disable-next-line no-await-in-loop
-            const prs = await auto.git?.graphql<Record<string, IssueCount>>(`
+            const userCommits = await auto.git?.graphql<QueryResponse>(`
               {
-                search(first: 2, type: ISSUE, query: "repo:${auto.git?.options.owner}/${auto.git?.options.repo} is:pr is:merged author:${author.username}") {
-                  issueCount
+                repository(name: "${auto.git?.options.repo}", owner: "${auto.git?.options.owner}") {
+                  object(expression: "${getCurrentBranch()}") {
+                    ... on Commit {
+                      history(after: "${commits[commits.length - 1].hash} 0", first: 1, author: { id: "${user.node_id}" }) {
+                        edges {
+                          node {
+                            message
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             `)
 
-            if (prs && prs.search.issueCount <= 1) {
+            if (
+              userCommits &&
+              userCommits.repository.object.history.edges.length === 0
+            ) {
               newContributors.push(author);
             }
           }
