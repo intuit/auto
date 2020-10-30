@@ -615,6 +615,11 @@ export default class Auto {
     const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
     const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
 
+    if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
+      this.logger.veryVerbose.note("Using ssh URL as remote");
+      return ssh_url;
+    }
+
     if (gitCredentials) {
       const { port, hostname, ...parsed } = parseUrl(html_url);
 
@@ -633,11 +638,6 @@ export default class Auto {
     if (html_url && (await this.git.verifyAuth(html_url))) {
       this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
-    }
-
-    if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
-      this.logger.veryVerbose.note("Using ssh URL as remote");
-      return ssh_url;
     }
 
     this.logger.veryVerbose.note("Using remote set in environment");
