@@ -1,3 +1,17 @@
+# v10.0.1 (Thu Oct 29 2020)
+
+#### 🐛 Bug Fix
+
+- better first-time-contributor thanking [#1619](https://github.com/intuit/auto/pull/1619) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- use node_id and correct commit ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- better first-time-contributor thanking ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.0.0 (Thu Oct 29 2020)
 
 ### Release Notes

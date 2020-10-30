@@ -1,3 +1,16 @@
+# v10.0.1 (Thu Oct 29 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/first-time-contributor`
+  - better first-time-contributor thanking [#1619](https://github.com/intuit/auto/pull/1619) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.0.0 (Thu Oct 29 2020)
 
 ### Release Notes
