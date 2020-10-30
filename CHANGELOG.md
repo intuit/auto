@@ -1,3 +1,16 @@
+# v10.0.2 (Thu Oct 29 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - make version, afterVersion, publish, and afterPublish series hooks [#1620](https://github.com/intuit/auto/pull/1620) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.0.1 (Thu Oct 29 2020)
 
 #### 🐛 Bug Fix
