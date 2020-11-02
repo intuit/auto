@@ -1,3 +1,38 @@
+# v10.1.0 (Mon Nov 02 2020)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Tim Ottewell ([@tinytim84](https://github.com/tinytim84)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - feat: add ssh support for connecting to github [#1590](https://github.com/intuit/auto/pull/1590) ([@tinytim84](https://github.com/tinytim84) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix non-ssh release [#1629](https://github.com/intuit/auto/pull/1629) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump ts-jest from 26.4.0 to 26.4.3 [#1627](https://github.com/intuit/auto/pull/1627) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump graphql from 15.3.0 to 15.4.0 [#1625](https://github.com/intuit/auto/pull/1625) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 4.0.3 to 4.0.5 [#1624](https://github.com/intuit/auto/pull/1624) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @fortawesome/react-fontawesome from 0.1.11 to 0.1.12 [#1623](https://github.com/intuit/auto/pull/1623) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.7.3 to 30.7.6 [#1622](https://github.com/intuit/auto/pull/1622) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-xo from 0.32.1 to 0.33.1 [#1621](https://github.com/intuit/auto/pull/1621) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/microsoft-teams`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/pr-body-labels`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Bump tslib from 2.0.1 to 2.0.3 [#1626](https://github.com/intuit/auto/pull/1626) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Tim Ottewell ([@tinytim84](https://github.com/tinytim84))
+
+---
+
 # v10.0.2 (Thu Oct 29 2020)
 
 #### 🐛 Bug Fix
