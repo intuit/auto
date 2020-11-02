@@ -428,6 +428,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "tinytim84",
+      "name": "Tim Ottewell",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6330189?v=4",
+      "profile": "https://github.com/tinytim84",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
