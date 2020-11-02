@@ -231,6 +231,8 @@ async function getRegistryArgs() {
 const pluginOptions = t.partial({
   /** Whether to create sub-package changelogs */
   subPackageChangelogs: t.boolean,
+  /** Whether to create a commit for "next" version. The default behavior will only create the tags */
+  commitNextVersion: t.boolean,
   /** Whether to set the npm token on CI */
   setRcToken: t.boolean,
   /** Whether to force publish all the packages in a monorepo */
@@ -522,6 +524,8 @@ export default class NPMPlugin implements IPlugin {
   private readonly canaryScope: string | undefined;
   /** Whether to use legacy auth for npm */
   private readonly legacyAuth: boolean;
+  /** Whether to use legacy auth for npm */
+  private readonly commitNextVersion: boolean;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
@@ -531,6 +535,7 @@ export default class NPMPlugin implements IPlugin {
     this.subPackageChangelogs = config.subPackageChangelogs ?? true;
     this.setRcToken = config.setRcToken ?? true;
     this.forcePublish = config.forcePublish ?? true;
+    this.commitNextVersion = config.commitNextVersion ?? false;
     this.canaryScope = config.canaryScope || undefined;
   }
 
@@ -1229,22 +1234,25 @@ export default class NPMPlugin implements IPlugin {
             ...verboseArgs,
           ]);
 
-          // we do not want to commit the next version. this causes
-          // merge conflicts when merged into master. We also do not want
-          // to re-implement the magic lerna does. So instead we let lerna
-          // commit+tag the new version and roll back all the tags to the
-          // previous commit.
           const tags = (
             await execPromise("git", ["tag", "--points-at", "HEAD"])
           ).split("\n");
-          await Promise.all(
-            // Move tags back one commit
-            tags.map((tag) =>
-              execPromise("git", ["tag", tag, "-f", "HEAD^", "-am", tag])
-            )
-          );
-          // Move branch back one commit
-          await execPromise("git", ["reset", "--hard", "HEAD~1"]);
+
+          if (!this.commitNextVersion) {
+            // we do not want to commit the next version. this causes
+            // merge conflicts when merged into master. We also do not want
+            // to re-implement the magic lerna does. So instead we let lerna
+            // commit+tag the new version and roll back all the tags to the
+            // previous commit.
+            await Promise.all(
+              // Move tags back one commit
+              tags.map((tag) =>
+                execPromise("git", ["tag", tag, "-f", "HEAD^", "-am", tag])
+              )
+            );
+            // Move branch back one commit
+            await execPromise("git", ["reset", "--hard", "HEAD~1"]);
+          }
 
           auto.logger.verbose.info("Successfully published next version");
 
@@ -1254,7 +1262,7 @@ export default class NPMPlugin implements IPlugin {
           ];
         } else {
           auto.logger.verbose.info("Detected single npm package");
-          
+
           const newVersion = determineNextVersion(
             lastRelease,
             latestTag,
