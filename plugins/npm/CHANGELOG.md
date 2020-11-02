@@ -1,3 +1,19 @@
+# v10.2.0 (Mon Nov 02 2020)
+
+#### 🚀 Enhancement
+
+- add "commitNextVersion" option to NPM plugin [#1630](https://github.com/intuit/auto/pull/1630) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add "commitNextVersion" option to NPM plugin ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.1.0 (Mon Nov 02 2020)
 
 :tada: This release contains work from a new contributor! :tada:
