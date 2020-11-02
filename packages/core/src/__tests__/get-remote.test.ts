@@ -3,6 +3,16 @@ import { Auto } from "../auto";
 jest.mock("child_process");
 
 describe("getRemote", () => {
+  let processEnvs: typeof process.env;
+
+  beforeEach(() => {
+    processEnvs = process.env;
+  });
+
+  afterEach(() => {
+    process.env = processEnvs;
+  });
+
   test("should fall back to origin with no git client", async () => {
     const auto = new Auto();
     // @ts-ignore
@@ -18,6 +28,19 @@ describe("getRemote", () => {
     } as any;
     // @ts-ignore
     expect(await auto.getRemote()).toBe(html_url);
+  });
+
+  test("should use ssh_url if we can push", async () => {
+    const auto = new Auto();
+    const ssh_url = "git@github.com:fake/remote.git";
+    delete process.env.GH_TOKEN;
+    delete process.env.GITHUB_ACTION;
+    auto.git = {
+      verifyAuth: (url: string) => url === ssh_url,
+      getProject: () => Promise.resolve({ ssh_url }),
+    } as any;
+    // @ts-ignore
+    expect(await auto.getRemote()).toBe(ssh_url);
   });
 
   test("should put token in url", async () => {

@@ -635,7 +635,10 @@ export default class Auto {
       return configuredRemote;
     }
 
-    const { html_url } = (await this.git.getProject()) || { html_url: "" };
+    const { html_url, ssh_url } = (await this.git.getProject()) || {
+      html_url: "",
+      ssh_url: "",
+    };
 
     const GIT_TOKENS: Record<string, string | undefined> = {
       // GitHub Actions require the "x-access-token:" prefix for git access
@@ -646,6 +649,11 @@ export default class Auto {
     };
     const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
     const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
+
+    if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
+      this.logger.veryVerbose.note("Using ssh URL as remote");
+      return ssh_url;
+    }
 
     if (gitCredentials) {
       const { port, hostname, ...parsed } = parseUrl(html_url);
