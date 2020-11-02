@@ -44,6 +44,6 @@
     "io-ts": "^2.1.2",
     "parse-github-url": "1.0.2",
     "semver": "^7.0.0",
-    "tslib": "2.0.1"
+    "tslib": "2.0.3"
   }
 }

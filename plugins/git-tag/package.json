@@ -38,7 +38,7 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "semver": "^7.0.0",
-    "tslib": "2.0.1"
+    "tslib": "2.0.3"
   },
   "devDependencies": {
     "@types/semver": "^7.1.0"
