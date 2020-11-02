@@ -595,14 +595,9 @@ export default class Auto {
       return configuredRemote;
     }
 
-    const {
-      html_url,
-      ssh_url,
-      permissions,
-    } = (await this.git.getProject()) || {
+    const { html_url, ssh_url } = (await this.git.getProject()) || {
       html_url: "",
       ssh_url: "",
-      permissions: {},
     };
 
     const GIT_TOKENS: Record<string, string | undefined> = {
@@ -629,10 +624,8 @@ export default class Auto {
         host: `${hostname}${port ? `:${port}` : ""}`,
       });
 
-      if (permissions?.push && (await this.git.verifyAuth(urlWithAuth))) {
-        this.logger.veryVerbose.note("Using token + html URL as remote");
-        return urlWithAuth;
-      }
+      this.logger.veryVerbose.note("Using token + html URL as remote");
+      return urlWithAuth;
     }
 
     if (html_url && (await this.git.verifyAuth(html_url))) {
