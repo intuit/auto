@@ -23,7 +23,11 @@ export default function verifyAuth(remote: string, branch: string) {
       });
 
       child.on("exit", () => {
-        resolve(!err.startsWith("fatal: could not read Username"));
+        resolve(
+          !err.startsWith("fatal: could not read Username") &&
+            !err.startsWith("ssh_askpass") &&
+            !err.includes("fatal")
+        );
       });
     } catch (error) {
       resolve(false);
