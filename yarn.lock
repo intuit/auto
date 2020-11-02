@@ -59,10 +59,10 @@
   integrity sha512-ZDDooL8brlN+oH4MKaG/es0Y4ccYzcVJaPwwblWww/VB6t8BqqGvnIzqQ2U45XCv9o0LMMOQ3/JFl2p4Ajzjzg==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "9.61.0"
+  version "10.0.2"
 
 "@auto-it/core@link:packages/core":
-  version "9.61.0"
+  version "10.0.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -102,7 +102,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "9.61.0"
+  version "10.0.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -120,7 +120,7 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "9.61.0"
+  version "10.0.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
@@ -129,7 +129,7 @@
     tslib "2.0.1"
 
 "@auto-it/slack@link:plugins/slack":
-  version "9.61.0"
+  version "10.0.2"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -8142,10 +8142,10 @@ eslint-config-prettier@^6.11.0:
   dependencies:
     get-stdin "^6.0.0"
 
-eslint-config-xo@^0.32.1:
-  version "0.32.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-xo/-/eslint-config-xo-0.32.1.tgz#51f6d7fd5591e66a2330feb24f2f205c4bfa64fc"
-  integrity sha512-achnYLilUTtljR1CGRikVj9HRAf5GplJeGgeyQMvph7mKo+AqTkNuig4EO/IrNOChcjoazgw9YT4cW/3+69i3Q==
+eslint-config-xo@^0.33.1:
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-xo/-/eslint-config-xo-0.33.1.tgz#05031d970c3ad5c3b592fc94dc8c8d5459cf44a9"
+  integrity sha512-ZdnT4Q/m3CLCX0o3nKKW3Q8CfNiRy/ojkeffLtz8f0EQJMHP/9fJyncIvI0mik1wE61EI6PHrXdLeAbeb62cZw==
   dependencies:
     confusing-browser-globals "1.0.9"
 
