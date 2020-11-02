@@ -624,8 +624,10 @@ export default class Auto {
         host: `${hostname}${port ? `:${port}` : ""}`,
       });
 
-      this.logger.veryVerbose.note("Using token + html URL as remote");
-      return urlWithAuth;
+      if (await this.git.verifyAuth(urlWithAuth)) {
+        this.logger.veryVerbose.note("Using token + html URL as remote");
+        return urlWithAuth;
+      }
     }
 
     if (html_url && (await this.git.verifyAuth(html_url))) {
