@@ -41,6 +41,6 @@
     "@auto-it/slack": "link:../slack",
     "https-proxy-agent": "^5.0.0",
     "node-fetch": "2.6.1",
-    "tslib": "2.0.1"
+    "tslib": "2.0.3"
   }
 }
