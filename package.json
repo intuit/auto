@@ -52,7 +52,7 @@
     "endent": "^2.0.1",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-config-xo": "^0.32.1",
+    "eslint-config-xo": "^0.33.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.1",
     "eslint-plugin-jsdoc": "^30.2.1",
