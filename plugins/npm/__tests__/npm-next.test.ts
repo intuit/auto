@@ -277,12 +277,48 @@ describe("next", () => {
       "npx",
       expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
     );
+    expect(execPromise).toHaveBeenCalledWith("git", ["reset", "--hard", "HEAD~1"]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
       "origin",
       "next",
       "--tags",
     ]);
+  });
+
+  test("optionally commits version", async () => {
+    const plugin = new NPMPlugin({ commitNextVersion: true });
+    const hooks = makeHooks();
+
+    // isMonorepo
+    existsSync.mockReturnValueOnce(true);
+    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("1.2.4-next.0");
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "master",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith(
+      "npx",
+      expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
+    );
+    expect(execPromise).not.toHaveBeenCalledWith("git", ["reset", "--hard", "HEAD~1"]);
   });
 
   test("works in dry run in monorepo", async () => {

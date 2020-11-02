@@ -139,6 +139,24 @@ You can disable this behavior by using the `monorepoChangelog` option.
 }
 ```
 
+### commitNextVersion
+
+Whether to create a commit for "next" version.
+The default behavior will only create the tags.
+
+```json
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "commitNextVersion": true
+      }
+    ]
+  ]
+}
+```
+
 ### legacyAuth
 
 When publishing packages that require authentication but you are working with an internally hosted npm registry that only uses the legacy Base64 version of username:password.
