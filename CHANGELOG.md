@@ -1,3 +1,16 @@
+# v10.2.1 (Tue Nov 03 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - NPM: independent next releases update dependency versions [#1631](https://github.com/intuit/auto/pull/1631) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.0 (Mon Nov 02 2020)
 
 #### 🚀 Enhancement
