@@ -428,6 +428,35 @@ const getIndependentNextReleases = async (
   return updates.filter((p): p is IndependentPackageUpdate => Boolean(p));
 };
 
+/** Apply updates to inter dependencies  */
+const updateDependencies = (
+  packageJson: IPackageJSON,
+  type: "dependencies" | "devDependencies",
+  updates: IndependentPackageUpdate[]
+) => {
+  const deps = packageJson[type];
+
+  if (!deps) {
+    return;
+  }
+
+  Object.entries(deps).forEach(([name, version]) => {
+    if (
+      typeof version !== "string" ||
+      version.startsWith("link:") ||
+      version.startsWith("file:")
+    ) {
+      return;
+    }
+
+    const depUpdate = updates.find((update) => update.name === name);
+
+    if (depUpdate && version.includes(depUpdate.version)) {
+      deps[name] = version.replace(depUpdate.version, depUpdate.newVersion)
+    }
+  });
+};
+
 /** Find changed packages and create a tag for the current next release. */
 const tagIndependentNextReleases = async (
   bump: SEMVER,
@@ -456,12 +485,15 @@ const tagIndependentNextReleases = async (
 
       packageJson.version = lernaPackage.newVersion;
 
+      updateDependencies(packageJson, 'dependencies', updates)
+      updateDependencies(packageJson, 'devDependencies', updates)
+
       await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
     })
   );
 
   // Commit work
-  await execPromise("git", ["commit", "-am", "'TEMP COMMIT'"]);
+  await execPromise("git", ["commit", "-am", "'Update versions'"]);
 
   // Create tags will be rolled back in the next hook
   await Promise.all(

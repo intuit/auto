@@ -1,3 +1,4 @@
+import endent from "endent";
 import { execSync } from "child_process";
 
 import * as Auto from "@auto-it/core";
@@ -277,7 +278,11 @@ describe("next", () => {
       "npx",
       expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
     );
-    expect(execPromise).toHaveBeenCalledWith("git", ["reset", "--hard", "HEAD~1"]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "reset",
+      "--hard",
+      "HEAD~1",
+    ]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
       "origin",
@@ -318,7 +323,11 @@ describe("next", () => {
       "npx",
       expect.arrayContaining(["lerna", "publish", "1.2.4-next.0"])
     );
-    expect(execPromise).not.toHaveBeenCalledWith("git", ["reset", "--hard", "HEAD~1"]);
+    expect(execPromise).not.toHaveBeenCalledWith("git", [
+      "reset",
+      "--hard",
+      "HEAD~1",
+    ]);
   });
 
   test("works in dry run in monorepo", async () => {
@@ -422,10 +431,12 @@ describe("next", () => {
       {
         name: "@foo/foo",
         path: "/path/to/1",
+        version: "0.45.0",
       },
       {
         name: "@foo/foo-bar",
         path: "/path/to/2",
+        version: "0.50.0",
       },
     ]);
     execPromise.mockImplementation((command, args) => {
@@ -455,6 +466,16 @@ describe("next", () => {
       },
     } as unknown) as Auto.Auto);
 
+    readResult = `
+      {
+        "name": "@foo/foo",
+        "version": "1.0.0-next.0",
+        "dependencies": {
+          "@foo/foo-bar": "0.50.0"
+        }
+      }
+    `;
+
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["@foo/foo@1.0.0-next.0", "@foo/foo-bar@2.0.0-next.0"]);
@@ -469,6 +490,16 @@ describe("next", () => {
       "next",
       "--tags",
     ]);
+    expect(writeSpy).toHaveBeenCalledWith(
+      "/path/to/1/package.json",
+      endent`{
+        "name": "@foo/foo",
+        "version": "1.0.0-next.1",
+        "dependencies": {
+          "@foo/foo-bar": "2.0.0-next.1"
+        }
+      }`
+    );
   });
 
   test("works in dry run in monorepo - independent", async () => {
