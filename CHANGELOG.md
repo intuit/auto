@@ -1,3 +1,16 @@
+# v10.2.2 (Wed Nov 04 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - handle multiple spaces in "lerna changed" output [#1633](https://github.com/intuit/auto/pull/1633) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.1 (Tue Nov 03 2020)
 
 #### 🐛 Bug Fix
