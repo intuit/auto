@@ -1,3 +1,16 @@
+# v10.2.3 (Wed Nov 04 2020)
+
+#### 🐛 Bug Fix
+
+- add timeout when verifying auth to remote [#1632](https://github.com/intuit/auto/pull/1632) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add timeout when verifying auth to remote ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.1.0 (Mon Nov 02 2020)
 
 :tada: This release contains work from a new contributor! :tada:
