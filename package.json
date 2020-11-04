@@ -120,7 +120,12 @@
       "html",
       "lcov",
       "text"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    }
   },
   "ignite": {
     "repo": "intuit/auto",

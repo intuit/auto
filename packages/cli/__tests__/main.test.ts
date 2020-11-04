@@ -3,6 +3,7 @@ import { runCli, execute } from "../src/run";
 process.env.GH_TOKEN = "XXXX";
 
 jest.mock("@octokit/rest");
+jest.mock("../../core/src/utils/verify-auth");
 
 test("throws error for unknown args", async () => {
   process.exit = jest.fn() as any;
