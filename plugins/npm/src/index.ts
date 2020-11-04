@@ -386,7 +386,7 @@ const getIndependentNextReleases = async (
   );
   const changedPackages = changedPackagesResult
     .split("\n")
-    .map((changedPackage) => changedPackage.replace(" (PRIVATE)", ""))
+    .map((changedPackage) => changedPackage.replace("(PRIVATE)", "").trim())
     .filter((changedPackage) =>
       packages.some((p) => p.name === changedPackage)
     );
@@ -452,7 +452,7 @@ const updateDependencies = (
     const depUpdate = updates.find((update) => update.name === name);
 
     if (depUpdate && version.includes(depUpdate.version)) {
-      deps[name] = version.replace(depUpdate.version, depUpdate.newVersion)
+      deps[name] = version.replace(depUpdate.version, depUpdate.newVersion);
     }
   });
 };
@@ -485,8 +485,8 @@ const tagIndependentNextReleases = async (
 
       packageJson.version = lernaPackage.newVersion;
 
-      updateDependencies(packageJson, 'dependencies', updates)
-      updateDependencies(packageJson, 'devDependencies', updates)
+      updateDependencies(packageJson, "dependencies", updates);
+      updateDependencies(packageJson, "devDependencies", updates);
 
       await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
     })
