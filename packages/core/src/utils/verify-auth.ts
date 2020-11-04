@@ -5,6 +5,15 @@ import { spawn } from "child_process";
  */
 export default function verifyAuth(remote: string, branch: string) {
   return new Promise<boolean>((resolve) => {
+    let timeout: NodeJS.Timeout | null = null;
+
+    /** Clear the timeout timeout */
+    const clear = () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+
     try {
       const child = spawn(
         `git push --dry-run --no-verify ${remote} HEAD:${branch} -q`,
@@ -16,6 +25,11 @@ export default function verifyAuth(remote: string, branch: string) {
         }
       );
 
+      timeout = setTimeout(() => {
+        child.kill(0);
+        resolve(false);
+      }, 5 * 1000);
+
       let err = "";
 
       child.stderr.on("data", (data) => {
@@ -23,6 +37,7 @@ export default function verifyAuth(remote: string, branch: string) {
       });
 
       child.on("exit", () => {
+        clear();
         resolve(
           !err.startsWith("fatal: could not read Username") &&
             !err.startsWith("ssh_askpass") &&
@@ -30,6 +45,7 @@ export default function verifyAuth(remote: string, branch: string) {
         );
       });
     } catch (error) {
+      clear();
       resolve(false);
     }
   });

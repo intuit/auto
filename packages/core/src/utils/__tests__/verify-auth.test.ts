@@ -8,6 +8,7 @@ describe("verify-auth", () => {
   test("should handle error", async () => {
     spawn.mockImplementationOnce(() => ({
       stderr: { on: () => {} },
+      kill: () => {},
       on: () => {
         throw new Error();
       },
@@ -18,6 +19,7 @@ describe("verify-auth", () => {
   test("should verify auth when we can push to remote", async () => {
     spawn.mockImplementationOnce(() => ({
       stderr: { on: () => {} },
+      kill: () => {},
       on: (_: string, cb: () => void) => cb(),
     }));
     expect(await verifyAuth("origin", "master")).toBe(true);
@@ -29,6 +31,7 @@ describe("verify-auth", () => {
         on: (_: string, cb: (data: string) => void) =>
           cb("fatal: could not read Username"),
       },
+      kill: () => {},
       on: (_: string, cb: () => void) => cb(),
     }));
     expect(await verifyAuth("bad", "master")).toBe(false);
