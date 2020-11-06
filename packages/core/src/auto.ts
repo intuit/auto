@@ -934,7 +934,7 @@ export default class Auto {
       // If pr-check is ran on CI on master then we exit successfully since
       // running pr-check in this scenario wouldn't make sense anyway. Enables
       // adding this command without resorting to bash if/else statements.
-      if (env.isCi && env.branch === "master") {
+      if (env.isCi && (env.branch === "master" || this.inPrereleaseBranch())) {
         process.exit(0);
       }
 
