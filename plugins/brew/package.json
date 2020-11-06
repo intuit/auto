@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/brew",
-  "version": "10.2.5",
+  "version": "10.3.0",
   "main": "dist/index.js",
   "description": "Automate the creation of Homebrew formulae.",
   "license": "MIT",
