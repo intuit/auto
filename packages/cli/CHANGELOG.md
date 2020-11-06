@@ -1,3 +1,44 @@
+# v10.2.5 (Fri Nov 06 2020)
+
+### Release Notes
+
+_From #1636_
+
+Previously when using `auto pr-check` you would have to check that you were running the command from a PR with bash scripting so it didn't fail when running on master.
+
+This PR simplifies this workflow so that you can run `auto pr-check` without any logic. On CI + base branch `pr-check` will exit successfully, otherwise it will check for a PR number and fail accordingly.
+
+## Why
+
+Less config + more automation = happy `auto` consumers
+
+Todo:
+
+- [ ] Add tests
+- [ ] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+---
+
+#### 🐛 Bug Fix
+
+- improve pr-check usage + don't fail on runs in CI base branch [#1636](https://github.com/intuit/auto/pull/1636) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- improve pr-check usage + don't fail on runs in CI master branch ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.4 (Fri Nov 06 2020)
 
 #### 🐛 Bug Fix
