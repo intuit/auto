@@ -1,6 +1,7 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 import { RestEndpointMethodTypes } from "@octokit/rest";
+import botList from "@auto-it/bot-list";
 
 import merge from "deepmerge";
 import * as t from "io-ts";
@@ -126,6 +127,17 @@ export default class ReleasedLabelPlugin implements IPlugin {
       const branch = pr?.data.head.ref;
 
       if (branch && auto.config?.prereleaseBranches.includes(branch)) {
+        return;
+      }
+
+      if (
+        commit.authors.some(
+          (author) =>
+            (author.name && botList.includes(author.name)) ||
+            (author.username && botList.includes(author.username)) ||
+            author.type === "Bot"
+        )
+      ) {
         return;
       }
 
