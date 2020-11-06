@@ -1,3 +1,20 @@
+# v10.3.0 (Fri Nov 06 2020)
+
+#### 🚀 Enhancement
+
+- Don't add release comment to PRs created by bots [#1637](https://github.com/intuit/auto/pull/1637) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add "includeBotPrs" options ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- ignore bot accounts in release comments ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.5 (Fri Nov 06 2020)
 
 ### Release Notes

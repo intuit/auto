@@ -1,3 +1,16 @@
+# v10.3.0 (Fri Nov 06 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/released`
+  - Don't add release comment to PRs created by bots [#1637](https://github.com/intuit/auto/pull/1637) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.5 (Fri Nov 06 2020)
 
 ### Release Notes
