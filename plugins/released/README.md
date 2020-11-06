@@ -94,3 +94,13 @@ Lock issues that have been merged in PRs.
   "plugins": [["released", { "lockIssues": true }]]
 }
 ```
+
+### Include Bot Prs
+
+Whether to comment on PRs made by bots.
+
+```json
+{
+  "plugins": [["released", { "includeBotPrs": true }]]
+}
+```

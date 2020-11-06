@@ -1,6 +1,7 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 import { RestEndpointMethodTypes } from "@octokit/rest";
+import botList from "@auto-it/bot-list";
 
 import merge from "deepmerge";
 import * as t from "io-ts";
@@ -14,6 +15,8 @@ const pluginOptions = t.partial({
   prereleaseLabel: t.string,
   /** Whether to lock the issue once the pull request has been released */
   lockIssues: t.boolean,
+  /** Whether to comment on PRs made by bots */
+  includeBotPrs: t.boolean,
 });
 
 export type IReleasedLabelPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -24,6 +27,7 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   label: "released",
   prereleaseLabel: "prerelease",
   lockIssues: false,
+  includeBotPrs: false,
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
 
@@ -126,6 +130,18 @@ export default class ReleasedLabelPlugin implements IPlugin {
       const branch = pr?.data.head.ref;
 
       if (branch && auto.config?.prereleaseBranches.includes(branch)) {
+        return;
+      }
+
+      if (
+        !this.options.includeBotPrs &&
+        commit.authors.some(
+          (author) =>
+            (author.name && botList.includes(author.name)) ||
+            (author.username && botList.includes(author.username)) ||
+            author.type === "Bot"
+        )
+      ) {
         return;
       }
 
