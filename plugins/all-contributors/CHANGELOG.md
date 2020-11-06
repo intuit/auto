@@ -1,3 +1,15 @@
+# v10.2.4 (Fri Nov 06 2020)
+
+#### 🐛 Bug Fix
+
+- Truncate commit hash for shorter canary versions [#1635](https://github.com/intuit/auto/pull/1635) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.3 (Wed Nov 04 2020)
 
 #### 🐛 Bug Fix
