@@ -78,12 +78,7 @@ jobs:
           at: ~/auto
       - run:
           name: Check for SemVer Label
-          command: | 
-            if [ ! -z "$CIRCLE_PR_NUMBER" ]; then
-              yarn auto pr-check --url $CIRCLE_PULL_REQUEST
-            else
-              echo "No pull request, not checking for semver label"
-            fi
+          command: yarn auto pr-check --url $CIRCLE_PULL_REQUEST
 
   test:
     <<: *defaults

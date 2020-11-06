@@ -317,7 +317,8 @@ export const commands: AutoCommand[] = [
   {
     name: "pr-check",
     group: "Pull Request Interaction Commands",
-    description: "Check that a pull request has a SemVer label",
+    description:
+      "Check that a pull request has a SemVer label and run all pr-check plugins.",
     require: ["url"],
     options: [
       pr,

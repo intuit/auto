@@ -928,7 +928,27 @@ export default class Auto {
     this.logger.verbose.info(`Using command: 'pr-check' for '${url}'`);
 
     const target_url = url;
-    const prNumber = this.getPrNumber("prCheck", pr);
+    const prNumber = getPrNumberFromEnv(pr);
+
+    if (!prNumber) {
+      // If pr-check is ran on CI on master then we exit successfully since
+      // running pr-check in this scenario wouldn't make sense anyway. Enables
+      // adding this command without resorting to bash if/else statements.
+      if (env.isCi && (env.branch === "master" || this.inPrereleaseBranch())) {
+        process.exit(0);
+      }
+
+      // Otherwise the command should fail since no PR number was provided or found
+      this.logger.log.error(
+        endent`
+          Could not detect PR number. pr-check must be run from either a PR or have the PR number supplied via the --pr flag.
+          
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+        `
+      );
+      process.exit(1);
+    }
+
     let msg;
     let sha;
 
@@ -1139,7 +1159,6 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
-  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault("canary"), ...args };
 
