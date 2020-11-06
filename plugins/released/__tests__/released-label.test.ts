@@ -144,32 +144,6 @@ describe("release label plugin", () => {
     expect(comment).not.toHaveBeenCalled();
   });
 
-  test("should do nothing for bots", async () => {
-    const releasedLabel = new ReleasedLabelPlugin();
-    const autoHooks = makeHooks();
-    releasedLabel.apply(({
-      hooks: autoHooks,
-      labels: defaultLabels,
-      logger: dummyLog(),
-      options: {},
-      comment,
-      git,
-    } as unknown) as Auto);
-
-    const commit = makeCommitFromMsg("normal commit with no bump");
-    commit.authors[0].username = botList[0];
-    const commit2 = makeCommitFromMsg("normal commit with no bump");
-    commit.authors[0].type = "Bot";
-
-    await autoHooks.afterRelease.promise({
-      lastRelease: "0.1.0",
-      commits: [commit, commit2],
-      releaseNotes: "",
-    });
-
-    expect(comment).not.toHaveBeenCalled();
-  });
-
   test("should do nothing without commits", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
@@ -245,6 +219,64 @@ describe("release label plugin", () => {
           ":rocket: PR was released in [`v1.0.0`](https://git.hub/some/project/releases/v1.0.0) :rocket:",
       })
     );
+  });
+
+  test("should do nothing for bots", async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    const commit = makeCommitFromMsg("normal commit with no bump");
+    commit.authors[0].username = botList[0];
+    const commit2 = makeCommitFromMsg("normal commit with no bump");
+    commit.authors[0].type = "Bot";
+
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit, commit2]),
+      releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(comment).not.toHaveBeenCalled();
+  });
+
+  test("should include bot PRs if configured to do so", async () => {
+    const releasedLabel = new ReleasedLabelPlugin({ includeBotPrs: true });
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    const commit = makeCommitFromMsg("normal commit with no bump");
+    commit.authors[0].username = botList[0];
+    const commit2 = makeCommitFromMsg("normal commit with no bump");
+    commit.authors[0].type = "Bot";
+
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit, commit2]),
+      releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(comment).not.toHaveBeenCalled();
   });
 
   test("should work with a null PR body", async () => {

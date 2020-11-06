@@ -15,6 +15,8 @@ const pluginOptions = t.partial({
   prereleaseLabel: t.string,
   /** Whether to lock the issue once the pull request has been released */
   lockIssues: t.boolean,
+  /** Whether to comment on PRs made by bots */
+  includeBotPrs: t.boolean,
 });
 
 export type IReleasedLabelPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -25,6 +27,7 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   label: "released",
   prereleaseLabel: "prerelease",
   lockIssues: false,
+  includeBotPrs: false,
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
 
@@ -131,6 +134,7 @@ export default class ReleasedLabelPlugin implements IPlugin {
       }
 
       if (
+        !this.options.includeBotPrs &&
         commit.authors.some(
           (author) =>
             (author.name && botList.includes(author.name)) ||
