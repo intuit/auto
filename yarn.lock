@@ -3388,9 +3388,9 @@
     universal-user-agent "^6.0.0"
 
 "@octokit/plugin-enterprise-compatibility@^1.2.2":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.5.tgz#43f77a2e392daf76841dc1d25d5dd7846de5fad4"
-  integrity sha512-c909SIGuLV8/gF2qh5jwrWAu2+MdWbaeubQzTJjvSzeTY8JPlj5OVxHHKtIgc7JhJKhgt4a4+2eirnOR8LEcRw==
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.6.tgz#c98568b7f1afc8abc41742fdd345db0e007cd8ef"
+  integrity sha512-Wc/qLOk4i9VTvoSiTBO1KJ1FqscG4PVM28DccKnKxwadkuvYbRlghKYisb/b8xTHnYBR2WpWXGppDjPaAKJxDw==
   dependencies:
     "@octokit/request-error" "^2.0.0"
     "@octokit/types" "^5.0.0"
