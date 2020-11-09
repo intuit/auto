@@ -59,10 +59,10 @@
   integrity sha512-ZDDooL8brlN+oH4MKaG/es0Y4ccYzcVJaPwwblWww/VB6t8BqqGvnIzqQ2U45XCv9o0LMMOQ3/JFl2p4Ajzjzg==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.0.2"
+  version "10.3.0"
 
 "@auto-it/core@link:packages/core":
-  version "10.0.2"
+  version "10.3.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -102,7 +102,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.0.2"
+  version "10.3.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     await-to-js "^2.1.1"
@@ -120,8 +120,9 @@
     user-home "^2.0.0"
 
 "@auto-it/released@link:plugins/released":
-  version "10.0.2"
+  version "10.3.0"
   dependencies:
+    "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
     fp-ts "^2.5.3"
@@ -129,7 +130,7 @@
     tslib "2.0.3"
 
 "@auto-it/slack@link:plugins/slack":
-  version "10.0.2"
+  version "10.3.0"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -3435,9 +3436,9 @@
     deprecation "^2.3.1"
 
 "@octokit/plugin-retry@^3.0.1":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-3.0.3.tgz#9d7983ab15ae48da43e2584ea90932602c1cd37c"
-  integrity sha512-RFvcBg4JGyfWTWE35EIF7jf/eglIk5MuvfygzdIMLIVK3/4Ywz3X1x9Ri75nlyAmk53EpVWB4DwM/xEB1NXxXA==
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-3.0.4.tgz#17530af7a9b0616bf58beaf61d2437d3420479e8"
+  integrity sha512-E6TqaUvIzJM00dRAnlKUWlkVwJ4jup8zzCvmhx4eoK0lOc2jhiqn6P2tMH3OZky8VoWnjRO8IG9bHy164MlVrQ==
   dependencies:
     "@octokit/types" "^5.0.0"
     bottleneck "^2.15.3"
