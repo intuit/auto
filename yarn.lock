@@ -3444,11 +3444,11 @@
     bottleneck "^2.15.3"
 
 "@octokit/plugin-throttling@^3.2.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-3.3.0.tgz#11ee58d986255888c112c63969ca79e921d57850"
-  integrity sha512-0hMtpqTAwAvo3XkNoaPQFqX2+csfbuR0bYpruHq3anrBrhQFPt9Gn01RVqqoDla/qBYmIIY2MRirxlaLO21Apg==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-3.3.1.tgz#1f0ce5beccc4051d20f3f9181c104d1f32361cb3"
+  integrity sha512-NdUmn52Wr2YCbF8dwjIFQLOcyBlvMJuCKMtybUGhFGA+F7kZtW2yyN73J4hvVL+mfBsjZVqa5vmsP9O8NX9+fg==
   dependencies:
-    "@octokit/types" "^5.0.0"
+    "@octokit/types" "^5.5.0"
     bottleneck "^2.15.3"
 
 "@octokit/request-error@^1.0.2":
