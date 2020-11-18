@@ -153,7 +153,7 @@ export interface IAutoHooks {
   /** Ran after the `shipit` command has run. */
   afterShipIt: AsyncParallelHook<
     [
-      {
+      DryRunOption & {
         /** The version published in the shipit run */
         newVersion: string | undefined;
         /** The commits the version was published for */
@@ -1532,6 +1532,7 @@ export default class Auto {
       newVersion,
       commitsInRelease,
       context,
+      dryRun: args.dryRun,
     });
   }
 
