@@ -1,3 +1,31 @@
+# v10.4.0 (Wed Nov 18 2020)
+
+#### 🚀 Enhancement
+
+- add dry-run info to afterShipIt hook [#1650](https://github.com/intuit/auto/pull/1650) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add dry-run info to afterShipIt hook ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump type-fest from 0.16.0 to 0.18.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump conventional-commits-parser from 3.1.0 to 3.2.0 [#1639](https://github.com/intuit/auto/pull/1639) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.7.6 to 30.7.7 [#1647](https://github.com/intuit/auto/pull/1647) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.14.0 to 6.15.0 [#1646](https://github.com/intuit/auto/pull/1646) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-retry from 3.0.3 to 3.0.4 [#1645](https://github.com/intuit/auto/pull/1645) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-enterprise-compatibility from 1.2.5 to 1.2.6 [#1644](https://github.com/intuit/auto/pull/1644) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 3.3.0 to 3.3.1 [#1642](https://github.com/intuit/auto/pull/1642) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump type-fest from 0.16.0 to 0.18.0 [#1641](https://github.com/intuit/auto/pull/1641) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.5 (Fri Nov 06 2020)
 
 ### Release Notes

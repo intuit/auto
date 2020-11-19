@@ -1,3 +1,30 @@
+# v10.4.0 (Wed Nov 18 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/gradle`, `@auto-it/maven`
+  - add dry-run info to afterShipIt hook [#1650](https://github.com/intuit/auto/pull/1650) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump conventional-changelog-core from 4.2.0 to 4.2.1 [#1643](https://github.com/intuit/auto/pull/1643) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump conventional-commits-parser from 3.1.0 to 3.2.0 [#1639](https://github.com/intuit/auto/pull/1639) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.7.6 to 30.7.7 [#1647](https://github.com/intuit/auto/pull/1647) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 6.14.0 to 6.15.0 [#1646](https://github.com/intuit/auto/pull/1646) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-retry from 3.0.3 to 3.0.4 [#1645](https://github.com/intuit/auto/pull/1645) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-enterprise-compatibility from 1.2.5 to 1.2.6 [#1644](https://github.com/intuit/auto/pull/1644) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @octokit/plugin-throttling from 3.3.0 to 3.3.1 [#1642](https://github.com/intuit/auto/pull/1642) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.6.0 to 4.6.1 [#1640](https://github.com/intuit/auto/pull/1640) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump type-fest from 0.16.0 to 0.18.0 [#1641](https://github.com/intuit/auto/pull/1641) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.3.0 (Fri Nov 06 2020)
 
 #### 🚀 Enhancement

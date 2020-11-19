@@ -1,3 +1,19 @@
+# v10.4.0 (Wed Nov 18 2020)
+
+#### 🚀 Enhancement
+
+- add dry-run info to afterShipIt hook [#1650](https://github.com/intuit/auto/pull/1650) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add dry-run info to afterShipIt hook ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.2.5 (Fri Nov 06 2020)
 
 ### Release Notes
