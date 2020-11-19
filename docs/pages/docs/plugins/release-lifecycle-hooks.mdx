@@ -339,6 +339,7 @@ Ran after the `shipit` command has run.
   - `newVersion` - The new version that was release
   - `commits` - the commits in the release
   - `context` - The type of release that was created (`latest`, `next`, `canary`, or `old`)
+  - `dryRun` - Whether the run is a dry run
 
 ```ts
 auto.hooks.afterShipIt.tap("MyPlugin", async ({ context }) => {
