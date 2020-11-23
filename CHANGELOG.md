@@ -1,3 +1,16 @@
+# v10.4.1 (Mon Nov 23 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Improve readability of release notes [#1662](https://github.com/intuit/auto/pull/1662) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.4.0 (Wed Nov 18 2020)
 
 #### 🚀 Enhancement
