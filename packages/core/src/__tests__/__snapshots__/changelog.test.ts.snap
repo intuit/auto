@@ -22,7 +22,7 @@ exports[`Hooks title 1`] = `
 exports[`generateReleaseNotes additional release notes should be able to contain sub-headers 1`] = `
 "### Release Notes
 
-_From #1235_
+#### - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
 
 Here is how you upgrade
 
@@ -88,7 +88,7 @@ exports[`generateReleaseNotes should add "Push to Next" 1`] = `
 exports[`generateReleaseNotes should add additional release notes 1`] = `
 "### Release Notes
 
-_From #1235_
+#### - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
 
 Here is how you upgrade
 
@@ -245,7 +245,7 @@ exports[`generateReleaseNotes should merge sections with same changelog title 1`
 exports[`generateReleaseNotes should not add automated comments to additional release notes 1`] = `
 "### Release Notes
 
-_From #1235_
+#### - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235)
 
 Here is how you upgrade
 
@@ -269,7 +269,7 @@ exports[`generateReleaseNotes should omit authors with invalid email addresses 1
 exports[`generateReleaseNotes should omit changelog item for next branches 1`] = `
 "### Release Notes
 
-_From #123_
+#### - V8 [#123](https://github.custom.com/foobar/auto/pull/123)
 
 foobar
 

@@ -271,7 +271,7 @@ export default class Changelog {
   }
 
   /** Transform a commit into a line in the changelog */
-  private async generateCommitNote(commit: IExtendedCommit) {
+  private async generateCommitNote(commit: IExtendedCommit, addUser = true) {
     const subject = commit.subject
       ? commit.subject
           .split("\n")[0]
@@ -290,8 +290,15 @@ export default class Changelog {
       pr = `[#${commit.pullRequest.number}](${prLink})`;
     }
 
-    const user = await this.createUserLinkList(commit);
-    return `- ${subject}${pr ? ` ${pr}` : ""}${user ? ` (${user})` : ""}`;
+    const line = `- ${subject}${pr ? ` ${pr}` : ""}`;
+
+    if (addUser) {
+      const user = await this.createUserLinkList(commit);
+
+      return `${line}${user ? ` (${user})` : ""}`;
+    }
+
+    return line;
   }
 
   /** Get all the authors in the provided commits */
@@ -432,57 +439,63 @@ export default class Changelog {
 
     let section = "";
     const visited = new Set<number>();
-    const included = await Promise.all(
-      commits.map(async (commit) => {
-        const omit = await this.hooks.omitReleaseNotes.promise(commit);
 
-        if (!omit) {
-          return commit;
+    await Promise.all(
+      commits.map(async (commit) => {
+        if (await this.hooks.omitReleaseNotes.promise(commit)) {
+          return;
         }
+
+        const pr = commit.pullRequest;
+
+        if (!pr || !pr.body) {
+          return;
+        }
+
+        const title = /^[#]{0,5}[ ]*[R|r]elease [N|n]otes$/;
+        const lines = pr.body
+
+          .split("\n")
+
+          .map((line) => line.replace(/\r$/, ""));
+        const notesStart = lines.findIndex((line) =>
+          Boolean(line.match(title))
+        );
+
+        if (notesStart === -1 || visited.has(pr.number)) {
+          return;
+        }
+
+        const depth = getHeaderDepth(lines[notesStart]);
+        visited.add(pr.number);
+        let notes = "";
+
+        for (let index = notesStart; index < lines.length; index++) {
+          const line = lines[index];
+          const isTitle = line.match(title);
+
+          if (
+            (line.startsWith("#") &&
+              getHeaderDepth(line) <= depth &&
+              !isTitle) ||
+            line.startsWith(automatedCommentIdentifier)
+          ) {
+            break;
+          }
+
+          if (!isTitle) {
+            notes += `${line}\n`;
+          }
+        }
+
+        const line = await this.hooks.renderChangelogLine.promise(
+          await this.generateCommitNote(commit, false),
+          commit
+        );
+
+        section += `#### ${line}\n\n${notes.trim()}\n\n`;
       })
     );
-
-    included.forEach((commit) => {
-      if (!commit) {
-        return;
-      }
-
-      const pr = commit.pullRequest;
-
-      if (!pr || !pr.body) {
-        return;
-      }
-
-      const title = /^[#]{0,5}[ ]*[R|r]elease [N|n]otes$/;
-      const lines = pr.body.split("\n").map((line) => line.replace(/\r$/, ""));
-      const notesStart = lines.findIndex((line) => Boolean(line.match(title)));
-
-      if (notesStart === -1 || visited.has(pr.number)) {
-        return;
-      }
-
-      const depth = getHeaderDepth(lines[notesStart]);
-      visited.add(pr.number);
-      let notes = "";
-
-      for (let index = notesStart; index < lines.length; index++) {
-        const line = lines[index];
-        const isTitle = line.match(title);
-
-        if (
-          (line.startsWith("#") && getHeaderDepth(line) <= depth && !isTitle) ||
-          line.startsWith(automatedCommentIdentifier)
-        ) {
-          break;
-        }
-
-        if (!isTitle) {
-          notes += `${line}\n`;
-        }
-      }
-
-      section += `_From #${pr.number}_\n\n${notes.trim()}\n\n`;
-    });
 
     if (!section) {
       return;
