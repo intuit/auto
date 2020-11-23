@@ -1,3 +1,20 @@
+# v10.4.2 (Mon Nov 23 2020)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Improve release notes section rendering in npm monorepos [#1664](https://github.com/intuit/auto/pull/1664) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- fix url pr-check uses for auto's CI [#1663](https://github.com/intuit/auto/pull/1663) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.4.1 (Mon Nov 23 2020)
 
 #### 🐛 Bug Fix
