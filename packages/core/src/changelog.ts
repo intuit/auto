@@ -270,8 +270,20 @@ export default class Changelog {
     return [...result].join(" ");
   }
 
+  /** Generate a link to a PR or issues */
+  private generateIssueLink(commit: IExtendedCommit) {
+    if (commit.pullRequest?.number) {
+      const prLink = join(
+        this.options.baseUrl,
+        "pull",
+        commit.pullRequest.number.toString()
+      );
+      return `[#${commit.pullRequest.number}](${prLink})`;
+    }
+  }
+
   /** Transform a commit into a line in the changelog */
-  private async generateCommitNote(commit: IExtendedCommit, addUser = true) {
+  private async generateCommitNote(commit: IExtendedCommit) {
     const subject = commit.subject
       ? commit.subject
           .split("\n")[0]
@@ -279,26 +291,10 @@ export default class Changelog {
           .replace("[skip ci]", "\\[skip ci\\]")
       : "";
 
-    let pr = "";
+    const pr = this.generateIssueLink(commit);
+    const user = await this.createUserLinkList(commit);
 
-    if (commit.pullRequest?.number) {
-      const prLink = join(
-        this.options.baseUrl,
-        "pull",
-        commit.pullRequest.number.toString()
-      );
-      pr = `[#${commit.pullRequest.number}](${prLink})`;
-    }
-
-    const line = `- ${subject}${pr ? ` ${pr}` : ""}`;
-
-    if (addUser) {
-      const user = await this.createUserLinkList(commit);
-
-      return `${line}${user ? ` (${user})` : ""}`;
-    }
-
-    return line;
+    return `- ${subject}${pr ? ` ${pr}` : ""}${user ? ` (${user})` : ""}`;
   }
 
   /** Get all the authors in the provided commits */
@@ -488,12 +484,9 @@ export default class Changelog {
           }
         }
 
-        const line = await this.hooks.renderChangelogLine.promise(
-          await this.generateCommitNote(commit, false),
+        section += `#### ${commit.subject.trim()} (${this.generateIssueLink(
           commit
-        );
-
-        section += `#### ${line}\n\n${notes.trim()}\n\n`;
+        )})\n\n${notes.trim()}\n\n`;
       })
     );
 
