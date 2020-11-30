@@ -54,9 +54,9 @@
     cross-fetch "3.0.5"
 
 "@atomist/slack-messages@~1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.0.tgz#488594ecb6676c7571dc66fcb18fb7452fecccb2"
-  integrity sha512-ZDDooL8brlN+oH4MKaG/es0Y4ccYzcVJaPwwblWww/VB6t8BqqGvnIzqQ2U45XCv9o0LMMOQ3/JFl2p4Ajzjzg==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.1.tgz#74e9499ae2b017cbb0e4f047033b9434cb42c1d7"
+  integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
   version "10.4.2"
