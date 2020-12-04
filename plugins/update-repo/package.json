@@ -1,0 +1,46 @@
+{
+  "name": "@auto-it/update-repo",
+  "version": "9.27.2",
+  "main": "dist/index.js",
+  "description": "Update github repos with a pull request",
+  "license": "MIT",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@artsy/update-repo": "^0.2.0",
+    "@auto-it/core": "link:../../packages/core",
+    "parse-github-url": "1.0.2",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
+    "tslib": "1.10.0"
+  }
+}
