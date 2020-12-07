@@ -2803,6 +2803,11 @@
     "@octokit/types" "^5.0.0"
     universal-user-agent "^6.0.0"
 
+"@octokit/openapi-types@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-2.0.0.tgz#6d8f8ad9db3b75a39115f5def2654df8bed39f28"
+  integrity sha512-J4bfM7lf8oZvEAdpS71oTvC1ofKxfEZgU5vKVwzZKi4QPiL82udjpseJwxPid9Pu2FNmyRQOX4iEj6W1iOSnPw==
+
 "@octokit/plugin-enterprise-compatibility@^1.2.2":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.6.tgz#c98568b7f1afc8abc41742fdd345db0e007cd8ef"
@@ -2852,11 +2857,11 @@
     deprecation "^2.3.1"
 
 "@octokit/plugin-retry@^3.0.1":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-3.0.4.tgz#17530af7a9b0616bf58beaf61d2437d3420479e8"
-  integrity sha512-E6TqaUvIzJM00dRAnlKUWlkVwJ4jup8zzCvmhx4eoK0lOc2jhiqn6P2tMH3OZky8VoWnjRO8IG9bHy164MlVrQ==
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-3.0.6.tgz#d14e7b196f83367b9409ea20d0656e6181bade6a"
+  integrity sha512-2ht+F85yN5pVw6rhFfJhrpujI8ch2lQUEEsK/Pkx3elFgh9lW4sbZXisH+uDD15+kZU5NX4zQ4ycUDofGLmhXg==
   dependencies:
-    "@octokit/types" "^5.0.0"
+    "@octokit/types" "^6.0.3"
     bottleneck "^2.15.3"
 
 "@octokit/plugin-throttling@^3.2.0":
@@ -2943,6 +2948,14 @@
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-5.5.0.tgz#e5f06e8db21246ca102aa28444cdb13ae17a139b"
   integrity sha512-UZ1pErDue6bZNjYOotCNveTXArOMZQFG6hKJfOnGnulVCMcVVi7YIIuuR4WfBhjo7zgpmzn/BkPDnUXtNx+PcQ==
   dependencies:
+    "@types/node" ">= 8"
+
+"@octokit/types@^6.0.3":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.1.1.tgz#bc88b3eb5f447b025a2a1a8177a72db216e8d4ca"
+  integrity sha512-btm3D6S7VkRrgyYF31etUtVY/eQ1KzrNRqhFt25KSe2mKlXuLXJilglRC6eDA2P6ou94BUnk/Kz5MPEolXgoiw==
+  dependencies:
+    "@octokit/openapi-types" "^2.0.0"
     "@types/node" ">= 8"
 
 "@react-hook/passive-layout-effect@^1.2.0":
