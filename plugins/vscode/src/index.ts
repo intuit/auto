@@ -41,7 +41,7 @@ export default class VscodePlugin implements IPlugin {
   readonly options: IVscodePluginOptions;
 
   /** Initialize the plugin with it's options */
-  constructor(options: IVscodePluginOptions) {
+  constructor(options: IVscodePluginOptions = {}) {
     this.options = options;
   }
 
@@ -87,7 +87,9 @@ export default class VscodePlugin implements IPlugin {
       }
     });
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, getVersion);
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
+      return auto.prefixRelease(await getVersion());
+    });
 
     auto.hooks.version.tapPromise(
       this.name,
@@ -137,8 +139,12 @@ export default class VscodePlugin implements IPlugin {
         version,
         "--pat",
         process.env.VSCE_TOKEN,
-        ...(this.options.baseContentUrl ? ["--baseContentUrl", this.options.baseContentUrl] : []),
-        ...(this.options.baseImagesUrl ? ["--baseImagesUrl", this.options.baseImagesUrl] : []),
+        ...(this.options.baseContentUrl
+          ? ["--baseContentUrl", this.options.baseContentUrl]
+          : []),
+        ...(this.options.baseImagesUrl
+          ? ["--baseImagesUrl", this.options.baseImagesUrl]
+          : []),
       ]);
     });
   }

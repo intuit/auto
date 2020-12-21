@@ -1,15 +1,18 @@
 /* eslint-disable no-template-curly-in-string */
 
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
+import { loadPackageJson } from "@auto-it/package-json-utils";
+
 import setNpmToken, { getRegistry } from "../src/set-npm-token";
 import * as utils from "../src/utils";
 
-const loadPackageJson = utils.loadPackageJson as jest.Mock;
+const loadPackageJsonSpy = loadPackageJson as jest.Mock;
 const readFile = utils.readFile as jest.Mock;
 const writeFile = utils.writeFile as jest.Mock;
 const isMonorepo = utils.isMonorepo as jest.Mock;
 const getLernaJson = utils.getLernaJson as jest.Mock;
 
+jest.mock("@auto-it/package-json-utils");
 jest.mock("../src/utils.ts");
 jest.mock("env-ci", () => () => ({
   isCi: true,
@@ -25,8 +28,8 @@ describe("set npm token", () => {
   });
 
   test("should write a new npmrc", async () => {
-    loadPackageJson.mockReturnValueOnce({ name: "test" });
-    loadPackageJson.mockReturnValueOnce({ name: "test" });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -35,7 +38,7 @@ describe("set npm token", () => {
   });
 
   test("should not write a new npmrc for single private package", async () => {
-    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test", private: true });
     isMonorepo.mockReturnValueOnce(false);
 
     await setNpmToken(dummyLog());
@@ -43,8 +46,8 @@ describe("set npm token", () => {
   });
 
   test("should write a npmrc for monorepo", async () => {
-    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
-    loadPackageJson.mockReturnValueOnce({ name: "test", private: true });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test", private: true });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test", private: true });
     isMonorepo.mockReturnValueOnce(true);
 
     await setNpmToken(dummyLog());
@@ -52,7 +55,7 @@ describe("set npm token", () => {
   });
 
   test("should get command publish registry", async () => {
-    loadPackageJson.mockReturnValueOnce({ name: "test" });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
     isMonorepo.mockReturnValueOnce(true);
     getLernaJson.mockReturnValue({
       command: { publish: { registry: "https://my.registry" } },
@@ -62,8 +65,8 @@ describe("set npm token", () => {
   });
 
   test("should write a new npmrc w/o name", async () => {
-    loadPackageJson.mockReturnValueOnce({});
-    loadPackageJson.mockReturnValueOnce({});
+    loadPackageJsonSpy.mockReturnValueOnce({});
+    loadPackageJsonSpy.mockReturnValueOnce({});
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -72,11 +75,11 @@ describe("set npm token", () => {
   });
 
   test("should use registry from packageJson", async () => {
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
@@ -88,10 +91,10 @@ describe("set npm token", () => {
   });
 
   test("should use registry for scoped packaged", async () => {
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "@scope/test",
     });
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "@scope/test",
     });
     await setNpmToken(dummyLog());
@@ -102,11 +105,11 @@ describe("set npm token", () => {
   });
 
   test("should not edit npmrc if it already has the token", async () => {
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
-    loadPackageJson.mockReturnValueOnce({
+    loadPackageJsonSpy.mockReturnValueOnce({
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
