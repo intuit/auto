@@ -123,7 +123,7 @@ describe("VSCode Plugin", () => {
         "1.0.1",
         "--no-commit-hooks",
         "-m",
-        "Bump version to: %s [skip ci]",
+        '"Bump version to: %s [skip ci]"',
       ]);
     });
   });

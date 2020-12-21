@@ -114,7 +114,7 @@ export default class VscodePlugin implements IPlugin {
           newVersion,
           "--no-commit-hooks",
           "-m",
-          "Bump version to: %s [skip ci]",
+          '"Bump version to: %s [skip ci]"',
           ...verboseArgs,
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
