@@ -1,0 +1,3 @@
+# @auto-it/{{kebab}}
+
+{{description}}

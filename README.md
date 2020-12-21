@@ -142,7 +142,20 @@ The two arguments are:
 2. A description
 
 ```bash
-yarn create:plugin "My Plugin" "Do something really cool"
+yarn create:plugin my-plugin "Do something really cool"
+```
+
+### Create a new package
+
+Get started developing a new package in the monorepo in seconds.
+
+The two arguments are:
+
+1. A spaced name
+2. A description
+
+```bash
+yarn create:package my-package "Do something really cool"
 ```
 
 ## :beers: Contributing :beers:
