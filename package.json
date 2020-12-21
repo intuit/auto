@@ -100,7 +100,7 @@
     "testMatch": [
       "**/__tests__/*.test.+(ts|tsx|js)",
       "!**/dist/**/*",
-      "!**/scripts/template-plugin/**/*"
+      "!**/scripts/**/*"
     ],
     "testRunner": "jest-circus/runner",
     "snapshotSerializers": [
