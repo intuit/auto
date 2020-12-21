@@ -78,6 +78,9 @@
       "path": "plugins/microsoft-teams"
     },
     {
+      "path": "plugins/vscode"
+    },
+    {
       "path": "packages/package-json-utils"
     }
   ]
