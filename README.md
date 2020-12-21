@@ -54,6 +54,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [gradle](./plugins/gradle) - Publish code with gradle
 - [maven](./plugins/maven) - Publish code with maven
 - [npm](./plugins/npm) - Publish code to npm (`default` when installed through `npm`)
+- [vscode](./plugins/vscode) - Publish code to the VSCode extension marketplace
 
 **Extra Functionality:**
 
