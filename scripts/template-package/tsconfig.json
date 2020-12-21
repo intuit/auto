@@ -6,14 +6,5 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "composite": true
-  },
-
-  "references": [
-    {
-      "path": "../../packages/core"
-    },
-    {
-      "path": "../../packages/package-json-utils"
-    }
-  ]
+  }
 }

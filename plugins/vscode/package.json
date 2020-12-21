@@ -1,8 +1,8 @@
 {
-  "name": "@auto-it/{{kebab}}",
-  "version": "{{version}}",
+  "name": "@auto-it/vscode",
+  "version": "10.4.2",
   "main": "dist/index.js",
-  "description": "{{description}}",
+  "description": "Publish an vscode extension",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
@@ -37,8 +37,11 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "@auto-it/package-json-utils": "link:../../packages/package-json-utils",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "1.10.0"
+    "semver": "^7.0.0",
+    "tslib": "1.10.0",
+    "vsce": "^1.83.0"
   }
 }

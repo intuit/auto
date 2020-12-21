@@ -1,6 +1,10 @@
-import { Auto, IPlugin } from '@auto-it/core';
+import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
+import * as t from "io-ts";
 
-interface I{{pascal}}PluginOptions {}
+const pluginOptions = t.partial({
+});
+
+export type I{{pascal}}PluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** {{description}} */
 export default class {{pascal}}Plugin implements IPlugin {
@@ -16,5 +20,12 @@ export default class {{pascal}}Plugin implements IPlugin {
   }
 
   /** Tap into auto plugin points. */
-  apply(auto: Auto) {}
+  apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      // If it's a string thats valid config
+      if (name === this.name && typeof options !== "string") {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+  }
 }

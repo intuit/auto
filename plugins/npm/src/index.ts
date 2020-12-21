@@ -1,6 +1,5 @@
 import envCi from "env-ci";
 import * as fs from "fs";
-import parseAuthor from "parse-author";
 import path from "path";
 import { Memoize as memoize } from "typescript-memoize";
 import { RestEndpointMethodTypes } from "@octokit/rest";
@@ -26,11 +25,10 @@ import {
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
+import { loadPackageJson, getRepo, getAuthor } from "@auto-it/package-json-utils";
 
-import getConfigFromPackageJson from "./package-config";
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import {
-  loadPackageJson,
   writeFile,
   isMonorepo,
   readFile,
@@ -718,19 +716,12 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info(
         "NPM: Getting repo information from package.json"
       );
-      const packageJson = await loadPackageJson();
 
-      if (!packageJson.author) {
-        return;
+      const author = await getAuthor();
+
+      if (author) {
+        return author;
       }
-
-      const { author } = packageJson;
-
-      if (typeof author === "string") {
-        return parseAuthor(author);
-      }
-
-      return author;
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, () =>
@@ -741,7 +732,7 @@ export default class NPMPlugin implements IPlugin {
       auto.logger.verbose.info(
         "NPM: getting repo information from package.json"
       );
-      const repo = await getConfigFromPackageJson();
+      const repo = await getRepo();
 
       if (repo) {
         return repo;

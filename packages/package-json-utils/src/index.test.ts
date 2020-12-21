@@ -1,12 +1,11 @@
-import packageConfig from "../src/package-config";
-import { loadPackageJson } from "../src/utils";
+import { loadPackageJson, getRepo } from ".";
 
 const packageJsonSpy = loadPackageJson as jest.Mock;
 jest.mock("../src/utils");
 
 test("should return nothing without a repo", async () => {
   packageJsonSpy.mockReturnValueOnce({});
-  expect(await packageConfig()).toBeUndefined();
+  expect(await getRepo()).toBeUndefined();
 });
 
 test("should return nothing without an owner", async () => {
@@ -14,7 +13,7 @@ test("should return nothing without an owner", async () => {
     repository: { url: "fake.com" },
   });
 
-  expect(await packageConfig()).toBeUndefined();
+  expect(await getRepo()).toBeUndefined();
 });
 
 test("should return nothing without an package name", async () => {
@@ -22,7 +21,7 @@ test("should return nothing without an package name", async () => {
     repository: { url: "fake.com" },
   });
 
-  expect(await packageConfig()).toBeUndefined();
+  expect(await getRepo()).toBeUndefined();
 });
 
 test("should correctly parse package info", async () => {
@@ -31,7 +30,7 @@ test("should correctly parse package info", async () => {
     repository: { url: "https://github.com/black-panther/operation-foo" },
   });
 
-  expect(await packageConfig()).toStrictEqual({
+  expect(await getRepo()).toStrictEqual({
     repo: "operation-foo",
     owner: "black-panther",
   });
@@ -43,7 +42,7 @@ test("should correctly parse package info - string", async () => {
     repository: "black-panther/operation-foo",
   });
 
-  expect(await packageConfig()).toStrictEqual({
+  expect(await getRepo()).toStrictEqual({
     repo: "operation-foo",
     owner: "black-panther",
   });

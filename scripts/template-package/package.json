@@ -1,8 +1,8 @@
 {
   "name": "@auto-it/{{kebab}}",
-  "version": "{{version}}",
   "main": "dist/index.js",
   "description": "{{description}}",
+  "version": "{{version}}",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
@@ -19,6 +19,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=10.x"
+  },
   "keywords": [
     "automation",
     "semantic",
@@ -27,18 +30,13 @@
     "labels",
     "automated",
     "continuos integration",
-    "changelog"
+    "changelog",
+    "cli"
   ],
   "scripts": {
     "build": "tsc -b",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2 --config ../../package.json"
-  },
-  "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
-    "tslib": "1.10.0"
+    "test": "jest --maxWorkers=2"
   }
 }

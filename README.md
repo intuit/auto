@@ -54,6 +54,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [gradle](./plugins/gradle) - Publish code with gradle
 - [maven](./plugins/maven) - Publish code with maven
 - [npm](./plugins/npm) - Publish code to npm (`default` when installed through `npm`)
+- [vscode](./plugins/vscode) - Publish code to the VSCode extension marketplace
 
 **Extra Functionality:**
 
@@ -142,7 +143,20 @@ The two arguments are:
 2. A description
 
 ```bash
-yarn create:plugin "My Plugin" "Do something really cool"
+yarn create:plugin my-plugin "Do something really cool"
+```
+
+### Create a new package
+
+Get started developing a new package in the monorepo in seconds.
+
+The two arguments are:
+
+1. A spaced name
+2. A description
+
+```bash
+yarn create:package my-package "Do something really cool"
 ```
 
 ## :beers: Contributing :beers:
