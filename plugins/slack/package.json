@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "10.4.2",
+  "version": "10.5.0",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "license": "MIT",
