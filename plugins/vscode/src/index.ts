@@ -6,6 +6,7 @@ import {
 } from "@auto-it/core";
 import * as t from "io-ts";
 import { inc, ReleaseType } from "semver";
+import * as vsce from "vsce";
 import {
   getRepo,
   getAuthor,
@@ -133,19 +134,13 @@ export default class VscodePlugin implements IPlugin {
         auto.baseBranch,
       ]);
 
-      await execPromise("npx", [
-        "vsce",
-        "publish",
+      await vsce.publish({
+        // @ts-ignore
         version,
-        "--pat",
-        process.env.VSCE_TOKEN,
-        ...(this.options.baseContentUrl
-          ? ["--baseContentUrl", this.options.baseContentUrl]
-          : []),
-        ...(this.options.baseImagesUrl
-          ? ["--baseImagesUrl", this.options.baseImagesUrl]
-          : []),
-      ]);
+        pat: process.env.VSCE_TOKEN,
+        baseContentUrl: this.options.baseContentUrl,
+        baseImagesUrl: this.options.baseImagesUrl,
+      });
     });
   }
 }

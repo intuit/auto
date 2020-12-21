@@ -7,6 +7,7 @@ import {
   getAuthor,
   getRepo,
 } from "@auto-it/package-json-utils";
+import * as vsce from "vsce";
 
 import Vscode from "../src";
 
@@ -14,7 +15,9 @@ const exec = jest.fn();
 const loadPackageJsonSpy = loadPackageJson as jest.Mock;
 const getAuthorSpy = getAuthor as jest.Mock;
 const getRepoSpy = getRepo as jest.Mock;
+const publishSpy = vsce.publish as jest.Mock;
 
+jest.mock("vsce");
 jest.mock("@auto-it/package-json-utils");
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
@@ -142,13 +145,11 @@ describe("VSCode Plugin", () => {
         undefined,
       ]);
 
-      expect(exec).toHaveBeenCalledWith("npx", [
-        "vsce",
-        "publish",
-        "1.0.0",
-        "--pat",
-        undefined,
-      ]);
+      expect(publishSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          version: "1.0.0",
+        })
+      );
     });
   });
 });
