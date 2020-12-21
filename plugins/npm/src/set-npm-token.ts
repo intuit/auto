@@ -4,14 +4,9 @@ import path from "path";
 import registryUrl from "registry-url";
 import urlJoin from "url-join";
 import userHome from "user-home";
+import { loadPackageJson } from "@auto-it/package-json-utils";
 
-import {
-  loadPackageJson,
-  readFile,
-  writeFile,
-  isMonorepo,
-  getLernaJson,
-} from "./utils";
+import { readFile, writeFile, isMonorepo, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
 

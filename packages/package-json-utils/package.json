@@ -1,0 +1,50 @@
+{
+  "name": "@auto-it/package-json-utils",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "description": "Shared utilities for parsing information from a package.json",
+  "version": "10.4.2",
+  "license": "MIT",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10.x"
+  },
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "cli"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
+    "test": "jest --maxWorkers=2"
+  },
+  "dependencies": {
+    "parse-author": "^2.0.0",
+    "parse-github-url": "1.0.2"
+  },
+  "devDependencies": {
+    "@types/parse-github-url": "1.0.0"
+  }
+}
