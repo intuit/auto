@@ -1,3 +1,20 @@
+# v10.5.0 (Mon Dec 21 2020)
+
+#### 🐛 Bug Fix
+
+- Bump all-contributors-cli from 6.17.4 to 6.19.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump jest from 26.4.2 to 26.6.3 [#1661](https://github.com/intuit/auto/pull/1661) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump all-contributors-cli from 6.17.4 to 6.19.0 [#1659](https://github.com/intuit/auto/pull/1659) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 1
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+
+---
+
 # v10.4.2 (Mon Nov 23 2020)
 
 #### 🐛 Bug Fix

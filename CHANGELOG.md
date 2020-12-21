@@ -1,3 +1,40 @@
+# v10.5.0 (Mon Dec 21 2020)
+
+#### 🚀 Enhancement
+
+- `@auto-it/package-json-utils`, `@auto-it/npm`, `@auto-it/vscode`
+  - VSCode marketplace publishing plugin [#1696](https://github.com/intuit/auto/pull/1696) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- fix blog links [#1666](https://github.com/intuit/auto/pull/1666) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/prettier from 2.1.1 to 2.1.5 [#1655](https://github.com/intuit/auto/pull/1655) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fromentries from 1.2.1 to 1.3.2 [#1675](https://github.com/intuit/auto/pull/1675) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jsdom from 16.2.4 to 16.2.5 [#1673](https://github.com/intuit/auto/pull/1673) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.4.2 to 10.5.2 [#1672](https://github.com/intuit/auto/pull/1672) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.2.0 to 2.2.1 [#1671](https://github.com/intuit/auto/pull/1671) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 16.0.0 to 16.0.1 [#1670](https://github.com/intuit/auto/pull/1670) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.6.1 to 4.8.2 [#1668](https://github.com/intuit/auto/pull/1668) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript-memoize from 1.0.0-alpha.3 to 1.0.0-alpha.4 [#1674](https://github.com/intuit/auto/pull/1674) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.7.7 to 30.7.8 [#1652](https://github.com/intuit/auto/pull/1652) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.4.0 to 4.8.2 [#1667](https://github.com/intuit/auto/pull/1667) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump jest from 26.4.2 to 26.6.3 [#1661](https://github.com/intuit/auto/pull/1661) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prettier from 2.1.2 to 2.2.0 [#1653](https://github.com/intuit/auto/pull/1653) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.4.3 to 26.4.4 [#1658](https://github.com/intuit/auto/pull/1658) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump highlight.js from 9.18.1 to 9.18.5 [#1665](https://github.com/intuit/auto/pull/1665) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/all-contributors`
+  - Bump all-contributors-cli from 6.17.4 to 6.19.0 [#1659](https://github.com/intuit/auto/pull/1659) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.4.2 (Mon Nov 23 2020)
 
 #### 🐛 Bug Fix
