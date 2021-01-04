@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
+exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should add more indents to nested lists 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
+exports[`postToSlack should add more indents to nested lists 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api in env var 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api in env var 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api through http proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api through http proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api through https proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api through https proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api with custom atTarget 1`] = `"{\\"text\\":\\"@here: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api with custom atTarget 1`] = `"{\\"text\\":\\"@here: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should call slack api with minimal config 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api with minimal config 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
-exports[`postToSlack should remove markdown code types from block 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n\`json\`:\\\\n\\\\n\`\`\`\\\\n{ \\\\\\"foo\\\\\\": \\\\\\"bar\\\\\\" }\`\`\`\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should remove markdown code types from block 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n\`json\`:\\\\n\\\\n\`\`\`\\\\n{ \\\\\\"foo\\\\\\": \\\\\\"bar\\\\\\" }\`\`\`\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
