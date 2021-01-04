@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`postToMicrosoftTeams should call microsoft-teams api through http proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+exports[`postToMicrosoftTeams should call microsoft-teams api through http proxy 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\"}"`;
 
-exports[`postToMicrosoftTeams should call microsoft-teams api with minimal config 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n* My Notes*\\\\n• PR <google.com|some link>\\"}"`;
+exports[`postToMicrosoftTeams should call microsoft-teams api with minimal config 1`] = `"{\\"@context\\":\\"http://schema.org/extensions\\",\\"@type\\":\\"MessageCard\\",\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\"}"`;
