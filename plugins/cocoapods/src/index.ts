@@ -2,7 +2,9 @@ import {
   Auto,
   IPlugin,
   execPromise,
+  getCurrentBranch,
   validatePluginConfiguration,
+  ILogger,
 } from "@auto-it/core";
 
 import { inc, ReleaseType } from "semver";
@@ -14,7 +16,7 @@ import { getPodspecContents, writePodspecContents } from "./utilities";
 const logPrefix = "[Cocoapods-Plugin]";
 
 /** Regex used to pull the version line from the spec */
-const versionRegex = /\.version\s*=\s*['|"](?<version>\d+\.\d+\.\d+)['|"]/;
+const versionRegex = /\.version\s*=\s*['|"](?<version>\d+\.\d+\.\d+.*?)['|"]/;
 /**
  * Wrapper to add logPrefix to messages
  *
@@ -113,6 +115,9 @@ export default class CocoapodsPlugin implements IPlugin {
   /** The name of the plugin */
   name = "cocoapods";
 
+  /** The auto logger */
+  logger?: ILogger;
+
   /** The options of the plugin */
   readonly options: ICocoapodsPluginOptions;
 
@@ -123,6 +128,7 @@ export default class CocoapodsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    this.logger = auto.logger;
     const isQuiet = auto.logger.logLevel === "quiet";
     const isVerbose =
       auto.logger.logLevel === "verbose" ||
@@ -144,34 +150,73 @@ export default class CocoapodsPlugin implements IPlugin {
       auto.prefixRelease(getVersion(this.options.podspecPath))
     );
 
-    auto.hooks.version.tapPromise(this.name, async ({ bump, dryRun, quiet }) => {
-      const previousVersion = getVersion(this.options.podspecPath);
-      const releaseVersion = inc(previousVersion, bump as ReleaseType);
+    auto.hooks.version.tapPromise(
+      this.name,
+      async ({ bump, dryRun, quiet }) => {
+        const previousVersion = getVersion(this.options.podspecPath);
+        const releaseVersion = inc(previousVersion, bump as ReleaseType);
 
-      if (dryRun && releaseVersion) {
-        if (quiet) {
-          console.log(releaseVersion);
-        } else {
-          auto.logger.log.info(`Would have published: ${releaseVersion}`);
+        if (dryRun && releaseVersion) {
+          if (quiet) {
+            console.log(releaseVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${releaseVersion}`);
+          }
+
+          return;
         }
 
-        return;
-      }
+        if (!releaseVersion) {
+          throw new Error(
+            `Could not increment previous version: ${previousVersion}`
+          );
+        }
 
-      if (!releaseVersion) {
-        throw new Error(
-          `Could not increment previous version: ${previousVersion}`
-        );
+        await updatePodspecVersion(this.options.podspecPath, releaseVersion);
+        await execPromise("git", [
+          "tag",
+          releaseVersion,
+          "-m",
+          `"Update version to ${releaseVersion}"`,
+        ]);
       }
+    );
 
-      await updatePodspecVersion(this.options.podspecPath, releaseVersion);
-      await execPromise("git", [
-        "tag",
-        releaseVersion,
-        "-m",
-        `"Update version to ${releaseVersion}"`,
-      ]);
-    });
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+        if (!auto.git) {
+          return;
+        }
+
+        const lastRelease = await auto.git.getLatestRelease();
+        const current = await auto.getCurrentVersion(lastRelease);
+        const nextVersion = inc(current, bump as ReleaseType);
+        const canaryVersion = `${nextVersion}-canary.${canaryIdentifier}`;
+        const branch = getCurrentBranch() || "";
+
+        if (dryRun) {
+          if (quiet) {
+            console.log(canaryVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${canaryVersion}`);
+          }
+
+          return;
+        }
+
+        await execPromise("git", [
+          "tag",
+          canaryVersion,
+          "-m",
+          `Update version to ${canaryVersion}`,
+        ]);
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+        await this.publishPodSpec(podLogLevel);
+        return canaryVersion;
+      }
+    );
 
     auto.hooks.beforeShipIt.tapPromise(this.name, async ({ dryRun }) => {
       if (dryRun) {
@@ -190,8 +235,6 @@ export default class CocoapodsPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
-
       await execPromise("git", [
         "push",
         "--follow-tags",
@@ -199,73 +242,36 @@ export default class CocoapodsPlugin implements IPlugin {
         auto.remote,
         auto.baseBranch,
       ]);
+      await this.publishPodSpec(podLogLevel);
+    });
+  }
 
-      if (!this.options.specsRepo) {
-        auto.logger.log.info(logMessage(`Pushing to Cocoapods trunk`));
-        await execPromise(pod, [
-          ...commands,
-          "trunk",
-          "push",
-          ...(this.options.flags || []),
-          this.options.podspecPath,
-          ...podLogLevel,
-        ]);
-        return;
-      }
+  /**
+   *
+   */
+  async publishPodSpec(podLogLevel: string[]) {
+    const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
+    if (!this.options.specsRepo) {
+      this.logger?.log.info(logMessage(`Pushing to Cocoapods trunk`));
+      await execPromise(pod, [
+        ...commands,
+        "trunk",
+        "push",
+        ...(this.options.flags || []),
+        this.options.podspecPath,
+        ...podLogLevel,
+      ]);
+      return;
+    }
 
-      try {
-        const existingRepos = await execPromise(pod, [
-          ...commands,
-          "repo",
-          "list",
-        ]);
-        if (existingRepos.indexOf("autoPublishRepo") !== -1) {
-          auto.logger.log.info("Removing existing autoPublishRepo");
-          await execPromise(pod, [
-            ...commands,
-            "repo",
-            "remove",
-            "autoPublishRepo",
-            ...podLogLevel,
-          ]);
-        }
-      } catch (error) {
-        auto.logger.log.warn(
-          `Error Checking for existing Specs repositories: ${error}`
-        );
-      }
-
-      try {
-        await execPromise(pod, [
-          ...commands,
-          "repo",
-          "add",
-          "autoPublishRepo",
-          this.options.specsRepo,
-          ...podLogLevel,
-        ]);
-
-        auto.logger.log.info(
-          logMessage(`Pushing to specs repo: ${this.options.specsRepo}`)
-        );
-
-        await execPromise(pod, [
-          ...commands,
-          "repo",
-          "push",
-          ...(this.options.flags || []),
-          "autoPublishRepo",
-          this.options.podspecPath,
-          ...podLogLevel,
-        ]);
-      } catch (error) {
-        auto.logger.log.error(
-          logMessage(
-            `Error pushing to specs repo: ${this.options.specsRepo}. Error: ${error}`
-          )
-        );
-        process.exit(1);
-      } finally {
+    try {
+      const existingRepos = await execPromise(pod, [
+        ...commands,
+        "repo",
+        "list",
+      ]);
+      if (existingRepos.indexOf("autoPublishRepo") !== -1) {
+        this.logger?.log.info("Removing existing autoPublishRepo");
         await execPromise(pod, [
           ...commands,
           "repo",
@@ -274,6 +280,50 @@ export default class CocoapodsPlugin implements IPlugin {
           ...podLogLevel,
         ]);
       }
-    });
+    } catch (error) {
+      this.logger?.log.warn(
+        `Error Checking for existing Specs repositories: ${error}`
+      );
+    }
+
+    try {
+      await execPromise(pod, [
+        ...commands,
+        "repo",
+        "add",
+        "autoPublishRepo",
+        this.options.specsRepo,
+        ...podLogLevel,
+      ]);
+
+      this.logger?.log.info(
+        logMessage(`Pushing to specs repo: ${this.options.specsRepo}`)
+      );
+
+      await execPromise(pod, [
+        ...commands,
+        "repo",
+        "push",
+        ...(this.options.flags || []),
+        "autoPublishRepo",
+        this.options.podspecPath,
+        ...podLogLevel,
+      ]);
+    } catch (error) {
+      this.logger?.log.error(
+        logMessage(
+          `Error pushing to specs repo: ${this.options.specsRepo}. Error: ${error}`
+        )
+      );
+      process.exit(1);
+    } finally {
+      await execPromise(pod, [
+        ...commands,
+        "repo",
+        "remove",
+        "autoPublishRepo",
+        ...podLogLevel,
+      ]);
+    }
   }
 }

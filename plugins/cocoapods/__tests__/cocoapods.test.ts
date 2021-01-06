@@ -93,6 +93,11 @@ describe("Cocoapods Plugin", () => {
 
       expect(getVersion("./Test.podspec")).toBe("0.0.1");
     });
+    test("should return canary version", () => {
+      mockPodspec(specWithVersion("0.0.1-canary.1.0.0"));
+
+      expect(getVersion("./Test.podspec")).toBe("0.0.1-canary.1.0.0");
+    });
   });
   describe("updatePodspecVersion", () => {
     test("should throw error if there is an error writing file", async () => {
@@ -231,6 +236,38 @@ describe("Cocoapods Plugin", () => {
         "lint",
         "--flag",
         "./Test.podspec",
+      ]);
+    });
+  });
+
+  describe("canary hook", () => {
+    test("should tag with canary version", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin(options);
+      const hook = makeHooks();
+      plugin.apply(({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+        git: {
+          getLatestRelease: async () => "0.0.1",
+        },
+        getCurrentVersion: async () => "0.0.1",
+      } as unknown) as Auto.Auto);
+
+      const newVersion = await hook.canary.promise({
+        bump: "minor" as Auto.SEMVER,
+        canaryIdentifier: "1.1.1",
+      });
+
+      expect(newVersion).toBe("0.1.0-canary.1.1.1");
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "0.1.0-canary.1.1.1",
+        "-m",
+        "Update version to 0.1.0-canary.1.1.1",
       ]);
     });
   });
