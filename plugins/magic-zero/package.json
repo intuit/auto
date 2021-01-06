@@ -39,6 +39,7 @@
     "@auto-it/core": "link:../../packages/core",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
+    "semver": "^7.0.0",
     "tslib": "1.10.0"
   }
 }
