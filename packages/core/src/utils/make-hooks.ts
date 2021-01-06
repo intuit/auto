@@ -3,7 +3,6 @@ import {
   AsyncSeriesBailHook,
   AsyncSeriesWaterfallHook,
   SyncHook,
-  SyncWaterfallHook,
   AsyncSeriesHook,
 } from "tapable";
 import { IAutoHooks } from "../auto";
@@ -15,7 +14,7 @@ import { InteractiveInitHooks } from "../init";
 /** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({
   beforeRun: new AsyncSeriesHook(["config"]),
-  modifyConfig: new SyncWaterfallHook(["config"]),
+  modifyConfig: new AsyncSeriesWaterfallHook(["config"]),
   validateConfig: new AsyncSeriesBailHook(["name", "options"]),
   beforeShipIt: new AsyncSeriesHook(["context"]),
   afterChangelog: new AsyncSeriesHook(["context"]),
