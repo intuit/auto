@@ -2,7 +2,6 @@ import {
   Auto,
   IPlugin,
   execPromise,
-  getCurrentBranch,
   validatePluginConfiguration,
   ILogger,
 } from "@auto-it/core";
@@ -17,6 +16,10 @@ const logPrefix = "[Cocoapods-Plugin]";
 
 /** Regex used to pull the version line from the spec */
 const versionRegex = /\.version\s*=\s*['|"](?<version>\d+\.\d+\.\d+.*?)['|"]/;
+
+/** Regex used to pull the source dictionary from the spec */
+const sourceLineRegex = /(?<specVar>\w+)\.source.*(?<source>\{\s*:\s*git.*\})/;
+
 /**
  * Wrapper to add logPrefix to messages
  *
@@ -72,6 +75,36 @@ export function getVersion(podspecPath: string): string {
 }
 
 /**
+ * Retrieves the source dictionary currently in the podspec file
+ *
+ * @param podspecPath - The relative path to the podspec file
+ */
+export function getSourceInfo(podspecPath: string): string {
+  const podspecContents = sourceLineRegex.exec(getPodspecContents(podspecPath));
+  if (podspecContents?.groups?.source) {
+    return podspecContents.groups.source;
+  }
+
+  throw new Error(`Source could not be found in podspec: ${podspecPath}`);
+}
+
+/**
+ * Retrieves the source dictionary currently in the podspec file
+ *
+ * @param podspecPath - The relative path to the podspec file
+ */
+export function getSourceVariable(podspecPath: string): string {
+  const podspecContents = sourceLineRegex.exec(getPodspecContents(podspecPath));
+  if (podspecContents?.groups?.specVar) {
+    return podspecContents.groups.specVar;
+  }
+
+  throw new Error(
+    `Spec variable could not be found in podspec: ${podspecPath}`
+  );
+}
+
+/**
  * Updates the version in the podspec to the supplied version
  *
  * @param podspecPath - The relative path to the podspec file
@@ -107,6 +140,47 @@ export async function updatePodspecVersion(
     }
   } catch (error) {
     throw new Error(`Error updating version in podspec: ${podspecPath}`);
+  }
+}
+
+/**
+ * Updates the version in the podspec to the supplied version
+ *
+ * @param podspecPath - The relative path to the podspec file
+ * @param remote - The git remote that is being used
+ * @param canary - Whether to update to the canary location or not
+ */
+export async function updateSourceLocation(
+  podspecPath: string,
+  remote: string,
+  canary: boolean
+) {
+  const podspecContents = getPodspecContents(podspecPath);
+
+  const source = getSourceInfo(podspecPath);
+  const specVar = getSourceVariable(podspecPath);
+
+  try {
+    if (canary) {
+      const revision = await execPromise("git", ["rev-parse", "HEAD"]);
+      const newPodspec = podspecContents.replace(
+        source,
+        `{ :git => '${remote}', :commit => '${revision}' }`
+      );
+
+      writePodspecContents(podspecPath, newPodspec);
+    } else {
+      const newPodspec = podspecContents.replace(
+        source,
+        `{ :git => '${remote}', :tag => ${specVar}.version.to_s }`
+      );
+
+      writePodspecContents(podspecPath, newPodspec);
+    }
+  } catch (error) {
+    throw new Error(
+      `Error updating source location in podspec: ${podspecPath}`
+    );
   }
 }
 
@@ -172,7 +246,14 @@ export default class CocoapodsPlugin implements IPlugin {
           );
         }
 
+        await updateSourceLocation(
+          this.options.podspecPath,
+          auto.remote,
+          false
+        );
+
         await updatePodspecVersion(this.options.podspecPath, releaseVersion);
+
         await execPromise("git", [
           "tag",
           releaseVersion,
@@ -193,7 +274,6 @@ export default class CocoapodsPlugin implements IPlugin {
         const current = await auto.getCurrentVersion(lastRelease);
         const nextVersion = inc(current, bump as ReleaseType);
         const canaryVersion = `${nextVersion}-canary.${canaryIdentifier}`;
-        const branch = getCurrentBranch() || "";
 
         if (dryRun) {
           if (quiet) {
@@ -205,15 +285,16 @@ export default class CocoapodsPlugin implements IPlugin {
           return;
         }
 
-        await execPromise("git", [
-          "tag",
-          canaryVersion,
-          "-m",
-          `Update version to ${canaryVersion}`,
-        ]);
-        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+        await updateSourceLocation(this.options.podspecPath, auto.remote, true);
 
+        await updatePodspecVersion(this.options.podspecPath, canaryVersion);
+
+        // Publish the canary podspec, committing it isn't needed for specs push
         await this.publishPodSpec(podLogLevel);
+
+        // Reset changes to podspec file since it doesn't need to be committed
+        await execPromise("git", ["checkout", this.options.podspecPath]);
+
         return canaryVersion;
       }
     );

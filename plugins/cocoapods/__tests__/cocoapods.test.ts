@@ -9,7 +9,10 @@ import CocoapodsPlugin, {
   updatePodspecVersion,
 } from "../src";
 
-const specWithVersion = (version: string) => `
+const specWithVersion = (
+  version: string,
+  source = "{ :git => 'https://github.com/intuit/auto.git', :tag => s.version.to_s }"
+) => `
       Pod:: Spec.new do | s |
         s.name             = 'Test'
         s.version = '${version}'
@@ -29,7 +32,7 @@ const specWithVersion = (version: string) => `
       # s.screenshots = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
       s.license = { : type => 'MIT', : file => 'LICENSE' }
       s.author = { 'hborawski' => 'harris_borawski@intuit.com' }
-      s.source = { : git => 'https://github.com/intuit/auto.git', : tag => s.version.to_s }
+      s.source = ${source}
 
       s.ios.deployment_target = '11.0'
 
@@ -67,7 +70,12 @@ describe("Cocoapods Plugin", () => {
     exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
+    plugin.apply({
+      hooks,
+      logger: dummyLog(),
+      prefixRelease,
+      remote: "https://github.com/intuit/auto.git",
+    } as Auto.Auto);
   });
 
   describe("getParsedPodspecContents", () => {
@@ -180,8 +188,10 @@ describe("Cocoapods Plugin", () => {
 
       const mock = jest
         .spyOn(utilities, "writePodspecContents")
-        .mockImplementationOnce(() => {
-          throw new Error("Filesystem Error");
+        .mockImplementation((path, contents) => {
+          if (contents.includes("1.0.0")) {
+            throw new Error("Filesystem Error");
+          }
         });
 
       await expect(
@@ -242,8 +252,17 @@ describe("Cocoapods Plugin", () => {
 
   describe("canary hook", () => {
     test("should tag with canary version", async () => {
-      mockPodspec(specWithVersion("0.0.1"));
+      // mockPodspec(specWithVersion("0.0.1"));
 
+      let podSpec = specWithVersion("0.0.1");
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation(() => podSpec);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          podSpec = contents;
+        });
       const plugin = new CocoapodsPlugin(options);
       const hook = makeHooks();
       plugin.apply(({
@@ -254,6 +273,7 @@ describe("Cocoapods Plugin", () => {
           getLatestRelease: async () => "0.0.1",
         },
         getCurrentVersion: async () => "0.0.1",
+        remote: "https://github.com/intuit/auto.git",
       } as unknown) as Auto.Auto);
 
       const newVersion = await hook.canary.promise({
@@ -262,13 +282,21 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");
-      expect(exec).toBeCalledTimes(3);
+      expect(exec).toBeCalledTimes(4);
       expect(exec).toHaveBeenCalledWith("git", [
-        "tag",
-        "0.1.0-canary.1.1.1",
-        "-m",
-        "Update version to 0.1.0-canary.1.1.1",
+        "commit",
+        "-am",
+        `"update version: 0.1.0-canary.1.1.1 [skip ci]"`,
+        "--no-verify",
       ]);
+
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit/auto.git', :commit => 'undefined' }"
+        )
+      );
     });
   });
 
