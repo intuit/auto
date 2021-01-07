@@ -117,11 +117,9 @@ describe("Cocoapods Plugin", () => {
           throw new Error("Filesystem Error");
         });
 
-      await expect(
-        updatePodspecVersion("./Test.podspec", "0.0.2")
-      ).rejects.toThrowError(
-        "Error updating version in podspec: ./Test.podspec"
-      );
+      expect(
+        updatePodspecVersion.bind(null, "./Test.podspec", "0.0.2")
+      ).toThrowError("Error updating version in podspec: ./Test.podspec");
     });
     test("should successfully write new version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -282,13 +280,8 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");
-      expect(exec).toBeCalledTimes(4);
-      expect(exec).toHaveBeenCalledWith("git", [
-        "commit",
-        "-am",
-        `"update version: 0.1.0-canary.1.1.1 [skip ci]"`,
-        "--no-verify",
-      ]);
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
 
       expect(mock).toHaveBeenLastCalledWith(
         expect.any(String),

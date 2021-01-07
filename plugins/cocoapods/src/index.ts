@@ -94,10 +94,7 @@ export function getSourceInfo(podspecPath: string): string {
  * @param podspecPath - The relative path to the podspec file
  * @param version - The version to update the podspec to
  */
-export async function updatePodspecVersion(
-  podspecPath: string,
-  version: string
-) {
+export function updatePodspecVersion(podspecPath: string, version: string) {
   const previousVersion = getVersion(podspecPath);
   const parsedContents = getParsedPodspecContents(podspecPath);
   const podspecContents = getPodspecContents(podspecPath);
@@ -114,13 +111,6 @@ export async function updatePodspecVersion(
       );
 
       writePodspecContents(podspecPath, newPodspec);
-
-      await execPromise("git", [
-        "commit",
-        "-am",
-        `"update version: ${version} [skip ci]"`,
-        "--no-verify",
-      ]);
     }
   } catch (error) {
     throw new Error(`Error updating version in podspec: ${podspecPath}`);
@@ -219,7 +209,14 @@ export default class CocoapodsPlugin implements IPlugin {
           );
         }
 
-        await updatePodspecVersion(this.options.podspecPath, releaseVersion);
+        updatePodspecVersion(this.options.podspecPath, releaseVersion);
+
+        await execPromise("git", [
+          "commit",
+          "-am",
+          `"update version: ${releaseVersion} [skip ci]"`,
+          "--no-verify",
+        ]);
 
         await execPromise("git", [
           "tag",
@@ -254,7 +251,7 @@ export default class CocoapodsPlugin implements IPlugin {
 
         await updateSourceLocation(this.options.podspecPath, auto.remote);
 
-        await updatePodspecVersion(this.options.podspecPath, canaryVersion);
+        updatePodspecVersion(this.options.podspecPath, canaryVersion);
 
         // Publish the canary podspec, committing it isn't needed for specs push
         await this.publishPodSpec(podLogLevel);
