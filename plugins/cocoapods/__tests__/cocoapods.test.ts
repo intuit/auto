@@ -276,7 +276,7 @@ describe("Cocoapods Plugin", () => {
 
       const newVersion = await hook.canary.promise({
         bump: "minor" as Auto.SEMVER,
-        canaryIdentifier: "1.1.1",
+        canaryIdentifier: "canary.1.1.1",
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");

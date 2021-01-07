@@ -237,7 +237,7 @@ export default class CocoapodsPlugin implements IPlugin {
         const lastRelease = await auto.git.getLatestRelease();
         const current = await auto.getCurrentVersion(lastRelease);
         const nextVersion = inc(current, bump as ReleaseType);
-        const canaryVersion = `${nextVersion}-canary.${canaryIdentifier}`;
+        const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
         if (dryRun) {
           if (quiet) {
