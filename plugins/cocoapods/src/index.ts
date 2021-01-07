@@ -89,22 +89,6 @@ export function getSourceInfo(podspecPath: string): string {
 }
 
 /**
- * Retrieves the source dictionary currently in the podspec file
- *
- * @param podspecPath - The relative path to the podspec file
- */
-export function getSourceVariable(podspecPath: string): string {
-  const podspecContents = sourceLineRegex.exec(getPodspecContents(podspecPath));
-  if (podspecContents?.groups?.specVar) {
-    return podspecContents.groups.specVar;
-  }
-
-  throw new Error(
-    `Spec variable could not be found in podspec: ${podspecPath}`
-  );
-}
-
-/**
  * Updates the version in the podspec to the supplied version
  *
  * @param podspecPath - The relative path to the podspec file
@@ -152,31 +136,20 @@ export async function updatePodspecVersion(
  */
 export async function updateSourceLocation(
   podspecPath: string,
-  remote: string,
-  canary: boolean
+  remote: string
 ) {
   const podspecContents = getPodspecContents(podspecPath);
 
   const source = getSourceInfo(podspecPath);
-  const specVar = getSourceVariable(podspecPath);
 
   try {
-    if (canary) {
-      const revision = await execPromise("git", ["rev-parse", "HEAD"]);
-      const newPodspec = podspecContents.replace(
-        source,
-        `{ :git => '${remote}', :commit => '${revision}' }`
-      );
+    const revision = await execPromise("git", ["rev-parse", "HEAD"]);
+    const newPodspec = podspecContents.replace(
+      source,
+      `{ :git => '${remote}', :commit => '${revision}' }`
+    );
 
-      writePodspecContents(podspecPath, newPodspec);
-    } else {
-      const newPodspec = podspecContents.replace(
-        source,
-        `{ :git => '${remote}', :tag => ${specVar}.version.to_s }`
-      );
-
-      writePodspecContents(podspecPath, newPodspec);
-    }
+    writePodspecContents(podspecPath, newPodspec);
   } catch (error) {
     throw new Error(
       `Error updating source location in podspec: ${podspecPath}`
@@ -246,12 +219,6 @@ export default class CocoapodsPlugin implements IPlugin {
           );
         }
 
-        await updateSourceLocation(
-          this.options.podspecPath,
-          auto.remote,
-          false
-        );
-
         await updatePodspecVersion(this.options.podspecPath, releaseVersion);
 
         await execPromise("git", [
@@ -285,7 +252,7 @@ export default class CocoapodsPlugin implements IPlugin {
           return;
         }
 
-        await updateSourceLocation(this.options.podspecPath, auto.remote, true);
+        await updateSourceLocation(this.options.podspecPath, auto.remote);
 
         await updatePodspecVersion(this.options.podspecPath, canaryVersion);
 
