@@ -56,6 +56,7 @@ let exec = jest.fn();
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
   exec(...args)
 );
+const logger = dummyLog();
 
 describe("Cocoapods Plugin", () => {
   let hooks: Auto.IAutoHooks;
@@ -72,11 +73,24 @@ describe("Cocoapods Plugin", () => {
     exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
     hooks = makeHooks();
-    plugin.apply({
+    plugin.apply(({
       hooks,
-      logger: dummyLog(),
+      logger: logger,
       prefixRelease,
-    } as Auto.Auto);
+      git: {
+        getLatestRelease: async () => "0.0.1",
+        getPullRequest: async () => ({
+          data: {
+            head: {
+              repo: {
+                clone_url: "https://github.com/intuit/auto.git",
+              },
+            },
+          },
+        }),
+      },
+      getCurrentVersion: async () => "0.0.1",
+    } as unknown) as Auto.Auto);
   });
 
   describe("getParsedPodspecContents", () => {
@@ -210,6 +224,32 @@ describe("Cocoapods Plugin", () => {
     });
   });
   describe("version hook", () => {
+    test("should do nothing on dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.version.promise({ bump: Auto.SEMVER.patch, dryRun: true });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(1);
+    });
+    test("should not use logger on quiet dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mockLog = jest.spyOn(logger.log, "info");
+      const mockConsole = jest.spyOn(console, "log");
+
+      await hooks.version.promise({
+        bump: Auto.SEMVER.patch,
+        dryRun: true,
+        quiet: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(0);
+      expect(mockConsole).toHaveBeenCalledTimes(1);
+    });
     test("should version release - patch version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
@@ -305,6 +345,39 @@ describe("Cocoapods Plugin", () => {
   });
 
   describe("canary hook", () => {
+    test("should do nothing on dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.1.0",
+        dryRun: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(1);
+    });
+    test("should not use logger on quiet dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+
+      const mockLog = jest.spyOn(logger.log, "info");
+      const mockConsole = jest.spyOn(console, "log");
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.1.0",
+        dryRun: true,
+        quiet: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(0);
+      expect(mockConsole).toHaveBeenCalledTimes(1);
+    });
     test("should tag with canary version", async () => {
       jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
       let podSpec = specWithVersion("0.0.1");
@@ -316,28 +389,8 @@ describe("Cocoapods Plugin", () => {
         .mockImplementation((path, contents) => {
           podSpec = contents;
         });
-      const plugin = new CocoapodsPlugin(options);
-      const hook = makeHooks();
-      plugin.apply(({
-        hooks: hook,
-        logger: dummyLog(),
-        prefixRelease,
-        git: {
-          getLatestRelease: async () => "0.0.1",
-          getPullRequest: async () => ({
-            data: {
-              head: {
-                repo: {
-                  clone_url: "https://github.com/intuit/auto.git",
-                },
-              },
-            },
-          }),
-        },
-        getCurrentVersion: async () => "0.0.1",
-      } as unknown) as Auto.Auto);
 
-      const newVersion = await hook.canary.promise({
+      const newVersion = await hooks.canary.promise({
         bump: "minor" as Auto.SEMVER,
         canaryIdentifier: "canary.1.1.1",
       });
