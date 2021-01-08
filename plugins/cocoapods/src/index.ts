@@ -4,6 +4,7 @@ import {
   execPromise,
   validatePluginConfiguration,
   ILogger,
+  getPrNumberFromEnv,
 } from "@auto-it/core";
 
 import { inc, ReleaseType } from "semver";
@@ -230,9 +231,14 @@ export default class CocoapodsPlugin implements IPlugin {
     auto.hooks.canary.tapPromise(
       this.name,
       async ({ bump, canaryIdentifier, dryRun, quiet }) => {
-        if (!auto.git) {
+        const pr = getPrNumberFromEnv();
+
+        if (!auto.git || !pr) {
           return;
         }
+
+        const remoteRepo = await (await auto.git.getPullRequest(pr)).data.head
+          .repo.clone_url;
 
         const lastRelease = await auto.git.getLatestRelease();
         const current = await auto.getCurrentVersion(lastRelease);
@@ -249,7 +255,7 @@ export default class CocoapodsPlugin implements IPlugin {
           return;
         }
 
-        await updateSourceLocation(this.options.podspecPath, auto.remote);
+        await updateSourceLocation(this.options.podspecPath, remoteRepo);
 
         updatePodspecVersion(this.options.podspecPath, canaryVersion);
 

@@ -250,8 +250,7 @@ describe("Cocoapods Plugin", () => {
 
   describe("canary hook", () => {
     test("should tag with canary version", async () => {
-      // mockPodspec(specWithVersion("0.0.1"));
-
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
       let podSpec = specWithVersion("0.0.1");
       jest
         .spyOn(utilities, "getPodspecContents")
@@ -269,9 +268,17 @@ describe("Cocoapods Plugin", () => {
         prefixRelease,
         git: {
           getLatestRelease: async () => "0.0.1",
+          getPullRequest: async () => ({
+            data: {
+              head: {
+                repo: {
+                  clone_url: "https://github.com/intuit/auto.git",
+                },
+              },
+            },
+          }),
         },
         getCurrentVersion: async () => "0.0.1",
-        remote: "https://github.com/intuit/auto.git",
       } as unknown) as Auto.Auto);
 
       const newVersion = await hook.canary.promise({
