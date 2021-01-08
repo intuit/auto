@@ -19,7 +19,7 @@ const logPrefix = "[Cocoapods-Plugin]";
 const versionRegex = /\.version\s*=\s*['|"](?<version>\d+\.\d+\.\d+.*?)['|"]/;
 
 /** Regex used to pull the source dictionary from the spec */
-const sourceLineRegex = /(?<specVar>\w+)\.source.*(?<source>\{\s*:\s*git.*\})/;
+const sourceLineRegex = /\.source.*(?<source>\{\s*:\s*git.*\})/;
 
 /**
  * Wrapper to add logPrefix to messages
