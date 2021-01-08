@@ -7,6 +7,8 @@ import CocoapodsPlugin, {
   getParsedPodspecContents,
   getVersion,
   updatePodspecVersion,
+  updateSourceLocation,
+  getSourceInfo,
 } from "../src";
 
 const specWithVersion = (
@@ -49,7 +51,7 @@ const mockPodspec = (contents: string) => {
   return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
-let exec = jest.fn().mockResolvedValueOnce("");
+let exec = jest.fn();
 // @ts-ignore
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
   exec(...args)
@@ -74,7 +76,6 @@ describe("Cocoapods Plugin", () => {
       hooks,
       logger: dummyLog(),
       prefixRelease,
-      remote: "https://github.com/intuit/auto.git",
     } as Auto.Auto);
   });
 
@@ -107,6 +108,20 @@ describe("Cocoapods Plugin", () => {
       expect(getVersion("./Test.podspec")).toBe("0.0.1-canary.1.0.0");
     });
   });
+  describe("getSourceInfo", () => {
+    test("should throw error if source line cant be found", () => {
+      mockPodspec(specWithVersion("0.0.1", "no source"));
+
+      expect(() => getSourceInfo("./Test.podspec")).toThrow();
+    });
+    test("should retrieve source info", () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      expect(getSourceInfo("./Test.podspec")).toBe(
+        "{ :git => 'https://github.com/intuit/auto.git', :tag => s.version.to_s }"
+      );
+    });
+  });
   describe("updatePodspecVersion", () => {
     test("should throw error if there is an error writing file", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -128,6 +143,47 @@ describe("Cocoapods Plugin", () => {
 
       await updatePodspecVersion("./Test.podspec", "0.0.2");
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.0.2"));
+    });
+  });
+  describe("updateSourceLocation", () => {
+    test("should throw error if there is an error writing file", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      exec.mockReturnValue("commithash");
+
+      jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementationOnce(() => {
+          throw new Error("Filesystem Error");
+        });
+
+      await expect(
+        updateSourceLocation(
+          "./Test.podspec",
+          "https://github.com/somefork/auto.git"
+        )
+      ).rejects.toThrowError(
+        "Error updating source location in podspec: ./Test.podspec"
+      );
+    });
+    test("should successfully write new source location", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mock = jest.spyOn(utilities, "writePodspecContents");
+
+      exec.mockReturnValue(Promise.resolve("commithash"));
+
+      await updateSourceLocation(
+        "./Test.podspec",
+        "https://github.com/somefork/auto.git"
+      );
+      expect(mock).lastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.0.1",
+          "{ :git => 'https://github.com/somefork/auto.git', :commit => 'commithash' }"
+        )
+      );
     });
   });
   describe("modifyConfig hook", () => {

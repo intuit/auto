@@ -119,11 +119,10 @@ export function updatePodspecVersion(podspecPath: string, version: string) {
 }
 
 /**
- * Updates the version in the podspec to the supplied version
+ * Updates the source location to point to the current commit for the given remote
  *
  * @param podspecPath - The relative path to the podspec file
  * @param remote - The git remote that is being used
- * @param canary - Whether to update to the canary location or not
  */
 export async function updateSourceLocation(
   podspecPath: string,
