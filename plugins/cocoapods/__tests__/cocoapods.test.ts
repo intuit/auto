@@ -83,12 +83,13 @@ describe("Cocoapods Plugin", () => {
           data: {
             head: {
               repo: {
-                clone_url: "https://github.com/intuit/auto.git",
+                clone_url: "https://github.com/intuit-fork/auto.git",
               },
             },
           },
         }),
       },
+      remote: "https://github.com/intuit/auto.git",
       getCurrentVersion: async () => "0.0.1",
     } as unknown) as Auto.Auto);
   });
@@ -380,6 +381,34 @@ describe("Cocoapods Plugin", () => {
     });
     test("should tag with canary version", async () => {
       jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      let podSpec = specWithVersion("0.0.1");
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation(() => podSpec);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          podSpec = contents;
+        });
+
+      const newVersion = await hooks.canary.promise({
+        bump: "minor" as Auto.SEMVER,
+        canaryIdentifier: "canary.1.1.1",
+      });
+
+      expect(newVersion).toBe("0.1.0-canary.1.1.1");
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+        )
+      );
+    });
+    test("should tag with canary version with no PR number", async () => {
       let podSpec = specWithVersion("0.0.1");
       jest
         .spyOn(utilities, "getPodspecContents")

@@ -230,14 +230,23 @@ export default class CocoapodsPlugin implements IPlugin {
     auto.hooks.canary.tapPromise(
       this.name,
       async ({ bump, canaryIdentifier, dryRun, quiet }) => {
-        const pr = getPrNumberFromEnv();
-
-        if (!auto.git || !pr) {
+        if (!auto.git) {
           return;
         }
 
-        const remoteRepo = await (await auto.git.getPullRequest(pr)).data.head
-          .repo.clone_url;
+        const pr = getPrNumberFromEnv();
+
+        if (!pr) {
+          this.logger?.log.info(
+            logMessage(
+              `No PR number found, using ${auto.remote} as the remote for canary. Commit must be pushed for this to work.`
+            )
+          );
+        }
+
+        const remoteRepo = pr
+          ? await (await auto.git.getPullRequest(pr)).data.head.repo.clone_url
+          : auto.remote;
 
         const lastRelease = await auto.git.getLatestRelease();
         const current = await auto.getCurrentVersion(lastRelease);
