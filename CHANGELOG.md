@@ -1,3 +1,31 @@
+# v10.5.1 (Fri Jan 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - default to patch for 0 non-auto labels on head PR [#1703](https://github.com/intuit/auto/pull/1703) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump eslint-plugin-prettier from 3.1.4 to 3.3.0 [#1691](https://github.com/intuit/auto/pull/1691) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @fortawesome/fontawesome-svg-core from 1.2.30 to 1.2.32 [#1685](https://github.com/intuit/auto/pull/1685) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.8.2 to 4.11.1 [#1700](https://github.com/intuit/auto/pull/1700) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint from 7.12.1 to 7.16.0 [#1697](https://github.com/intuit/auto/pull/1697) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump node-notifier from 8.0.0 to 8.0.1 [#1695](https://github.com/intuit/auto/pull/1695) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump ini from 1.3.5 to 1.3.8 [#1689](https://github.com/intuit/auto/pull/1689) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.5.2 to 10.5.3 [#1686](https://github.com/intuit/auto/pull/1686) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump array.prototype.flatmap from 1.2.3 to 1.2.4 [#1681](https://github.com/intuit/auto/pull/1681) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.1.0 to 24.1.3 [#1680](https://github.com/intuit/auto/pull/1680) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/microsoft-teams`, `@auto-it/slack`
+  - Bump @atomist/slack-messages from 1.2.0 to 1.2.1 [#1676](https://github.com/intuit/auto/pull/1676) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.5.0 (Mon Dec 21 2020)
 
 #### 🚀 Enhancement
