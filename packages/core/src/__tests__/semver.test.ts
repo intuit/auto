@@ -48,6 +48,12 @@ describe("calculateSemVerBump", () => {
     );
   });
 
+  test("should release a patch for pr with non-auto labels", () => {
+    expect(calculateSemVerBump([["a", "b", "c"], []], semverMap)).toBe(
+      SEMVER.patch
+    );
+  });
+
   test("should be able to configure default label", () => {
     expect(
       calculateSemVerBump([[], ["documentation"]], semverMap, {
