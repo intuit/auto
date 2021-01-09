@@ -192,16 +192,23 @@ export function calculateSemVerBump(
   const releaseTypes = new Set<ReleaseType>();
   const skipReleaseLabels = labelMap.get("skip") || [];
 
+  /** Find the release type + labels that match the given label */
+  const getLabelEntry = (label: string) =>
+    [...labelMap.entries()].find((pair) => pair[1].includes(label));
+
   prLabels.forEach((pr, index) => {
-    // If the head pr has no labels we default to a patch
-    if (pr.length === 0 && index === 0) {
+    // Default to a patch when:
+    // 1. No labels on HEAD PR
+    // 2. It has labels but none of them are auto labels
+    if (
+      index === 0 &&
+      (pr.length === 0 || !pr.find((label) => getLabelEntry(label)))
+    ) {
       releaseTypes.add(defaultReleaseType);
     }
 
     pr.forEach((label) => {
-      const userLabel = [...labelMap.entries()].find((pair) =>
-        pair[1].includes(label)
-      );
+      const userLabel = getLabelEntry(label);
 
       if (userLabel) {
         releaseTypes.add(userLabel[0]);
