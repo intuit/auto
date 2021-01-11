@@ -1,3 +1,34 @@
+# v10.6.0 (Mon Jan 11 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Andrew Leedham ([@AndrewLeedham](https://github.com/AndrewLeedham)), for all your work!
+
+#### 🚀 Enhancement
+
+- feat: tag canaries for cocoapods plugin [#1702](https://github.com/intuit/auto/pull/1702) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- fix: get remote repo from octokit for the current PR ([@hborawski](https://github.com/hborawski))
+- fix npm plugin git tag splitting [#1705](https://github.com/intuit/auto/pull/1705) ([@AndrewLeedham](https://github.com/AndrewLeedham))
+- test: add tests for dryRun logging ([@hborawski](https://github.com/hborawski))
+- add more tests ([@hborawski](https://github.com/hborawski))
+- remove unused capture group in regex ([@hborawski](https://github.com/hborawski))
+- fix: if no PR number, default to auto.remote instead of fetching from octokit ([@hborawski](https://github.com/hborawski))
+- fix: remove duplicate canary in version ([@hborawski](https://github.com/hborawski))
+- fix: only commit in version hook ([@hborawski](https://github.com/hborawski))
+- fix: dont rewrite source location in version hook since the canary rewrite isnt committed ([@hborawski](https://github.com/hborawski))
+- refactor: dont use git tags, rewrite the source line to point to the commit ([@hborawski](https://github.com/hborawski))
+- feat: tag canaries for cocoapods plugin ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 2
+
+- Andrew Leedham ([@AndrewLeedham](https://github.com/AndrewLeedham))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.5.1 (Fri Jan 08 2021)
 
 #### 🔩 Dependency Updates
