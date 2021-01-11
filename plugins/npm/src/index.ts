@@ -1268,7 +1268,9 @@ export default class NPMPlugin implements IPlugin {
 
           const tags = (
             await execPromise("git", ["tag", "--points-at", "HEAD"])
-          ).split("\n");
+          )
+            .split("\n")
+            .filter((tag) => tag.trim() !== "");
 
           if (!this.commitNextVersion) {
             // we do not want to commit the next version. this causes
