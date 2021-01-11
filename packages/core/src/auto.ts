@@ -307,7 +307,7 @@ const loadEnv = () => {
 };
 
 /** Get the pr number from user input or the CI env. */
-function getPrNumberFromEnv(pr?: number) {
+export function getPrNumberFromEnv(pr?: number) {
   const envPr = "pr" in env && Number(env.pr);
   const prNumber = pr || envPr;
 

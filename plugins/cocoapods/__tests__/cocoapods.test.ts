@@ -7,9 +7,14 @@ import CocoapodsPlugin, {
   getParsedPodspecContents,
   getVersion,
   updatePodspecVersion,
+  updateSourceLocation,
+  getSourceInfo,
 } from "../src";
 
-const specWithVersion = (version: string) => `
+const specWithVersion = (
+  version: string,
+  source = "{ :git => 'https://github.com/intuit/auto.git', :tag => s.version.to_s }"
+) => `
       Pod:: Spec.new do | s |
         s.name             = 'Test'
         s.version = '${version}'
@@ -29,7 +34,7 @@ const specWithVersion = (version: string) => `
       # s.screenshots = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
       s.license = { : type => 'MIT', : file => 'LICENSE' }
       s.author = { 'hborawski' => 'harris_borawski@intuit.com' }
-      s.source = { : git => 'https://github.com/intuit/auto.git', : tag => s.version.to_s }
+      s.source = ${source}
 
       s.ios.deployment_target = '11.0'
 
@@ -46,11 +51,12 @@ const mockPodspec = (contents: string) => {
   return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
-let exec = jest.fn().mockResolvedValueOnce("");
+let exec = jest.fn();
 // @ts-ignore
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
   exec(...args)
 );
+const logger = dummyLog();
 
 describe("Cocoapods Plugin", () => {
   let hooks: Auto.IAutoHooks;
@@ -67,7 +73,25 @@ describe("Cocoapods Plugin", () => {
     exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
+    plugin.apply(({
+      hooks,
+      logger: logger,
+      prefixRelease,
+      git: {
+        getLatestRelease: async () => "0.0.1",
+        getPullRequest: async () => ({
+          data: {
+            head: {
+              repo: {
+                clone_url: "https://github.com/intuit-fork/auto.git",
+              },
+            },
+          },
+        }),
+      },
+      remote: "https://github.com/intuit/auto.git",
+      getCurrentVersion: async () => "0.0.1",
+    } as unknown) as Auto.Auto);
   });
 
   describe("getParsedPodspecContents", () => {
@@ -93,6 +117,25 @@ describe("Cocoapods Plugin", () => {
 
       expect(getVersion("./Test.podspec")).toBe("0.0.1");
     });
+    test("should return canary version", () => {
+      mockPodspec(specWithVersion("0.0.1-canary.1.0.0"));
+
+      expect(getVersion("./Test.podspec")).toBe("0.0.1-canary.1.0.0");
+    });
+  });
+  describe("getSourceInfo", () => {
+    test("should throw error if source line cant be found", () => {
+      mockPodspec(specWithVersion("0.0.1", "no source"));
+
+      expect(() => getSourceInfo("./Test.podspec")).toThrow();
+    });
+    test("should retrieve source info", () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      expect(getSourceInfo("./Test.podspec")).toBe(
+        "{ :git => 'https://github.com/intuit/auto.git', :tag => s.version.to_s }"
+      );
+    });
   });
   describe("updatePodspecVersion", () => {
     test("should throw error if there is an error writing file", async () => {
@@ -104,11 +147,9 @@ describe("Cocoapods Plugin", () => {
           throw new Error("Filesystem Error");
         });
 
-      await expect(
-        updatePodspecVersion("./Test.podspec", "0.0.2")
-      ).rejects.toThrowError(
-        "Error updating version in podspec: ./Test.podspec"
-      );
+      expect(
+        updatePodspecVersion.bind(null, "./Test.podspec", "0.0.2")
+      ).toThrowError("Error updating version in podspec: ./Test.podspec");
     });
     test("should successfully write new version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -117,6 +158,47 @@ describe("Cocoapods Plugin", () => {
 
       await updatePodspecVersion("./Test.podspec", "0.0.2");
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.0.2"));
+    });
+  });
+  describe("updateSourceLocation", () => {
+    test("should throw error if there is an error writing file", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      exec.mockReturnValue("commithash");
+
+      jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementationOnce(() => {
+          throw new Error("Filesystem Error");
+        });
+
+      await expect(
+        updateSourceLocation(
+          "./Test.podspec",
+          "https://github.com/somefork/auto.git"
+        )
+      ).rejects.toThrowError(
+        "Error updating source location in podspec: ./Test.podspec"
+      );
+    });
+    test("should successfully write new source location", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mock = jest.spyOn(utilities, "writePodspecContents");
+
+      exec.mockReturnValue(Promise.resolve("commithash"));
+
+      await updateSourceLocation(
+        "./Test.podspec",
+        "https://github.com/somefork/auto.git"
+      );
+      expect(mock).lastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.0.1",
+          "{ :git => 'https://github.com/somefork/auto.git', :commit => 'commithash' }"
+        )
+      );
     });
   });
   describe("modifyConfig hook", () => {
@@ -143,6 +225,32 @@ describe("Cocoapods Plugin", () => {
     });
   });
   describe("version hook", () => {
+    test("should do nothing on dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.version.promise({ bump: Auto.SEMVER.patch, dryRun: true });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(1);
+    });
+    test("should not use logger on quiet dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const mockLog = jest.spyOn(logger.log, "info");
+      const mockConsole = jest.spyOn(console, "log");
+
+      await hooks.version.promise({
+        bump: Auto.SEMVER.patch,
+        dryRun: true,
+        quiet: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(0);
+      expect(mockConsole).toHaveBeenCalledTimes(1);
+    });
     test("should version release - patch version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
@@ -175,8 +283,10 @@ describe("Cocoapods Plugin", () => {
 
       const mock = jest
         .spyOn(utilities, "writePodspecContents")
-        .mockImplementationOnce(() => {
-          throw new Error("Filesystem Error");
+        .mockImplementation((path, contents) => {
+          if (contents.includes("1.0.0")) {
+            throw new Error("Filesystem Error");
+          }
         });
 
       await expect(
@@ -232,6 +342,99 @@ describe("Cocoapods Plugin", () => {
         "--flag",
         "./Test.podspec",
       ]);
+    });
+  });
+
+  describe("canary hook", () => {
+    test("should do nothing on dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.1.0",
+        dryRun: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(1);
+    });
+    test("should not use logger on quiet dryRun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+
+      const mockLog = jest.spyOn(logger.log, "info");
+      const mockConsole = jest.spyOn(console, "log");
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: "canary.1.0",
+        dryRun: true,
+        quiet: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(0);
+      expect(mockLog).toHaveBeenCalledTimes(0);
+      expect(mockConsole).toHaveBeenCalledTimes(1);
+    });
+    test("should tag with canary version", async () => {
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      let podSpec = specWithVersion("0.0.1");
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation(() => podSpec);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          podSpec = contents;
+        });
+
+      const newVersion = await hooks.canary.promise({
+        bump: "minor" as Auto.SEMVER,
+        canaryIdentifier: "canary.1.1.1",
+      });
+
+      expect(newVersion).toBe("0.1.0-canary.1.1.1");
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+        )
+      );
+    });
+    test("should tag with canary version with no PR number", async () => {
+      let podSpec = specWithVersion("0.0.1");
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation(() => podSpec);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          podSpec = contents;
+        });
+
+      const newVersion = await hooks.canary.promise({
+        bump: "minor" as Auto.SEMVER,
+        canaryIdentifier: "canary.1.1.1",
+      });
+
+      expect(newVersion).toBe("0.1.0-canary.1.1.1");
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit/auto.git', :commit => 'undefined' }"
+        )
+      );
     });
   });
 
