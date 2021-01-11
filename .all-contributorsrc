@@ -439,6 +439,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "AndrewLeedham",
+      "name": "Andrew Leedham",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/5557458?v=4",
+      "profile": "http://andrewleedham.me/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

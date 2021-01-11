@@ -262,6 +262,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://changelogg.io/"><img src="https://avatars0.githubusercontent.com/u/8403230?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mukul Chaware</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=mukul13" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=mukul13" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=mukul13" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/tinytim84"><img src="https://avatars2.githubusercontent.com/u/6330189?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tim Ottewell</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=tinytim84" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=tinytim84" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=tinytim84" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://andrewleedham.me/"><img src="https://avatars2.githubusercontent.com/u/5557458?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Leedham</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
