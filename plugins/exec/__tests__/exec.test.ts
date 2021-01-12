@@ -9,6 +9,25 @@ import { execSync } from "child_process";
 
 import Exec from "../src";
 
+const getMockAuto = () => {
+  const hooks = makeHooks();
+
+  return {
+    hooks,
+    logger: {
+      verbose: {
+        info: jest.fn(),
+      },
+      veryVerbose: {
+        info: jest.fn(),
+      },
+      log: {
+        error: jest.fn(),
+      },
+    },
+  };
+};
+
 const execSpy = execSync as jest.Mock;
 jest.mock("child_process");
 execSpy.mockReturnValue("");
@@ -33,30 +52,42 @@ describe("Exec Plugin", () => {
 
   test("should handle SyncHook hooks", async () => {
     const plugins = new Exec({ beforeRun: "echo foo" });
-    const hooks = makeHooks();
 
-    plugins.apply({ hooks } as Auto);
-    await hooks.beforeRun.promise({} as any);
+    const mockAuto = getMockAuto();
+
+    plugins.apply(mockAuto);
+    await mockAuto.hooks.beforeRun.promise({} as any);
 
     expect(execSpy).toHaveBeenCalledWith("echo foo", expect.anything());
+    expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
+      "Running command: echo foo"
+    );
   });
 
   test("should handle AsyncParallelHook hooks", async () => {
     const plugins = new Exec({ version: "echo bar" });
-    const hooks = makeHooks();
 
-    plugins.apply({ hooks } as Auto);
-    await hooks.version.promise({ bump: SEMVER.patch });
+    const mockAuto = getMockAuto();
+
+    plugins.apply(mockAuto);
+    await mockAuto.hooks.version.promise({ bump: SEMVER.patch });
+    expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
+      "Running command: echo bar"
+    );
 
     expect(execSpy).toHaveBeenCalledWith("echo bar", expect.anything());
   });
 
   test("should handle AsyncSeriesHook hooks w/args", async () => {
     const plugins = new Exec({ beforeShipIt: "echo baz" });
-    const hooks = makeHooks();
 
-    plugins.apply({ hooks } as Auto);
-    await hooks.beforeShipIt.promise({ releaseType: "latest" });
+    const mockAuto = getMockAuto();
+
+    plugins.apply(mockAuto);
+    await mockAuto.hooks.beforeShipIt.promise({ releaseType: "latest" });
+    expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
+      "Running command: echo baz"
+    );
 
     expect(execSpy).toHaveBeenCalledWith(
       "echo baz",
@@ -70,12 +101,13 @@ describe("Exec Plugin", () => {
     const plugins = new Exec({
       getRepository: `echo "{ "repo": "foo", "owner": "bar" }"`,
     });
-    const hooks = makeHooks();
 
     execSpy.mockReturnValueOnce('{ "repo": "foo", "owner": "bar" }');
-    plugins.apply({ hooks } as Auto);
+    const mockAuto = getMockAuto();
 
-    expect(await hooks.getRepository.promise()).toStrictEqual({
+    plugins.apply(mockAuto);
+
+    expect(await mockAuto.hooks.getRepository.promise()).toStrictEqual({
       repo: "foo",
       owner: "bar",
     });
@@ -87,13 +119,13 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         canary: `echo ${canaryVersion}`,
       });
-      const hooks = makeHooks();
 
+      const mockAuto = getMockAuto();
+      plugins.apply(mockAuto);
       execSpy.mockReturnValueOnce(canaryVersion);
-      plugins.apply({ hooks } as Auto);
 
       expect(
-        await hooks.canary.promise({
+        await mockAuto.hooks.canary.promise({
           bump: SEMVER.patch,
           canaryIdentifier: "-canary",
         })
@@ -105,13 +137,13 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         canary: `echo ${JSON.stringify(canaryVersion)}`,
       });
-      const hooks = makeHooks();
 
+      const mockAuto = getMockAuto();
       execSpy.mockReturnValueOnce(JSON.stringify(canaryVersion));
-      plugins.apply({ hooks } as Auto);
+      plugins.apply(mockAuto);
 
       expect(
-        await hooks.canary.promise({
+        await mockAuto.hooks.canary.promise({
           bump: SEMVER.patch,
           canaryIdentifier: "-canary",
         })
@@ -124,12 +156,12 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         onCreateRelease: { createChangelogTitle: "echo here" },
       });
-      const hooks = makeHooks();
+      const mockAuto = getMockAuto();
       const releaseHooks = makeReleaseHooks();
 
       execSpy.mockReturnValueOnce("here");
-      plugins.apply({ hooks } as Auto);
-      hooks.onCreateRelease.call({ hooks: releaseHooks } as any);
+      plugins.apply(mockAuto);
+      mockAuto.hooks.onCreateRelease.call({ hooks: releaseHooks } as any);
 
       expect(await releaseHooks.createChangelogTitle.promise()).toBe("here");
     });
@@ -140,12 +172,12 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         onCreateLogParse: { omitCommit: "echo true" },
       });
-      const hooks = makeHooks();
+      const mockAuto = getMockAuto();
       const logParsehooks = makeLogParseHooks();
 
       execSpy.mockReturnValueOnce("true");
-      plugins.apply({ hooks } as Auto);
-      hooks.onCreateLogParse.call({ hooks: logParsehooks } as any);
+      plugins.apply(mockAuto);
+      mockAuto.hooks.onCreateLogParse.call({ hooks: logParsehooks } as any);
 
       expect(
         await logParsehooks.omitCommit.promise({
@@ -162,11 +194,12 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         onCreateLogParse: { omitCommit: "echo" },
       });
-      const hooks = makeHooks();
+
+      const mockAuto = getMockAuto();
       const logParsehooks = makeLogParseHooks();
 
-      plugins.apply({ hooks } as Auto);
-      hooks.onCreateLogParse.call({ hooks: logParsehooks } as any);
+      plugins.apply(mockAuto);
+      mockAuto.hooks.onCreateLogParse.call({ hooks: logParsehooks } as any);
 
       expect(
         await logParsehooks.omitCommit.promise({
@@ -185,15 +218,15 @@ describe("Exec Plugin", () => {
       const plugins = new Exec({
         onCreateChangelog: { omitReleaseNotes: "echo true" },
       });
-      const hooks = makeHooks();
+      const mockAuto = getMockAuto();
       const changelogHooks = makeChangelogHooks();
 
       execSpy.mockReturnValueOnce("true");
-      plugins.apply({ hooks } as Auto);
-      hooks.onCreateChangelog.call(
-        { hooks: changelogHooks } as any,
-        { bump: SEMVER.patch }
-      );
+      plugins.apply(mockAuto);
+
+      mockAuto.hooks.onCreateChangelog.call({ hooks: changelogHooks } as any, {
+        bump: SEMVER.patch,
+      });
 
       expect(
         await changelogHooks.omitReleaseNotes.promise({
