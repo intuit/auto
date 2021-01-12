@@ -30,10 +30,10 @@ const getMockAuto = () => {
 
 const execSpy = execSync as jest.Mock;
 jest.mock("child_process");
-execSpy.mockReturnValue("");
 
 describe("Exec Plugin", () => {
   beforeEach(() => {
+    execSpy.mockReturnValue("");
     execSpy.mockClear();
   });
 
@@ -62,6 +62,61 @@ describe("Exec Plugin", () => {
     expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
       "Running command: echo foo"
     );
+  });
+
+  test("logs an E2BIG error with special handling", async () => {
+    const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+    execSpy.mockImplementation(() => {
+      const error = new Error("E2BIG");
+      error.code = "E2BIG";
+
+      throw error;
+    });
+
+    const plugins = new Exec({ beforeRun: "echo foo" });
+
+    const mockAuto = getMockAuto();
+
+    plugins.apply(mockAuto);
+    await mockAuto.hooks.beforeRun.promise({} as any);
+
+    expect(execSpy).toHaveBeenCalledWith("echo foo", expect.anything());
+    expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
+      "Running command: echo foo"
+    );
+    expect(mockAuto.logger.log.error).toHaveBeenCalledTimes(1);
+    expect(mockAuto.logger.log.error.mock.calls[0][0]).toStrictEqual(
+      expect.stringContaining("Received E2BIG from execSync.")
+    );
+    expect(mockExit).toHaveBeenCalledWith(1);
+  });
+
+  test("logs other errors normally", async () => {
+    const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+    execSpy.mockImplementation(() => {
+      const error = new Error("random error");
+      error.code = "random";
+
+      throw error;
+    });
+
+    const plugins = new Exec({ beforeRun: "echo foo" });
+
+    const mockAuto = getMockAuto();
+
+    plugins.apply(mockAuto);
+    await mockAuto.hooks.beforeRun.promise({} as any);
+
+    expect(execSpy).toHaveBeenCalledWith("echo foo", expect.anything());
+    expect(mockAuto.logger.verbose.info).toHaveBeenCalledWith(
+      "Running command: echo foo"
+    );
+
+    expect(mockAuto.logger.log.error).toHaveBeenCalledTimes(1);
+    expect(mockAuto.logger.log.error.mock.calls[0][0].message).toStrictEqual(
+      expect.stringContaining("random error")
+    );
+    expect(mockExit).toHaveBeenCalledWith(1);
   });
 
   test("should handle AsyncParallelHook hooks", async () => {

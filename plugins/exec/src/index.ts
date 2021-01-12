@@ -77,10 +77,10 @@ const runExecSync = (
   try {
     auto.logger.verbose.info(`Running command: ${command}`);
     auto.logger.veryVerbose.info(endent`
-    Supplied Environment:
+    Supplied Environment (name and char size):
     
     ${Object.entries(options?.env || {})
-      .map(([key, value]) => `\t${key}=${value}`)
+      .map(([key, value]) => `\t${key}=${value ? value.length : 0}`)
       .join("\n")}
     `);
 
@@ -95,8 +95,10 @@ const runExecSync = (
         Please consider disabling your 'auto-exec' usage and following this issue for updates: https://github.com/intuit/auto/issues/1294
       `);
     } else {
-      throw e;
+      auto.logger.log.error(e);
     }
+
+    process.exit(1);
   }
 
   return execResult;
