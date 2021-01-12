@@ -1,3 +1,20 @@
+# v10.6.1 (Tue Jan 12 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Lucas Shadler ([@lshadler](https://github.com/lshadler)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/exec`
+  - fix: add debugging and error handling to exec [#1710](https://github.com/intuit/auto/pull/1710) ([@lshadler](https://github.com/lshadler))
+
+#### Authors: 1
+
+- Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+---
+
 # v10.6.0 (Mon Jan 11 2021)
 
 :tada: This release contains work from a new contributor! :tada:
