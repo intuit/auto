@@ -319,6 +319,9 @@ export default class CocoapodsPlugin implements IPlugin {
 
         updatePodspecVersion(this.options.podspecPath, prerelease);
 
+        // Publish the next podspec, committing it isn't needed for specs push
+        await this.publishPodSpec(podLogLevel);
+
         // Reset changes to podspec file since it doesn't need to be committed
         await execPromise("git", ["checkout", this.options.podspecPath]);
 
