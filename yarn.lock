@@ -2363,9 +2363,9 @@
     "@types/node" "*"
 
 "@types/conventional-commits-parser@*", "@types/conventional-commits-parser@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/conventional-commits-parser/-/conventional-commits-parser-3.0.0.tgz#91227c309cf3308207634b22895787ffc3b68f6a"
-  integrity sha512-l1gxdN92fUcPfN9/5r4YAVhxQXaVKq8W727QIFEBhlm9rXymKlVpeMVgdvV6Thr0FCt9Kn4fl9f78BXqIsST/g==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/conventional-commits-parser/-/conventional-commits-parser-3.0.1.tgz#1a4796a0ae2bf33b41ea49f55e27ccbdb29cce5e"
+  integrity sha512-xkKomW6PqJS0rzFPPQSzKwbKIRqAGjYa1aWWkoT14YYodXyEpG4ok4H1US3olqGBxejz7EeBfT3fTJ3hUOiUkQ==
   dependencies:
     "@types/node" "*"
 
