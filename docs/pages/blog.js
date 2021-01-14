@@ -1,3 +1,6 @@
 import { BlogIndex } from "next-ignite";
 
-export default () => <BlogIndex />;
+/** The blog index */
+const Blog = () => <BlogIndex />;
+
+export default Blog;

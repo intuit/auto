@@ -299,7 +299,7 @@ const Home = () => (
       </div>
 
       <div className="bg-primary-500 dark:bg-primary-600 text-white text-center">
-        <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-16 flex flex-col items-center">
+        <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-20 flex flex-col items-center">
           <h2 className="text-xl mb-8">
             Stop worrying about your release and hit that merge button!
           </h2>
