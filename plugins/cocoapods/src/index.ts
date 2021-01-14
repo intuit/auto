@@ -317,6 +317,8 @@ export default class CocoapodsPlugin implements IPlugin {
           `"Tag pre-release: ${prerelease}"`,
         ]);
 
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
         updatePodspecVersion(this.options.podspecPath, prerelease);
 
         // Publish the next podspec, committing it isn't needed for specs push
