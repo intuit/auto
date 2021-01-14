@@ -49,7 +49,11 @@ export interface IGitOptions {
 /** An error originating from the GitHub */
 class GitAPIError extends Error {
   /** Extend the base error */
-  constructor(api: string, args: Record<string, unknown> | unknown[], origError: Error) {
+  constructor(
+    api: string,
+    args: Record<string, unknown> | unknown[],
+    origError: Error
+  ) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
         origError.message
@@ -219,7 +223,11 @@ export default class Git {
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise("git", ["rev-list", "--max-parents=0", "HEAD"]);
+    const list = await execPromise("git", [
+      "rev-list",
+      "--max-parents=0",
+      "HEAD",
+    ]);
     return list.split("\n").pop() as string;
   }
 
@@ -428,10 +436,17 @@ export default class Git {
     }
   }
 
+  /** Get the users associated with the GH_TOKEN */
+  @memoize()
+  async getUser() {
+    const [, user] = await on(this.github.users.getAuthenticated()) || {};
+    return user?.data;
+  }
+
   /** Get collaborator permission level to the repo. */
   @memoize()
   async getTokenPermissionLevel() {
-    const [, user] = await on(this.github.users.getAuthenticated());
+    const user = await this.getUser()
 
     if (!user) {
       return {
@@ -444,14 +459,14 @@ export default class Git {
         await this.github.repos.getCollaboratorPermissionLevel({
           owner: this.options.owner,
           repo: this.options.repo,
-          username: user.data.login,
+          username: user.login,
         })
       ).data;
 
-      return { permission, user: user.data };
+      return { permission, user };
     } catch (error) {
       this.logger.verbose.error(`Could not get permissions for token`);
-      return { permission: "read", user: user.data };
+      return { permission: "read", user };
     }
   }
 

@@ -1962,10 +1962,11 @@ export default class Auto {
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );
-      const packageAuthor = await this.hooks.getAuthor.promise();
+      const packageAuthor = (await this.hooks.getAuthor.promise()) || {};
+      const tokenUser = await this.git?.getUser();
 
-      email = !email && packageAuthor ? packageAuthor.email : email;
-      name = !name && packageAuthor ? packageAuthor.name : name;
+      email = email || packageAuthor.email || tokenUser?.email;
+      name = name || packageAuthor.name || tokenUser?.name;
 
       this.logger.verbose.warn(`Using author: ${name} <${email}>`);
 

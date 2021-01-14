@@ -51,6 +51,10 @@ jest.mock("@octokit/rest", () => {
     hook = {
       error: () => undefined,
     };
+
+    users = {
+      getAuthenticated: jest.fn().mockResolvedValue({}),
+    };
   };
 
   return { Octokit };
