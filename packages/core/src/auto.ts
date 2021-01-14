@@ -1159,6 +1159,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
+  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault("canary"), ...args };
 
@@ -1187,7 +1188,16 @@ export default class Auto {
 
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
+
+    this.logger.veryVerbose.info('Found commits in canary release', commitsInRelease);
+
     const labels = commitsInRelease.map((commit) => commit.labels);
+
+    if (pr) {
+      const prLabels = await this.git.getLabels(Number(pr));
+      labels.push(prLabels);
+    }
+
     let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
     if (bump === SEMVER.noVersion) {
