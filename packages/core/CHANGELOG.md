@@ -1,3 +1,17 @@
+# v10.9.1 (Thu Jan 14 2021)
+
+#### 🐛 Bug Fix
+
+- take into account labels on next+canary PRs [#1722](https://github.com/intuit/auto/pull/1722) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- if canary PR detected get it's labels ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- take into account labels on next branch PRs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.9.0 (Thu Jan 14 2021)
 
 #### 🚀 Enhancement
