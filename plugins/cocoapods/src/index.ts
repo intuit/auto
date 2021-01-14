@@ -5,6 +5,9 @@ import {
   validatePluginConfiguration,
   ILogger,
   getPrNumberFromEnv,
+  DEFAULT_PRERELEASE_BRANCHES,
+  getCurrentBranch,
+  determineNextVersion,
 } from "@auto-it/core";
 
 import { inc, ReleaseType } from "semver";
@@ -274,6 +277,57 @@ export default class CocoapodsPlugin implements IPlugin {
         await execPromise("git", ["checkout", this.options.podspecPath]);
 
         return canaryVersion;
+      }
+    );
+
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, { bump, dryRun }) => {
+        if (!auto.git) {
+          return preReleaseVersions;
+        }
+
+        const prereleaseBranches =
+          auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const lastRelease = await auto.git.getLatestRelease();
+        const current =
+          (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await auto.getCurrentVersion(lastRelease));
+        const prerelease = determineNextVersion(
+          lastRelease,
+          current,
+          bump,
+          prereleaseBranch
+        );
+
+        preReleaseVersions.push(prerelease);
+
+        if (dryRun) {
+          return preReleaseVersions;
+        }
+
+        await execPromise("git", [
+          "tag",
+          prerelease,
+          "-m",
+          `"Tag pre-release: ${prerelease}"`,
+        ]);
+
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+        updatePodspecVersion(this.options.podspecPath, prerelease);
+
+        // Publish the next podspec, committing it isn't needed for specs push
+        await this.publishPodSpec(podLogLevel);
+
+        // Reset changes to podspec file since it doesn't need to be committed
+        await execPromise("git", ["checkout", this.options.podspecPath]);
+
+        return preReleaseVersions;
       }
     );
 
