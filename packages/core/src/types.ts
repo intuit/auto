@@ -51,7 +51,7 @@ const logOptions = t.partial({
 
 export type LogOptions = t.TypeOf<typeof logOptions>;
 
-const globalOptions = t.partial({
+export const globalOptions = t.partial({
   /** Another auto configuration to extend */
   extends: t.string,
   /** Labels that power auto */
@@ -84,7 +84,16 @@ const globalOptions = t.partial({
   }),
   /** Options to pass to "auto shipit" */
   shipit: t.partial({
+    prerelease: t.boolean,
+    noChangelog: t.boolean,
+    message: t.string,
     onlyGraduateWithReleaseLabel: t.boolean,
+  }),
+  /** Options to pass to "auto latest" */
+  latest: t.partial({
+    prerelease: t.boolean,
+    noChangelog: t.boolean,
+    message: t.string,
   }),
   /** Options to pass to "auto canary" */
   canary: t.partial({
