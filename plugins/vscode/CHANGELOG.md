@@ -1,3 +1,15 @@
+# v10.9.0 (Thu Jan 14 2021)
+
+#### 🚀 Enhancement
+
+- default `name` and `email` to the token user if no author config is found in autorc or plugin [#1720](https://github.com/intuit/auto/pull/1720) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.7.0 (Thu Jan 14 2021)
 
 #### 🚀 Enhancement
