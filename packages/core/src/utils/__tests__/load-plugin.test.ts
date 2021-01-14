@@ -3,7 +3,7 @@ import endent from "endent";
 import { execSync } from "child_process";
 
 import { getInstalledPlugins, loadPlugin, listPlugins } from "../load-plugins";
-import { dummyLog } from "../logger";
+import { dummyLog, setLogLevel } from "../logger";
 
 const logger = dummyLog();
 
@@ -40,6 +40,10 @@ jest.mock(
 );
 
 describe("loadPlugins", () => {
+  beforeEach(() => {
+    setLogLevel('quiet');
+  });
+
   test("should load official plugins", () => {
     expect(loadPlugin(["baz", {}], logger)?.name).toBe("baz");
     expect(loadPlugin(["@auto-it/baz", {}], logger)?.name).toBe("baz");
@@ -48,6 +52,26 @@ describe("loadPlugins", () => {
   test("should load community plugins", () => {
     expect(loadPlugin(["foo", {}], logger)?.name).toBe("foo");
     expect(loadPlugin(["auto-plugin-foo", {}], logger)?.name).toBe("foo");
+  });
+
+  test("should load plugin stored relative to extended config package.json", () => {
+    expect(
+      loadPlugin(
+        ["./some-plugin.js", {}],
+        logger,
+        path.join(__dirname, "../test-config/package.json")
+      )?.name
+    ).toBe("test-1");
+  });
+
+  test("should load plugin stored relative to extended config dir", () => {
+    expect(
+      loadPlugin(
+        ["./some-other-plugin.js", {}],
+        logger,
+        path.join(__dirname, "../test-config")
+      )?.name
+    ).toBe("test-2");
   });
 
   test("should load scoped plugins", () => {

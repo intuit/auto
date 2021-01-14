@@ -362,7 +362,9 @@ The following removes the default internal and documentation label sections:
 
 ## Extending
 
-If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
+If you want to share your auto configuration between projects you can use the `extends` property.
+This property will load from a module's `package.json` or from a custom path.
+It's expected that the extended configuration be under the `auto` key in the `package.json` file.
 
 Auto can load `extends` configs in the following ways:
 
@@ -370,6 +372,8 @@ Auto can load `extends` configs in the following ways:
 - from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
 - from a package `auto-config-YOUR_NAME`
 - from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
+
+### Formats
 
 ```json
 {
@@ -400,5 +404,24 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 ```json
 {
   "extends": "./path/to/other/package.json"
+}
+```
+
+### Custom Plugins
+
+An `extends` configuration can include custom plugins in the NPM package.
+This is useful if you have a shared plugin that doesn't necessarily need to be published as it's own package.
+
+> NOTE: This does not work for `auto` configs stored in a url.
+
+To include custom plugins just use a relative path in the extended configuration/
+
+**`package.json`:**
+
+```json
+{
+  "auto": {
+    "plugins": ["./plugins/some-plugin.js"]
+  }
 }
 ```

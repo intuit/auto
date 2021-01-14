@@ -2057,7 +2057,15 @@ export default class Auto {
         extendedLocation = require.resolve(config.extends);
       }
     } catch (error) {
-      this.logger.veryVerbose.error(error);
+      try {
+        if (config.extends) {
+          extendedLocation = require.resolve(
+            path.join(process.cwd(), config.extends)
+          );
+        }
+      } catch (error) {
+        this.logger.veryVerbose.error(error);
+      }
     }
 
     return extendedLocation;
