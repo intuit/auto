@@ -51,7 +51,7 @@ const logOptions = t.partial({
 
 export type LogOptions = t.TypeOf<typeof logOptions>;
 
-const globalOptions = t.partial({
+export const globalOptions = t.partial({
   /** Another auto configuration to extend */
   extends: t.string,
   /** Labels that power auto */
