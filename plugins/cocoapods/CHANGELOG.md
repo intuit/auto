@@ -1,3 +1,21 @@
+# v10.8.0 (Thu Jan 14 2021)
+
+#### 🚀 Enhancement
+
+- tap the next hook and tag prerelease versions for cocoapods [#1713](https://github.com/intuit/auto/pull/1713) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- fix: push tags in next hook ([@hborawski](https://github.com/hborawski))
+- fix: actually call publish for the podspec ([@hborawski](https://github.com/hborawski))
+- tap the next hook and tag prerelease versions for cocoapods ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.7.0 (Thu Jan 14 2021)
 
 #### 🚀 Enhancement

@@ -1,3 +1,16 @@
+# v10.8.0 (Thu Jan 14 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/cocoapods`
+  - tap the next hook and tag prerelease versions for cocoapods [#1713](https://github.com/intuit/auto/pull/1713) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.7.0 (Thu Jan 14 2021)
 
 #### 🚀 Enhancement
