@@ -1,3 +1,20 @@
+# v10.6.2 (Wed Jan 13 2021)
+
+#### 🐛 Bug Fix
+
+- `auto`, `@auto-it/core`
+  - add missing configurable option validation [#1716](https://github.com/intuit/auto/pull/1716) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- upgrade ignite [#1714](https://github.com/intuit/auto/pull/1714) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.6.1 (Tue Jan 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:
