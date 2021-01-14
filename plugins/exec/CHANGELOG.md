@@ -1,3 +1,15 @@
+# v10.7.0 (Thu Jan 14 2021)
+
+#### 🚀 Enhancement
+
+- Attempt to resolve relative plugin paths from extended config location [#1717](https://github.com/intuit/auto/pull/1717) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.6.1 (Tue Jan 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:
