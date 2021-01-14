@@ -1159,6 +1159,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
+  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault("canary"), ...args };
 
@@ -1187,7 +1188,16 @@ export default class Auto {
 
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
+
+    this.logger.veryVerbose.info('Found commits in canary release', commitsInRelease);
+
     const labels = commitsInRelease.map((commit) => commit.labels);
+
+    if (pr) {
+      const prLabels = await this.git.getLabels(Number(pr));
+      labels.push(prLabels);
+    }
+
     let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
     if (bump === SEMVER.noVersion) {
@@ -1700,7 +1710,27 @@ export default class Auto {
       from ||
       (isPrerelease && (await this.git.getLatestTagInBranch())) ||
       (await this.git.getLatestRelease());
-    const calculatedBump = await this.release.getSemverBump(lastRelease);
+    let calculatedBump = await this.release.getSemverBump(lastRelease);
+
+    // For next releases we also want to take into account any labels on
+    // the PR of next into main
+    if (isPrerelease) {
+      const pr = getPrNumberFromEnv();
+
+      if (pr && this.semVerLabels) {
+        const prLabels = await this.git.getLabels(pr);
+        this.logger.verbose.info(
+          `Found labels on prerelease branch PR`,
+          prLabels
+        );
+        calculatedBump = calculateSemVerBump(
+          [prLabels, [calculatedBump]],
+          this.semVerLabels,
+          this.config
+        );
+      }
+    }
+
     const bump =
       (isPrerelease && preVersionMap.get(calculatedBump)) || calculatedBump;
 

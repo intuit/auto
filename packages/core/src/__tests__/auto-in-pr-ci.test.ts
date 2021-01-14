@@ -36,6 +36,10 @@ jest.mock("@octokit/rest", () => {
       get: jest.fn().mockReturnValue({}),
     };
 
+    issues = {
+      listLabelsOnIssue: jest.fn().mockReturnValue({ data: []}),
+    };
+
     hook = {
       error: () => undefined,
     };
@@ -221,5 +225,25 @@ describe("next in ci", () => {
         </details>
       `,
     });
+  });
+
+  test("should use labels on next branch PR", async () => {
+    const auto = new Auto({ ...defaults, plugins: [] });
+
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+
+    // @ts-ignore
+    auto.inPrereleaseBranch = () => true;
+    // @ts-ignore
+    jest.spyOn(console, "log").mockImplementation();
+    auto.git!.getLatestTagInBranch = () => Promise.resolve("1.4.0-next.0");
+    auto.release!.getSemverBump = () => Promise.resolve(SEMVER.patch);
+    
+    auto.git!.getLabels = () => Promise.resolve([]);
+    expect(await auto.getVersion()).toBe(SEMVER.prepatch);
+
+    auto.git!.getLabels = () => Promise.resolve([SEMVER.major]);
+    expect(await auto.getVersion()).toBe(SEMVER.premajor);
   });
 });

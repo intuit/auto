@@ -256,7 +256,7 @@ export default class Git {
 
   /** Get the labels for a PR */
   @memoize()
-  async getLabels(prNumber: number) {
+  async getLabels(prNumber: number): Promise<string[]> {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
     const args: RestEndpointMethodTypes["issues"]["listLabelsOnIssue"]["parameters"] = {
