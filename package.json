@@ -135,6 +135,14 @@
   "auto": {
     "plugins": [
       [
+        "upload-assets",
+        [
+          "./packages/cli/binary/auto-linux.gz",
+          "./packages/cli/binary/auto-macos.gz",
+          "./packages/cli/binary/auto-win.exe.gz"
+        ]
+      ],
+      [
         "npm",
         {
           "exact": true,
@@ -157,14 +165,6 @@
             ]
           }
         }
-      ],
-      [
-        "upload-assets",
-        [
-          "./packages/cli/binary/auto-linux.gz",
-          "./packages/cli/binary/auto-macos.gz",
-          "./packages/cli/binary/auto-win.exe.gz"
-        ]
       ],
       [
         "brew",

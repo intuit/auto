@@ -39,3 +39,8 @@ Simply add the plugins to your auto configuration.
   "plugins": ["git-tag"]
 }
 ```
+
+## Canary Releases
+
+This plugin does not support canaries.
+For canary support try using [the upload-assets plugin](./upload-assets)
