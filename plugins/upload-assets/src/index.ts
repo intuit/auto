@@ -248,6 +248,7 @@ export default class UploadAssetsPlugin implements IPlugin {
         repo: auto.git!.options.repo,
         owner: auto.git!.options.owner,
         tag_name: "canary",
+        name: "Canary Assets",
         prerelease: true,
         body: `This release contains preview assets of Pull Requests.`,
       });
