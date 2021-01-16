@@ -1,3 +1,19 @@
+# v10.10.0 (Sat Jan 16 2021)
+
+#### 🚀 Enhancement
+
+- enable canary releases for upload-assets plugin [#1725](https://github.com/intuit/auto/pull/1725) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add link ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.9.0 (Thu Jan 14 2021)
 
 #### 🚀 Enhancement

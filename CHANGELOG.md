@@ -1,3 +1,21 @@
+# v10.10.0 (Sat Jan 16 2021)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/git-tag`, `@auto-it/upload-assets`
+  - enable canary releases for upload-assets plugin [#1725](https://github.com/intuit/auto/pull/1725) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - set title on canary release [#1726](https://github.com/intuit/auto/pull/1726) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.9.1 (Thu Jan 14 2021)
 
 #### 🐛 Bug Fix
