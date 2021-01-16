@@ -1,6 +1,10 @@
 # Upload Assets Plugin
 
-Upload assets to the release. Good for executables and extra downloadable files.
+Upload assets to the release.
+Good for executables and extra downloadable files.
+Also supports canaries!
+
+> NOTE: For canaries to work this plugin must be listed before any other publishing plugin.
 
 ## Installation
 
@@ -24,6 +28,26 @@ Simply supply the paths to the assets to add to the release.
     ["upload-assets", ["./path/to/file"]],
     // or use globs to upload multiple things
     ["upload-assets", ["./path/**/to/*.file"]]
+  ]
+}
+```
+
+## Options
+
+### `maxCanaryAssets`
+
+Max number of assets to keep in the canary release.
+
+```json
+{
+  "plugins": [
+    [
+      "upload-assets",
+      {
+        "assets": ["./path/to/file"],
+        "maxAssets": 100
+      }
+    ]
   ]
 }
 ```
