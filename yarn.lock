@@ -59,10 +59,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.6.1"
+  version "10.10.0"
 
 "@auto-it/core@link:packages/core":
-  version "10.6.1"
+  version "10.10.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -102,7 +102,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.6.1"
+  version "10.10.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -119,13 +119,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.6.1"
+  version "10.10.0"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.6.1"
+  version "10.10.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -135,7 +135,7 @@
     tslib "2.0.3"
 
 "@auto-it/slack@link:plugins/slack":
-  version "10.6.1"
+  version "10.10.0"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -6144,9 +6144,9 @@ eslint-plugin-jsdoc@^30.2.1:
     spdx-expression-parse "^3.0.1"
 
 eslint-plugin-prettier@^3.1.4:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.3.0.tgz#61e295349a65688ffac0b7808ef0a8244bdd8d40"
-  integrity sha512-tMTwO8iUWlSRZIwS9k7/E4vrTsfvsrcM5p1eftyuqWH25nKsz/o6/54I7jwQ/3zobISyC7wMy9ZsFwgTxOcOpQ==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.3.1.tgz#7079cfa2497078905011e6f82e8dd8453d1371b7"
+  integrity sha512-Rq3jkcFY8RYeQLgk2cCwuc0P7SEFwDravPhsJZOQ5N4YI4DSg50NyqJ/9gdZHzQlHf8MvafSesbNJCcP/FF6pQ==
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
