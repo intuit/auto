@@ -2597,10 +2597,10 @@
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.0.tgz#fef1904e4668b6e5ecee60c52cc6a078ffa6697d"
   integrity sha512-I99sngh224D0M7XgW1s120zxCt3VYQ3IQsuw3P3jbq5GG4yc79+ZjyKznyOGIQrflfylLgcfekeZW/vk0yng6A==
 
-"@types/twitter-text@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/twitter-text/-/twitter-text-2.0.0.tgz#487cbe72aa15db64e6ac406df17804347bd716ee"
-  integrity sha512-bRlURk6hHRMSm37Wc5MPswV5ZWFAt2DYJ50ERoB5kzu6u+qGmzE83sRP5gA55uBW52uBnsBrorK7yEsPUYQWHQ==
+"@types/twitter-text@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@types/twitter-text/-/twitter-text-3.1.0.tgz#32abbbc71bfa4838798e3a12e5554e6b7288e776"
+  integrity sha512-AOMDM8MTYygW9net4TPFtgpbMowCkKETAzCC3jYhrolDdHd1yBgIYAao+L455lqg2aWRGEI0v5lHTw/aNBJuhg==
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2", "@types/unist@^2.0.3":
   version "2.0.3"
