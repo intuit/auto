@@ -1,3 +1,15 @@
+# v10.10.1 (Tue Jan 19 2021)
+
+#### 🐛 Bug Fix
+
+- properly kill spawned node child processes [#1732](https://github.com/intuit/auto/pull/1732) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.10.0 (Sat Jan 16 2021)
 
 #### 🚀 Enhancement
