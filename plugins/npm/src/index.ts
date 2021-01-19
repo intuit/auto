@@ -25,15 +25,14 @@ import {
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
-import { loadPackageJson, getRepo, getAuthor } from "@auto-it/package-json-utils";
+import {
+  loadPackageJson,
+  getRepo,
+  getAuthor,
+} from "@auto-it/package-json-utils";
 
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
-import {
-  writeFile,
-  isMonorepo,
-  readFile,
-  getLernaJson,
-} from "./utils";
+import { writeFile, isMonorepo, readFile, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
 const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
@@ -212,10 +211,9 @@ function getLegacyAuthArgs(
     return [];
   }
 
-  return [
-    options.isMonorepo ? "--legacy-auth" : "--_auth",
-    process.env.NPM_TOKEN,
-  ];
+  return options.isMonorepo
+    ? ["--legacy-auth", process.env.NPM_TOKEN]
+    : [`--_auth=${process.env.NPM_TOKEN}`];
 }
 
 /** Get the args to set the registry. Only used with lerna */
