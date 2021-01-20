@@ -451,6 +451,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "sethomas",
+      "name": "Seth Thomas",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3957314?v=4",
+      "profile": "http://sethomas.com/",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
