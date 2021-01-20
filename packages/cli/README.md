@@ -54,7 +54,7 @@ In the `Tag version` field enter the version number you just tagged and click `P
    The following are options that might be more useful to set in the `.autorc` than with a flag:
 
    ```txt
-     baseBranch           Configure what your repo considers the "master" branch.
+     baseBranch           Configure what your repo considers the base branch.
      plugins              Specify your plugins to load
      githubApi            If you are using enterprise github, `auto` lets you configure the github API URL that it uses.
      githubGraphqlApi     If you are using enterprise github and your company hosts the graphql at some other URL than the

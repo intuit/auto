@@ -8,7 +8,7 @@ date: "Thu, 12 Mar 2020 23:00:02 -0700"
 
 Sometimes you are working on a big feature and you know it will require a lot of changes. These types of pull requests can be a nightmare to review. Taking in all the changes at once can be overwhelming. It makes it easy to miss smaller mistakes and can make it hard to guess the intent of the changes. Multiple features, bug fixes, or even breaking changes may make up this large PR.
 
-One way to manage this problem is by making a PR to the large PR. Other contributors can review a smaller subset of changes and also follow along with development. In previous versions of `auto`, large PRs would not be represented well in the changelog and release notes. It would only include the main PR that got merged into master as the only changelog note.
+One way to manage this problem is by making a PR to the large PR. Other contributors can review a smaller subset of changes and also follow along with development. In previous versions of `auto`, large PRs would not be represented well in the changelog and release notes. It would only include the main PR that got merged into `baseBranch` as the only changelog note.
 
 But thanks to [this PR](https://github.com/intuit/auto/pull/359) that isn't true anymore! Now when you merge one PR to another both changes will be represented in the changelog.
 

@@ -4,7 +4,7 @@ title: CircleCI
 
 The following config declares the `release` job and uses it in the `build_and_release` workflow. The `release` job will run at the end of each build and either release:
 
-- a new `latest` version from `master`
+- a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (if your package manager plugin implements them)
 
 ```yaml
@@ -51,5 +51,5 @@ Go to Settings -> Checkout SSH Keys -> `Create and add YOUR_USERNAME user key`. 
 
 ## Examples
 
-- [`auto`](https://github.com/intuit/auto/blob/master/.circleci/config.yml)
+- [`auto`](https://github.com/intuit/auto/blob/main/.circleci/config.yml)
 - [`reaction`](https://github.com/artsy/reaction/blob/master/.circleci/config.yml)

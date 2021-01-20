@@ -36,7 +36,7 @@ _From #371_
 
 #### 💥 Breaking Change
 
-- shipit will publish a canary locally when not on master [#371](https://github.com/intuit/auto/pull/371) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- shipit will publish a canary locally when not on `baseBranch` [#371](https://github.com/intuit/auto/pull/371) ([@hipstersmoothie](https://github.com/hipstersmoothie))
 
 #### Authors: 1
 
