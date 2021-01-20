@@ -1,3 +1,33 @@
+# v10.11.0 (Tue Jan 19 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Seth Thomas ([@sethomas](https://github.com/sethomas)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - Properly setting env var _auth for legacyAuth case for npm publish [#1735](https://github.com/intuit/auto/pull/1735) ([@sethomas](https://github.com/sethomas))
+
+#### 🔩 Dependency Updates
+
+- Bump @types/prettier from 2.1.5 to 2.1.6 [#1730](https://github.com/intuit/auto/pull/1730) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/conventional-commits-parser from 3.0.0 to 3.0.1 [#1708](https://github.com/intuit/auto/pull/1708) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 30.7.8 to 31.0.3 [#1715](https://github.com/intuit/auto/pull/1715) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-prettier from 3.3.0 to 3.3.1 [#1727](https://github.com/intuit/auto/pull/1727) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jest from 26.0.14 to 26.0.20 [#1728](https://github.com/intuit/auto/pull/1728) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.11.1 to 4.13.0 [#1729](https://github.com/intuit/auto/pull/1729) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.8.2 to 4.13.0 [#1731](https://github.com/intuit/auto/pull/1731) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/twitter`
+  - Bump @types/twitter-text from 2.0.0 to 3.1.0 [#1709](https://github.com/intuit/auto/pull/1709) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Seth Thomas ([@sethomas](https://github.com/sethomas))
+
+---
+
 # v10.10.1 (Tue Jan 19 2021)
 
 #### 🐛 Bug Fix
