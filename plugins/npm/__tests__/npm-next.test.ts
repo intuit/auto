@@ -241,8 +241,7 @@ describe("next", () => {
       "publish",
       "--tag",
       "next",
-      "--_auth",
-      "abcd",
+      "--_auth=abcd",
     ]);
   });
 

@@ -719,8 +719,7 @@ describe("publish", () => {
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
-      "--_auth",
-      "abcd",
+      "--_auth=abcd",
     ]);
   });
 
@@ -996,8 +995,7 @@ describe("canary", () => {
       "publish",
       "--tag",
       "canary",
-      "--_auth",
-      "abcd",
+      "--_auth=abcd",
     ]);
   });
 
