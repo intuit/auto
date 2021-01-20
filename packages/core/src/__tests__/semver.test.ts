@@ -84,7 +84,7 @@ describe("calculateSemVerBump", () => {
     ).toBe(SEMVER.noVersion);
   });
 
-  test("should respect onlyPublishWithReleaseLabel when no labels present on push to master", () => {
+  test("should respect onlyPublishWithReleaseLabel when no labels present on push to baseBranch", () => {
     expect(
       calculateSemVerBump([], semverMap, {
         onlyPublishWithReleaseLabel: true,

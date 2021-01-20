@@ -78,7 +78,7 @@ exports[`generateReleaseNotes should add "Push to Next" 1`] = `
 
 #### ⚠️ Pushed to \`next\`
 
-- I was a push to master (adam@dierkens.com)
+- I was a push to main (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -110,7 +110,7 @@ exports[`generateReleaseNotes should be able to customize pushToBaseBranch title
 
 #### Custom Title
 
-- I was a push to master (adam@dierkens.com)
+- I was a push to main (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -183,9 +183,9 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
-#### ⚠️ Pushed to \`master\`
+#### ⚠️ Pushed to \`main\`
 
-- I was a push to master (adam@dierkens.com)
+- I was a push to main (adam@dierkens.com)
 
 #### Authors: 1
 
@@ -195,7 +195,7 @@ exports[`generateReleaseNotes should include PR-less commits as patches 1`] = `
 exports[`generateReleaseNotes should include PR-less commits as the default label 1`] = `
 "#### 🚀 Enhancement
 
-- I was a push to master (adam@dierkens.com)
+- I was a push to main (adam@dierkens.com)
 - First Feature [#1235](https://github.custom.com/foobar/auto/pull/1235) (adam@dierkens.com)
 
 #### Authors: 1
@@ -298,7 +298,7 @@ exports[`generateReleaseNotes should order the section major, minor, patch, then
 
 #### 🐛 Bug Fix
 
-- I was a push to master (adam@dierkens.com)
+- I was a push to main (adam@dierkens.com)
 
 #### 📝 Documentation
 

@@ -31,7 +31,7 @@ jest.mock("@octokit/rest", () => {
   return { Octokit };
 });
 
-test("shipit should publish canary in locally when not on master", async () => {
+test("shipit should publish canary in locally when not on baseBranch", async () => {
   const auto = new Auto({ ...defaults, plugins: [] });
   auto.logger = dummyLog();
   // @ts-ignore

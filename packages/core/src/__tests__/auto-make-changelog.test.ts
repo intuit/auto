@@ -10,7 +10,7 @@ jest
 
 const importMock = jest.fn();
 jest.mock("import-cwd", () => (path: string) => importMock(path));
-jest.mock("env-ci", () => () => ({ isCi: false, branch: "master" }));
+jest.mock("env-ci", () => () => ({ isCi: false, branch: "main" }));
 jest.mock("../utils/exec-promise", () => () => Promise.resolve(""));
 
 const defaults = {

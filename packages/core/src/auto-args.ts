@@ -83,7 +83,7 @@ interface Prerelease {
 }
 
 interface BaseBranch {
-  /** The branch to treat as the base. Default is master */
+  /** The branch to treat as the base */
   baseBranch?: string;
 }
 
@@ -146,10 +146,10 @@ export type ILatestOptions = BaseBranch &
 
 export type IShipItOptions = ILatestOptions & {
   /**
-   * Make auto publish prerelease versions when merging to master.
+   * Make auto publish prerelease versions when merging to baseBranch.
    * Only PRs merged with "release" label will generate a "latest" release.
    * Only use this flag if you do not want to maintain a prerelease branch,
-   * and instead only want to use master.
+   * and instead only want to use baseBranch.
    */
   onlyGraduateWithReleaseLabel?: boolean;
 };

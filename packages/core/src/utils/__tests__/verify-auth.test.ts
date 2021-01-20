@@ -13,7 +13,7 @@ describe("verify-auth", () => {
         throw new Error();
       },
     }));
-    expect(await verifyAuth("origin", "master")).toBe(false);
+    expect(await verifyAuth("origin", "main")).toBe(false);
   });
 
   test("should verify auth when we can push to remote", async () => {
@@ -22,7 +22,7 @@ describe("verify-auth", () => {
       kill: () => {},
       on: (_: string, cb: () => void) => cb(),
     }));
-    expect(await verifyAuth("origin", "master")).toBe(true);
+    expect(await verifyAuth("origin", "main")).toBe(true);
   });
 
   test("should not verify auth when we can't push to remote", async () => {
@@ -34,6 +34,6 @@ describe("verify-auth", () => {
       kill: () => {},
       on: (_: string, cb: () => void) => cb(),
     }));
-    expect(await verifyAuth("bad", "master")).toBe(false);
+    expect(await verifyAuth("bad", "main")).toBe(false);
   });
 });

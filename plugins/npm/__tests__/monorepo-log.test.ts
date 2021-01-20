@@ -103,7 +103,7 @@ test("should group sections for packages", async () => {
     repo: "test",
     baseUrl: "https://github.custom.com/",
     labels: defaultLabels,
-    baseBranch: "master",
+    baseBranch: "main",
     prereleaseBranches: ["next"],
   });
 
@@ -167,7 +167,7 @@ test("should create sections for packages", async () => {
     repo: "test",
     baseUrl: "https://github.custom.com/",
     labels: defaultLabels,
-    baseBranch: "master",
+    baseBranch: "main",
     prereleaseBranches: ["next"],
   });
 
@@ -227,7 +227,7 @@ test("should be able to disable sections for packages", async () => {
     repo: "test",
     baseUrl: "https://github.custom.com/",
     labels: defaultLabels,
-    baseBranch: "master",
+    baseBranch: "main",
     prereleaseBranches: ["next"],
   });
 
@@ -287,7 +287,7 @@ test("should add versions for independent packages", async () => {
     repo: "test",
     baseUrl: "https://github.custom.com/",
     labels: defaultLabels,
-    baseBranch: "master",
+    baseBranch: "main",
     prereleaseBranches: ["next"],
   });
 
@@ -344,7 +344,7 @@ test("should create extra change logs for sub-packages", async () => {
           repo: "test",
           baseUrl: "https://github.custom.com/",
           labels: defaultLabels,
-          baseBranch: "master",
+          baseBranch: "main",
           prereleaseBranches: ["next"],
         });
         t.hooks.renderChangelogTitle.tap("test", (label) => label);
