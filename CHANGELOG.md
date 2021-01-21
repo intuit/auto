@@ -1,3 +1,16 @@
+# v10.12.2 (Thu Jan 21 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - handle case where auto isn't used in a git repo [#1739](https://github.com/intuit/auto/pull/1739) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.12.1 (Thu Jan 21 2021)
 
 #### 🐛 Bug Fix
