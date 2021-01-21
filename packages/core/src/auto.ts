@@ -349,15 +349,19 @@ function escapeRegExp(str: string) {
 
 /** Check if a repo has a branch */
 function hasBranch(branch: string) {
-  const branches = execSync("git branch --list --all", {
-    encoding: "utf-8",
-  }).split("\n");
+  try {
+    const branches = execSync("git branch --list --all", {
+      encoding: "utf-8",
+    }).split("\n");
 
-  return branches.some((b) => {
-    const parts = b.split("/");
+    return branches.some((b) => {
+      const parts = b.split("/");
 
-    return b === branch || parts[parts.length - 1] === branch;
-  });
+      return b === branch || parts[parts.length - 1] === branch;
+    });
+  } catch (error) {
+    return false;
+  }
 }
 
 /** The Error that gets thrown when a label existence check fails */
