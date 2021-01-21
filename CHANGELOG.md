@@ -1,3 +1,16 @@
+# v10.12.1 (Thu Jan 21 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - respect `skip` and `none` releases for prereleases [#1738](https://github.com/intuit/auto/pull/1738) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.12.0 (Thu Jan 21 2021)
 
 ### Release Notes
