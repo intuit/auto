@@ -44,7 +44,7 @@ Prepend all relative links in README.md with this url.
   "plugins": [
     [
       "vscode",
-      { "baseContentUrl": "https://github.com/my-username/my-repo/tree/master" }
+      { "baseContentUrl": "https://github.com/my-username/my-repo/tree/main" }
     ]
     // other plugins
   ]
@@ -62,7 +62,7 @@ Prepend all relative image links in README.md with this url.
     [
       "vscode",
       {
-        "baseContentUrl": "https://raw.githubusercontent.com/my-username/my-repo/master/"
+        "baseContentUrl": "https://raw.githubusercontent.com/my-username/my-repo/main/"
       }
     ]
   ]

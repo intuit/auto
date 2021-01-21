@@ -36,7 +36,7 @@ export interface IGitOptions {
   repo: string;
   /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl?: string;
-  /** The main branch of the repo. Usually master */
+  /** The main branch of the repo */
   baseBranch: string;
   /** The URL to the GitHub graphql API (public or enterprise) the project is using */
   graphqlBaseUrl?: string;
@@ -439,14 +439,14 @@ export default class Git {
   /** Get the users associated with the GH_TOKEN */
   @memoize()
   async getUser() {
-    const [, user] = await on(this.github.users.getAuthenticated()) || {};
+    const [, user] = (await on(this.github.users.getAuthenticated())) || {};
     return user?.data;
   }
 
   /** Get collaborator permission level to the repo. */
   @memoize()
   async getTokenPermissionLevel() {
-    const user = await this.getUser()
+    const user = await this.getUser();
 
     if (!user) {
       return {
@@ -876,17 +876,21 @@ export default class Git {
 
   /** Get all the tags for a given branch. */
   async getTags(branch: string) {
-    const tags = await execPromise("git", [
-      "tag",
-      "--sort='creatordate'",
-      "--merged",
-      branch,
-    ]);
-
-    return tags
-      .split("\n")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+    try {
+      const tags = await execPromise("git", [
+        "tag",
+        "--sort='creatordate'",
+        "--merged",
+        branch,
+      ]);
+  
+      return tags
+        .split("\n")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+    } catch (error) {
+      return []
+    }
   }
 
   /** Get the a tag that isn't in the base branch */

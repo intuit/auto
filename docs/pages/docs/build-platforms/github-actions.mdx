@@ -4,7 +4,7 @@ title: GitHub Actions
 
 The following config declares the `release` action that run on all branches. The job will either release:
 
-- a new `latest` version from `master`
+- a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (only on the main fork and if your package manager plugin implements them)
 
 **`.github/workflows/release.yml`**

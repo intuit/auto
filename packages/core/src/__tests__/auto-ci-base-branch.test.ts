@@ -6,12 +6,13 @@ jest.mock("env-ci");
 const envSpy = envCi as jest.Mock;
 envSpy.mockImplementation(() => ({
   isCi: true,
-  branch: "master",
+  branch: "main",
 }));
 
 import { Auto } from "../auto";
 
 const defaults = {
+  baseBranch: "main",
   owner: "foo",
   repo: "bar",
 };
@@ -51,13 +52,13 @@ describe("Auto", () => {
       url: "https://google.com",
     };
 
-    test("should exit successfully if ran from master + CI", async () => {
+    test("should exit successfully if ran from main + CI", async () => {
       const auto = new Auto(defaults);
       const exit = jest.fn();
 
       envSpy.mockImplementationOnce(() => ({
         isCi: true,
-        branch: "master",
+        branch: "main",
       }));
 
       // @ts-ignore

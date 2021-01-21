@@ -19,7 +19,7 @@ export interface IGenerateReleaseNotesOptions {
   baseUrl: string;
   /** The labels configured by the user */
   labels: ILabelDefinition[];
-  /** The branch that is used as the base. defaults to master */
+  /** The branch that is used as the base */
   baseBranch: string;
   /** The branches that is used as prerelease branches. defaults to next */
   prereleaseBranches: string[];

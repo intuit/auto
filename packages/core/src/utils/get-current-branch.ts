@@ -7,7 +7,7 @@ const env = envCi();
 export function getCurrentBranch() {
   const isPR = "isPr" in env && env.isPr;
   let branch: string | undefined;
-  // env-ci sets branch to target branch (ex: master) in some CI services.
+  // env-ci sets branch to target branch (ex: main) in some CI services.
   // so we should make sure we aren't in a PR just to be safe
 
   if (isPR && "prBranch" in env) {

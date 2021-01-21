@@ -347,6 +347,19 @@ function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
+/** Check if a repo has a branch */
+function hasBranch(branch: string) {
+  const branches = execSync("git branch --list --all", {
+    encoding: "utf-8",
+  }).split("\n");
+
+  return branches.some((b) => {
+    const parts = b.split("/");
+
+    return b === branch || parts[parts.length - 1] === branch;
+  });
+}
+
 /** The Error that gets thrown when a label existence check fails */
 export class LabelExistsError extends Error {
   /**
@@ -369,7 +382,7 @@ export default class Auto {
   logger: ILogger;
   /** Options auto was initialized with */
   options: ApiOptions;
-  /** The branch auto uses as master. */
+  /** The branch auto uses as the base. */
   baseBranch: string;
   /** The remote git to push changes to. This is the full URL with auth */
   remote!: string;
@@ -391,7 +404,8 @@ export default class Auto {
   /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
     this.options = options;
-    this.baseBranch = options.baseBranch || "master";
+    this.baseBranch =
+      options.baseBranch || (hasBranch("main") && "main") || "master";
     setLogLevel(
       "quiet" in options && options.quiet
         ? "quiet"
@@ -931,10 +945,13 @@ export default class Auto {
     const prNumber = getPrNumberFromEnv(pr);
 
     if (!prNumber) {
-      // If pr-check is ran on CI on master then we exit successfully since
+      // If pr-check is ran on CI on baseBranch then we exit successfully since
       // running pr-check in this scenario wouldn't make sense anyway. Enables
       // adding this command without resorting to bash if/else statements.
-      if (env.isCi && (env.branch === "master" || this.inPrereleaseBranch())) {
+      if (
+        env.isCi &&
+        (env.branch === this.baseBranch || this.inPrereleaseBranch())
+      ) {
         process.exit(0);
       }
 
@@ -1189,7 +1206,10 @@ export default class Auto {
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
 
-    this.logger.veryVerbose.info('Found commits in canary release', commitsInRelease);
+    this.logger.veryVerbose.info(
+      "Found commits in canary release",
+      commitsInRelease
+    );
 
     const labels = commitsInRelease.map((commit) => commit.labels);
 
@@ -1284,7 +1304,7 @@ export default class Auto {
   }
 
   /**
-   * Create a next (or test) version of the project. If on master will
+   * Create a next (or test) version of the project. If on baseBranch will
    * release to the default "next" branch.
    */
   async next(args: INextOptions): Promise<ShipitInfo | undefined> {
@@ -1308,18 +1328,26 @@ export default class Auto {
     await this.checkClean();
     await this.setGitUser();
 
-    this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
-      logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
-        const shouldOmit = commit.subject.match(/^Merge (?:\S+\/)*master/);
+    this.hooks.onCreateLogParse.tap(
+      `Omit merges from ${this.baseBranch}`,
+      (logParse) => {
+        logParse.hooks.omitCommit.tap(
+          `Omit merges from ${this.baseBranch}`,
+          (commit) => {
+            const shouldOmit = commit.subject.match(
+              new RegExp(`^Merge (?:\\S+\\/)*${this.baseBranch}`)
+            );
 
-        if (shouldOmit) {
-          this.logger.verbose.info(
-            `Omitting merge commit from master: ${commit.subject}`
-          );
-          return true;
-        }
-      });
-    });
+            if (shouldOmit) {
+              this.logger.verbose.info(
+                `Omitting merge commit from ${this.baseBranch}: ${commit.subject}`
+              );
+              return true;
+            }
+          }
+        );
+      }
+    );
 
     const currentBranch = getCurrentBranch();
     const forkPoints = (
@@ -1473,7 +1501,7 @@ export default class Auto {
     const isPR = "isPr" in env && env.isPr;
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const head = await this.release.getCommitsInRelease(from);
-    // env-ci sets branch to target branch (ex: master) in some CI services.
+    // env-ci sets branch to target branch (ex: main) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const currentBranch = getCurrentBranch();
     const isBaseBranch = !isPR && currentBranch === this.baseBranch;
@@ -1527,7 +1555,7 @@ export default class Auto {
 
       if (options.dryRun && !options.quiet) {
         this.logger.log.success(
-          "Below is what would happen upon merge of the current branch into master"
+          `Below is what would happen upon merge of the current branch into ${this.baseBranch}`
         );
         await this.publishFullRelease(options);
       }

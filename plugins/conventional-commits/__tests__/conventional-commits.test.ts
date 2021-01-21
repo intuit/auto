@@ -1,4 +1,4 @@
-import Auto from "@auto-it/core";
+import Auto, { DEFAULT_PRERELEASE_BRANCHES } from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Git from "@auto-it/core/dist/git";
 import LogParse from "@auto-it/core/dist/log-parse";
@@ -12,6 +12,12 @@ import {
 import ConventionalCommitsPlugin from "../src";
 
 const versionLabels = getVersionMap(defaultLabels);
+
+const config = {
+  baseBranch: "main",
+  prereleaseBranches: DEFAULT_PRERELEASE_BRANCHES,
+  labels: defaultLabels,
+};
 
 test("should do nothing when conventional commit message is not present", async () => {
   const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
@@ -142,7 +148,7 @@ test("should not include label-less head commit if any other commit in PR has co
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
-    release: new Release(mockGit),
+    release: new Release(mockGit, config),
   } as Auto);
 
   autoHooks.onCreateLogParse.call(logParse);
@@ -179,7 +185,7 @@ test("should include labeled head commit", async () => {
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
-    release: new Release(mockGit),
+    release: new Release(mockGit, config),
   } as Auto);
 
   autoHooks.onCreateLogParse.call(logParse);
@@ -212,7 +218,7 @@ test("should respect PR label if SEMVER", async () => {
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
-    release: new Release(mockGit),
+    release: new Release(mockGit, config),
   } as Auto);
 
   autoHooks.onCreateLogParse.call(logParse);
@@ -245,7 +251,7 @@ test("should add conventional commit label if none/skip", async () => {
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
-    release: new Release(mockGit),
+    release: new Release(mockGit, config),
   } as Auto);
 
   autoHooks.onCreateLogParse.call(logParse);
@@ -277,7 +283,7 @@ test("should not add skip when a non skip commit is present with a skip commit",
     semVerLabels: versionLabels,
     logger: dummyLog(),
     git: mockGit,
-    release: new Release(mockGit),
+    release: new Release(mockGit, config),
   } as Auto);
 
   autoHooks.onCreateLogParse.call(logParse);

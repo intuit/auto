@@ -12,7 +12,7 @@ import botList from "@auto-it/bot-list";
 
 import ReleasedLabelPlugin from "../src";
 
-const git = new Git({ owner: "1", repo: "2", baseBranch: "master" });
+const git = new Git({ owner: "1", repo: "2", baseBranch: "main" });
 const log = new LogParse();
 
 const comment = jest.fn();

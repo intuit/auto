@@ -4,7 +4,7 @@ title: Jenkins 2
 
 The following config declares the `release` action that run on all branches. The job will either release:
 
-- a new `latest` version from `master`
+- a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (only on the main fork and if your package manager plugin implements them)
 
 **`Jenkinsfile`**
@@ -74,13 +74,13 @@ pipeline {
           }
         }
         stage('Latest') {
-          when { branch 'master' }
+          when { branch 'main' }
           steps {
             // Jenkins will leave you in a detached HEAD state during builds
             // Make sure to checkout your baseBranch here or the push will fail!
             // The error will look like the following:
-            // error: src refspec master does not match any
-            sh 'git checkout master'
+            // error: src refspec main does not match any
+            sh 'git checkout main'
             sh 'auto shipit'
           }
         }

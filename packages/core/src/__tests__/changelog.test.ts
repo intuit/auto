@@ -15,7 +15,7 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: "auto",
   baseUrl: "https://github.custom.com/foobar/auto",
   labels: [...defaultLabels],
-  baseBranch: "master",
+  baseBranch: "main",
   prereleaseBranches: ["next"],
 });
 
@@ -28,7 +28,7 @@ describe("createUserLink", () => {
       repo: "",
       baseUrl: "https://github.custom.com/",
       labels: [...defaultLabels],
-      baseBranch: "master",
+      baseBranch: "main",
       prereleaseBranches: ["next"],
     });
     changelog.loadDefaultHooks();
@@ -68,7 +68,7 @@ describe("createUserLink", () => {
       repo: "",
       baseUrl: "https://github.custom.com/",
       labels: [...defaultLabels],
-      baseBranch: "master",
+      baseBranch: "main",
       prereleaseBranches: ["next"],
     });
     changelog.loadDefaultHooks();
@@ -345,7 +345,7 @@ describe("generateReleaseNotes", () => {
         files: [],
         authorName: "Adam Dierkens",
         authorEmail: "adam@dierkens.com",
-        subject: "I was a push to master\n\nfoo bar",
+        subject: "I was a push to main\n\nfoo bar",
         labels: ["pushToBaseBranch"],
       },
       {
@@ -376,7 +376,7 @@ describe("generateReleaseNotes", () => {
         files: [],
         authorName: "Adam Dierkens",
         authorEmail: "adam@dierkens.com",
-        subject: "I was a push to master\n\nfoo bar",
+        subject: "I was a push to main\n\nfoo bar",
       },
       {
         hash: "2",
@@ -402,7 +402,7 @@ describe("generateReleaseNotes", () => {
         files: [],
         authorName: "Adam Dierkens",
         authorEmail: "adam@dierkens.com",
-        subject: "I was a push to master\n\n",
+        subject: "I was a push to main\n\n",
         labels: ["pushToBaseBranch"],
       },
       {
@@ -454,7 +454,7 @@ describe("generateReleaseNotes", () => {
         files: [],
         authorName: "Adam Dierkens",
         authorEmail: "adam@dierkens.com",
-        subject: "I was a push to master\n\n",
+        subject: "I was a push to main\n\n",
         labels: ["patch"],
       },
       {
@@ -543,7 +543,7 @@ describe("generateReleaseNotes", () => {
         files: [],
         authorName: "Adam Dierkens",
         authorEmail: "adam@dierkens.com",
-        subject: "I was a push to master\n\n",
+        subject: "I was a push to main\n\n",
         labels: ["pushToBaseBranch"],
       },
       {

@@ -1,4 +1,10 @@
 import { Auto } from "../auto";
+import { execSync } from "child_process";
+
+const exec = jest.fn();
+// @ts-ignore
+execSync.mockImplementation(exec);
+exec.mockReturnValue("");
 
 jest.mock("child_process");
 
@@ -68,5 +74,12 @@ describe("getRemote", () => {
     expect(await auto.getRemote()).toBe(
       "https://x-access-token:XXXX@github.com/fake/remote"
     );
+  });
+
+  test("should use main if it exists", async () => {
+    exec.mockReturnValue("foo\nbar\nbaz\nmain");
+    const auto = new Auto();
+
+    expect(auto.baseBranch).toBe("main");
   });
 });

@@ -112,7 +112,7 @@ const testOptions = (): IGenerateReleaseNotesOptions => ({
   repo: "auto",
   baseUrl: "https://github.custom.com/foobar/auto",
   labels: defaultLabels,
-  baseBranch: "master",
+  baseBranch: "main",
   prereleaseBranches: ["next"],
 });
 const logParse = new LogParse();

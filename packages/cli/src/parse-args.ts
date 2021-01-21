@@ -129,7 +129,7 @@ const defaultOptions: AutoOption[] = [
 const baseBranch: AutoOption = {
   name: "base-branch",
   type: String,
-  description: 'Branch to treat as the "master" branch',
+  description: "Branch to treat as the base branch",
   group: "global",
 };
 
@@ -515,7 +515,7 @@ export const commands: AutoCommand[] = [
         defaultValue: false,
         group: "main",
         description:
-          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.',
+          'Make auto publish prerelease versions when merging to baseBranch. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use baseBranch.',
         config: true,
       },
     ],

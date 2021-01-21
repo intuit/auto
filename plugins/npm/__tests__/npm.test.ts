@@ -33,7 +33,7 @@ jest.mock(
   () => (...args: any[]) => execPromise(...args)
 );
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
-  getCurrentBranch: () => "master",
+  getCurrentBranch: () => "main",
 }));
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
@@ -180,7 +180,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -200,7 +200,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -227,7 +227,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -253,7 +253,7 @@ describe("getRepository", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -285,7 +285,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -308,7 +308,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -332,7 +332,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -366,7 +366,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -401,7 +401,7 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -417,7 +417,7 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -448,7 +448,7 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -473,7 +473,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -503,7 +503,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -531,7 +531,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -567,7 +567,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -603,7 +603,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -651,7 +651,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -676,7 +676,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -703,7 +703,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -731,7 +731,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -762,7 +762,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -799,7 +799,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -817,7 +817,7 @@ describe("publish", () => {
       "--follow-tags",
       "--set-upstream",
       "origin",
-      "master",
+      "main",
     ]);
   });
 });
@@ -835,7 +835,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -866,7 +866,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -901,7 +901,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -935,7 +935,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -972,7 +972,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -1007,7 +1007,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -1038,7 +1038,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1086,7 +1086,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1138,7 +1138,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1197,7 +1197,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1245,7 +1245,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
@@ -1295,7 +1295,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
@@ -1342,7 +1342,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
@@ -1400,7 +1400,7 @@ describe("makeRelease", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
       git: { publish } as any,
@@ -1469,7 +1469,7 @@ describe("beforeCommitChangelog", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
       release: {

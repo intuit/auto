@@ -6,6 +6,7 @@ import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import child from "child_process";
 import { getCurrentBranch } from "../utils/get-current-branch";
+import { DEFAULT_PRERELEASE_BRANCHES } from "../config";
 
 const { execSync } = child;
 const exec = jest.fn();
@@ -91,7 +92,7 @@ const execSpy = jest.fn();
 jest.mock("../utils/exec-promise.ts", () => (...args) => execSpy(...args));
 
 const currentBranch = jest.fn();
-currentBranch.mockReturnValue("master");
+currentBranch.mockReturnValue("main");
 jest.mock("../utils/get-current-branch.ts");
 // @ts-ignore
 getCurrentBranch.mockImplementation(currentBranch);
@@ -100,6 +101,12 @@ const existsSync = jest.fn();
 const writeSpy = jest.fn();
 
 let readResult = "{}";
+
+const config = {
+  baseBranch: "main",
+  prereleaseBranches: DEFAULT_PRERELEASE_BRANCHES,
+  labels: defaultLabels,
+};
 
 jest.mock("fs", () => ({
   // @ts-ignore
@@ -123,7 +130,7 @@ const git = new Git({
   owner: "Andrew",
   repo: "test",
   token: "MY_TOKEN",
-  baseBranch: "master",
+  baseBranch: "main",
 });
 
 describe("getVersionMap", () => {
@@ -158,13 +165,13 @@ describe("Release", () => {
 
   describe("getCommits", () => {
     test("should default to HEAD", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       await gh.getCommits("12345");
       expect(getGitLog).toHaveBeenCalled();
     });
 
     test("should use configured HEAD", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       await gh.getCommits("12345", "1234");
       expect(getGitLog).toHaveBeenCalled();
     });
@@ -177,7 +184,7 @@ describe("Release", () => {
       ];
 
       getGitLog.mockReturnValueOnce(commits);
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       expect(await gh.getCommits("12345", "1234")).toMatchSnapshot();
     });
 
@@ -223,7 +230,7 @@ describe("Release", () => {
         };
       });
 
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const modifiedCommits = await gh.getCommits("12345", "1234");
       expect(getUserByUsername).toHaveBeenCalled();
       expect(modifiedCommits).toMatchSnapshot();
@@ -271,7 +278,7 @@ describe("Release", () => {
         };
       });
 
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       gh.hooks.onCreateLogParse.tap("test", (parser) => {
         parser.hooks.omitCommit.tap("test", (commit) =>
           Boolean(commit.authors.find((author) => author.username === "adam"))
@@ -282,7 +289,7 @@ describe("Release", () => {
     });
 
     test("should ignore rebased commits if no last release", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getLatestReleaseInfo.mockReturnValueOnce({});
       const commits = await logParse.normalizeCommits([
@@ -295,7 +302,7 @@ describe("Release", () => {
     });
 
     test("should match rebased commits to PRs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: "2019-01-16",
@@ -327,7 +334,7 @@ describe("Release", () => {
     });
 
     test("should match rebased commits to PRs with first commit", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getLatestReleaseInfo.mockImplementationOnce(() => {
         throw new Error("no releases yet");
@@ -360,7 +367,7 @@ describe("Release", () => {
     });
 
     test("should omit commits that have already been released", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       jest.spyOn(console, "log").mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
@@ -391,7 +398,7 @@ describe("Release", () => {
     });
 
     test("should not omit commits in next branch", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       jest.spyOn(console, "log").mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
@@ -425,7 +432,7 @@ describe("Release", () => {
     });
 
     test("should include PR opener in authors (in case of external rebase)", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const info = {
         data: {
@@ -456,7 +463,7 @@ describe("Release", () => {
     });
 
     test("should use latest title of PR", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const info = {
         data: {
@@ -491,7 +498,7 @@ describe("Release", () => {
 
   describe("addToChangelog", () => {
     test("creates new changelog if one didn't exist - from 0", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       await gh.addToChangelog(
         "# My new Notes",
         "klajsdlfk4lj51l43k5hj234l",
@@ -502,7 +509,7 @@ describe("Release", () => {
     });
 
     test("creates new changelog if one didn't exist", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       await gh.addToChangelog("# My new Notes", "v1.0.0", "v1.0.0");
 
       expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
@@ -513,7 +520,7 @@ describe("Release", () => {
         noVersionPrefix: true,
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       await gh.addToChangelog("# My new Notes", "1.0.0", "1.0.0");
 
@@ -521,7 +528,7 @@ describe("Release", () => {
     });
 
     test("prepends to old changelog", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       existsSync.mockReturnValueOnce(true);
       readResult = "# My old Notes";
@@ -537,17 +544,17 @@ describe("Release", () => {
 
   describe("generateReleaseNotes", () => {
     test("should default to HEAD", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       expect(await gh.generateReleaseNotes("1234")).toBe("");
     });
 
     test("should use configured HEAD", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       expect(await gh.generateReleaseNotes("1234", "123")).toBe("");
     });
 
     test("should include PR-less commits", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const commits = [
         {
@@ -603,7 +610,7 @@ describe("Release", () => {
     });
 
     test("should get extra user data for login", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const commits = [
         {
@@ -631,7 +638,7 @@ describe("Release", () => {
     });
 
     test("should allow user to configure section headings", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const commits = [
         makeCommitFromMsg("First (#1234)"),
@@ -652,7 +659,7 @@ describe("Release", () => {
     });
 
     test("should match rebased commits to PRs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: "2019-01-16",
@@ -679,7 +686,7 @@ describe("Release", () => {
           hash: "1",
           authorName: "Adam Dierkens",
           authorEmail: "adam@dierkens.com",
-          subject: "I am a commit to master",
+          subject: "I am a commit to main",
         },
       ]);
       graphql.mockReturnValueOnce({
@@ -690,7 +697,7 @@ describe("Release", () => {
     });
 
     test("should match commits with related PRs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: "2019-01-16",
@@ -729,7 +736,7 @@ describe("Release", () => {
     });
 
     test("should find matching PRs for shas through search", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg("Doom Patrol enabled", {
@@ -761,7 +768,7 @@ describe("Release", () => {
     });
 
     test("should ignore closed prs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg("Doom Patrol enabled", {
@@ -795,7 +802,7 @@ describe("Release", () => {
     });
 
     test("should detect pre-release branches", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg("Doom Patrol enabled", {
@@ -834,7 +841,7 @@ describe("Release", () => {
     });
 
     test("should include PRs merged to other PRs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       getGitLog.mockReturnValueOnce([
         makeCommitFromMsg("Doom (#12343)", {
@@ -900,7 +907,7 @@ describe("Release", () => {
     });
 
     test("should gracefully handle failed fetches to merged PRs", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
 
       const commits = await logParse.normalizeCommits([
         makeCommitFromMsg("First"),
@@ -921,7 +928,7 @@ describe("Release", () => {
 
   describe("getSemverBump", () => {
     test("default to patch", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const commits = [
         makeCommitFromMsg("First"),
         makeCommitFromMsg("Second"),
@@ -934,7 +941,7 @@ describe("Release", () => {
     });
 
     test("should use higher version", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const commits = [
         makeCommitFromMsg("First (#1234)"),
         makeCommitFromMsg("Second"),
@@ -948,7 +955,7 @@ describe("Release", () => {
     });
 
     test("should not publish a release", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const commits = [
         makeCommitFromMsg("First (#1234)"),
         makeCommitFromMsg("Second (#1235)"),
@@ -970,7 +977,7 @@ describe("Release", () => {
     });
 
     test("should publish a release", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const commits = [
         makeCommitFromMsg("First (#1234)"),
         makeCommitFromMsg("Second (#1235)"),
@@ -990,7 +997,7 @@ describe("Release", () => {
     });
 
     test("should default to publish a prepatch", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const commits = [
         makeCommitFromMsg("First (#1234)"),
         makeCommitFromMsg("Second (#1235)"),
@@ -1010,7 +1017,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const commits = [
         makeCommitFromMsg("First (#1234)"),
@@ -1031,7 +1038,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const commits = [
         makeCommitFromMsg("First (#1234)"),
@@ -1062,7 +1069,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: customLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const commits = [
         makeCommitFromMsg("First (#1234)"),
@@ -1098,7 +1105,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: customLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const commits = [
         makeCommitFromMsg("First (#1234)"),
@@ -1124,7 +1131,7 @@ describe("Release", () => {
 
   describe("addLabelsToProject", () => {
     test("should add labels", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const customLabels: ILabelDefinition[] = [
         { name: "1", description: "major", releaseType: SEMVER.major },
         { name: "2", description: "minor", releaseType: SEMVER.minor },
@@ -1159,7 +1166,7 @@ describe("Release", () => {
         {
           prereleaseBranches: ["next"],
           labels: defaultLabels,
-          baseBranch: "master",
+          baseBranch: "main",
         },
         mockLogger
       );
@@ -1177,7 +1184,7 @@ describe("Release", () => {
     });
 
     test("should not add old labels", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const labels: ILabelDefinition[] = [
         { name: "1", description: "major", releaseType: SEMVER.major },
         { name: "2", description: "minor", releaseType: SEMVER.minor },
@@ -1199,7 +1206,7 @@ describe("Release", () => {
     });
 
     test("should not add old labels - case sensitive", async () => {
-      const gh = new Release(git);
+      const gh = new Release(git, config);
       const labels: ILabelDefinition[] = [
         { name: "major", description: "", releaseType: SEMVER.major },
         { name: "Minor", description: "", releaseType: SEMVER.minor },
@@ -1224,7 +1231,7 @@ describe("Release", () => {
       let gh = new Release(git, {
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const labels: ILabelDefinition[] = [
         {
@@ -1245,7 +1252,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith({
@@ -1260,7 +1267,7 @@ describe("Release", () => {
         onlyPublishWithReleaseLabel: true,
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       const labels: ILabelDefinition[] = [
         {
@@ -1280,7 +1287,7 @@ describe("Release", () => {
       gh = new Release(git, {
         prereleaseBranches: ["next"],
         labels: defaultLabels,
-        baseBranch: "master",
+        baseBranch: "main",
       });
       await gh.addLabelsToProject(labels);
       expect(createLabel).toHaveBeenCalledWith({

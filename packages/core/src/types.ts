@@ -18,7 +18,7 @@ const githubInformation = t.partial({
   githubApi: t.string,
   /** The github graphql api to interact with */
   githubGraphqlApi: t.string,
-  /** The branch that is used as the base. defaults to master */
+  /** The branch that is used as the base */
   baseBranch: t.string,
 });
 
@@ -128,7 +128,7 @@ export const loadedAutoRc = t.intersection([
     labels: t.array(labelDefinition),
     /** Branches to create pre-releases from */
     prereleaseBranches: t.array(t.string),
-    /** The branch that is used as the base. defaults to master */
+    /** The branch that is used as the base */
     baseBranch: t.string,
   }),
 ]);
