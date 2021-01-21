@@ -2,7 +2,7 @@
   "name": "auto",
   "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "10.12.1",
+  "version": "10.12.2",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
