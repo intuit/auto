@@ -1,3 +1,44 @@
+# v10.12.0 (Thu Jan 21 2021)
+
+### Release Notes
+
+#### Support "main" as a default "baseBranch" ([#1736](https://github.com/intuit/auto/pull/1736))
+
+Many communities, both on GitHub and in the wider Git community, are considering renaming the default branch name of their repository from `master` to `main`.
+
+This pull request add default support for a `main` branch instead of `master`. If `main` is detected then that will be used as the `baseBranch` without the need for any configuration.
+
+## Why
+
+The community is shifting.
+
+Todo:
+
+- [x] Add tests
+- [ ] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [ ] `patch`
+- [x] `minor`
+- [ ] `major`
+
+---
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/jira`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/vscode`
+  - Support "main" as a default "baseBranch" [#1736](https://github.com/intuit/auto/pull/1736) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.11.0 (Tue Jan 19 2021)
 
 :tada: This release contains work from a new contributor! :tada:
