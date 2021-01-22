@@ -69,7 +69,7 @@ pipeline {
         stage('Next') {
           when { branch 'next' }
           steps {
-            sh 'git checkout next'
+            sh 'git checkout -b next'
             sh "auto shipit"
           }
         }
@@ -80,7 +80,7 @@ pipeline {
             // Make sure to checkout your baseBranch here or the push will fail!
             // The error will look like the following:
             // error: src refspec main does not match any
-            sh 'git checkout main'
+            sh 'git checkout -b main'
             sh 'auto shipit'
           }
         }
