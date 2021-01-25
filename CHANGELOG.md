@@ -1,3 +1,34 @@
+# v10.13.0 (Mon Jan 25 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/cocoapods`, `@auto-it/magic-zero`, `@auto-it/npm`
+  - Add `@auto-it/magic-zero` Plugin [#1701](https://github.com/intuit/auto/pull/1701) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- fix jenkins setup [#1740](https://github.com/intuit/auto/pull/1740) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 4.13.0 to 4.14.0 [#1747](https://github.com/intuit/auto/pull/1747) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/jsdom from 16.2.5 to 16.2.6 [#1750](https://github.com/intuit/auto/pull/1750) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump husky from 4.3.0 to 4.3.8 [#1749](https://github.com/intuit/auto/pull/1749) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump gitlog from 4.0.3 to 4.0.4 [#1748](https://github.com/intuit/auto/pull/1748) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump file-type from 16.0.1 to 16.2.0 [#1746](https://github.com/intuit/auto/pull/1746) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump change-case from 4.1.1 to 4.1.2 [#1745](https://github.com/intuit/auto/pull/1745) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.8.2 to 2.9.3 [#1743](https://github.com/intuit/auto/pull/1743) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fast-glob from 3.2.4 to 3.2.5 [#1742](https://github.com/intuit/auto/pull/1742) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump type-fest from 0.18.0 to 0.20.2 [#1744](https://github.com/intuit/auto/pull/1744) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.12.2 (Thu Jan 21 2021)
 
 #### 🐛 Bug Fix

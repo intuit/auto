@@ -1,3 +1,19 @@
+# v10.13.0 (Mon Jan 25 2021)
+
+#### 🚀 Enhancement
+
+- Add `@auto-it/magic-zero` Plugin [#1701](https://github.com/intuit/auto/pull/1701) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- make modifyConfig async ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.12.2 (Thu Jan 21 2021)
 
 #### 🐛 Bug Fix
