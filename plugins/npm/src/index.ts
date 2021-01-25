@@ -947,7 +947,7 @@ export default class NPMPlugin implements IPlugin {
             "-m",
             isIndependent
               ? '"Bump independent versions [skip ci]"'
-              : JSON.stringify(VERSION_COMMIT_MESSAGE),
+              : `'"${VERSION_COMMIT_MESSAGE}"'`,
             this.exact && "--exact",
             ...verboseArgs,
           ]);
@@ -969,7 +969,7 @@ export default class NPMPlugin implements IPlugin {
           latestBump,
           "--no-commit-hooks",
           "-m",
-          JSON.stringify(VERSION_COMMIT_MESSAGE),
+          VERSION_COMMIT_MESSAGE,
           ...verboseArgs,
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
