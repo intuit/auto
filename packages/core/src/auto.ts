@@ -12,7 +12,6 @@ import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   SyncHook,
-  SyncWaterfallHook,
   AsyncSeriesHook,
   AsyncSeriesWaterfallHook,
 } from "tapable";
@@ -139,7 +138,7 @@ type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["respon
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
-  modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
+  modifyConfig: AsyncSeriesWaterfallHook<[LoadedAutoRc]>;
   /** Validate what is in the config. You must return the config in this hook. */
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
@@ -570,7 +569,7 @@ export default class Auto {
     };
     this.loadPlugins(this.config!);
     this.loadDefaultBehavior();
-    this.config = this.hooks.modifyConfig.call(this.config!);
+    this.config = await this.hooks.modifyConfig.promise(this.config!);
     this.labels = this.config.labels;
     this.semVerLabels = getVersionMap(this.config.labels);
     await this.hooks.beforeRun.promise(this.config);

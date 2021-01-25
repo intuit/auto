@@ -46,8 +46,8 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [brew](./plugins/brew) - Automate the creation of Homebrew formulae
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
-- [crates](./plugins/crates) - Publish Rust crates
 - [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+- [crates](./plugins/crates) - Publish Rust crates
 - [docker](./plugins/docker) - Publish images with Docker
 - [gem](./plugins/gem) - Publish ruby gems
 - [git-tag](./plugins/git-tag) - Manage your projects version through just a git tag (`default` when used with binary)
@@ -64,6 +64,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [first-time-contributor](./plugins/first-time-contributor) - Thank first time contributors for their work right in your release notes.
 - [gh-pages](./plugins/gh-pages) - Automate publishing to your gh-pages documentation website
 - [jira](./plugins/jira) - Include Jira story links in the changelog
+- [magic-zero](./plugins/magic-zero) - A plugin that closely adheres to semver versioning for 0.0.x and 0.x.y releases
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
 - [pr-body-labels](./plugins/pr-body-labels) - Allow outside contributors to indicate what semver label should be applied to the Pull Request

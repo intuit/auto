@@ -405,7 +405,7 @@ describe("modifyConfig", () => {
       logger,
     } as Auto.Auto);
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({});
   });
 
   test("should not modify config when tagVersionPrefix is not set", async () => {
@@ -428,7 +428,7 @@ describe("modifyConfig", () => {
       }
     `;
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({});
   });
 
   test("should modify config when tagVersionPrefix is set", async () => {
@@ -452,7 +452,7 @@ describe("modifyConfig", () => {
       logger,
     } as Auto.Auto);
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({
       noVersionPrefix: true,
     });
   });

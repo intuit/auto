@@ -203,9 +203,9 @@ describe("Cocoapods Plugin", () => {
     });
   });
   describe("modifyConfig hook", () => {
-    test("should set noVersionPrefix to true", () => {
+    test("should set noVersionPrefix to true", async () => {
       const config = {};
-      expect(hooks.modifyConfig.call(config as any)).toStrictEqual({
+      expect(await hooks.modifyConfig.promise(config as any)).toStrictEqual({
         noVersionPrefix: true,
       });
     });
