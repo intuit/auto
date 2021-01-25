@@ -1,3 +1,16 @@
+# v10.13.2 (Mon Jan 25 2021)
+
+#### 🐛 Bug Fix
+
+- fix commit message when using npx [#1752](https://github.com/intuit/auto/pull/1752) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix commit message when using npx ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.13.1 (Mon Jan 25 2021)
 
 #### 🐛 Bug Fix
