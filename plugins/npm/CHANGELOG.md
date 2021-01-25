@@ -1,3 +1,16 @@
+# v10.13.1 (Mon Jan 25 2021)
+
+#### 🐛 Bug Fix
+
+- format commit message [#1751](https://github.com/intuit/auto/pull/1751) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- format commit message ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.13.0 (Mon Jan 25 2021)
 
 #### 🚀 Enhancement
