@@ -1,6 +1,5 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { formatPath } from "next-ignite";
 
 class MyDocument extends Document {
   render() {
@@ -19,25 +18,26 @@ class MyDocument extends Document {
               --color-primary-800: #3D0020;
               --color-primary-900: #290016;
 
-              --color-gray-100: #f1eef0;
-              --color-gray-200: #e3dde0;
-              --color-gray-300: #d5cdd1;
-              --color-gray-400: #c7bcc1;
-              --color-gray-500: #b9abb2;
-              --color-gray-600: #94898e;
-              --color-gray-700: #6f676b;
-              --color-gray-800: #4a4447;
-              --color-gray-900: #252224;
-              --color-gray-1000: #181617;
+              --color-gray-100: #f6f7f5;
+              --color-gray-200: #eaeae7;
+              --color-gray-300: #dcd5d4;
+              --color-gray-400: #c0aeb1;
+              --color-gray-500: #9c8586;
+              --color-gray-600: #735f5e;
+              --color-gray-700: #53484a;
+              --color-gray-800: #3c373a;
+              --color-gray-900: #2e2c2f;
+              --color-gray-1000: #181517;
             }
           `}</style>
           <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css"
+            href="https://www.unpkg.com/prismjs@1.19.0/themes/prism.css"
           />
-          <script
-            type="text/javascript"
-            src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"
+          <link
+            rel="stylesheet"
+            href="https://www.unpkg.com/prismjs@1.19.0/themes/prism-tomorrow.css"
+            media="(prefers-color-scheme: dark)"
           />
           <script
             async
@@ -60,7 +60,6 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <script src={formatPath("attach-dark-mode.js")} />
           <Main />
           <NextScript />
         </body>
