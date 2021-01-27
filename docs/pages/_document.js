@@ -36,7 +36,7 @@ class MyDocument extends Document {
           />
           <link
             rel="stylesheet"
-            href="https://www.unpkg.com/prism-themes@1.5.0/themes/prism-coldark-dark.css"
+            href="https://www.unpkg.com/prismjs@1.19.0/themes/prism-tomorrow.css"
             media="(prefers-color-scheme: dark)"
           />
           <script
