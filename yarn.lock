@@ -11456,10 +11456,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-ignite@^0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.9.10.tgz#2746f84ccacad4e9617c54aaccbc03816f88ecb0"
-  integrity sha512-GdZPD2ANAa3VjsyYpHDDr1Cwh3Gr38/0Ktf/MkX7hvOI93CyyZi7Bkb6zFjTVSBDh9prf48WcKfFCkSrlJpj2Q==
+next-ignite@^0.9.13:
+  version "0.9.13"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.9.13.tgz#88e2bcd982503c1a3eccb21a9afc467dcf4caea4"
+  integrity sha512-dKwtoaUn3RniYRrKxdfX/d5Ak65wrK4Tb4j1fiRsV9sZjsKDoxJ559K/1FznzjkOJoGupZ9WyTCjUwwB1h1VyQ==
   dependencies:
     "@babel/helper-call-delegate" "^7.12.1"
     "@mapbox/rehype-prism" "^0.4.0"
