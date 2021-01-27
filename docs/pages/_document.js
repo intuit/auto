@@ -21,11 +21,11 @@ class MyDocument extends Document {
               --color-gray-100: #f6f7f5;
               --color-gray-200: #eaeae7;
               --color-gray-300: #dcd5d4;
-              --color-gray-400: #c0aeb1;
-              --color-gray-500: #9c8586;
-              --color-gray-600: #735f5e;
-              --color-gray-700: #53484a;
-              --color-gray-800: #3c373a;
+              --color-gray-400: #c2bdbd;
+              --color-gray-500: #9f9697;
+              --color-gray-600: #706a69;
+              --color-gray-700: #534e4f;
+              --color-gray-800: #3c383b;
               --color-gray-900: #2e2c2f;
               --color-gray-1000: #181517;
             }
