@@ -27,7 +27,7 @@ class MyDocument extends Document {
               --color-gray-700: #53484a;
               --color-gray-800: #3c373a;
               --color-gray-900: #2e2c2f;
-              --color-gray-1000: #181617;
+              --color-gray-1000: #181517;
             }
           `}</style>
           <link
