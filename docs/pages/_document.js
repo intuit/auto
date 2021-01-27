@@ -1,6 +1,5 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { formatPath } from "next-ignite";
 
 class MyDocument extends Document {
   render() {
@@ -33,11 +32,12 @@ class MyDocument extends Document {
           `}</style>
           <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css"
+            href="https://www.unpkg.com/prism-themes@1.5.0/themes/prism-coldark-cold.css"
           />
-          <script
-            type="text/javascript"
-            src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"
+          <link
+            rel="stylesheet"
+            href="https://www.unpkg.com/prism-themes@1.5.0/themes/prism-coldark-dark.css"
+            media="(prefers-color-scheme: dark)"
           />
           <script
             async
@@ -60,7 +60,6 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <script src={formatPath("attach-dark-mode.js")} />
           <Main />
           <NextScript />
         </body>

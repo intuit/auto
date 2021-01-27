@@ -6,7 +6,6 @@ import SimpleReactLightbox, { SRLWrapper } from "simple-react-lightbox";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
-import "prismjs/themes/prism.css";
 import "next-ignite/dist/main.css";
 import "../css/syntax-highlighting-overrides.css";
 

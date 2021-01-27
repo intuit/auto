@@ -1,0 +1,10 @@
+{
+  "name": "auto Docs",
+  "short_name": "auto",
+  "theme_color": "#7A0041",
+  "background_color": "#fff",
+  "dark_background_color": "#11151d",
+  "description": "The documentation for using auto.",
+  "display": "standalone",
+  "orientation": "portrait"
+}
