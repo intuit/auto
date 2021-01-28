@@ -135,6 +135,56 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       return this.storedGetBump(message);
     };
 
+    auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
+      if (!auto.git) {
+        return;
+      }
+
+      const VERSIONS = [
+        SEMVER.major,
+        SEMVER.minor,
+        SEMVER.patch,
+        "skip",
+      ] as const;
+
+      const labels = await auto.git.getLabels(pr.number);
+
+      // check if semver label is already on PR
+      if (labels.filter((l) => VERSIONS.includes(l as any)).length > 0) {
+        return;
+      }
+
+      const commits = await auto.git?.getCommitsForPR(pr.number);
+
+      const bumps = await Promise.all(
+        commits.map(async (commit) => {
+          try {
+            return await getBump(commit.commit.message);
+          } catch (error) {
+            auto.logger.verbose.info(
+              `No conventional commit message found for ${commit.sha}`
+            );
+          }
+        })
+      );
+
+      const sorted = bumps.sort((bump1, bump2) => {
+        if (bump1 === undefined) {
+          return -1;
+        }
+
+        if (bump2 === undefined) {
+          return 1;
+        }
+
+        return VERSIONS.indexOf(bump1) - VERSIONS.indexOf(bump2);
+      });
+
+      if (sorted[0] !== undefined) {
+        await auto.git.addLabelToPr(pr.number, sorted[0]);
+      }
+    });
+
     auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
       logParse.hooks.parseCommit.tapPromise(this.name, async (commit) => {
         if (!auto.semVerLabels) {

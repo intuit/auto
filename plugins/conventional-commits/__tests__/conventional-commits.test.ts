@@ -313,3 +313,123 @@ test("should skip when not a fix/feat/breaking change commit", async () => {
     labels: ["skip-release"],
   });
 });
+
+test("should not semver label to pr if semver label exists", async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  const addLabelToPr = jest.fn();
+  const auto = ({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: {
+      getLabels: async () => ["minor"],
+      getCommitsForPR: async () => {
+        return [
+          {
+            sha: "1234",
+            commit: {
+              message: "fix: normal commit",
+            },
+          },
+        ];
+      },
+      addLabelToPr,
+    },
+  } as unknown) as Auto;
+
+  conventionalCommitsPlugin.apply(auto);
+
+  await auto.hooks.prCheck.promise({
+    pr: {
+      number: 1,
+    } as any,
+  });
+
+  expect(addLabelToPr).toHaveBeenCalledTimes(0);
+});
+
+test("should add correct semver label to pr - one commit", async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  const addLabelToPr = jest.fn();
+  const auto = ({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: {
+      getLabels: async () => [],
+      getCommitsForPR: async () => {
+        return [
+          {
+            sha: "1234",
+            commit: {
+              message: "fix: normal commit",
+            },
+          },
+        ];
+      },
+      addLabelToPr,
+    },
+  } as unknown) as Auto;
+
+  conventionalCommitsPlugin.apply(auto);
+
+  await auto.hooks.prCheck.promise({
+    pr: {
+      number: 1,
+    } as any,
+  });
+
+  expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
+});
+
+test("should add correct semver label to pr - multiple commit", async () => {
+  const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+  const autoHooks = makeHooks();
+  const addLabelToPr = jest.fn();
+  const auto = ({
+    hooks: autoHooks,
+    labels: defaultLabels,
+    semVerLabels: versionLabels,
+    logger: dummyLog(),
+    git: {
+      getLabels: async () => [],
+      getCommitsForPR: async () => {
+        return [
+          {
+            sha: "1234",
+            commit: {
+              message: "fix: normal commit",
+            },
+          },
+          {
+            sha: "12345",
+            commit: {
+              message: "minor: normal commit",
+            },
+          },
+          {
+            sha: "123456",
+            commit: {
+              message: "minor: normal commit",
+            },
+          },
+        ];
+      },
+      addLabelToPr,
+    },
+  } as unknown) as Auto;
+
+  conventionalCommitsPlugin.apply(auto);
+
+  await auto.hooks.prCheck.promise({
+    pr: {
+      number: 1,
+    } as any,
+  });
+
+  expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
+});
