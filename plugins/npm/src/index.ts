@@ -35,7 +35,7 @@ import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import { writeFile, isMonorepo, readFile, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
-const VERSION_COMMIT_MESSAGE = "Bump version to: %s [skip ci]";
+const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
 
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
@@ -947,7 +947,7 @@ export default class NPMPlugin implements IPlugin {
             "-m",
             isIndependent
               ? '"Bump independent versions [skip ci]"'
-              : `'"${VERSION_COMMIT_MESSAGE}"'`,
+              : VERSION_COMMIT_MESSAGE,
             this.exact && "--exact",
             ...verboseArgs,
           ]);
