@@ -1,3 +1,24 @@
+# v10.13.3 (Thu Jan 28 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix commit message when using npx in non-monorepo [#1762](https://github.com/intuit/auto/pull/1762) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- fix docs meta descriptions [#1760](https://github.com/intuit/auto/pull/1760) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite [#1759](https://github.com/intuit/auto/pull/1759) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update ignite [#1757](https://github.com/intuit/auto/pull/1757) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- modify docs site colors [#1756](https://github.com/intuit/auto/pull/1756) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update docs site [#1755](https://github.com/intuit/auto/pull/1755) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.13.2 (Mon Jan 25 2021)
 
 #### 🐛 Bug Fix

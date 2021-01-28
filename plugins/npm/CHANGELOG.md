@@ -1,3 +1,16 @@
+# v10.13.3 (Thu Jan 28 2021)
+
+#### 🐛 Bug Fix
+
+- fix commit message when using npx in non-monorepo [#1762](https://github.com/intuit/auto/pull/1762) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix commit message when using npx in non-monorepo ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.13.2 (Mon Jan 25 2021)
 
 #### 🐛 Bug Fix
