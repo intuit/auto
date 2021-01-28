@@ -73,6 +73,8 @@ const optionalOptions = t.partial({
   preset: t.string,
 });
 
+const VERSIONS = [SEMVER.major, SEMVER.minor, SEMVER.patch, "skip"] as const;
+
 export type ConventionalCommitsOptions = t.TypeOf<typeof optionalOptions>;
 
 /**
@@ -117,12 +119,6 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           const whatBump =
             config.recommendedBumpOpts?.whatBump ||
             defaultPreset.recommendedBumpOpts.whatBump;
-          const VERSIONS = [
-            SEMVER.major,
-            SEMVER.minor,
-            SEMVER.patch,
-            "skip",
-          ] as const;
           const result = whatBump([conventionalCommit]);
 
           if (result?.level !== null && result?.level !== undefined) {
@@ -140,17 +136,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         return;
       }
 
-      const VERSIONS = [
-        SEMVER.major,
-        SEMVER.minor,
-        SEMVER.patch,
-        "skip",
-      ] as const;
-
       const labels = await auto.git.getLabels(pr.number);
 
       // check if semver label is already on PR
-      if (labels.filter((l) => VERSIONS.includes(l as any)).length > 0) {
+      if (labels.filter((l) => auto.semVerLabels?.get(l as any)).length > 0) {
         return;
       }
 
@@ -168,19 +157,21 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         })
       );
 
-      const sorted = bumps.sort((bump1, bump2) => {
-        if (bump1 === undefined) {
-          return -1;
-        }
+      const sorted = bumps
+        .filter(
+          (bump): bump is SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" =>
+            bump !== undefined
+        )
+        .sort((bump1, bump2) => {
+          return VERSIONS.indexOf(bump1) - VERSIONS.indexOf(bump2);
+        });
 
-        if (bump2 === undefined) {
-          return 1;
-        }
+      if (!sorted[0]) {
+        return;
+      }
 
-        return VERSIONS.indexOf(bump1) - VERSIONS.indexOf(bump2);
-      });
-
-      if (sorted[0] !== undefined) {
+      const label = auto.semVerLabels?.get(sorted[0]);
+      if (label) {
         await auto.git.addLabelToPr(pr.number, sorted[0]);
       }
     });

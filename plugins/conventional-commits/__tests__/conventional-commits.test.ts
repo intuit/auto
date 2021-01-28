@@ -408,13 +408,13 @@ test("should add correct semver label to pr - multiple commit", async () => {
           {
             sha: "12345",
             commit: {
-              message: "minor: normal commit",
+              message: "feat: normal commit",
             },
           },
           {
             sha: "123456",
             commit: {
-              message: "minor: normal commit",
+              message: "feat: normal commit",
             },
           },
         ];
@@ -431,5 +431,5 @@ test("should add correct semver label to pr - multiple commit", async () => {
     } as any,
   });
 
-  expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
+  expect(addLabelToPr).toHaveBeenCalledWith(1, "minor");
 });
