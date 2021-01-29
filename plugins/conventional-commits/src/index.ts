@@ -137,9 +137,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       }
 
       const labels = await auto.git.getLabels(pr.number);
+      const semVerLabels = [...auto.semVerLabels!.values()].flat();
 
       // check if semver label is already on PR
-      if (labels.filter((l) => auto.semVerLabels?.get(l as any)).length > 0) {
+      if (labels.some((l) => semVerLabels.includes(l))) {
         return;
       }
 

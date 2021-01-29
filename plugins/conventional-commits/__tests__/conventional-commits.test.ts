@@ -1,4 +1,4 @@
-import Auto, { DEFAULT_PRERELEASE_BRANCHES } from "@auto-it/core";
+import Auto, { SEMVER, DEFAULT_PRERELEASE_BRANCHES } from "@auto-it/core";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Git from "@auto-it/core/dist/git";
 import LogParse from "@auto-it/core/dist/log-parse";
@@ -314,17 +314,23 @@ test("should skip when not a fix/feat/breaking change commit", async () => {
   });
 });
 
-test("should not semver label to pr if semver label exists", async () => {
+test("should not add semver label to pr if semver label exists", async () => {
   const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
   const autoHooks = makeHooks();
   const addLabelToPr = jest.fn();
+  const customLabels = [
+    ...defaultLabels,
+    { name: "my-major", releaseType: SEMVER.major } as any,
+  ];
+  const versionLabelsCustom = getVersionMap(customLabels);
+
   const auto = ({
     hooks: autoHooks,
-    labels: defaultLabels,
-    semVerLabels: versionLabels,
+    labels: customLabels,
+    semVerLabels: versionLabelsCustom,
     logger: dummyLog(),
     git: {
-      getLabels: async () => ["minor"],
+      getLabels: async () => ["my-major"],
       getCommitsForPR: async () => {
         return [
           {
@@ -385,6 +391,47 @@ test("should add correct semver label to pr - one commit", async () => {
 
   expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
 });
+
+// test("should add correct semver label to pr - custom labels", async () => {
+//   const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+//   const customLabels = [
+//     ...defaultLabels,
+//     { name: "my-major", releaseType: SEMVER.major } as any,
+//   ];
+//   const versionLabelsCustom = getVersionMap(customLabels);
+//   const autoHooks = makeHooks();
+//   const addLabelToPr = jest.fn();
+//   const auto = ({
+//     hooks: autoHooks,
+//     labels: customLabels,
+//     semVerLabels: versionLabelsCustom,
+//     logger: dummyLog(),
+//     git: {
+//       getLabels: async () => ['my-major'],
+//       getCommitsForPR: async () => {
+//         return [
+//           {
+//             sha: "1234",
+//             commit: {
+//               message: "normal commit",
+//             },
+//           },
+//         ];
+//       },
+//       addLabelToPr,
+//     },
+//   } as unknown) as Auto;
+
+//   conventionalCommitsPlugin.apply(auto);
+
+//   await auto.hooks.prCheck.promise({
+//     pr: {
+//       number: 1,
+//     } as any,
+//   });
+
+//   expect(addLabelToPr).toHaveBeenCalledWith(1, "my-major");
+// });
 
 test("should add correct semver label to pr - multiple commit", async () => {
   const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
