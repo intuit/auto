@@ -2,10 +2,16 @@ import { Options as CoreOptions } from "conventional-changelog-core";
 import { Commit, sync as parse } from "conventional-commits-parser";
 import { promisify } from "util";
 import conventionalChangelogPresetLoader from "conventional-changelog-preset-loader";
+import flatMap from "array.prototype.flatmap";
 import * as t from "io-ts";
 
-import { Auto, IPlugin, SEMVER } from "@auto-it/core";
-// import conventionalCommitsParser, { Commit } from "conventional-commits-parser";
+import {
+  Auto,
+  IPlugin,
+  SEMVER,
+  getReleaseType,
+  getHigherSemverTag,
+} from "@auto-it/core";
 
 /** Resolve a conventional commit preset */
 function presetResolver(presetPackage: CoreOptions.Config) {
@@ -137,7 +143,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       }
 
       const labels = await auto.git.getLabels(pr.number);
-      const semVerLabels = [...auto.semVerLabels!.values()].flat();
+      const semVerLabels = flatMap([...auto.semVerLabels!.values()], (x) => x);
 
       // check if semver label is already on PR
       if (labels.some((l) => semVerLabels.includes(l))) {
@@ -158,22 +164,32 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         })
       );
 
-      const sorted = bumps
-        .filter(
-          (bump): bump is SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" =>
-            bump !== undefined
-        )
-        .sort((bump1, bump2) => {
-          return VERSIONS.indexOf(bump1) - VERSIONS.indexOf(bump2);
-        });
+      const definedBumps = bumps.filter(
+        (bump): bump is SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" =>
+          bump !== undefined
+      );
 
-      if (!sorted[0]) {
+      if (definedBumps.length === 0) {
         return;
       }
 
-      const label = auto.semVerLabels?.get(sorted[0]);
+      const bump = definedBumps
+        .map(getReleaseType)
+        .reduce(getHigherSemverTag, SEMVER.noVersion);
+
+      if (
+        !bump ||
+        bump === SEMVER.premajor ||
+        bump === SEMVER.preminor ||
+        bump === SEMVER.prepatch
+      ) {
+        return;
+      }
+
+      const label = auto.semVerLabels?.get(bump);
+
       if (label) {
-        await auto.git.addLabelToPr(pr.number, sorted[0]);
+        await auto.git.addLabelToPr(pr.number, label[0]);
       }
     });
 
