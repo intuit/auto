@@ -144,6 +144,32 @@ describe("release label plugin", () => {
     expect(comment).not.toHaveBeenCalled();
   });
 
+  test("should do nothing with PR that doesn't exist", async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    getPr.mockRejectedValueOnce(new Error("PR dont exist"));
+    const commit = makeCommitFromMsg("normal commit with no bump (#123)");
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(comment).not.toHaveBeenCalled();
+  });
+
   test("should do nothing without commits", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
