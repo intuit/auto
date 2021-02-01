@@ -191,9 +191,8 @@ const FAQ = () => (
 
 const SampleWorkflow = () => (
   <ContentWrapper>
-    <div className="max-w-4xl mx-10 lg:mx-auto pt-12 pb-16 lg:pb-24">
-      <Divider style={{ height: 1 }} />
-      <h2 className="text-center text-2xl font-semibold mt-12 mb-16 lg:mb-20">
+    <div className="max-w-4xl mx-10 lg:mx-auto pt-20 pb-16 lg:pb-24">
+      <h2 className="text-center text-2xl font-semibold mb-16 lg:mb-20">
         What does the workflow look like? How easy is it really?
       </h2>
 
@@ -264,6 +263,48 @@ const Features = () => (
   </ContentWrapper>
 );
 
+const ReleaseType = ({ type, description, color = "primary" }) => (
+  <div className={`${color} rounded-xl flex-1 py-6 px-8`}>
+    <h3 className="text-white text-2xl mb-4 font-semibold">{type}</h3>
+    <p className="text-gray-100">{description}</p>
+  </div>
+);
+
+const ReleaseTypes = () => (
+  <div className="w-full bg-gray-100 dark:bg-gray-900 py-20">
+    <ContentWrapper>
+      <div className="flex flex-col lg:px-12">
+        <h2 className="text-4xl font-bold mb-6 dark:text-white">
+          A release for any situation!
+        </h2>
+        <p className="text-xl max-w-4xl text-gray-800 dark:text-gray-200 mb-10">
+          <Emphasize>auto</Emphasize> can create multiple types of releases.
+          Each release type guarantees that no matter the situation you'll be
+          able to publish and consume a release with your changes.
+        </p>
+
+        <div className="flex flex-col space-y-4 lg:space-y-0 lg:space-x-6 lg:flex-row w-full">
+          <ReleaseType
+            color="bg-primary-500"
+            type="canary"
+            description="PR build previews that enable your project's consumers to easily test changes."
+          />
+          <ReleaseType
+            color="bg-yellow-600"
+            type="next"
+            description="Easily create and manage pre-releases for your project as you develop large changes."
+          />
+          <ReleaseType
+            color="bg-red-700"
+            type="latest"
+            description="Publish a new full release for the project. Creates changelogs, github releases, and more!"
+          />
+        </div>
+      </div>
+    </ContentWrapper>
+  </div>
+);
+
 const Hero = () => (
   <div className="w-full">
     <div className="bg-primary-500 dark:bg-primary-600 w-full flex justify-center flex-col items-center py-40 text-center">
@@ -312,6 +353,8 @@ const Home = () => (
       <Hero />
 
       <Features />
+
+      <ReleaseTypes />
 
       <SampleWorkflow />
 
