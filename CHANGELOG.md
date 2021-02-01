@@ -1,3 +1,16 @@
+# v10.13.4 (Mon Feb 01 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/released`
+  - released plugin: handle PR numbers that dont exist [#1772](https://github.com/intuit/auto/pull/1772) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.13.3 (Thu Jan 28 2021)
 
 #### 🐛 Bug Fix
