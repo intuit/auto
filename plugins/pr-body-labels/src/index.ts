@@ -33,7 +33,7 @@ export default class PrBodyLabelsPlugin implements IPlugin {
       await Promise.all(
         auto.labels.map(async (label) => {
           if (
-            pr.body.includes(`- [x] \`${label.name}\``) &&
+            pr.body?.includes(`- [x] \`${label.name}\``) &&
             !this.options.disabledLabels.includes(label.name)
           ) {
             await auto.git?.addLabelToPr(pr.number, label.name);

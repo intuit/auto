@@ -727,7 +727,7 @@ export default class Git {
     this.logger.veryVerbose.info("Got PR comments\n", comments);
 
     const oldMessage = comments.data.find((comment) =>
-      comment.body.includes(commentIdentifier)
+      comment.body?.includes(commentIdentifier)
     );
 
     if (!oldMessage) {

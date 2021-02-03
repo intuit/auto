@@ -449,7 +449,7 @@ export default class Release {
   private async getPRsSinceLastRelease() {
     let lastRelease: {
       /** Date the last release was published */
-      published_at: string;
+      published_at: string | null;
     };
 
     try {
@@ -507,19 +507,23 @@ export default class Release {
         return modifiedCommit;
       }
 
-      const labels = info ? info.data.labels.map((l) => l.name) : [];
+      const labels = info
+        ? info.data.labels
+            .map((l) => (typeof l === "string" ? l : l.name))
+            .filter((l): l is string => Boolean(l))
+        : [];
       modifiedCommit.labels = [
         ...new Set([...labels, ...modifiedCommit.labels]),
       ];
       modifiedCommit.pullRequest.body = info.data.body;
       modifiedCommit.subject = info.data.title || modifiedCommit.subject;
       const hasPrOpener = modifiedCommit.authors.some(
-        (author) => author.username === info.data.user.login
+        (author) => author.username === info.data.user?.login
       );
 
       // If we can't find the use who opened the PR in authors attempt
       // to add that user.
-      if (!hasPrOpener) {
+      if (!hasPrOpener && info.data.user) {
         const user = await this.git.getUserByUsername(info.data.user.login);
 
         if (user) {
@@ -545,7 +549,10 @@ export default class Release {
     );
 
     if (!commit.pullRequest && matchPr) {
-      const labels = matchPr.labels.map((label) => label.name) || [];
+      const labels = matchPr.labels
+        .map((label) => label.name)
+        .filter((l): l is string => Boolean(l));
+
       commit.labels = [...new Set([...labels, ...commit.labels])];
       commit.pullRequest = {
         number: matchPr.number,
@@ -580,7 +587,7 @@ export default class Release {
       resolvedAuthors = await Promise.all(
         prCommits.map(async (prCommit) => {
           if (!prCommit.author) {
-            return prCommit.commit.author;
+            return prCommit.commit.author || undefined;
           }
 
           return {

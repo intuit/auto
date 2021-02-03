@@ -857,14 +857,18 @@ export default class Auto {
         state: "closed",
       });
       const lastMerged = pulls
-        .sort(
-          (a, b) =>
-            new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
-        )
+        .sort((a, b) => {
+          const aDate = a.merged_at ? new Date(a.merged_at).getTime() : 0;
+          const bDate = b.merged_at ? new Date(b.merged_at).getTime() : 0;
+
+          return bDate - aDate;
+        })
         .find((pull) => pull.merged_at);
 
       if (lastMerged) {
-        labels = lastMerged.labels.map((label) => label.name);
+        labels = lastMerged.labels
+          .map((label) => label.name)
+          .filter((l): l is string => Boolean(l));
       }
     }
 
@@ -2029,8 +2033,8 @@ export default class Auto {
       const packageAuthor = (await this.hooks.getAuthor.promise()) || {};
       const tokenUser = await this.git?.getUser();
 
-      email = email || packageAuthor.email || tokenUser?.email;
-      name = name || packageAuthor.name || tokenUser?.name;
+      email = email || packageAuthor.email || tokenUser?.email || undefined;
+      name = name || packageAuthor.name || tokenUser?.name || undefined;
 
       this.logger.verbose.warn(`Using author: ${name} <${email}>`);
 
