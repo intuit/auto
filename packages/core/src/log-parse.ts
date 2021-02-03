@@ -3,9 +3,9 @@ import { makeLogParseHooks } from "./utils/make-hooks";
 
 export interface ICommitAuthor {
   /** Author's name */
-  name?: string;
+  name?: string | null;
   /** Author's email */
-  email?: string;
+  email?: string | null;
   /** Author's username */
   username?: string;
   /** The commit this author created */
