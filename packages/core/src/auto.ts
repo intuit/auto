@@ -2230,7 +2230,8 @@ export { IPlugin } from "./utils/load-plugins";
 export { ICommitAuthor, IExtendedCommit } from "./log-parse";
 
 export { default as Auto } from "./auto";
-export { default as SEMVER, VersionLabel } from "./semver";
+export { default as SEMVER } from "./semver";
+export * from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export {
   default as getLernaPackages,
