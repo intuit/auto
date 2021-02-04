@@ -1,3 +1,19 @@
+# v10.15.0 (Wed Feb 03 2021)
+
+#### 🚀 Enhancement
+
+- add --force flag/config option to "next" command [#1776](https://github.com/intuit/auto/pull/1776) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add --force flag/config option to "next" command ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.14.2 (Wed Feb 03 2021)
 
 #### 🐛 Bug Fix
