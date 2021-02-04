@@ -1,3 +1,16 @@
+# v10.14.2 (Wed Feb 03 2021)
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - inject next version into bundled "auto" [#1775](https://github.com/intuit/auto/pull/1775) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.14.1 (Wed Feb 03 2021)
 
 #### 🐛 Bug Fix
