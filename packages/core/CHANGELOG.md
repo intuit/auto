@@ -1,3 +1,16 @@
+# v10.14.1 (Wed Feb 03 2021)
+
+#### 🐛 Bug Fix
+
+- don't check if git clean during dry run [#1774](https://github.com/intuit/auto/pull/1774) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't check if git clean during dry run ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.14.0 (Wed Feb 03 2021)
 
 #### 🚀 Enhancement
