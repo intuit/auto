@@ -1390,11 +1390,15 @@ export default class Auto {
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
-    const bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
+    let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
-    if (bump === "") {
-      this.logger.log.info("No version published.");
-      return;
+    if (bump === SEMVER.noVersion) {
+      if (options.force) {
+        bump = SEMVER.patch;
+      } else {;
+        this.logger.log.info("No version published.");
+        return;
+      }
     }
 
     if (!args.quiet) {
