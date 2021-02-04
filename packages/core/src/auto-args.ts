@@ -154,7 +154,12 @@ export type IShipItOptions = ILatestOptions & {
   onlyGraduateWithReleaseLabel?: boolean;
 };
 
-export type ICanaryOptions = QuietOption & {
+interface ForceOption {
+  /** Always deploy even if marked as skip release */
+  force?: boolean;
+}
+
+export type ICanaryOptions = QuietOption & ForceOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** THe PR to attach the canary to */
@@ -163,11 +168,9 @@ export type ICanaryOptions = QuietOption & {
   build?: number;
   /** The message used when attaching the canary version to a PR */
   message?: string | "false";
-  /** Always deploy a canary, even if the PR is marked as skip release */
-  force?: boolean;
 };
 
-export type INextOptions = QuietOption & {
+export type INextOptions = QuietOption & ForceOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** The message used when attaching the prerelease version to a PR */

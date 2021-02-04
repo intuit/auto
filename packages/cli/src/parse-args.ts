@@ -216,6 +216,13 @@ const noChangelog: AutoOption = {
   config: true,
 };
 
+const force: AutoOption = {
+  name: "force",
+  type: Boolean,
+  group: "main",
+  config: true,
+};
+
 interface AutoCommand extends Command {
   /** Options for the command */
   options?: AutoOption[];
@@ -566,12 +573,9 @@ export const commands: AutoCommand[] = [
         config: true,
       },
       {
-        name: "force",
-        type: Boolean,
-        group: "main",
+        ...force,
         description:
-          "Force a canary release, even if the PR is marked to skip the release",
-        config: true,
+          "Force a next release, even if the last commit is marked to skip the release",
       },
       quiet,
     ],
@@ -595,6 +599,11 @@ export const commands: AutoCommand[] = [
         description:
           "The message used when attaching the prerelease version to a PR",
         config: true,
+      },
+      {
+        ...force,
+        description:
+          "Force a canary release, even if the PR is marked to skip the release",
       },
       quiet,
     ],

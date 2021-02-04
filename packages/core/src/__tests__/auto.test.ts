@@ -1382,6 +1382,33 @@ describe("Auto", () => {
       await auto.next({});
       expect(next).not.toHaveBeenCalled();
     });
+
+    test("can --force release", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "origin";
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLastTagNotInBaseBranch = () =>
+        Promise.reject(new Error("Test"));
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestRelease = () => Promise.resolve("abcd");
+      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
+        ]);
+
+      const next = jest.fn();
+      auto.hooks.next.tap("test", next);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.next({ force: true });
+      expect(next).toHaveBeenCalled();
+    });
   });
 
   describe("shipit", () => {

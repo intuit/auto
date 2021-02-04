@@ -102,6 +102,7 @@ export const globalOptions = t.partial({
   }),
   /** Options to pass to "auto next" */
   next: t.partial({
+    force: t.boolean,
     message: t.string,
   }),
 });
