@@ -208,7 +208,7 @@ describe("postToSlack", () => {
     await plugin.createPost(
       { ...mockAuto, logger } as Auto,
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      '',
+      "",
       undefined
     );
 
@@ -222,7 +222,7 @@ describe("postToSlack", () => {
     await plugin.createPost(
       mockAuto,
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
@@ -240,8 +240,10 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)\n - Another note"),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      sanitizeMarkdown(
+        "# My Notes\n- PR [some link](google.com)\n - Another note"
+      ),
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
@@ -259,8 +261,10 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)\n  - Another note"),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      sanitizeMarkdown(
+        "# My Notes\n- PR [some link](google.com)\n  - Another note"
+      ),
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
@@ -280,8 +284,8 @@ describe("postToSlack", () => {
     await plugin.createPost(
       mockAuto,
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
-      createHttpsProxyAgent('mock-url')
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      createHttpsProxyAgent("mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -298,8 +302,10 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown(`# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
+      sanitizeMarkdown(
+        `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`
+      ),
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
@@ -314,8 +320,8 @@ describe("postToSlack", () => {
     await plugin.createPost(
       mockAuto,
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      '*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*',
-      createHttpsProxyAgent('mock-url')
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      createHttpsProxyAgent("mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -392,6 +398,26 @@ describe("postToSlack", () => {
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe("https://foo.bar?token=MY_TOKEN");
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+
+  test("should add title", async () => {
+    process.env.SLACK_WEBHOOK_URL = "https://foo.bar";
+    const plugin = new SlackPlugin({ title: "My Cool Project" });
+    const hooks = makeHooks();
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: [makeCommitFromMsg("a patch")],
+      releaseNotes: "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 });

@@ -44,6 +44,8 @@ const pluginOptions = t.partial({
   atTarget: t.string,
   /** Allow users to opt into having prereleases posted to slack */
   publishPreRelease: t.boolean,
+  /** Additional Title to add at the start of the slack message */
+  title: t.string,
 });
 
 export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -62,6 +64,7 @@ export default class SlackPlugin implements IPlugin {
       this.options = { url: options, atTarget: "channel" };
     } else {
       this.options = {
+        ...options,
         url: process.env.SLACK_WEBHOOK_URL || options.url || "",
         atTarget: options.atTarget ? options.atTarget : "channel",
         publishPreRelease: options.publishPreRelease
@@ -178,7 +181,9 @@ export default class SlackPlugin implements IPlugin {
       method: "POST",
       body: JSON.stringify({
         text: [
-          `@${this.options.atTarget}: New release ${releaseUrl}`,
+          `${this.options.title ? `${this.options.title}\n\n` : ""}@${
+            this.options.atTarget
+          }: New release ${releaseUrl}`,
           releaseNotes,
         ].join("\n"),
         link_names: 1,
