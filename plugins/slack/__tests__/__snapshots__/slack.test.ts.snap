@@ -4,6 +4,8 @@ exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `"
 
 exports[`postToSlack should add more indents to nested lists 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
 
+exports[`postToSlack should add title 1`] = `"{\\"text\\":\\"My Cool Project\\\\n\\\\n@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+
 exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
 
 exports[`postToSlack should call slack api in env var 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
