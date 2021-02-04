@@ -1,3 +1,19 @@
+# v10.16.0 (Thu Feb 04 2021)
+
+#### 🚀 Enhancement
+
+- add title option [#1777](https://github.com/intuit/auto/pull/1777) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add title option ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.15.0 (Wed Feb 03 2021)
 
 #### 🚀 Enhancement
