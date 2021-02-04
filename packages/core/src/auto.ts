@@ -1202,7 +1202,9 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean();
+    }
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -1332,7 +1334,10 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean()
+    }
+
     await this.setGitUser();
 
     this.hooks.onCreateLogParse.tap(
@@ -1664,7 +1669,9 @@ export default class Auto {
       noCommit: options.noChangelog,
     });
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean();
+    }
 
     this.logger.verbose.info("Calling version hook");
     await this.hooks.version.promise({
