@@ -623,7 +623,8 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (!mainOptions._command) {
     if (mainOptions.version) {
-      console.log(`v${getAutoVersion()}`);
+      const version = process.env.AUTO_CLI_VERSION || getAutoVersion();
+      console.log(`v${version}`);
     }
 
     return [];
