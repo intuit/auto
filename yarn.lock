@@ -59,10 +59,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.16.1"
+  version "10.16.2"
 
 "@auto-it/core@link:packages/core":
-  version "10.16.1"
+  version "10.16.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -102,7 +102,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.16.1"
+  version "10.16.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -119,13 +119,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.16.1"
+  version "10.16.2"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.16.1"
+  version "10.16.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -135,7 +135,7 @@
     tslib "2.0.3"
 
 "@auto-it/slack@link:plugins/slack":
-  version "10.16.1"
+  version "10.16.2"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -3221,9 +3221,9 @@
   integrity sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==
 
 "@types/prettier@^2.0.0", "@types/prettier@^2.0.1":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.6.tgz#f4b1efa784e8db479cdb8b14403e2144b1e9ff03"
-  integrity sha512-6gOkRe7OIioWAXfnO/2lFiv+SJichKVSys1mSsgyrYHSEjk8Ctv4tSR/Odvnu+HWlH2C8j53dahU03XmQdd5fA==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.2.0.tgz#a4e8205a4955690eef712a6d0394a1d2e121e721"
+  integrity sha512-O3SQC6+6AySHwrspYn2UvC6tjo6jCTMMmylxZUFhE1CulVu5l3AxU6ca9lrJDTQDVllF62LIxVSx5fuYL6LiZg==
 
 "@types/readable-stream@^2.3.9":
   version "2.3.9"
