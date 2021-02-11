@@ -44,7 +44,7 @@
     "conventional-commits-parser": "^3.1.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/conventional-changelog-core": "^4.1.1",
