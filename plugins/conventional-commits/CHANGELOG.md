@@ -1,3 +1,17 @@
+# v10.16.1 (Thu Feb 11 2021)
+
+#### 🐛 Bug Fix
+
+- When calculating "next" lastTag, fallback to latest tag in baseBranch before first commit [#1791](https://github.com/intuit/auto/pull/1791) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add more logging to conventional commits [#1793](https://github.com/intuit/auto/pull/1793) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add more logging to conventional commits ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.15.0 (Wed Feb 03 2021)
 
 #### 🚀 Enhancement
