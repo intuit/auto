@@ -1,3 +1,33 @@
+# v10.16.3 (Thu Feb 11 2021)
+
+### Release Notes
+
+#### Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver ([#1802](https://github.com/intuit/auto/pull/1802))
+
+This release changes the tag used for the "Canary Releases Assets" created by the `upload-assets` plugin to be `0.0.0-canary`.
+This new tag is a valid semantic version and can be used with other auto commands.
+
+If you already have a canary release assets releases this change will create another under a different tag.
+This mean you'll have an old "Canary Releases Assets" release that never updates, feel free to delete the tag/release or just ignore it if you want the urls to the old assets to still exist.
+
+---
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver [#1802](https://github.com/intuit/auto/pull/1802) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- add automated TOC to hooks documentation [#1801](https://github.com/intuit/auto/pull/1801) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- update docs to always have latest default labels [#1798](https://github.com/intuit/auto/pull/1798) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.2 (Thu Feb 11 2021)
 
 #### 🐛 Bug Fix
