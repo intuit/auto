@@ -34,6 +34,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -64,6 +65,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -111,6 +113,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -148,6 +151,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -185,6 +189,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -218,6 +223,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -251,6 +257,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options: { ...options, baseUrl: "https://github.my.com/api/v3" },
         github: {
@@ -297,6 +304,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -330,6 +338,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -373,6 +382,7 @@ describe("Upload Assets Plugin", () => {
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
@@ -405,15 +415,16 @@ describe("Upload Assets Plugin", () => {
     const hooks = makeHooks();
     const deleteReleaseAsset = jest.fn();
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
-          repos: { uploadReleaseAsset, createRelease, deleteReleaseAsset },
+          repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
           paginate: jest.fn().mockResolvedValue(new Array(303).fill({})),
         },
       },
@@ -443,15 +454,16 @@ describe("Upload Assets Plugin", () => {
     const hooks = makeHooks();
     const deleteReleaseAsset = jest.fn();
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         github: {
-          repos: { uploadReleaseAsset, createRelease, deleteReleaseAsset },
+          repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
           paginate: jest.fn().mockResolvedValue(new Array(300).fill({})),
         },
       },
