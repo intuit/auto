@@ -45,6 +45,14 @@ describe("Gh-Pages Plugin", () => {
       expect(execSpy).not.toHaveBeenCalled();
     });
 
+    test("should not release on anything on a dry run", async () => {
+      const hooks = createTest({ dir: "test" });
+
+      await hooks.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
+
+      expect(execSpy).not.toHaveBeenCalled();
+    });
+
     test("should not release if there is a version bump", async () => {
       const hooks = createTest({ dir: "test" }, { getVersion: () => "patch" });
 
