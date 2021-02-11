@@ -15,6 +15,7 @@ import link from "terminal-link";
 import * as t from "io-ts";
 
 type AssetResponse = RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["response"]["data"];
+type GitHubRelease = RestEndpointMethodTypes["repos"]["getReleaseByTag"]["response"]["data"];
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
@@ -80,7 +81,7 @@ export default class UploadAssetsPlugin implements IPlugin {
     auto.hooks.canary.tapPromise(
       this.name,
       async ({ canaryIdentifier, dryRun }) => {
-        const canaryRelease = await this.getCanaryGitHubRelease(auto);
+        const canaryRelease = await this.getCanaryGitHubRelease(auto, true);
 
         auto.logger.log.info(endent`${
           dryRun ? "Would update" : "Updating"
@@ -233,8 +234,13 @@ export default class UploadAssetsPlugin implements IPlugin {
       .reduce((acc, item) => [...acc, ...item], []);
   }
 
+  // prettier-ignore
+  private async getCanaryGitHubRelease(auto: Auto): Promise<GitHubRelease | undefined>
+  // prettier-ignore
+  private async getCanaryGitHubRelease(auto: Auto, create: true): Promise<GitHubRelease>
+  // prettier-ignore
   /** Get the release all the canaries are stored in */
-  private async getCanaryGitHubRelease(auto: Auto) {
+  private async getCanaryGitHubRelease(auto: Auto, create = false): Promise<GitHubRelease | undefined> {
     try {
       const canaryRelease = await auto.git!.github.repos.getReleaseByTag({
         repo: auto.git!.options.repo,
@@ -244,6 +250,10 @@ export default class UploadAssetsPlugin implements IPlugin {
 
       return canaryRelease.data;
     } catch (error) {
+      if (!create) {
+        return;
+      }
+
       const canaryRelease = await auto.git!.github.repos.createRelease({
         repo: auto.git!.options.repo,
         owner: auto.git!.options.owner,
@@ -260,6 +270,11 @@ export default class UploadAssetsPlugin implements IPlugin {
   /** Delete old canary asset */
   private async cleanupCanaryAssets(auto: Auto) {
     const canaryRelease = await this.getCanaryGitHubRelease(auto);
+
+    if (!canaryRelease) {
+      return;
+    }
+
     const canaryReleaseAssets = await auto.git!.github.paginate(
       auto.git!.github.repos.listReleaseAssets,
       {
