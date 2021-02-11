@@ -5,14 +5,14 @@ title: Jenkins 2
 The following config declares the `release` action that run on all branches. The job will either release:
 
 - a new `latest` version from `baseBranch`
-- a `canary` build from a pull request (only on the main fork and if your package manager plugin implements them)
+- a `canary` build from a pull request (only if your package manager plugin supports it)
 
 **`Jenkinsfile`**
 
-> :warning:You must use some sort of step that implements `skip ci` functionality. Otherwise you will get stuck in a release loop!
+> :warning: You must use some sort of step that implements `skip ci` functionality.
+> Otherwise you will get stuck in a release loop!
 
 ```groovy
-
 pipeline {
   environment {
     NPM_TOKEN = credentials('NPM_TOKEN')
@@ -56,20 +56,8 @@ pipeline {
     stage('Publish') {
       parallel {
         stage('Canary') {
-          when {
-            allOf {
-              changeRequest();
-              expression { env.CHANGE_BRANCH != 'next' }
-            }
-          }
+          when { changeRequest(); }
           steps {
-            sh "auto shipit"
-          }
-        }
-        stage('Next') {
-          when { branch 'next' }
-          steps {
-            sh 'git checkout -b next'
             sh "auto shipit"
           }
         }
@@ -95,6 +83,56 @@ pipeline {
   }
 }
 ```
+
+## Configuring Prereleases
+
+For `auto`'s prerelease to work you need to makes sure that you jenkins instance is configured correctly.
+
+1. Go to `General > Projects > GitHub Organization` and add a `Behaviors` that enables branch builds.
+
+   ![A screenshot of the jenkins configuration](/jenkins-next-branches.png)
+
+2. Add this to the top of your `Jenkinsfile`. 
+
+   ```groovy
+   // Exit the branch build if not on "baseBranch" or a prerelease, but still do PR builds
+   if (env.BRANCH_NAME != "master" && env.BRANCH_NAME != "next" && !env.BRANCH_NAME.startsWith('PR-')) {
+     echo ("Aborting build. Only the master/next branch and PR builds run.")
+     currentBuild.result = 'SUCCESS'
+     return
+    }
+   ```
+
+   If your successful you will see two separate builds in your PRs: `pr-merge` and `branch`.
+
+3. Modify your `canary` stage to not build the prerelease branch
+
+   ```groovy
+   stage('Canary') {
+     when {
+       allOf {
+         changeRequest();
+         expression { env.CHANGE_BRANCH != 'next' }
+       }
+     }
+     steps {
+       sh "auto shipit"
+     }
+   }
+   ```
+4. Add a stage for the prerelease
+
+   ```groovy
+   stage('Next') {
+     when { branch 'next' }
+     steps {
+       sh 'git checkout -b next'
+       sh "auto shipit"
+     }
+   }
+   ```
+
+5. Open a PR from your prerelease branch into your baseBranch and enjoy your prerelease! :tada:
 
 ## Troubleshooting
 
