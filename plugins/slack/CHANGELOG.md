@@ -1,3 +1,15 @@
+# v10.16.2 (Thu Feb 11 2021)
+
+#### 📝 Documentation
+
+- improve jenkins/next docs [#1794](https://github.com/intuit/auto/pull/1794) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.0 (Thu Feb 04 2021)
 
 #### 🚀 Enhancement

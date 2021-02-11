@@ -1,3 +1,20 @@
+# v10.16.2 (Thu Feb 11 2021)
+
+#### 🐛 Bug Fix
+
+- Do not execute gh-pages build during a dry run [#1797](https://github.com/intuit/auto/pull/1797) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Do not execute gh-pages build during a dry run ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- improve jenkins/next docs [#1794](https://github.com/intuit/auto/pull/1794) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.15.0 (Wed Feb 03 2021)
 
 #### 🚀 Enhancement
