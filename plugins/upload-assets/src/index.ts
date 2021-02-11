@@ -19,6 +19,7 @@ type GitHubRelease = RestEndpointMethodTypes["repos"]["getReleaseByTag"]["respon
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
+const canaryTag = "0.0.0-canary";
 
 const requiredPluginOptions = t.interface({
   /** Paths to assets to upload */
@@ -245,7 +246,7 @@ export default class UploadAssetsPlugin implements IPlugin {
       const canaryRelease = await auto.git!.github.repos.getReleaseByTag({
         repo: auto.git!.options.repo,
         owner: auto.git!.options.owner,
-        tag: "canary",
+        tag: auto.prefixRelease(canaryTag),
       });
 
       return canaryRelease.data;
@@ -257,7 +258,7 @@ export default class UploadAssetsPlugin implements IPlugin {
       const canaryRelease = await auto.git!.github.repos.createRelease({
         repo: auto.git!.options.repo,
         owner: auto.git!.options.owner,
-        tag_name: "canary",
+        tag_name:  auto.prefixRelease(canaryTag),
         name: "Canary Assets",
         prerelease: true,
         body: `This release contains preview assets of Pull Requests.`,
