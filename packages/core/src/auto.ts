@@ -1384,9 +1384,14 @@ export default class Auto {
     const [, latestTagInBranch] = await on(
       this.git.getLatestTagInBranch(currentBranch)
     );
+    const [, tagsInBaseBranch] = await on(
+      this.git.getTags(`origin/${this.baseBranch}`)
+    );
+    const [latestTagInBaseBranch] = (tagsInBaseBranch || []).reverse();
     const lastTag =
       lastTagNotInBaseBranch ||
       latestTagInBranch ||
+      latestTagInBaseBranch ||
       (await this.git.getFirstCommit());
 
     const fullReleaseNotes = await this.release.generateReleaseNotes(
@@ -1400,7 +1405,7 @@ export default class Auto {
     if (bump === SEMVER.noVersion) {
       if (options.force) {
         bump = SEMVER.patch;
-      } else {;
+      } else {
         this.logger.log.info("No version published.");
         return;
       }
