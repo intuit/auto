@@ -200,7 +200,8 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         }
 
         try {
-          const label = await getBump(`${commit.subject}\n\n${commit.rawBody}`);
+          const message = `${commit.subject}\n\n${commit.rawBody}`;
+          const label = await getBump(message);
 
           if (!label) {
             return commit;
@@ -220,6 +221,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             incrementLabel &&
             !commit.labels.some((l) => allSemVerLabels.includes(l))
           ) {
+            auto.logger.verbose.log(
+              `Found "${label}" from conventional commit message: ${message}`
+            );
+
             commit.labels = [...commit.labels, incrementLabel[0]];
           }
         } catch (error) {
