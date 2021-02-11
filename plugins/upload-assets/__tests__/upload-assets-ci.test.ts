@@ -29,19 +29,18 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest
-      .fn()
-      .mockImplementation(({ name }) =>
-        Promise.resolve({
-          data: { id: 2, name, browser_download_url: `http://${name}` },
-        })
-      );
+    const uploadReleaseAsset = jest.fn().mockImplementation(({ name }) =>
+      Promise.resolve({
+        data: { id: 2, name, browser_download_url: `http://${name}` },
+      })
+    );
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
     const addToPrBody = jest.fn();
 
     plugin.apply(({
       hooks,
       logger: dummyLog(),
+      prefixRelease: (v) => v,
       git: {
         options,
         addToPrBody,
