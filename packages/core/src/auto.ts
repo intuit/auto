@@ -1335,7 +1335,7 @@ export default class Auto {
     }
 
     if (!options.dryRun) {
-      await this.checkClean()
+      await this.checkClean();
     }
 
     await this.setGitUser();

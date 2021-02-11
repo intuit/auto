@@ -584,12 +584,13 @@ export const commands: AutoCommand[] = [
     name: "next",
     group: "Release Commands",
     description: endent`
-      Make a release for your "prerelease" release line. This is ran automatically from "shipit".
+      Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
 
       1. Creates a prerelease on package management platform
-      2. Creates a "Pre Release" on GitHub releases page.
+      2. Creates a "Pre Release" on GitHub releases page
+      3. If ran from a PR build in a CI, posts the prerelease's full releases notes and expected version of the prerelease
 
-      Calling the \`next\` command from a prerelease branch will publish a prerelease, otherwise it will publish to the default prerelease branch.
+      Calling the \`next\` command from a prerelease branch will publish a prerelease for just that branch, otherwise it will publish to the default prerelease branch.
     `,
     examples: ["{green $} auto next"],
     options: [
