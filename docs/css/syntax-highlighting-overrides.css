@@ -9,3 +9,7 @@
 * {
   text-shadow: none !important;
 }
+
+#ignite .toc ol li {
+  list-style-type: disc;
+}
