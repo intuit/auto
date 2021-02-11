@@ -1755,9 +1755,10 @@ export default class Auto {
     }
 
     const isPrerelease = this.inPrereleaseBranch();
+    const [, latestTagInBranch] = await on(this.git.getLatestTagInBranch());
     const lastRelease =
       from ||
-      (isPrerelease && (await this.git.getLatestTagInBranch())) ||
+      (isPrerelease && latestTagInBranch) ||
       (await this.git.getLatestRelease());
     let calculatedBump = await this.release.getSemverBump(lastRelease);
 
