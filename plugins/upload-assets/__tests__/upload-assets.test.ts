@@ -93,6 +93,7 @@ describe("Upload Assets Plugin", () => {
         release_id: "123",
       })
     );
+    expect(createRelease).not.toHaveBeenCalled();
   });
 
   test("should upload a single canary asset", async () => {
@@ -196,7 +197,7 @@ describe("Upload Assets Plugin", () => {
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",
       bump: SEMVER.patch,
-      dryRun: true
+      dryRun: true,
     });
 
     expect(uploadReleaseAsset).not.toHaveBeenCalled();
