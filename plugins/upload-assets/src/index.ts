@@ -262,6 +262,7 @@ export default class UploadAssetsPlugin implements IPlugin {
         name: "Canary Assets",
         prerelease: true,
         body: `This release contains preview assets of Pull Requests.`,
+        target_commitish: await auto.git?.getFirstCommit()
       });
 
       return canaryRelease.data;

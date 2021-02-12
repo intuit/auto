@@ -43,6 +43,7 @@ describe("Upload Assets Plugin", () => {
       prefixRelease: (v) => v,
       git: {
         options,
+        getFirstCommit: () => 'abc',
         addToPrBody,
         github: {
           repos: { uploadReleaseAsset, createRelease },
