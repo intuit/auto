@@ -1,3 +1,15 @@
+# v10.16.5 (Thu Feb 11 2021)
+
+#### 🐛 Bug Fix
+
+- build the s3 plugin [#1804](https://github.com/intuit/auto/pull/1804) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.4 (Thu Feb 11 2021)
 
 #### 🐛 Bug Fix
