@@ -80,7 +80,7 @@
     "@types/graphql": "^14.2.0",
     "@types/jest": "~26.0.7",
     "@types/lodash.chunk": "^4.2.6",
-    "@types/node": "^13.1.8",
+    "@types/node": "^14.14.26",
     "@types/node-fetch": "2.5.7",
     "@types/semver": "^7.1.0",
     "@types/signale": "^1.2.1",
