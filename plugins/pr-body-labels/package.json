@@ -39,6 +39,6 @@
     "@auto-it/core": "link:../../packages/core",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

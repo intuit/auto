@@ -43,7 +43,7 @@
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
     "node-fetch": "2.6.1",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/node-fetch": "2.5.7",
