@@ -1,3 +1,16 @@
+# v10.16.4 (Thu Feb 11 2021)
+
+#### 🐛 Bug Fix
+
+- make canary assets tag at the start of history to avoid tag calculation bugs [#1803](https://github.com/intuit/auto/pull/1803) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- make canary assets tag at the start of history to avoid tag calculation bugs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.3 (Thu Feb 11 2021)
 
 ### Release Notes
