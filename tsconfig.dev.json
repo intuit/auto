@@ -85,6 +85,9 @@
     },
     {
       "path": "plugins/magic-zero"
+    },
+    {
+      "path": "plugins/s3"
     }
   ]
 }
