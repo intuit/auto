@@ -64,10 +64,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.16.2"
+  version "10.16.5"
 
 "@auto-it/core@link:packages/core":
-  version "10.16.2"
+  version "10.16.5"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -107,7 +107,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.16.2"
+  version "10.16.5"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -124,13 +124,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.16.2"
+  version "10.16.5"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.16.2"
+  version "10.16.5"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -140,7 +140,7 @@
     tslib "2.1.0"
 
 "@auto-it/slack@link:plugins/slack":
-  version "10.16.2"
+  version "10.16.5"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -4171,11 +4171,10 @@ await-to-js@^2.1.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-cli-js@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.0.6.tgz#2772bf1283838b75bc3b57bd988bdd63bf3e3d9d"
-  integrity sha512-fxNyextpwSdVq0fRDrsjD+OX28aZFbBbqIEjft2ef77OnmOlNMsSHZyGkxBQJozGB2EWdKX4kM5yn+9yPZLxBQ==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.1.0.tgz#b48c82858151c8e2a926289db6aec329908187c8"
+  integrity sha512-fU2AjQ/uivh75bO3SWjAril0AKSM7I83VRpvpigAbC2iE3hLgMemmypl78BRH3bo5BBpdmXYLhM0p5wNUex8BA==
   dependencies:
-    lodash "4.17.15"
     nodeify-ts "1.0.6"
 
 aws-sign2@~0.7.0:
@@ -10191,11 +10190,6 @@ lodash.uniqwith@4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniqwith/-/lodash.uniqwith-4.5.0.tgz#7a0cbf65f43b5928625a9d4d0dc54b18cadc7ef3"
   integrity sha1-egy/ZfQ7WShiWp1NDcVLGMrcfvM=
-
-lodash@4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
 lodash@4.x, lodash@^4.11.2, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.2.1:
   version "4.17.20"
