@@ -1,6 +1,13 @@
 # Jira Plugin
 
-To include Jira story information in your changelogs you must include a URL to your hosted JIRA instance.
+Include links to Jira stories in your changelogs.
+
+This plugin will create links to Jira stories using the following syntax in a pull request title:
+
+```txt
+JIRA-123: My pull request title
+[JIRA-123]: My pull request title
+```
 
 ## Installation
 
