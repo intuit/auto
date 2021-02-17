@@ -2,10 +2,16 @@ import { Options as CoreOptions } from "conventional-changelog-core";
 import { Commit, sync as parse } from "conventional-commits-parser";
 import { promisify } from "util";
 import conventionalChangelogPresetLoader from "conventional-changelog-preset-loader";
+import flatMap from "array.prototype.flatmap";
 import * as t from "io-ts";
 
-import { Auto, IPlugin, SEMVER } from "@auto-it/core";
-// import conventionalCommitsParser, { Commit } from "conventional-commits-parser";
+import {
+  Auto,
+  IPlugin,
+  SEMVER,
+  getReleaseType,
+  getHigherSemverTag,
+} from "@auto-it/core";
 
 /** Resolve a conventional commit preset */
 function presetResolver(presetPackage: CoreOptions.Config) {
@@ -73,6 +79,8 @@ const optionalOptions = t.partial({
   preset: t.string,
 });
 
+const VERSIONS = [SEMVER.major, SEMVER.minor, SEMVER.patch, "skip"] as const;
+
 export type ConventionalCommitsOptions = t.TypeOf<typeof optionalOptions>;
 
 /**
@@ -117,12 +125,6 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           const whatBump =
             config.recommendedBumpOpts?.whatBump ||
             defaultPreset.recommendedBumpOpts.whatBump;
-          const VERSIONS = [
-            SEMVER.major,
-            SEMVER.minor,
-            SEMVER.patch,
-            "skip",
-          ] as const;
           const result = whatBump([conventionalCommit]);
 
           if (result?.level !== null && result?.level !== undefined) {
@@ -135,6 +137,62 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       return this.storedGetBump(message);
     };
 
+    auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
+      if (!auto.git) {
+        return;
+      }
+
+      const labels = await auto.git.getLabels(pr.number);
+      const semVerLabels = flatMap([...auto.semVerLabels!.values()], (x) => x);
+
+      // check if semver label is already on PR
+      if (labels.some((l) => semVerLabels.includes(l))) {
+        return;
+      }
+
+      const commits = await auto.git?.getCommitsForPR(pr.number);
+
+      const bumps = await Promise.all(
+        commits.map(async (commit) => {
+          try {
+            return await getBump(commit.commit.message);
+          } catch (error) {
+            auto.logger.verbose.info(
+              `No conventional commit message found for ${commit.sha}`
+            );
+          }
+        })
+      );
+
+      const definedBumps = bumps.filter(
+        (bump): bump is SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" =>
+          bump !== undefined
+      );
+
+      if (definedBumps.length === 0) {
+        return;
+      }
+
+      const bump = definedBumps
+        .map(getReleaseType)
+        .reduce(getHigherSemverTag, SEMVER.noVersion);
+
+      if (
+        !bump ||
+        bump === SEMVER.premajor ||
+        bump === SEMVER.preminor ||
+        bump === SEMVER.prepatch
+      ) {
+        return;
+      }
+
+      const label = auto.semVerLabels?.get(bump);
+
+      if (label) {
+        await auto.git.addLabelToPr(pr.number, label[0]);
+      }
+    });
+
     auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
       logParse.hooks.parseCommit.tapPromise(this.name, async (commit) => {
         if (!auto.semVerLabels) {
@@ -142,7 +200,8 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         }
 
         try {
-          const label = await getBump(`${commit.subject}\n\n${commit.rawBody}`);
+          const message = `${commit.subject}\n\n${commit.rawBody}`;
+          const label = await getBump(message);
 
           if (!label) {
             return commit;
@@ -162,6 +221,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             incrementLabel &&
             !commit.labels.some((l) => allSemVerLabels.includes(l))
           ) {
+            auto.logger.verbose.log(
+              `Found "${label}" from conventional commit message: ${message}`
+            );
+
             commit.labels = [...commit.labels, incrementLabel[0]];
           }
         } catch (error) {

@@ -12,7 +12,6 @@ import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
   SyncHook,
-  SyncWaterfallHook,
   AsyncSeriesHook,
   AsyncSeriesWaterfallHook,
 } from "tapable";
@@ -139,7 +138,7 @@ type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["respon
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
-  modifyConfig: SyncWaterfallHook<[LoadedAutoRc]>;
+  modifyConfig: AsyncSeriesWaterfallHook<[LoadedAutoRc]>;
   /** Validate what is in the config. You must return the config in this hook. */
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
@@ -347,6 +346,23 @@ function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
+/** Check if a repo has a branch */
+function hasBranch(branch: string) {
+  try {
+    const branches = execSync("git branch --list --all", {
+      encoding: "utf-8",
+    }).split("\n");
+
+    return branches.some((b) => {
+      const parts = b.split("/");
+
+      return b === branch || parts[parts.length - 1] === branch;
+    });
+  } catch (error) {
+    return false;
+  }
+}
+
 /** The Error that gets thrown when a label existence check fails */
 export class LabelExistsError extends Error {
   /**
@@ -369,7 +385,7 @@ export default class Auto {
   logger: ILogger;
   /** Options auto was initialized with */
   options: ApiOptions;
-  /** The branch auto uses as master. */
+  /** The branch auto uses as the base. */
   baseBranch: string;
   /** The remote git to push changes to. This is the full URL with auth */
   remote!: string;
@@ -391,7 +407,8 @@ export default class Auto {
   /** Initialize auto and it's environment */
   constructor(options: ApiOptions = {}) {
     this.options = options;
-    this.baseBranch = options.baseBranch || "master";
+    this.baseBranch =
+      options.baseBranch || (hasBranch("main") && "main") || "master";
     setLogLevel(
       "quiet" in options && options.quiet
         ? "quiet"
@@ -552,7 +569,7 @@ export default class Auto {
     };
     this.loadPlugins(this.config!);
     this.loadDefaultBehavior();
-    this.config = this.hooks.modifyConfig.call(this.config!);
+    this.config = await this.hooks.modifyConfig.promise(this.config!);
     this.labels = this.config.labels;
     this.semVerLabels = getVersionMap(this.config.labels);
     await this.hooks.beforeRun.promise(this.config);
@@ -840,14 +857,18 @@ export default class Auto {
         state: "closed",
       });
       const lastMerged = pulls
-        .sort(
-          (a, b) =>
-            new Date(b.merged_at).getTime() - new Date(a.merged_at).getTime()
-        )
+        .sort((a, b) => {
+          const aDate = a.merged_at ? new Date(a.merged_at).getTime() : 0;
+          const bDate = b.merged_at ? new Date(b.merged_at).getTime() : 0;
+
+          return bDate - aDate;
+        })
         .find((pull) => pull.merged_at);
 
       if (lastMerged) {
-        labels = lastMerged.labels.map((label) => label.name);
+        labels = lastMerged.labels
+          .map((label) => label.name)
+          .filter((l): l is string => Boolean(l));
       }
     }
 
@@ -931,10 +952,13 @@ export default class Auto {
     const prNumber = getPrNumberFromEnv(pr);
 
     if (!prNumber) {
-      // If pr-check is ran on CI on master then we exit successfully since
+      // If pr-check is ran on CI on baseBranch then we exit successfully since
       // running pr-check in this scenario wouldn't make sense anyway. Enables
       // adding this command without resorting to bash if/else statements.
-      if (env.isCi && (env.branch === "master" || this.inPrereleaseBranch())) {
+      if (
+        env.isCi &&
+        (env.branch === this.baseBranch || this.inPrereleaseBranch())
+      ) {
         process.exit(0);
       }
 
@@ -1159,6 +1183,7 @@ export default class Auto {
   }
 
   /** Create a canary (or test) version of the project */
+  // eslint-disable-next-line complexity
   async canary(args: ICanaryOptions = {}): Promise<ShipitInfo | undefined> {
     const options = { ...this.getCommandDefault("canary"), ...args };
 
@@ -1177,7 +1202,9 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean();
+    }
 
     let { pr, build } = await this.getPrEnvInfo();
     pr = options.pr ? String(options.pr) : pr;
@@ -1187,7 +1214,19 @@ export default class Auto {
 
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const commitsInRelease = await this.release.getCommitsInRelease(from);
+
+    this.logger.veryVerbose.info(
+      "Found commits in canary release",
+      commitsInRelease
+    );
+
     const labels = commitsInRelease.map((commit) => commit.labels);
+
+    if (pr) {
+      const prLabels = await this.git.getLabels(Number(pr));
+      labels.push(prLabels);
+    }
+
     let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
 
     if (bump === SEMVER.noVersion) {
@@ -1274,7 +1313,7 @@ export default class Auto {
   }
 
   /**
-   * Create a next (or test) version of the project. If on master will
+   * Create a next (or test) version of the project. If on baseBranch will
    * release to the default "next" branch.
    */
   async next(args: INextOptions): Promise<ShipitInfo | undefined> {
@@ -1295,21 +1334,32 @@ export default class Auto {
       process.exit(0);
     }
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean();
+    }
+
     await this.setGitUser();
 
-    this.hooks.onCreateLogParse.tap("Omit merges from master", (logParse) => {
-      logParse.hooks.omitCommit.tap("Omit merges from master", (commit) => {
-        const shouldOmit = commit.subject.match(/^Merge (?:\S+\/)*master/);
+    this.hooks.onCreateLogParse.tap(
+      `Omit merges from ${this.baseBranch}`,
+      (logParse) => {
+        logParse.hooks.omitCommit.tap(
+          `Omit merges from ${this.baseBranch}`,
+          (commit) => {
+            const shouldOmit = commit.subject.match(
+              new RegExp(`^Merge (?:\\S+\\/)*${this.baseBranch}`)
+            );
 
-        if (shouldOmit) {
-          this.logger.verbose.info(
-            `Omitting merge commit from master: ${commit.subject}`
-          );
-          return true;
-        }
-      });
-    });
+            if (shouldOmit) {
+              this.logger.verbose.info(
+                `Omitting merge commit from ${this.baseBranch}: ${commit.subject}`
+              );
+              return true;
+            }
+          }
+        );
+      }
+    );
 
     const currentBranch = getCurrentBranch();
     const forkPoints = (
@@ -1334,9 +1384,14 @@ export default class Auto {
     const [, latestTagInBranch] = await on(
       this.git.getLatestTagInBranch(currentBranch)
     );
+    const [, tagsInBaseBranch] = await on(
+      this.git.getTags(`origin/${this.baseBranch}`)
+    );
+    const [latestTagInBaseBranch] = (tagsInBaseBranch || []).reverse();
     const lastTag =
       lastTagNotInBaseBranch ||
       latestTagInBranch ||
+      latestTagInBaseBranch ||
       (await this.git.getFirstCommit());
 
     const fullReleaseNotes = await this.release.generateReleaseNotes(
@@ -1345,9 +1400,16 @@ export default class Auto {
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
-    const bump =
-      calculateSemVerBump(labels, this.semVerLabels!, this.config) ||
-      SEMVER.patch;
+    let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
+
+    if (bump === SEMVER.noVersion) {
+      if (options.force) {
+        bump = SEMVER.patch;
+      } else {
+        this.logger.log.info("No version published.");
+        return;
+      }
+    }
 
     if (!args.quiet) {
       this.logger.log.info("Full Release notes for next release:");
@@ -1463,7 +1525,7 @@ export default class Auto {
     const isPR = "isPr" in env && env.isPr;
     const from = (await this.git.shaExists("HEAD^")) ? "HEAD^" : "HEAD";
     const head = await this.release.getCommitsInRelease(from);
-    // env-ci sets branch to target branch (ex: master) in some CI services.
+    // env-ci sets branch to target branch (ex: main) in some CI services.
     // so we should make sure we aren't in a PR just to be safe
     const currentBranch = getCurrentBranch();
     const isBaseBranch = !isPR && currentBranch === this.baseBranch;
@@ -1517,7 +1579,7 @@ export default class Auto {
 
       if (options.dryRun && !options.quiet) {
         this.logger.log.success(
-          "Below is what would happen upon merge of the current branch into master"
+          `Below is what would happen upon merge of the current branch into ${this.baseBranch}`
         );
         await this.publishFullRelease(options);
       }
@@ -1616,7 +1678,9 @@ export default class Auto {
       noCommit: options.noChangelog,
     });
 
-    await this.checkClean();
+    if (!options.dryRun) {
+      await this.checkClean();
+    }
 
     this.logger.verbose.info("Calling version hook");
     await this.hooks.version.promise({
@@ -1696,11 +1760,32 @@ export default class Auto {
     }
 
     const isPrerelease = this.inPrereleaseBranch();
+    const [, latestTagInBranch] = await on(this.git.getLatestTagInBranch());
     const lastRelease =
       from ||
-      (isPrerelease && (await this.git.getLatestTagInBranch())) ||
+      (isPrerelease && latestTagInBranch) ||
       (await this.git.getLatestRelease());
-    const calculatedBump = await this.release.getSemverBump(lastRelease);
+    let calculatedBump = await this.release.getSemverBump(lastRelease);
+
+    // For next releases we also want to take into account any labels on
+    // the PR of next into main
+    if (isPrerelease) {
+      const pr = getPrNumberFromEnv();
+
+      if (pr && this.semVerLabels) {
+        const prLabels = await this.git.getLabels(pr);
+        this.logger.verbose.info(
+          `Found labels on prerelease branch PR`,
+          prLabels
+        );
+        calculatedBump = calculateSemVerBump(
+          [prLabels, [calculatedBump]],
+          this.semVerLabels,
+          this.config
+        );
+      }
+    }
+
     const bump =
       (isPrerelease && preVersionMap.get(calculatedBump)) || calculatedBump;
 
@@ -1962,10 +2047,11 @@ export default class Auto {
       this.logger.verbose.warn(
         `Got author from options: email: ${email}, name ${name}`
       );
-      const packageAuthor = await this.hooks.getAuthor.promise();
+      const packageAuthor = (await this.hooks.getAuthor.promise()) || {};
+      const tokenUser = await this.git?.getUser();
 
-      email = !email && packageAuthor ? packageAuthor.email : email;
-      name = !name && packageAuthor ? packageAuthor.name : name;
+      email = email || packageAuthor.email || tokenUser?.email || undefined;
+      name = name || packageAuthor.name || tokenUser?.name || undefined;
 
       this.logger.verbose.warn(`Using author: ${name} <${email}>`);
 
@@ -2057,7 +2143,15 @@ export default class Auto {
         extendedLocation = require.resolve(config.extends);
       }
     } catch (error) {
-      this.logger.veryVerbose.error(error);
+      try {
+        if (config.extends) {
+          extendedLocation = require.resolve(
+            path.join(process.cwd(), config.extends)
+          );
+        }
+      } catch (error) {
+        this.logger.veryVerbose.error(error);
+      }
     }
 
     return extendedLocation;
@@ -2153,7 +2247,8 @@ export { IPlugin } from "./utils/load-plugins";
 export { ICommitAuthor, IExtendedCommit } from "./log-parse";
 
 export { default as Auto } from "./auto";
-export { default as SEMVER, VersionLabel } from "./semver";
+export { default as SEMVER } from "./semver";
+export * from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export {
   default as getLernaPackages,

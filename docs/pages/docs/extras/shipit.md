@@ -42,8 +42,8 @@ Read more about preparing you project for pre-releases [here](./next#setting-up-
 
 #### "next" Branch (default)
 
-The suggested way to create pre-releases is by managing 2 branches for your repo: `master` and `next`.
-`master` contains the `latest` stable version of the code, and `next` contains future updates.
+The suggested way to create pre-releases is by managing 2 branches for your repo: `baseBranch` and `next`.
+`baseBranch` contains the `latest` stable version of the code, and `next` contains future updates.
 
 You can change what branches `auto` treats as pre-release branches in your [`.autorc`](../configuration/autorc#prerelease-branches).
 

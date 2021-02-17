@@ -25,18 +25,17 @@ import {
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
 import { gt, gte, inc, ReleaseType } from "semver";
-import { loadPackageJson, getRepo, getAuthor } from "@auto-it/package-json-utils";
+import {
+  loadPackageJson,
+  getRepo,
+  getAuthor,
+} from "@auto-it/package-json-utils";
 
 import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
-import {
-  writeFile,
-  isMonorepo,
-  readFile,
-  getLernaJson,
-} from "./utils";
+import { writeFile, isMonorepo, readFile, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
-const VERSION_COMMIT_MESSAGE = '"Bump version to: %s [skip ci]"';
+const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
 
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
@@ -212,10 +211,9 @@ function getLegacyAuthArgs(
     return [];
   }
 
-  return [
-    options.isMonorepo ? "--legacy-auth" : "--_auth",
-    process.env.NPM_TOKEN,
-  ];
+  return options.isMonorepo
+    ? ["--legacy-auth", process.env.NPM_TOKEN]
+    : [`--_auth=${process.env.NPM_TOKEN}`];
 }
 
 /** Get the args to set the registry. Only used with lerna */
@@ -653,7 +651,7 @@ export default class NPMPlugin implements IPlugin {
     const prereleaseBranches =
       auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
     const branch = getCurrentBranch();
-    // if ran from master we publish the prerelease to the first
+    // if ran from baseBranch we publish the prerelease to the first
     // configured prerelease branch
     const prereleaseBranch =
       branch && prereleaseBranches.includes(branch)
@@ -1265,7 +1263,7 @@ export default class NPMPlugin implements IPlugin {
 
           if (!this.commitNextVersion) {
             // we do not want to commit the next version. this causes
-            // merge conflicts when merged into master. We also do not want
+            // merge conflicts when merged into baseBranch. We also do not want
             // to re-implement the magic lerna does. So instead we let lerna
             // commit+tag the new version and roll back all the tags to the
             // previous commit.
@@ -1306,7 +1304,7 @@ export default class NPMPlugin implements IPlugin {
             "version",
             newVersion,
             // we do not want to commit the next version. this causes
-            // merge conflicts when merged into master
+            // merge conflicts when merged into baseBranch
             "--no-git-tag-version",
             ...verboseArgs,
           ]);

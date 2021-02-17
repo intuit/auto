@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gradle",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "A plugin that calls gradle-release-plugin with versioning information.",
   "license": "MIT",
@@ -40,6 +40,6 @@
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "semver": "^7.0.0",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

@@ -9,7 +9,8 @@ import {
 } from "@auto-it/core/dist/utils/make-hooks";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
-import { execSync } from "child_process";
+import endent from "endent";
+import { execSync, ExecSyncOptionsWithStringEncoding } from "child_process";
 
 type CommandMap = Record<string, string | undefined>;
 
@@ -65,8 +66,46 @@ const createEnv = (args: any[]) => ({
   ),
 });
 
+/** Wraps execSync around debugging and error handling */
+const runExecSync = (
+  command: string,
+  options: ExecSyncOptionsWithStringEncoding | undefined,
+  auto: Auto
+): string | undefined => {
+  let execResult;
+
+  try {
+    auto.logger.verbose.info(`Running command: ${command}`);
+    auto.logger.veryVerbose.info(endent`
+    Supplied Environment (name and char size):
+    
+    ${Object.entries(options?.env || {})
+      .map(([key, value]) => `\t${key}=${value ? value.length : 0}`)
+      .join("\n")}
+    `);
+
+    execResult = trim(execSync(command, options));
+  } catch (e) {
+    if (e && e.code === "E2BIG") {
+      auto.logger.log.error(endent`
+        Received E2BIG from execSync.
+
+        This usually occurs when the argument list is too large for the command you are trying to run. 
+        
+        Please consider disabling your 'auto-exec' usage and following this issue for updates: https://github.com/intuit/auto/issues/1294
+      `);
+    } else {
+      auto.logger.log.error(e);
+    }
+
+    process.exit(1);
+  }
+
+  return execResult;
+};
+
 /** Tap a hook if possible */
-const tapHook = (name: string, hook: any, command: string) => {
+const tapHook = (name: string, hook: any, command: string, auto: Auto) => {
   if (!hook) {
     return;
   }
@@ -89,11 +128,15 @@ const tapHook = (name: string, hook: any, command: string) => {
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = trim(
-        execSync(command, {
-          stdio: ["ignore", "pipe", "inherit"],
-          encoding: "utf8",
-          env: createEnv(args),
-        })
+        runExecSync(
+          command,
+          {
+            stdio: ["ignore", "pipe", "inherit"],
+            encoding: "utf8",
+            env: createEnv(args),
+          },
+          auto
+        )
       );
 
       if (!value) {
@@ -114,11 +157,15 @@ const tapHook = (name: string, hook: any, command: string) => {
   } else if (name === "omitCommit" || name === "omitReleaseNotes") {
     hook.tap(`exec ${name}`, (...args: any[]) => {
       const value = trim(
-        execSync(command, {
-          stdio: ["ignore", "pipe", "inherit"],
-          encoding: "utf8",
-          env: createEnv(args),
-        })
+        runExecSync(
+          command,
+          {
+            stdio: ["ignore", "pipe", "inherit"],
+            encoding: "utf8",
+            env: createEnv(args),
+          },
+          auto
+        )
       );
 
       if (value === "true") {
@@ -134,14 +181,18 @@ const tapHook = (name: string, hook: any, command: string) => {
   ) {
     hook.tap(`exec ${name}`, (...args: any[]) =>
       trim(
-        execSync(command, {
-          encoding: "utf8",
-          env: createEnv(args),
-          stdio:
-            name === "createChangelogTitle" || name === "getPreviousVersion"
-              ? ["ignore", "pipe", "inherit"]
-              : "inherit",
-        })
+        runExecSync(
+          command,
+          {
+            encoding: "utf8",
+            env: createEnv(args),
+            stdio:
+              name === "createChangelogTitle" || name === "getPreviousVersion"
+                ? ["ignore", "pipe", "inherit"]
+                : "inherit",
+          },
+          auto
+        )
       )
     );
   }
@@ -186,7 +237,8 @@ export default class ExecPlugin implements IPlugin {
             tapHook(
               key,
               release.hooks[key as keyof typeof release.hooks],
-              command
+              command,
+              auto
             )
         );
       });
@@ -198,7 +250,8 @@ export default class ExecPlugin implements IPlugin {
             tapHook(
               key,
               changelog.hooks[key as keyof typeof changelog.hooks],
-              command
+              command,
+              auto
             )
         );
       });
@@ -210,12 +263,13 @@ export default class ExecPlugin implements IPlugin {
             tapHook(
               key,
               logParse.hooks[key as keyof typeof logParse.hooks],
-              command
+              command,
+              auto
             )
         );
       });
     } else {
-      tapHook(name, auto.hooks[name], command as string);
+      tapHook(name, auto.hooks[name], command as string, auto);
     }
   }
 }

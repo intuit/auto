@@ -218,3 +218,4 @@ GitHub.sublime-settings
 
 ### Files generated from testing ###
 packages/cli/auto
+docs/public/search-index.json

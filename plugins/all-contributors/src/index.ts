@@ -128,7 +128,7 @@ const title = /[#]{0,5}[ ]*[C|c]ontributions/;
 const contributorLine = /^[-*] @(\S+)\s+[:-]\s+([\S ,]+)$/;
 
 /** Find contributions listed in PR bodies */
-function getExtraContributors(body?: string) {
+function getExtraContributors(body?: string | null) {
   const authorContributions: Record<string, Set<string>> = {};
 
   if (!body) {

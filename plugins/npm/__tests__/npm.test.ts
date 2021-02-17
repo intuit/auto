@@ -33,7 +33,7 @@ jest.mock(
   () => (...args: any[]) => execPromise(...args)
 );
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
-  getCurrentBranch: () => "master",
+  getCurrentBranch: () => "main",
 }));
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
@@ -180,7 +180,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -200,7 +200,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -227,7 +227,7 @@ describe("getAuthor", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -253,7 +253,7 @@ describe("getRepository", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -285,7 +285,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -308,7 +308,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -332,7 +332,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -366,7 +366,7 @@ describe("getPreviousVersion", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
     } as Auto.Auto);
@@ -401,11 +401,11 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({});
   });
 
   test("should not modify config when tagVersionPrefix is not set", async () => {
@@ -417,7 +417,7 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -428,7 +428,7 @@ describe("modifyConfig", () => {
       }
     `;
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({});
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({});
   });
 
   test("should modify config when tagVersionPrefix is set", async () => {
@@ -448,11 +448,11 @@ describe("modifyConfig", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
-    expect(hooks.modifyConfig.call({} as any)).toStrictEqual({
+    expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({
       noVersionPrefix: true,
     });
   });
@@ -473,7 +473,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger,
     } as Auto.Auto);
 
@@ -489,7 +489,7 @@ describe("publish", () => {
       Auto.SEMVER.patch,
       "--no-commit-hooks",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
       "--loglevel",
       "silly",
     ]);
@@ -503,7 +503,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -519,7 +519,7 @@ describe("publish", () => {
       Auto.SEMVER.patch,
       "--no-commit-hooks",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
     ]);
   });
 
@@ -531,7 +531,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -554,7 +554,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
       false,
     ]);
   });
@@ -567,7 +567,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -590,7 +590,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
       false,
     ]);
   });
@@ -603,7 +603,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -626,7 +626,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
       "--exact",
     ]);
 
@@ -651,7 +651,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -676,7 +676,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -703,7 +703,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -719,8 +719,7 @@ describe("publish", () => {
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
-      "--_auth",
-      "abcd",
+      "--_auth=abcd",
     ]);
   });
 
@@ -732,7 +731,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -751,7 +750,7 @@ describe("publish", () => {
       "1.0.1",
       "--no-commit-hooks",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
     ]);
   });
 
@@ -763,7 +762,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -787,7 +786,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      '"Bump version to: %s [skip ci]"',
+      "'\"Bump version to: %s [skip ci]\"'",
       false,
     ]);
   });
@@ -800,7 +799,7 @@ describe("publish", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
 
@@ -818,7 +817,7 @@ describe("publish", () => {
       "--follow-tags",
       "--set-upstream",
       "origin",
-      "master",
+      "main",
     ]);
   });
 });
@@ -836,7 +835,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -867,7 +866,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -902,7 +901,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -936,7 +935,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -973,7 +972,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -996,8 +995,7 @@ describe("canary", () => {
       "publish",
       "--tag",
       "canary",
-      "--_auth",
-      "abcd",
+      "--_auth=abcd",
     ]);
   });
 
@@ -1009,7 +1007,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       getCurrentVersion: () => "1.2.3",
       git: {
@@ -1040,7 +1038,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1088,7 +1086,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1140,7 +1138,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1199,7 +1197,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("1.2.3"),
@@ -1247,7 +1245,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
     existsSync.mockReturnValueOnce(true);
@@ -1297,7 +1295,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
@@ -1344,7 +1342,7 @@ describe("canary", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       git: {
         getLatestRelease: () => Promise.resolve("@foo/lib:1.1.0"),
@@ -1402,7 +1400,7 @@ describe("makeRelease", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
       git: { publish } as any,
@@ -1471,7 +1469,7 @@ describe("beforeCommitChangelog", () => {
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
-      baseBranch: "master",
+      baseBranch: "main",
       logger: dummyLog(),
       prefixRelease: (str) => str,
       release: {

@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
   "license": "MIT",
@@ -48,6 +48,6 @@
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

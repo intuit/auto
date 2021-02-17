@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/git-tag",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Manage your projects version through just a git tag",
   "license": "MIT",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
     "semver": "^7.0.0",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/semver": "^7.1.0"

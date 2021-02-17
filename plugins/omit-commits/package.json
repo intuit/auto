@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/omit-commits",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
   "license": "MIT",
@@ -41,6 +41,6 @@
     "@auto-it/core": "link:../../packages/core",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

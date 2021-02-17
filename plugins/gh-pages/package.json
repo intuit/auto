@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gh-pages",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Automate publishing to your gh-pages documentation website",
   "license": "MIT",
@@ -41,6 +41,6 @@
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "push-dir": "^0.4.1",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

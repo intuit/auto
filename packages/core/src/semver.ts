@@ -164,7 +164,7 @@ export function getHigherSemverTag(left: SEMVER, right: SEMVER): SEMVER {
 }
 
 /** Get the semver bump for a release type */
-const getBump = (releaseType?: ReleaseType) =>
+export const getReleaseType = (releaseType?: ReleaseType) =>
   releaseType === "none" || releaseType === "skip"
     ? SEMVER.noVersion
     : releaseType === "release"
@@ -202,7 +202,7 @@ export function calculateSemVerBump(
     // 2. It has labels but none of them are auto labels
     if (
       index === 0 &&
-      (pr.length === 0 || !pr.find((label) => getLabelEntry(label)))
+      (pr.length === 0 || !pr.some((label) => Boolean(getLabelEntry(label))))
     ) {
       releaseTypes.add(defaultReleaseType);
     }
@@ -238,6 +238,6 @@ export function calculateSemVerBump(
   }
 
   return [...releaseTypes]
-    .map(getBump)
-    .reduce(getHigherSemverTag, getBump(defaultReleaseType));
+    .map(getReleaseType)
+    .reduce(getHigherSemverTag, getReleaseType(defaultReleaseType));
 }

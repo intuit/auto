@@ -128,14 +128,24 @@ export function findPlugin(
 
   // Try requiring a path from cwd
   if (isLocal) {
-    const localPath = path.join(process.cwd(), pluginPath);
+    let localPath = path.join(process.cwd(), pluginPath);
 
-    if (!exists(localPath)) {
-      logger.log.warn(`Could not find plugin from path: ${localPath}`);
-      return;
+    if (exists(localPath)) {
+      return localPath;
+    } 
+    
+    if (extendedLocation) {
+      localPath = path.join(
+        extendedLocation.endsWith("package.json")
+          ? path.dirname(extendedLocation)
+          : extendedLocation,
+        pluginPath
+      );
+
+      if (exists(localPath)) {
+        return localPath;
+      }
     }
-
-    return localPath;
   }
 
   // For pkg bundle

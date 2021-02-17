@@ -2,7 +2,7 @@
   "name": "auto",
   "bin": "dist/bin/auto.js",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
@@ -41,7 +41,8 @@
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2",
-    "bundle": "yarn package && yarn gzip",
+    "bundle": "yarn inject-version && yarn package && yarn gzip",
+    "inject-version": "node scripts/inject-version.js",
     "package": "rimraf binary && pkg . --out-path binary",
     "gzip": "ls binary/auto* | xargs gzip"
   },
@@ -56,7 +57,7 @@
     "module-alias": "^2.2.2",
     "signale": "^1.4.0",
     "terminal-link": "^2.1.1",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/signale": "^1.2.1",

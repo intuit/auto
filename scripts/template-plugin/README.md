@@ -17,7 +17,7 @@ yarn add -D @auto-it/{{kebab}}
 ```json
 {
   "plugins": [
-    ["{{kebab}}"]
+    "{{kebab}}"
     // other plugins
   ]
 }

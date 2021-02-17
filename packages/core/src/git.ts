@@ -36,7 +36,7 @@ export interface IGitOptions {
   repo: string;
   /** The URL to the GitHub (public or enterprise) the project is using */
   baseUrl?: string;
-  /** The main branch of the repo. Usually master */
+  /** The main branch of the repo */
   baseBranch: string;
   /** The URL to the GitHub graphql API (public or enterprise) the project is using */
   graphqlBaseUrl?: string;
@@ -256,7 +256,7 @@ export default class Git {
 
   /** Get the labels for a PR */
   @memoize()
-  async getLabels(prNumber: number) {
+  async getLabels(prNumber: number): Promise<string[]> {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
     const args: RestEndpointMethodTypes["issues"]["listLabelsOnIssue"]["parameters"] = {
@@ -436,10 +436,17 @@ export default class Git {
     }
   }
 
+  /** Get the users associated with the GH_TOKEN */
+  @memoize()
+  async getUser() {
+    const [, user] = (await on(this.github.users.getAuthenticated())) || {};
+    return user?.data;
+  }
+
   /** Get collaborator permission level to the repo. */
   @memoize()
   async getTokenPermissionLevel() {
-    const [, user] = await on(this.github.users.getAuthenticated());
+    const user = await this.getUser();
 
     if (!user) {
       return {
@@ -452,14 +459,14 @@ export default class Git {
         await this.github.repos.getCollaboratorPermissionLevel({
           owner: this.options.owner,
           repo: this.options.repo,
-          username: user.data.login,
+          username: user.login,
         })
       ).data;
 
-      return { permission, user: user.data };
+      return { permission, user };
     } catch (error) {
       this.logger.verbose.error(`Could not get permissions for token`);
-      return { permission: "read", user: user.data };
+      return { permission: "read", user };
     }
   }
 
@@ -720,7 +727,7 @@ export default class Git {
     this.logger.veryVerbose.info("Got PR comments\n", comments);
 
     const oldMessage = comments.data.find((comment) =>
-      comment.body.includes(commentIdentifier)
+      comment.body?.includes(commentIdentifier)
     );
 
     if (!oldMessage) {
@@ -869,17 +876,21 @@ export default class Git {
 
   /** Get all the tags for a given branch. */
   async getTags(branch: string) {
-    const tags = await execPromise("git", [
-      "tag",
-      "--sort='creatordate'",
-      "--merged",
-      branch,
-    ]);
-
-    return tags
-      .split("\n")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+    try {
+      const tags = await execPromise("git", [
+        "tag",
+        "--sort='creatordate'",
+        "--merged",
+        branch,
+      ]);
+  
+      return tags
+        .split("\n")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+    } catch (error) {
+      return []
+    }
   }
 
   /** Get the a tag that isn't in the base branch */

@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/chrome",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Chrome publishing plugin for auto",
   "license": "MIT",
@@ -43,7 +43,7 @@
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "semver": "^7.0.0",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/semver": "^7.1.0"

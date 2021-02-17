@@ -126,38 +126,42 @@ export default class ReleasedLabelPlugin implements IPlugin {
     const isPrerelease = releases.some((r) => r.data.prerelease);
 
     if (commit.pullRequest) {
-      const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
-      const branch = pr?.data.head.ref;
+      try {
+        const pr = await auto.git!.getPullRequest(commit.pullRequest.number);
+        const branch = pr?.data.head.ref;
 
-      if (branch && auto.config?.prereleaseBranches.includes(branch)) {
-        return;
+        if (branch && auto.config?.prereleaseBranches.includes(branch)) {
+          return;
+        }
+
+        if (
+          !this.options.includeBotPrs &&
+          commit.authors.some(
+            (author) =>
+              (author.name && botList.includes(author.name)) ||
+              (author.username && botList.includes(author.username)) ||
+              author.type === "Bot"
+          )
+        ) {
+          return;
+        }
+
+        await this.addCommentAndLabel({
+          auto,
+          prOrIssue: commit.pullRequest.number,
+          isPrerelease,
+          releases,
+        });
+
+        pr.data.body?.split("\n").map((line) => messages.push(line));
+
+        const commitsInPr = await auto.git!.getCommitsForPR(
+          commit.pullRequest.number
+        );
+        commitsInPr.map((c) => messages.push(c.commit.message));
+      } catch (error) {
+        auto.logger.verbose.log(error);
       }
-
-      if (
-        !this.options.includeBotPrs &&
-        commit.authors.some(
-          (author) =>
-            (author.name && botList.includes(author.name)) ||
-            (author.username && botList.includes(author.username)) ||
-            author.type === "Bot"
-        )
-      ) {
-        return;
-      }
-
-      await this.addCommentAndLabel({
-        auto,
-        prOrIssue: commit.pullRequest.number,
-        isPrerelease,
-        releases,
-      });
-
-      pr.data.body?.split("\n").map((line) => messages.push(line));
-
-      const commitsInPr = await auto.git!.getCommitsForPR(
-        commit.pullRequest.number
-      );
-      commitsInPr.map((c) => messages.push(c.commit.message));
     }
 
     const issues = messages

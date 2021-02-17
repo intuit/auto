@@ -83,7 +83,7 @@ interface Prerelease {
 }
 
 interface BaseBranch {
-  /** The branch to treat as the base. Default is master */
+  /** The branch to treat as the base */
   baseBranch?: string;
 }
 
@@ -146,15 +146,20 @@ export type ILatestOptions = BaseBranch &
 
 export type IShipItOptions = ILatestOptions & {
   /**
-   * Make auto publish prerelease versions when merging to master.
+   * Make auto publish prerelease versions when merging to baseBranch.
    * Only PRs merged with "release" label will generate a "latest" release.
    * Only use this flag if you do not want to maintain a prerelease branch,
-   * and instead only want to use master.
+   * and instead only want to use baseBranch.
    */
   onlyGraduateWithReleaseLabel?: boolean;
 };
 
-export type ICanaryOptions = QuietOption & {
+interface ForceOption {
+  /** Always deploy even if marked as skip release */
+  force?: boolean;
+}
+
+export type ICanaryOptions = QuietOption & ForceOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** THe PR to attach the canary to */
@@ -163,11 +168,9 @@ export type ICanaryOptions = QuietOption & {
   build?: number;
   /** The message used when attaching the canary version to a PR */
   message?: string | "false";
-  /** Always deploy a canary, even if the PR is marked as skip release */
-  force?: boolean;
 };
 
-export type INextOptions = QuietOption & {
+export type INextOptions = QuietOption & ForceOption & {
   /** Do not actually do anything */
   dryRun?: boolean;
   /** The message used when attaching the prerelease version to a PR */

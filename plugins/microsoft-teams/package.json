@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/microsoft-teams",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Microsoft Teams plugin for auto",
   "license": "MIT",
@@ -41,6 +41,6 @@
     "@auto-it/slack": "link:../slack",
     "https-proxy-agent": "^5.0.0",
     "node-fetch": "2.6.1",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

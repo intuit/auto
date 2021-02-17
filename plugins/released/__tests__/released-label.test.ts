@@ -12,7 +12,7 @@ import botList from "@auto-it/bot-list";
 
 import ReleasedLabelPlugin from "../src";
 
-const git = new Git({ owner: "1", repo: "2", baseBranch: "master" });
+const git = new Git({ owner: "1", repo: "2", baseBranch: "main" });
 const log = new LogParse();
 
 const comment = jest.fn();
@@ -139,6 +139,32 @@ describe("release label plugin", () => {
       lastRelease: "0.1.0",
       commits: [commit],
       releaseNotes: "",
+    });
+
+    expect(comment).not.toHaveBeenCalled();
+  });
+
+  test("should do nothing with PR that doesn't exist", async () => {
+    const releasedLabel = new ReleasedLabelPlugin();
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    getPr.mockRejectedValueOnce(new Error("PR dont exist"));
+    const commit = makeCommitFromMsg("normal commit with no bump (#123)");
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: "",
+      // @ts-ignore
+      response: mockResponse,
     });
 
     expect(comment).not.toHaveBeenCalled();

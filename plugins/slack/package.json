@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "license": "MIT",
@@ -43,10 +43,10 @@
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
     "node-fetch": "2.6.1",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "2.5.7",
+    "@types/node-fetch": "2.5.8",
     "@types/url-join": "^4.0.0"
   }
 }

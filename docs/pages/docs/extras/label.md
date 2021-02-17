@@ -16,5 +16,5 @@ fi
 
 Running `auto label` without the PR number will:
 
-- When run in master will get the labels for the last merged PR
+- When run in `baseBranch` will get the labels for the last merged PR
 - When run for a PR in CI will use the PR's number

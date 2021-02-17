@@ -53,35 +53,38 @@ export default class GhPagesPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.beforeShipIt.tapPromise(this.name, async ({ releaseType }) => {
-      if (releaseType !== "latest" || !auto.git) {
-        return;
+    auto.hooks.beforeShipIt.tapPromise(
+      this.name,
+      async ({ releaseType, dryRun }) => {
+        if (releaseType !== "latest" || !auto.git || dryRun) {
+          return;
+        }
+
+        const bump = await auto.getVersion();
+
+        // If it's a bump the 'afterRelease' hook will release the docs
+        if (bump !== SEMVER.noVersion) {
+          return;
+        }
+
+        const sha = await auto.git.getSha();
+        const pr = await auto.git.matchCommitToPr(sha);
+
+        if (!pr) {
+          return;
+        }
+
+        const hasDocumentationLabel = pr.labels.includes(this.options.label);
+
+        if (!hasDocumentationLabel) {
+          return;
+        }
+
+        // If: skip-release + w/documentation label then we will push to gh-pages
+        await auto.setGitUser();
+        await this.releaseGhPages(auto);
       }
-
-      const bump = await auto.getVersion();
-
-      // If it's a bump the 'afterRelease' hook will release the docs
-      if (bump !== SEMVER.noVersion) {
-        return;
-      }
-
-      const sha = await auto.git.getSha();
-      const pr = await auto.git.matchCommitToPr(sha);
-
-      if (!pr) {
-        return;
-      }
-
-      const hasDocumentationLabel = pr.labels.includes(this.options.label);
-
-      if (!hasDocumentationLabel) {
-        return;
-      }
-
-      // If: skip-release + w/documentation label then we will push to gh-pages
-      await auto.setGitUser();
-      await this.releaseGhPages(auto);
-    });
+    );
 
     auto.hooks.afterRelease.tapPromise(this.name, async ({ response }) => {
       if (!response) {

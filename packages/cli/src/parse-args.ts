@@ -129,7 +129,7 @@ const defaultOptions: AutoOption[] = [
 const baseBranch: AutoOption = {
   name: "base-branch",
   type: String,
-  description: 'Branch to treat as the "master" branch',
+  description: "Branch to treat as the base branch",
   group: "global",
 };
 
@@ -213,6 +213,13 @@ const noChangelog: AutoOption = {
   type: Boolean,
   group: "main",
   description: "Skip creating the changelog",
+  config: true,
+};
+
+const force: AutoOption = {
+  name: "force",
+  type: Boolean,
+  group: "main",
   config: true,
 };
 
@@ -515,7 +522,7 @@ export const commands: AutoCommand[] = [
         defaultValue: false,
         group: "main",
         description:
-          'Make auto publish prerelease versions when merging to master. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use master.',
+          'Make auto publish prerelease versions when merging to baseBranch. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use baseBranch.',
         config: true,
       },
     ],
@@ -566,12 +573,9 @@ export const commands: AutoCommand[] = [
         config: true,
       },
       {
-        name: "force",
-        type: Boolean,
-        group: "main",
+        ...force,
         description:
-          "Force a canary release, even if the PR is marked to skip the release",
-        config: true,
+          "Force a next release, even if the last commit is marked to skip the release",
       },
       quiet,
     ],
@@ -580,12 +584,13 @@ export const commands: AutoCommand[] = [
     name: "next",
     group: "Release Commands",
     description: endent`
-      Make a release for your "prerelease" release line. This is ran automatically from "shipit".
+      Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
 
       1. Creates a prerelease on package management platform
-      2. Creates a "Pre Release" on GitHub releases page.
+      2. Creates a "Pre Release" on GitHub releases page
+      3. If ran from a PR build in a CI, posts the prerelease's full releases notes and expected version of the prerelease
 
-      Calling the \`next\` command from a prerelease branch will publish a prerelease, otherwise it will publish to the default prerelease branch.
+      Calling the \`next\` command from a prerelease branch will publish a prerelease for just that branch, otherwise it will publish to the default prerelease branch.
     `,
     examples: ["{green $} auto next"],
     options: [
@@ -595,6 +600,11 @@ export const commands: AutoCommand[] = [
         description:
           "The message used when attaching the prerelease version to a PR",
         config: true,
+      },
+      {
+        ...force,
+        description:
+          "Force a canary release, even if the PR is marked to skip the release",
       },
       quiet,
     ],
@@ -623,7 +633,8 @@ export default function parseArgs(testArgs?: string[]) {
 
   if (!mainOptions._command) {
     if (mainOptions.version) {
-      console.log(`v${getAutoVersion()}`);
+      const version = process.env.AUTO_CLI_VERSION || getAutoVersion();
+      console.log(`v${version}`);
     }
 
     return [];

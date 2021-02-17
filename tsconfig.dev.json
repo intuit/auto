@@ -82,6 +82,12 @@
     },
     {
       "path": "packages/package-json-utils"
+    },
+    {
+      "path": "plugins/magic-zero"
+    },
+    {
+      "path": "plugins/s3"
     }
   ]
 }

@@ -224,7 +224,7 @@ describe("CratesPlugin", () => {
           hooks,
           logger: dummyLog(),
           remote: "origin",
-          baseBranch: "master",
+          baseBranch: "main",
         } as Auto.Auto);
         await hooks.publish.promise({ bump: Auto.SEMVER.patch });
         expect(exec).toHaveBeenCalledWith("cargo", ["publish"]);
@@ -233,7 +233,7 @@ describe("CratesPlugin", () => {
           "--follow-tags",
           "--set-upstream",
           "origin",
-          "master",
+          "main",
         ]);
       });
     });

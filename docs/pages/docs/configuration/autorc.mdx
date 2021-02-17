@@ -2,6 +2,8 @@
 title: \`auto\` Configuration File
 ---
 
+import { DefaultLabelRenderer } from "../../../components/defaultLabelsRenderer";
+
 `auto` uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to find your config.
 This means you can define this file a variety of ways.
 `cosmiconfig` will start at the root of your project and start to search up the directory tree for the following:
@@ -37,7 +39,8 @@ Configure the default release behavior.
 
 ### Base Branch
 
-Configure what your repo considers the "master" branch.
+Configure what your repo considers the base branch.
+Defaults to either `main` or `master`.
 
 ```json
 {
@@ -195,54 +198,7 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 }
 ```
 
-<details><summary>Click here to see the default label configuration</summary>
-
-```json
-[
-  {
-    name: "major",
-    changelogTitle: "💥 Breaking Change",
-    description: "Increment the major version when merged",
-    releaseType: "major",
-  },
-  {
-    name: "minor",
-    changelogTitle: "🚀 Enhancement",
-    description: "Increment the minor version when merged",
-    releaseType: "minor",
-  },
-  {
-    name: "patch",
-    changelogTitle: "🐛 Bug Fix",
-    description: "Increment the patch version when merged",
-    releaseType: "patch",
-  },
-  {
-    name: "skip-release",
-    description: "Preserve the current version when merged",
-    releaseType: "skip",
-  },
-  {
-    name: "release",
-    description: "Create a release when this pr is merged",
-    releaseType: "release",
-  },
-  {
-    name: "internal",
-    changelogTitle: "🏠 Internal",
-    description: "Changes only affect the internal API",
-    releaseType: "none",
-  },
-  {
-    name: "documentation",
-    changelogTitle: "📝 Documentation",
-    description: "Changes only affect the documentation",
-    releaseType: "none",
-  },
-];
-```
-
-</details>
+<DefaultLabelRenderer />
 
 #### Label Customization
 
@@ -362,7 +318,9 @@ The following removes the default internal and documentation label sections:
 
 ## Extending
 
-If you want to share your auto configuration between projects you can use the `extends` property. This property will load from a module's package.json or from a custom path. It's expected that the extended configuration be under the `auto` key in the package.json file.
+If you want to share your auto configuration between projects you can use the `extends` property.
+This property will load from a module's `package.json` or from a custom path.
+It's expected that the extended configuration be under the `auto` key in the `package.json` file.
 
 Auto can load `extends` configs in the following ways:
 
@@ -370,6 +328,8 @@ Auto can load `extends` configs in the following ways:
 - from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
 - from a package `auto-config-YOUR_NAME`
 - from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
+
+### Formats
 
 ```json
 {
@@ -400,5 +360,24 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 ```json
 {
   "extends": "./path/to/other/package.json"
+}
+```
+
+### Custom Plugins
+
+An `extends` configuration can include custom plugins in the NPM package.
+This is useful if you have a shared plugin that doesn't necessarily need to be published as it's own package.
+
+> NOTE: This does not work for `auto` configs stored in a url.
+
+To include custom plugins just use a relative path in the extended configuration/
+
+**`package.json`:**
+
+```json
+{
+  "auto": {
+    "plugins": ["./plugins/some-plugin.js"]
+  }
 }
 ```

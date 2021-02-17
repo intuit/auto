@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/exec",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Tap into select hooks and run a command on the terminal",
   "license": "MIT",
@@ -37,9 +37,10 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "endent": "^2.0.1",
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   }
 }

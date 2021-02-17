@@ -5,6 +5,13 @@ import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import { loadPlugin } from "../utils/load-plugins";
 import child from "child_process";
+import execPromise from "../utils/exec-promise";
+
+const exec = jest.fn();
+jest.mock("../utils/exec-promise");
+// @ts-ignore
+execPromise.mockImplementation(exec);
+exec.mockResolvedValue("");
 
 const importMock = jest.fn();
 
@@ -12,9 +19,10 @@ jest.mock("../utils/git-reset.ts");
 jest.mock("../utils/load-plugins.ts");
 jest.mock("../utils/verify-auth.ts", () => () => true);
 jest.mock("import-cwd", () => (path: string) => importMock(path));
-jest.mock("env-ci", () => () => ({ isCi: false, branch: "master" }));
+jest.mock("env-ci", () => () => ({ isCi: false, branch: "main" }));
 
 const defaults = {
+  baseBranch: "main",
   owner: "foo",
   repo: "bar",
 };
@@ -50,6 +58,14 @@ jest.mock("@octokit/rest", () => {
 
     hook = {
       error: () => undefined,
+    };
+
+    issues = {
+      listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
+    };
+
+    users = {
+      getAuthenticated: jest.fn().mockResolvedValue({}),
     };
   };
 
@@ -106,7 +122,7 @@ describe("Auto", () => {
     const auto = new Auto();
     auto.logger = dummyLog();
     await auto.loadConfig();
-    expect(auto.baseBranch).toBe("master");
+    expect(auto.baseBranch).toBe("main");
   });
 
   test("should set custom baseBranch", async () => {
@@ -154,9 +170,11 @@ describe("Auto", () => {
     process.pkg = undefined;
   });
 
-  test("should throw if now GH_TOKEN set", async () => {
+  test("should throw if no GH_TOKEN set", async () => {
     const auto = new Auto();
     auto.logger = dummyLog();
+    // @ts-ignore
+    auto.getRepo = () => ({});
     process.env.GH_TOKEN = undefined;
     await expect(auto.loadConfig()).rejects.toBeInstanceOf(Error);
     process.env.GH_TOKEN = "XXXX";
@@ -179,7 +197,7 @@ describe("Auto", () => {
   test("should exit with errors in config", async () => {
     search.mockReturnValueOnce({ config: { name: 123 } });
     process.exit = jest.fn() as any;
-    const auto = new Auto();
+    const auto = new Auto({ owner: "foo", repo: "bar" });
     auto.logger = dummyLog();
     await auto.loadConfig();
     expect(process.exit).toHaveBeenCalled();
@@ -1337,6 +1355,60 @@ describe("Auto", () => {
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
     });
+
+    test("respects none release labels", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "origin";
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLastTagNotInBaseBranch = () =>
+        Promise.reject(new Error("Test"));
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestRelease = () => Promise.resolve("abcd");
+      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
+        ]);
+
+      const next = jest.fn();
+      auto.hooks.next.tap("test", next);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.next({});
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    test("can --force release", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+
+      // @ts-ignore
+      auto.checkClean = () => Promise.resolve(true);
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+      auto.remote = "origin";
+      auto.git!.publish = () => Promise.resolve({ data: {} } as any);
+      auto.git!.getLastTagNotInBaseBranch = () =>
+        Promise.reject(new Error("Test"));
+      auto.git!.getLatestTagInBranch = () => Promise.reject(new Error("Test"));
+      auto.git!.getLatestRelease = () => Promise.resolve("abcd");
+      auto.release!.generateReleaseNotes = () => Promise.resolve("notes");
+      auto.release!.getCommitsInRelease = () =>
+        Promise.resolve([
+          makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
+        ]);
+
+      const next = jest.fn();
+      auto.hooks.next.tap("test", next);
+      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+
+      await auto.next({ force: true });
+      expect(next).toHaveBeenCalled();
+    });
   });
 
   describe("shipit", () => {
@@ -1418,12 +1490,16 @@ describe("Auto", () => {
     });
 
     test("should not publish when behind remote", async () => {
-      jest.spyOn(child, "execSync").mockImplementation((command) => {
-        if (command.startsWith("git")) {
-          throw new Error();
+      exec.mockImplementation((command, args) => {
+        if (
+          command.startsWith("git") &&
+          args[0] === "ls-remote" &&
+          args[1] === "--heads"
+        ) {
+          return Promise.reject(new Error());
         }
 
-        return Buffer.from("");
+        return Promise.resolve("");
       });
 
       const auto = new Auto({ ...defaults, plugins: [] });

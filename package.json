@@ -36,9 +36,11 @@
     "docs:build": "yarn docs:generate && ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
-    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
+    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
+    "@atomictech/rehype-toc": "^3.1.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
@@ -56,7 +58,7 @@
     "eslint-config-xo": "^0.33.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.1",
-    "eslint-plugin-jsdoc": "^30.2.1",
+    "eslint-plugin-jsdoc": "^31.0.3",
     "eslint-plugin-prettier": "^3.1.4",
     "graphql": "^15.0.0",
     "husky": "^4.0.7",
@@ -66,14 +68,16 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.4",
     "lint-staged": "^10.0.7",
-    "next-ignite": "^0.7.4",
+    "next-ignite": "^0.9.20",
+    "patch-package": "^6.2.2",
     "prettier": "^2.0.1",
+    "prism-react-renderer": "^1.1.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
     "simple-react-lightbox": "^3.1.2-3",
     "title-case": "^3.0.2",
     "ts-jest": "^26.1.3",
-    "typescript": "~4.0.3"
+    "typescript": "~4.1.5"
   },
   "husky": {
     "hooks": {
@@ -127,13 +131,16 @@
       }
     }
   },
-  "ignite": {
-    "repo": "intuit/auto",
-    "name": "auto",
-    "url": "https://intuit.github.io/auto"
-  },
   "auto": {
     "plugins": [
+      [
+        "upload-assets",
+        [
+          "./packages/cli/binary/auto-linux.gz",
+          "./packages/cli/binary/auto-macos.gz",
+          "./packages/cli/binary/auto-win.exe.gz"
+        ]
+      ],
       [
         "npm",
         {
@@ -157,14 +164,6 @@
             ]
           }
         }
-      ],
-      [
-        "upload-assets",
-        [
-          "./packages/cli/binary/auto-linux.gz",
-          "./packages/cli/binary/auto-macos.gz",
-          "./packages/cli/binary/auto-win.exe.gz"
-        ]
       ],
       [
         "brew",

@@ -78,6 +78,7 @@ describe("Cocoapods Plugin", () => {
       logger: logger,
       prefixRelease,
       git: {
+        getLastTagNotInBaseBranch: async () => undefined,
         getLatestRelease: async () => "0.0.1",
         getPullRequest: async () => ({
           data: {
@@ -202,9 +203,9 @@ describe("Cocoapods Plugin", () => {
     });
   });
   describe("modifyConfig hook", () => {
-    test("should set noVersionPrefix to true", () => {
+    test("should set noVersionPrefix to true", async () => {
       const config = {};
-      expect(hooks.modifyConfig.call(config as any)).toStrictEqual({
+      expect(await hooks.modifyConfig.promise(config as any)).toStrictEqual({
         noVersionPrefix: true,
       });
     });
@@ -434,6 +435,50 @@ describe("Cocoapods Plugin", () => {
           "0.1.0-canary.1.1.1",
           "{ :git => 'https://github.com/intuit/auto.git', :commit => 'undefined' }"
         )
+      );
+    });
+  });
+
+  describe("next hook", () => {
+    test("should return prerelease versions on dryrun", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const versions = await hooks.next.promise(["0.0.1", "0.0.2"], {
+        bump: Auto.SEMVER.minor,
+        dryRun: true,
+        commits: [],
+        fullReleaseNotes: "",
+        releaseNotes: "",
+      });
+      expect(versions).toStrictEqual(["0.0.1", "0.0.2", "0.1.0-next.0"]);
+    });
+    test("should tag with next version", async () => {
+      jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
+      let podSpec = specWithVersion("0.0.1");
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation(() => podSpec);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          podSpec = contents;
+        });
+
+      const versions = await hooks.next.promise([], {
+        bump: Auto.SEMVER.major,
+        dryRun: false,
+        commits: [],
+        fullReleaseNotes: "",
+        releaseNotes: "",
+      });
+
+      expect(versions).toContain("1.0.0-next.0");
+      expect(exec).toBeCalledTimes(4);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("1.0.0-next.0")
       );
     });
   });

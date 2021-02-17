@@ -6,7 +6,6 @@ import SimpleReactLightbox, { SRLWrapper } from "simple-react-lightbox";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
-import "prismjs/themes/prism.css";
 import "next-ignite/dist/main.css";
 import "../css/syntax-highlighting-overrides.css";
 
@@ -16,7 +15,7 @@ config.autoAddCss = false;
 const components = {
   ...igniteComponents,
   img: (props) => {
-    if (props.alt && props.alt.includes("Logo")) {
+    if (props.alt?.includes("Logo")) {
       return <igniteComponents.img {...props} />;
     }
 
@@ -45,19 +44,6 @@ const components = {
 };
 
 function MyApp({ Component, pageProps }) {
-  React.useEffect(() => {
-    if (window.docsearch) {
-      window.docsearch({
-        apiKey: "9a3222c3fb6678852549109b167d0cef",
-        indexName: "intuit_auto",
-        inputSelector: "#search",
-        debug: false,
-      });
-    } else {
-      console.warn("Search has failed to load");
-    }
-  });
-
   return (
     <MDXProvider components={components}>
       <Component {...pageProps} />

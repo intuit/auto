@@ -315,7 +315,8 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/23409677?v=4",
       "profile": "https://lshadler.github.io/",
       "contributions": [
-        "code"
+        "code",
+        "test"
       ]
     },
     {
@@ -447,6 +448,16 @@
       "profile": "http://andrewleedham.me/",
       "contributions": [
         "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "sethomas",
+      "name": "Seth Thomas",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3957314?v=4",
+      "profile": "http://sethomas.com/",
+      "contributions": [
         "test",
         "code"
       ]

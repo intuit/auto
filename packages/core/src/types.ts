@@ -18,7 +18,7 @@ const githubInformation = t.partial({
   githubApi: t.string,
   /** The github graphql api to interact with */
   githubGraphqlApi: t.string,
-  /** The branch that is used as the base. defaults to master */
+  /** The branch that is used as the base */
   baseBranch: t.string,
 });
 
@@ -51,7 +51,7 @@ const logOptions = t.partial({
 
 export type LogOptions = t.TypeOf<typeof logOptions>;
 
-const globalOptions = t.partial({
+export const globalOptions = t.partial({
   /** Another auto configuration to extend */
   extends: t.string,
   /** Labels that power auto */
@@ -84,7 +84,16 @@ const globalOptions = t.partial({
   }),
   /** Options to pass to "auto shipit" */
   shipit: t.partial({
+    prerelease: t.boolean,
+    noChangelog: t.boolean,
+    message: t.string,
     onlyGraduateWithReleaseLabel: t.boolean,
+  }),
+  /** Options to pass to "auto latest" */
+  latest: t.partial({
+    prerelease: t.boolean,
+    noChangelog: t.boolean,
+    message: t.string,
   }),
   /** Options to pass to "auto canary" */
   canary: t.partial({
@@ -93,6 +102,7 @@ const globalOptions = t.partial({
   }),
   /** Options to pass to "auto next" */
   next: t.partial({
+    force: t.boolean,
     message: t.string,
   }),
 });
@@ -119,7 +129,7 @@ export const loadedAutoRc = t.intersection([
     labels: t.array(labelDefinition),
     /** Branches to create pre-releases from */
     prereleaseBranches: t.array(t.string),
-    /** The branch that is used as the base. defaults to master */
+    /** The branch that is used as the base */
     baseBranch: t.string,
   }),
 ]);

@@ -4,7 +4,7 @@ title: Travis CI
 
 The following config declares the `deploy` job that run on all branches. The job will either release:
 
-- a new `latest` version from `master`
+- a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (if your package manager plugin implements them)
 
 **`.travis.yml`**
@@ -44,12 +44,12 @@ To fix this add the following lines to your `.travis.yml`
 
 ```yml
 before_deploy:
-  - if [ "$TRAVIS_BRANCH" == "master" ];then
-    git checkout master;
+  - if [ "$TRAVIS_BRANCH" == "main" ];then
+    git checkout main;
     fi;
 ```
 
-This code will ensure that your git HEAD is on master when creating a new release.
+This code will ensure that your git HEAD is on `baseBranch` when creating a new release.
 
 ### Canary Deploy Failing on Forks
 

@@ -88,7 +88,7 @@ const options = {
   owner: "Adam Dierkens",
   repo: "test",
   token: "MyToken",
-  baseBranch: "master",
+  baseBranch: "main",
 };
 
 describe("github", () => {
@@ -129,7 +129,7 @@ describe("github", () => {
       const gh = new Git(options);
 
       gh.getTags = (ref: string) => {
-        if (ref === "origin/master") {
+        if (ref === "origin/main") {
           return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
         }
 
@@ -149,7 +149,7 @@ describe("github", () => {
       const gh = new Git(options);
 
       gh.getTags = (ref: string) => {
-        if (ref === "origin/master") {
+        if (ref === "origin/main") {
           return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
         }
 
@@ -204,7 +204,7 @@ describe("github", () => {
       const gh = new Git(options);
 
       gh.getTags = (ref: string) => {
-        if (ref === "origin/master") {
+        if (ref === "origin/main") {
           return Promise.resolve(baseTags);
         }
 
@@ -305,7 +305,7 @@ describe("github", () => {
   test("getTags", async () => {
     const gh = new Git(options);
 
-    expect(Array.isArray(await gh.getTags("master"))).toBe(true);
+    expect(Array.isArray(await gh.getTags("main"))).toBe(true);
   });
 
   test("getLastTagNotInBaseBranch", async () => {

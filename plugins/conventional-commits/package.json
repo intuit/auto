@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/conventional-commits",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "main": "dist/index.js",
   "description": "Conventional commit plugin for auto",
   "license": "MIT",
@@ -38,12 +38,13 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
+    "array.prototype.flatmap": "^1.2.2",
     "conventional-changelog-core": "^4.2.0",
     "conventional-changelog-preset-loader": "^2.3.4",
     "conventional-commits-parser": "^3.1.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.0.3"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/conventional-changelog-core": "^4.1.1",

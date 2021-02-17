@@ -289,7 +289,7 @@ describe("Docker Plugin", () => {
       const hooks = setup(
         {
           getLatestTagInBranch: () => "v1.0.0",
-          getCurrentBranch: () => "master",
+          getCurrentBranch: () => "main",
           remote: "github.com",
         },
         { registry, image: sourceImage, tagLatest: false }
@@ -308,7 +308,7 @@ describe("Docker Plugin", () => {
       const hooks = setup(
         {
           getLatestTagInBranch: () => "v1.0.0",
-          getCurrentBranch: () => "master",
+          getCurrentBranch: () => "main",
           remote: "github.com",
         },
         { registry, image: sourceImage, tagLatest: true }

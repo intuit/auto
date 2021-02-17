@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "10.6.0",
+  "version": "10.16.5",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "license": "MIT",
@@ -69,8 +69,8 @@
     "tapable": "^2.0.0-beta.2",
     "terminal-link": "^2.1.1",
     "tinycolor2": "^1.4.1",
-    "tslib": "2.0.3",
-    "type-fest": "^0.18.0",
+    "tslib": "2.1.0",
+    "type-fest": "^0.20.2",
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },
@@ -81,7 +81,7 @@
     "@types/jest": "~26.0.7",
     "@types/lodash.chunk": "^4.2.6",
     "@types/node": "^13.1.8",
-    "@types/node-fetch": "2.5.7",
+    "@types/node-fetch": "2.5.8",
     "@types/semver": "^7.1.0",
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
