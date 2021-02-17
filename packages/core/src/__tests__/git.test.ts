@@ -171,7 +171,7 @@ describe("github", () => {
       const gh = new Git(options);
 
       gh.getTags = (ref: string) => {
-        if (ref === "origin/master") {
+        if (ref === "origin/main") {
           return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
         }
 
