@@ -49,7 +49,11 @@ export interface IGitOptions {
 /** An error originating from the GitHub */
 class GitAPIError extends Error {
   /** Extend the base error */
-  constructor(api: string, args: Record<string, unknown> | unknown[], origError: Error) {
+  constructor(
+    api: string,
+    args: Record<string, unknown> | unknown[],
+    origError: Error
+  ) {
     super(
       `Error calling github: ${api}\n\twith: ${JSON.stringify(args)}.\n\t${
         origError.message
@@ -219,7 +223,11 @@ export default class Git {
 
   /** Get the first commit for the repo */
   async getFirstCommit(): Promise<string> {
-    const list = await execPromise("git", ["rev-list", "--max-parents=0", "HEAD"]);
+    const list = await execPromise("git", [
+      "rev-list",
+      "--max-parents=0",
+      "HEAD",
+    ]);
     return list.split("\n").pop() as string;
   }
 
@@ -885,7 +893,15 @@ export default class Git {
     const baseTags = (
       await this.getTags(`origin/${this.options.baseBranch}`)
     ).reverse();
-    const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
+    let branchTags = (await this.getTags(`heads/${branch}`)).reverse();
+    const branchTagsWithPrereleaseSuffix = branchTags.filter(
+      (tag) => tag.indexOf(`-${branch.toLowerCase()}`) >= 0
+    );
+
+    if (branchTagsWithPrereleaseSuffix.length) {
+      branchTags = branchTagsWithPrereleaseSuffix;
+    }
+
     const comparator = options.first ? lt : gt;
     let firstGreatestUnique: string | undefined;
 
