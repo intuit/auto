@@ -45,7 +45,7 @@ An incoming webhook can work for most situations but to enable a better integrat
 - Upload text snippets for code blocks in release notes
 - Post to multiple channels
 
-For this to work you need to create a token with the following permissions:
+For this to work you need to [create an app](https://api.slack.com/apps) with the following permissions:
 
 - `files:write`
 - `chat:write`
@@ -155,3 +155,19 @@ Can be an encoded ID, or a name.
 ```
 
 [Read here for more details.](https://api.slack.com/methods/chat.postMessage#channels)
+
+## Creating a Slack App
+
+There are a lot of steps to creating a Slack app and installing it.
+Let's go over what you'll need to do to get set up with app auth.
+
+1. [Create the app](https://api.slack.com/apps)
+2. From your app's `Basic Information` page go to `Permissions => Bot Token Scopes` and add `chat:write` and `file:write`
+3. Copy the `Bot User OAuth Access Token` into your `.env` file and store it as `SLACK_TOKEN`
+
+### Customize the App
+
+To make you app shine in Slack head to `Basic Information` and scroll down to `Display Information`.
+Her you should set a description for the app and give it an `icon` and `color`.
+
+This could be your code's logo or one of [our](https://github.com/intuit/auto/blob/main/docs/public/logo-large-dark.png) [logos](https://github.com/intuit/auto/blob/main/docs/public/logo-large.png).
