@@ -11,8 +11,6 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
-const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
-
 /** Transform markdown into slack friendly text */
 export const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
@@ -28,14 +26,98 @@ export const sanitizeMarkdown = (markdown: string) =>
         return line.replace(/^\s+•/, "   •");
       }
 
-      // Strip markdown code block type. Slack does not render them correctly.
-      if (line.match(MARKDOWN_LANGUAGE)) {
-        return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
-      }
-
       return line;
     })
     .join("\n");
+
+/** Create slack context block */
+const createTextBlock = (
+  type: "context" | "section" | "header",
+  text: string
+) =>
+  type === "context"
+    ? {
+        type,
+        elements: [
+          {
+            type: "mrkdwn",
+            text,
+          },
+        ],
+      }
+    : {
+        type,
+        text: {
+          type: "mrkdwn",
+          text,
+        },
+      };
+
+/** Create slack divider block */
+const createDividerBlock = () => ({
+  type: "divider",
+});
+
+interface FileUpload {
+  /** special identifier to upload file */
+  type: "file";
+  /** the language the file is */
+  language: string;
+  /** the code in the file */
+  code: string;
+}
+
+/** Convert the sanitized markdown to slack blocks */
+export const convertToBlocks = (slackMarkdown: string) => {
+  const messages: Array<any[] | FileUpload> = [];
+  let currentMessage = [];
+
+  const lineIterator = slackMarkdown.split("\n")[Symbol.iterator]();
+
+  for (const line of lineIterator) {
+    if (line.startsWith("*Release Notes*")) {
+      currentMessage.push(createTextBlock("header", line));
+    } else if (line === "---") {
+      currentMessage.push(createDividerBlock());
+    } else if (line.startsWith("```")) {
+      const [, language] = line.match(/```(\S+)/) || ["", "detect"];
+      const lines: string[] = [];
+
+      for (const codeBlockLine of lineIterator) {
+        if (codeBlockLine.startsWith("```")) {
+          break;
+        }
+
+        lines.push(codeBlockLine);
+      }
+
+      messages.push(currentMessage);
+      messages.push({
+        type: "file",
+        language,
+        code: lines.join("\n"),
+      });
+      currentMessage = [];
+    } else if (line.startsWith("*Authors:")) {
+      currentMessage.push(createDividerBlock());
+      currentMessage.push(createTextBlock("context", line));
+
+      for (const authorLine of lineIterator) {
+        if (authorLine) {
+          currentMessage.push(createTextBlock("context", authorLine));
+        }
+      }
+    } else if (line) {
+      currentMessage.push(createTextBlock("section", line));
+    }
+  }
+
+  if (currentMessage.length) {
+    messages.push(currentMessage);
+  }
+
+  return messages;
+};
 
 const pluginOptions = t.partial({
   /** URL of the slack to post to */

@@ -6,7 +6,8 @@ import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
 import createHttpsProxyAgent from "https-proxy-agent";
 
-import SlackPlugin, { sanitizeMarkdown } from "../src";
+import SlackPlugin, { sanitizeMarkdown, convertToBlocks } from "../src";
+import endent from "endent";
 
 const fetchSpy = jest.fn();
 // @ts-ignore
@@ -419,5 +420,84 @@ describe("postToSlack", () => {
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  });
+});
+
+describe("convertToBlocks", () => {
+  test("work for simple case", () => {
+    expect(
+      convertToBlocks(
+        sanitizeMarkdown(endent`
+          #### 🐛 Bug Fix
+
+          - build the s3 plugin [#1804](https://github.com/intuit/auto/pull/1804) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          
+          #### Authors: 1
+          
+          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))    
+      `)
+      )
+    ).toMatchSnapshot();
+  });
+
+  test("work for simple additional release notes", () => {
+    expect(
+      convertToBlocks(
+        sanitizeMarkdown(endent`
+          ### Release Notes
+
+          #### Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver ([#1802](https://github.com/intuit/auto/pull/1802))
+          
+          This release changes the tag used for the "Canary Releases Assets" created by the \`upload-assets\` plugin to be \`0.0.0-canary\`.
+          This new tag is a valid semantic version and can be used with other auto commands.
+          
+          ---
+          
+          #### 🐛 Bug Fix
+          
+          - \`@auto-it/upload-assets\`
+            - Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver [#1802](https://github.com/intuit/auto/pull/1802) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          
+          #### 📝 Documentation
+          
+          - add automated TOC to hooks documentation [#1801](https://github.com/intuit/auto/pull/1801) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          
+          #### Authors: 1
+          
+          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+      `)
+      )
+    ).toMatchSnapshot();
+  });
+
+  test("work for simple additional release notes with code examples", () => {
+    expect(
+      convertToBlocks(
+        sanitizeMarkdown(endent`
+          ### Release Notes
+
+          #### Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver ([#1802](https://github.com/intuit/auto/pull/1802))
+          
+          \`\`\`md
+          > Code example
+          \`\`\`
+          
+          ---
+          
+          #### 🐛 Bug Fix
+          
+          - \`@auto-it/upload-assets\`
+            - Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver [#1802](https://github.com/intuit/auto/pull/1802) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          
+          #### 📝 Documentation
+          
+          - add automated TOC to hooks documentation [#1801](https://github.com/intuit/auto/pull/1801) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          
+          #### Authors: 1
+          
+          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+      `)
+      )
+    ).toMatchSnapshot();
   });
 });
