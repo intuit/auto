@@ -313,7 +313,7 @@ export default class SlackPlugin implements IPlugin {
         } else {
           const languageMap: Record<string, string> = { md: "markdown" };
 
-          await fetch("	https://slack.com/api/files.upload", {
+          await fetch("https://slack.com/api/files.upload", {
             method: "POST",
             body: JSON.stringify({
               token,
