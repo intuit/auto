@@ -105,3 +105,12 @@ Found unknown configuration keys: types.doc
 ",
 ]
 `;
+
+exports[`validatePlugin should validate plugin configuration - union 1`] = `
+Array [
+  "\\"test-plugin\\"
+
+Found missing configuration keys: when using auth you must also provide channels
+",
+]
+`;
