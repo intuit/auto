@@ -461,6 +461,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "EvanLovely",
+      "name": "Evan Lovely",
+      "avatar_url": "https://avatars.githubusercontent.com/u/569699?v=4",
+      "profile": "https://www.knapsack.cloud/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
