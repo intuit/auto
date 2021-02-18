@@ -11,7 +11,6 @@ import {
 } from "@auto-it/core";
 import fetch from "node-fetch";
 import * as t from "io-ts";
-import endent from "endent";
 
 type ReleaseResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
@@ -77,7 +76,7 @@ interface Block {
   /** Type of slack block */
   type: "header" | "divider" | "section" | "context";
   /** Blocks config */
-  [params: string]: any;
+  [params: string]: unknown;
 }
 
 type Messages = [Block[], ...Array<Block[] | FileUpload>];
@@ -274,6 +273,7 @@ export default class SlackPlugin implements IPlugin {
   }
 
   /** Post the release notes to slack */
+  // eslint-disable-next-line max-params
   async createPost(
     auto: Auto,
     header: string,
@@ -303,10 +303,15 @@ export default class SlackPlugin implements IPlugin {
           release.data.name || release.data.tag_name
         }>*`
     );
-    const releaseUrl = urls.length > 1 ? urls.join(", ") : `<${releases[0].data.html_url}|View Release>`;
+    const releaseUrl =
+      urls.length > 1
+        ? urls.join(", ")
+        : `<${releases[0].data.html_url}|View Release>`;
 
     // First add context to share link to release
-    messages[0].unshift(createContextBlock(`@${this.options.atTarget} ${releaseUrl}`));
+    messages[0].unshift(
+      createContextBlock(`@${this.options.atTarget} ${releaseUrl}`)
+    );
     // At text only header
     messages[0].unshift(createHeaderBlock(header));
 
