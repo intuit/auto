@@ -20,7 +20,7 @@ This is the easier option to set up, but it has less features than [app auth](#a
 
 There are a few options on how to call/construct the webhook URL:
 
-```json
+```jsonc
 {
   "plugins": [
     // Webhook URL Only:
@@ -77,7 +77,7 @@ Defaults to `channel`.
 
 Some less chatty options are:
 
-```json
+```jsonc
 {
   "plugins": [
     [

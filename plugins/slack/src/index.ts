@@ -1,3 +1,4 @@
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import { githubToSlack } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -12,16 +13,13 @@ import fetch from "node-fetch";
 import * as t from "io-ts";
 import endent from "endent";
 
+type ReleaseResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+
 /** Transform markdown into slack friendly text */
 export const sanitizeMarkdown = (markdown: string) =>
   githubToSlack(markdown)
     .split("\n")
     .map((line) => {
-      // Strip out the ### prefix and replace it with *<word>* to make it bold
-      if (line.startsWith("#")) {
-        return `*${line.replace(/^[#]+/, "")}*`;
-      }
-
       // Give extra padding to nested lists
       if (line.match(/^\s+•/)) {
         return line.replace(/^\s+•/, "   •");
@@ -32,31 +30,38 @@ export const sanitizeMarkdown = (markdown: string) =>
     .join("\n");
 
 /** Create slack context block */
-const createTextBlock = (
-  type: "context" | "section" | "header",
-  text: string
-) =>
-  type === "context"
-    ? {
-        type,
-        elements: [
-          {
-            type: "mrkdwn",
-            text,
-          },
-        ],
-      }
-    : {
-        type,
-        text: {
-          type: "mrkdwn",
-          text,
-        },
-      };
+const createContextBlock = (text: string) => ({
+  type: "context" as const,
+  elements: [
+    {
+      type: "mrkdwn",
+      text,
+    },
+  ],
+});
+
+/** Create slack section block */
+const createSectionBlock = (text: string) => ({
+  type: "section" as const,
+  text: {
+    type: "mrkdwn",
+    text,
+  },
+});
+
+/** Create slack header block */
+const createHeaderBlock = (text: string) => ({
+  type: "header" as const,
+  text: {
+    type: "plain_text",
+    text,
+    emoji: true,
+  },
+});
 
 /** Create slack divider block */
 const createDividerBlock = () => ({
-  type: "divider",
+  type: "divider" as const,
 });
 
 interface FileUpload {
@@ -68,19 +73,28 @@ interface FileUpload {
   code: string;
 }
 
+interface Block {
+  /** Type of slack block */
+  type: "header" | "divider" | "section" | "context";
+  /** Blocks config */
+  [params: string]: any;
+}
+
+type Messages = [Block[], ...Array<Block[] | FileUpload>];
+
 /** Convert the sanitized markdown to slack blocks */
 export function convertToBlocks(
   slackMarkdown: string,
   withFiles = false
-): Array<any[] | FileUpload> {
-  const messages: Array<any[] | FileUpload> = [];
-  let currentMessage = [];
+): Messages {
+  let currentMessage: Block[] = [];
+  const messages: Messages = [currentMessage];
 
   const lineIterator = slackMarkdown.split("\n")[Symbol.iterator]();
 
   for (const line of lineIterator) {
-    if (line.startsWith("*Release Notes*")) {
-      currentMessage.push(createTextBlock("header", line));
+    if (line.startsWith("#")) {
+      currentMessage.push(createSectionBlock(`*${line.replace(/^[#]+/, "")}*`));
     } else if (line === "---") {
       currentMessage.push(createDividerBlock());
     } else if (line.startsWith("```")) {
@@ -103,31 +117,30 @@ export function convertToBlocks(
           code: lines.join("\n"),
         });
         currentMessage = [];
+        messages.push(currentMessage);
       } else {
-        currentMessage.push(createTextBlock("section", `\`${language}\`:\n\n`));
+        currentMessage.push(createSectionBlock(`\`${language}\`:\n\n`));
         currentMessage.push(
-          createTextBlock("section", `\`\`\`\n${lines.join("\n")}\n\`\`\``)
+          createSectionBlock(`\`\`\`\n${lines.join("\n")}\n\`\`\``)
         );
       }
     } else if (line.startsWith("*Authors:")) {
       currentMessage.push(createDividerBlock());
-      currentMessage.push(createTextBlock("context", line));
+      currentMessage.push(createContextBlock(line));
 
       for (const authorLine of lineIterator) {
         if (authorLine) {
-          currentMessage.push(createTextBlock("context", authorLine));
+          currentMessage.push(createContextBlock(authorLine));
         }
       }
     } else if (line) {
-      currentMessage.push(createTextBlock("section", line));
+      currentMessage.push(createSectionBlock(line));
     }
   }
 
-  if (currentMessage.length) {
-    messages.push(currentMessage);
-  }
-
-  return messages;
+  return messages.filter(
+    (m) => (Array.isArray(m) && m.length !== 0) || true
+  ) as [Block[], ...Array<Block[] | FileUpload>];
 }
 
 const basePluginOptions = t.partial({
@@ -243,20 +256,17 @@ export default class SlackPlugin implements IPlugin {
           (Array.isArray(response) && response) ||
           (response && [response]) ||
           [];
-        const urls = releases.map(
-          (release) =>
-            `*<${release.data.html_url}|${
-              release.data.name || release.data.tag_name
-            }>*`
-        );
-        const releaseUrl = urls.length ? urls.join(", ") : newVersion;
+        const header = `New Release${
+          releases.length > 1 ? "s" : ""
+        }: ${releases.map((r) => r.data.tag_name).join(", ")}`;
         const proxyUrl = process.env.https_proxy || process.env.http_proxy;
         const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
 
         await this.createPost(
           auto,
+          header,
           sanitizeMarkdown(releaseNotes),
-          releaseUrl,
+          releases,
           agent
         );
       }
@@ -266,8 +276,9 @@ export default class SlackPlugin implements IPlugin {
   /** Post the release notes to slack */
   async createPost(
     auto: Auto,
+    header: string,
     releaseNotes: string,
-    releaseUrl: string,
+    releases: ReleaseResponse[],
     agent: HttpsProxyAgent | undefined
   ) {
     if (!auto.git) {
@@ -283,15 +294,26 @@ export default class SlackPlugin implements IPlugin {
     }
 
     const messages = convertToBlocks(
-      endent`
-        ${this.options.title ? `${this.options.title}` : ""}
-        
-        @${this.options.atTarget}: New release ${releaseUrl}
-        
-        ${releaseNotes}
-      `,
+      releaseNotes,
       "auth" in this.options && this.options.auth === "app"
     );
+    const urls = releases.map(
+      (release) =>
+        `*<${release.data.html_url}|${
+          release.data.name || release.data.tag_name
+        }>*`
+    );
+    const releaseUrl = urls.length > 1 ? urls.join(", ") : `<${releases[0].data.html_url}|View Release>`;
+
+    // First add context to share link to release
+    messages[0].unshift(createContextBlock(`@${this.options.atTarget} ${releaseUrl}`));
+    // At text only header
+    messages[0].unshift(createHeaderBlock(header));
+
+    // Add user context title
+    if (this.options.title) {
+      messages[0].unshift(createSectionBlock(this.options.title));
+    }
 
     if ("auth" in this.options) {
       const channels = this.options.channels;

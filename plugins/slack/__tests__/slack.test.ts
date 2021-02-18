@@ -208,8 +208,9 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       { ...mockAuto, logger } as Auto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      "",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       undefined
     );
 
@@ -222,8 +223,9 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       undefined
     );
 
@@ -232,7 +234,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should add more indents to nested lists", async () => {
@@ -241,10 +243,11 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown(
         "# My Notes\n- PR [some link](google.com)\n - Another note"
       ),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       undefined
     );
 
@@ -253,7 +256,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should add more indents to nested lists - 2 spaces", async () => {
@@ -262,10 +265,11 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown(
         "# My Notes\n- PR [some link](google.com)\n  - Another note"
       ),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       undefined
     );
 
@@ -274,7 +278,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should call slack api through http proxy", async () => {
@@ -284,8 +288,9 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       createHttpsProxyAgent("mock-url")
     );
 
@@ -294,7 +299,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should remove markdown code types from block", async () => {
@@ -303,14 +308,15 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown(
         `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`
       ),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       undefined
     );
 
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should call slack api through https proxy", async () => {
@@ -320,8 +326,9 @@ describe("postToSlack", () => {
 
     await plugin.createPost(
       mockAuto,
+      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
+      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
       createHttpsProxyAgent("mock-url")
     );
 
@@ -330,7 +337,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should call slack api", async () => {
@@ -352,7 +359,7 @@ describe("postToSlack", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe(
       "https://custom-slack-url?token=MY_TOKEN"
     );
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should call slack api with custom atTarget", async () => {
@@ -378,7 +385,7 @@ describe("postToSlack", () => {
       "https://custom-slack-url?token=MY_TOKEN"
     );
     expect(fetchSpy.mock.calls[0][1].body.includes("@here")).toBe(true);
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should call slack api in env var", async () => {
@@ -399,7 +406,7 @@ describe("postToSlack", () => {
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe("https://foo.bar?token=MY_TOKEN");
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
   test("should add title", async () => {
@@ -419,7 +426,7 @@ describe("postToSlack", () => {
     });
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 });
 
