@@ -215,4 +215,7 @@ GitHub.sublime-settings
 .history
 
 # End of https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
+
+### Files generated from testing ###
+packages/cli/auto
 docs/public/search-index.json

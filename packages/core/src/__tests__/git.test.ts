@@ -167,6 +167,31 @@ describe("github", () => {
       );
     });
 
+    test("will prefer latest tags from prerelease branch if available", async () => {
+      const gh = new Git(options);
+
+      gh.getTags = (ref: string) => {
+        if (ref === "origin/main") {
+          return Promise.resolve(["1.0.0", "1.2.3", "1.4.0"]);
+        }
+
+        return Promise.resolve([
+          "1.0.0",
+          "1.2.3",
+          "1.4.0",
+          "1.4.1-beta.0",
+          "1.4.1-beta.1",
+          "1.4.1-beta.2",
+          "1.4.1-alpha.0",
+          "1.4.1-alpha.1",
+        ]);
+      };
+
+      expect(await gh.getTagNotInBaseBranch("alpha")).toBe("1.4.1-alpha.1");
+
+      expect(await gh.getTagNotInBaseBranch("beta")).toBe("1.4.1-beta.2");
+    });
+
     test("handles tags with package names", async () => {
       const baseTags = ["@monorepo/models@2.0.0", "@monorepo/core@2.0.0"];
       const branchTags = [

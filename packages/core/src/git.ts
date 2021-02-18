@@ -904,7 +904,15 @@ export default class Git {
     const baseTags = (
       await this.getTags(`origin/${this.options.baseBranch}`)
     ).reverse();
-    const branchTags = (await this.getTags(`heads/${branch}`)).reverse();
+    let branchTags = (await this.getTags(`heads/${branch}`)).reverse();
+    const branchTagsWithPrereleaseSuffix = branchTags.filter(
+      (tag) => tag.indexOf(`-${branch.toLowerCase()}`) >= 0
+    );
+
+    if (branchTagsWithPrereleaseSuffix.length) {
+      branchTags = branchTagsWithPrereleaseSuffix;
+    }
+
     const comparator = options.first ? lt : gt;
     let firstGreatestUnique: string | undefined;
 
