@@ -1,3 +1,44 @@
+# v10.16.6 (Thu Feb 18 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+:heart: Evan Lovely ([@EvanLovely](https://github.com/EvanLovely))
+
+#### 🐛 Bug Fix
+
+- fix: prefer prerelease tags when determining latest [#1812](https://github.com/intuit/auto/pull/1812) (lucas_shadler@intuit.com)
+- docs: fix broken link on all-contributors page ([@EvanLovely](https://github.com/EvanLovely))
+- Merge branch 'main' into fix-prefer-prerelease-tags (lucas_shadler@intuit.com)
+- Bump tslib from 2.0.3 to 2.1.0 ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### 📝 Documentation
+
+- docs: fix broken link on all-contributors page [#1813](https://github.com/intuit/auto/pull/1813) ([@EvanLovely](https://github.com/EvanLovely))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 4.0.5 to 4.1.5 [#1800](https://github.com/intuit/auto/pull/1800) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.13.0 to 4.15.0 [#1799](https://github.com/intuit/auto/pull/1799) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump conventional-changelog-core from 4.2.1 to 4.2.2 [#1788](https://github.com/intuit/auto/pull/1788) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.5.3 to 10.5.4 [#1787](https://github.com/intuit/auto/pull/1787) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/prettier from 2.1.6 to 2.2.0 [#1786](https://github.com/intuit/auto/pull/1786) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump vsce from 1.83.0 to 1.85.0 [#1785](https://github.com/intuit/auto/pull/1785) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/node-fetch from 2.5.7 to 2.5.8 [#1784](https://github.com/intuit/auto/pull/1784) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tapable from 2.0.0 to 2.2.0 [#1781](https://github.com/intuit/auto/pull/1781) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tslib from 2.0.3 to 2.1.0 [#1779](https://github.com/intuit/auto/pull/1779) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Evan Lovely ([@EvanLovely](https://github.com/EvanLovely))
+- Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+---
+
 # v10.16.2 (Thu Feb 11 2021)
 
 #### 📝 Documentation

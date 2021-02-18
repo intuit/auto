@@ -1,3 +1,50 @@
+# v10.16.6 (Thu Feb 18 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+:heart: Evan Lovely ([@EvanLovely](https://github.com/EvanLovely))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix: prefer prerelease tags when determining latest [#1812](https://github.com/intuit/auto/pull/1812) (lucas_shadler@intuit.com)
+
+#### 📝 Documentation
+
+- fix typo [#1814](https://github.com/intuit/auto/pull/1814) ([@zephraph](https://github.com/zephraph))
+- `@auto-it/all-contributors`
+  - docs: fix broken link on all-contributors page [#1813](https://github.com/intuit/auto/pull/1813) ([@EvanLovely](https://github.com/EvanLovely))
+- `@auto-it/jira`
+  - better docs for jira plugin [#1811](https://github.com/intuit/auto/pull/1811) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump typescript from 4.0.5 to 4.1.5 [#1800](https://github.com/intuit/auto/pull/1800) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/parser from 4.13.0 to 4.15.0 [#1799](https://github.com/intuit/auto/pull/1799) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump conventional-changelog-core from 4.2.1 to 4.2.2 [#1788](https://github.com/intuit/auto/pull/1788) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump lint-staged from 10.5.3 to 10.5.4 [#1787](https://github.com/intuit/auto/pull/1787) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @types/prettier from 2.1.6 to 2.2.0 [#1786](https://github.com/intuit/auto/pull/1786) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump vsce from 1.83.0 to 1.85.0 [#1785](https://github.com/intuit/auto/pull/1785) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tapable from 2.0.0 to 2.2.0 [#1781](https://github.com/intuit/auto/pull/1781) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`, `@auto-it/slack`
+  - Bump @types/node-fetch from 2.5.7 to 2.5.8 [#1784](https://github.com/intuit/auto/pull/1784) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/magic-zero`, `@auto-it/microsoft-teams`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/pr-body-labels`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`, `@auto-it/vscode`
+  - Bump tslib from 2.0.3 to 2.1.0 [#1779](https://github.com/intuit/auto/pull/1779) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 5
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Evan Lovely ([@EvanLovely](https://github.com/EvanLovely))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Lucas Shadler ([@lshadler](https://github.com/lshadler))
+
+---
+
 # v10.16.5 (Thu Feb 11 2021)
 
 #### 🐛 Bug Fix
