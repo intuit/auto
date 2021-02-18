@@ -111,13 +111,24 @@ Array [
       },
       "type": "section",
     },
-  ],
-  Object {
-    "code": "> Code example",
-    "language": "md",
-    "type": "file",
-  },
-  Array [
+    Object {
+      "text": Object {
+        "text": "\`md\`:
+
+",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "\`\`\`
+> Code example
+\`\`\`",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
     Object {
       "type": "divider",
     },

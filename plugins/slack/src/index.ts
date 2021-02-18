@@ -70,7 +70,7 @@ interface FileUpload {
 /** Convert the sanitized markdown to slack blocks */
 export const convertToBlocks = (slackMarkdown: string) => {
   const messages: Array<any[] | FileUpload> = [];
-  let currentMessage = [];
+  const currentMessage = [];
 
   const lineIterator = slackMarkdown.split("\n")[Symbol.iterator]();
 
@@ -91,13 +91,10 @@ export const convertToBlocks = (slackMarkdown: string) => {
         lines.push(codeBlockLine);
       }
 
-      messages.push(currentMessage);
-      messages.push({
-        type: "file",
-        language,
-        code: lines.join("\n"),
-      });
-      currentMessage = [];
+      currentMessage.push(createTextBlock("section", `\`${language}\`:\n\n`));
+      currentMessage.push(
+        createTextBlock("section", `\`\`\`\n${lines.join("\n")}\n\`\`\``)
+      );
     } else if (line.startsWith("*Authors:")) {
       currentMessage.push(createDividerBlock());
       currentMessage.push(createTextBlock("context", line));
