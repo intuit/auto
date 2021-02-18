@@ -256,17 +256,16 @@ export const validateIoConfiguration = (
           type._tag === "IntersectionType" || (type as any)._tag === "ExactType"
       )
     ) {
-      const matchingMember = exactDeclaration.types
-        .map((t) => t.decode(rc))
-        .filter((t) => "left" in t)[0];
+      const decodedTypes = exactDeclaration.types.map((t) => t.decode(rc));
+      const matchingMissingMember = decodedTypes.filter((t) => "left" in t)[0];
 
-      if (matchingMember && "left" in matchingMember) {
+      if (matchingMissingMember && "left" in matchingMissingMember) {
         const correct = Object.keys(
-          matchingMember.left[0].context[0].actual as any
+          matchingMissingMember.left[0].context[0].actual as any
         );
         const missing =
-          matchingMember.left[0].context[
-            matchingMember.left[0].context.length - 1
+          matchingMissingMember.left[0].context[
+            matchingMissingMember.left[0].context.length - 1
           ].key;
 
         return [
@@ -276,6 +275,17 @@ export const validateIoConfiguration = (
             correct.join(", ")
           )} you must also provide ${unexpectedValue(missing)}\n`,
         ];
+      }
+
+      const matchingCorrectMember = decodedTypes.filter(
+        (t) =>
+          "right" in t &&
+          Object.keys(t.right).length && 
+          Object.keys(t.right).every((key) => unknownKeys.includes(key))
+      )[0];
+
+      if (matchingCorrectMember) {
+        return [];
       }
     }
 

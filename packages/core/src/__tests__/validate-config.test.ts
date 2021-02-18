@@ -466,18 +466,22 @@ describe("validatePlugin", () => {
       }
     });
 
-    // Check no validation issues with base options
     expect(
       await validatePlugins(hook, {
         plugins: [["test-plugin", { url: "foo" }]],
       })
     ).toStrictEqual([]);
-    // Check no validation issues with intersected options
     expect(
       await validatePlugins(hook, {
         plugins: [["test-plugin", { auth: "app" }]],
       })
     ).toMatchSnapshot();
+    // Check no validation issues with intersected options
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", { auth: "app", channels: ['foo'] }]],
+      })
+      ).toStrictEqual([]);
   });
 
   test("should validate plugin configuration - array of configurations", async () => {
