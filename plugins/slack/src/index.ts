@@ -109,7 +109,6 @@ export function convertToBlocks(
       }
 
       if (withFiles) {
-        messages.push(currentMessage);
         messages.push({
           type: "file",
           language,
@@ -245,7 +244,7 @@ export default class SlackPlugin implements IPlugin {
           return;
         }
 
-        if (!this.options.url) {
+        if (!("auth" in this.options) && !this.options.url) {
           throw new Error(
             `${this.name} url must be set to post a message to ${this.name}.`
           );
@@ -327,28 +326,38 @@ export default class SlackPlugin implements IPlugin {
         await last;
 
         if (Array.isArray(message)) {
-          await fetch("https://slack.com/api/chat.postMessage", {
-            method: "POST",
-            body: JSON.stringify({
-              token,
-              channels,
-              blocks: message,
-            }),
-            headers: { "Content-Type": "application/json" },
-            agent,
-          });
+          await channels.reduce(async (lastMessage, channel) => {
+            await lastMessage;
+            await fetch("https://slack.com/api/chat.postMessage", {
+              method: "POST",
+              body: JSON.stringify({
+                channel,
+                blocks: message,
+                link_names: true,
+              }),
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: `Bearer ${token}`,
+              },
+              agent,
+            });
+          }, Promise.resolve());
         } else {
           const languageMap: Record<string, string> = { md: "markdown" };
 
           await fetch("https://slack.com/api/files.upload", {
             method: "POST",
-            body: JSON.stringify({
-              token,
-              channels,
+            body: new URLSearchParams({
+              channels: channels.join(","),
               content: message.code,
+              title: languageMap[message.language] || message.language,
               filetype: languageMap[message.language] || message.language,
-            }),
-            headers: { "Content-Type": "application/json" },
+            }) as any,
+            headers: {
+              "Content-Type":
+                "application/x-www-form-urlencoded; charset=utf-8",
+              Authorization: `Bearer ${token}`,
+            },
             agent,
           });
         }
