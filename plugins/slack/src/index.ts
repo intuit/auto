@@ -10,6 +10,7 @@ import {
 } from "@auto-it/core";
 import fetch from "node-fetch";
 import * as t from "io-ts";
+import endent from "endent";
 
 /** Transform markdown into slack friendly text */
 export const sanitizeMarkdown = (markdown: string) =>
@@ -68,9 +69,12 @@ interface FileUpload {
 }
 
 /** Convert the sanitized markdown to slack blocks */
-export const convertToBlocks = (slackMarkdown: string) => {
+export function convertToBlocks(
+  slackMarkdown: string,
+  withFiles = false
+): Array<any[] | FileUpload> {
   const messages: Array<any[] | FileUpload> = [];
-  const currentMessage = [];
+  let currentMessage = [];
 
   const lineIterator = slackMarkdown.split("\n")[Symbol.iterator]();
 
@@ -91,10 +95,20 @@ export const convertToBlocks = (slackMarkdown: string) => {
         lines.push(codeBlockLine);
       }
 
-      currentMessage.push(createTextBlock("section", `\`${language}\`:\n\n`));
-      currentMessage.push(
-        createTextBlock("section", `\`\`\`\n${lines.join("\n")}\n\`\`\``)
-      );
+      if (withFiles) {
+        messages.push(currentMessage);
+        messages.push({
+          type: "file",
+          language,
+          code: lines.join("\n"),
+        });
+        currentMessage = [];
+      } else {
+        currentMessage.push(createTextBlock("section", `\`${language}\`:\n\n`));
+        currentMessage.push(
+          createTextBlock("section", `\`\`\`\n${lines.join("\n")}\n\`\`\``)
+        );
+      }
     } else if (line.startsWith("*Authors:")) {
       currentMessage.push(createDividerBlock());
       currentMessage.push(createTextBlock("context", line));
@@ -114,9 +128,9 @@ export const convertToBlocks = (slackMarkdown: string) => {
   }
 
   return messages;
-};
+}
 
-const pluginOptions = t.partial({
+const basePluginOptions = t.partial({
   /** URL of the slack to post to */
   url: t.string,
   /** Who to bother when posting to the channel */
@@ -126,6 +140,18 @@ const pluginOptions = t.partial({
   /** Additional Title to add at the start of the slack message */
   title: t.string,
 });
+
+const appPluginOptions = t.intersection([
+  t.interface({
+    /** Marks we are gonna use app auth */
+    auth: t.literal("app"),
+    /** Channels to post */
+    channels: t.array(t.string),
+  }),
+  basePluginOptions,
+]);
+
+const pluginOptions = t.union([basePluginOptions, appPluginOptions]);
 
 export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
 
@@ -256,20 +282,62 @@ export default class SlackPlugin implements IPlugin {
       auto.logger.verbose.warn("Slack may need a token to send a message");
     }
 
-    await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
-      method: "POST",
-      body: JSON.stringify({
-        text: [
-          `${this.options.title ? `${this.options.title}\n\n` : ""}@${
-            this.options.atTarget
-          }: New release ${releaseUrl}`,
-          releaseNotes,
-        ].join("\n"),
-        link_names: 1,
-      }),
-      headers: { "Content-Type": "application/json" },
-      agent,
-    });
+    const messages = convertToBlocks(
+      endent`
+        ${this.options.title ? `${this.options.title}` : ""}
+        
+        @${this.options.atTarget}: New release ${releaseUrl}
+        
+        ${releaseNotes}
+      `,
+      "auth" in this.options && this.options.auth === "app"
+    );
+
+    if ("auth" in this.options) {
+      const channels = this.options.channels;
+
+      await messages.reduce(async (last, message) => {
+        await last;
+
+        if (Array.isArray(message)) {
+          await fetch("https://slack.com/api/chat.postMessage", {
+            method: "POST",
+            body: JSON.stringify({
+              token,
+              channels,
+              blocks: message,
+            }),
+            headers: { "Content-Type": "application/json" },
+            agent,
+          });
+        } else {
+          const languageMap: Record<string, string> = { md: "markdown" };
+
+          await fetch("	https://slack.com/api/files.upload", {
+            method: "POST",
+            body: JSON.stringify({
+              token,
+              channels,
+              content: message.code,
+              filetype: languageMap[message.language] || message.language,
+            }),
+            headers: { "Content-Type": "application/json" },
+            agent,
+          });
+        }
+      }, Promise.resolve());
+    } else {
+      await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
+        method: "POST",
+        body: JSON.stringify({
+          link_names: true,
+          // If not in app auth only one message is constructed
+          blocks: messages[0],
+        }),
+        headers: { "Content-Type": "application/json" },
+        agent,
+      });
+    }
 
     auto.logger.verbose.info("Posted release notes to slack.");
   }
