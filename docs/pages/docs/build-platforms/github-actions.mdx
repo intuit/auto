@@ -57,7 +57,7 @@ If you are publishing to the Github Package Registry you will need to change the
 - name: Create Release
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   run: |
     yarn install --frozen-lockfile
     yarn build
