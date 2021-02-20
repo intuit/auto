@@ -7,10 +7,11 @@ import setNpmToken, { getRegistry } from "../src/set-npm-token";
 import * as utils from "../src/utils";
 
 const loadPackageJsonSpy = loadPackageJson as jest.Mock;
-const readFile = utils.readFile as jest.Mock;
+const readFile = (utils.readFile as jest.Mock).mockResolvedValue("");
 const writeFile = utils.writeFile as jest.Mock;
 const isMonorepo = utils.isMonorepo as jest.Mock;
 const getLernaJson = utils.getLernaJson as jest.Mock;
+const getNpmrcPath = utils.getNpmrcPath as jest.Mock;
 
 jest.mock("@auto-it/package-json-utils");
 jest.mock("../src/utils.ts");
@@ -30,6 +31,18 @@ describe("set npm token", () => {
   test("should write a new npmrc", async () => {
     loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
     loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
+    getNpmrcPath.mockReturnValueOnce("/User/name/repo/.npmrc");
+    await setNpmToken(dummyLog());
+    expect(writeFile).toHaveBeenCalledWith(
+      "/User/name/repo/.npmrc",
+      "npm.registry.com/:_authToken=${NPM_TOKEN}"
+    );
+  });
+
+  test("should update a user's npmrc", async () => {
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
+    loadPackageJsonSpy.mockReturnValueOnce({ name: "test" });
+    getNpmrcPath.mockReturnValueOnce("/User/name/.npmrc");
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -67,9 +80,10 @@ describe("set npm token", () => {
   test("should write a new npmrc w/o name", async () => {
     loadPackageJsonSpy.mockReturnValueOnce({});
     loadPackageJsonSpy.mockReturnValueOnce({});
+    getNpmrcPath.mockReturnValueOnce("/User/name/repo/.npmrc");
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
-      "/User/name/.npmrc",
+      "/User/name/repo/.npmrc",
       "npm.registry.com/:_authToken=${NPM_TOKEN}"
     );
   });
@@ -83,6 +97,7 @@ describe("set npm token", () => {
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
+    getNpmrcPath.mockReturnValueOnce("/User/name/.npmrc");
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -97,6 +112,7 @@ describe("set npm token", () => {
     loadPackageJsonSpy.mockReturnValueOnce({
       name: "@scope/test",
     });
+    getNpmrcPath.mockReturnValueOnce("/User/name/.npmrc");
     await setNpmToken(dummyLog());
     expect(writeFile).toHaveBeenCalledWith(
       "/User/name/.npmrc",
@@ -113,7 +129,10 @@ describe("set npm token", () => {
       name: "test",
       publishConfig: { registry: "https://my-registry.com" },
     });
-    readFile.mockReturnValueOnce("//my-registry.com/:_authToken=${NPM_TOKEN}");
+    getNpmrcPath.mockReturnValueOnce("/User/name/.npmrc");
+    readFile.mockResolvedValueOnce(
+      "//my-registry.com/:_authToken=${NPM_TOKEN}"
+    );
 
     await setNpmToken(dummyLog());
     expect(writeFile).not.toHaveBeenCalled();
