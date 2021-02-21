@@ -35,12 +35,12 @@ describe("getLernaJson", () => {
     mockFs({
       "lerna.json": `{"hello": "world"}`,
     });
-    expect(getLernaJson()).toEqual({ hello: "world" });
+    expect(getLernaJson()).toStrictEqual({ hello: "world" });
   });
 
   test("should return empty object if doesn't exist", () => {
     mockFs({});
-    expect(getLernaJson()).toEqual({});
+    expect(getLernaJson()).toStrictEqual({});
   });
 });
 

@@ -56,7 +56,9 @@ export default async function setTokenOnCI(logger: ILogger) {
     readFile(npmrcFilePath, "utf-8")
   );
   if (readRCError) {
-    logger.verbose.info(`${npmrcFilePath} doesn't exist or cannot be read`);
+    logger.veryVerbose.error(
+      `${npmrcFilePath} doesn't exist or cannot be read`
+    );
   }
 
   const registry = await getRegistry();

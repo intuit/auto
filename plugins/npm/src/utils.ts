@@ -25,22 +25,26 @@ const getFilePathIfExists = (
 
 interface GetLernaPathFn {
   (): string | false;
+  /** Where the result of the path is cached after the first run */
   _path?: string | false;
 }
+/** Get the path to the lerna.json file in the tree or false if it doesn't exist */
 export const getLernaPathIfExists: GetLernaPathFn = () => {
   if (typeof getLernaPathIfExists._path !== "undefined") {
     return getLernaPathIfExists._path;
   }
+
   const pathToLerna = getFilePathIfExists(process.cwd(), "lerna.json");
   const result = pathToLerna ? path.join(pathToLerna, "lerna.json") : false;
   if (process.env.NODE_ENV !== "test") {
     getLernaPathIfExists._path = result;
   }
+
   return result;
 };
 
 /** Check if the project is a monorepo */
-export const isMonorepo = (): boolean => !!getLernaPathIfExists();
+export const isMonorepo = (): boolean => Boolean(getLernaPathIfExists());
 
 /** Parse the lerna.json file. */
 export const getLernaJson = () => {
