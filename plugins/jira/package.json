@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/jira",
-  "version": "10.16.6",
+  "version": "10.16.7",
   "main": "dist/index.js",
   "description": "Jira plugin for auto",
   "license": "MIT",

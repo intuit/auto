@@ -1282,7 +1282,7 @@ describe("canary", () => {
       "--yes",
       "--no-push",
       "-m",
-      '"Bump independent versions [skip ci]"',
+      `'"Bump independent versions [skip ci]"'`,
       false,
     ]);
   });

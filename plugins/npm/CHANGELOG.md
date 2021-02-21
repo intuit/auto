@@ -1,3 +1,16 @@
+# v10.16.7 (Sat Feb 20 2021)
+
+#### 🐛 Bug Fix
+
+- fix lerna independent commit message [#1819](https://github.com/intuit/auto/pull/1819) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix lerna independent commit message ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.6 (Thu Feb 18 2021)
 
 :tada: This release contains work from a new contributor! :tada:

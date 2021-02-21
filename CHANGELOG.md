@@ -1,3 +1,21 @@
+# v10.16.7 (Sat Feb 20 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix lerna independent commit message [#1819](https://github.com/intuit/auto/pull/1819) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Revert "fix typo" [#1817](https://github.com/intuit/auto/pull/1817) ([@zephraph](https://github.com/zephraph) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.16.6 (Thu Feb 18 2021)
 
 :tada: This release contains work from new contributors! :tada:
