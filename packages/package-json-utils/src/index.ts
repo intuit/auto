@@ -19,9 +19,7 @@ export interface IRepoConfig {
 }
 
 /** Try to the the owner/repo from the package.json */
-export async function getRepo(): Promise<
-  IRepoConfig | undefined
-> {
+export async function getRepo(): Promise<IRepoConfig | undefined> {
   const { repository } = await loadPackageJson();
 
   if (!repository) {

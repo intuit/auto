@@ -41,7 +41,7 @@ jest.mock(
 
 describe("loadPlugins", () => {
   beforeEach(() => {
-    setLogLevel('quiet');
+    setLogLevel("quiet");
   });
 
   test("should load official plugins", () => {

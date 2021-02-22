@@ -92,7 +92,7 @@ For `auto`'s prerelease to work you need to makes sure that you jenkins instance
 
    ![A screenshot of the jenkins configuration](/jenkins-next-branches.png)
 
-2. Add this to the top of your `Jenkinsfile`. 
+2. Add this to the top of your `Jenkinsfile`.
 
    ```groovy
    // Exit the branch build if not on "baseBranch" or a prerelease, but still do PR builds
@@ -120,6 +120,7 @@ For `auto`'s prerelease to work you need to makes sure that you jenkins instance
      }
    }
    ```
+
 4. Add a stage for the prerelease
 
    ```groovy

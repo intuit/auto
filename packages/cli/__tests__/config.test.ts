@@ -7,7 +7,7 @@ test.each(commands.map((c) => [c.name, c] as const))(
   (name, command) => {
     const configOptions = globalOptions.props[name]?.props || {};
 
-    expect.assertions(command.options?.filter((o) => o.config).length  ?? 0);
+    expect.assertions(command.options?.filter((o) => o.config).length ?? 0);
 
     Object.keys(configOptions).forEach((option) => {
       expect(command.options.some((o) => camelCase(o.name) === option)).toBe(

@@ -15,7 +15,7 @@ yarn add -D @auto-it/microsoft-teams
 ## Usage
 
 To use the plugin include it in your `.autorc`.
-To generate incoming webhook in microsoft teams, checkout [this blog](https://medium.com/@ankush.kumar133/get-started-with-microsoft-team-connectors-incoming-webhook-a330657993e7). 
+To generate incoming webhook in microsoft teams, checkout [this blog](https://medium.com/@ankush.kumar133/get-started-with-microsoft-team-connectors-incoming-webhook-a330657993e7).
 
 ```json
 {

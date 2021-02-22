@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 **Describe the bug**
@@ -30,6 +29,7 @@ assignees: ''
 <!-- Please run `npx auto info` and put the results in the section below -->
 
 ```txt
+
 ```
 
 **Additional context**

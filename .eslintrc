@@ -13,11 +13,10 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "prettier",
-    "prettier/@typescript-eslint"
+    "prettier"
   ],
 
-  "plugins": ["prettier", "jest", "@typescript-eslint", "eslint-plugin-jsdoc", "import"],
+  "plugins": ["jest", "@typescript-eslint", "eslint-plugin-jsdoc", "import"],
 
   "rules": {
     "import/no-extraneous-dependencies": 2,

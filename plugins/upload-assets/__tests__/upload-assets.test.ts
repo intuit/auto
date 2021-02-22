@@ -115,7 +115,7 @@ describe("Upload Assets Plugin", () => {
       logger: dummyLog(),
       prefixRelease: (v) => v,
       git: {
-        getFirstCommit: () => 'abc',
+        getFirstCommit: () => "abc",
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
@@ -193,7 +193,7 @@ describe("Upload Assets Plugin", () => {
       prefixRelease: (v) => v,
       git: {
         options,
-        getFirstCommit: () => 'abc',
+        getFirstCommit: () => "abc",
         github: {
           repos: { uploadReleaseAsset, createRelease },
           paginate: jest.fn().mockResolvedValue([]),
@@ -228,7 +228,7 @@ describe("Upload Assets Plugin", () => {
       prefixRelease: (v) => v,
       git: {
         options,
-        getFirstCommit: () => 'abc',
+        getFirstCommit: () => "abc",
         github: {
           repos: { uploadReleaseAsset, createRelease },
           paginate: jest.fn().mockResolvedValue([]),
