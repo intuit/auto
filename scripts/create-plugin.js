@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-const copy = require('copy-template-dir');
-const path = require('path');
-const log = require('signale');
-const fs = require('fs');
-const changeCase = require('change-case');
-const { titleCase } = require('title-case');
+const copy = require("copy-template-dir");
+const path = require("path");
+const log = require("signale");
+const fs = require("fs");
+const changeCase = require("change-case");
+const { titleCase } = require("title-case");
 const [, , name, description] = process.argv;
 
 const { version } = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '../lerna.json'), 'utf8')
+  fs.readFileSync(path.join(__dirname, "../lerna.json"), "utf8")
 );
-const inDir = path.join(__dirname, './template-plugin');
+const inDir = path.join(__dirname, "./template-plugin");
 const kebab = changeCase.paramCase(name);
-const outDir = path.join(__dirname, '../plugins', kebab);
-const TSCONFIG = path.join(__dirname, '../tsconfig.dev.json');
+const outDir = path.join(__dirname, "../plugins", kebab);
+const TSCONFIG = path.join(__dirname, "../tsconfig.dev.json");
 
 fs.mkdirSync(outDir);
 
@@ -23,7 +23,7 @@ const vars = {
   version,
   title: titleCase(name),
   kebab,
-  pascal: changeCase.pascalCase(name)
+  pascal: changeCase.pascalCase(name),
 };
 
 copy(inDir, outDir, vars, (err, createdFiles) => {
@@ -31,13 +31,13 @@ copy(inDir, outDir, vars, (err, createdFiles) => {
     throw err;
   }
 
-  createdFiles.forEach(filePath =>
+  createdFiles.forEach((filePath) =>
     log.info(`Created ${path.relative(outDir, filePath)}`)
   );
   log.success(`Created @auto-it/${kebab} plugin!`);
 });
 
-fs.readFile(TSCONFIG, 'utf8', (err, data) => {
+fs.readFile(TSCONFIG, "utf8", (err, data) => {
   if (err) {
     throw err;
   }
@@ -45,7 +45,7 @@ fs.readFile(TSCONFIG, 'utf8', (err, data) => {
   const json = JSON.parse(data);
 
   json.references.push({
-    path: `plugins/${kebab}`
+    path: `plugins/${kebab}`,
   });
 
   fs.writeFileSync(TSCONFIG, JSON.stringify(json, null, 2));

@@ -43,9 +43,10 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
   /** Initialize the plugin with it's options */
   constructor(options: Partial<IReleasedLabelPluginOptions> = {}) {
-    this.options = merge(defaultOptions, options) as Required<
-      IReleasedLabelPluginOptions
-    >;
+    this.options = merge(
+      defaultOptions,
+      options
+    ) as Required<IReleasedLabelPluginOptions>;
   }
 
   /** Tap into auto plugin points. */

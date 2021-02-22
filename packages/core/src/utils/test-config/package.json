@@ -2,7 +2,12 @@
   "auto": {
     "plugins": [
       "./some-other-plugin.js",
-      ["./some-plugin.js", {"foo": "bar"}]
+      [
+        "./some-plugin.js",
+        {
+          "foo": "bar"
+        }
+      ]
     ]
   }
 }

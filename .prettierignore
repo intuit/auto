@@ -1,1 +1,10 @@
 scripts/template-plugin/
+CHANGELOG.md
+coverage
+.next
+.mdx-data
+docs/out
+docs/generated
+dist/
+test-plugin-malformed.js
+lerna.json

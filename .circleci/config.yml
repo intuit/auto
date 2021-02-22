@@ -5,7 +5,7 @@ defaults: &defaults
   docker:
     - image: circleci/node:12-browsers
   environment:
-    TZ: '/usr/share/zoneinfo/America/Los_Angeles'
+    TZ: "/usr/share/zoneinfo/America/Los_Angeles"
 
 aliases:
   # Circle related commands
@@ -122,7 +122,7 @@ workflows:
             - build
 
       - release:
-          context: '@auto-canary'
+          context: "@auto-canary"
           requires:
             - test
             - lint

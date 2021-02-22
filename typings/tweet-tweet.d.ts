@@ -1,4 +1,4 @@
-declare module 'tweet-tweet' {
+declare module "tweet-tweet" {
   interface IOptions {
     consumerKey: string;
     consumerSecret: string;

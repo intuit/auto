@@ -1,1 +1,1 @@
-declare module 'module-alias';
+declare module "module-alias";

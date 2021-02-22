@@ -1,4 +1,4 @@
-declare module 'import-cwd' {
+declare module "import-cwd" {
   function importCwd(path: string): any;
   export = importCwd;
 }

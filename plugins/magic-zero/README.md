@@ -13,7 +13,7 @@ _Starting version:_ `0.0.1`
 `patch` => `0.0.2`  
 `minor` => `0.0.2`  
 `major` => `0.0.2`  
-`graduate` => `0.1.0`  
+`graduate` => `0.1.0`
 
 **0.x.y:**
 
@@ -22,7 +22,7 @@ _Starting version:_ `0.1.0`
 `patch` => `0.1.1`  
 `minor` => `0.1.1`  
 `major` => `0.2.0`  
-`graduate` => `1.0.0`  
+`graduate` => `1.0.0`
 
 Once you're project is `>= 1.0.0` this plugin effectively does nothing.
 

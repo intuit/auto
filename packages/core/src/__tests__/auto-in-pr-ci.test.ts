@@ -37,7 +37,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     issues = {
-      listLabelsOnIssue: jest.fn().mockReturnValue({ data: []}),
+      listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
     };
 
     hook = {
@@ -239,7 +239,7 @@ describe("next in ci", () => {
     jest.spyOn(console, "log").mockImplementation();
     auto.git!.getLatestTagInBranch = () => Promise.resolve("1.4.0-next.0");
     auto.release!.getSemverBump = () => Promise.resolve(SEMVER.patch);
-    
+
     auto.git!.getLabels = () => Promise.resolve([]);
     expect(await auto.getVersion()).toBe(SEMVER.prepatch);
 
