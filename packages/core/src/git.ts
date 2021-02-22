@@ -883,13 +883,13 @@ export default class Git {
         "--merged",
         branch,
       ]);
-  
+
       return tags
         .split("\n")
         .map((tag) => tag.trim())
         .filter(Boolean);
     } catch (error) {
-      return []
+      return [];
     }
   }
 

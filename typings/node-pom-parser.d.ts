@@ -1,4 +1,4 @@
-declare module 'pom-parser' {
+declare module "pom-parser" {
   interface IDeveloper {
     name: string;
     email: string;

@@ -132,8 +132,8 @@ export function findPlugin(
 
     if (exists(localPath)) {
       return localPath;
-    } 
-    
+    }
+
     if (extendedLocation) {
       localPath = path.join(
         extendedLocation.endsWith("package.json")

@@ -91,7 +91,8 @@ export default class Config {
     return {
       ...rawConfig,
       labels,
-      prereleaseBranches: rawConfig.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES,
+      prereleaseBranches:
+        rawConfig.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES,
       versionBranches:
         typeof rawConfig.versionBranches === "boolean" &&
         rawConfig.versionBranches

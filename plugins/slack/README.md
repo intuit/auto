@@ -50,7 +50,7 @@ However, if you would like to configure it such that Slack _does_ post on prerel
     [
       "slack",
       { "url": "https://url-to-your-slack-hook.com", "publishPreRelease": true }
-    ],
+    ]
   ]
 }
 ```
@@ -64,8 +64,11 @@ Additional Title to add at the start of the slack message.
   "plugins": [
     [
       "slack",
-      { "url": "https://url-to-your-slack-hook.com", "title": "My Cool Project" }
-    ],
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        "title": "My Cool Project"
+      }
+    ]
   ]
 }
 ```

@@ -98,7 +98,7 @@ interface IScriptsMap {
   [scriptName: string]: string;
 }
 
-declare module 'get-monorepo-packages' {
+declare module "get-monorepo-packages" {
   interface IPackage {
     location: string;
     package: IPackageJSON;
