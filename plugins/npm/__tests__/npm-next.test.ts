@@ -547,7 +547,7 @@ describe("next", () => {
     ]);
     expect(
       JSON.parse(fs.readFileSync("packages/foo/package.json", "utf-8"))
-    ).toEqual({
+    ).toStrictEqual({
       name: "@foo/foo",
       version: "1.0.0-next.1",
       dependencies: {
