@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import mockFs from "mock-fs";
 
 import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
@@ -15,17 +16,11 @@ const exec = jest.fn();
 const execPromise = jest.fn();
 const getLernaPackages = jest.fn();
 const monorepoPackages = jest.fn();
-const existsSync = jest.fn();
-const readFileSync = jest.fn();
-const writeSpy = jest.fn();
 
 jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
-
-let readResult = "{}";
-readFileSync.mockReturnValue("{}");
 
 jest.mock("../src/set-npm-token.ts");
 jest.mock(
@@ -41,24 +36,6 @@ jest.mock(
 );
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, readResult);
-  },
-  // @ts-ignore
-  readFileSync: (...args) => readFileSync(...args),
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  writeFile: (file, data, cb) => {
-    cb(undefined, writeSpy(file, data));
-  },
-}));
 
 const monorepoPackagesResult = [
   { path: "packages/a", name: "@packages/a", package: { version: "0.1.1" } },
@@ -66,6 +43,28 @@ const monorepoPackagesResult = [
   { path: "packages/c", name: "@packages/c", package: { version: "0.1.2" } },
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
 ];
+
+const packageTemplate = ({
+  path,
+  name,
+  package: pkg,
+}: {
+  path: string;
+  name: string;
+  package: Record<string, unknown>;
+}) => ({
+  [path]: {
+    "package.json": JSON.stringify({ name, ...pkg }),
+  },
+});
+
+const monorepoPackagesOnFs = monorepoPackagesResult
+  .map((pkg) => packageTemplate(pkg))
+  .reduce((acc, curr) => ({ ...acc, ...curr }));
+
+afterEach(() => {
+  mockFs.restore();
+});
 
 describe("getChangedPackages", () => {
   test("should return nothing without a package directory", async () => {
@@ -173,6 +172,13 @@ describe("greaterRelease", () => {
 
 describe("getAuthor", () => {
   test("should do nothing if no author", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -184,15 +190,21 @@ describe("getAuthor", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
     expect(await hooks.getAuthor.promise()).toBeUndefined();
   });
 
   test("should get author object from package.json", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "author": {
+            "name": "Adam",
+            "email": "adam@email.com"
+          }
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -204,22 +216,21 @@ describe("getAuthor", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test",
-        "author": {
-          "name": "Adam",
-          "email": "adam@email.com"
-        }
-      }
-    `;
     expect(await hooks.getAuthor.promise()).toStrictEqual({
       name: "Adam",
       email: "adam@email.com",
     });
   });
 
-  test("should get parse author as string", async () => {
+  test("should get parse author as string from package.json", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "author": "Adam<adam@email.com>"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -231,12 +242,6 @@ describe("getAuthor", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test",
-        "author": "Adam<adam@email.com>"
-      }
-    `;
     expect(await hooks.getAuthor.promise()).toStrictEqual({
       name: "Adam",
       email: "adam@email.com",
@@ -246,6 +251,18 @@ describe("getAuthor", () => {
 
 describe("getRepository", () => {
   test("should get package config", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "repository": "black-panther/operation-foo",
+          "author": {
+            "name": "Adam",
+            "email": "adam@email.com"
+          }
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -257,16 +274,6 @@ describe("getRepository", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test",
-        "repository": "black-panther/operation-foo",
-        "author": {
-          "name": "Adam",
-          "email": "adam@email.com"
-        }
-      }
-    `;
     expect(await hooks.getRepository.promise()).toStrictEqual({
       owner: "black-panther",
       repo: "operation-foo",
@@ -276,11 +283,16 @@ describe("getRepository", () => {
 
 describe("getPreviousVersion", () => {
   test("should get use 0 if not version in package.json", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    existsSync.mockReturnValueOnce(false);
-    existsSync.mockReturnValueOnce(true);
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
@@ -290,20 +302,21 @@ describe("getPreviousVersion", () => {
       prefixRelease: (str) => str,
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
     expect(await hooks.getPreviousVersion.promise()).toBe("0.0.0");
   });
 
   test("should get version from the package.json", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "version": "1.0.0"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    existsSync.mockReturnValueOnce(false);
-    existsSync.mockReturnValueOnce(true);
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
@@ -313,20 +326,21 @@ describe("getPreviousVersion", () => {
       prefixRelease: (str) => str,
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.0.0"
-      }
-    `;
     expect(await hooks.getPreviousVersion.promise()).toBe("1.0.0");
   });
 
   test("should get version from the lerna.json", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "name": "test",
+          "version": "2.0.0"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
@@ -337,28 +351,24 @@ describe("getPreviousVersion", () => {
       prefixRelease: (str) => str,
     } as Auto.Auto);
 
-    readFileSync.mockReturnValueOnce(`
-      {
-        "name": "test",
-        "version": "2.0.0"
-      }
-    `);
     expect(await hooks.getPreviousVersion.promise()).toBe("2.0.0");
   });
 
   test("should get version greatest published monorepo package", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "name": "test",
+          "version": "0.0.1"
+        }
+      `,
+      ...monorepoPackagesOnFs,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
-    readFileSync.mockReturnValueOnce(`
-      {
-        "name": "test",
-        "version": "0.0.1"
-      }
-    `);
     // published version of test package
     execPromise.mockReturnValueOnce("0.1.2");
 
@@ -421,28 +431,21 @@ describe("modifyConfig", () => {
       logger,
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
-
     expect(await hooks.modifyConfig.promise({} as any)).toStrictEqual({});
   });
 
   test("should modify config when tagVersionPrefix is set", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "name": "test",
+          "tagVersionPrefix": ""
+        }
+      `,
+    });
     const plugin = new NPMPlugin({ setRcToken: false });
     const hooks = makeHooks();
     const logger = dummyLog();
-
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue(`
-      {
-        "name": "test",
-        "tagVersionPrefix": ""
-      }
-    `);
 
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
@@ -464,6 +467,14 @@ describe("publish", () => {
   });
 
   test("should use silly logging in verbose mode", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+      // ...monorepoPackagesOnFs,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
     const logger = dummyLog();
@@ -476,12 +487,6 @@ describe("publish", () => {
       baseBranch: "main",
       logger,
     } as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
@@ -496,6 +501,13 @@ describe("publish", () => {
   });
 
   test("should use string semver if no published package", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -506,12 +518,6 @@ describe("publish", () => {
       baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
@@ -535,14 +541,7 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -571,14 +570,7 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -607,14 +599,7 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce([]);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -631,7 +616,6 @@ describe("publish", () => {
     ]);
 
     execPromise.mockClear();
-    existsSync.mockReturnValueOnce(true);
 
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -654,8 +638,6 @@ describe("publish", () => {
       baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
-
-    existsSync.mockReturnValueOnce(true);
 
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
@@ -680,8 +662,6 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
-
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npx", [
       "lerna",
@@ -695,6 +675,14 @@ describe("publish", () => {
   });
 
   test("should use legacy", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "version": "0.0.0"
+        }
+      `,
+    });
     process.env.NPM_TOKEN = "abcd";
     const plugin = new NPMPlugin({ legacyAuth: true });
     const hooks = makeHooks();
@@ -709,13 +697,6 @@ describe("publish", () => {
 
     execPromise.mockReturnValueOnce("1.0.0");
 
-    readResult = `
-      {
-        "name": "test",
-        "version": "0.0.0"
-      }
-    `;
-
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
@@ -724,6 +705,14 @@ describe("publish", () => {
   });
 
   test("should bump published version", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "version": "0.0.0"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -736,13 +725,6 @@ describe("publish", () => {
     } as Auto.Auto);
 
     execPromise.mockReturnValueOnce("1.0.0");
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "0.0.0"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenCalledWith("npm", [
@@ -766,15 +748,8 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    existsSync.mockReturnValueOnce(true);
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
     execPromise.mockReturnValueOnce("1.0.0");
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.version.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
@@ -803,13 +778,6 @@ describe("publish", () => {
       logger: dummyLog(),
     } as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "@scope/test",
-        "private": true
-      }
-    `;
-
     await hooks.publish.promise({ bump: Auto.SEMVER.patch });
     expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
     expect(execPromise).toHaveBeenCalledWith("git", [
@@ -828,6 +796,13 @@ describe("canary", () => {
   });
 
   test("use npm for normal package", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -843,12 +818,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -859,6 +828,13 @@ describe("canary", () => {
   });
 
   test("prints canary version in dry run", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -874,12 +850,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     const log = jest.fn();
     jest.spyOn(console, "log").mockImplementation(log);
@@ -894,6 +864,14 @@ describe("canary", () => {
   });
 
   test("doesn't publish private packages", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "private": true
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -909,13 +887,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "private": true
-      }
-    `;
 
     expect(
       await hooks.canary.promise({
@@ -928,6 +899,13 @@ describe("canary", () => {
   });
 
   test("finds available canary version", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -943,12 +921,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     // first version exists
     execPromise.mockReturnValueOnce(true);
@@ -964,6 +936,13 @@ describe("canary", () => {
   });
 
   test("legacy auth work", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     process.env.NPM_TOKEN = "abcd";
     const plugin = new NPMPlugin({ legacyAuth: true });
     const hooks = makeHooks();
@@ -981,12 +960,6 @@ describe("canary", () => {
       },
     } as unknown) as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
-
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "canary.123.1",
@@ -1000,6 +973,13 @@ describe("canary", () => {
   });
 
   test("use handles repos with no tags", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1015,12 +995,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.reject(new Error()),
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1045,13 +1019,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     const packages = [
       {
@@ -1093,13 +1060,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     const packages = [
       {
@@ -1145,13 +1105,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     const packages = [
       {
@@ -1204,13 +1157,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     const packages = [
       {
@@ -1238,6 +1184,18 @@ describe("canary", () => {
   });
 
   test("doesn't force publish in independent mode", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1248,14 +1206,6 @@ describe("canary", () => {
       baseBranch: "main",
       logger: dummyLog(),
     } as Auto.Auto);
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     getLernaPackages.mockImplementation(async () =>
       Promise.resolve([
@@ -1288,6 +1238,18 @@ describe("canary", () => {
   });
 
   test("don't force publish canaries", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1302,14 +1264,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     getLernaPackages.mockImplementation(async () =>
       Promise.resolve([
@@ -1335,6 +1289,13 @@ describe("canary", () => {
   });
 
   test("error when no canary release found - independent", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -1349,14 +1310,6 @@ describe("canary", () => {
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
     } as any);
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
-
-    readResult = `
-      {
-        "name": "test"
-      }
-    `;
 
     getLernaPackages.mockImplementation(async () =>
       Promise.resolve([
@@ -1385,15 +1338,17 @@ describe("canary", () => {
 
 describe("makeRelease", () => {
   test("publish release for each package", async () => {
+    mockFs({
+      "lerna.json": `
+       { "name": "test", "version": "independent" }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
     execPromise.mockReturnValue("@packages/a\n@packages/b");
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
-    readFileSync.mockReturnValue(
-      '{ "name": "test", "version": "independent" }'
-    );
 
     const publish = jest.fn();
     plugin.apply({
@@ -1461,7 +1416,6 @@ describe("beforeCommitChangelog", () => {
     // isMonorepo
     execPromise.mockResolvedValue("@packages/a\n@packages/b");
     execPromise.mockResolvedValue(changed);
-    existsSync.mockReturnValueOnce(true);
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
     updateChangelogFile = jest.fn();
