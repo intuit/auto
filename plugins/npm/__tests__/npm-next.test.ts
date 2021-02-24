@@ -1,5 +1,6 @@
-import endent from "endent";
+import mockFs from "mock-fs";
 import { execSync } from "child_process";
+import fs from "fs";
 
 import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
@@ -10,18 +11,12 @@ const exec = jest.fn();
 const execPromise = jest.fn();
 const getLernaPackages = jest.fn();
 const monorepoPackages = jest.fn();
-const existsSync = jest.fn();
-const readFileSync = jest.fn();
-const writeSpy = jest.fn();
 
 jest.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 execPromise.mockResolvedValue("");
-
-let readResult = "{}";
-readFileSync.mockReturnValue("{}");
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
@@ -36,24 +31,11 @@ jest.mock(
 );
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, readResult);
-  },
-  // @ts-ignore
-  readFileSync: (...args) => readFileSync(...args),
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  writeFile: (file, data, cb) => {
-    cb(undefined, writeSpy(file, data));
-  },
-}));
+jest.mock("registry-url", () => () => "https://registry.npm.org");
+
+afterEach(() => {
+  mockFs.restore();
+});
 
 describe("next", () => {
   beforeEach(() => {
@@ -61,6 +43,14 @@ describe("next", () => {
   });
 
   test("works in single package", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -77,13 +67,6 @@ describe("next", () => {
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.2.4-next.0"
-      }
-    `;
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -114,6 +97,14 @@ describe("next", () => {
   });
 
   test("works for dry run in single package", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -130,13 +121,6 @@ describe("next", () => {
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.2.4-next.0"
-      }
-    `;
 
     expect(
       await hooks.next.promise([], {
@@ -148,6 +132,15 @@ describe("next", () => {
   });
 
   test("skips publish for private package", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "version": "1.2.4-next.0",
+          "private": true
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
@@ -164,14 +157,6 @@ describe("next", () => {
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.2.4-next.0",
-        "private": true
-      }
-    `;
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -191,6 +176,14 @@ describe("next", () => {
   });
 
   test("works with legacy auth", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+      `,
+    });
     process.env.NPM_TOKEN = "abcd";
     const plugin = new NPMPlugin({ legacyAuth: true });
     const hooks = makeHooks();
@@ -208,13 +201,6 @@ describe("next", () => {
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
     } as unknown) as Auto.Auto);
-
-    readResult = `
-      {
-        "name": "test",
-        "version": "1.2.4-next.0"
-      }
-    `;
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -246,12 +232,35 @@ describe("next", () => {
   });
 
   test("works in monorepo", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.3"
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "1.2.3"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    monorepoPackages.mockReturnValueOnce([
+      {
+        path: "packages/a",
+        name: "@packages/a",
+        package: { version: "1.2.3" },
+      },
+      {
+        path: "packages/b",
+        name: "@packages/b",
+        package: { version: "1.2.4-next.0" },
+      },
+    ]);
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
@@ -291,12 +300,35 @@ describe("next", () => {
   });
 
   test("optionally commits version", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.3"
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "1.2.3"
+        }
+      `,
+    });
     const plugin = new NPMPlugin({ commitNextVersion: true });
     const hooks = makeHooks();
 
+    monorepoPackages.mockReturnValueOnce([
+      {
+        path: "packages/a",
+        name: "@packages/a",
+        package: { version: "1.2.3" },
+      },
+      {
+        path: "packages/b",
+        name: "@packages/b",
+        package: { version: "1.2.4-next.0" },
+      },
+    ]);
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
@@ -330,12 +362,23 @@ describe("next", () => {
   });
 
   test("works in dry run in monorepo", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.3"
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "1.2.3"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
@@ -378,8 +421,8 @@ describe("next", () => {
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "1.2.3" }');
+    // existsSync.mockReturnValueOnce(true);
+    // readFileSync.mockReturnValue('{ "version": "1.2.3" }');
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
@@ -420,21 +463,44 @@ describe("next", () => {
   });
 
   test("works in monorepo - independent", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "@foo/foo",
+        "dependencies": {
+          "@foo/foo-bar": "0.50.0"
+        }
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+      "packages/foo/package.json": `
+        {
+          "name": "@foo/foo",
+          "version": "1.0.0-next.0",
+          "dependencies": {
+            "@foo/foo-bar": "0.50.0"
+          }
+        }
+      `,
+      "packages/foo-bar/package.json": "{}",
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
     getLernaPackages.mockResolvedValueOnce([
       {
         name: "@foo/foo",
-        path: "/path/to/1",
+        path: "packages/foo",
         version: "0.45.0",
       },
       {
         name: "@foo/foo-bar",
-        path: "/path/to/2",
+        path: "packages/foo-bar",
         version: "0.50.0",
       },
     ]);
@@ -465,16 +531,6 @@ describe("next", () => {
       },
     } as unknown) as Auto.Auto);
 
-    readResult = `
-      {
-        "name": "@foo/foo",
-        "version": "1.0.0-next.0",
-        "dependencies": {
-          "@foo/foo-bar": "0.50.0"
-        }
-      }
-    `;
-
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
     ).toStrictEqual(["@foo/foo@1.0.0-next.0", "@foo/foo-bar@2.0.0-next.0"]);
@@ -489,25 +545,38 @@ describe("next", () => {
       "next",
       "--tags",
     ]);
-    expect(writeSpy).toHaveBeenCalledWith(
-      "/path/to/1/package.json",
-      endent`{
-        "name": "@foo/foo",
-        "version": "1.0.0-next.1",
-        "dependencies": {
-          "@foo/foo-bar": "2.0.0-next.1"
-        }
-      }`
-    );
+    expect(
+      JSON.parse(fs.readFileSync("packages/foo/package.json", "utf-8"))
+    ).toStrictEqual({
+      name: "@foo/foo",
+      version: "1.0.0-next.1",
+      dependencies: {
+        "@foo/foo-bar": "2.0.0-next.1",
+      },
+    });
   });
 
   test("works in dry run in monorepo - independent", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "@foo/foo",
+        "version": "1.0.0-next.0",
+        "dependencies": {
+          "@foo/foo-bar": "0.50.0"
+        }
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
     getLernaPackages.mockResolvedValueOnce([
       {
         name: "@foo/foo",
@@ -565,16 +634,29 @@ describe("next", () => {
   });
 
   test("works in monorepo - independent - private package", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "@foo/foo",
+        "version": "1.0.0-next.0",
+        "private": true
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "independent"
+        }
+      `,
+      "packages/foo/package.json": `{}`,
+    });
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
     // isMonorepo
-    existsSync.mockReturnValueOnce(true);
-    readFileSync.mockReturnValue('{ "version": "independent" }');
     getLernaPackages.mockResolvedValueOnce([
       {
         name: "@foo/foo",
-        path: "/path/to/1",
+        path: "packages/foo",
       },
     ]);
     execPromise.mockImplementation((command, args) => {

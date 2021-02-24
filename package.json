@@ -45,6 +45,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@types/jest": "^26.0.0",
+    "@types/mock-fs": "^4.13.0",
     "@types/parse-github-url": "1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
@@ -67,6 +68,7 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.22.1",
     "lint-staged": "^10.0.7",
+    "mock-fs": "^4.13.0",
     "next-ignite": "^0.9.20",
     "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
@@ -95,6 +97,9 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "setupFiles": [
+      "./scripts/jest-setup.js"
+    ],
     "moduleFileExtensions": [
       "ts",
       "js",
