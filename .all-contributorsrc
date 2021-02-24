@@ -470,6 +470,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "dorianmariefr",
+      "name": "Dorian Marié",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58794487?v=4",
+      "profile": "https://dorianmarie.fr/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
