@@ -1,3 +1,46 @@
+# v10.16.8 (Wed Feb 24 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Dorian Marié ([@dorianmariefr](https://github.com/dorianmariefr)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - improve GitHub actions docs + remove unnecessary warning [#1828](https://github.com/intuit/auto/pull/1828) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- `@auto-it/npm`
+  - Use mock-fs for npm tests [#1827](https://github.com/intuit/auto/pull/1827) ([@zephraph](https://github.com/zephraph))
+
+#### 📝 Documentation
+
+- `@auto-it/npm`
+  - Add note about verifyAccess config [#1829](https://github.com/intuit/auto/pull/1829) ([@zephraph](https://github.com/zephraph))
+- `@auto-it/gem`
+  - gem's README, typo: you -> your [#1820](https://github.com/intuit/auto/pull/1820) ([@dorianmariefr](https://github.com/dorianmariefr))
+
+#### 🔩 Dependency Updates
+
+- Bump @octokit/rest from 18.1.0 to 18.2.0 [#1823](https://github.com/intuit/auto/pull/1823) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump graphql from 15.4.0 to 15.5.0 [#1824](https://github.com/intuit/auto/pull/1824) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump aws-cli-js from 2.0.6 to 2.1.0 [#1808](https://github.com/intuit/auto/pull/1808) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.9.3 to 2.9.5 [#1810](https://github.com/intuit/auto/pull/1810) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `@auto-it/core`
+  - Bump type-fest from 0.20.2 to 0.21.1 [#1825](https://github.com/intuit/auto/pull/1825) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- `auto`, `@auto-it/core`, `@auto-it/package-json-utils`, `@auto-it/gh-pages`, `@auto-it/magic-zero`, `@auto-it/microsoft-teams`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/upload-assets`, `@auto-it/vscode`
+  - Bump eslint-config-prettier from 6.15.0 to 8.0.0 [#1822](https://github.com/intuit/auto/pull/1822) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 4
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Dorian Marié ([@dorianmariefr](https://github.com/dorianmariefr))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.16.7 (Sat Feb 20 2021)
 
 #### 🐛 Bug Fix
