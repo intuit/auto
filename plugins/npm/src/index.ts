@@ -31,7 +31,12 @@ import {
   getAuthor,
 } from "@auto-it/package-json-utils";
 
-import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
+import {
+  setTokenOnCI,
+  getRegistry,
+  DEFAULT_REGISTRY,
+  unsetTokenOnCI,
+} from "./set-npm-token";
 import { writeFile, isMonorepo, readFile, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
@@ -539,7 +544,8 @@ export default class NPMPlugin implements IPlugin {
   private monorepoChangelog: boolean;
   /** the type of release shipit is making */
   private releaseType?: ShipitRelease;
-
+  /** Whether the .npmrc file was written to */
+  private rcWritten = false;
   /** Whether to create sub-package changelogs */
   private readonly subPackageChangelogs: boolean;
   /** Whether to set the npm token in CI */
@@ -983,7 +989,7 @@ export default class NPMPlugin implements IPlugin {
       this.name,
       async ({ bump, canaryIdentifier, dryRun, quiet }) => {
         if (this.setRcToken) {
-          await setTokenOnCI(auto.logger);
+          this.rcWritten = await setTokenOnCI(auto.logger);
           auto.logger.verbose.info("Set CI NPM_TOKEN");
         }
 
@@ -1406,6 +1412,12 @@ export default class NPMPlugin implements IPlugin {
         branch || auto.baseBranch,
       ]);
       auto.logger.verbose.info("Successfully published repo");
+    });
+
+    auto.hooks.afterPublish.tapPromise(this.name, async () => {
+      if (this.rcWritten) {
+        await unsetTokenOnCI(auto.logger);
+      }
     });
 
     auto.hooks.makeRelease.tapPromise(this.name, async (options) => {

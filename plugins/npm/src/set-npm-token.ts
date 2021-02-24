@@ -1,8 +1,10 @@
-import { ILogger } from "@auto-it/core";
+import { ILogger, execPromise } from "@auto-it/core";
 import envCi from "env-ci";
 import registryUrl from "registry-url";
 import { loadPackageJson } from "@auto-it/package-json-utils";
 import to from "await-to-js";
+import path from "path";
+import os from "os";
 
 import {
   readFile,
@@ -10,6 +12,7 @@ import {
   isMonorepo,
   getLernaJson,
   getNpmrcPath,
+  removeFile,
 } from "./utils";
 import urljoin from "url-join";
 
@@ -37,17 +40,21 @@ export const getRegistry = async () => {
   return registry;
 };
 
-/** Set the .npmrc only when in a continuos integration environment */
-export default async function setTokenOnCI(logger: ILogger) {
+/**
+ * Set the .npmrc only when in a continuos integration environment
+ *
+ * @returns `true` if the .npmrc token was written, `false` otherwise
+ * */
+export async function setTokenOnCI(logger: ILogger): Promise<boolean> {
   if (!isCi) {
-    return;
+    return false;
   }
 
   const { private: isPrivate } = await loadPackageJson();
 
   if (isPrivate && !isMonorepo()) {
     logger.verbose.info("NPM token not set for private package.");
-    return;
+    return false;
   }
 
   const npmrcFilePath = getNpmrcPath();
@@ -84,7 +91,7 @@ export default async function setTokenOnCI(logger: ILogger) {
     logger.verbose.success(
       `npmrc file, ${npmrcFilePath}, is already setup correctly`
     );
-    return;
+    return false;
   }
 
   logger.verbose.info(
@@ -93,5 +100,46 @@ export default async function setTokenOnCI(logger: ILogger) {
 
   await writeFile(npmrcFilePath, `${npmrcContents}\n${authTokenString}`.trim());
 
+  if (path.dirname(npmrcFilePath) === process.cwd()) {
+    await execPromise("git", ["--assume-unchanged", npmrcFilePath]);
+  }
+
   logger.log.success(`Wrote authentication token string to ${npmrcFilePath}`);
+  return true;
+}
+
+/**
+ * Remove the token if we previously wrote it
+ */
+export async function unsetTokenOnCI(logger: ILogger) {
+  if (!isCi) {
+    return;
+  }
+
+  const npmrcPath = getNpmrcPath();
+  const npmrcDir = path.dirname(npmrcPath);
+
+  if (npmrcDir === process.cwd()) {
+    const [fileUntracked] = await to(
+      execPromise("git", ["ls-files", "--error-unmatch", npmrcPath])
+    );
+
+    if (fileUntracked) {
+      await removeFile(npmrcPath);
+    } else {
+      await execPromise("git", ["--no-assume-unchanged", npmrcPath]);
+      await execPromise("git", ["checkout", npmrcPath]);
+    }
+  } else if (npmrcDir === os.homedir()) {
+    /**
+     * This probably isn't the safest. Likely, instead of removing ~/.npmrc we should
+     * only delete the line that we specifically added. Given that this is CI though
+     * and it _should_ be unlikely that folks are writing a .npmrc to the home directory
+     * that's supposed to persist over a large series of actions, I think it's safe _enough_
+     * that we ignore this for now.
+     */
+    await removeFile(npmrcPath);
+  } else {
+    logger.log.error("Unable to clear .npmrc, invalid .npmrc path:", npmrcPath);
+  }
 }

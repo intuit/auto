@@ -1,7 +1,7 @@
 import mockFs from "mock-fs";
 import path from "path";
 import { getLernaJson, getLernaPathIfExists, getNpmrcPath } from "../src/utils";
-import userHome from "user-home";
+import os from "os";
 
 const cwd = process.cwd();
 const rel = (p: string) => path.join(cwd, p);
@@ -63,9 +63,9 @@ describe("getNpmrcPath", () => {
 
   test("returns the .npmrc from home directory if none local", () => {
     mockFs({
-      [rel(path.relative(cwd, userHome) + "/.npmrc")]: "home",
+      [rel(path.relative(cwd, os.homedir()) + "/.npmrc")]: "home",
     });
-    expect(getNpmrcPath()).toBe(path.join(userHome, ".npmrc"));
+    expect(getNpmrcPath()).toBe(path.join(os.homedir(), ".npmrc"));
   });
   test("returns the project root if no .npmrc", () => {
     mockFs({});

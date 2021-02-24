@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import path from "path";
 import { promisify } from "util";
-import userHome from "user-home";
+import os from "os";
 
 export const readFile = promisify(fs.readFile);
 export const writeFile = promisify(fs.writeFile);
+export const removeFile = promisify(fs.readFile);
 
 /** Traverses the file tree to find the given file if it exists */
 const getFilePathIfExists = (
@@ -64,7 +65,7 @@ export const getNpmrcPath = () => {
   const projectPath = lernaPath ? path.dirname(lernaPath) : cwd;
 
   const localRC = path.join(projectPath, ".npmrc");
-  const homeRC = path.join(userHome, ".npmrc");
+  const homeRC = path.join(os.homedir(), ".npmrc");
 
   return fs.existsSync(localRC)
     ? localRC

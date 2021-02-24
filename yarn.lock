@@ -64,10 +64,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.16.7"
+  version "10.16.8"
 
 "@auto-it/core@link:packages/core":
-  version "10.16.7"
+  version "10.16.8"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -107,7 +107,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.16.7"
+  version "10.16.8"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -121,16 +121,15 @@
     tslib "2.1.0"
     typescript-memoize "^1.0.0-alpha.3"
     url-join "^4.0.0"
-    user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.16.7"
+  version "10.16.8"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.16.7"
+  version "10.16.8"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -140,7 +139,7 @@
     tslib "2.1.0"
 
 "@auto-it/slack@link:plugins/slack":
-  version "10.16.7"
+  version "10.16.8"
   dependencies:
     "@atomist/slack-messages" "~1.2.0"
     "@auto-it/core" "link:packages/core"
@@ -3316,11 +3315,6 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/url-join/-/url-join-4.0.0.tgz#72eff71648a429c7d4acf94e03780e06671369bd"
   integrity sha512-awrJu8yML4E/xTwr2EMatC+HBnHGoDxc2+ImA9QyeUELI1S7dOCIZcyjki1rkwoA8P2D2NVgLAJLjnclkdLtAw==
-
-"@types/user-home@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/user-home/-/user-home-2.0.0.tgz#17d49bd734f5826c6f7f06ac4b2ef59162fe6583"
-  integrity sha1-F9Sb1zT1gmxvfwasSy71kWL+ZYM=
 
 "@types/warning@^3.0.0":
   version "3.0.0"

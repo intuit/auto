@@ -49,8 +49,7 @@
     "semver": "^7.0.0",
     "tslib": "2.1.0",
     "typescript-memoize": "^1.0.0-alpha.3",
-    "url-join": "^4.0.0",
-    "user-home": "^2.0.0"
+    "url-join": "^4.0.0"
   },
   "devDependencies": {
     "@octokit/rest": "^18.0.0",
@@ -58,7 +57,6 @@
     "@types/mock-fs": "^4.13.0",
     "@types/semver": "^7.1.0",
     "@types/url-join": "^4.0.0",
-    "@types/user-home": "^2.0.0",
     "mock-fs": "^4.13.0"
   }
 }
