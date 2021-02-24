@@ -77,7 +77,7 @@ If you are publishing to the Github Package Registry you will need to change a f
     npx auto shipit
 ```
 
-The `NODE_AUTH_TOKEN` variable is required the `.npmrc` that `actions/setup-node@v1` sets up.
+The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v1` sets up.
 If you aren't using `actions/setup-node@v1` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
 
 ## Troubleshooting
@@ -98,7 +98,7 @@ steps:
   - uses: actions/checkout@v2
     with:
       # Ensure that git uses your token with admin access to the repo
-      token: ${{ secrets.GH_TOKEN }}
+      token: ${{ secrets.ADMIN_TOKEN }}
 
   - name: Prepare repository
     # Fetch full git history and tags
