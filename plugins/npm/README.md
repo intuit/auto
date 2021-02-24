@@ -50,6 +50,23 @@ No additional setup is required.
 > Do you have a package in your monorepo you don't want to publish but still want versioned?
 > Just set that `"private": true` you that package's `package.json`!
 
+### Using automation tokens from NPM
+
+If you have 2FA enabled and want to publish using an [automation token](https://github.blog/changelog/2020-10-02-npm-automation-tokens/) you _must_ add the following to your `lerna.json` for it to work.
+
+```json
+{
+  // ... other config here
+  "command": {
+    "publish": {
+      "verifyAccess": false
+    }
+  }
+}
+```
+
+Lerna's verify access step hits an npm api endpoint that treats automation tokens differently than regular user tokens. Disabling it will bypass that failure. See [this lerna issue](https://github.com/lerna/lerna/issues/2788) for more context.
+
 ## Options
 
 ### setRcToken

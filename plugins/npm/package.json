@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/npm",
-  "version": "10.16.7",
+  "version": "10.16.8",
   "main": "dist/index.js",
   "description": "NPM publishing plugin for auto",
   "license": "MIT",

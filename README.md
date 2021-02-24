@@ -267,6 +267,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="http://andrewleedham.me/"><img src="https://avatars2.githubusercontent.com/u/5557458?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Leedham</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=AndrewLeedham" title="Code">💻</a></td>
     <td align="center"><a href="http://sethomas.com/"><img src="https://avatars2.githubusercontent.com/u/3957314?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Seth Thomas</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sethomas" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sethomas" title="Code">💻</a></td>
     <td align="center"><a href="https://www.knapsack.cloud/"><img src="https://avatars.githubusercontent.com/u/569699?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Evan Lovely</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=EvanLovely" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://dorianmarie.fr/"><img src="https://avatars.githubusercontent.com/u/58794487?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dorian Marié</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=dorianmariefr" title="Documentation">📖</a></td>
   </tr>
 </table>
 

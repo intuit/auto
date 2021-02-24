@@ -1,3 +1,34 @@
+# v10.16.8 (Wed Feb 24 2021)
+
+#### 🐛 Bug Fix
+
+- improve GitHub actions docs + remove unnecessary warning [#1828](https://github.com/intuit/auto/pull/1828) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add note about verifyAccess config ([@zephraph](https://github.com/zephraph))
+- improve GitHub actions docs + remove unnecessary warning ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix lint error ([@zephraph](https://github.com/zephraph))
+- Use mock-fs for npm tests ([@zephraph](https://github.com/zephraph))
+
+#### 🏠 Internal
+
+- Use mock-fs for npm tests [#1827](https://github.com/intuit/auto/pull/1827) ([@zephraph](https://github.com/zephraph))
+
+#### 📝 Documentation
+
+- Add note about verifyAccess config [#1829](https://github.com/intuit/auto/pull/1829) ([@zephraph](https://github.com/zephraph))
+
+#### 🔩 Dependency Updates
+
+- Bump aws-cli-js from 2.0.6 to 2.1.0 [#1808](https://github.com/intuit/auto/pull/1808) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.9.3 to 2.9.5 [#1810](https://github.com/intuit/auto/pull/1810) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 3
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.16.7 (Sat Feb 20 2021)
 
 #### 🐛 Bug Fix

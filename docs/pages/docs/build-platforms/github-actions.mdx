@@ -51,7 +51,20 @@ jobs:
 
 ### NPM: Github Package Registry
 
-If you are publishing to the Github Package Registry you will need to change the `NPM_TOKEN` token secret to match the following:
+If you are publishing to the Github Package Registry you will need to change a few things.
+
+1. Modify the node action to use the Github Package Registry and your user scope.
+
+```yml
+- name: Use Node.js 12.x
+  uses: actions/setup-node@v1
+  with:
+    node-version: 12.x
+    registry-url: "https://npm.pkg.github.com"
+    scope: "@your-username-scope"
+```
+
+2. Use the `GITHUB_TOKEN` as the `NODE_AUTH_TOKEN` to publish to the Github Package Registry.
 
 ```yml
 - name: Create Release
@@ -64,8 +77,7 @@ If you are publishing to the Github Package Registry you will need to change the
     npx auto shipit
 ```
 
-This will use your `GITHUB_TOKEN` to publish to the Github Package Registry.
-The `NODE_AUTH_TOKEN` variable is required the `.npmrc` that `actions/setup-node@v1` sets up.
+The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v1` sets up.
 If you aren't using `actions/setup-node@v1` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
 
 ## Troubleshooting
@@ -78,13 +90,15 @@ If you are having problems make sure you have done the following:
 ### Running With Branch Protection
 
 GitHub actions require a little more setup to use `auto` with branch protection.
+We can't use the `GITHUB_TOKEN` to commit to the branch because it does not have high enough permissions.
+You will need to create a token with admin access to your repo and modify your build config like the following:
 
 ```yml
 steps:
   - uses: actions/checkout@v2
     with:
-      # Ensure that git uses your token with write access to the repo
-      token: ${{ secrets.GH_TOKEN }}
+      # Ensure that git uses your token with admin access to the repo
+      token: ${{ secrets.ADMIN_TOKEN }}
 
   - name: Prepare repository
     # Fetch full git history and tags

@@ -707,7 +707,10 @@ export default class NPMPlugin implements IPlugin {
         return;
       }
 
-      auto.checkEnv(this.name, "NPM_TOKEN");
+      // gh-action + node action uses NODE_AUTH_TOKEN and we should warn about NPM_TOKEN
+      if (!process.env.NODE_AUTH_TOKEN) {
+        auto.checkEnv(this.name, "NPM_TOKEN");
+      }
     });
 
     auto.hooks.getAuthor.tapPromise(this.name, async () => {

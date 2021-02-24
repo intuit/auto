@@ -1,3 +1,29 @@
+# v10.16.8 (Wed Feb 24 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Dorian Marié ([@dorianmariefr](https://github.com/dorianmariefr)), for all your work!
+
+#### 🐛 Bug Fix
+
+- gem's README, typo: you -> your ([@dorianmariefr](https://github.com/dorianmariefr))
+
+#### 📝 Documentation
+
+- gem's README, typo: you -> your [#1820](https://github.com/intuit/auto/pull/1820) ([@dorianmariefr](https://github.com/dorianmariefr))
+
+#### 🔩 Dependency Updates
+
+- Bump aws-cli-js from 2.0.6 to 2.1.0 [#1808](https://github.com/intuit/auto/pull/1808) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump fp-ts from 2.9.3 to 2.9.5 [#1810](https://github.com/intuit/auto/pull/1810) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Dorian Marié ([@dorianmariefr](https://github.com/dorianmariefr))
+
+---
+
 # v10.16.6 (Thu Feb 18 2021)
 
 :tada: This release contains work from a new contributor! :tada:
