@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/cocoapods",
-  "version": "10.16.7",
+  "version": "10.16.8",
   "main": "dist/index.js",
   "description": "Use auto to version your cocoapod",
   "license": "MIT",
