@@ -4,7 +4,7 @@ import { getLernaJson, getLernaPathIfExists, getNpmrcPath } from "../src/utils";
 import userHome from "user-home";
 
 const cwd = process.cwd();
-const rel = (p) => path.join(cwd, p);
+const rel = (p: string) => path.join(cwd, p);
 
 afterEach(() => {
   mockFs.restore();
@@ -68,7 +68,7 @@ describe("getNpmrcPath", () => {
     expect(getNpmrcPath()).toBe(path.join(userHome, ".npmrc"));
   });
   test("returns the project root if no .npmrc", () => {
-    mockFs();
+    mockFs({});
     expect(getNpmrcPath()).toBe(rel("./.npmrc"));
   });
   test("returns the project root if no .npmrc but lerna", () => {
