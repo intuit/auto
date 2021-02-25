@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { inc, ReleaseType } from "semver";
 import toml from "toml";
-import userHome from "user-home";
+import os from "os";
 
 const { isCi } = envCi();
 
@@ -22,7 +22,7 @@ export function checkForCreds() {
     return process.env.CARGO_REGISTRY_TOKEN;
   }
 
-  const credsFile = path.join(userHome, ".cargo", "credentials");
+  const credsFile = path.join(os.homedir(), ".cargo", "credentials");
   return fs.existsSync(credsFile);
 }
 
