@@ -318,11 +318,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
     auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun }) => {
       if (!this.snapshotRelease || dryRun) {
-        if (dryRun) {
-          auto.logger.log.info(`+++++AFTERSHIPIT
-            `);
-        }
-
         return;
       }
 
