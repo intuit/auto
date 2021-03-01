@@ -3,6 +3,7 @@ import {
   IPlugin,
   execPromise,
   validatePluginConfiguration,
+  getCurrentBranch
 } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
@@ -238,8 +239,90 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       ]);
     });
 
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ dryRun, quiet }) => {
+        const releaseVersion = await getVersion(
+          this.options.gradleCommand,
+          this.options.gradleOptions
+        );
+
+        const canaryVersion = `${releaseVersion}${defaultSnapshotSuffix}`;
+
+        if (dryRun) {
+          if (quiet) {
+            console.log(canaryVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${releaseVersion}`);
+          }
+
+          return canaryVersion;
+        }
+
+        const { publish } = this.properties;
+
+        if (publish) {
+          await execPromise(this.options.gradleCommand, [
+            "publish",
+            ...this.options.gradleOptions,
+          ]);
+        }
+
+        return canaryVersion;
+      }
+    );
+
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, { dryRun }) => {
+        const branch = getCurrentBranch() || "";
+
+        const {version} = await getProperties(
+          this.options.gradleCommand,
+          this.options.gradleOptions
+        );
+
+        // Don't need to increment version since version should have already 
+        // been incremented by canary during PR, so take the current version
+        // and publish it
+        if (version) {
+          preReleaseVersions.push(version);
+        }
+
+        if (dryRun) {
+          auto.logger.log.info(`Would have published: ${version}`);
+          return preReleaseVersions;
+        }
+
+        await execPromise("git", [
+          "tag",
+          version ?? "",
+          "-m",
+          `"Tag pre-release: ${version}"`,
+        ]);
+
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+        const { publish } = this.properties;
+
+        if (publish) {
+          await execPromise(this.options.gradleCommand, [
+            "publish",
+            ...this.options.gradleOptions,
+          ]);
+        }
+
+        return preReleaseVersions;
+      }
+    );
+
     auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun }) => {
       if (!this.snapshotRelease || dryRun) {
+        if (dryRun) {
+          auto.logger.log.info(`+++++AFTERSHIPIT
+            `);
+        }
+
         return;
       }
 
