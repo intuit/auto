@@ -6,8 +6,7 @@ import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
 import createHttpsProxyAgent from "https-proxy-agent";
 
-import SlackPlugin, { sanitizeMarkdown, convertToBlocks } from "../src";
-import endent from "endent";
+import MicrosoftTeamsPlugin, { sanitizeMarkdown } from "../src";
 
 const fetchSpy = jest.fn();
 // @ts-ignore
@@ -38,9 +37,9 @@ const mockAuto = {
   logger: dummyLog(),
 } as any;
 
-describe("postToSlack", () => {
+describe("createPost", () => {
   test("doesn't post with no new version", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
     jest.spyOn(plugin, "createPost").mockImplementation();
@@ -57,7 +56,7 @@ describe("postToSlack", () => {
   });
 
   test("doesn't post with no commits", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
     jest.spyOn(plugin, "createPost").mockImplementation();
@@ -75,7 +74,7 @@ describe("postToSlack", () => {
   });
 
   test("doesn't post with skip release label", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
     jest.spyOn(plugin, "createPost").mockImplementation();
@@ -98,7 +97,7 @@ describe("postToSlack", () => {
 
   test("doesn't post without url", async () => {
     // @ts-ignore
-    const plugin = new SlackPlugin({ url: undefined });
+    const plugin = new MicrosoftTeamsPlugin({ url: undefined });
     const hooks = makeHooks();
 
     jest.spyOn(plugin, "createPost").mockImplementation();
@@ -117,8 +116,8 @@ describe("postToSlack", () => {
 
   test("doesn't post when prerelease branch and using default prereleasePublish setting", async () => {
     // @ts-ignore
-    const plugin = new SlackPlugin({
-      url: "https://custom-slack-url",
+    const plugin = new MicrosoftTeamsPlugin({
+      url: "https://custom-microsoft-url",
     });
     const hooks = makeHooks();
 
@@ -145,8 +144,8 @@ describe("postToSlack", () => {
 
   test("doesn't post when prerelease branch setting is false", async () => {
     // @ts-ignore
-    const plugin = new SlackPlugin({
-      url: "https://custom-slack-url",
+    const plugin = new MicrosoftTeamsPlugin({
+      url: "https://custom-microsoft-url",
       publishPreRelease: false,
     });
     const hooks = makeHooks();
@@ -174,8 +173,8 @@ describe("postToSlack", () => {
 
   test("posts when prerelease branch setting is true", async () => {
     // @ts-ignore
-    const plugin = new SlackPlugin({
-      url: "https://custom-slack-url",
+    const plugin = new MicrosoftTeamsPlugin({
+      url: "https://custom-microsoft-url",
       publishPreRelease: true,
     });
     const hooks = makeHooks();
@@ -200,150 +199,120 @@ describe("postToSlack", () => {
     expect(plugin.createPost).toHaveBeenCalledTimes(1);
   });
 
-  test("should warn when no token", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    const logger = dummyLog();
-    jest.spyOn(logger.verbose, "warn").mockImplementation();
-    process.env.SLACK_TOKEN = "";
-
-    await plugin.createPost(
-      { ...mockAuto, logger } as Auto,
-      "New Releases: 1.0.0",
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
-      undefined
-    );
-
-    expect(logger.verbose.warn).toHaveBeenCalled();
-  });
-
   test("should call slack api with minimal config", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should add more indents to nested lists", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown(
         "# My Notes\n- PR [some link](google.com)\n - Another note"
       ),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should add more indents to nested lists - 2 spaces", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown(
         "# My Notes\n- PR [some link](google.com)\n  - Another note"
       ),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api through http proxy", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     process.env.http_proxy = "http-proxy";
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       createHttpsProxyAgent("mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should remove markdown code types from block", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown(
         `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`
       ),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
 
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api through https proxy", async () => {
-    const plugin = new SlackPlugin("https://custom-slack-url");
-    process.env.SLACK_TOKEN = "MY_TOKEN";
+    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     process.env.https_proxy = "https-proxy";
 
     await plugin.createPost(
       mockAuto,
-      "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
+      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       createHttpsProxyAgent("mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api", async () => {
-    const plugin = new SlackPlugin({ url: "https://custom-slack-url" });
+    const plugin = new MicrosoftTeamsPlugin({ url: "https://custom-microsoft-url" });
     const hooks = makeHooks();
-    process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -357,18 +326,17 @@ describe("postToSlack", () => {
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api with custom atTarget", async () => {
-    const plugin = new SlackPlugin({
-      url: "https://custom-slack-url",
+    const plugin = new MicrosoftTeamsPlugin({
+      url: "https://custom-microsoft-url",
       atTarget: "here",
     });
     const hooks = makeHooks();
-    process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -382,17 +350,16 @@ describe("postToSlack", () => {
 
     expect(fetchSpy).toHaveBeenCalled();
     expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-slack-url?token=MY_TOKEN"
+      "https://custom-microsoft-url"
     );
     expect(fetchSpy.mock.calls[0][1].body.includes("@here")).toBe(true);
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call slack api in env var", async () => {
-    process.env.SLACK_WEBHOOK_URL = "https://foo.bar";
-    const plugin = new SlackPlugin();
+    process.env.MICROSOFT_TEAMS_WEBHOOK_URL = "https://foo.bar";
+    const plugin = new MicrosoftTeamsPlugin();
     const hooks = makeHooks();
-    process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -405,15 +372,14 @@ describe("postToSlack", () => {
     });
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe("https://foo.bar?token=MY_TOKEN");
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][0]).toBe("https://foo.bar");
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should add title", async () => {
-    process.env.SLACK_WEBHOOK_URL = "https://foo.bar";
-    const plugin = new SlackPlugin({ title: "My Cool Project" });
+    process.env.MICROSOFT_TEAMS_WEBHOOK_URL = "https://foo.bar";
+    const plugin = new MicrosoftTeamsPlugin({ title: "My Cool Project" });
     const hooks = makeHooks();
-    process.env.SLACK_TOKEN = "MY_TOKEN";
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
     await hooks.afterRelease.promise({
@@ -426,85 +392,6 @@ describe("postToSlack", () => {
     });
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
-  });
-});
-
-describe("convertToBlocks", () => {
-  test("work for simple case", () => {
-    expect(
-      convertToBlocks(
-        sanitizeMarkdown(endent`
-          #### 🐛 Bug Fix
-
-          - build the s3 plugin [#1804](https://github.com/intuit/auto/pull/1804) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-          
-          #### Authors: 1
-          
-          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))    
-      `)
-      )
-    ).toMatchSnapshot();
-  });
-
-  test("work for simple additional release notes", () => {
-    expect(
-      convertToBlocks(
-        sanitizeMarkdown(endent`
-          ### Release Notes
-
-          #### Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver ([#1802](https://github.com/intuit/auto/pull/1802))
-          
-          This release changes the tag used for the "Canary Releases Assets" created by the \`upload-assets\` plugin to be \`0.0.0-canary\`.
-          This new tag is a valid semantic version and can be used with other auto commands.
-          
-          ---
-          
-          #### 🐛 Bug Fix
-          
-          - \`@auto-it/upload-assets\`
-            - Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver [#1802](https://github.com/intuit/auto/pull/1802) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-          
-          #### 📝 Documentation
-          
-          - add automated TOC to hooks documentation [#1801](https://github.com/intuit/auto/pull/1801) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-          
-          #### Authors: 1
-          
-          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-      `)
-      )
-    ).toMatchSnapshot();
-  });
-
-  test("work for simple additional release notes with code examples", () => {
-    expect(
-      convertToBlocks(
-        sanitizeMarkdown(endent`
-          ### Release Notes
-
-          #### Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver ([#1802](https://github.com/intuit/auto/pull/1802))
-          
-          \`\`\`md
-          > Code example
-          \`\`\`
-          
-          ---
-          
-          #### 🐛 Bug Fix
-          
-          - \`@auto-it/upload-assets\`
-            - Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver [#1802](https://github.com/intuit/auto/pull/1802) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-          
-          #### 📝 Documentation
-          
-          - add automated TOC to hooks documentation [#1801](https://github.com/intuit/auto/pull/1801) ([@hipstersmoothie](https://github.com/hipstersmoothie))
-          
-          #### Authors: 1
-          
-          - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
-      `)
-      )
-    ).toMatchSnapshot();
+    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 });

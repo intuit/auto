@@ -1,21 +1,658 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
+exports[`convertToBlocks work for simple additional release notes 1`] = `
+Array [
+  Array [
+    Object {
+      "text": Object {
+        "text": "*Release Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "*Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "This release changes the tag used for the \\"Canary Releases Assets\\" created by the \`upload-assets\` plugin to be \`0.0.0-canary\`.",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "This new tag is a valid semantic version and can be used with other auto commands.",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "type": "divider",
+    },
+    Object {
+      "text": Object {
+        "text": "*🐛 Bug Fix*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• \`@auto-it/upload-assets\`",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "*📝 Documentation*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "type": "divider",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "*Authors: 1*",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+  ],
+]
+`;
 
-exports[`postToSlack should add more indents to nested lists 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\\\n   • Another note\\",\\"link_names\\":1}"`;
+exports[`convertToBlocks work for simple additional release notes with code examples 1`] = `
+Array [
+  Array [
+    Object {
+      "text": Object {
+        "text": "*Release Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "*Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "\`md\`:
 
-exports[`postToSlack should add title 1`] = `"{\\"text\\":\\"My Cool Project\\\\n\\\\n@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "\`\`\`
+> Code example
+\`\`\`",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "type": "divider",
+    },
+    Object {
+      "text": Object {
+        "text": "*🐛 Bug Fix*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• \`@auto-it/upload-assets\`",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "*📝 Documentation*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "type": "divider",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "*Authors: 1*",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+  ],
+]
+`;
 
-exports[`postToSlack should call slack api 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`convertToBlocks work for simple case 1`] = `
+Array [
+  Array [
+    Object {
+      "text": Object {
+        "text": "*🐛 Bug Fix*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• build the s3 plugin <https://github.com/intuit/auto/pull/1804|#1804> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "type": "divider",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "*Authors: 1*",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+  ],
+]
+`;
 
-exports[`postToSlack should call slack api in env var 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "   • Another note",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
 
-exports[`postToSlack should call slack api through http proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should add more indents to nested lists 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "   • Another note",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
 
-exports[`postToSlack should call slack api through https proxy 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should add title 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "text": "My Cool Project",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Release: ",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
 
-exports[`postToSlack should call slack api with custom atTarget 1`] = `"{\\"text\\":\\"@here: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Release: ",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
 
-exports[`postToSlack should call slack api with minimal config 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api in env var 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Release: ",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
 
-exports[`postToSlack should remove markdown code types from block 1`] = `"{\\"text\\":\\"@channel: New release *<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*\\\\n*My Notes*\\\\n\`json\`:\\\\n\\\\n\`\`\`\\\\n{ \\\\\\"foo\\\\\\": \\\\\\"bar\\\\\\" }\`\`\`\\\\n• PR <google.com|some link>\\",\\"link_names\\":1}"`;
+exports[`postToSlack should call slack api through http proxy 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
+
+exports[`postToSlack should call slack api through https proxy 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
+
+exports[`postToSlack should call slack api with custom atTarget 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Release: ",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@here <https://git.hub/some/project/releases/v1.0.0|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
+
+exports[`postToSlack should call slack api with minimal config 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
+
+exports[`postToSlack should remove markdown code types from block 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Releases: 1.0.0",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "@channel <https://google.com|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "\`json\`:
+
+",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "\`\`\`
+{ \\"foo\\": \\"bar\\" }\`\`\`
+• PR <google.com|some link>
+\`\`\`",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;

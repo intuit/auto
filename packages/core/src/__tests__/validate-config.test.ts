@@ -427,6 +427,63 @@ describe("validatePlugin", () => {
     ).toMatchSnapshot();
   });
 
+  test("should validate plugin configuration - union", async () => {
+    const hook: ValidatePluginHook = new AsyncSeriesBailHook([
+      "name",
+      "options",
+    ]);
+
+    const basePluginOptions = t.partial({
+      /** URL of the slack to post to */
+      url: t.string,
+      /** Who to bother when posting to the channel */
+      atTarget: t.string,
+      /** Allow users to opt into having prereleases posted to slack */
+      publishPreRelease: t.boolean,
+      /** Additional Title to add at the start of the slack message */
+      title: t.string,
+    });
+
+    const appPluginOptions = t.intersection([
+      t.interface({
+        /** Marks we are gonna use app auth */
+        auth: t.literal("app"),
+        /** Channels to post */
+        channels: t.array(t.string),
+      }),
+      basePluginOptions,
+    ]);
+
+    const pluginOptions = t.union([basePluginOptions, appPluginOptions]);
+
+    hook.tapPromise("test", async (name, options) => {
+      if (name === "test-plugin") {
+        return validatePluginConfiguration(
+          "test-plugin",
+          pluginOptions,
+          options
+        );
+      }
+    });
+
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", { url: "foo" }]],
+      })
+    ).toStrictEqual([]);
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", { auth: "app" }]],
+      })
+    ).toMatchSnapshot();
+    // Check no validation issues with intersected options
+    expect(
+      await validatePlugins(hook, {
+        plugins: [["test-plugin", { auth: "app", channels: ['foo'] }]],
+      })
+      ).toStrictEqual([]);
+  });
+
   test("should validate plugin configuration - array of configurations", async () => {
     const hook: ValidatePluginHook = new AsyncSeriesBailHook([
       "name",

@@ -1,6 +1,6 @@
 # Slack Plugin
 
-Post your release notes to a slack channel
+Post your release notes to a slack channel.
 
 ## Installation
 
@@ -14,29 +14,91 @@ yarn add -D @auto-it/slack
 
 ## Usage
 
-To use the plugin include it in your `.autorc`.
+### Incoming Webhook + Token
 
-```json
+This is the easier option to set up, but it has less features than [app auth](#app-auth-token).
+
+There are a few options on how to call/construct the webhook URL:
+
+```jsonc
 {
   "plugins": [
-    // or
-    ["slack", { "url": "https://url-to-your-slack-hook.com" }],
-    // or
-    ["slack", "https://url-to-your-slack-hook.com"],
-    // or
-    [
-      "slack",
-      { "url": "https://url-to-your-slack-hook.com", "atTarget": "here" }
-    ],
-    // Below: Uses slack hook set in process.env.SLACK_WEBHOOK_URL
-    "slack"
+    // Webhook URL Only:
+    // Store the hook URL in `SLACK_WEBHOOK_URL` so you don't commit it
+    "slack",
+    // Incoming  Webhook URL + Token:
+    // Set generic app hook URL in `.autorc` as `url` and set the
+    // `SLACK_TOKEN` variable available on your environment.
+    //
+    // This token will be added to the URL as a query string parameter.
+    ["slack", { "url": "https://url-to-your-slack-hook.com" }]
   ]
 }
 ```
 
-This URL should be to you webhook. Store it in `SLACK_WEBHOOK_URL` for more security. If you require a token to post to a slack hook, make sure you have a `SLACK_TOKEN` variable available on your environment. This token will be added to eh URL as a query string parameter.
+[Read more about Slack incoming webhooks here.](https://api.slack.com/messaging/webhooks)
+
+### App Auth Token
+
+An incoming webhook can work for most situations but to enable a better integration we need an app auth token. This enables us to:
+
+- Upload text snippets for code blocks in release notes
+- Post to multiple channels
+
+For this to work you need to [create an app](https://api.slack.com/apps) with the following permissions:
+
+- `files:write`
+- `chat:write`
+
+Set the `auth` option to `app` and the `SLACK_TOKEN` will be used to authenticate as an app.
+
+```json
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "auth": "app",
+        "channels": ["app-update-channel", "private-team-channel"]
+      }
+    ]
+  ]
+}
+```
+
+[Read about creating an installing apps.](https://api.slack.com/start/overview#creating)
 
 ## Options
+
+### atTarget
+
+Who to tag when posting a message.
+Defaults to `channel`.
+
+Some less chatty options are:
+
+```jsonc
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        // Only tag people online
+        "atTarget": "here"
+      }
+    ],
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        // Tag a custom group, like the channel admin
+        "atTarget": "channel-admin"
+      }
+    ]
+  ]
+}
+```
 
 ### publishPreRelease
 
@@ -72,3 +134,41 @@ Additional Title to add at the start of the slack message.
   ]
 }
 ```
+
+### channels (App Auth Only)
+
+Channel, private group, or IM channel to send message to.
+Can be an encoded ID, or a name.
+
+```json
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "auth": "app",
+        "channels": ["app-update-channel", "private-team-channel"]
+      }
+    ]
+  ]
+}
+```
+
+[Read here for more details.](https://api.slack.com/methods/chat.postMessage#channels)
+
+## Creating a Slack App
+
+There are a lot of steps to creating a Slack app and installing it.
+Let's go over what you'll need to do to get set up with app auth.
+
+1. [Create the app](https://api.slack.com/apps)
+2. From your app's `Basic Information` page go to `Permissions => Bot Token Scopes` and add `chat:write` and `file:write`
+3. Copy the `Bot User OAuth Access Token` into your `.env` file and store it as `SLACK_TOKEN`
+4. Install the app in the channels you want it to post to via the Slack UI
+
+### Customize the App
+
+To make you app shine in Slack head to `Basic Information` and scroll down to `Display Information`.
+Her you should set a description for the app and give it an `icon` and `color`.
+
+This could be your code's logo or one of [our](https://github.com/intuit/auto/blob/main/docs/public/logo-large-dark.png) [logos](https://github.com/intuit/auto/blob/main/docs/public/logo-large.png).

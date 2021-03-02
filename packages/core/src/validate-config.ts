@@ -228,7 +228,8 @@ export const validateIoConfiguration = (
       return errors;
     }
 
-    const exactRc = makeExactType(configDeceleration).decode(rc);
+    const exactDeclaration = makeExactType(configDeceleration);
+    const exactRc = exactDeclaration.decode(rc);
 
     if (!isRight(looseRc) || !isRight(exactRc)) {
       return [];
@@ -245,6 +246,47 @@ export const validateIoConfiguration = (
 
     if (unknownKeys.length === 0) {
       return [];
+    }
+
+    if (
+      (exactDeclaration as any)._tag === "UnionType" &&
+      "types" in exactDeclaration &&
+      exactDeclaration.types.every(
+        (type) =>
+          type._tag === "IntersectionType" || (type as any)._tag === "ExactType"
+      )
+    ) {
+      const decodedTypes = exactDeclaration.types.map((t) => t.decode(rc));
+      const matchingMissingMember = decodedTypes.filter((t) => "left" in t)[0];
+
+      if (matchingMissingMember && "left" in matchingMissingMember) {
+        const correct = Object.keys(
+          matchingMissingMember.left[0].context[0].actual as any
+        );
+        const missing =
+          matchingMissingMember.left[0].context[
+            matchingMissingMember.left[0].context.length - 1
+          ].key;
+
+        return [
+          `${errorPath(
+            `"${name}"`
+          )}\n\nFound missing configuration keys: when using ${chalk.greenBright.bold(
+            correct.join(", ")
+          )} you must also provide ${unexpectedValue(missing)}\n`,
+        ];
+      }
+
+      const matchingCorrectMember = decodedTypes.filter(
+        (t) =>
+          "right" in t &&
+          Object.keys(t.right).length && 
+          Object.keys(t.right).every((key) => unknownKeys.includes(key))
+      )[0];
+
+      if (matchingCorrectMember) {
+        return [];
+      }
     }
 
     return [
