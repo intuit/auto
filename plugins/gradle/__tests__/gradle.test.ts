@@ -141,7 +141,20 @@ describe("Gradle Plugin", () => {
       ]);
     });
 
-    test("should version release - canary w/ default snapshot", async () => {
+    test("should not increment version - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(canaryVersion).toBe("1.0.0-SNAPSHOT")
+    });
+
+    test("should not increment version - canary w/ default snapshot", async () => {
       const properties = "version: 1.0.0-SNAPSHOT";
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
@@ -155,6 +168,20 @@ describe("Gradle Plugin", () => {
     });
 
     test("should not increment version - next", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+    
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.patch, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(nextVersion[0]).toBe("1.0.0-SNAPSHOT")
+    });
+
+    test("should not increment version - next w/ default snapshot", async () => {
       const properties = "version: 1.0.0-SNAPSHOT";
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);

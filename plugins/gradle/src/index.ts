@@ -90,6 +90,9 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   /** should this release be a snapshot release */
   private snapshotRelease = false;
 
+  /** should this release be a canary release */
+  private canaryRelease = false;
+
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
     this.options = {
@@ -242,6 +245,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     auto.hooks.canary.tapPromise(
       this.name,
       async ({ dryRun, quiet }) => {
+        this.canaryRelease = true;
+
         const releaseVersion = await getVersion(
           this.options.gradleCommand,
           this.options.gradleOptions
@@ -277,28 +282,30 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       async (preReleaseVersions, { dryRun }) => {
         const branch = getCurrentBranch() || "";
 
-        const {version} = await getProperties(
+        const version = await getVersion(
           this.options.gradleCommand,
           this.options.gradleOptions
         );
 
+        const nextVersion = `${version}${defaultSnapshotSuffix}`;
+
         // Don't need to increment version since version should have already 
         // been incremented by canary during PR, so take the current version
         // and publish it
-        if (version) {
-          preReleaseVersions.push(version);
+        if (nextVersion) {
+          preReleaseVersions.push(nextVersion);
         }
 
         if (dryRun) {
-          auto.logger.log.info(`Would have published: ${version}`);
+          auto.logger.log.info(`Would have published: ${nextVersion}`);
           return preReleaseVersions;
         }
 
         await execPromise("git", [
           "tag",
-          version ?? "",
+          nextVersion ?? "",
           "-m",
-          `"Tag pre-release: ${version}"`,
+          `"Tag pre-release: ${nextVersion}"`,
         ]);
 
         await execPromise("git", ["push", auto.remote, branch, "--tags"]);
@@ -317,7 +324,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun }) => {
-      if (!this.snapshotRelease || dryRun) {
+      if (!this.snapshotRelease || dryRun || this.canaryRelease) {
         return;
       }
 
