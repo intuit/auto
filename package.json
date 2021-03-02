@@ -69,7 +69,7 @@
     "lerna": "^3.22.1",
     "lint-staged": "^10.0.7",
     "mock-fs": "^4.13.0",
-    "next-ignite": "^0.9.20",
+    "next-ignite": "^0.10.7",
     "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
     "prism-react-renderer": "^1.1.1",
