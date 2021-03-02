@@ -151,11 +151,11 @@ describe("Gradle Plugin", () => {
 
       const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
 
-      expect(canaryVersion).toBe("1.0.0-SNAPSHOT")
+      expect(canaryVersion).toBe("1.0.0-canary123")
     });
 
     test("should not increment version - canary w/ default snapshot", async () => {
-      const properties = "version: 1.0.0-SNAPSHOT";
+      const properties = "version: 1.0.0";
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
@@ -164,7 +164,7 @@ describe("Gradle Plugin", () => {
 
       const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
 
-      expect(canaryVersion).toBe("1.0.0-SNAPSHOT")
+      expect(canaryVersion).toBe("1.0.0-canary123")
     });
 
     test("should not increment version - next", async () => {

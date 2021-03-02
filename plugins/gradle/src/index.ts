@@ -90,9 +90,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   /** should this release be a snapshot release */
   private snapshotRelease = false;
 
-  /** should this release be a canary release */
-  private canaryRelease = false;
-
   /** Initialize the plugin with it's options */
   constructor(options: IGradleReleasePluginPluginOptions = {}) {
     this.options = {
@@ -244,15 +241,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
     auto.hooks.canary.tapPromise(
       this.name,
-      async ({ dryRun, quiet }) => {
-        this.canaryRelease = true;
-
+      async ({ dryRun, quiet, canaryIdentifier }) => {
         const releaseVersion = await getVersion(
           this.options.gradleCommand,
           this.options.gradleOptions
         );
 
-        const canaryVersion = `${releaseVersion}${defaultSnapshotSuffix}`;
+        const canaryVersion = `${releaseVersion}-${canaryIdentifier}`;
 
         if (dryRun) {
           if (quiet) {
@@ -271,6 +266,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
             "publish",
             ...this.options.gradleOptions,
           ]);
+        } else {
+          auto.logger.log.warn(`Publish task not found in gradle`);
         }
 
         return canaryVersion;
@@ -317,14 +314,16 @@ export default class GradleReleasePluginPlugin implements IPlugin {
             "publish",
             ...this.options.gradleOptions,
           ]);
+        } else {
+          auto.logger.log.warn(`Publish task not found in gradle`);
         }
 
         return preReleaseVersions;
       }
     );
 
-    auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun }) => {
-      if (!this.snapshotRelease || dryRun || this.canaryRelease) {
+    auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun, context }) => {
+      if (!this.snapshotRelease || dryRun || context === "canary") {
         return;
       }
 
