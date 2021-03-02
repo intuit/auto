@@ -135,6 +135,62 @@ Additional Title to add at the start of the slack message.
 }
 ```
 
+### username
+
+Username to post the message as.
+
+```json
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        "username": "My Project"
+      }
+    ]
+  ]
+}
+```
+
+### iconUrl
+
+Image url to use as the message's avatar.
+
+```json
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        "iconUrl": "http://lorempixel.com/48/48"
+      }
+    ]
+  ]
+}
+```
+
+> NOTE: If both `iconUrl` and `iconEmoji` are specified only `iconUrl` will be respected
+
+### iconEmoji
+
+Emoji code to use as the message's avatar.
+
+```json
+{
+  "plugins": [
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        "iconEmoji": ":chart_with_upwards_trend:"
+      }
+    ]
+  ]
+}
+```
+
 ### channels (App Auth Only)
 
 Channel, private group, or IM channel to send message to.

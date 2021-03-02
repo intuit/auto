@@ -43,14 +43,8 @@ Array [
     },
     Object {
       "text": Object {
-        "text": "• \`@auto-it/upload-assets\`",
-        "type": "mrkdwn",
-      },
-      "type": "section",
-    },
-    Object {
-      "text": Object {
-        "text": "   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "text": "• \`@auto-it/upload-assets\`
+   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -141,14 +135,8 @@ Array [
     },
     Object {
       "text": Object {
-        "text": "• \`@auto-it/upload-assets\`",
-        "type": "mrkdwn",
-      },
-      "type": "section",
-    },
-    Object {
-      "text": Object {
-        "text": "   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "text": "• \`@auto-it/upload-assets\`
+   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -263,14 +251,8 @@ Object {
     },
     Object {
       "text": Object {
-        "text": "• PR <google.com|some link>",
-        "type": "mrkdwn",
-      },
-      "type": "section",
-    },
-    Object {
-      "text": Object {
-        "text": "   • Another note",
+        "text": "• PR <google.com|some link>
+   • Another note",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -309,14 +291,8 @@ Object {
     },
     Object {
       "text": Object {
-        "text": "• PR <google.com|some link>",
-        "type": "mrkdwn",
-      },
-      "type": "section",
-    },
-    Object {
-      "text": Object {
-        "text": "   • Another note",
+        "text": "• PR <google.com|some link>
+   • Another note",
         "type": "mrkdwn",
       },
       "type": "section",
