@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/slack",
-  "version": "10.16.8",
+  "version": "10.17.0",
   "main": "dist/index.js",
   "description": "Slack plugin for auto",
   "license": "MIT",
@@ -38,8 +38,8 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "~1.2.0",
-    "@octokit/rest": "^18.0.0",
     "@auto-it/core": "link:../../packages/core",
+    "@octokit/rest": "^18.0.0",
     "fp-ts": "^2.5.3",
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
