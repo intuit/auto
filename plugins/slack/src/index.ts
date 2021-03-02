@@ -150,6 +150,12 @@ const basePluginOptions = t.partial({
   publishPreRelease: t.boolean,
   /** Additional Title to add at the start of the slack message */
   title: t.string,
+  /** Username to post the message as */
+  username: t.string,
+  /** Image url to use as the message's avatar */
+  iconUrl: t.string,
+  /** Emoji code to use as the message's avatar */
+  iconEmoji: t.string,
 });
 
 const appPluginOptions = t.intersection([
@@ -319,6 +325,18 @@ export default class SlackPlugin implements IPlugin {
       messages[0].unshift(createSectionBlock(this.options.title));
     }
 
+    const userPostMessageOptions: Record<string, string> = {};
+
+    if (this.options.username) {
+      userPostMessageOptions.username = this.options.username;
+    }
+
+    if (this.options.iconUrl) {
+      userPostMessageOptions.icon_url = this.options.iconUrl;
+    } else if (this.options.iconEmoji) {
+      userPostMessageOptions.icon_emoji = this.options.iconEmoji;
+    }
+
     if ("auth" in this.options) {
       const channels = this.options.channels;
 
@@ -331,6 +349,7 @@ export default class SlackPlugin implements IPlugin {
             await fetch("https://slack.com/api/chat.postMessage", {
               method: "POST",
               body: JSON.stringify({
+                ...userPostMessageOptions,
                 channel,
                 blocks: message,
                 link_names: true,
@@ -366,6 +385,7 @@ export default class SlackPlugin implements IPlugin {
       await fetch(`${this.options.url}${token ? `?token=${token}` : ""}`, {
         method: "POST",
         body: JSON.stringify({
+          ...userPostMessageOptions,
           link_names: true,
           // If not in app auth only one message is constructed
           blocks: messages[0],
