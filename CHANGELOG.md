@@ -1,3 +1,16 @@
+# v10.17.0 (Tue Mar 02 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/microsoft-teams`, `@auto-it/slack`
+  - Use Block Kit for slack messages [#1815](https://github.com/intuit/auto/pull/1815) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.8 (Wed Feb 24 2021)
 
 :tada: This release contains work from a new contributor! :tada:

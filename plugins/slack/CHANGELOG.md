@@ -1,3 +1,27 @@
+# v10.17.0 (Tue Mar 02 2021)
+
+#### 🚀 Enhancement
+
+- Use Block Kit for slack messages [#1815](https://github.com/intuit/auto/pull/1815) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- actually make it work ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix lint ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- finalize block setup ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add app instructions ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update plugins/slack/src/index.ts ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- implement new auth + file uploading ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- document atTarget and old + new auth ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- go back to old format for webhook only auth ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add function to convert message to slack blocks ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.16.8 (Wed Feb 24 2021)
 
 #### 🐛 Bug Fix
