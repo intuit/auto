@@ -64,10 +64,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.16.7"
+  version "10.17.0"
 
 "@auto-it/core@link:packages/core":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -107,7 +107,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -124,30 +124,19 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
     fp-ts "^2.5.3"
     io-ts "^2.1.2"
-    tslib "2.1.0"
-
-"@auto-it/slack@link:plugins/slack":
-  version "10.16.7"
-  dependencies:
-    "@atomist/slack-messages" "~1.2.0"
-    "@auto-it/core" "link:packages/core"
-    fp-ts "^2.5.3"
-    https-proxy-agent "^5.0.0"
-    io-ts "^2.1.2"
-    node-fetch "2.6.1"
     tslib "2.1.0"
 
 "@babel/code-frame@7.12.11", "@babel/code-frame@^7.12.11":
@@ -2614,6 +2603,11 @@
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-5.1.0.tgz#661fd03c7d55fbcb0a0937d3353d87dea012f52c"
   integrity sha512-bodZvSYgycbUuuKrC/anCBUExvaSSWzMMFz0xl7pcJujxnmGxvqvcFHktjx1ZOSyeNKLfYF0QCgibaHUGsZTng==
 
+"@octokit/openapi-types@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-5.2.1.tgz#5e846f86104aef96ace20091d8afb6be27979d8a"
+  integrity sha512-Bf7MBvQ1nMpv15ANaQtRBsC7YnwQFPM0eUztp3luQs9L6sBEiQ6ArM1Wx5CG+N7tXETtd0oE0DMcU4wbLlCZIw==
+
 "@octokit/plugin-enterprise-compatibility@^1.2.2":
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-enterprise-compatibility/-/plugin-enterprise-compatibility-1.2.9.tgz#63e58313fc6f3936fb9a01f8145160fb1d29df96"
@@ -2654,12 +2648,12 @@
     "@octokit/types" "^2.0.1"
     deprecation "^2.3.1"
 
-"@octokit/plugin-rest-endpoint-methods@4.12.0":
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-4.12.0.tgz#1cec405cd4eaf0bdb58cb7d2a9b3d8473b3a70e8"
-  integrity sha512-RgnQ1aoetdOJjZYC37LV5FNlL7GY/v1CdC5dur1Zp/UiADJlbRFbAz/xLx26ovXw67dK7EUtwCghS+6QyiI9RA==
+"@octokit/plugin-rest-endpoint-methods@4.13.1":
+  version "4.13.1"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-4.13.1.tgz#d8c807bbd0e187ac903620f53321e2634818bb30"
+  integrity sha512-T9YhQqpbO9Onmg+FYk09uci9pfChg8CZR9GBaPJWj+bDSzictW1xnU0NtCSSKKyrwvpW/opu7CtuDSs/HF1Syg==
   dependencies:
-    "@octokit/types" "^6.10.0"
+    "@octokit/types" "^6.11.1"
     deprecation "^2.3.1"
 
 "@octokit/plugin-retry@^3.0.1":
@@ -2733,14 +2727,14 @@
     universal-user-agent "^4.0.0"
 
 "@octokit/rest@^18.0.0":
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.2.0.tgz#b75c87870bb1f7bc9f37ae0e9acb3a411a34a25f"
-  integrity sha512-xsp6bIqL2sb/NmgLXTxw96caegobRw+YHnzdIi70ruquHtPPDW2cBAONhDYMUuAOeXx0JH2auOeplpk4SQJy1w==
+  version "18.3.1"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.3.1.tgz#6680331e941c422dbff0e758a9bd3dc4edcbd2db"
+  integrity sha512-g57ebsk7dtbLjiPBgEYDAiDTsyQM9kvlIt0J5UN6OSjG82K6fQQck6HXPpwcyNIDqbN7lIaWr3nsz56jBfI6qg==
   dependencies:
     "@octokit/core" "^3.2.3"
     "@octokit/plugin-paginate-rest" "^2.6.2"
     "@octokit/plugin-request-log" "^1.0.2"
-    "@octokit/plugin-rest-endpoint-methods" "4.12.0"
+    "@octokit/plugin-rest-endpoint-methods" "4.13.1"
 
 "@octokit/types@^2.0.0", "@octokit/types@^2.0.1":
   version "2.16.2"
@@ -2755,6 +2749,13 @@
   integrity sha512-aMDo10kglofejJ96edCBIgQLVuzMDyjxmhdgEcoUUD64PlHYSrNsAGqN0wZtoiX4/PCQ3JLA50IpkP1bcKD/cA==
   dependencies:
     "@octokit/openapi-types" "^5.1.0"
+
+"@octokit/types@^6.11.1":
+  version "6.11.1"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.11.1.tgz#54ece128029526fa99bd71e757b9e35478403d95"
+  integrity sha512-UiSRTG2lrFbMUMwhKNR0uSV33Fzv4bNu1n5iFuuNOg80XCh0VYNhR4TQWgrkLhVxdDuej6s61aP3eQvVm6K6uA==
+  dependencies:
+    "@octokit/openapi-types" "^5.2.1"
 
 "@opentelemetry/api@0.14.0":
   version "0.14.0"
