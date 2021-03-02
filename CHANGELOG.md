@@ -1,3 +1,16 @@
+# v10.18.0 (Tue Mar 02 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/slack`
+  - Expose username, iconUrl, and iconEmoji validation bug + collapse markdown lists into 1 section [#1846](https://github.com/intuit/auto/pull/1846) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.17.1 (Tue Mar 02 2021)
 
 #### 🐛 Bug Fix
