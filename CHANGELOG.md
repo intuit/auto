@@ -1,3 +1,16 @@
+# v10.17.1 (Tue Mar 02 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix validating slack config with mixed options [#1844](https://github.com/intuit/auto/pull/1844) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.17.0 (Tue Mar 02 2021)
 
 #### 🚀 Enhancement
