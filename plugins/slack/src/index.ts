@@ -79,6 +79,7 @@ interface Block {
   [params: string]: unknown;
 }
 
+const CHANGELOG_LINE = /^\s*•/;
 type Messages = [Block[], ...Array<Block[] | FileUpload>];
 
 /** Convert the sanitized markdown to slack blocks */
@@ -131,6 +132,18 @@ export function convertToBlocks(
           currentMessage.push(createContextBlock(authorLine));
         }
       }
+    } else if (line.match(CHANGELOG_LINE)) {
+      const lines: string[] = [line];
+
+      for (const changelogLine of lineIterator) {
+        if (!changelogLine.match(CHANGELOG_LINE)) {
+          break;
+        }
+
+        lines.push(changelogLine);
+      }
+
+      currentMessage.push(createSectionBlock(lines.join("\n")));
     } else if (line) {
       currentMessage.push(createSectionBlock(line));
     }
