@@ -3,7 +3,9 @@ import {
   IPlugin,
   execPromise,
   validatePluginConfiguration,
-  getCurrentBranch
+  getCurrentBranch,
+  DEFAULT_PRERELEASE_BRANCHES,
+  determineNextVersion
 } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
@@ -276,19 +278,24 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
     auto.hooks.next.tapPromise(
       this.name,
-      async (preReleaseVersions, { dryRun }) => {
+      async (preReleaseVersions, { dryRun, bump }) => {
+        const prereleaseBranches =
+          auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
         const branch = getCurrentBranch() || "";
-
-        const version = await getVersion(
-          this.options.gradleCommand,
-          this.options.gradleOptions
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const lastRelease = await auto.git?.getLatestRelease();
+        const current =
+          (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await auto.getCurrentVersion(lastRelease ?? ""));
+        const nextVersion = determineNextVersion(
+          lastRelease ?? "",
+          current,
+          bump,
+          prereleaseBranch
         );
 
-        const nextVersion = `${version}${defaultSnapshotSuffix}`;
-
-        // Don't need to increment version since version should have already 
-        // been incremented by canary during PR, so take the current version
-        // and publish it
         if (nextVersion) {
           preReleaseVersions.push(nextVersion);
         }
@@ -298,6 +305,11 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           return preReleaseVersions;
         }
 
+        await this.updateGradleVersion(
+          nextVersion,
+          `Prerelease version: ${nextVersion} [skip ci]`
+        );
+
         await execPromise("git", [
           "tag",
           nextVersion ?? "",
@@ -305,7 +317,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           `"Tag pre-release: ${nextVersion}"`,
         ]);
 
-        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+        await execPromise("git", [
+          "push",
+          "--follow-tags",
+          "--set-upstream",
+          auto.remote,
+          auto.baseBranch,
+        ]);
 
         const { publish } = this.properties;
 

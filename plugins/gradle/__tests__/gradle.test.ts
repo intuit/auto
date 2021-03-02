@@ -24,7 +24,15 @@ describe("Gradle Plugin", () => {
     exec.mockClear();
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
+    plugin.apply(({ 
+      hooks, 
+      logger: dummyLog(), 
+      prefixRelease, 
+      git: {
+        getLastTagNotInBaseBranch: async () => undefined,
+        getLatestRelease: async () => "0.0.1",
+      },
+      getCurrentVersion: async () => "0.0.1" } as unknown) as Auto.Auto);
   });
 
   describe("getPreviousVersion", () => {
@@ -176,13 +184,13 @@ describe("Gradle Plugin", () => {
     
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.patch, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
 
-      expect(nextVersion[0]).toBe("1.0.0-SNAPSHOT")
+      expect(nextVersion[0]).toBe("1.0.0-next.0")
     });
 
     test("should not increment version - next w/ default snapshot", async () => {
-      const properties = "version: 1.0.0-SNAPSHOT";
+      const properties = "version: 1.1.0-SNAPSHOT";
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
@@ -190,9 +198,9 @@ describe("Gradle Plugin", () => {
     
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.patch, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
 
-      expect(nextVersion[0]).toBe("1.0.0-SNAPSHOT")
+      expect(nextVersion[0]).toBe("1.0.0-next.0")
     });
 
     test("should tag release - next w/ default snapshot", async () => {
@@ -204,13 +212,13 @@ describe("Gradle Plugin", () => {
     
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.next.promise([], { bump: Auto.SEMVER.patch, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+      await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("git"), [
         "tag",
-        "1.0.0-SNAPSHOT",
+        "1.0.0-next.0",
         "-m",
-        "\"Tag pre-release: 1.0.0-SNAPSHOT\"",
+        "\"Tag pre-release: 1.0.0-next.0\"",
       ]);
     });
 
