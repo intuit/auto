@@ -479,7 +479,7 @@ describe("validatePlugin", () => {
     // Check no validation issues with intersected options
     expect(
       await validatePlugins(hook, {
-        plugins: [["test-plugin", { auth: "app", channels: ['foo'] }]],
+        plugins: [["test-plugin", { auth: "app", channels: ['foo'], atTarget: 'foo' }]],
       })
       ).toStrictEqual([]);
   });
