@@ -64,10 +64,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.16.7"
+  version "10.17.0"
 
 "@auto-it/core@link:packages/core":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@octokit/plugin-enterprise-compatibility" "^1.2.2"
@@ -107,7 +107,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -124,30 +124,19 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.16.7"
+  version "10.17.0"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
     deepmerge "^4.0.0"
     fp-ts "^2.5.3"
     io-ts "^2.1.2"
-    tslib "2.1.0"
-
-"@auto-it/slack@link:plugins/slack":
-  version "10.16.7"
-  dependencies:
-    "@atomist/slack-messages" "~1.2.0"
-    "@auto-it/core" "link:packages/core"
-    fp-ts "^2.5.3"
-    https-proxy-agent "^5.0.0"
-    io-ts "^2.1.2"
-    node-fetch "2.6.1"
     tslib "2.1.0"
 
 "@babel/code-frame@7.12.11", "@babel/code-frame@^7.12.11":

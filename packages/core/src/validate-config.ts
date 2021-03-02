@@ -280,8 +280,8 @@ export const validateIoConfiguration = (
       const matchingCorrectMember = decodedTypes.filter(
         (t) =>
           "right" in t &&
-          Object.keys(t.right).length && 
-          Object.keys(t.right).every((key) => unknownKeys.includes(key))
+          Object.keys(t.right).length &&
+          unknownKeys.every((u) => Object.keys(t.right).includes(u))
       )[0];
 
       if (matchingCorrectMember) {
