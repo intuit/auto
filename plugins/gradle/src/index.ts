@@ -300,13 +300,16 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           preReleaseVersions.push(nextVersion);
         }
 
+        const nextRegex = /(-next).*/;
+        const preReleaseSnapshotVersion = nextVersion.replace(nextRegex, defaultSnapshotSuffix)
+
         if (dryRun) {
-          auto.logger.log.info(`Would have published: ${nextVersion}`);
+          auto.logger.log.info(`Would have published: ${preReleaseSnapshotVersion}`);
           return preReleaseVersions;
         }
 
         await this.updateGradleVersion(
-          nextVersion,
+          preReleaseSnapshotVersion,
           `Prerelease version: ${nextVersion} [skip ci]`
         );
 
@@ -317,13 +320,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           `"Tag pre-release: ${nextVersion}"`,
         ]);
 
-        await execPromise("git", [
-          "push",
-          "--follow-tags",
-          "--set-upstream",
-          auto.remote,
-          auto.baseBranch,
-        ]);
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
 
         const { publish } = this.properties;
 
