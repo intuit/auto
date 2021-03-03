@@ -255,7 +255,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           if (quiet) {
             console.log(canaryVersion);
           } else {
-            auto.logger.log.info(`Would have published: ${releaseVersion}`);
+            auto.logger.log.info(`Would have published Canary: ${releaseVersion}`);
           }
 
           return canaryVersion;
@@ -304,7 +304,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         const preReleaseSnapshotVersion = nextVersion.replace(nextRegex, defaultSnapshotSuffix)
 
         if (dryRun) {
-          auto.logger.log.info(`Would have published: ${preReleaseSnapshotVersion}`);
+          auto.logger.log.info(`Would have published Next: ${preReleaseSnapshotVersion}`);
           return preReleaseVersions;
         }
 
