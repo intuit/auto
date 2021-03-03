@@ -1,3 +1,20 @@
+# v10.18.2 (Wed Mar 03 2021)
+
+#### 🐛 Bug Fix
+
+- handle capital X in semver bump list [#1849](https://github.com/intuit/auto/pull/1849) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- handle capital X in semver bump list ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- update getting started docs [#1848](https://github.com/intuit/auto/pull/1848) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.17.0 (Tue Mar 02 2021)
 
 #### 🚀 Enhancement
