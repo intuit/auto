@@ -9,6 +9,7 @@ import {
   faBacon,
 } from "@fortawesome/free-solid-svg-icons";
 import { GetStarted } from "./get-started-button";
+import { Label } from "./label";
 
 const Feature = ({ title, description, icon }) => (
   <div className="mb-8 flex items-start last:mb-0">
@@ -54,14 +55,6 @@ const Step = ({ number, label, image }) => (
       {...getImageProps(image)}
     />
   </div>
-);
-
-const Label = ({ children, color }) => (
-  <span
-    className={`bg-${color}-600 text-white px-2 py-1 rounded font-semibold text-xs`}
-  >
-    {children}
-  </span>
 );
 
 const FrequentlyAskedQuestion = ({ question, answer }) => (
