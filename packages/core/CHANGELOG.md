@@ -1,3 +1,16 @@
+# v10.18.3 (Wed Mar 03 2021)
+
+#### 🐛 Bug Fix
+
+- Add leading hyphen to canary identifier so that canaries always sort before any other release type [#1851](https://github.com/intuit/auto/pull/1851) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add leading hyphen to canary identifier so that canaries always sort before any other release type ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.17.1 (Tue Mar 02 2021)
 
 #### 🐛 Bug Fix
