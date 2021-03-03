@@ -503,6 +503,7 @@ describe("convertToBlocks", () => {
           #### Authors: 1
           
           - Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+          - Other
       `)
       )
     ).toMatchSnapshot();

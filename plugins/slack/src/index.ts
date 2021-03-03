@@ -126,12 +126,15 @@ export function convertToBlocks(
     } else if (line.startsWith("*Authors:")) {
       currentMessage.push(createDividerBlock());
       currentMessage.push(createContextBlock(line));
+      const authorLines: string[] = [];
 
       for (const authorLine of lineIterator) {
         if (authorLine) {
-          currentMessage.push(createContextBlock(authorLine));
+          authorLines.push(authorLine);
         }
       }
+
+      currentMessage.push(createContextBlock(authorLines.join("\n")));
     } else if (line.match(CHANGELOG_LINE)) {
       const lines: string[] = [line];
 
