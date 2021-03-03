@@ -68,7 +68,7 @@ describe("canary in ci", () => {
     expect(canary).toHaveBeenCalledWith(
       expect.objectContaining({
         bump: SEMVER.patch,
-        canaryIdentifier: "canary.123.1",
+        canaryIdentifier: "-canary.123.1",
       })
     );
   });
@@ -153,7 +153,7 @@ describe("canary in ci", () => {
     );
 
     const version = await auto.canary({ pr: 456, build: 5 });
-    expect(version!.newVersion).toBe("1.2.4-canary.456.5");
+    expect(version!.newVersion).toBe("1.2.4--canary.456.5");
   });
 });
 
@@ -177,7 +177,7 @@ describe("shipit in ci", () => {
     expect(canary).toHaveBeenCalledWith(
       expect.objectContaining({
         bump: SEMVER.patch,
-        canaryIdentifier: "canary.123.1",
+        canaryIdentifier: "-canary.123.1",
       })
     );
   });

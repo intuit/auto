@@ -1257,7 +1257,7 @@ export default class Auto {
       ).slice(0, 7)}`;
     }
 
-    canaryIdentifier = `canary${canaryIdentifier}`;
+    canaryIdentifier = `-canary${canaryIdentifier}`;
 
     this.logger.verbose.info("Calling canary hook");
     const result = await this.hooks.canary.promise({

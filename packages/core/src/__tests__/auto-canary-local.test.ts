@@ -50,7 +50,7 @@ test("shipit should publish canary in locally when not on baseBranch", async () 
   expect(canary).toHaveBeenCalledWith(
     expect.objectContaining({
       bump: SEMVER.patch,
-      canaryIdentifier: "canary.abcdefg",
+      canaryIdentifier: "-canary.abcdefg",
     })
   );
 });

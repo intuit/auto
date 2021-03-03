@@ -1172,7 +1172,7 @@ describe("Auto", () => {
       expect(canary).toHaveBeenCalledWith(
         expect.objectContaining({
           bump: SEMVER.patch,
-          canaryIdentifier: "canary.123.1",
+          canaryIdentifier: "-canary.123.1",
         })
       );
       expect(auto.git!.addToPrBody).toHaveBeenCalled();
@@ -1197,7 +1197,7 @@ describe("Auto", () => {
       expect(canary).toHaveBeenCalledWith(
         expect.objectContaining({
           bump: SEMVER.patch,
-          canaryIdentifier: "canary.abc",
+          canaryIdentifier: "-canary.abc",
         })
       );
     });
@@ -1241,7 +1241,7 @@ describe("Auto", () => {
       expect(canary).toHaveBeenCalledWith(
         expect.objectContaining({
           bump: SEMVER.patch,
-          canaryIdentifier: "canary.abcd",
+          canaryIdentifier: "-canary.abcd",
         })
       );
     });
@@ -1290,7 +1290,7 @@ describe("Auto", () => {
       expect(canary).toHaveBeenCalledWith(
         expect.objectContaining({
           bump: SEMVER.patch,
-          canaryIdentifier: "canary.abcd",
+          canaryIdentifier: "-canary.abcd",
         })
       );
     });
