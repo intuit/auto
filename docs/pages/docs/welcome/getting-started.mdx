@@ -2,6 +2,8 @@
 title: Getting Started
 ---
 
+import { Label } from '../../../components/label';
+
 Before we do anything we must first install `auto` as a dev dependency.
 
 ```bash
@@ -10,7 +12,7 @@ yarn add -D auto
 
 If you are using `auto` in a non-javascript project, you can install `auto` and all it's official plugins via the [releases](https://github.com/intuit/auto/releases) page. Here you will find a build of `auto` for all major OSes. This build has `node` bundled so you don't need it installed!
 
-> :warning: If you use `yarn@2` none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
+> :warning: If you use <Label color="blue">yarn@2</Label> none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
 
 ## Help
 
@@ -18,8 +20,8 @@ To get detailed help for any command use the `--help` flag.
 
 ```bash
 auto --help
-# or command help
-auto command --help
+# or any of auto's command's help
+auto shipit --help
 ```
 
 ### Make "Latest Release"
@@ -33,41 +35,43 @@ git tag v1.2.3
 git push --tags
 ```
 
-Then on GitHub go to your project's releases and click `Draft a new release`. In the `Tag version` field enter the version number you just tagged and click `Publish release`.
+Then on GitHub go to your project's releases and click `Draft a new release`.
+In the `Tag version` field enter the version number you just tagged and click `Publish release`.
 
-Now your github project is set up to use `auto`.
+Now your github project is set up to use `auto` :tada:
 
 ## Configuration
 
 Getting started with `auto` is super easy.
 
-1. `auto init` (optional)
-2. Configure environment variables
-3. `auto create-labels`
-4. Set up script
+1. Initialize Options (optional)
+2. Configure Environment Variables
+3. Create Labels
+4. Run `auto`
 
-### 1. Initialize Options
+### 1. Initialize Options <Label color="blue" className="ml-4">Optional</Label>
 
 Initialize the bare minimum options and a few other optional things.
 This will set you up locally but you will still have to configure environment variables in your CI.
 
-- Override default labels
-- Add additional labels
-- Add plugins
-- Creates an .env file for local testing
+```bash
+auto init
+```
 
-### 2. Environment Variables
+### 2. Configure Environment Variables
 
 You must configure some environment variables for publishing and releasing to work properly.
 
 - `GH_TOKEN` - Used for publishing the GitHub release and creating labels ([create one here](https://github.com/settings/tokens)) (needs `repo` permission)
-- `NPM_TOKEN` - Used to publish to npm. (only with NPM plugin)
 
-> Make sure you give the `GH_TOKEN` `repo` permission or `shipit` will fail!
+> Make sure you give the GH_TOKEN <Label color="blue">repo</Label> permission or `shipit` will fail!
 
-#### Local `.env`
+#### Local `.env` <Label color="yellow" className="ml-4">Recommended</Label>
 
-You can also store these values in a local file at the root of your project named `.env`. You should make sure to add this file to your `.gitignore` so you don't commit any keys! These env vars will override these any variable already set on the process. This enables you to have a per project configuration that isn't effected by your global setup.
+You can also store these values in a local file at the root of your project named `.env`.
+You should make sure to add this file to your `.gitignore` so you don't commit any keys!
+These env vars will override these any variable already set on the process.
+This enables you to have a per project configuration that isn't effected by your global setup.
 
 **`PROJECT_ROOT/.env`:**
 
@@ -78,18 +82,21 @@ NPM_TOKEN=PUBLISH_TOKEN
 
 #### HTTP Proxy
 
-If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment. To test locally add it to .env file. Remember this file is only local, so you will need to set the variable in your CI as well.
+If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment.
+To test locally add it to `.env` file.
+Remember this file is only local, so you will need to set the variable in your CI as well.
 
 ```bash
 https_proxy=<PROXYHOST>:<PROXYPORT>
 ```
 
-### 3. Labels
+### 3. Create Labels
 
-After that, you need to set up the labels on your github project. The types of labels that `auto` uses are:
+After that, you need to set up the labels on your GitHub project.
+The types of labels that `auto` uses are:
 
-- Versioning Labels - used to calculate version numbers and make releases. To change them refer to [this](../configuration/autorc#labels).
-- Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even add your own sections. Read more [here](../configuration/autorc#changelog-titles)
+- Versioning Labels - Used to calculate version numbers and make releases. To change them refer to [this](../configuration/autorc#labels).
+- Changelog Labels - These labels do not effect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even [add your own sections](../configuration/autorc#changelog-titles).
 
 To create the labels for your project on GitHub, run the following command with your `GH_TOKEN`.
 
@@ -99,15 +106,22 @@ GH_TOKEN=YOUR_TOKEN auto create-labels
 auto create-labels
 ```
 
-### 4. Script
+### 4. Run `auto`
 
-`auto` is written so that each tool it exposes is useful in isolation. It also provides workflows for those who don't care about the details of each tool and just want their code released.
+`auto` is written so that each tool it exposes is useful in isolation.
+You can use as much or as little of `auto` as you want!
 
-#### Quick Setup (Recommended)
+There are two ways you can use `auto` to create releases.
 
-To version, changelog, publish and release your code all at the same time, we've included the `shipit` tool.
-This tool runs all commands in the default `auto` workflow and puts it into one meta-command.
-It is context aware and will make different type of releases based on where you run it.
+1. `auto shipit` - Let `auto` do everything
+2. Sub Commands - Run each command yourself
+
+#### `auto shipit` <Label color="yellow" className="ml-4">Recommended</Label>
+
+To version, changelog, publish and release your code all at the same time you should use the `shipit` command.
+`shipit` runs all commands in the `auto` workflow and puts it into one meta-command.
+It's context aware and will make different types of releases based on where you run it.
+
 [Read more here.](../generated/shipit)
 
 ```json
@@ -118,23 +132,10 @@ It is context aware and will make different type of releases based on where you 
 }
 ```
 
-#### Detailed Setup
+#### Do-It-Yourself
 
-The simplest workflow to get set up in just the `package.json` is by adding the following to your `package.json`. With this setup your application will not be able to use the `skip-release` flag, but everything else will work just fine
-
-```json
-{
-  "scripts": {
-    "version": "npm version `auto version` -m 'Bump version to: %s [skip ci]'",
-    "publish": "npm publish && git push --follow-tags --set-upstream origin $branch",
-    "release": "auto changelog && npm run version && npm run publish && auto release"
-  }
-}
-```
-
-##### Enabling `skip-release` label
-
-To use the `skip-release` label you have to get a little more involved and use a shell script. We could do the `if` checks in the `package.json`, but this would get messy and hard to read very quickly.
+All of the functionality of `shipit` is accessible through all of `auto`'s other commands.
+Through these commands you can fit parts of `auto` into your existing release process.
 
 ```json
 {
@@ -144,7 +145,7 @@ To use the `skip-release` label you have to get a little more involved and use a
 }
 ```
 
-Here is an example release script for a single NPM package:
+Here is an example release script for a npm package:
 
 ```bash
 export PATH=$(npm bin):$PATH
@@ -162,20 +163,6 @@ if [ ! -z "$VERSION" ]; then
 
   ## Create GitHub Release
   git push --follow-tags --set-upstream origin $branch
-  auto release
-fi
-```
-
-or if you are using lerna to manage a monorepo.
-
-```bash
-export PATH=$(npm bin):$PATH
-
-VERSION=`auto version`
-
-if [ ! -z "$VERSION" ]; then
-  auto changelog
-  lerna publish --yes $VERSION -m '%v [skip ci]'
   auto release
 fi
 ```
