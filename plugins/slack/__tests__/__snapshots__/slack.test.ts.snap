@@ -170,7 +170,8 @@ Array [
     Object {
       "elements": Array [
         Object {
-          "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+          "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)
+• Other",
           "type": "mrkdwn",
         },
       ],
