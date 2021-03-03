@@ -1,3 +1,16 @@
+# v10.18.1 (Tue Mar 02 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - groups authors [#1847](https://github.com/intuit/auto/pull/1847) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.0 (Tue Mar 02 2021)
 
 #### 🚀 Enhancement
