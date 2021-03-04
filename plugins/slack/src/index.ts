@@ -48,6 +48,15 @@ const createSectionBlock = (text: string) => ({
   },
 });
 
+/** Create some space in the message */
+const createSpacerBlock = () => ({
+  type: "section" as const,
+  text: {
+    type: "mrkdwn",
+    text: " ",
+  },
+});
+
 /** Create slack header block */
 const createHeaderBlock = (text: string) => ({
   type: "header" as const,
@@ -96,6 +105,7 @@ export function convertToBlocks(
     if (line.startsWith("#")) {
       currentMessage.push(createSectionBlock(`*${line.replace(/^[#]+/, "")}*`));
     } else if (line === "---") {
+      currentMessage.push(createSpacerBlock());
       currentMessage.push(createDividerBlock());
     } else if (line.startsWith("```")) {
       const [, language] = line.match(/```(\S+)/) || ["", "detect"];
@@ -147,6 +157,7 @@ export function convertToBlocks(
       }
 
       currentMessage.push(createSectionBlock(lines.join("\n")));
+      currentMessage.push(createSpacerBlock());
     } else if (line) {
       currentMessage.push(createSectionBlock(line));
     }

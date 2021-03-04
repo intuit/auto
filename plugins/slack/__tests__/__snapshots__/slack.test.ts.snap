@@ -32,6 +32,13 @@ Array [
       "type": "section",
     },
     Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
       "type": "divider",
     },
     Object {
@@ -51,6 +58,13 @@ Array [
     },
     Object {
       "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
@@ -59,6 +73,13 @@ Array [
     Object {
       "text": Object {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -124,6 +145,13 @@ Array [
       "type": "section",
     },
     Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
       "type": "divider",
     },
     Object {
@@ -143,6 +171,13 @@ Array [
     },
     Object {
       "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
@@ -151,6 +186,13 @@ Array [
     Object {
       "text": Object {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -194,6 +236,13 @@ Array [
     Object {
       "text": Object {
         "text": "• build the s3 plugin <https://github.com/intuit/auto/pull/1804|#1804> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -258,6 +307,13 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
 }
@@ -294,6 +350,13 @@ Object {
       "text": Object {
         "text": "• PR <google.com|some link>
    • Another note",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -344,6 +407,13 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
 }
@@ -379,6 +449,13 @@ Object {
     Object {
       "text": Object {
         "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -422,6 +499,13 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
 }
@@ -457,6 +541,13 @@ Object {
     Object {
       "text": Object {
         "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -500,6 +591,13 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
 }
@@ -539,6 +637,13 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
 }
@@ -574,6 +679,13 @@ Object {
     Object {
       "text": Object {
         "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",

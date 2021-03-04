@@ -218,7 +218,7 @@ There are a lot of steps to creating a Slack app and installing it.
 Let's go over what you'll need to do to get set up with app auth.
 
 1. [Create the app](https://api.slack.com/apps)
-2. From your app's `Basic Information` page go to `Permissions => Bot Token Scopes` and add `chat:write` and `file:write`
+2. From your app's `Basic Information` page go to `Permissions => Bot Token Scopes` and add `chat:write` and `file:write` (Optionally add `chat:write.customize` to use the `username` and `icon` options)
 3. Copy the `Bot User OAuth Access Token` into your `.env` file and store it as `SLACK_TOKEN`
 4. Install the app in the channels you want it to post to via the Slack UI
 
