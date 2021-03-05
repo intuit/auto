@@ -106,6 +106,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
+    commit = true,
     buildFlag = true
   ) => {
     if (buildFlag) {
@@ -128,12 +129,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       ]);
     }
 
-    await execPromise("git", [
-      "commit",
-      "-am",
-      `"${commitMsg || `update version: ${version} [skip ci]"`}"`,
-      "--no-verify",
-    ]);
+    if (commit) {
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"${commitMsg || `update version: ${version} [skip ci]"`}"`,
+        "--no-verify",
+      ]);
+    }
   };
 
   /** Tap into auto plugin points. */
@@ -254,8 +257,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         if (dryRun) {
           if (quiet) {
             console.log(canaryVersion);
-          } else {
-            auto.logger.log.info(`Would have published Canary: ${releaseVersion}`);
           }
 
           return canaryVersion;
@@ -304,14 +305,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         const preReleaseSnapshotVersion = nextVersion.replace(nextRegex, defaultSnapshotSuffix)
 
         if (dryRun) {
-          auto.logger.log.info(`Would have published Next: ${preReleaseSnapshotVersion}`);
           return preReleaseVersions;
         }
-
-        await this.updateGradleVersion(
-          preReleaseSnapshotVersion,
-          `Prerelease version: ${nextVersion} [skip ci]`
-        );
 
         await execPromise("git", [
           "tag",
@@ -321,6 +316,12 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         ]);
 
         await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+        await this.updateGradleVersion(
+          preReleaseSnapshotVersion,
+          `Prerelease version: ${preReleaseSnapshotVersion} [skip ci]`,
+          false
+        );
 
         const { publish } = this.properties;
 
@@ -338,7 +339,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun, context }) => {
-      if (!this.snapshotRelease || dryRun || context === "canary") {
+      if (!this.snapshotRelease || dryRun || context != "latest") {
         return;
       }
 
