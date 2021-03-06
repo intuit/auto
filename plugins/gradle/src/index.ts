@@ -339,7 +339,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun, context }) => {
-      if (!this.snapshotRelease || dryRun || context != "latest") {
+      if (!this.snapshotRelease || dryRun || context !== "latest") {
         return;
       }
 
