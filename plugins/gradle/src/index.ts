@@ -246,7 +246,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
     auto.hooks.canary.tapPromise(
       this.name,
-      async ({ dryRun, quiet, canaryIdentifier }) => {
+      async ({ dryRun, canaryIdentifier }) => {
         const releaseVersion = await getVersion(
           this.options.gradleCommand,
           this.options.gradleOptions
