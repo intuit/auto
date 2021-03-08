@@ -255,10 +255,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         const canaryVersion = `${releaseVersion}-${canaryIdentifier}`;
 
         if (dryRun) {
-          if (quiet) {
-            console.log(canaryVersion);
-          }
-
+          auto.logger.log.info(`Would have published: ${canaryVersion}`);
           return canaryVersion;
         }
 

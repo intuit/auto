@@ -151,6 +151,21 @@ describe("Gradle Plugin", () => {
       ]);
     });
 
+    test("should only log on dryRun - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" , dryRun: true});
+
+      expect(spy).toHaveBeenCalledTimes(0)
+      expect(mockLog).toHaveBeenCalledTimes(1)
+    });
+
     test("should not increment version - canary", async () => {
       const properties = "version: 1.0.0";
       exec.mockReturnValueOnce(properties);
@@ -204,6 +219,19 @@ describe("Gradle Plugin", () => {
       await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
 
       expect(mockLog).toHaveBeenCalledWith(expect.stringMatching("Publish task not found in gradle"));
+    });
+
+    test("do nothing on dryRun - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.minor, commits: [], fullReleaseNotes: "", releaseNotes: "", dryRun: true });
+
+      expect(spy).toHaveBeenCalledTimes(0)
     });
 
     test("version does not depend on project gradle properties - next", async () => {
