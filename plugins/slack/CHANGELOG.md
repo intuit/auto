@@ -1,3 +1,17 @@
+# v10.18.4 (Tue Mar 09 2021)
+
+#### 🐛 Bug Fix
+
+- Slack message spacing + notification text [#1862](https://github.com/intuit/auto/pull/1862) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add notification text ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add spacing to slack message ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.1 (Tue Mar 02 2021)
 
 #### 🐛 Bug Fix

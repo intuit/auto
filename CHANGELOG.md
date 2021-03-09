@@ -1,3 +1,16 @@
+# v10.18.4 (Tue Mar 09 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - Slack message spacing + notification text [#1862](https://github.com/intuit/auto/pull/1862) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.3 (Wed Mar 03 2021)
 
 #### 🐛 Bug Fix
