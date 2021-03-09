@@ -48,6 +48,15 @@ const createSectionBlock = (text: string) => ({
   },
 });
 
+/** Create some space in the message */
+const createSpacerBlock = () => ({
+  type: "section" as const,
+  text: {
+    type: "mrkdwn",
+    text: " ",
+  },
+});
+
 /** Create slack header block */
 const createHeaderBlock = (text: string) => ({
   type: "header" as const,
@@ -96,6 +105,7 @@ export function convertToBlocks(
     if (line.startsWith("#")) {
       currentMessage.push(createSectionBlock(`*${line.replace(/^[#]+/, "")}*`));
     } else if (line === "---") {
+      currentMessage.push(createSpacerBlock());
       currentMessage.push(createDividerBlock());
     } else if (line.startsWith("```")) {
       const [, language] = line.match(/```(\S+)/) || ["", "detect"];
@@ -147,6 +157,7 @@ export function convertToBlocks(
       }
 
       currentMessage.push(createSectionBlock(lines.join("\n")));
+      currentMessage.push(createSpacerBlock());
     } else if (line) {
       currentMessage.push(createSectionBlock(line));
     }
@@ -360,13 +371,14 @@ export default class SlackPlugin implements IPlugin {
         await last;
 
         if (Array.isArray(message)) {
-          await channels.reduce(async (lastMessage, channel) => {
+          await channels.reduce(async (lastMessage, channel, index) => {
             await lastMessage;
             await fetch("https://slack.com/api/chat.postMessage", {
               method: "POST",
               body: JSON.stringify({
                 ...userPostMessageOptions,
                 channel,
+                text: index === 0 ? `${header} :tada:` : undefined,
                 blocks: message,
                 link_names: true,
               }),
@@ -403,6 +415,7 @@ export default class SlackPlugin implements IPlugin {
         body: JSON.stringify({
           ...userPostMessageOptions,
           link_names: true,
+          text: `${header} :tada:`,
           // If not in app auth only one message is constructed
           blocks: messages[0],
         }),

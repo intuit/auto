@@ -32,6 +32,13 @@ Array [
       "type": "section",
     },
     Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
       "type": "divider",
     },
     Object {
@@ -51,6 +58,13 @@ Array [
     },
     Object {
       "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
@@ -59,6 +73,13 @@ Array [
     Object {
       "text": Object {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -124,6 +145,13 @@ Array [
       "type": "section",
     },
     Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
       "type": "divider",
     },
     Object {
@@ -143,6 +171,13 @@ Array [
     },
     Object {
       "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
@@ -151,6 +186,13 @@ Array [
     Object {
       "text": Object {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -194,6 +236,13 @@ Array [
     Object {
       "text": Object {
         "text": "• build the s3 plugin <https://github.com/intuit/auto/pull/1804|#1804> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
@@ -258,8 +307,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
 
@@ -298,8 +355,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
 
@@ -344,8 +409,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Release:  :tada:",
 }
 `;
 
@@ -383,8 +456,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Release:  :tada:",
 }
 `;
 
@@ -422,8 +503,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Release:  :tada:",
 }
 `;
 
@@ -461,8 +550,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
 
@@ -500,8 +597,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
 
@@ -539,8 +644,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Release:  :tada:",
 }
 `;
 
@@ -578,8 +691,16 @@ Object {
       },
       "type": "section",
     },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
 
@@ -631,5 +752,6 @@ Object {
     },
   ],
   "link_names": true,
+  "text": "New Releases: 1.0.0 :tada:",
 }
 `;
