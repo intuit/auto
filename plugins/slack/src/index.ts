@@ -371,13 +371,14 @@ export default class SlackPlugin implements IPlugin {
         await last;
 
         if (Array.isArray(message)) {
-          await channels.reduce(async (lastMessage, channel) => {
+          await channels.reduce(async (lastMessage, channel, index) => {
             await lastMessage;
             await fetch("https://slack.com/api/chat.postMessage", {
               method: "POST",
               body: JSON.stringify({
                 ...userPostMessageOptions,
                 channel,
+                text: index === 0 ? `${header} :tada:` : undefined,
                 blocks: message,
                 link_names: true,
               }),
@@ -414,6 +415,7 @@ export default class SlackPlugin implements IPlugin {
         body: JSON.stringify({
           ...userPostMessageOptions,
           link_names: true,
+          text: `${header} :tada:`,
           // If not in app auth only one message is constructed
           blocks: messages[0],
         }),
