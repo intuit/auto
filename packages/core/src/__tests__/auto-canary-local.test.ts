@@ -11,6 +11,8 @@ const defaults = {
   repo: "bar",
 };
 
+const listLabelsOnIssue = jest.fn();
+
 process.env.GH_TOKEN = "XXXX";
 
 jest.mock("@octokit/rest", () => {
@@ -21,6 +23,10 @@ jest.mock("@octokit/rest", () => {
 
     repos = {
       get: jest.fn().mockReturnValue({}),
+    };
+
+    issues = {
+      listLabelsOnIssue: listLabelsOnIssue.mockReturnValue({ data: []}),
     };
 
     hook = {
@@ -53,4 +59,30 @@ test("shipit should publish canary in locally when not on baseBranch", async () 
       canaryIdentifier: "-canary.abcdefg",
     })
   );
+});
+
+test("canary should use PR labels correctly", async () => {
+  const auto = new Auto({
+    ...defaults,
+    onlyPublishWithReleaseLabel: true,
+    plugins: [],
+  });
+  auto.logger = dummyLog();
+  // @ts-ignore
+  auto.checkClean = () => Promise.resolve(true);
+  await auto.loadConfig();
+
+  auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+  auto.git!.getSha = () => Promise.resolve("abcdefghijklmnop");
+  jest.spyOn(auto.git!, "createComment").mockImplementation();
+  auto.release!.getCommitsInRelease = () => Promise.resolve([]);
+  auto.release!.getCommits = () => Promise.resolve([]);
+  const canary = jest.fn();
+  auto.hooks.canary.tap("test", canary);
+  listLabelsOnIssue.mockReturnValueOnce({
+    data: [{ name: "internal" }, { name: "release" }],
+  });
+
+  await auto.canary({ pr: 123 });
+  expect(canary).toHaveBeenCalled();
 });

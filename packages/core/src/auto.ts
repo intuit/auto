@@ -1224,7 +1224,7 @@ export default class Auto {
 
     if (pr) {
       const prLabels = await this.git.getLabels(Number(pr));
-      labels.push(prLabels);
+      labels.unshift(prLabels);
     }
 
     let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
