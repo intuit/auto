@@ -1,3 +1,17 @@
+# v10.18.6 (Thu Mar 11 2021)
+
+#### 🐛 Bug Fix
+
+- wrap canary identifier in quotes so terminal understands it's an argument to the --preid flag [#1864](https://github.com/intuit/auto/pull/1864) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix lerna independent canary preid ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- wrap canary identifier in quotes so terminal understands it's an argument to the --preid flag ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.17.0 (Tue Mar 02 2021)
 
 #### 🚀 Enhancement
