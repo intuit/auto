@@ -1,3 +1,16 @@
+# v10.18.5 (Thu Mar 11 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix PR label calculation [#1865](https://github.com/intuit/auto/pull/1865) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.4 (Tue Mar 09 2021)
 
 #### 🐛 Bug Fix
