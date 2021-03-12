@@ -1827,17 +1827,18 @@ export default class Auto {
       this.versionBump
     );
 
+    if (args.quiet) {
+      console.log(releaseNotes);
+    }
+
     if (dryRun) {
       this.logger.log.info("Potential Changelog Addition:\n", releaseNotes);
       this.logger.verbose.info("`changelog` dry run complete.");
+
       return;
     }
 
-    if (args.quiet) {
-      console.log(releaseNotes);
-    } else {
-      this.logger.log.info("New Release Notes\n", releaseNotes);
-    }
+    this.logger.log.info("New Release Notes\n", releaseNotes);
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
     const context = {
