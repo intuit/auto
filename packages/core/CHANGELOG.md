@@ -1,3 +1,16 @@
+# v10.18.8 (Fri Mar 12 2021)
+
+#### 🐛 Bug Fix
+
+- fix using --dry-run and --quiet together with the changelog command [#1870](https://github.com/intuit/auto/pull/1870) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix using --dry-run and --quiet together with the changelog command ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.7 (Thu Mar 11 2021)
 
 #### 🐛 Bug Fix
