@@ -10,11 +10,17 @@ export interface LernaPackage {
 }
 
 /** Get all of the packages in the lerna monorepo */
-export default async function getLernaPackages(): Promise<LernaPackage[]> {
-  return execPromise("npx", ["lerna", "ls", "-pla"]).then((res) =>
-    res.split("\n").map((packageInfo) => {
-      const [packagePath, name, version] = packageInfo.split(":");
-      return { path: packagePath, name, version };
-    })
-  );
+export default async function getLernaPackages() {
+  const packages: LernaPackage[] = [];
+  const response = await execPromise("npx", ["lerna", "ls", "-pla"]);
+
+  response.split("\n").forEach((packageInfo) => {
+    const [packagePath, name, version] = packageInfo.split(":");
+
+    if (version !== "MISSING") {
+      packages.push({ path: packagePath, name, version });
+    }
+  });
+
+  return packages;
 }
