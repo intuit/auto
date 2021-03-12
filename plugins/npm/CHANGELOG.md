@@ -1,3 +1,16 @@
+# v10.18.7 (Thu Mar 11 2021)
+
+#### 🐛 Bug Fix
+
+- don't include private packages in canary install list [#1866](https://github.com/intuit/auto/pull/1866) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't include private packages in canary install list ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.6 (Thu Mar 11 2021)
 
 #### 🐛 Bug Fix
