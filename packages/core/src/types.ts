@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-import { labelDefinition } from "./semver";
+import { ILabelDefinition, labelDefinition } from "./semver";
 
 const author = t.partial({
   /** The name and email of the author to make commits with */
@@ -71,38 +71,58 @@ export const globalOptions = t.partial({
   versionBranches: t.union([t.boolean, t.string]),
   /** Options to pass to "auto comment" */
   comment: t.partial({
+    /** Delete the previous comment */
     delete: t.boolean,
+    /** Instead of deleting/adding a new comment. Just edit the old one */
     edit: t.boolean,
   }),
   /** Options to pass to "auto changelog" */
   changelog: t.partial({
+    /** The commit message to commit the changelog changes with */
     message: t.string,
   }),
   /** Options to pass to "auto release" */
   release: t.partial({
+    /** Create a prerelease */
     prerelease: t.boolean,
   }),
   /** Options to pass to "auto shipit" */
   shipit: t.partial({
+    /** Create a prerelease */
     prerelease: t.boolean,
+    /** Skip creating the changelog */
     noChangelog: t.boolean,
+    /** The commit message to commit the changelog changes with */
     message: t.string,
+    /**
+     * Make auto publish prerelease versions when merging to baseBranch.
+     * Only PRs merged with "release" label will generate a "latest" release.
+     * Only use this flag if you do not want to maintain a prerelease branch,
+     * and instead only want to use baseBranch.
+     */
     onlyGraduateWithReleaseLabel: t.boolean,
   }),
   /** Options to pass to "auto latest" */
   latest: t.partial({
+    /** Create a prerelease */
     prerelease: t.boolean,
+    /** Skip creating the changelog */
     noChangelog: t.boolean,
+    /** The commit message to commit the changelog changes with */
     message: t.string,
   }),
   /** Options to pass to "auto canary" */
   canary: t.partial({
+    /** Always deploy even if marked as skip release */
     force: t.boolean,
+    /** The message used when attaching the canary version to a PR */
     message: t.union([t.literal(false), t.string]),
   }),
   /** Options to pass to "auto next" */
   next: t.partial({
+    /** Always deploy even if marked as skip release */
     force: t.boolean,
+    /** The message used when attaching the prerelease version to a PR */
     message: t.string,
   }),
 });
@@ -120,7 +140,12 @@ export const autoRc = t.intersection([
   ]),
 ]);
 
-export type AutoRc = t.TypeOf<typeof autoRc>;
+export type AutoRc = t.TypeOf<typeof autoRc> & {
+  // Seems to be a bug with io-ts and label jsDoc isn't getting through
+  // so we explicitly set it
+  /** Labels that power auto */
+  labels?: ILabelDefinition[];
+};
 
 export const loadedAutoRc = t.intersection([
   autoRc,

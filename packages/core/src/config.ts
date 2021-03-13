@@ -2,6 +2,7 @@ import { cosmiconfig } from "cosmiconfig";
 import merge from "deepmerge";
 import fetch from "node-fetch";
 import * as path from "path";
+import TypeScriptLoader from "@endemolshinegroup/cosmiconfig-typescript-loader";
 
 import { getVersionMap } from "./release";
 import { ILogger } from "./utils/logger";
@@ -66,13 +67,36 @@ export default class Config {
    * load the extends property, load the plugins and start the git remote interface.
    */
   async loadConfig() {
-    const explorer = cosmiconfig("auto");
+    const name = "auto";
+    const explorer = cosmiconfig(name, {
+      searchPlaces: [
+        "package.json",
+        `.${name}rc`,
+        `.${name}rc.json`,
+        `.${name}rc.yaml`,
+        `.${name}rc.yml`,
+        `.${name}rc.ts`,
+        `.${name}rc.js`,
+        `.${name}rc.cjs`,
+        `${name}.config.js`,
+        `${name}.config.cjs`,
+        `${name}.config.ts`,
+        `${name}.config.js`,
+      ],
+      loaders: {
+        ".ts": TypeScriptLoader,
+      },
+    });
     const result = await explorer.search();
 
     let rawConfig: ConfigObject = {};
 
     if (result?.config) {
       rawConfig = result.config;
+    }
+
+    if (typeof rawConfig === "function") {
+      rawConfig = await rawConfig();
     }
 
     if (rawConfig.extends) {

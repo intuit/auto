@@ -8,10 +8,11 @@ import { DefaultLabelRenderer } from "../../../components/defaultLabelsRenderer"
 This means you can define this file a variety of ways.
 `cosmiconfig` will start at the root of your project and start to search up the directory tree for the following:
 
-- a package.json property
-- a JSON or YAML, extension-less "rc file"
-- an "rc file" with the extensions `.json`, `.yaml`, `.yml`, or `.js`
-- a `.config.js` CommonJS module
+- an `auto` package.json property
+- a JSON or YAML, extension-less rc file ".autorc"
+- an "rc file" with the extensions `.json`, `.yaml`, `.yml`, `.ts` or `.js`
+- a `auto.config.js` or `auto.config.js` CommonJS module
+- a `auto.config.ts` TypeScript module
 
 ## Initialization
 
@@ -19,6 +20,51 @@ To interactively create an `.autorc` use the `init` command. You can configure m
 
 ```bash
 auto init
+```
+
+## TypeScript Configuration
+
+You can write your `auto` configuration in a TypeScript file for easier validation
+
+**auto.config.ts:**
+
+```ts
+import { AutoRc } from "auto";
+
+import { INpmConfig } from "@auto-it/core";
+import { IAllContributorsPluginOptions } from "@auto-it/all-contributors";
+
+/** Auto configuration */
+export default function rc(): AutoRc {
+  return {
+    plugins: [
+      "released",
+      [
+        "npm",
+        {
+          exact: true,
+          canaryScope: "@auto-canary",
+        } as INpmConfig,
+      ],
+      [
+        "all-contributors",
+        {
+          types: {
+            plugin: "**/plugin/**/*",
+            code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
+          },
+        } as IAllContributorsPluginOptions,
+      ],
+    ],
+    labels: [
+      {
+        name: "blog-post",
+        changelogTitle: "📚 Blog Post",
+        releaseType: "none",
+      },
+    ],
+  };
+}
 ```
 
 ## Options

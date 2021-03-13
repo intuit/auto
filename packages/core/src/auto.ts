@@ -2260,3 +2260,5 @@ export {
   LernaPackage,
 } from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";
+
+export { AutoRc } from "./types";
