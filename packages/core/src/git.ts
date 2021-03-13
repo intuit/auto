@@ -901,9 +901,12 @@ export default class Git {
       first?: boolean;
     } = {}
   ) {
-    const baseTags = (
-      await this.getTags(`origin/${this.options.baseBranch}`)
-    ).reverse();
+    const baseBranch = (await this.shaExists(
+      `origin/${this.options.baseBranch}`
+    ))
+      ? `origin/${this.options.baseBranch}`
+      : this.options.baseBranch;
+    const baseTags = (await this.getTags(baseBranch)).reverse();
     let branchTags = (await this.getTags(`heads/${branch}`)).reverse();
     const branchTagsWithPrereleaseSuffix = branchTags.filter(
       (tag) => tag.indexOf(`-${branch.toLowerCase()}`) >= 0

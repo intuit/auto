@@ -1362,11 +1362,15 @@ export default class Auto {
     );
 
     const currentBranch = getCurrentBranch();
+    const baseBranch = (await this.git.shaExists(`origin/${this.baseBranch}`))
+      ? `origin/${this.baseBranch}`
+      : this.baseBranch;
+
     const forkPoints = (
       await execPromise("git", [
         "rev-list",
         "--boundary",
-        `${currentBranch}...origin/${this.baseBranch}`,
+        `${currentBranch}...${baseBranch}`,
         "--left-only",
       ])
     )
@@ -1384,9 +1388,7 @@ export default class Auto {
     const [, latestTagInBranch] = await on(
       this.git.getLatestTagInBranch(currentBranch)
     );
-    const [, tagsInBaseBranch] = await on(
-      this.git.getTags(`origin/${this.baseBranch}`)
-    );
+    const [, tagsInBaseBranch] = await on(this.git.getTags(baseBranch));
     const [latestTagInBaseBranch] = (tagsInBaseBranch || []).reverse();
     const lastTag =
       lastTagNotInBaseBranch ||
