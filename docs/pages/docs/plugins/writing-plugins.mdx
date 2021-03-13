@@ -9,6 +9,8 @@ A plugin definition is:
 - a name for the plugin, should match the [name of the package](../configuration/plugins#plugin-declaration) (REQUIRED)
 - a class the has an `apply` function where a plugin hooks into various functions in auto (REQUIRED)
 
+You can write a plugin directly in TypeScript with no build step:
+
 ```ts
 import { Auto, IPlugin } from "auto";
 
