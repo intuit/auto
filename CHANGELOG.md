@@ -1,3 +1,82 @@
+# v10.20.0 (Sat Mar 13 2021)
+
+### Release Notes
+
+#### Write auto configuration in TypeScript ([#1875](https://github.com/intuit/auto/pull/1875))
+
+You can now author you `auto` configuration in TypeScript 🎉  
+
+This makes it a bit easier to validate your configuration as you write it. All of the options come with jsDoc so you can get documentation super easy. 
+
+You can even pull in the options types for plugins!
+
+```ts
+import { AutoRc } from "auto";
+
+import { INpmConfig } from "@auto-it/core";
+import { IAllContributorsPluginOptions } from "@auto-it/all-contributors";
+
+const npmOptions: INpmConfig = {
+  exact: true,
+  canaryScope: "@auto-canary",
+};
+
+const allContributorsOptions: IAllContributorsPluginOptions = {
+  types: {
+    plugin: "**/plugin/**/*",
+    code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
+  },
+};
+
+/** Auto configuration */
+export default function rc(): AutoRc {
+  return {
+    plugins: [
+      "released",
+      ["npm", npmOptions],
+      ["all-contributors", allContributorsOptions],
+    ],
+    labels: [
+      {
+        name: "blog-post",
+        changelogTitle: "📚 Blog Post",
+        releaseType: "none",
+      },
+    ],
+  };
+}
+```
+
+## Why
+
+The more validation of configuration the better!
+
+Todo:
+
+- [x] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [ ] `patch`
+- [x] `minor`
+- [ ] `major`
+
+---
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - Write auto configuration in TypeScript [#1875](https://github.com/intuit/auto/pull/1875) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.19.0 (Sat Mar 13 2021)
 
 #### 🚀 Enhancement
