@@ -69,6 +69,7 @@
     "tapable": "^2.0.0-beta.2",
     "terminal-link": "^2.1.1",
     "tinycolor2": "^1.4.1",
+    "ts-node": "^9.1.1",
     "tslib": "2.1.0",
     "type-fest": "^0.21.1",
     "typescript-memoize": "^1.0.0-alpha.3",
