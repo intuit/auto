@@ -4,33 +4,28 @@ import {
   GithubInformation,
   LogOptions,
   ReleaseCalculationOptions,
+  AutoRc,
 } from "./types";
 
-export interface ICreateLabelsOptions {
-  /** Do not actually do anything */
-  dryRun?: boolean;
-}
+export type ICreateLabelsOptions = DryRunOption;
 
 export interface ILabelOptions {
   /** PR to get the labels for */
   pr?: number;
-
   /** Label to check for */
   exists?: string;
 }
 
-export interface IPRCheckOptions {
+export interface IPRCheckOptions extends DryRunOption {
   /** PR to check the label for */
   pr?: number;
   /** URL to attach to the checkmark */
   url?: string;
   /** The context the check should be attached to */
   context?: string;
-  /** Do not actually do anything */
-  dryRun?: boolean;
 }
 
-export interface IPRStatusOptions {
+export interface IPRStatusOptions extends DryRunOption {
   /** The commit to attach a check to */
   sha?: string;
   /** The pr to attach a check to */
@@ -43,8 +38,6 @@ export interface IPRStatusOptions {
   description: string;
   /** The context the check should be attached to */
   context: string;
-  /** Do not actually do anything */
-  dryRun?: boolean;
 }
 
 export type IVersionOptions = ReleaseCalculationOptions & {
@@ -57,19 +50,11 @@ export interface QuietOption {
   quiet?: boolean;
 }
 
-interface NoVersionPrefix {
-  /** Whether to prefix the version with a "v" */
-  noVersionPrefix?: boolean;
-}
+type NoVersionPrefix = Pick<AutoRc, "noVersionPrefix">;
 
 export interface DryRunOption {
   /** Do not actually do anything */
   dryRun?: boolean;
-}
-
-interface ChangelogMessage {
-  /** The commit message to commit the changelog changes with */
-  message?: string;
 }
 
 interface ChangelogTitle {
@@ -77,19 +62,11 @@ interface ChangelogTitle {
   title?: string;
 }
 
-interface Prerelease {
-  /** Create a prerelease */
-  prerelease?: boolean;
-}
-
-interface BaseBranch {
-  /** The branch to treat as the base */
-  baseBranch?: string;
-}
+type BaseBranch = Pick<GithubInformation, "baseBranch">;
 
 export type IChangelogOptions = BaseBranch &
   ChangelogTitle &
-  ChangelogMessage &
+  NonNullable<AutoRc["changelog"]> &
   QuietOption &
   DryRunOption &
   NoVersionPrefix &
@@ -103,7 +80,7 @@ export type IChangelogOptions = BaseBranch &
   };
 
 export type IReleaseOptions = BaseBranch &
-  Prerelease &
+  NonNullable<AutoRc["release"]> &
   DryRunOption &
   NoVersionPrefix &
   Partial<AuthorInformation> &
@@ -116,78 +93,49 @@ export type IReleaseOptions = BaseBranch &
     useVersion?: string;
   };
 
-export type ICommentOptions = DryRunOption & {
-  /** The message to use when commenting */
-  message?: string;
-  /** THe PR to comment on */
-  pr?: number;
-  /** The context the message should be attached to. Use to post multiple comments to a PR */
-  context?: string;
-  /** Delete the previous comment */
-  delete?: boolean;
-  /** Instead of deleting/adding a new comment. Just edit the old one */
-  edit?: boolean;
-};
+export type ICommentOptions = DryRunOption &
+  NonNullable<AutoRc["comment"]> & {
+    /** The message to use when commenting */
+    message?: string;
+    /** THe PR to comment on */
+    pr?: number;
+    /** The context the message should be attached to. Use to post multiple comments to a PR */
+    context?: string;
+  };
 
 export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
 export type ILatestOptions = BaseBranch &
   DryRunOption &
   Partial<AuthorInformation> &
-  Prerelease &
+  NonNullable<AutoRc["latest"]> &
   NoVersionPrefix &
   ChangelogTitle &
-  ChangelogMessage &
   QuietOption &
-  ReleaseCalculationOptions & {
-    /** Skip creating the changelog */
-    noChangelog?: boolean;
-  };
+  ReleaseCalculationOptions;
 
-export type IShipItOptions = ILatestOptions & {
-  /**
-   * Make auto publish prerelease versions when merging to baseBranch.
-   * Only PRs merged with "release" label will generate a "latest" release.
-   * Only use this flag if you do not want to maintain a prerelease branch,
-   * and instead only want to use baseBranch.
-   */
-  onlyGraduateWithReleaseLabel?: boolean;
-};
-
-interface ForceOption {
-  /** Always deploy even if marked as skip release */
-  force?: boolean;
-}
+export type IShipItOptions = ILatestOptions & NonNullable<AutoRc["shipit"]>;
 
 export type ICanaryOptions = QuietOption &
-  ForceOption & {
-    /** Do not actually do anything */
-    dryRun?: boolean;
+  NonNullable<AutoRc["canary"]> &
+  DryRunOption & {
     /** THe PR to attach the canary to */
     pr?: number;
     /** The build to attach the canary to */
     build?: number;
-    /** The message used when attaching the canary version to a PR */
-    message?: string | "false";
   };
 
 export type INextOptions = QuietOption &
-  ForceOption & {
-    /** Do not actually do anything */
-    dryRun?: boolean;
-    /** The message used when attaching the prerelease version to a PR */
-    message?: string;
-  };
+  NonNullable<AutoRc["next"]> &
+  DryRunOption;
 
 export interface IInfoOptions {
   /** List some of the available plugins */
   listPlugins?: boolean;
 }
 
-export type GlobalOptions = {
-  /** Plugins to initialize "auto" with */
-  plugins?: string[];
-} & Partial<GithubInformation & RepoInformation> &
+export type GlobalOptions = Pick<AutoRc, "plugins"> &
+  Partial<GithubInformation & RepoInformation> &
   LogOptions;
 
 export type ApiOptions = GlobalOptions &
