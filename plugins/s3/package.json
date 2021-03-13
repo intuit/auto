@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/s3",
-  "version": "10.18.8",
+  "version": "10.18.9",
   "main": "dist/index.js",
   "description": "Post your built artifacts to s3",
   "license": "MIT",
