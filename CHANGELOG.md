@@ -1,3 +1,16 @@
+# v10.18.9 (Fri Mar 12 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - next: handle baseBranch not on remote on fresh repo [#1871](https://github.com/intuit/auto/pull/1871) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.8 (Fri Mar 12 2021)
 
 #### 🐛 Bug Fix
