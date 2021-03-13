@@ -5,6 +5,28 @@ import { IBrewPluginOptions } from "./plugins/brew";
 import { IGhPagesPluginOptions } from "./plugins/gh-pages";
 import { IAllContributorsPluginOptions } from "./plugins/all-contributors";
 
+const npmOptions: INpmConfig = {
+  exact: true,
+  canaryScope: "@auto-canary",
+};
+
+const allContributorsOptions: IAllContributorsPluginOptions = {
+  types: {
+    plugin: "**/plugin/**/*",
+    code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
+  },
+};
+
+const brewOptions: IBrewPluginOptions = {
+  executable: "./packages/cli/binary/auto-macos.gz",
+  name: "auto",
+};
+
+const ghPagesOptions: IGhPagesPluginOptions = {
+  buildCommand: "yarn docs:build",
+  dir: "docs/out",
+};
+
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
@@ -17,40 +39,14 @@ export default function rc(): AutoRc {
           "./packages/cli/binary/auto-win.exe.gz",
         ],
       ],
-      [
-        "npm",
-        {
-          exact: true,
-          canaryScope: "@auto-canary",
-        } as INpmConfig,
-      ],
+      ["npm", npmOptions],
       "released",
       "first-time-contributor",
       "pr-body-labels",
       "./scripts/auto-update-curl-version.js",
-      [
-        "all-contributors",
-        {
-          types: {
-            plugin: "**/plugin/**/*",
-            code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
-          },
-        } as IAllContributorsPluginOptions,
-      ],
-      [
-        "brew",
-        {
-          executable: "./packages/cli/binary/auto-macos.gz",
-          name: "auto",
-        } as IBrewPluginOptions,
-      ],
-      [
-        "gh-pages",
-        {
-          buildCommand: "yarn docs:build",
-          dir: "docs/out",
-        } as IGhPagesPluginOptions,
-      ],
+      ["all-contributors", allContributorsOptions],
+      ["brew", brewOptions],
+      ["gh-pages", ghPagesOptions],
     ],
     labels: [
       {

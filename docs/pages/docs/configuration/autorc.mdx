@@ -34,27 +34,25 @@ import { AutoRc } from "auto";
 import { INpmConfig } from "@auto-it/core";
 import { IAllContributorsPluginOptions } from "@auto-it/all-contributors";
 
+const npmOptions: INpmConfig = {
+  exact: true,
+  canaryScope: "@auto-canary",
+};
+
+const allContributorsOptions: IAllContributorsPluginOptions = {
+  types: {
+    plugin: "**/plugin/**/*",
+    code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
+  },
+};
+
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
     plugins: [
       "released",
-      [
-        "npm",
-        {
-          exact: true,
-          canaryScope: "@auto-canary",
-        } as INpmConfig,
-      ],
-      [
-        "all-contributors",
-        {
-          types: {
-            plugin: "**/plugin/**/*",
-            code: ["**/src/**/*", "**/package.json", "**/tsconfig.json"],
-          },
-        } as IAllContributorsPluginOptions,
-      ],
+      ["npm", npmOptions],
+      ["all-contributors", allContributorsOptions],
     ],
     labels: [
       {
