@@ -1,3 +1,19 @@
+# v10.19.0 (Sat Mar 13 2021)
+
+#### 🚀 Enhancement
+
+- Enable authoring pure TypeScript plugins [#1872](https://github.com/intuit/auto/pull/1872) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- enable pure TyepScript plugins ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.9 (Fri Mar 12 2021)
 
 #### 🐛 Bug Fix
