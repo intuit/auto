@@ -1,6 +1,7 @@
 import envCi from "env-ci";
 import * as fs from "fs";
 import path from "path";
+import endent from "endent";
 import { Memoize as memoize } from "typescript-memoize";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
@@ -983,7 +984,7 @@ export default class NPMPlugin implements IPlugin {
       this.name,
       async ({ bump, canaryIdentifier, dryRun, quiet }) => {
         if (this.setRcToken) {
-          await setTokenOnCI(auto.logger);
+          await this.setTokenOnCI(auto);
           auto.logger.verbose.info("Set CI NPM_TOKEN");
         }
 
@@ -1181,7 +1182,7 @@ export default class NPMPlugin implements IPlugin {
       this.name,
       async (preReleaseVersions, { bump, dryRun }) => {
         if (this.setRcToken) {
-          await setTokenOnCI(auto.logger);
+          await this.setTokenOnCI(auto);
           auto.logger.verbose.info("Set CI NPM_TOKEN");
         }
 
@@ -1360,7 +1361,7 @@ export default class NPMPlugin implements IPlugin {
       }
 
       if (this.setRcToken) {
-        await setTokenOnCI(auto.logger);
+        await this.setTokenOnCI(auto);
         auto.logger.verbose.info("Set CI NPM_TOKEN");
       }
 
@@ -1494,5 +1495,30 @@ export default class NPMPlugin implements IPlugin {
         );
       }
     });
+  }
+
+  /** The the NPM token */
+  private async setTokenOnCI(auto: Auto) {
+    try {
+      await setTokenOnCI(auto.logger);
+    } catch (error) {
+      if (
+        // eslint-disable-next-line no-template-curly-in-string
+        error.message?.includes("Failed to replace env in config: ${NPM_TOKEN}")
+      ) {
+        auto.logger.log.error(endent`
+          Uh oh! It looks like you don\'t have a NPM_TOKEN available in your environment.
+
+          To fix:
+
+          - Ensure you've added a NPM_TOKEN environment variable
+          - Ensure that it's exposed to your CI step
+        `);
+        auto.logger.verbose.error(error);
+        process.exit(1);
+      } else {
+        throw error;
+      }
+    }
   }
 }
