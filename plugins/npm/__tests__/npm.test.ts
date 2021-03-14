@@ -824,7 +824,7 @@ describe("canary", () => {
       canaryIdentifier: "canary.123.1",
     });
     expect(execPromise.mock.calls[1]).toContain("npm");
-    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.0");
   });
 
   test("prints canary version in dry run", async () => {
@@ -924,6 +924,7 @@ describe("canary", () => {
 
     // first version exists
     execPromise.mockReturnValueOnce(true);
+    execPromise.mockReturnValueOnce(true);
     // second doesn't
     execPromise.mockReturnValueOnce(false);
 
@@ -931,8 +932,8 @@ describe("canary", () => {
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "canary.123.1",
     });
-    expect(execPromise.mock.calls[2]).toContain("npm");
-    expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.1");
+    expect(execPromise.mock.calls[3]).toContain("npm");
+    expect(execPromise.mock.calls[3][1]).toContain("1.2.4-canary.123.1.1");
   });
 
   test("legacy auth work", async () => {
@@ -1000,8 +1001,8 @@ describe("canary", () => {
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "canary.123.1",
     });
-    expect(execPromise.mock.calls[1]).toContain("npm");
-    expect(execPromise.mock.calls[1][1]).toContain("1.2.4-canary.123.1.0");
+    expect(execPromise.mock.calls[2]).toContain("npm");
+    expect(execPromise.mock.calls[2][1]).toContain("1.2.4-canary.123.1.0");
   });
 
   test("use lerna for monorepo package", async () => {
@@ -1040,7 +1041,7 @@ describe("canary", () => {
       bump: Auto.SEMVER.patch,
       canaryIdentifier: "",
     });
-    expect(execPromise.mock.calls[1][1]).toContain("lerna");
+    expect(execPromise.mock.calls[2][1]).toContain("lerna");
     // @ts-ignore
     expect(value.newVersion).toBe("1.2.3-canary.0");
   });

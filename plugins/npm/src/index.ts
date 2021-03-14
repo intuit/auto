@@ -1501,6 +1501,8 @@ export default class NPMPlugin implements IPlugin {
   private async setTokenOnCI(auto: Auto) {
     try {
       await setTokenOnCI(auto.logger);
+      // This will make NPM actually check if the npmrc is valid for the env
+      await execPromise("npm", ["root"]);
     } catch (error) {
       if (
         // eslint-disable-next-line no-template-curly-in-string

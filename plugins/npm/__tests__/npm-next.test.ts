@@ -262,6 +262,7 @@ describe("next", () => {
       },
     ]);
     execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
     plugin.apply(({
@@ -329,6 +330,7 @@ describe("next", () => {
       },
     ]);
     // isMonorepo
+    execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
