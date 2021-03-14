@@ -1,3 +1,17 @@
+# v10.20.1 (Sun Mar 14 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - only ts-node/register for plugins if typescript is installed to the project [#1877](https://github.com/intuit/auto/pull/1877) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+  - better exclude for lerna private packages [#1876](https://github.com/intuit/auto/pull/1876) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.20.0 (Sat Mar 13 2021)
 
 ### Release Notes

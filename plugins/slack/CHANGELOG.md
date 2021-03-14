@@ -1,3 +1,15 @@
+# v10.20.1 (Sun Mar 14 2021)
+
+#### 🐛 Bug Fix
+
+- only ts-node/register for plugins if typescript is installed to the project [#1877](https://github.com/intuit/auto/pull/1877) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.18.4 (Tue Mar 09 2021)
 
 #### 🐛 Bug Fix
