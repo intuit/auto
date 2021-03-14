@@ -7,10 +7,24 @@ jest.mock("../exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 
-test("it shouldn't included private packages", async () => {
+test("it shouldn't included version-less packages", async () => {
   exec.mockReturnValue(endent`
     /dir/a:a:0.3.0--canary.32.d54a0c4.0
     /dir/b:b:MISSING:PRIVATE
+  `);
+  expect(await getLernaPackages()).toStrictEqual([
+    {
+      name: "a",
+      path: "/dir/a",
+      version: "0.3.0--canary.32.d54a0c4.0",
+    },
+  ]);
+});
+
+test("it shouldn't included private packages", async () => {
+  exec.mockReturnValue(endent`
+    /dir/a:a:0.3.0--canary.32.d54a0c4.0
+    /dir/b:b:0.3.0:PRIVATE
   `);
   expect(await getLernaPackages()).toStrictEqual([
     {
