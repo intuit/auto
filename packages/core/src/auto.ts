@@ -74,7 +74,9 @@ import { execSync } from "child_process";
 import isBinary from "./utils/is-binary";
 import { gitReset } from "./utils/git-reset";
 
-import "ts-node/register/transpile-only";
+if (require.resolve("typescript")) {
+  require("ts-node/register/transpile-only");
+}
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
