@@ -15,9 +15,9 @@ export default async function getLernaPackages() {
   const response = await execPromise("npx", ["lerna", "ls", "-pla"]);
 
   response.split("\n").forEach((packageInfo) => {
-    const [packagePath, name, version] = packageInfo.split(":");
+    const [packagePath, name, version, isPrivate] = packageInfo.split(":");
 
-    if (version !== "MISSING") {
+    if (version !== "MISSING" && isPrivate !== "PRIVATE") {
       packages.push({ path: packagePath, name, version });
     }
   });
