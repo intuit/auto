@@ -1,3 +1,16 @@
+# v10.20.4 (Mon Mar 15 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - Slack link bug [#1887](https://github.com/intuit/auto/pull/1887) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.20.3 (Mon Mar 15 2021)
 
 #### 🐛 Bug Fix
