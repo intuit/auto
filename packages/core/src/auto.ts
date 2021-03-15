@@ -74,8 +74,12 @@ import { execSync } from "child_process";
 import isBinary from "./utils/is-binary";
 import { gitReset } from "./utils/git-reset";
 
-if (require.resolve("typescript")) {
-  require("ts-node/register/transpile-only");
+try {
+  if (require.resolve("typescript")) {
+    require("ts-node/register/transpile-only");
+  }
+} catch (error) {
+  // User doesn't have TS installed, cannot write TS plugins
 }
 
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
