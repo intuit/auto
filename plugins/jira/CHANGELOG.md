@@ -1,3 +1,15 @@
+# v10.20.3 (Mon Mar 15 2021)
+
+#### 🐛 Bug Fix
+
+- better error message for no NPM_token in CI [#1878](https://github.com/intuit/auto/pull/1878) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.20.1 (Sun Mar 14 2021)
 
 #### 🐛 Bug Fix
