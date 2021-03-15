@@ -58,16 +58,21 @@
   resolved "https://registry.yarnpkg.com/@atomictech/rehype-toc/-/rehype-toc-3.1.2.tgz#62ec993528be26dbf304e1ec0db75ae074d459df"
   integrity sha512-ZLqzgBo9WUgXmLpCF8e2rYeHZjJbvWk/3R+mmpKBMDmjYRTb6/Fk6SSGFv0x1aorPwg0OLfg6ZvjAaRbndRPcA==
 
+"@atomist/slack-messages@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.2.tgz#782d31936a0363e4458272bcc8fbe4f7651292ee"
+  integrity sha512-K1kQv1BZVtMXQqdpNZt9Pgh85KwamsWX9gYyq1xG4cpyb+EacfMiNfumrju16piFXanCUrCR0P1DowPjV2qV/A==
+
 "@atomist/slack-messages@~1.2.0":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.1.tgz#74e9499ae2b017cbb0e4f047033b9434cb42c1d7"
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.19.0"
+  version "10.20.2"
 
 "@auto-it/core@link:packages/core":
-  version "10.19.0"
+  version "10.20.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -109,7 +114,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.19.0"
+  version "10.20.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -126,13 +131,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.19.0"
+  version "10.20.2"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.19.0"
+  version "10.20.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
