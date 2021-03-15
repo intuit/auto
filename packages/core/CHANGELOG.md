@@ -1,3 +1,16 @@
+# v10.20.2 (Mon Mar 15 2021)
+
+#### 🐛 Bug Fix
+
+- fix typescript require [#1885](https://github.com/intuit/auto/pull/1885) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix typescript require ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.20.1 (Sun Mar 14 2021)
 
 #### 🐛 Bug Fix
