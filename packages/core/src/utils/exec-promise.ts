@@ -81,7 +81,13 @@ export default async function execPromise(
       } else {
         // Tools can occasionally print to stderr but not fail, so print that just in case.
         if (allStderr.length) {
-          log.log.warn(allStderr);
+          if (allStderr.includes("Failed to replace env in config")) {
+            const error = new Error(allStderr);
+            error.stack = (error.stack || "") + callSite;
+            reject(error);
+          } else {
+            log.log.warn(allStderr);
+          }
         }
 
         // Resolve the string of the whole stdout
