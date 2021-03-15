@@ -1,5 +1,5 @@
 import { RestEndpointMethodTypes } from "@octokit/rest";
-import { githubToSlack } from "@atomist/slack-messages";
+import { githubToSlack, url } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
@@ -331,14 +331,15 @@ export default class SlackPlugin implements IPlugin {
     );
     const urls = releases.map(
       (release) =>
-        `*<${release.data.html_url}|${
+        `*${url(
+          release.data.html_url,
           release.data.name || release.data.tag_name
-        }>*`
+        )}*`
     );
     const releaseUrl =
       urls.length > 1
         ? urls.join(", ")
-        : `<${releases[0].data.html_url}|View Release>`;
+        : `${url(releases[0].data.html_url, 'View Release')}`;
 
     // First add context to share link to release
     messages[0].unshift(
