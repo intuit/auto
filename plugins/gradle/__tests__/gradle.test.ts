@@ -19,12 +19,22 @@ describe("Gradle Plugin", () => {
     (version) => `v${version}`
   );
   const options: IGradleReleasePluginPluginOptions = {};
+  const logger = dummyLog();
 
   beforeEach(() => {
     exec.mockClear();
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
-    plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);
+    plugin.apply(({ 
+      hooks, 
+      logger, 
+      remote: "stubRemote",
+      prefixRelease, 
+      git: {
+        getLastTagNotInBaseBranch: async () => undefined,
+        getLatestRelease: async () => "0.0.1",
+      },
+      getCurrentVersion: async () => "0.0.1" } as unknown) as Auto.Auto);
   });
 
   describe("getPreviousVersion", () => {
@@ -139,6 +149,158 @@ describe("Gradle Plugin", () => {
         "-x preTagCommit",
         "-x commitNewVersion",
       ]);
+    });
+
+    test("should only log on dryRun - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+      const mockLog = jest.spyOn(logger.log, "info");
+
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" , dryRun: true});
+
+      expect(spy).toHaveBeenCalledTimes(0)
+      expect(mockLog).toHaveBeenCalledTimes(1)
+    });
+
+    test("should not increment version - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(canaryVersion).toBe("1.0.0-canary123")
+    });
+
+    test("should not increment version - canary w/ default snapshot", async () => {
+      const properties = "version: 1.0.0-SNAPSHOT";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(canaryVersion).toBe("1.0.0-canary123")
+    });
+
+    test("should publish if available - canary", async () => {
+      const properties = "publish: yes";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "publish",
+      ]);
+    });
+
+    test("should log warning if publish isn't available - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+      const mockLog = jest.spyOn(logger.log, "warn");
+
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(mockLog).toHaveBeenCalledWith(expect.stringMatching("Publish task not found in gradle"));
+    });
+
+    test("do nothing on dryRun - canary", async () => {
+      const properties = "version: 1.0.0";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.minor, commits: [], fullReleaseNotes: "", releaseNotes: "", dryRun: true });
+
+      expect(spy).toHaveBeenCalledTimes(0)
+    });
+
+    test("version does not depend on project gradle properties - next", async () => {
+      await hooks.beforeRun.promise({} as any);
+
+      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.minor, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(nextVersion[0]).toBe("0.1.0-next.0")
+    });
+
+    test("version does not depend on project gradle properties - next w/ default snapshot", async () => {
+      const properties = "version: 1.1.0-SNAPSHOT";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+    
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      const nextVersion = await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(nextVersion[0]).toBe("1.0.0-next.0")
+    });
+
+    test("should version release with snapshot suffix - next", async () => {
+      const properties = "this doesn't matter";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+    
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "release",
+        "-Prelease.useAutomaticVersion=true",
+        `-Prelease.newVersion=1.0.0-SNAPSHOT`,
+        "-x createReleaseTag",
+        "-x preTagCommit",
+        "-x commitNewVersion",
+      ]);
+    });
+
+    test("should publish if available - next", async () => {
+      const properties = "publish: yes";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+    
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "publish",
+      ]);
+    });
+
+    test("should log warning if publish isn't available - next", async () => {
+      await hooks.beforeRun.promise({} as any);
+
+      const mockLog = jest.spyOn(logger.log, "warn");
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
+
+      expect(mockLog).toHaveBeenCalledWith(expect.stringMatching("Publish task not found in gradle"));
     });
 
     test("should version release - patch w/ custom snapshot", async () => {

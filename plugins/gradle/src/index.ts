@@ -3,6 +3,9 @@ import {
   IPlugin,
   execPromise,
   validatePluginConfiguration,
+  getCurrentBranch,
+  DEFAULT_PRERELEASE_BRANCHES,
+  determineNextVersion
 } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
@@ -103,6 +106,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
+    commit = true,
     buildFlag = true
   ) => {
     if (buildFlag) {
@@ -125,12 +129,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       ]);
     }
 
-    await execPromise("git", [
-      "commit",
-      "-am",
-      `"${commitMsg || `update version: ${version} [skip ci]"`}"`,
-      "--no-verify",
-    ]);
+    if (commit) {
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"${commitMsg || `update version: ${version} [skip ci]"`}"`,
+        "--no-verify",
+      ]);
+    }
   };
 
   /** Tap into auto plugin points. */
@@ -238,8 +244,99 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       ]);
     });
 
-    auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun }) => {
-      if (!this.snapshotRelease || dryRun) {
+    auto.hooks.canary.tapPromise(
+      this.name,
+      async ({ dryRun, canaryIdentifier }) => {
+        const releaseVersion = await getVersion(
+          this.options.gradleCommand,
+          this.options.gradleOptions
+        );
+
+        const canaryVersion = `${releaseVersion}-${canaryIdentifier}`;
+
+        if (dryRun) {
+          auto.logger.log.info(`Would have published: ${canaryVersion}`);
+          return canaryVersion;
+        }
+
+        const { publish } = this.properties;
+
+        if (publish) {
+          await execPromise(this.options.gradleCommand, [
+            "publish",
+            ...this.options.gradleOptions,
+          ]);
+        } else {
+          auto.logger.log.warn(`Publish task not found in gradle`);
+        }
+
+        return canaryVersion;
+      }
+    );
+
+    auto.hooks.next.tapPromise(
+      this.name,
+      async (preReleaseVersions, { dryRun, bump }) => {
+        const prereleaseBranches =
+          auto.config?.prereleaseBranches ?? DEFAULT_PRERELEASE_BRANCHES;
+        const branch = getCurrentBranch() || "";
+        const prereleaseBranch = prereleaseBranches.includes(branch)
+          ? branch
+          : prereleaseBranches[0];
+        const lastRelease = await auto.git?.getLatestRelease();
+        const current =
+          (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+          (await auto.getCurrentVersion(lastRelease ?? ""));
+        const nextVersion = determineNextVersion(
+          lastRelease ?? "",
+          current,
+          bump,
+          prereleaseBranch
+        );
+
+        if (nextVersion) {
+          preReleaseVersions.push(nextVersion);
+        }
+
+        const nextRegex = /(-next).*/;
+        const preReleaseSnapshotVersion = nextVersion.replace(nextRegex, defaultSnapshotSuffix)
+
+        if (dryRun) {
+          return preReleaseVersions;
+        }
+
+        await execPromise("git", [
+          "tag",
+          nextVersion ?? "",
+          "-m",
+          `"Tag pre-release: ${nextVersion}"`,
+        ]);
+
+        await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+        await this.updateGradleVersion(
+          preReleaseSnapshotVersion,
+          `Prerelease version: ${preReleaseSnapshotVersion} [skip ci]`,
+          false
+        );
+
+        const { publish } = this.properties;
+
+        if (publish) {
+          await execPromise(this.options.gradleCommand, [
+            "publish",
+            ...this.options.gradleOptions,
+          ]);
+        } else {
+          auto.logger.log.warn(`Publish task not found in gradle`);
+        }
+
+        return preReleaseVersions;
+      }
+    );
+
+    auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun, context }) => {
+      if (!this.snapshotRelease || dryRun || context !== "latest") {
         return;
       }
 
