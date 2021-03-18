@@ -1,3 +1,20 @@
+# v10.20.5 (Thu Mar 18 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@myndelx](https://github.com/myndelx), for all your work!
+
+#### 🐛 Bug Fix
+
+- Fix ts-node peer deps [#1891](https://github.com/intuit/auto/pull/1891) ([@myndelx](https://github.com/myndelx))
+- Fix ts-node peer deps ([@myndelx](https://github.com/myndelx))
+
+#### Authors: 1
+
+- [@myndelx](https://github.com/myndelx)
+
+---
+
 # v10.20.3 (Mon Mar 15 2021)
 
 #### 🐛 Bug Fix
