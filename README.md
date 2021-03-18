@@ -269,6 +269,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://www.knapsack.cloud/"><img src="https://avatars.githubusercontent.com/u/569699?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Evan Lovely</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=EvanLovely" title="Documentation">📖</a></td>
     <td align="center"><a href="https://dorianmarie.fr/"><img src="https://avatars.githubusercontent.com/u/58794487?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dorian Marié</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=dorianmariefr" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/myndelx"><img src="https://avatars.githubusercontent.com/u/13200484?v=4?s=100" width="100px;" alt=""/><br /><sub><b>myndelx</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=myndelx" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/sentony93"><img src="https://avatars.githubusercontent.com/u/13474011?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sentony93</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sentony93" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sentony93" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sentony93" title="Code">💻</a></td>
   </tr>
 </table>
 

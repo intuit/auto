@@ -488,6 +488,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sentony93",
+      "name": "sentony93",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13474011?v=4",
+      "profile": "https://github.com/sentony93",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
