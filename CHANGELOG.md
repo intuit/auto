@@ -1,3 +1,21 @@
+# v10.20.6 (Thu Mar 18 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@sentony93](https://github.com/sentony93), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - Next/Canary Support for Gradle [#1842](https://github.com/intuit/auto/pull/1842) (tony_lin@intuit.com [@sentony93](https://github.com/sentony93))
+
+#### Authors: 2
+
+- [@sentony93](https://github.com/sentony93)
+- slin8 (tony_lin@intuit.com)
+
+---
+
 # v10.20.5 (Thu Mar 18 2021)
 
 :tada: This release contains work from a new contributor! :tada:

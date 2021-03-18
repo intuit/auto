@@ -1,3 +1,31 @@
+# v10.20.6 (Thu Mar 18 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@sentony93](https://github.com/sentony93), for all your work!
+
+#### 🐛 Bug Fix
+
+- Next/Canary Support for Gradle [#1842](https://github.com/intuit/auto/pull/1842) (tony_lin@intuit.com [@sentony93](https://github.com/sentony93))
+- [PLAYA-7576] - lint (tony_lin@intuit.com)
+- [PLAYA-7576] - coverage for dryRun (tony_lin@intuit.com)
+- [PLAYA-7576] - lint and tests (tony_lin@intuit.com)
+- [PLAYA-7576] - do not commit version on next (tony_lin@intuit.com)
+- [PLAYA-7576] - more specific logging (tony_lin@intuit.com)
+- [PLAYA-7576] - manage pre-release versions (tony_lin@intuit.com)
+- [PLAYA-7576] - determine next version (tony_lin@intuit.com)
+- [PLAYA-7576] - addressed some PR comments (tony_lin@intuit.com)
+- [PLAYA-7576] - additional tests + skip afterShipIt for canary (tony_lin@intuit.com)
+- [PLAYA-7576] - remove comment (tony_lin@intuit.com)
+- [PLAYA-7576] - next and canary support for gradle plugin (tony_lin@intuit.com)
+
+#### Authors: 2
+
+- [@sentony93](https://github.com/sentony93)
+- slin8 (tony_lin@intuit.com)
+
+---
+
 # v10.20.3 (Mon Mar 15 2021)
 
 #### 🐛 Bug Fix
