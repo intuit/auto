@@ -1,3 +1,19 @@
+# v10.21.0 (Fri Mar 19 2021)
+
+#### 🚀 Enhancement
+
+- add canary target flag/option [#1893](https://github.com/intuit/auto/pull/1893) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- add canary target flag/option ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.20.3 (Mon Mar 15 2021)
 
 #### 🐛 Bug Fix
