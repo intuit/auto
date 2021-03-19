@@ -1295,16 +1295,39 @@ export default class Auto {
     );
 
     if (options.message !== "false" && pr) {
+      const prNumber = Number(pr);
       const message =
         typeof result === "string"
           ? messageHeader
           : makeDetail(messageHeader, result.details);
 
-      await this.prBody({
-        pr: Number(pr),
-        context: "canary-version",
-        message,
-      });
+      switch (options.target) {
+        case "comment":
+          await this.comment({
+            pr: prNumber,
+            context: "canary-version",
+            message,
+          });
+          break;
+
+        case "status":
+          await this.prStatus({
+            pr: prNumber,
+            context: "canary-version",
+            description: messageHeader,
+            state: "success",
+            url: "buildUrl" in env ? env.buildUrl : "",
+          });
+          break;
+
+        default:
+          await this.prBody({
+            pr: prNumber,
+            context: "canary-version",
+            message,
+          });
+          break;
+      }
     }
 
     this.logger.log.success(

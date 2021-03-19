@@ -567,6 +567,15 @@ export const commands: AutoCommand[] = [
           "Build number to use to create the canary version. Detected in CI env",
       },
       {
+        name: "target",
+        type: String,
+        group: "main",
+        defaultValue: "pr-body",
+        description: "How the canary version should be attached to a PR",
+        typeLabel: "pr-body | comment | status",
+        config: true,
+      },
+      {
         ...message,
         description:
           "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment",

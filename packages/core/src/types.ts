@@ -117,6 +117,12 @@ export const globalOptions = t.partial({
     force: t.boolean,
     /** The message used when attaching the canary version to a PR */
     message: t.union([t.literal(false), t.string]),
+    /** How the canary version should be attached to a PR */
+    target: t.union([
+      t.literal("pr-body"),
+      t.literal("comment"),
+      t.literal("status"),
+    ]),
   }),
   /** Options to pass to "auto next" */
   next: t.partial({
