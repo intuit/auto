@@ -30,15 +30,6 @@ class MyDocument extends Document {
               --color-gray-1000: #181517;
             }
           `}</style>
-          <link
-            rel="stylesheet"
-            href="https://www.unpkg.com/prismjs@1.19.0/themes/prism.css"
-          />
-          <link
-            rel="stylesheet"
-            href="https://www.unpkg.com/prismjs@1.19.0/themes/prism-tomorrow.css"
-            media="(prefers-color-scheme: dark)"
-          />
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-142981718-4"

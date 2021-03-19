@@ -6,6 +6,7 @@ const { camelCase } = require("change-case");
 const endent = require("endent").default;
 const glob = require("fast-glob");
 const docs = require("command-line-docs").default;
+const { defaultLabels } = require("../packages/core/dist/semver");
 const { commands } = require("../packages/cli/dist/parse-args");
 
 try {
@@ -100,3 +101,22 @@ glob
       lines.join("\n")
     );
   });
+
+fs.writeFileSync(
+  path.join(__dirname, "./pages/docs/generated/defaultLabelsRenderer.mdx"),
+  `---
+title: "Default Labels"
+layout: 'none'
+---
+
+<details>
+
+<summary>Click here to see the default label configuration</summary>
+
+\`\`\`json
+${JSON.stringify(defaultLabels, null, 2)}
+\`\`\`
+
+</details>
+`
+);

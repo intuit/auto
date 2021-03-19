@@ -10926,10 +10926,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-ignite@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.10.7.tgz#a2a617ce6741347ac5d9d625ef3c944f46e5fd94"
-  integrity sha512-iWY29rMXVWPciRPZKIBWc+USDVcfJkoy3LkKHcTS4YFYcMyeebDEd7V2zHIKa335VvQVBloQPD7E5eWCDci/BQ==
+next-ignite@^0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.10.9.tgz#035e5714ca093b010a343ad23edaf840ac0bd560"
+  integrity sha512-1w/bdyAr2C+yC7CpqVtKjEM0TEXDYK0Jm2n+k6Yfw4nt69ZWbzp6RLdmSzoU6L4nidhpSSFBtZppVT4ICKcR6g==
   dependencies:
     "@babel/helper-call-delegate" "^7.12.1"
     "@next/bundle-analyzer" "^9.4.0"
@@ -10966,6 +10966,7 @@ next-ignite@^0.10.7:
     rehype "^9.0.1"
     rehype-accessible-emojis "^0.3.2"
     rehype-autolink-headings "^3.0.0"
+    rehype-shiki-reloaded "^0.0.10"
     rehype-slug "^3.0.0"
     remark-emoji "^2.0.2"
     scroll-lock "^2.1.4"
@@ -12490,11 +12491,6 @@ pretty-ms@^7.0.0:
   dependencies:
     parse-ms "^2.1.0"
 
-prism-react-renderer@^1.1.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-1.2.0.tgz#5ad4f90c3e447069426c8a53a0eafde60909cdf4"
-  integrity sha512-GHqzxLYImx1iKN1jJURcuRoA/0ygCcNhfGw1IT8nPIMzarmKQ3Nc+JcG0gi8JXQzuh0C5ShE4npMIoqNin40hg==
-
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
@@ -13209,6 +13205,18 @@ rehype-parse@^6.0.0:
     hast-util-from-parse5 "^5.0.0"
     parse5 "^5.0.0"
     xtend "^4.0.0"
+
+rehype-shiki-reloaded@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/rehype-shiki-reloaded/-/rehype-shiki-reloaded-0.0.10.tgz#8ad79ab6a42d3dc2431c5174a553a9a3d12713a5"
+  integrity sha512-0TiOzXmUuPLU/q0OMHrBh56IZ5yIZL1MPC2EXQb9dHGERA5jPbxr8kHd1KRJhpWZBb2mHmtdoXyPNm00kze+gg==
+  dependencies:
+    fast-copy "^2.1.1"
+    hast-util-to-string "^1.0.4"
+    shiki "^0.9.2"
+    shiki-languages "^0.2.7"
+    unist-builder "^2.0.3"
+    unist-util-visit "^2.0.3"
 
 rehype-slug@^3.0.0:
   version "3.0.0"
