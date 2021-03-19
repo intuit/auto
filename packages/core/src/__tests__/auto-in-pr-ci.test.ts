@@ -37,6 +37,8 @@ jest.mock("@octokit/rest", () => {
     };
 
     issues = {
+      createComment: jest.fn().mockReturnValue({ data: [] }),
+      listComments: jest.fn().mockReturnValue({ data: [] }),
       listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
     };
 
@@ -73,7 +75,7 @@ describe("canary in ci", () => {
     );
   });
 
-  test("comments on PR in CI", async () => {
+  test("add to pr-body on PR in CI", async () => {
     const auto = new Auto({ ...defaults, plugins: [] });
     // @ts-ignore
     auto.checkClean = () => Promise.resolve(true);
@@ -90,6 +92,52 @@ describe("canary in ci", () => {
 
     const version = await auto.canary({ pr: 123, build: 1 });
     expect(addToPrBody).toHaveBeenCalled();
+    expect(version!.newVersion).toBe("1.2.4-canary.123.1");
+  });
+
+  test("adds comment on PR in CI", async () => {
+    const auto = new Auto({ ...defaults, plugins: [] });
+    // @ts-ignore
+    auto.checkClean = () => Promise.resolve(true);
+
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+    auto.release!.getCommitsInRelease = () =>
+      Promise.resolve([makeCommitFromMsg("Test Commit")]);
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
+    const comment = jest.fn();
+    auto.comment = comment;
+    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
+
+    const version = await auto.canary({ pr: 123, build: 1, target: "comment" });
+    expect(addToPrBody).not.toHaveBeenCalled();
+    expect(comment).toHaveBeenCalled();
+    expect(version!.newVersion).toBe("1.2.4-canary.123.1");
+  });
+
+  test("adds status on PR in CI", async () => {
+    const auto = new Auto({ ...defaults, plugins: [] });
+    // @ts-ignore
+    auto.checkClean = () => Promise.resolve(true);
+
+    auto.logger = dummyLog();
+    await auto.loadConfig();
+    auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
+    auto.release!.getCommitsInRelease = () =>
+      Promise.resolve([makeCommitFromMsg("Test Commit")]);
+    const addToPrBody = jest.fn();
+    auto.git!.addToPrBody = addToPrBody;
+    const prStatus = jest.fn();
+    auto.prStatus = prStatus;
+    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
+
+    const version = await auto.canary({ pr: 123, build: 1, target: "status" });
+    expect(addToPrBody).not.toHaveBeenCalled();
+    expect(prStatus).toHaveBeenCalled();
     expect(version!.newVersion).toBe("1.2.4-canary.123.1");
   });
 
