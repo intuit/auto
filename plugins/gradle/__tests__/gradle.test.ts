@@ -192,6 +192,23 @@ describe("Gradle Plugin", () => {
       expect(canaryVersion).toBe("1.0.0-canary123")
     });
 
+    test("should update gradle version for publish - canary w/ default snapshot", async () => {
+      const properties = "version: 1.0.0-SNAPSHOT";
+      exec.mockReturnValueOnce(properties);
+      await hooks.beforeRun.promise({} as any);
+
+      const spy = jest.fn();
+      exec.mockReturnValueOnce(properties).mockImplementation(spy);
+
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+
+      expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "updateVersion",
+        "-Prelease.useAutomaticVersion=true",
+        `-Prelease.newVersion=1.0.0-canary123-SNAPSHOT`,
+      ]);
+    });
+
     test("should publish if available - canary", async () => {
       const properties = "publish: yes";
       exec.mockReturnValueOnce(properties);
@@ -256,7 +273,7 @@ describe("Gradle Plugin", () => {
       expect(nextVersion[0]).toBe("1.0.0-next.0")
     });
 
-    test("should version release with snapshot suffix - next", async () => {
+    test("should update gradle version for publish with snapshot suffix - next", async () => {
       const properties = "this doesn't matter";
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
@@ -268,12 +285,9 @@ describe("Gradle Plugin", () => {
       await hooks.next.promise([], { bump: Auto.SEMVER.major, commits: [], fullReleaseNotes: "", releaseNotes: "" });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.0-SNAPSHOT`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 

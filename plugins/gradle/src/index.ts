@@ -106,8 +106,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
-    commit = true,
-    buildFlag = true
+    buildFlag = true,
+    commit = true
   ) => {
     if (buildFlag) {
       // don't create release, tag, or commit since auto will do this
@@ -259,6 +259,14 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           return canaryVersion;
         }
 
+        const canaryReleaseVersion = `${canaryVersion}${defaultSnapshotSuffix}`
+        await this.updateGradleVersion(
+          canaryReleaseVersion,
+          `Prerelease version: ${canaryReleaseVersion} [skip ci]`,
+          false,
+          false
+        );
+
         const { publish } = this.properties;
 
         if (publish) {
@@ -317,6 +325,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         await this.updateGradleVersion(
           preReleaseSnapshotVersion,
           `Prerelease version: ${preReleaseSnapshotVersion} [skip ci]`,
+          false,
           false
         );
 
