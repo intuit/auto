@@ -77,9 +77,11 @@ const defaultPreset = {
 const optionalOptions = t.partial({
   /** A path to the formula template */
   preset: t.string,
+  /** The default release type to apply when the conventional commit isn't "fix", "feat" or "breaking" */
+  defaultReleaseType: t.string,
 });
 
-const VERSIONS = [SEMVER.major, SEMVER.minor, SEMVER.patch, "skip"] as const;
+const VERSIONS = [SEMVER.major, SEMVER.minor, SEMVER.patch] as const;
 
 export type ConventionalCommitsOptions = t.TypeOf<typeof optionalOptions>;
 
@@ -103,7 +105,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
   /** Initialize the plugin with it's options */
   constructor(options: ConventionalCommitsOptions = {}) {
-    this.options = options;
+    this.options = {
+      defaultReleaseType: "skip",
+      ...options,
+    };
   }
 
   /** Tap into auto plugin points. */
@@ -128,7 +133,8 @@ export default class ConventionalCommitsPlugin implements IPlugin {
           const result = whatBump([conventionalCommit]);
 
           if (result?.level !== null && result?.level !== undefined) {
-            const bump = VERSIONS[result.level];
+            const bump =
+              VERSIONS[result.level] || this.options.defaultReleaseType;
             return bump;
           }
         };

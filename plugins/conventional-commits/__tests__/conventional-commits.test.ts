@@ -160,6 +160,32 @@ describe("parseCommit", () => {
       labels: ["skip-release"],
     });
   });
+
+  test("should be able to configure the default release type", async () => {
+    const conventionalCommitsPlugin = new ConventionalCommitsPlugin({
+      defaultReleaseType: "patch",
+    });
+    const autoHooks = makeHooks();
+    conventionalCommitsPlugin.apply({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      semVerLabels: versionLabels,
+      logger: dummyLog(),
+    } as Auto);
+
+    const logParseHooks = makeLogParseHooks();
+    autoHooks.onCreateLogParse.call({
+      hooks: logParseHooks,
+    } as LogParse);
+
+    const commit = makeCommitFromMsg("chore: i should not trigger a release");
+    expect(
+      await logParseHooks.parseCommit.promise({ ...commit })
+    ).toStrictEqual({
+      ...commit,
+      labels: ["patch"],
+    });
+  });
 });
 
 describe("normalizeCommit", () => {

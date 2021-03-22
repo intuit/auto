@@ -35,6 +35,8 @@ yarn add -D @auto-it/conventional-commits
 
 ## Options
 
+### `preset`
+
 You can use any [conventional-changelog preset](https://www.npmjs.com/search?q=conventional-changelog%20preset%20) with this plugin.
 Using a preset will completely override this plugin's default behavior with whatever the preset defines.
 
@@ -43,6 +45,21 @@ Using a preset will completely override this plugin's default behavior with what
   "plugins": [
     "npm",
     ["conventional-commits", { "preset": "angular" }]
+    // other plugins
+  ]
+}
+```
+
+### `defaultReleaseType`
+
+The default release type to apply when the conventional commit isn't "fix", "feat" or "breaking" (ex: "chore:").
+Defaults to `skip`.
+
+```json
+{
+  "plugins": [
+    "npm",
+    ["conventional-commits", { "defaultReleaseType": "patch" }]
     // other plugins
   ]
 }
