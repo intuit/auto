@@ -65,6 +65,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [gh-pages](./plugins/gh-pages) - Automate publishing to your gh-pages documentation website
 - [jira](./plugins/jira) - Include Jira story links in the changelog
 - [magic-zero](./plugins/magic-zero) - A plugin that closely adheres to semver versioning for 0.0.x and 0.x.y releases
+- [microsoft-teams](./plugins/microsoft-teams) - Post your release notes to a Microsoft teams channel
 - [omit-commits](./plugins/omit-commits) - Ignore commits base on name, email, subject, labels, and username
 - [omit-release-notes](./plugins/omit-release-notes) - Ignore release notes in PRs made by certain accounts
 - [pr-body-labels](./plugins/pr-body-labels) - Allow outside contributors to indicate what semver label should be applied to the Pull Request

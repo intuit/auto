@@ -1,6 +1,6 @@
 # Microsoft-Teams Plugin
 
-Microsoft Teams plugin for auto
+Post your release notes to a Microsoft teams channel.
 
 ## Installation
 
