@@ -1,3 +1,19 @@
+# v10.21.3 (Mon Mar 22 2021)
+
+#### ⚠️ Pushed to `main`
+
+- fix docs build ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- add skip label docs [#1909](https://github.com/intuit/auto/pull/1909) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.21.1 (Mon Mar 22 2021)
 
 :tada: This release contains work from a new contributor! :tada:
