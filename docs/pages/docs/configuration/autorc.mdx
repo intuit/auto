@@ -270,6 +270,21 @@ You can customize everything about a label
 }
 ```
 
+#### Release Type: `skip`
+
+A label with the `skip` release type will not create a release when merged even when paired with other labels.
+
+```json
+{
+  "labels": [
+    {
+      "name": "infra",
+      "releaseType": "none"
+    }
+  ]
+}
+```
+
 #### Release Type: `none`
 
 A label with the `none` release type will not create a release when merged.
