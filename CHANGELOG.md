@@ -1,3 +1,37 @@
+# v10.21.1 (Mon Mar 22 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@sentony93](https://github.com/sentony93), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - Small gradle plugin enhancement [#1896](https://github.com/intuit/auto/pull/1896) (tony_lin@intuit.com [@sentony93](https://github.com/sentony93))
+
+#### 🔩 Dependency Updates
+
+- Upgrade next-ignite [#1895](https://github.com/intuit/auto/pull/1895) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+- Bump @octokit/rest from 18.2.0 to 18.3.5 [#1873](https://github.com/intuit/auto/pull/1873) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump typescript from 4.1.5 to 4.2.3 [#1857](https://github.com/intuit/auto/pull/1857) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump elliptic from 6.5.3 to 6.5.4 [#1859](https://github.com/intuit/auto/pull/1859) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump prism-react-renderer from 1.1.1 to 1.2.0 [#1841](https://github.com/intuit/auto/pull/1841) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump ts-jest from 26.5.0 to 26.5.3 [#1858](https://github.com/intuit/auto/pull/1858) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jsdoc from 31.0.3 to 32.3.0 [#1882](https://github.com/intuit/auto/pull/1882) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump vsce from 1.85.0 to 1.87.0 [#1883](https://github.com/intuit/auto/pull/1883) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-plugin-jest from 24.1.3 to 24.3.1 [#1884](https://github.com/intuit/auto/pull/1884) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump @typescript-eslint/eslint-plugin from 4.14.1 to 4.18.0 [#1888](https://github.com/intuit/auto/pull/1888) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump eslint-config-prettier from 8.0.0 to 8.1.0 [#1835](https://github.com/intuit/auto/pull/1835) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 4
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- [@sentony93](https://github.com/sentony93)
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- slin8 (tony_lin@intuit.com)
+
+---
+
 # v10.21.0 (Fri Mar 19 2021)
 
 #### 🚀 Enhancement
