@@ -69,7 +69,7 @@
     "lerna": "^3.22.1",
     "lint-staged": "^10.0.7",
     "mock-fs": "^4.13.0",
-    "next-ignite": "^0.10.9",
+    "next-ignite": "^0.10.11",
     "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
     "push-dir": "^0.4.1",

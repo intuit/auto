@@ -55,7 +55,7 @@ If you are publishing to the Github Package Registry you will need to change a f
 
 1. Modify the node action to use the Github Package Registry and your user scope.
 
-```yml
+```yaml
 - name: Use Node.js 12.x
   uses: actions/setup-node@v1
   with:
@@ -66,7 +66,7 @@ If you are publishing to the Github Package Registry you will need to change a f
 
 2. Use the `GITHUB_TOKEN` as the `NODE_AUTH_TOKEN` to publish to the Github Package Registry.
 
-```yml
+```yaml
 - name: Create Release
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -93,7 +93,7 @@ GitHub actions require a little more setup to use `auto` with branch protection.
 We can't use the `GITHUB_TOKEN` to commit to the branch because it does not have high enough permissions.
 You will need to create a token with admin access to your repo and modify your build config like the following:
 
-```yml
+```yaml
 steps:
   - uses: actions/checkout@v2
     with:

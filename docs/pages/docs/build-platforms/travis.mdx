@@ -42,7 +42,7 @@ Some plugins might use tools that require you to be on a branch.
 The default setup for travis leaves you in a "Detached Head" state, meaning the git HEAD pointer is not on a branch.
 To fix this add the following lines to your `.travis.yml`
 
-```yml
+```yaml
 before_deploy:
   - if [ "$TRAVIS_BRANCH" == "main" ];then
     git checkout main;

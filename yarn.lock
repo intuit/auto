@@ -69,10 +69,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.21.0"
+  version "10.21.2"
 
 "@auto-it/core@link:packages/core":
-  version "10.21.0"
+  version "10.21.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -114,7 +114,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.21.0"
+  version "10.21.2"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -132,13 +132,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.21.0"
+  version "10.21.2"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.21.0"
+  version "10.21.2"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -10926,10 +10926,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-ignite@^0.10.9:
-  version "0.10.9"
-  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.10.9.tgz#035e5714ca093b010a343ad23edaf840ac0bd560"
-  integrity sha512-1w/bdyAr2C+yC7CpqVtKjEM0TEXDYK0Jm2n+k6Yfw4nt69ZWbzp6RLdmSzoU6L4nidhpSSFBtZppVT4ICKcR6g==
+next-ignite@^0.10.11:
+  version "0.10.11"
+  resolved "https://registry.yarnpkg.com/next-ignite/-/next-ignite-0.10.11.tgz#a122a776604c861eb6efe6b8589532ad77e56967"
+  integrity sha512-rP68zonLrE/4cSxJXVLtZ7joA77nh5ni+K+cmvOplnJwfVHW4ZO9Cy3dSnB1v55xGUFegSPfrUGLysqYGMYf/g==
   dependencies:
     "@babel/helper-call-delegate" "^7.12.1"
     "@next/bundle-analyzer" "^9.4.0"
