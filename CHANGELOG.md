@@ -1,3 +1,16 @@
+# v10.22.0 (Mon Mar 22 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/conventional-commits`
+  - add defaultReleaseType option [#1911](https://github.com/intuit/auto/pull/1911) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.21.3 (Mon Mar 22 2021)
 
 #### ⚠️ Pushed to `main`
