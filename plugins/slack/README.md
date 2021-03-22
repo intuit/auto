@@ -2,6 +2,8 @@
 
 Post your release notes to a slack channel.
 
+![Example slack release notes](https://user-images.githubusercontent.com/1192452/112035992-5ad1f400-8afd-11eb-9241-3567db8bd395.png)
+
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
