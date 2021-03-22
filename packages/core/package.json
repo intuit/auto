@@ -43,7 +43,7 @@
     "@octokit/plugin-retry": "^3.0.1",
     "@octokit/plugin-throttling": "^3.2.0",
     "@octokit/rest": "^18.0.0",
-    "await-to-js": "^2.1.1",
+    "await-to-js": "^3.0.0",
     "chalk": "^4.0.0",
     "cosmiconfig": "7.0.0",
     "deepmerge": "^4.0.0",
