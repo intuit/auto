@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/all-contributors",
-  "version": "10.21.2",
+  "version": "10.21.3",
   "main": "dist/index.js",
   "description": "Automatically add contributors as changelogs are produced.",
   "license": "MIT",
