@@ -4179,9 +4179,9 @@ await-to-js@^2.1.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-cli-js@^2.0.6:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.1.0.tgz#b48c82858151c8e2a926289db6aec329908187c8"
-  integrity sha512-fU2AjQ/uivh75bO3SWjAril0AKSM7I83VRpvpigAbC2iE3hLgMemmypl78BRH3bo5BBpdmXYLhM0p5wNUex8BA==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/aws-cli-js/-/aws-cli-js-2.2.1.tgz#57776a9c4a0822f8013f9dfd48324d3242b590eb"
+  integrity sha512-RUw9CXj2IxJ+ue44fSvbR4bsyepA8gbQiROpSRft4VcwzOIqqr3DX/ENwHHsEImZIyfl6N6Yzebb5VNDmddGbw==
   dependencies:
     nodeify-ts "1.0.6"
 
