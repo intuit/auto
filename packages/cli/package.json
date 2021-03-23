@@ -52,7 +52,7 @@
     "@auto-it/core": "link:../core",
     "@auto-it/npm": "link:../../plugins/npm",
     "@auto-it/released": "link:../../plugins/released",
-    "await-to-js": "^2.1.1",
+    "await-to-js": "^3.0.0",
     "chalk": "^4.0.0",
     "command-line-application": "^0.10.1",
     "endent": "^2.0.1",
