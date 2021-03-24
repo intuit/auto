@@ -91,6 +91,19 @@ interface Block {
 const CHANGELOG_LINE = /^\s*•/;
 type Messages = [Block[], ...Array<Block[] | FileUpload>];
 
+/** Split a long spring into chunks by character limit */
+const splitCharacterLimit = (line: string, charLimit: number) => {
+  const splitLines = [];
+  let buffer = line;
+
+  while (buffer) {
+    splitLines.push(buffer.slice(0, charLimit));
+    buffer = buffer.slice(charLimit);
+  }
+
+  return splitLines;
+};
+
 /** Convert the sanitized markdown to slack blocks */
 export function convertToBlocks(
   slackMarkdown: string,
@@ -156,8 +169,25 @@ export function convertToBlocks(
         lines.push(changelogLine);
       }
 
-      currentMessage.push(createSectionBlock(lines.join("\n")));
+      const fullSection = lines.join("\n");
+
+      if (line.length > 3000) {
+        const splitLines = splitCharacterLimit(line, 3000);
+
+        splitLines.forEach((splitLine) => {
+            currentMessage.push(createSectionBlock(splitLine));
+        });
+      } else {
+        currentMessage.push(createSectionBlock(fullSection));
+      }
+
       currentMessage.push(createSpacerBlock());
+    } else if (line.length > 3000) {
+      const splitLines = splitCharacterLimit(line, 3000);
+
+      splitLines.forEach((splitLine) => {
+          currentMessage.push(createSectionBlock(splitLine));
+      });
     } else if (line) {
       currentMessage.push(createSectionBlock(line));
     }
@@ -339,7 +369,7 @@ export default class SlackPlugin implements IPlugin {
     const releaseUrl =
       urls.length > 1
         ? urls.join(", ")
-        : `${url(releases[0].data.html_url, 'View Release')}`;
+        : `${url(releases[0].data.html_url, "View Release")}`;
 
     // First add context to share link to release
     messages[0].unshift(
