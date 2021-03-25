@@ -1,4 +1,4 @@
-import { jsesc } from "jsesc";
+import jsesc from "jsesc";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
