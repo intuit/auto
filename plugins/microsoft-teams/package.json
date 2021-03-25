@@ -37,11 +37,11 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@atomist/slack-messages": "~1.2.0",
     "@auto-it/core": "link:../../packages/core",
     "fp-ts": "^2.5.3",
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
+    "jsesc": "^3.0.2",
     "node-fetch": "2.6.1",
     "tslib": "2.1.0"
   }

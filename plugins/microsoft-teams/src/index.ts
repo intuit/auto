@@ -1,4 +1,4 @@
-import { githubToSlack } from "@atomist/slack-messages";
+import { jsesc } from "jsesc";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
@@ -10,31 +10,8 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
-const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
-
-/** Transform markdown into slack friendly text */
-export const sanitizeMarkdown = (markdown: string) =>
-  githubToSlack(markdown)
-    .split("\n")
-    .map((line) => {
-      // Strip out the ### prefix and replace it with *<word>* to make it bold
-      if (line.startsWith("#")) {
-        return `*${line.replace(/^[#]+/, "")}*`;
-      }
-
-      // Give extra padding to nested lists
-      if (line.match(/^\s+•/)) {
-        return line.replace(/^\s+•/, "   •");
-      }
-
-      // Strip markdown code block type. Slack does not render them correctly.
-      if (line.match(MARKDOWN_LANGUAGE)) {
-        return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
-      }
-
-      return line;
-    })
-    .join("\n");
+/** Microsoft Teams accepts markdown, as long as the content was escaped/serialized to a JSON string first  */
+export const sanitizeMarkdown = (markdown: string) => jsesc(markdown);
 
 const pluginOptions = t.partial({
   /** URL of the mircosoft teams to post to */
