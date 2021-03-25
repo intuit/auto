@@ -42,7 +42,7 @@ export default class MicrosoftTeamsPlugin {
       this.options = {
         ...options,
         url: process.env.MICROSOFT_TEAMS_WEBHOOK_URL || options.url || "",
-        atTarget: options.atTarget ? options.atTarget : "channel",
+        atTarget: options.atTarget,
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
           : false,
