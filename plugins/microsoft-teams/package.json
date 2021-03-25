@@ -44,5 +44,8 @@
     "jsesc": "^3.0.2",
     "node-fetch": "2.6.1",
     "tslib": "2.1.0"
+  },
+  "devDependencies": {
+    "@types/jsesc": "^2.5.1"
   }
 }

@@ -63,16 +63,11 @@
   resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.2.tgz#782d31936a0363e4458272bcc8fbe4f7651292ee"
   integrity sha512-K1kQv1BZVtMXQqdpNZt9Pgh85KwamsWX9gYyq1xG4cpyb+EacfMiNfumrju16piFXanCUrCR0P1DowPjV2qV/A==
 
-"@atomist/slack-messages@~1.2.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@atomist/slack-messages/-/slack-messages-1.2.1.tgz#74e9499ae2b017cbb0e4f047033b9434cb42c1d7"
-  integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
-
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.21.2"
+  version "10.22.1"
 
 "@auto-it/core@link:packages/core":
-  version "10.21.2"
+  version "10.22.1"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -114,7 +109,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.21.2"
+  version "10.22.1"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -132,13 +127,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.21.2"
+  version "10.22.1"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.21.2"
+  version "10.22.1"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -3122,6 +3117,11 @@
     "@types/node" "*"
     "@types/parse5" "*"
     "@types/tough-cookie" "*"
+
+"@types/jsesc@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@types/jsesc/-/jsesc-2.5.1.tgz#c34defc608ec94b68dc6a12a581b440942c6d503"
+  integrity sha512-9VN+6yxLOPLOav+7PwjZbxiID2bVaeq0ED4qSQmdQTdjnXJSaCVKTR58t15oqH1H5t8Ng2ZX1SabJVoN9Q34bw==
 
 "@types/json-schema@^7.0.3":
   version "7.0.3"

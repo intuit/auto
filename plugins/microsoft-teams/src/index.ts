@@ -147,7 +147,9 @@ export default class MicrosoftTeamsPlugin {
 
     auto.logger.verbose.info("Posting release notes to microsoft teams.");
 
-    const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
+    // @mentions don't work in teams - yet
+    // https://microsoftteams.uservoice.com/forums/555103-public/suggestions/17153099-webhook-needs-to-support-forced-notification-a-la
+    // const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
 
     await fetch(`${this.options.url}`, {
       method: "POST",
