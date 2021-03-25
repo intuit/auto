@@ -154,7 +154,19 @@ export default class MicrosoftTeamsPlugin {
       body: JSON.stringify({
         "@context": "http://schema.org/extensions",
         "@type": "MessageCard",
-        text: [`${atTarget}New release ${releaseUrl}`, releaseNotes].join("\n"),
+        text: releaseNotes,
+        potentialAction: [
+          {
+            "@type": "OpenUri",
+            name: "Learn More",
+            targets: [
+              {
+                os: "default",
+                uri: releaseUrl,
+              },
+            ],
+          },
+        ],
       }),
       headers: { "Content-Type": "application/json" },
       agent,
