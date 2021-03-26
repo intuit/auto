@@ -26,7 +26,7 @@ const pluginOptions = t.partial({
 
 export type IMicrosoftTeamsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-/** Post your release notes to Slack during `auto release` */
+/** Post your release notes to Microsoft Teams during `auto release` */
 export default class MicrosoftTeamsPlugin {
   /** The name of the plugin */
   name = "microsoft-teams";
@@ -114,6 +114,7 @@ export default class MicrosoftTeamsPlugin {
           (Array.isArray(response) && response) ||
           (response && [response]) ||
           [];
+
         const urls = releases.map(
           (release) =>
             `*<${release.data.html_url}|${
@@ -134,7 +135,7 @@ export default class MicrosoftTeamsPlugin {
     );
   }
 
-  /** Post the release notes to slack */
+  /** Post the release notes to Microsoft Teams */
   async createPost(
     auto: Auto,
     releaseNotes: string,
@@ -147,7 +148,7 @@ export default class MicrosoftTeamsPlugin {
 
     auto.logger.verbose.info("Posting release notes to microsoft teams.");
 
-    // @mentions don't work in teams - yet
+    // TODO: @mentions don't work in teams - yet
     // https://microsoftteams.uservoice.com/forums/555103-public/suggestions/17153099-webhook-needs-to-support-forced-notification-a-la
     // const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
 
