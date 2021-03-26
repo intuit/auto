@@ -467,7 +467,11 @@ export const commands: AutoCommand[] = [
   {
     name: "release",
     group: "Release Commands",
-    description: "Auto-generate a github release",
+    description: endent`
+      Create a GitHub release for a tag. Defaults to last tag in branch.
+      
+      > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the HEAD of you default branch.
+    `,
     options: [
       dryRun,
       noVersionPrefix,
