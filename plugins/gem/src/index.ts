@@ -16,6 +16,9 @@ import envCi from "env-ci";
 import { readFile, writeFile, mkdir } from "./utils";
 
 const VERSION_REGEX = /\d+\.\d+\.\d+/;
+const GEM_PKG_BUILD_REGEX = /(pkg.*)[^.]/;
+const GEM_SPEC_NAME_REGEX = /name\s*=\s*["']([\S ]+)["']/;
+
 const { isCi } = envCi();
 
 const pluginOptions = t.partial({
@@ -120,6 +123,93 @@ export default class GemPlugin implements IPlugin {
       }
     );
 
+    auto.hooks.canary.tapPromise(
+      this.name, 
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+      if (
+        isCi &&
+        !fs.existsSync("~/.gem/credentials") &&
+        process.env.RUBYGEMS_API_KEY
+      ) {
+        const home = process.env.HOME || "~";
+        const gemDir = path.join(home, ".gem");
+
+        if (!fs.existsSync(gemDir)) {
+          auto.logger.verbose.info(`Creating ${gemDir} directory`);
+          await mkdir(gemDir);
+        }
+
+        const credentials = path.join(gemDir, "credentials");
+
+        await writeFile(
+          credentials,
+          endent`
+            ---
+            :rubygems_api_key: ${process.env.RUBYGEMS_API_KEY}
+
+          `
+        );
+        auto.logger.verbose.success(`Wrote ${credentials}`);
+
+        execSync(`chmod 0600 ${credentials}`, {
+          stdio: "inherit",
+        });
+      }
+
+      const [version, versionFile] = await this.getVersion(auto);
+      const newTag = inc(version, bump as ReleaseType);
+
+      if (!newTag) {
+        throw new Error(
+          `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
+        );
+      }
+
+      const canaryVersion = `${newTag}.pre${canaryIdentifier.replace('-','.')}`
+      
+      if (dryRun) {
+        if (quiet) {
+          console.log(canaryVersion);
+        } else {
+          auto.logger.log.info(`Would have published: ${canaryVersion}`);
+        }
+
+        return;
+      }
+
+      
+      const content = await readFile(versionFile, { encoding: "utf8" });
+      await writeFile(versionFile, content.replace(version, canaryVersion));
+
+      /** Commit the new version. we wait because "rake build" changes the lock file */
+      /** we don't push that version, is just to clean the stage  */
+      const commitVersion = async () =>
+        execPromise("git", [
+          "commit",
+          "-am",
+          `"update version: ${canaryVersion} [skip ci]"`,
+          "--no-verify",
+        ]);
+
+ 
+      auto.logger.verbose.info("Running default release command");
+      const buildResult = await execPromise("bundle", ["exec", "rake", "build"]);
+      const gemPath = GEM_PKG_BUILD_REGEX.exec(buildResult)?.[0]
+      await commitVersion();
+      // will push the canary gem
+      await execPromise("gem", ["push", `${gemPath}`]);
+
+      auto.logger.verbose.info("Successfully published canary version");
+
+      const name = await this.loadGemName();
+      
+      return {
+        newVersion: canaryVersion,
+        details: this.makeInstallDetails(name, canaryVersion),
+      };
+
+    });
+
     auto.hooks.publish.tapPromise(this.name, async () => {
       if (
         isCi &&
@@ -175,6 +265,27 @@ export default class GemPlugin implements IPlugin {
       }
     });
   }
+
+  /** create the installation details */
+  private makeInstallDetails(name: string | undefined, canaryVersion: string) {
+  return [
+    ":sparkles: Test out this PR via:\n",
+    "```bash",
+    `gem ${name}, ${canaryVersion}`,
+    "or",
+    `gem install ${name} -v ${canaryVersion}`,
+    "```",
+  ].join("\n");
+  }
+
+  /** loads the gem name from .gemspec */
+  private async loadGemName() {
+    const gemspec = glob.sync("*.gemspec")[0];
+    const content = await readFile(gemspec, { encoding: "utf8" });
+    
+    return content.match(GEM_SPEC_NAME_REGEX)?.[1];
+  }
+
 
   /** Get the current version of the gem and where it was found */
   private async getVersion(auto: Auto) {
