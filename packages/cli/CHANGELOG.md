@@ -1,3 +1,47 @@
+# v10.24.0 (Mon Mar 29 2021)
+
+### Release Notes
+
+#### Release Command: Tag creation fallback. ([#1929](https://github.com/intuit/auto/pull/1929))
+
+When creating a release for a tag that isn't on the remote, fallback to creating a tag pointing at the --to option.
+
+## Why
+
+closes #1917
+
+Todo:
+
+- [x] Add tests
+- [x] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [ ] `patch`
+- [x] `minor`
+- [ ] `major`
+
+---
+
+#### 🚀 Enhancement
+
+- Release Command: Tag creation fallback. [#1929](https://github.com/intuit/auto/pull/1929) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- improve docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Release Command: When creating a release for a tag that isn't on remote, fallback to creating a tag pointing at the --to option ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Improve release command docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix
