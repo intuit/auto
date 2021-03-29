@@ -845,13 +845,19 @@ export default class Git {
   }
 
   /** Create a release for the GitHub project */
-  async publish(releaseNotes: string, tag: string, prerelease = false) {
+  async publish(
+    releaseNotes: string,
+    tag: string,
+    prerelease = false,
+    fallbackCommit?: string,
+  ) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
     const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
+      target_commitish: fallbackCommit,
       name: tag,
       body: releaseNotes,
       prerelease,

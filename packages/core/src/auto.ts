@@ -193,6 +193,8 @@ export interface IAutoHooks {
       DryRunOption & {
         /** Commit to start calculating the version from */
         from: string;
+        /** Commit to end calculating the version from */
+        to: string;
         /** The version being released */
         newVersion: string;
         /** Whether the release being made is a prerelease */
@@ -551,7 +553,8 @@ export default class Auto {
         const release = await this.git!.publish(
           options.fullReleaseNotes,
           options.newVersion,
-          options.isPrerelease
+          options.isPrerelease,
+          options.to
         );
 
         this.logger.log.info(release.data.html_url);
@@ -1472,6 +1475,7 @@ export default class Auto {
     const release = await this.hooks.makeRelease.promise({
       commits,
       from: lastTag,
+      to: await this.git.getSha(),
       isPrerelease: true,
       newVersion,
       fullReleaseNotes: releaseNotes,
@@ -1983,6 +1987,7 @@ export default class Auto {
     const release = await this.hooks.makeRelease.promise({
       dryRun,
       from: lastRelease,
+      to: to || (await this.git.getSha()),
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,
