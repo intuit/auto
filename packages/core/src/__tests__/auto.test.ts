@@ -948,7 +948,8 @@ describe("Auto", () => {
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
         "v1.2.4",
-        false
+        false,
+        ""
       );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1013,7 +1014,8 @@ describe("Auto", () => {
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
         "v1.2.4",
-        true
+        true,
+        ""
       );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1052,7 +1054,8 @@ describe("Auto", () => {
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
         "v1.2.4",
-        false
+        false,
+        ""
       );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1091,7 +1094,8 @@ describe("Auto", () => {
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
         "v1.3.0",
-        false
+        false,
+        ""
       );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1130,7 +1134,8 @@ describe("Auto", () => {
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
         "v1.2.3+1",
-        false
+        false,
+        ""
       );
       expect(afterRelease).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -470,7 +470,7 @@ export const commands: AutoCommand[] = [
     description: endent`
       Create a GitHub release for a tag. Defaults to last tag in branch.
       
-      > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the HEAD of you default branch.
+      > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
     `,
     options: [
       dryRun,
@@ -489,7 +489,7 @@ export const commands: AutoCommand[] = [
         type: String,
         group: "main",
         description:
-          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD",
+          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD.",
       },
       {
         name: "use-version",
