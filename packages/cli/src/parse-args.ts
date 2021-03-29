@@ -503,7 +503,12 @@ export const commands: AutoCommand[] = [
     ],
     examples: [
       "{green $} auto release",
-      "{green $} auto release --from v0.20.1 --use-version v0.21.0",
+      {
+        desc:
+          "This command can be used in isolation easily. This example will: tag the release version at 'to' and create a GitHub release changelog over the commits range",
+        example:
+          "{green $} auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
+      },
     ],
   },
   {
