@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/pr-body-labels",
-  "version": "10.24.0",
+  "version": "10.24.1",
   "main": "dist/index.js",
   "description": "Allow outside contributors to indicate what semver label should be applied to the Pull Request",
   "license": "MIT",
