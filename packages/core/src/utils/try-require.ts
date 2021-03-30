@@ -1,4 +1,5 @@
 import importCwd from "import-cwd";
+import requireg from "requireg";
 import importFrom from "import-from";
 import createLog from "./logger";
 
@@ -22,8 +23,8 @@ export default function tryRequire(tryPath: string, from?: string) {
     }
 
     try {
-      // Require from __dirname. Needed for npx and global installs
-      return require(tryPath);
+      // Require from __dirname and then common global package places. Needed for npx and global installs
+      return requireg(tryPath);
     } catch (error) {
       logger.veryVerbose.warn(error.message);
     }
