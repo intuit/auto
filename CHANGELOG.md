@@ -1,3 +1,16 @@
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.24.0 (Mon Mar 29 2021)
 
 ### Release Notes
