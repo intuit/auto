@@ -39,7 +39,7 @@ npx all-contributors init
 
 ### Configure Contribution Type Matching
 
-You use any of the [contribution type](vhttps://allcontributors.org/docs/en/emoji-key).
+You use any of the [contribution type](https://allcontributors.org/docs/en/emoji-key).
 If you configure an pre-configured contribution type the arrays are not merged, it is overridden.
 
 **`auto.rc`**
