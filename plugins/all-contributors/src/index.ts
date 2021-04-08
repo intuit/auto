@@ -27,6 +27,7 @@ const contributionTypes = [
   "business",
   "code",
   "content",
+  "data",
   "design",
   "doc",
   "eventOrganizing",
