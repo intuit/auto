@@ -499,6 +499,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "kharrop",
+      "name": "Kelly Harrop",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24794756?v=4",
+      "profile": "https://github.com/kharrop",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
