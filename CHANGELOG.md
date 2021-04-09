@@ -1,3 +1,21 @@
+# v10.24.2 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - Update index.ts [#1938](https://github.com/intuit/auto/pull/1938) ([@kharrop](https://github.com/kharrop))
+
+#### 📝 Documentation
+
+- `@auto-it/all-contributors`
+  - Update README.md [#1937](https://github.com/intuit/auto/pull/1937) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v10.24.1 (Mon Mar 29 2021)
 
 #### 🐛 Bug Fix
