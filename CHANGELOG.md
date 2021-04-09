@@ -1,3 +1,16 @@
+# v10.24.3 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - Prefer npx over yarn for running lerna commands [#1936](https://github.com/intuit/auto/pull/1936) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.24.2 (Thu Apr 08 2021)
 
 #### 🐛 Bug Fix
