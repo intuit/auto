@@ -2,7 +2,7 @@
 
 Automatically add contributors as changelogs are produced.
 
-This plugin maps one of the [contribution type](https://allcontributors.org/docs/en/emoji-key) to a glob or array of globs.
+This plugin maps one of the [contribution types](https://allcontributors.org/docs/en/emoji-key) to a glob or array of globs.
 Out of the box the plugin will only detect the following contribution types:
 
 - 📖 `doc` - Edits to any README `['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*']`
@@ -39,7 +39,7 @@ npx all-contributors init
 
 ### Configure Contribution Type Matching
 
-You use any of the [contribution type](https://allcontributors.org/docs/en/emoji-key).
+You use any of the [contribution types](https://allcontributors.org/docs/en/emoji-key).
 If you configure an pre-configured contribution type the arrays are not merged, it is overridden.
 
 **`auto.rc`**
