@@ -45,5 +45,8 @@
     "parse-github-url": "1.0.2",
     "semver": "^7.0.0",
     "tslib": "2.1.0"
+  },
+  "devDependencies": {
+    "jest-when": "^3.2.1"
   }
 }
