@@ -1,3 +1,16 @@
+# v10.25.0 (Tue Apr 13 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/gem`
+  - feat(gem): add canary hook [#1916](https://github.com/intuit/auto/pull/1916) ([@angeliski](https://github.com/angeliski))
+
+#### Authors: 1
+
+- Rogerio Angeliski ([@angeliski](https://github.com/angeliski))
+
+---
+
 # v10.24.3 (Thu Apr 08 2021)
 
 #### 🐛 Bug Fix
