@@ -521,6 +521,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "hasparus",
+      "name": "Piotr Monwid-Olechnowicz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15332326?v=4",
+      "profile": "https://haspar.us/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
