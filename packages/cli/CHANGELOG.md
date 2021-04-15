@@ -1,3 +1,16 @@
+# v10.25.1 (Thu Apr 15 2021)
+
+#### 🐛 Bug Fix
+
+- fix(types): point to dist/index.d.ts instead of non-existing file [#1944](https://github.com/intuit/auto/pull/1944) ([@hasparus](https://github.com/hasparus))
+- fix(types): point to dist/index.d.ts instead of non-existing file ([@hasparus](https://github.com/hasparus))
+
+#### Authors: 1
+
+- Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus))
+
+---
+
 # v10.24.3 (Thu Apr 08 2021)
 
 #### 🐛 Bug Fix

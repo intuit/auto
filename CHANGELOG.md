@@ -1,3 +1,24 @@
+# v10.25.1 (Thu Apr 15 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - fix(types): point to dist/index.d.ts instead of non-existing file [#1944](https://github.com/intuit/auto/pull/1944) ([@hasparus](https://github.com/hasparus))
+
+#### 📝 Documentation
+
+- docs: import INpmConfig from npm package, not from core [#1942](https://github.com/intuit/auto/pull/1942) ([@hasparus](https://github.com/hasparus))
+
+#### Authors: 1
+
+- Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus))
+
+---
+
 # v10.25.0 (Tue Apr 13 2021)
 
 #### 🚀 Enhancement
