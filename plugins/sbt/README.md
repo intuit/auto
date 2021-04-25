@@ -2,6 +2,8 @@
 
 Publish Scala projects with sbt
 
+> :warning: only sbt 1.4+ is supported at the moment because this plugin uses `sbt --client` functionality
+
 ## Installation
 
 This plugin is not included with the `auto` CLI installed via NPM. To install:
