@@ -131,7 +131,7 @@ export default class SbtPlugin implements IPlugin {
 
         const lastRelease = await auto.git.getLatestRelease();
         const lastVersion = await auto.getCurrentVersion(lastRelease);
-        const canaryVersion = `${lastVersion}-${canaryIdentifier}`;
+        const canaryVersion = `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
         auto.logger.log.info(`Canary version: ${canaryVersion}`);
 
         if (dryRun) {
