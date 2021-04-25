@@ -140,10 +140,13 @@ export default class SbtPlugin implements IPlugin {
         ]);
 
         auto.logger.log.info("Run sbt publish");
-        await execPromise("sbt", ["--client", "publish"]);
+        const publishLogs = await execPromise("sbt", ["--client", "publish"]);
 
         auto.logger.verbose.info("Successfully published canary version");
-        return canaryVersion;
+        return {
+          newVersion: canaryVersion,
+          details: publishLogs,
+        };
       },
     );
   }
