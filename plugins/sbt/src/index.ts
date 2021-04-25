@@ -5,7 +5,7 @@ import {
   IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
-import { clean, inc, ReleaseType } from "semver";
+import { inc, ReleaseType } from "semver";
 import * as t from "io-ts";
 import stripAnsi from "strip-ansi";
 
