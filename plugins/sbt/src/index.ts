@@ -9,7 +9,9 @@ import { inc, ReleaseType } from "semver";
 import * as t from "io-ts";
 import stripAnsi from "strip-ansi";
 
-const pluginOptions = t.partial({});
+const pluginOptions = t.partial({
+  manageVersion: t.boolean,
+});
 
 export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
 
@@ -42,6 +44,16 @@ export default class SbtPlugin implements IPlugin {
       const output = await execPromise("sbt", ["--client", ...args]);
       const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
       return cleanOutput;
+    }
+
+    async function sbtGetVersion() {
+      const output = await sbtClient("print version");
+      const version = output.split("\n").shift();
+      if (!version) {
+        throw new Error(`Failed to read version from sbt: ${output}`);
+      }
+      auto.logger.log.info(`Got version from sbt: ${version}`);
+      return version;
     }
 
     async function sbtSetVersion(version: string) {
@@ -110,7 +122,9 @@ export default class SbtPlugin implements IPlugin {
           `"Update version to ${prefixedTag}"`,
         ]);
 
-        await sbtSetVersion(newTag);
+        if (this.options.manageVersion) {
+          await sbtSetVersion(newTag);
+        }
       },
     );
 
@@ -127,6 +141,12 @@ export default class SbtPlugin implements IPlugin {
       ]);
     });
 
+    async function getCanaryVersion(canaryIdentifier: string) {
+      const lastTag = await getTag();
+      const lastVersion = lastTag.replace(/^v/, "");
+      return `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
+    }
+
     auto.hooks.canary.tapPromise(
       this.name,
       async ({ canaryIdentifier, dryRun, quiet }) => {
@@ -134,9 +154,9 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
-        const lastTag = await getTag();
-        const lastVersion = lastTag.replace(/^v/, "");
-        const canaryVersion = `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
+        const canaryVersion = this.options.manageVersion
+          ? await getCanaryVersion(canaryIdentifier)
+          : await sbtGetVersion();
         auto.logger.log.info(`Canary version: ${canaryVersion}`);
 
         if (dryRun) {
@@ -149,7 +169,10 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
-        await sbtSetVersion(canaryVersion);
+        if (this.options.manageVersion) {
+          await sbtSetVersion(canaryVersion);
+        }
+
         const publishLogs = await sbtPublish();
 
         auto.logger.verbose.info("Successfully published canary version");
