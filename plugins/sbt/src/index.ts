@@ -7,6 +7,7 @@ import {
 } from "@auto-it/core";
 import { inc, ReleaseType } from "semver";
 import * as t from "io-ts";
+import stripAnsi from "strip-ansi";
 
 const pluginOptions = t.partial({});
 
@@ -38,7 +39,8 @@ export default class SbtPlugin implements IPlugin {
     }
 
     async function sbtClient(...args: string[]) {
-      return await execPromise("sbt", ["--client", ...args]);
+      const output = await execPromise("sbt", ["--client", ...args]);
+      return stripAnsi(output);
     }
 
     async function sbtSetVersion(version: string) {
