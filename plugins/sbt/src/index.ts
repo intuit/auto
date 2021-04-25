@@ -37,6 +37,20 @@ export default class SbtPlugin implements IPlugin {
       }
     }
 
+    async function sbtClient(...args: string[]) {
+      return await execPromise("sbt", ["--client", ...args]);
+    }
+
+    async function sbtSetVersion(version: string) {
+      auto.logger.log.info(`Set version in sbt to ${version}`);
+      return await sbtClient(`set every version := \\"${version}\\"`);
+    }
+
+    async function sbtPublish() {
+      auto.logger.log.info("Run sbt publish");
+      return await sbtClient("publish");
+    }
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config
       if (name === this.name && typeof options !== "string") {
@@ -91,17 +105,12 @@ export default class SbtPlugin implements IPlugin {
           `"Update version to ${prefixedTag}"`,
         ]);
 
-        auto.logger.log.info("Set version in sbt");
-        await execPromise("sbt", [
-          "--client",
-          `set every version := "${newTag}"`,
-        ]);
+        await sbtSetVersion(newTag);
       },
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      auto.logger.log.info("Run sbt publish");
-      await execPromise("sbt", ["--client", "publish"]);
+      await sbtPublish();
 
       auto.logger.log.info("Pushing new tag to GitHub");
       await execPromise("git", [
@@ -135,19 +144,17 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
-        auto.logger.log.info("Set version in sbt");
-        await execPromise("sbt", [
-          "--client",
-          `set every version := "${canaryVersion}"`,
-        ]);
-
-        auto.logger.log.info("Run sbt publish");
-        const publishLogs = await execPromise("sbt", ["--client", "publish"]);
+        await sbtSetVersion(canaryVersion);
+        const publishLogs = await sbtPublish();
 
         auto.logger.verbose.info("Successfully published canary version");
         return {
           newVersion: canaryVersion,
-          details: publishLogs,
+          details: [
+            "```",
+            publishLogs,
+            "```",
+          ].join("\n"),
         };
       },
     );
