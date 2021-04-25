@@ -5,7 +5,7 @@ import {
   IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
-import { inc, ReleaseType } from "semver";
+import { clean, inc, ReleaseType } from "semver";
 import * as t from "io-ts";
 import stripAnsi from "strip-ansi";
 
@@ -40,7 +40,8 @@ export default class SbtPlugin implements IPlugin {
 
     async function sbtClient(...args: string[]) {
       const output = await execPromise("sbt", ["--client", ...args]);
-      return stripAnsi(output);
+      const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
+      return cleanOutput;
     }
 
     async function sbtSetVersion(version: string) {
@@ -50,7 +51,9 @@ export default class SbtPlugin implements IPlugin {
 
     async function sbtPublish() {
       auto.logger.log.info("Run sbt publish");
-      return await sbtClient("publish");
+      const publishLog = await sbtClient("publish");
+      auto.logger.log.info("Output:\n" + publishLog);
+      return publishLog;
     }
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
