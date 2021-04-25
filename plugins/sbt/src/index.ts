@@ -72,6 +72,7 @@ export default class SbtPlugin implements IPlugin {
           } else {
             auto.logger.log.info(`Would have published: ${newTag}`);
           }
+
           return;
         }
 
@@ -130,6 +131,7 @@ export default class SbtPlugin implements IPlugin {
           } else {
             auto.logger.log.info(`Would have published: ${canaryVersion}`);
           }
+
           return;
         }
 
