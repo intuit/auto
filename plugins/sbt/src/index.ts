@@ -40,32 +40,44 @@ export default class SbtPlugin implements IPlugin {
       }
     }
 
+    /** Calls sbt in the client and returns cleaned up logs */
     async function sbtClient(...args: string[]) {
       const output = await execPromise("sbt", ["--client", ...args]);
       const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
       return cleanOutput;
     }
 
+    /** Read version from sbt */
     async function sbtGetVersion() {
       const output = await sbtClient("print version");
       const version = output.split("\n").shift();
       if (!version) {
         throw new Error(`Failed to read version from sbt: ${output}`);
       }
+
       auto.logger.log.info(`Got version from sbt: ${version}`);
       return version;
     }
 
+    /** Set version in sbt to the given value */
     async function sbtSetVersion(version: string) {
-      auto.logger.log.info(`Set version in sbt to ${version}`);
-      return await sbtClient(`set every version := \\"${version}\\"`);
+      auto.logger.log.info(`Set version in sbt to "${version}"`);
+      return sbtClient(`set every version := \\"${version}\\"`);
     }
 
+    /** Run sbt publish */
     async function sbtPublish() {
       auto.logger.log.info("Run sbt publish");
       const publishLog = await sbtClient("publish");
       auto.logger.log.info("Output:\n" + publishLog);
       return publishLog;
+    }
+
+    /** Construct canary version using Auto-provided suffix */
+    async function getCanaryVersion(canaryIdentifier: string) {
+      const lastTag = await getTag();
+      const lastVersion = lastTag.replace(/^v/, "");
+      return `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
     }
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
@@ -140,12 +152,6 @@ export default class SbtPlugin implements IPlugin {
         getCurrentBranch() || auto.baseBranch,
       ]);
     });
-
-    async function getCanaryVersion(canaryIdentifier: string) {
-      const lastTag = await getTag();
-      const lastVersion = lastTag.replace(/^v/, "");
-      return `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
-    }
 
     auto.hooks.canary.tapPromise(
       this.name,
