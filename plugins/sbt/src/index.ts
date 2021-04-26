@@ -49,9 +49,10 @@ export default class SbtPlugin implements IPlugin {
 
     /** Read version from sbt */
     async function sbtGetVersion() {
+      // in multi-module projects, we want to get only ThisBuild/version
       await sbtClient("set version/aggregate := false");
       const output = await sbtClient("print version");
-      const version = output.split("\n").shift();
+      const version = output.split("\n").shift()?.trim();
       if (!version) {
         throw new Error(`Failed to read version from sbt: ${output}`);
       }
