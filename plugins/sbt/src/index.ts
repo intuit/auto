@@ -49,6 +49,7 @@ export default class SbtPlugin implements IPlugin {
 
     /** Read version from sbt */
     async function sbtGetVersion() {
+      await sbtClient("set version/aggregate := false");
       const output = await sbtClient("print version");
       const version = output.split("\n").shift();
       if (!version) {
