@@ -16,6 +16,36 @@ const pluginOptions = t.partial({
 
 export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
 
+/** Calls sbt in the client and returns cleaned up logs */
+async function sbtClient(input: string): Promise<string> {
+  const output = await execPromise("sbt", ["--client", input]);
+  const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
+  return cleanOutput;
+}
+
+/** Read version from sbt */
+async function sbtGetVersion(): Promise<string> {
+  // in multi-module projects, we want to get only ThisBuild/version
+  await sbtClient("set version/aggregate := false");
+  const output = await sbtClient("print version");
+  const version = output.split("\n").shift()?.trim();
+  if (!version) {
+    throw new Error(`Failed to read version from sbt: ${output}`);
+  }
+
+  return version;
+}
+
+/** Set version in sbt to the given value */
+async function sbtSetVersion(version: string): Promise<string> {
+  return sbtClient(`set every version := \\"${version}\\"`);
+}
+
+/** Run sbt publish */
+async function sbtPublish(command?: string): Promise<string> {
+  return sbtClient(command || "publish");
+}
+
 /** Publish Scala projects with sbt */
 export default class SbtPlugin implements IPlugin {
   /** The name of the plugin */
@@ -39,48 +69,6 @@ export default class SbtPlugin implements IPlugin {
       } catch (error) {
         return auto.prefixRelease("0.0.0");
       }
-    }
-
-    /** Calls sbt in the client and returns cleaned up logs */
-    async function sbtClient(input: string) {
-      const output = await execPromise("sbt", ["--client", input]);
-      const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
-      return cleanOutput;
-    }
-
-    /** Read version from sbt */
-    async function sbtGetVersion() {
-      // in multi-module projects, we want to get only ThisBuild/version
-      await sbtClient("set version/aggregate := false");
-      const output = await sbtClient("print version");
-      const version = output.split("\n").shift()?.trim();
-      if (!version) {
-        throw new Error(`Failed to read version from sbt: ${output}`);
-      }
-
-      auto.logger.verbose.info(`Got version from sbt: ${version}`);
-      return version;
-    }
-
-    /** Set version in sbt to the given value */
-    async function sbtSetVersion(version: string) {
-      auto.logger.verbose.info(`Set version in sbt to "${version}"`);
-      return sbtClient(`set every version := \\"${version}\\"`);
-    }
-
-    /** Run sbt publish */
-    async function sbtPublish(command?: string) {
-      auto.logger.verbose.info("Run sbt publish");
-      const publishLog = await sbtClient(command || "publish");
-      auto.logger.verbose.info("Output:\n" + publishLog);
-      return publishLog;
-    }
-
-    /** Construct canary version using Auto-provided suffix */
-    async function getCanaryVersion(canaryIdentifier: string) {
-      const lastTag = await getTag();
-      const lastVersion = lastTag.replace(/^v/, "");
-      return `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
     }
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
@@ -137,12 +125,15 @@ export default class SbtPlugin implements IPlugin {
           `"Update version to ${prefixedTag}"`,
         ]);
 
+        auto.logger.verbose.info(`Set version in sbt to "${newTag}"`);
         await sbtSetVersion(newTag);
       },
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      await sbtPublish(this.options.publishCommand);
+      auto.logger.verbose.info("Run sbt publish");
+      const publishLogs = await sbtPublish(this.options.publishCommand);
+      auto.logger.verbose.info("Output:\n", publishLogs);
 
       auto.logger.log.info("Pushing new tag to GitHub");
       await execPromise("git", [
@@ -161,8 +152,15 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
+        /** Construct canary version using Auto-provided suffix */
+        const constructCanaryVersion = async () => {
+          const lastTag = await getTag();
+          const lastVersion = lastTag.replace(/^v/, "");
+          return `${lastVersion}${canaryIdentifier}-SNAPSHOT`;
+        };
+
         const canaryVersion = this.options.setCanaryVersion
-          ? await getCanaryVersion(canaryIdentifier)
+          ? await constructCanaryVersion()
           : await sbtGetVersion();
         auto.logger.log.info(`Canary version: ${canaryVersion}`);
 
@@ -177,10 +175,13 @@ export default class SbtPlugin implements IPlugin {
         }
 
         if (this.options.setCanaryVersion) {
+          auto.logger.verbose.info(`Set version in sbt to "${canaryVersion}"`);
           await sbtSetVersion(canaryVersion);
         }
 
+        auto.logger.verbose.info("Run sbt publish");
         const publishLogs = await sbtPublish(this.options.publishCommand);
+        auto.logger.verbose.info("Output:\n", publishLogs);
 
         auto.logger.verbose.info("Successfully published canary version");
         return {
