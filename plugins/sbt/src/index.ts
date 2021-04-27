@@ -58,21 +58,21 @@ export default class SbtPlugin implements IPlugin {
         throw new Error(`Failed to read version from sbt: ${output}`);
       }
 
-      auto.logger.log.info(`Got version from sbt: ${version}`);
+      auto.logger.verbose.info(`Got version from sbt: ${version}`);
       return version;
     }
 
     /** Set version in sbt to the given value */
     async function sbtSetVersion(version: string) {
-      auto.logger.log.info(`Set version in sbt to "${version}"`);
+      auto.logger.verbose.info(`Set version in sbt to "${version}"`);
       return sbtClient(`set every version := \\"${version}\\"`);
     }
 
     /** Run sbt publish */
     async function sbtPublish(command?: string) {
-      auto.logger.log.info("Run sbt publish");
+      auto.logger.verbose.info("Run sbt publish");
       const publishLog = await sbtClient(command || "publish");
-      auto.logger.log.info("Output:\n" + publishLog);
+      auto.logger.verbose.info("Output:\n" + publishLog);
       return publishLog;
     }
 
