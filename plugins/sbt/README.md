@@ -47,9 +47,9 @@ With this setup canary versions will look like this: `{last_tag}-{number_of_comm
 
 ## Options
 
-### `manageVersion: boolean` (default: `false`)
+### `setCanaryVersion: boolean` (default: `false`)
 
-If you don't want to use an sbt plugin for version management, you can let Auto manage the version:
+If you don't want to use an sbt plugin for version management, you can let Auto manage the canary version:
 
 ```json
 {
@@ -57,14 +57,14 @@ If you don't want to use an sbt plugin for version management, you can let Auto 
     [
       "sbt",
       {
-        "manageVersion": true
+        "setCanaryVersion": true
       }
     ]
   ]
 }
 ```
 
-With this option Auto will override the version in sbt during the release process.
+With this option Auto will override the version in sbt during canary release process.
 
 Canary versions will look like this: `{last_tag}-canary.{pr_number}.{build_number}-SNAPSHOT`, for example:
 

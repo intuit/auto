@@ -10,7 +10,7 @@ import * as t from "io-ts";
 import stripAnsi from "strip-ansi";
 
 const pluginOptions = t.partial({
-  manageVersion: t.boolean,
+  setCanaryVersion: t.boolean,
   publishCommand: t.string,
 });
 
@@ -161,7 +161,7 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
-        const canaryVersion = this.options.manageVersion
+        const canaryVersion = this.options.setCanaryVersion
           ? await getCanaryVersion(canaryIdentifier)
           : await sbtGetVersion();
         auto.logger.log.info(`Canary version: ${canaryVersion}`);
@@ -176,7 +176,7 @@ export default class SbtPlugin implements IPlugin {
           return;
         }
 
-        if (this.options.manageVersion) {
+        if (this.options.setCanaryVersion) {
           await sbtSetVersion(canaryVersion);
         }
 
