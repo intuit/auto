@@ -73,3 +73,20 @@ Canary versions will look like this: `{last_tag}-canary.{pr_number}.{build_numbe
 ```
 
 Here build number is the git commit SHA.
+
+### `publishCommand: string` (default: `publish`)
+
+If you need to run some custom publishing command, you can change this option. For example, to cross-publish a library:
+
+```json
+{
+  "plugins": [
+    [
+      "sbt",
+      {
+        "publishCommand": "+publish"
+      }
+    ]
+  ]
+}
+```

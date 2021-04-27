@@ -11,6 +11,7 @@ import stripAnsi from "strip-ansi";
 
 const pluginOptions = t.partial({
   manageVersion: t.boolean,
+  publishCommand: t.string,
 });
 
 export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -68,9 +69,9 @@ export default class SbtPlugin implements IPlugin {
     }
 
     /** Run sbt publish */
-    async function sbtPublish() {
+    async function sbtPublish(command?: string) {
       auto.logger.log.info("Run sbt publish");
-      const publishLog = await sbtClient("publish");
+      const publishLog = await sbtClient(command || "publish");
       auto.logger.log.info("Output:\n" + publishLog);
       return publishLog;
     }
@@ -143,7 +144,7 @@ export default class SbtPlugin implements IPlugin {
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      await sbtPublish();
+      await sbtPublish(this.options.publishCommand);
 
       auto.logger.log.info("Pushing new tag to GitHub");
       await execPromise("git", [
@@ -181,7 +182,7 @@ export default class SbtPlugin implements IPlugin {
           await sbtSetVersion(canaryVersion);
         }
 
-        const publishLogs = await sbtPublish();
+        const publishLogs = await sbtPublish(this.options.publishCommand);
 
         auto.logger.verbose.info("Successfully published canary version");
         return {
