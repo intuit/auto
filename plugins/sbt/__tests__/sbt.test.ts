@@ -5,15 +5,10 @@ import SbtPlugin, {
   ISbtPluginOptions,
   sbtClient,
   sbtGetVersion,
-  sbtPublish,
   sbtSetVersion,
 } from "../src";
 
-// const sbt = jest.fn();
 const exec = jest.fn();
-
-// @ts-ignore
-// sbtClient.mockImplementation(sbt);
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
@@ -42,7 +37,7 @@ const rawAggregationOutput =
 [0J[[32msuccess[0m] Total time: 2 s, completed Apr 27, 2021 3:52:04 AM
 [0Jv`;
 
-describe("sbt Plugin", () => {
+describe("sbt plugin", () => {
   let hooks: Auto.IAutoHooks;
   const prefixRelease: (a: string) => string = jest.fn(
     (version) => `v${version}`,
@@ -50,8 +45,7 @@ describe("sbt Plugin", () => {
   const options: ISbtPluginOptions = {};
   const logger = dummyLog();
 
-  beforeEach(() => {
-    exec.mockClear();
+  const setup = (options: ISbtPluginOptions) => {
     const plugin = new SbtPlugin(options);
     hooks = makeHooks();
     plugin.apply(
@@ -67,6 +61,11 @@ describe("sbt Plugin", () => {
         getCurrentVersion: async () => "0.0.1",
       } as unknown) as Auto.Auto,
     );
+  };
+
+  beforeEach(() => {
+    exec.mockClear();
+    setup(options);
   });
 
   describe("sbt client", () => {
@@ -91,6 +90,129 @@ describe("sbt Plugin", () => {
       await expect(sbtGetVersion()).rejects.toThrowError(
         `Failed to read version from sbt: `,
       );
+    });
+  });
+
+  describe("version hook", () => {
+    test("should set version in sbt", async () => {
+      exec.mockReturnValue("");
+
+      await hooks.version.promise({
+        bump: Auto.SEMVER.minor,
+      });
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(exec).lastCalledWith("sbt", [
+        "--client",
+        'set every version := \\"0.1.0\\"',
+      ]);
+    });
+  });
+
+  describe("publish hook", () => {
+    test("should call sbt publish", async () => {
+      exec.mockReturnValue("");
+
+      await hooks.publish.promise({
+        bump: Auto.SEMVER.minor,
+      });
+
+      expect(exec).toHaveBeenCalledWith("sbt", [
+        "--client",
+        "publish",
+      ]);
+    });
+
+    test("should call sbt publish with custom command", async () => {
+      setup({
+        publishCommand: "+publishLocal",
+      });
+      exec.mockReturnValue("");
+
+      await hooks.publish.promise({
+        bump: Auto.SEMVER.minor,
+      });
+
+      expect(exec).toHaveBeenCalledWith("sbt", [
+        "--client",
+        "+publishLocal",
+      ]);
+    });
+  });
+
+  describe("canary hook", () => {
+    test("should only read version from sbt on dry run", async () => {
+      exec
+        .mockReturnValueOnce(rawAggregationOutput)
+        .mockReturnValueOnce(rawOutput);
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.minor,
+        canaryIdentifier: "-canary.42.1",
+        dryRun: true,
+      });
+
+      expect(exec).toHaveBeenCalledTimes(2); // 2 calls in sbtGetVersion
+    });
+
+    test("should return version from sbt as canary", async () => {
+      exec.mockReturnValue(rawOutput);
+
+      const result = await hooks.canary.promise({
+        bump: Auto.SEMVER.minor,
+        canaryIdentifier: "-canary.42.1",
+      });
+
+      expect(exec).not.toHaveBeenCalledWith("sbt", [
+        "--client",
+        'set every version := \\"0.1.0\\"',
+      ]);
+
+      expect(result).toMatchObject({
+        newVersion: "1.2.3",
+        details: [
+          "```",
+          cleanedOutput,
+          "```",
+        ].join("\n"),
+      });
+    });
+
+    test("should construct canary version when configured", async () => {
+      setup({
+        setCanaryVersion: true,
+      });
+      exec.mockReturnValue(rawOutput);
+
+      const result = await hooks.canary.promise({
+        bump: Auto.SEMVER.minor,
+        canaryIdentifier: "-canary.42.1",
+      });
+
+      const newVersion = "0.0.0-canary.42.1-SNAPSHOT";
+
+      expect(exec).toHaveBeenCalledWith("sbt", [
+        "--client",
+        `set every version := \\"${newVersion}\\"`,
+      ]);
+
+      expect(result).toMatchObject({ newVersion });
+    });
+
+    test("should call sbt publish with custom command", async () => {
+      setup({
+        publishCommand: "+publishLocal",
+      });
+      exec.mockReturnValue(rawOutput);
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.minor,
+        canaryIdentifier: "-canary.42.1",
+      });
+
+      expect(exec).toHaveBeenCalledWith("sbt", [
+        "--client",
+        "+publishLocal",
+      ]);
     });
   });
 });
