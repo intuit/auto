@@ -137,9 +137,7 @@ export default class SbtPlugin implements IPlugin {
           `"Update version to ${prefixedTag}"`,
         ]);
 
-        if (this.options.manageVersion) {
-          await sbtSetVersion(newTag);
-        }
+        await sbtSetVersion(newTag);
       },
     );
 
