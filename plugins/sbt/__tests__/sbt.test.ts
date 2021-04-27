@@ -1,12 +1,7 @@
 import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
-import SbtPlugin, {
-  ISbtPluginOptions,
-  sbtClient,
-  sbtGetVersion,
-  sbtSetVersion,
-} from "../src";
+import SbtPlugin, { ISbtPluginOptions, sbtClient, sbtGetVersion } from "../src";
 
 const exec = jest.fn();
 
