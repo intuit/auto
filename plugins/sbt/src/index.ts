@@ -17,14 +17,14 @@ const pluginOptions = t.partial({
 export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /** Calls sbt in the client and returns cleaned up logs */
-async function sbtClient(input: string): Promise<string> {
+export async function sbtClient(input: string): Promise<string> {
   const output = await execPromise("sbt", ["--client", input]);
   const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
   return cleanOutput;
 }
 
 /** Read version from sbt */
-async function sbtGetVersion(): Promise<string> {
+export async function sbtGetVersion(): Promise<string> {
   // in multi-module projects, we want to get only ThisBuild/version
   await sbtClient("set version/aggregate := false");
   const output = await sbtClient("print version");
@@ -37,12 +37,12 @@ async function sbtGetVersion(): Promise<string> {
 }
 
 /** Set version in sbt to the given value */
-async function sbtSetVersion(version: string): Promise<string> {
+export async function sbtSetVersion(version: string): Promise<string> {
   return sbtClient(`set every version := \\"${version}\\"`);
 }
 
 /** Run sbt publish */
-async function sbtPublish(command?: string): Promise<string> {
+export async function sbtPublish(command?: string): Promise<string> {
   return sbtClient(command || "publish");
 }
 
