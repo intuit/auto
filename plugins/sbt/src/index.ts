@@ -42,8 +42,8 @@ export default class SbtPlugin implements IPlugin {
     }
 
     /** Calls sbt in the client and returns cleaned up logs */
-    async function sbtClient(...args: string[]) {
-      const output = await execPromise("sbt", ["--client", ...args]);
+    async function sbtClient(input: string) {
+      const output = await execPromise("sbt", ["--client", input]);
       const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
       return cleanOutput;
     }
