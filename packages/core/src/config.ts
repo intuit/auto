@@ -38,11 +38,11 @@ export function normalizeLabel(
  */
 export function normalizeLabels(config: ConfigObject): ILabelDefinition[] {
   if (config.labels) {
-    const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
-
     if (config.noDefaultLabels) {
-      return userLabels;
+      return config.labels as ILabelDefinition[];
     }
+
+    const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
 
     const baseLabels = defaultLabels.filter(
       (d) =>
