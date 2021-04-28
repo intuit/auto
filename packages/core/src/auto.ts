@@ -1245,7 +1245,7 @@ export default class Auto {
         bump = SEMVER.patch;
       } else {
         this.logger.log.info(
-          "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
+          "Skipping canary release due to PR specifying no release. Use `auto canary --force` to override this setting"
         );
         return;
       }
@@ -1297,7 +1297,7 @@ export default class Auto {
         : `<code>${newVersion}</code>`
     );
 
-    if (options.message !== "false" && pr) {
+    if (!options.dryRun && options.message !== "false" && pr) {
       const prNumber = Number(pr);
       const message =
         typeof result === "string"
@@ -1333,15 +1333,18 @@ export default class Auto {
       }
     }
 
+    const verb = options.dryRun ? "Would have published" : "Published"
     this.logger.log.success(
-      `Published canary version${newVersion ? `: ${newVersion}` : ""}`
+      `${verb} canary version${newVersion ? `: ${newVersion}` : ""}`
     );
 
     if (args.quiet) {
       console.log(newVersion);
     }
 
-    await gitReset();
+    if (!options.dryRun) {
+      await gitReset();
+    }
 
     return { newVersion, commitsInRelease, context: "canary" };
   }
