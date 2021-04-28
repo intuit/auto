@@ -1,3 +1,21 @@
+# v10.25.2 (Tue Apr 27 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Alexey Alekhin ([@laughedelic](https://github.com/laughedelic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- canary shouldn't make changes on dry run [#1969](https://github.com/intuit/auto/pull/1969) ([@laughedelic](https://github.com/laughedelic))
+- export CLI API [#1967](https://github.com/intuit/auto/pull/1967) ([@laughedelic](https://github.com/laughedelic))
+- re-export parse-args exports and execute function ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
 # v10.25.1 (Thu Apr 15 2021)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,31 @@
+# v10.25.2 (Tue Apr 27 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+:heart: John T. Wodder II ([@jwodder](https://github.com/jwodder))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - canary shouldn't make changes on dry run [#1969](https://github.com/intuit/auto/pull/1969) ([@laughedelic](https://github.com/laughedelic))
+- `auto`
+  - export CLI API [#1967](https://github.com/intuit/auto/pull/1967) ([@laughedelic](https://github.com/laughedelic))
+
+#### 📝 Documentation
+
+- Update docs for "afterAddToChangelog" → "afterChangelog" rename [#1951](https://github.com/intuit/auto/pull/1951) ([@jwodder](https://github.com/jwodder))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- John T. Wodder II ([@jwodder](https://github.com/jwodder))
+
+---
+
 # v10.25.1 (Thu Apr 15 2021)
 
 :tada: This release contains work from a new contributor! :tada:

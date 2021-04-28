@@ -1,3 +1,20 @@
+# v10.25.2 (Tue Apr 27 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Alexey Alekhin ([@laughedelic](https://github.com/laughedelic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- canary shouldn't make changes on dry run [#1969](https://github.com/intuit/auto/pull/1969) ([@laughedelic](https://github.com/laughedelic))
+- canary shouldn't create comment or do git stuff on dry run ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
 # v10.24.1 (Mon Mar 29 2021)
 
 #### 🐛 Bug Fix
