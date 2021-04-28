@@ -43,7 +43,6 @@ export function normalizeLabels(config: ConfigObject): ILabelDefinition[] {
     }
 
     const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
-
     const baseLabels = defaultLabels.filter(
       (d) =>
         !userLabels.some(
