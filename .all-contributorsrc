@@ -531,6 +531,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "jwodder",
+      "name": "John T. Wodder II",
+      "avatar_url": "https://avatars.githubusercontent.com/u/98207?v=4",
+      "profile": "https://github.com/jwodder",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
