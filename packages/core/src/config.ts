@@ -36,8 +36,12 @@ export function normalizeLabel(
  * Go through all the labels in a config and make them
  * follow the same format.
  */
-export function normalizeLabels(config: ConfigObject) {
+export function normalizeLabels(config: ConfigObject): ILabelDefinition[] {
   if (config.labels) {
+    if (config.noDefaultLabels) {
+      return config.labels as ILabelDefinition[];
+    }
+
     const userLabels: ILabelDefinition[] = config.labels.map(normalizeLabel);
     const baseLabels = defaultLabels.filter(
       (d) =>

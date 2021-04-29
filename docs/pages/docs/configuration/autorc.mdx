@@ -244,6 +244,19 @@ To customize your project's labels use the `labels` section in your `.autorc`.
 
 <DefaultLabelRenderer />
 
+#### Overriding default Labels
+
+By default Auto will add the labels you configured to the list of default labels. If you want to create only the labels you configured and ignore defaults, use `noDefaultLabels` option:
+
+```json
+{
+  "noDefaultLabels": true,
+  "labels": [
+    // custom labels
+  ]
+}
+```
+
 #### Label Customization
 
 You can customize everything about a label
