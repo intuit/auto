@@ -1,6 +1,6 @@
 # sbt plugin
 
-Publish Scala projects with sbt
+Publish Scala projects with [sbt](https://www.scala-sbt.org)
 
 > :warning: only sbt 1.4+ is supported at the moment because this plugin uses `sbt --client` functionality
 
