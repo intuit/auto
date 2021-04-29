@@ -56,6 +56,8 @@ export const globalOptions = t.partial({
   extends: t.string,
   /** Labels that power auto */
   labels: t.array(labelDefinition),
+  /** Don't add default labels */
+  noDefaultLabels: t.boolean,
   /** Branches to create pre-releases from */
   prereleaseBranches: t.array(t.string),
   /** Configured auto plugins */
