@@ -1,3 +1,16 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
 # v10.25.2 (Tue Apr 27 2021)
 
 :tada: This release contains work from new contributors! :tada:

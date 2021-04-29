@@ -1,3 +1,25 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Alexey Alekhin ([@laughedelic](https://github.com/laughedelic)), for all your work!
+
+#### 🚀 Enhancement
+
+- add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### 🐛 Bug Fix
+
+- unnecessary change ([@laughedelic](https://github.com/laughedelic))
+- don't normalize labels with noDefaultLabels flag ([@laughedelic](https://github.com/laughedelic))
+- Add noDefaultLabels config flag ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
 # v10.25.2 (Tue Apr 27 2021)
 
 :tada: This release contains work from a new contributor! :tada:
