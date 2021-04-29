@@ -3,6 +3,7 @@ export default [
   "greenkeeper[bot]",
   "dependabot[bot]",
   "fossabot",
+  "mergify[bot]",
   "renovate",
   "renovate-bot",
   "renovate[bot]",
