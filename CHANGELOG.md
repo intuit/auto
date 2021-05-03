@@ -1,3 +1,16 @@
+# v10.26.1 (Mon May 03 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - add noDefaultLabels config option to the globalOptions type [#1971](https://github.com/intuit/auto/pull/1971) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
 # v10.26.0 (Wed Apr 28 2021)
 
 #### 🚀 Enhancement
