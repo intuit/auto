@@ -51,7 +51,7 @@ export default class GitTagPlugin implements IPlugin {
 
         const prefixedTag = auto.prefixRelease(newTag);
 
-        if (dryRun && prefixedTag) {
+        if (dryRun) {
           if (quiet) {
             console.log(prefixedTag);
           } else {
