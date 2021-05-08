@@ -49,6 +49,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -73,6 +74,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -97,6 +99,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -121,6 +124,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -137,6 +141,38 @@ describe("parseCommit", () => {
     });
   });
 
+  test("should apply a PRs greatest semver label", async () => {
+    const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+    const autoHooks = makeHooks();
+    conventionalCommitsPlugin.apply({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      semVerLabels: versionLabels,
+      logger: dummyLog(),
+      git: {
+        getCommitsForPR: () =>
+          Promise.resolve([
+            { sha: "8", commit: { message: "docs: child commit" } },
+            { sha: "1", commit: { message: "chore: child commit" } },
+            { sha: "2", commit: { message: "feat!: another commit" } },
+          ]),
+      } as any,
+    } as Auto);
+
+    const logParseHooks = makeLogParseHooks();
+    autoHooks.onCreateLogParse.call({
+      hooks: logParseHooks,
+    } as LogParse);
+
+    const commit = makeCommitFromMsg("fix lint", {pullRequest: {number: 123}});
+    expect(
+      await logParseHooks.parseCommit.promise({ ...commit })
+    ).toStrictEqual({
+      ...commit,
+      labels: ["major"],
+    });
+  });
+
   test("should skip when not a fix/feat/breaking change commit", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
@@ -145,6 +181,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -171,6 +208,7 @@ describe("parseCommit", () => {
       labels: defaultLabels,
       semVerLabels: versionLabels,
       logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
     } as Auto);
 
     const logParseHooks = makeLogParseHooks();
@@ -204,7 +242,8 @@ describe("normalizeCommit", () => {
       getPr: jest.fn(),
       getCommitsForPR: () =>
         Promise.resolve([
-          { sha: "1", commit: { message: "fix: child commit" } },
+          { sha: "1", commit: { message: "chore: child commit" } },
+          { sha: "2", commit: { message: "chore: another commit" } },
         ]),
     } as unknown) as Git;
     conventionalCommitsPlugin.apply({

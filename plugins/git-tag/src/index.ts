@@ -44,22 +44,22 @@ export default class GitTagPlugin implements IPlugin {
         const lastTag = await getTag();
         const newTag = inc(lastTag, bump as ReleaseType);
 
-        if (dryRun && newTag) {
-          if (quiet) {
-            console.log(newTag);
-          } else {
-            auto.logger.log.info(`Would have published: ${newTag}`);
-          }
-
-          return;
-        }
-
         if (!newTag) {
           auto.logger.log.info("No release found, doing nothing");
           return;
         }
 
         const prefixedTag = auto.prefixRelease(newTag);
+
+        if (dryRun) {
+          if (quiet) {
+            console.log(prefixedTag);
+          } else {
+            auto.logger.log.info(`Would have published: ${prefixedTag}`);
+          }
+
+          return;
+        }
 
         auto.logger.log.info(`Tagging new tag: ${lastTag} => ${prefixedTag}`);
         await execPromise("git", [

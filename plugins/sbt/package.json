@@ -1,12 +1,12 @@
 {
-  "name": "@auto-it/omit-release-notes",
+  "name": "@auto-it/sbt",
   "version": "10.27.0",
   "main": "dist/index.js",
-  "description": "Omit release notes plugin for auto",
+  "description": "Publish Scala projects with sbt",
   "license": "MIT",
   "author": {
-    "name": "Andrew Lisowski",
-    "email": "lisowski54@gmail.com"
+    "name": "Alexey Alekhin",
+    "email": "laughedelic@gmail.com"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -28,8 +28,8 @@
     "automated",
     "continuos integration",
     "changelog",
-    "filter",
-    "omit"
+    "scala",
+    "sbt"
   ],
   "scripts": {
     "build": "tsc -b",
@@ -41,6 +41,8 @@
     "@auto-it/core": "link:../../packages/core",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.1.0"
+    "semver": "^7.0.0",
+    "strip-ansi": "^6.0.0",
+    "tslib": "1.10.0"
   }
 }

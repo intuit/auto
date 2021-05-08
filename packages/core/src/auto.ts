@@ -193,6 +193,8 @@ export interface IAutoHooks {
       DryRunOption & {
         /** Commit to start calculating the version from */
         from: string;
+        /** Commit to end calculating the version from */
+        to: string;
         /** The version being released */
         newVersion: string;
         /** Whether the release being made is a prerelease */
@@ -551,7 +553,8 @@ export default class Auto {
         const release = await this.git!.publish(
           options.fullReleaseNotes,
           options.newVersion,
-          options.isPrerelease
+          options.isPrerelease,
+          options.to
         );
 
         this.logger.log.info(release.data.html_url);
@@ -1242,7 +1245,7 @@ export default class Auto {
         bump = SEMVER.patch;
       } else {
         this.logger.log.info(
-          "Skipping canary release due to PR being specifying no release. Use `auto canary --force` to override this setting"
+          "Skipping canary release due to PR specifying no release. Use `auto canary --force` to override this setting"
         );
         return;
       }
@@ -1294,7 +1297,7 @@ export default class Auto {
         : `<code>${newVersion}</code>`
     );
 
-    if (options.message !== "false" && pr) {
+    if (!options.dryRun && options.message !== "false" && pr) {
       const prNumber = Number(pr);
       const message =
         typeof result === "string"
@@ -1330,15 +1333,18 @@ export default class Auto {
       }
     }
 
+    const verb = options.dryRun ? "Would have published" : "Published"
     this.logger.log.success(
-      `Published canary version${newVersion ? `: ${newVersion}` : ""}`
+      `${verb} canary version${newVersion ? `: ${newVersion}` : ""}`
     );
 
     if (args.quiet) {
       console.log(newVersion);
     }
 
-    await gitReset();
+    if (!options.dryRun) {
+      await gitReset();
+    }
 
     return { newVersion, commitsInRelease, context: "canary" };
   }
@@ -1472,6 +1478,7 @@ export default class Auto {
     const release = await this.hooks.makeRelease.promise({
       commits,
       from: lastTag,
+      to: await this.git.getSha(),
       isPrerelease: true,
       newVersion,
       fullReleaseNotes: releaseNotes,
@@ -1983,6 +1990,7 @@ export default class Auto {
     const release = await this.hooks.makeRelease.promise({
       dryRun,
       from: lastRelease,
+      to: to || (await this.git.getSha()),
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,

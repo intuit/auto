@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "10.22.1",
+  "version": "10.27.0",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "license": "MIT",
@@ -65,6 +65,7 @@
     "parse-author": "^2.0.0",
     "parse-github-url": "1.0.2",
     "pretty-ms": "^7.0.0",
+    "requireg": "^0.2.2",
     "semver": "^7.0.0",
     "signale": "^1.4.0",
     "tapable": "^2.0.0-beta.2",

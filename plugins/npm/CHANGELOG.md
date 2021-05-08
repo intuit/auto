@@ -1,3 +1,41 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.24.3 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- Prefer npx over yarn for running lerna commands [#1936](https://github.com/intuit/auto/pull/1936) ([@zephraph](https://github.com/zephraph))
+- Fix tests referencing yarn ([@zephraph](https://github.com/zephraph))
+- Prefer npx over yarn for running lerna commands ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix

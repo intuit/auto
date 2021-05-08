@@ -71,7 +71,7 @@ _Other examples:_
 - In Core: Create major version branches when `major` happens
 - [npm](../generated/npm) - Create sub-package changelogs
 
-## afterAddToChangelog
+## afterChangelog
 
 Ran after the `changelog` command adds the new release notes to `CHANGELOG.md`.
 Useful for getting extra commits into a release before publishing.
@@ -83,7 +83,7 @@ Useful for getting extra commits into a release before publishing.
 - `releaseNotes` - generated release notes for the release
 
 ```ts
-auto.hooks.afterAddToChangelog.tap(
+auto.hooks.afterChangelog.tap(
   "MyPlugin",
   async ({ currentVersion, commits, releaseNotes, lastRelease }) => {
     // do something

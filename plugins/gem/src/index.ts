@@ -16,6 +16,9 @@ import envCi from "env-ci";
 import { readFile, writeFile, mkdir } from "./utils";
 
 const VERSION_REGEX = /\d+\.\d+\.\d+/;
+const GEM_PKG_BUILD_REGEX = /(pkg.*)[^.]/;
+const GEM_SPEC_NAME_REGEX = /name\s*=\s*["']([\S ]+)["']/;
+
 const { isCi } = envCi();
 
 const pluginOptions = t.partial({
@@ -96,8 +99,7 @@ export default class GemPlugin implements IPlugin {
     auto.hooks.version.tapPromise(
       this.name,
       async ({ bump, dryRun, quiet }) => {
-        const [version, versionFile] = await this.getVersion(auto);
-        const newTag = inc(version, bump as ReleaseType);
+        const [version, newTag, versionFile] = await this.getNewVersion(auto, bump as ReleaseType)
 
         if (dryRun && newTag) {
           if (quiet) {
@@ -109,47 +111,62 @@ export default class GemPlugin implements IPlugin {
           return;
         }
 
-        if (!newTag) {
-          throw new Error(
-            `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
-          );
-        }
-
-        const content = await readFile(versionFile, { encoding: "utf8" });
-        await writeFile(versionFile, content.replace(version, newTag));
+        await this.writeNewVersion(version, newTag, versionFile)
       }
     );
 
-    auto.hooks.publish.tapPromise(this.name, async () => {
-      if (
-        isCi &&
-        !fs.existsSync("~/.gem/credentials") &&
-        process.env.RUBYGEMS_API_KEY
-      ) {
-        const home = process.env.HOME || "~";
-        const gemDir = path.join(home, ".gem");
+    auto.hooks.canary.tapPromise(
+      this.name, 
+      async ({ bump, canaryIdentifier, dryRun, quiet }) => {
+      await this.writeCredentials(auto)
 
-        if (!fs.existsSync(gemDir)) {
-          auto.logger.verbose.info(`Creating ${gemDir} directory`);
-          await mkdir(gemDir);
+      const [version, newTag, versionFile] = await this.getNewVersion(auto, bump as ReleaseType)
+
+      const canaryVersion = `${newTag}.pre${canaryIdentifier.replace('-','.')}`
+      
+      if (dryRun) {
+        if (quiet) {
+          console.log(canaryVersion);
+        } else {
+          auto.logger.log.info(`Would have published: ${canaryVersion}`);
         }
 
-        const credentials = path.join(gemDir, "credentials");
-
-        await writeFile(
-          credentials,
-          endent`
-            ---
-            :rubygems_api_key: ${process.env.RUBYGEMS_API_KEY}
-
-          `
-        );
-        auto.logger.verbose.success(`Wrote ${credentials}`);
-
-        execSync(`chmod 0600 ${credentials}`, {
-          stdio: "inherit",
-        });
+        return;
       }
+
+      await this.writeNewVersion(version, canaryVersion, versionFile)
+
+      /** Commit the new version. we wait because "rake build" changes the lock file */
+      /** we don't push that version, is just to clean the stage  */
+      const commitVersion = async () =>
+        execPromise("git", [
+          "commit",
+          "-am",
+          `"update version: ${canaryVersion} [skip ci]"`,
+          "--no-verify",
+        ]);
+
+ 
+      auto.logger.verbose.info("Running default release command");
+      const buildResult = await execPromise("bundle", ["exec", "rake", "build"]);
+      const gemPath = GEM_PKG_BUILD_REGEX.exec(buildResult)?.[0]
+      await commitVersion();
+      // will push the canary gem
+      await execPromise("gem", ["push", `${gemPath}`]);
+
+      auto.logger.verbose.info("Successfully published canary version");
+
+      const name = await this.loadGemName();
+      
+      return {
+        newVersion: canaryVersion,
+        details: this.makeInstallDetails(name, canaryVersion),
+      };
+
+    });
+
+    auto.hooks.publish.tapPromise(this.name, async () => {
+      await this.writeCredentials(auto)
 
       const [version] = await this.getVersion(auto);
 
@@ -174,6 +191,80 @@ export default class GemPlugin implements IPlugin {
         await execPromise("bundle", ["exec", "rake", "release"]);
       }
     });
+  }
+
+  /** create the installation details */
+  private makeInstallDetails(name: string | undefined, canaryVersion: string) {
+  return [
+    ":sparkles: Test out this PR via:\n",
+    "```bash",
+    `gem ${name}, ${canaryVersion}`,
+    "or",
+    `gem install ${name} -v ${canaryVersion}`,
+    "```",
+  ].join("\n");
+  }
+
+  /** loads the gem name from .gemspec */
+  private async loadGemName() {
+    const gemspec = glob.sync("*.gemspec")[0];
+    const content = await readFile(gemspec, { encoding: "utf8" });
+    
+    return content.match(GEM_SPEC_NAME_REGEX)?.[1];
+  }
+
+  /** write the credentials file when necessary */
+  private async writeCredentials(auto: Auto) {
+    if (
+      isCi &&
+      !fs.existsSync("~/.gem/credentials") &&
+      process.env.RUBYGEMS_API_KEY
+    ) {
+      const home = process.env.HOME || "~";
+      const gemDir = path.join(home, ".gem");
+
+      if (!fs.existsSync(gemDir)) {
+        auto.logger.verbose.info(`Creating ${gemDir} directory`);
+        await mkdir(gemDir);
+      }
+
+      const credentials = path.join(gemDir, "credentials");
+
+      await writeFile(
+        credentials,
+        endent`
+          ---
+          :rubygems_api_key: ${process.env.RUBYGEMS_API_KEY}
+
+        `
+      );
+      auto.logger.verbose.success(`Wrote ${credentials}`);
+
+      execSync(`chmod 0600 ${credentials}`, {
+        stdio: "inherit",
+      });
+    }
+  }
+
+  /** resolves the version to a new one */
+  private async getNewVersion(auto: Auto, bump: ReleaseType) {
+    const [version, versionFile] = await this.getVersion(auto);
+      const newTag = inc(version, bump);
+
+      if (!newTag) {
+        throw new Error(
+          `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
+        );
+      }
+
+      return [version, newTag, versionFile];
+  }
+
+  /** write the version in the file */
+  private async writeNewVersion(version: string, newVersion: string, versionFile: string){          
+    const content = await readFile(versionFile, { encoding: "utf8" });
+    await writeFile(versionFile, content.replace(version, newVersion));
+
   }
 
   /** Get the current version of the gem and where it was found */

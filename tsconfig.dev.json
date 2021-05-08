@@ -88,6 +88,9 @@
     },
     {
       "path": "plugins/s3"
+    },
+    {
+      "path": "plugins/sbt"
     }
   ]
 }

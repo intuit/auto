@@ -12,6 +12,7 @@ import {
   getReleaseType,
   getHigherSemverTag,
 } from "@auto-it/core";
+import endent from "endent";
 
 /** Resolve a conventional commit preset */
 function presetResolver(presetPackage: CoreOptions.Config) {
@@ -201,19 +202,12 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
     auto.hooks.onCreateLogParse.tap(this.name, (logParse) => {
       logParse.hooks.parseCommit.tapPromise(this.name, async (commit) => {
-        if (!auto.semVerLabels) {
+        if (!auto.semVerLabels || !auto.git) {
           return commit;
         }
 
         try {
           const message = `${commit.subject}\n\n${commit.rawBody}`;
-          const label = await getBump(message);
-
-          if (!label) {
-            return commit;
-          }
-
-          const incrementLabel = auto.semVerLabels.get(label);
           const allSemVerLabels = [
             auto.semVerLabels.get(SEMVER.major),
             auto.semVerLabels.get(SEMVER.minor),
@@ -222,13 +216,50 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             (acc, labels) => (labels ? [...acc, ...labels] : acc),
             []
           );
+          const prHasSemverLabel = commit.labels.some((l) =>
+            allSemVerLabels.includes(l)
+          );
+          let bump = await getBump(message);
 
+          // Take into account all conventional commit message in each commit for a PR
           if (
-            incrementLabel &&
-            !commit.labels.some((l) => allSemVerLabels.includes(l))
+            commit.pullRequest &&
+            // If the PR already has a semver label it takes precedence over conventional
+            // commit messages
+            !prHasSemverLabel
           ) {
+            const prCommits = await auto.git.getCommitsForPR(
+              commit.pullRequest.number
+            );
+            const prBumps = (
+              await Promise.all(prCommits.map((c) => getBump(c.commit.message)))
+            ).filter((bump): bump is
+              | SEMVER.major
+              | SEMVER.minor
+              | SEMVER.patch => Boolean(bump && bump !== "skip"));
+
+            if (prBumps.includes(SEMVER.major)) {
+              bump = SEMVER.major;
+            } else if (prBumps.includes(SEMVER.minor)) {
+              bump = SEMVER.minor;
+            } else if (prBumps.includes(SEMVER.patch)) {
+              bump = SEMVER.patch;
+            }
+          }
+
+          if (!bump) {
+            return commit;
+          }
+
+          const incrementLabel = auto.semVerLabels.get(bump);
+
+          if (incrementLabel && !prHasSemverLabel) {
             auto.logger.verbose.log(
-              `Found "${label}" from conventional commit message: ${message}`
+              endent`
+                Found "${bump}" from conventional commit message: ${message}
+              
+                Applying "${incrementLabel}"
+              `
             );
 
             commit.labels = [...commit.labels, incrementLabel[0]];

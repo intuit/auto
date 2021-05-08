@@ -1,3 +1,114 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.25.2 (Tue Apr 27 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Alexey Alekhin ([@laughedelic](https://github.com/laughedelic)), for all your work!
+
+#### 🐛 Bug Fix
+
+- canary shouldn't make changes on dry run [#1969](https://github.com/intuit/auto/pull/1969) ([@laughedelic](https://github.com/laughedelic))
+- export CLI API [#1967](https://github.com/intuit/auto/pull/1967) ([@laughedelic](https://github.com/laughedelic))
+- re-export parse-args exports and execute function ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.25.1 (Thu Apr 15 2021)
+
+#### 🐛 Bug Fix
+
+- fix(types): point to dist/index.d.ts instead of non-existing file [#1944](https://github.com/intuit/auto/pull/1944) ([@hasparus](https://github.com/hasparus))
+- fix(types): point to dist/index.d.ts instead of non-existing file ([@hasparus](https://github.com/hasparus))
+
+#### Authors: 1
+
+- Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus))
+
+---
+
+# v10.24.3 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- Prefer npx over yarn for running lerna commands [#1936](https://github.com/intuit/auto/pull/1936) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.24.0 (Mon Mar 29 2021)
+
+### Release Notes
+
+#### Release Command: Tag creation fallback. ([#1929](https://github.com/intuit/auto/pull/1929))
+
+When creating a release for a tag that isn't on the remote, fallback to creating a tag pointing at the --to option.
+
+## Why
+
+closes #1917
+
+Todo:
+
+- [x] Add tests
+- [x] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [ ] `patch`
+- [x] `minor`
+- [ ] `major`
+
+---
+
+#### 🚀 Enhancement
+
+- Release Command: Tag creation fallback. [#1929](https://github.com/intuit/auto/pull/1929) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- improve docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Release Command: When creating a release for a tag that isn't on remote, fallback to creating a tag pointing at the --to option ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Improve release command docs ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix

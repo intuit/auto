@@ -65,7 +65,8 @@
       "contributions": [
         "bug",
         "code",
-        "doc"
+        "doc",
+        "test"
       ]
     },
     {
@@ -498,6 +499,57 @@
         "doc",
         "test",
         "code"
+      ]
+    },
+    {
+      "login": "kharrop",
+      "name": "Kelly Harrop",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24794756?v=4",
+      "profile": "https://github.com/kharrop",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "angeliski",
+      "name": "Rogerio Angeliski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1574240?v=4",
+      "profile": "https://github.com/angeliski",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "hasparus",
+      "name": "Piotr Monwid-Olechnowicz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15332326?v=4",
+      "profile": "https://haspar.us/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "jwodder",
+      "name": "John T. Wodder II",
+      "avatar_url": "https://avatars.githubusercontent.com/u/98207?v=4",
+      "profile": "https://github.com/jwodder",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "laughedelic",
+      "name": "Alexey Alekhin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/766656?v=4",
+      "profile": "https://github.com/laughedelic",
+      "contributions": [
+        "doc",
+        "code",
+        "test"
       ]
     }
   ],

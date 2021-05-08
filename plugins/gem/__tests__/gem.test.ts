@@ -2,6 +2,7 @@ import glob from "fast-glob";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { execSync } from "child_process";
+import { when } from 'jest-when';
 
 import * as utils from "../src/utils";
 import Gem from "../src";
@@ -265,6 +266,10 @@ describe("Gem Plugin", () => {
   });
 
   describe("publish", () => {
+    beforeEach(() => {
+      execSpy.mockClear();
+    });
+
     test("uses bundler + rake as default publishing method", async () => {
       globSpy.mockReturnValueOnce(["test.gemspec"]);
       readFile.mockReturnValue(endent`
@@ -302,5 +307,72 @@ describe("Gem Plugin", () => {
         stdio: "inherit",
       });
     });
+  });
+
+  describe("canary", () => {
+    beforeEach(() => {
+      execSpy.mockClear();
+    });
+    test("uses (bundler + rake + gem push) as default publishing method", async () => {
+      globSpy.mockReturnValue(["test.gemspec"]);
+      readFile.mockReturnValue(endent`
+        Gem::Specification.new do |spec|
+          spec.name          = "test"
+          spec.version       = "0.1.0"
+        end
+      `);
+
+      const canaryIdentifier = '-canary-x'
+      when(execSpy).calledWith("bundle", ["exec", "rake", "build"])
+      .mockReturnValue(`test 0.2.0.pre${canaryIdentifier} built to pkg/test-0.2.0.pre${canaryIdentifier.replace('-','.')}.gem.`);
+
+      const plugin = new Gem();
+      const hooks = makeHooks();
+
+      plugin.apply({ hooks, logger } as any);
+
+      const result = await hooks.canary
+      .promise({ bump: SEMVER.minor, canaryIdentifier: "-canary-x", dryRun: false, quiet: false });
+
+      expect(result.newVersion).toBe(`0.2.0.pre${canaryIdentifier.replace('-','.')}`)
+      expect(result.details).toBe(endent`
+       :sparkles: Test out this PR via:
+      
+       \`\`\`bash
+       gem test, 0.2.0.pre${canaryIdentifier.replace('-','.')}
+       or
+       gem install test -v 0.2.0.pre${canaryIdentifier.replace('-','.')}
+       \`\`\`
+      `)
+
+      expect(execSpy).toHaveBeenCalledWith("bundle", ["exec", "rake", "build"]);
+      expect(execSpy).toHaveBeenCalledWith("gem", ["push", "pkg/test-0.2.0.pre.canary-x.gem"]);
+    });
+
+    test("dry-run not release", async () => {
+      globSpy.mockReturnValue(["test.gemspec"]);
+      readFile.mockReturnValue(endent`
+        Gem::Specification.new do |spec|
+          spec.name          = "test"
+          spec.version       = "0.1.0"
+        end
+      `);
+
+      const canaryIdentifier = '-canary-x'
+      when(execSpy).calledWith("bundle", ["exec", "rake", "build"])
+      .mockReturnValue(`test 0.2.0.pre${canaryIdentifier} built to pkg/test-0.2.0.pre${canaryIdentifier.replace('-','.')}.gem.`);
+
+      const plugin = new Gem();
+      const hooks = makeHooks();
+
+      plugin.apply({ hooks, logger } as any);
+
+      await hooks.canary
+      .promise({ bump: SEMVER.minor, canaryIdentifier: "-canary-x", dryRun: true, quiet: false });
+
+      expect(execSpy).not.toHaveBeenCalledWith("bundle", ["exec", "rake", "build"]);
+      expect(execSpy).not.toHaveBeenCalledWith("gem", ["push", "pkg/test-0.2.0.pre.canary-x.gem"]);
+    });
+
   });
 });

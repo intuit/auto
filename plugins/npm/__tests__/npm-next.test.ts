@@ -513,7 +513,7 @@ describe("next", () => {
         );
       }
 
-      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+      if (command === "npx" && args[0] === "lerna" && args[1] === "changed") {
         return Promise.resolve("@foo/foo\n@foo/foo-bar");
       }
 
@@ -596,7 +596,7 @@ describe("next", () => {
         );
       }
 
-      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+      if (command === "npx" && args[0] === "lerna" && args[1] === "changed") {
         return Promise.resolve("@foo/foo\n@foo/foo-bar");
       }
 
@@ -666,7 +666,7 @@ describe("next", () => {
         return Promise.resolve("@foo/foo@1.0.0-next.0");
       }
 
-      if (command === "yarn" && args[0] === "lerna" && args[1] === "changed") {
+      if (command === "npx" && args[0] === "lerna" && args[1] === "changed") {
         return Promise.resolve("@foo/foo (PRIVATE)");
       }
 

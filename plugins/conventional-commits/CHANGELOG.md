@@ -1,3 +1,43 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.23.0 (Fri Mar 26 2021)
+
+#### 🚀 Enhancement
+
+- Fix conventional commits releaseType calculation to include all conventionally committed commits in PR [#1723](https://github.com/intuit/auto/pull/1723) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- check all commits in PR for highest semver bump ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix

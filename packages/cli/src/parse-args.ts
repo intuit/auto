@@ -467,7 +467,11 @@ export const commands: AutoCommand[] = [
   {
     name: "release",
     group: "Release Commands",
-    description: "Auto-generate a github release",
+    description: endent`
+      Create a GitHub release for a tag. Defaults to last tag in branch.
+      
+      > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
+    `,
     options: [
       dryRun,
       noVersionPrefix,
@@ -485,7 +489,7 @@ export const commands: AutoCommand[] = [
         type: String,
         group: "main",
         description:
-          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD",
+          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD.",
       },
       {
         name: "use-version",
@@ -499,7 +503,12 @@ export const commands: AutoCommand[] = [
     ],
     examples: [
       "{green $} auto release",
-      "{green $} auto release --from v0.20.1 --use-version v0.21.0",
+      {
+        desc:
+          "This command can be used in isolation easily. This example will: tag the release version at 'to' and create a GitHub release changelog over the commits range",
+        example:
+          "{green $} auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
+      },
     ],
   },
   {

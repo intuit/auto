@@ -1,3 +1,49 @@
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.24.2 (Thu Apr 08 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kelly Harrop ([@kharrop](https://github.com/kharrop)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Update index.ts [#1938](https://github.com/intuit/auto/pull/1938) ([@kharrop](https://github.com/kharrop))
+- Update README.md ([@kharrop](https://github.com/kharrop))
+- Update index.ts ([@kharrop](https://github.com/kharrop))
+
+#### 📝 Documentation
+
+- Update README.md [#1937](https://github.com/intuit/auto/pull/1937) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix

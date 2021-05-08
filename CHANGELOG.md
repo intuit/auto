@@ -1,3 +1,210 @@
+# v10.27.0 (Fri May 07 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Spencer Hamm ([@spentacular](https://github.com/spentacular)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/sbt`
+  - add sbt plugin [#1962](https://github.com/intuit/auto/pull/1962) ([@laughedelic](https://github.com/laughedelic))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/git-tag`
+  - rearrange to allow dryrun to leverage prefixed tag [#1976](https://github.com/intuit/auto/pull/1976) (spencer_hamm@intuit.com)
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Spencer Hamm ([@spentacular](https://github.com/spentacular))
+
+---
+
+# v10.26.1 (Mon May 03 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - add noDefaultLabels config option to the globalOptions type [#1971](https://github.com/intuit/auto/pull/1971) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.26.0 (Wed Apr 28 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - add noDefaultLabels config flag [#1966](https://github.com/intuit/auto/pull/1966) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 1
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+---
+
+# v10.25.2 (Tue Apr 27 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+
+:heart: John T. Wodder II ([@jwodder](https://github.com/jwodder))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - canary shouldn't make changes on dry run [#1969](https://github.com/intuit/auto/pull/1969) ([@laughedelic](https://github.com/laughedelic))
+- `auto`
+  - export CLI API [#1967](https://github.com/intuit/auto/pull/1967) ([@laughedelic](https://github.com/laughedelic))
+
+#### 📝 Documentation
+
+- Update docs for "afterAddToChangelog" → "afterChangelog" rename [#1951](https://github.com/intuit/auto/pull/1951) ([@jwodder](https://github.com/jwodder))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- John T. Wodder II ([@jwodder](https://github.com/jwodder))
+
+---
+
+# v10.25.1 (Thu Apr 15 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - fix(types): point to dist/index.d.ts instead of non-existing file [#1944](https://github.com/intuit/auto/pull/1944) ([@hasparus](https://github.com/hasparus))
+
+#### 📝 Documentation
+
+- docs: import INpmConfig from npm package, not from core [#1942](https://github.com/intuit/auto/pull/1942) ([@hasparus](https://github.com/hasparus))
+
+#### Authors: 1
+
+- Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus))
+
+---
+
+# v10.25.0 (Tue Apr 13 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/gem`
+  - feat(gem): add canary hook [#1916](https://github.com/intuit/auto/pull/1916) ([@angeliski](https://github.com/angeliski))
+
+#### Authors: 1
+
+- Rogerio Angeliski ([@angeliski](https://github.com/angeliski))
+
+---
+
+# v10.24.3 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - Prefer npx over yarn for running lerna commands [#1936](https://github.com/intuit/auto/pull/1936) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
+# v10.24.2 (Thu Apr 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - Update index.ts [#1938](https://github.com/intuit/auto/pull/1938) ([@kharrop](https://github.com/kharrop))
+
+#### 📝 Documentation
+
+- `@auto-it/all-contributors`
+  - Update README.md [#1937](https://github.com/intuit/auto/pull/1937) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v10.24.1 (Mon Mar 29 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Enable using globally installed plugins [#1930](https://github.com/intuit/auto/pull/1930) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.24.0 (Mon Mar 29 2021)
+
+### Release Notes
+
+#### Release Command: Tag creation fallback. ([#1929](https://github.com/intuit/auto/pull/1929))
+
+When creating a release for a tag that isn't on the remote, fallback to creating a tag pointing at the --to option.
+
+## Why
+
+closes #1917
+
+Todo:
+
+- [x] Add tests
+- [x] Add docs
+
+## Change Type
+
+Indicate the type of change your pull request is:
+
+- [ ] `documentation`
+- [ ] `patch`
+- [x] `minor`
+- [ ] `major`
+
+---
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - Release Command: Tag creation fallback. [#1929](https://github.com/intuit/auto/pull/1929) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.23.0 (Fri Mar 26 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/conventional-commits`
+  - Fix conventional commits releaseType calculation to include all conventionally committed commits in PR [#1723](https://github.com/intuit/auto/pull/1723) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.22.1 (Tue Mar 23 2021)
 
 #### 🐛 Bug Fix
