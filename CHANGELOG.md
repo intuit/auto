@@ -1,3 +1,26 @@
+# v10.27.0 (Fri May 07 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Spencer Hamm ([@spentacular](https://github.com/spentacular)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/sbt`
+  - add sbt plugin [#1962](https://github.com/intuit/auto/pull/1962) ([@laughedelic](https://github.com/laughedelic))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/git-tag`
+  - rearrange to allow dryrun to leverage prefixed tag [#1976](https://github.com/intuit/auto/pull/1976) (spencer_hamm@intuit.com)
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Spencer Hamm ([@spentacular](https://github.com/spentacular))
+
+---
+
 # v10.26.1 (Mon May 03 2021)
 
 #### 🐛 Bug Fix
