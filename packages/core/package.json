@@ -68,7 +68,7 @@
     "requireg": "^0.2.2",
     "semver": "^7.0.0",
     "signale": "^1.4.0",
-    "tapable": "^2.0.0-beta.2",
+    "tapable": "^2.2.0",
     "terminal-link": "^2.1.1",
     "tinycolor2": "^1.4.1",
     "ts-node": "^9.1.1",

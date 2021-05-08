@@ -20,7 +20,7 @@ export interface IPullRequest {
   /** The base branch the pull request is on */
   base?: string;
   /** The body of the PR (opening comment) */
-  body?: string;
+  body?: string | null;
 }
 
 export interface ICommit {
