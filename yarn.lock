@@ -69,10 +69,10 @@
   integrity sha512-TYiuOxy5Pf9ORn94X/ujl7PY9opIh+l6NzRAV8EBLpIv3IC9gmEoev4wmmyP7Q33J0/nGjqxAaZcq/n2SZrYaQ==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "10.23.0"
+  version "10.25.1"
 
 "@auto-it/core@link:packages/core":
-  version "10.23.0"
+  version "10.25.1"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -102,6 +102,7 @@
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
     pretty-ms "^7.0.0"
+    requireg "^0.2.2"
     semver "^7.0.0"
     signale "^1.4.0"
     tapable "^2.0.0-beta.2"
@@ -114,7 +115,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "10.23.0"
+  version "10.25.1"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -132,13 +133,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "10.23.0"
+  version "10.25.1"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "10.23.0"
+  version "10.25.1"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
