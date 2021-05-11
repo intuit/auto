@@ -1,3 +1,16 @@
+# v10.27.1 (Tue May 11 2021)
+
+#### 🐛 Bug Fix
+
+- Remove `text` from non-app authed slack response [#1947](https://github.com/intuit/auto/pull/1947) ([@adierkens](https://github.com/adierkens))
+- Update index.ts ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v10.26.0 (Wed Apr 28 2021)
 
 #### 🚀 Enhancement
