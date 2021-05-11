@@ -446,7 +446,6 @@ export default class SlackPlugin implements IPlugin {
         body: JSON.stringify({
           ...userPostMessageOptions,
           link_names: true,
-          text: `${header} :tada:`,
           // If not in app auth only one message is constructed
           blocks: messages[0],
         }),
