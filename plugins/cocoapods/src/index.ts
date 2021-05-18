@@ -168,9 +168,8 @@ export default class CocoapodsPlugin implements IPlugin {
     if (typeof this.options.podspecPath === "string") {
       return [this.options.podspecPath];
     }
- 
-      return this.options.podspecPath;
-    
+
+    return this.options.podspecPath;
   }
 
   /** Initialize the plugin with it's options */
@@ -373,7 +372,7 @@ export default class CocoapodsPlugin implements IPlugin {
                 path,
               ])
             ),
-          Promise.resolve()
+          Promise.resolve("")
         );
       }
     });
@@ -409,7 +408,7 @@ export default class CocoapodsPlugin implements IPlugin {
               ...podLogLevel,
             ])
           ),
-        Promise.resolve()
+        Promise.resolve("")
       );
       return;
     }
@@ -463,7 +462,7 @@ export default class CocoapodsPlugin implements IPlugin {
               ...podLogLevel,
             ])
           ),
-        Promise.resolve()
+        Promise.resolve("")
       );
     } catch (error) {
       this.logger?.log.error(
