@@ -226,6 +226,21 @@ describe("Cocoapods Plugin", () => {
       );
     });
   });
+  describe("validateConfig hook", () => {
+    test("should validate options", async () => {
+      expect(
+        ((await hooks.validateConfig.promise("cocoapods", {})) || [])
+      ).toHaveLength(1);
+      expect(
+        ((await hooks.validateConfig.promise("cocoapods", options)) || [])
+          
+      ).toHaveLength(0);
+      expect(
+        ((await hooks.validateConfig.promise("cocoapods", multiOptions)) || [])
+          
+      ).toHaveLength(0);
+    });
+  });
   describe("modifyConfig hook", () => {
     test("should set noVersionPrefix to true", async () => {
       const config = {};
