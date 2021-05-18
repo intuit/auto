@@ -51,6 +51,18 @@ const mockPodspec = (contents: string) => {
   return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
+interface FakePodspec {
+  path: string;
+  contents: string;
+}
+const mockPodspecs = (contents: FakePodspec[]) => {
+  return jest
+    .spyOn(utilities, "getPodspecContents")
+    .mockImplementation((path) => {
+      return contents.find((podspec) => podspec.path === path).contents;
+    });
+};
+
 let exec = jest.fn();
 // @ts-ignore
 jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
@@ -60,6 +72,7 @@ const logger = dummyLog();
 
 describe("Cocoapods Plugin", () => {
   let hooks: Auto.IAutoHooks;
+  let multiHooks: Auto.IAutoHooks;
   const prefixRelease: (a: string) => string = (version: string) => {
     return `v${version}`;
   };
@@ -68,31 +81,42 @@ describe("Cocoapods Plugin", () => {
     podspecPath: "./Test.podspec",
   };
 
+  const multiOptions: ICocoapodsPluginOptions = {
+    podspecPath: ["./Test.podspec", "./Test2.podspec"],
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
     exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
+    const multiPlugin = new CocoapodsPlugin(multiOptions);
     hooks = makeHooks();
-    plugin.apply(({
-      hooks,
-      logger: logger,
-      prefixRelease,
-      git: {
-        getLastTagNotInBaseBranch: async () => undefined,
-        getLatestRelease: async () => "0.0.1",
-        getPullRequest: async () => ({
-          data: {
-            head: {
-              repo: {
-                clone_url: "https://github.com/intuit-fork/auto.git",
+    multiHooks = makeHooks();
+    const apply = (p: CocoapodsPlugin, h: Auto.IAutoHooks) => {
+      p.apply(({
+        hooks: h,
+        logger: logger,
+        prefixRelease,
+        git: {
+          getLastTagNotInBaseBranch: async () => undefined,
+          getLatestRelease: async () => "0.0.1",
+          getPullRequest: async () => ({
+            data: {
+              head: {
+                repo: {
+                  clone_url: "https://github.com/intuit-fork/auto.git",
+                },
               },
             },
-          },
-        }),
-      },
-      remote: "https://github.com/intuit/auto.git",
-      getCurrentVersion: async () => "0.0.1",
-    } as unknown) as Auto.Auto);
+          }),
+        },
+        remote: "https://github.com/intuit/auto.git",
+        getCurrentVersion: async () => "0.0.1",
+      } as unknown) as Auto.Auto);
+    };
+
+    apply(plugin, hooks);
+    apply(multiPlugin, multiHooks);
   });
 
   describe("getParsedPodspecContents", () => {
@@ -224,6 +248,20 @@ describe("Cocoapods Plugin", () => {
         "Version could not be found in podspec: ./Test.podspec"
       );
     });
+
+    test("should get version if multiple podspecs", async () => {
+      mockPodspecs([
+        {
+          path: "./Test.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+        {
+          path: "./Test2.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+      ]);
+      expect(await multiHooks.getPreviousVersion.promise()).toBe("v0.0.1");
+    });
   });
   describe("version hook", () => {
     test("should do nothing on dryRun", async () => {
@@ -279,6 +317,81 @@ describe("Cocoapods Plugin", () => {
 
       expect(mock).lastCalledWith(expect.any(String), specWithVersion("1.0.0"));
     });
+    test("should release version multiple podspecs - patch", async () => {
+      mockPodspecs([
+        {
+          path: "./Test.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+        {
+          path: "./Test2.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+      ]);
+      const mock = jest.spyOn(utilities, "writePodspecContents");
+      await multiHooks.version.promise({ bump: Auto.SEMVER.patch });
+      expect(mock).toHaveBeenCalledTimes(2);
+      expect(mock).toHaveBeenNthCalledWith(
+        1,
+        "./Test.podspec",
+        specWithVersion("0.0.2")
+      );
+      expect(mock).toHaveBeenNthCalledWith(
+        2,
+        "./Test2.podspec",
+        specWithVersion("0.0.2")
+      );
+    });
+    test("should release version multiple podspecs - minor", async () => {
+      mockPodspecs([
+        {
+          path: "./Test.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+        {
+          path: "./Test2.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+      ]);
+      const mock = jest.spyOn(utilities, "writePodspecContents");
+      await multiHooks.version.promise({ bump: Auto.SEMVER.minor });
+      expect(mock).toHaveBeenCalledTimes(2);
+      expect(mock).toHaveBeenNthCalledWith(
+        1,
+        "./Test.podspec",
+        specWithVersion("0.1.0")
+      );
+      expect(mock).toHaveBeenNthCalledWith(
+        2,
+        "./Test2.podspec",
+        specWithVersion("0.1.0")
+      );
+    });
+    test("should release version multiple podspecs - major", async () => {
+      mockPodspecs([
+        {
+          path: "./Test.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+        {
+          path: "./Test2.podspec",
+          contents: specWithVersion("0.0.1"),
+        },
+      ]);
+      const mock = jest.spyOn(utilities, "writePodspecContents");
+      await multiHooks.version.promise({ bump: Auto.SEMVER.major });
+      expect(mock).toHaveBeenCalledTimes(2);
+      expect(mock).toHaveBeenNthCalledWith(
+        1,
+        "./Test.podspec",
+        specWithVersion("1.0.0")
+      );
+      expect(mock).toHaveBeenNthCalledWith(
+        2,
+        "./Test2.podspec",
+        specWithVersion("1.0.0")
+      );
+    });
     test("should throw if there is an error writing new version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
@@ -317,6 +430,32 @@ describe("Cocoapods Plugin", () => {
 
       expect(exec).toBeCalledTimes(1);
       expect(exec).lastCalledWith("pod", ["lib", "lint", "./Test.podspec"]);
+    });
+    test("should call pod lib lint for each podspec with dryRun flag", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin(multiOptions);
+      const hook = makeHooks();
+
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
+
+      expect(exec).toBeCalledTimes(2);
+      expect(exec).toHaveBeenNthCalledWith(1, "pod", [
+        "lib",
+        "lint",
+        "./Test.podspec",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(2, "pod", [
+        "lib",
+        "lint",
+        "./Test2.podspec",
+      ]);
     });
     test("should call pod lib lint with options with dryRun flag", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -409,6 +548,46 @@ describe("Cocoapods Plugin", () => {
         )
       );
     });
+    test("should tag multiple podspeccs with canary version", async () => {
+      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      const specs = {
+        "./Test.podspec": specWithVersion("0.0.1"),
+        "./Test2.podspec": specWithVersion("0.0.1"),
+      };
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation((path) => specs[path]);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          specs[path] = contents;
+        });
+
+      const newVersion = await multiHooks.canary.promise({
+        bump: "minor" as Auto.SEMVER,
+        canaryIdentifier: "canary.1.1.1",
+      });
+
+      expect(newVersion).toBe("0.1.0-canary.1.1.1");
+      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test2.podspec"]);
+      expect(mock).toBeCalledTimes(4);
+      expect(mock).toHaveBeenCalledWith(
+        "./Test.podspec",
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+        )
+      );
+      expect(mock).toHaveBeenCalledWith(
+        "./Test2.podspec",
+        specWithVersion(
+          "0.1.0-canary.1.1.1",
+          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+        )
+      );
+    });
     test("should tag with canary version with no PR number", async () => {
       let podSpec = specWithVersion("0.0.1");
       jest
@@ -453,6 +632,43 @@ describe("Cocoapods Plugin", () => {
       expect(versions).toStrictEqual(["0.0.1", "0.0.2", "0.1.0-next.0"]);
     });
     test("should tag with next version", async () => {
+      jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
+      const specs = {
+        "./Test.podspec": specWithVersion("0.0.1"),
+        "./Test2.podspec": specWithVersion("0.0.1"),
+      };
+      jest
+        .spyOn(utilities, "getPodspecContents")
+        .mockImplementation((path) => specs[path]);
+      const mock = jest
+        .spyOn(utilities, "writePodspecContents")
+        .mockImplementation((path, contents) => {
+          specs[path] = contents;
+        });
+
+      const versions = await multiHooks.next.promise([], {
+        bump: Auto.SEMVER.major,
+        dryRun: false,
+        commits: [],
+        fullReleaseNotes: "",
+        releaseNotes: "",
+      });
+
+      expect(versions).toContain("1.0.0-next.0");
+      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+
+      expect(mock).toBeCalledTimes(2);
+      expect(mock).toHaveBeenCalledWith(
+        "./Test.podspec",
+        specWithVersion("1.0.0-next.0")
+      );
+      expect(mock).toHaveBeenCalledWith(
+        "./Test2.podspec",
+        specWithVersion("1.0.0-next.0")
+      );
+    });
+    test("should tag with next version for multiple podspecs", async () => {
       jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
       let podSpec = specWithVersion("0.0.1");
       jest
@@ -499,6 +715,31 @@ describe("Cocoapods Plugin", () => {
 
       expect(exec).toBeCalledTimes(2);
       expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
+    });
+    test("should push multiple podspecs to trunk if no specsRepo in options", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const plugin = new CocoapodsPlugin(multiOptions);
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger: dummyLog(),
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
+
+      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledWith("pod", [
+        "trunk",
+        "push",
+        "./Test.podspec",
+      ]);
+      expect(exec).toHaveBeenCalledWith("pod", [
+        "trunk",
+        "push",
+        "./Test2.podspec",
+      ]);
     });
 
     test("should push with different pod command if in options", async () => {
@@ -614,6 +855,55 @@ describe("Cocoapods Plugin", () => {
         "--silent",
       ]);
       expect(exec).toHaveBeenNthCalledWith(5, "pod", [
+        "repo",
+        "remove",
+        "autoPublishRepo",
+        "--silent",
+      ]);
+    });
+    test("should push multiple podspecs to specs repo if specsRepo in options", async () => {
+      mockPodspec(specWithVersion("0.0.1"));
+
+      const logger = dummyLog();
+      logger.logLevel = "quiet";
+
+      const plugin = new CocoapodsPlugin({
+        ...multiOptions,
+        specsRepo: "someSpecsRepo",
+      });
+      const hook = makeHooks();
+      plugin.apply({
+        hooks: hook,
+        logger,
+        prefixRelease,
+      } as Auto.Auto);
+
+      await hook.publish.promise({ bump: Auto.SEMVER.patch });
+
+      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
+      expect(exec).toHaveBeenNthCalledWith(3, "pod", [
+        "repo",
+        "add",
+        "autoPublishRepo",
+        "someSpecsRepo",
+        "--silent",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(4, "pod", [
+        "repo",
+        "push",
+        "autoPublishRepo",
+        "./Test.podspec",
+        "--silent",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(5, "pod", [
+        "repo",
+        "push",
+        "autoPublishRepo",
+        "./Test2.podspec",
+        "--silent",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(6, "pod", [
         "repo",
         "remove",
         "autoPublishRepo",

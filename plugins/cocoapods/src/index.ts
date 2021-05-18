@@ -34,7 +34,7 @@ const logMessage = (msg: string): string => `${logPrefix} ${msg}`;
 
 const required = t.interface({
   /** Relative path to podspec file */
-  podspecPath: t.string,
+  podspecPath: t.union([t.string, t.array(t.string)]),
 });
 
 const optional = t.partial({
@@ -161,6 +161,18 @@ export default class CocoapodsPlugin implements IPlugin {
   /** The options of the plugin */
   readonly options: ICocoapodsPluginOptions;
 
+  /**
+   *
+   */
+  private get paths() {
+    if (typeof this.options.podspecPath === "string") {
+      return [this.options.podspecPath];
+    }
+ 
+      return this.options.podspecPath;
+    
+  }
+
   /** Initialize the plugin with it's options */
   constructor(options: ICocoapodsPluginOptions) {
     this.options = options;
@@ -186,16 +198,17 @@ export default class CocoapodsPlugin implements IPlugin {
       noVersionPrefix: true,
     }));
 
-    auto.hooks.getPreviousVersion.tapPromise(this.name, async () =>
-      auto.prefixRelease(getVersion(this.options.podspecPath))
-    );
+    auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
+      // Due to CocoaPods being git backed, all the versions will be the same
+      // so there are no git tag collisions
+      return auto.prefixRelease(getVersion(this.paths[0]));
+    });
 
     auto.hooks.version.tapPromise(
       this.name,
       async ({ bump, dryRun, quiet }) => {
-        const previousVersion = getVersion(this.options.podspecPath);
+        const previousVersion = getVersion(this.paths[0]);
         const releaseVersion = inc(previousVersion, bump as ReleaseType);
-
         if (dryRun && releaseVersion) {
           if (quiet) {
             console.log(releaseVersion);
@@ -212,7 +225,9 @@ export default class CocoapodsPlugin implements IPlugin {
           );
         }
 
-        updatePodspecVersion(this.options.podspecPath, releaseVersion);
+        this.paths.forEach((path) => {
+          updatePodspecVersion(path, releaseVersion);
+        });
 
         await execPromise("git", [
           "commit",
@@ -223,7 +238,7 @@ export default class CocoapodsPlugin implements IPlugin {
 
         await execPromise("git", [
           "tag",
-          releaseVersion,
+          `${releaseVersion}`,
           "-m",
           `"Update version to ${releaseVersion}"`,
         ]);
@@ -266,15 +281,23 @@ export default class CocoapodsPlugin implements IPlugin {
           return;
         }
 
-        await updateSourceLocation(this.options.podspecPath, remoteRepo);
+        await this.paths.reduce(
+          (promise, path) =>
+            promise.then(async () => {
+              await updateSourceLocation(path, remoteRepo);
 
-        updatePodspecVersion(this.options.podspecPath, canaryVersion);
+              updatePodspecVersion(path, canaryVersion);
+            }),
+          Promise.resolve()
+        );
 
         // Publish the canary podspec, committing it isn't needed for specs push
         await this.publishPodSpec(podLogLevel);
 
         // Reset changes to podspec file since it doesn't need to be committed
-        await execPromise("git", ["checkout", this.options.podspecPath]);
+        await Promise.all(
+          this.paths.map((path) => execPromise("git", ["checkout", path]))
+        );
 
         return canaryVersion;
       }
@@ -319,13 +342,15 @@ export default class CocoapodsPlugin implements IPlugin {
 
         await execPromise("git", ["push", auto.remote, branch, "--tags"]);
 
-        updatePodspecVersion(this.options.podspecPath, prerelease);
+        this.paths.forEach((path) => updatePodspecVersion(path, prerelease));
 
         // Publish the next podspec, committing it isn't needed for specs push
         await this.publishPodSpec(podLogLevel);
 
         // Reset changes to podspec file since it doesn't need to be committed
-        await execPromise("git", ["checkout", this.options.podspecPath]);
+        await Promise.all(
+          this.paths.map((path) => execPromise("git", ["checkout", path]))
+        );
 
         return preReleaseVersions;
       }
@@ -337,13 +362,19 @@ export default class CocoapodsPlugin implements IPlugin {
         const [pod, ...commands] = this.options.podCommand?.split(" ") || [
           "pod",
         ];
-        await execPromise(pod, [
-          ...commands,
-          "lib",
-          "lint",
-          ...(this.options.flags || []),
-          this.options.podspecPath,
-        ]);
+        await this.paths.reduce(
+          (promise, path) =>
+            promise.then(() =>
+              execPromise(pod, [
+                ...commands,
+                "lib",
+                "lint",
+                ...(this.options.flags || []),
+                path,
+              ])
+            ),
+          Promise.resolve()
+        );
       }
     });
 
@@ -366,14 +397,20 @@ export default class CocoapodsPlugin implements IPlugin {
     const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
     if (!this.options.specsRepo) {
       this.logger?.log.info(logMessage(`Pushing to Cocoapods trunk`));
-      await execPromise(pod, [
-        ...commands,
-        "trunk",
-        "push",
-        ...(this.options.flags || []),
-        this.options.podspecPath,
-        ...podLogLevel,
-      ]);
+      await this.paths.reduce(
+        (promise, path) =>
+          promise.then(() =>
+            execPromise(pod, [
+              ...commands,
+              "trunk",
+              "push",
+              ...(this.options.flags || []),
+              path,
+              ...podLogLevel,
+            ])
+          ),
+        Promise.resolve()
+      );
       return;
     }
 
@@ -413,15 +450,21 @@ export default class CocoapodsPlugin implements IPlugin {
         logMessage(`Pushing to specs repo: ${this.options.specsRepo}`)
       );
 
-      await execPromise(pod, [
-        ...commands,
-        "repo",
-        "push",
-        ...(this.options.flags || []),
-        "autoPublishRepo",
-        this.options.podspecPath,
-        ...podLogLevel,
-      ]);
+      await this.paths.reduce(
+        (promise, path) =>
+          promise.then(() =>
+            execPromise(pod, [
+              ...commands,
+              "repo",
+              "push",
+              ...(this.options.flags || []),
+              "autoPublishRepo",
+              path,
+              ...podLogLevel,
+            ])
+          ),
+        Promise.resolve()
+      );
     } catch (error) {
       this.logger?.log.error(
         logMessage(
