@@ -1,3 +1,16 @@
+# v10.28.0 (Wed May 19 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/cocoapods`
+  - feat: push multiple podspecs [#1982](https://github.com/intuit/auto/pull/1982) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.27.1 (Tue May 11 2021)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,21 @@
+# v10.28.0 (Wed May 19 2021)
+
+#### 🚀 Enhancement
+
+- feat: push multiple podspecs [#1982](https://github.com/intuit/auto/pull/1982) ([@hborawski](https://github.com/hborawski))
+
+#### 🐛 Bug Fix
+
+- add some config validation tests ([@hborawski](https://github.com/hborawski))
+- fix: fix promise.resolve initial value ([@hborawski](https://github.com/hborawski))
+- feat: podspecPath can be an array to push multiple podspecs with the cocoapod plugin ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.26.0 (Wed Apr 28 2021)
 
 #### 🚀 Enhancement
