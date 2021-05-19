@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+      <urlset xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+      xmlns:xhtml="http://www.w3.org/1999/xhtml">
+      <url><loc>undefined/blog/both-worlds</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog/npm-canary-scope</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog/pr-in-progress</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog/using-shipit</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog/v8</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog/why</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/blog</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/build-platforms/circleci</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/build-platforms/github-actions</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/build-platforms/jenkins</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/build-platforms/travis</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/configuration/autorc</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/configuration/non-npm</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/configuration/plugins</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/configuration/troubleshooting</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/all-contributors</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/brew</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/canary</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/changelog</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/chrome</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/cocoapods</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/comment</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/conventional-commits</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/crates</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/create-labels</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/defaultLabelsRenderer</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/docker</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/exec</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/first-time-contributor</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/gem</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/gh-pages</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/git-tag</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/gradle</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/info</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/init</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/jira</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/label</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/latest</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/magic-zero</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/maven</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/microsoft-teams</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/next</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/npm</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/omit-commits</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/omit-release-notes</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/pr-body-labels</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/pr-body</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/pr-check</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/pr-status</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/release</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/released</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/s3</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/sbt</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/shipit</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/slack</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/twitter</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/upload-assets</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/version</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/generated/vscode</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/changelog-hooks</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/configuration-hooks</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/hook-api-docs</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/init-hooks</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/log-parse-hooks</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/release-lifecycle-hooks</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/writing-plugins</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/plugins/writing-publishing-plugins</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/welcome/getting-started</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs/welcome/quick-merge</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined/docs</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url><url><loc>undefined</loc>
+                
+                
+                
+                <lastmod>2021-05-19</lastmod>
+                </url></urlset>
