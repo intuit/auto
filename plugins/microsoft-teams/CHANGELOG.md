@@ -1,3 +1,31 @@
+# v10.29.0 (Fri May 21 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Vincent Briglia ([@vincentbriglia](https://github.com/vincentbriglia)), for all your work!
+
+#### 🚀 Enhancement
+
+- Feature/msteams [#1914](https://github.com/intuit/auto/pull/1914) ([@vincentbriglia](https://github.com/vincentbriglia) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- Merge branch 'main' into feature/msteams ([@vincentbriglia](https://github.com/vincentbriglia))
+- Update snapshots as well as commenting out atTarget test ([@vincentbriglia](https://github.com/vincentbriglia))
+- fix snaps ([@vincentbriglia](https://github.com/vincentbriglia))
+- correct import ([@vincentbriglia](https://github.com/vincentbriglia))
+- add @types/jsesc ([@vincentbriglia](https://github.com/vincentbriglia))
+- add an action button for people to click on ([@vincentbriglia](https://github.com/vincentbriglia))
+- remove default "channel" as it gets checked further down below. ([@vincentbriglia](https://github.com/vincentbriglia))
+- Remove githubtoslack and use simple json serialization instead ([@vincentbriglia](https://github.com/vincentbriglia))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Vincent Briglia ([@vincentbriglia](https://github.com/vincentbriglia))
+
+---
+
 # v10.26.0 (Wed Apr 28 2021)
 
 #### 🚀 Enhancement

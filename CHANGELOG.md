@@ -1,3 +1,17 @@
+# v10.29.0 (Fri May 21 2021)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`, `@auto-it/brew`, `@auto-it/crates`, `@auto-it/maven`, `@auto-it/microsoft-teams`, `@auto-it/npm`
+  - Feature/msteams [#1914](https://github.com/intuit/auto/pull/1914) ([@vincentbriglia](https://github.com/vincentbriglia) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Vincent Briglia ([@vincentbriglia](https://github.com/vincentbriglia))
+
+---
+
 # v10.28.0 (Wed May 19 2021)
 
 #### 🚀 Enhancement

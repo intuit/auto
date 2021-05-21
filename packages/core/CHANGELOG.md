@@ -1,3 +1,22 @@
+# v10.29.0 (Fri May 21 2021)
+
+#### 🚀 Enhancement
+
+- Feature/msteams [#1914](https://github.com/intuit/auto/pull/1914) ([@vincentbriglia](https://github.com/vincentbriglia) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Merge branch 'main' into feature/msteams ([@vincentbriglia](https://github.com/vincentbriglia))
+- fix: tapable issues ([@vincentbriglia](https://github.com/vincentbriglia))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Vincent Briglia ([@vincentbriglia](https://github.com/vincentbriglia))
+
+---
+
 # v10.26.1 (Mon May 03 2021)
 
 #### 🐛 Bug Fix
