@@ -551,6 +551,17 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "vincentbriglia",
+      "name": "Vincent Briglia",
+      "avatar_url": "https://avatars.githubusercontent.com/u/452811?v=4",
+      "profile": "http://www.vincentbriglia.com/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
