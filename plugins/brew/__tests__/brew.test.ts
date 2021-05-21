@@ -13,6 +13,10 @@ const writeFileSync = jest.fn();
 
 jest.mock("fs", () => ({
   // @ts-ignore
+  read: (a, b, cb) => {
+    cb(undefined);
+  },
+  // @ts-ignore
   existsSync: (...args) => existsSync(...args),
   // @ts-ignore
   mkdirSync: (...args) => mkdirSync(...args),

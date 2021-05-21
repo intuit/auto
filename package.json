@@ -40,13 +40,14 @@
     "postinstall": "patch-package"
   },
   "devDependencies": {
-    "@atomictech/rehype-toc": "^3.1.2",
+    "@atomictech/rehype-toc": "3.1.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@types/jest": "^26.0.0",
     "@types/mock-fs": "^4.13.0",
     "@types/parse-github-url": "1.0.0",
+    "@types/tapable": "2.2.2",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "all-contributors-cli": "^6.4.0",

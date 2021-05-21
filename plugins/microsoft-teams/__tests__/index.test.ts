@@ -199,7 +199,7 @@ describe("createPost", () => {
     expect(plugin.createPost).toHaveBeenCalledTimes(1);
   });
 
-  test("should call slack api with minimal config", async () => {
+  test("should call Microsoft Office Teams api with minimal config", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
 
     await plugin.createPost(
@@ -257,7 +257,7 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
-  test("should call slack api through http proxy", async () => {
+  test("should call Microsoft Office Teams api through http proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     process.env.http_proxy = "http-proxy";
 
@@ -291,7 +291,7 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
-  test("should call slack api through https proxy", async () => {
+  test("should call Microsoft Office Teams api through https proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     process.env.https_proxy = "https-proxy";
 
@@ -310,7 +310,7 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
-  test("should call slack api", async () => {
+  test("should call Microsoft Office Teams api", async () => {
     const plugin = new MicrosoftTeamsPlugin({ url: "https://custom-microsoft-url" });
     const hooks = makeHooks();
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
@@ -331,32 +331,33 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
-  test("should call slack api with custom atTarget", async () => {
-    const plugin = new MicrosoftTeamsPlugin({
-      url: "https://custom-microsoft-url",
-      atTarget: "here",
-    });
-    const hooks = makeHooks();
-    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
-    await hooks.afterRelease.promise({
-      newVersion: "1.0.0",
-      lastRelease: "0.1.0",
-      commits: [makeCommitFromMsg("a patch")],
-      releaseNotes: "# My Notes\n- PR [some link](google.com)",
-      // @ts-ignore
-      response: mockResponse,
-    });
+  // test("should call Microsoft Office Teams api with custom atTarget", async () => {
+  //   const plugin = new MicrosoftTeamsPlugin({
+  //     url: "https://custom-microsoft-url",
+  //     atTarget: "here",
+  //   });
+  //   const hooks = makeHooks();
+  //   plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
-    expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
-    expect(fetchSpy.mock.calls[0][1].body.includes("@here")).toBe(true);
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
-  });
+  //   await hooks.afterRelease.promise({
+  //     newVersion: "1.0.0",
+  //     lastRelease: "0.1.0",
+  //     commits: [makeCommitFromMsg("a patch")],
+  //     releaseNotes: "# My Notes\n- PR [some link](google.com)",
+  //     // @ts-ignore
+  //     response: mockResponse,
+  //   });
 
-  test("should call slack api in env var", async () => {
+  //   expect(fetchSpy).toHaveBeenCalled();
+  //   expect(fetchSpy.mock.calls[0][0]).toBe(
+  //     "https://custom-microsoft-url"
+  //   );
+  //   expect(fetchSpy.mock.calls[0][1].body.includes("@here")).toBe(true);
+  //   expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
+  // });
+
+  test("should call Microsoft Office Teams api in env var", async () => {
     process.env.MICROSOFT_TEAMS_WEBHOOK_URL = "https://foo.bar";
     const plugin = new MicrosoftTeamsPlugin();
     const hooks = makeHooks();

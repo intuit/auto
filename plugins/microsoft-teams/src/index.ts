@@ -1,4 +1,4 @@
-import { githubToSlack } from "@atomist/slack-messages";
+import jsesc from "jsesc";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
@@ -10,31 +10,8 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
-const MARKDOWN_LANGUAGE = /^(```)(\S+)$/m;
-
-/** Transform markdown into slack friendly text */
-export const sanitizeMarkdown = (markdown: string) =>
-  githubToSlack(markdown)
-    .split("\n")
-    .map((line) => {
-      // Strip out the ### prefix and replace it with *<word>* to make it bold
-      if (line.startsWith("#")) {
-        return `*${line.replace(/^[#]+/, "")}*`;
-      }
-
-      // Give extra padding to nested lists
-      if (line.match(/^\s+•/)) {
-        return line.replace(/^\s+•/, "   •");
-      }
-
-      // Strip markdown code block type. Slack does not render them correctly.
-      if (line.match(MARKDOWN_LANGUAGE)) {
-        return line.replace(MARKDOWN_LANGUAGE, "`$2`:\n\n$1");
-      }
-
-      return line;
-    })
-    .join("\n");
+/** Microsoft Teams accepts markdown, as long as the content was escaped/serialized to a JSON string first  */
+export const sanitizeMarkdown = (markdown: string) => jsesc(markdown);
 
 const pluginOptions = t.partial({
   /** URL of the mircosoft teams to post to */
@@ -49,7 +26,7 @@ const pluginOptions = t.partial({
 
 export type IMicrosoftTeamsPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-/** Post your release notes to Slack during `auto release` */
+/** Post your release notes to Microsoft Teams during `auto release` */
 export default class MicrosoftTeamsPlugin {
   /** The name of the plugin */
   name = "microsoft-teams";
@@ -65,7 +42,7 @@ export default class MicrosoftTeamsPlugin {
       this.options = {
         ...options,
         url: process.env.MICROSOFT_TEAMS_WEBHOOK_URL || options.url || "",
-        atTarget: options.atTarget ? options.atTarget : "channel",
+        atTarget: options.atTarget,
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
           : false,
@@ -137,6 +114,7 @@ export default class MicrosoftTeamsPlugin {
           (Array.isArray(response) && response) ||
           (response && [response]) ||
           [];
+
         const urls = releases.map(
           (release) =>
             `*<${release.data.html_url}|${
@@ -157,7 +135,7 @@ export default class MicrosoftTeamsPlugin {
     );
   }
 
-  /** Post the release notes to slack */
+  /** Post the release notes to Microsoft Teams */
   async createPost(
     auto: Auto,
     releaseNotes: string,
@@ -170,14 +148,28 @@ export default class MicrosoftTeamsPlugin {
 
     auto.logger.verbose.info("Posting release notes to microsoft teams.");
 
-    const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
+    // TODO: @mentions don't work in teams - yet
+    // https://microsoftteams.uservoice.com/forums/555103-public/suggestions/17153099-webhook-needs-to-support-forced-notification-a-la
+    // const atTarget = this.options.atTarget ? `@${this.options.atTarget}: ` : "";
 
     await fetch(`${this.options.url}`, {
       method: "POST",
       body: JSON.stringify({
         "@context": "http://schema.org/extensions",
         "@type": "MessageCard",
-        text: [`${atTarget}New release ${releaseUrl}`, releaseNotes].join("\n"),
+        text: releaseNotes,
+        potentialAction: [
+          {
+            "@type": "OpenUri",
+            name: "Learn More",
+            targets: [
+              {
+                os: "default",
+                uri: releaseUrl,
+              },
+            ],
+          },
+        ],
       }),
       headers: { "Content-Type": "application/json" },
       agent,

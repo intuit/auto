@@ -123,6 +123,10 @@ jest.mock("fs", () => ({
   writeFile: (file, data, cb) => {
     cb(undefined, writeSpy(file, data));
   },
+  // @ts-ignore
+  read: (a, b, cb) => {
+    cb(undefined);
+  },
 }));
 
 const logParse = new LogParse();
