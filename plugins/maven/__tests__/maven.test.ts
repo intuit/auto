@@ -30,6 +30,10 @@ jest.mock("fs", () => ({
   WriteStream: function () {},
   // @ts-ignore
   closeSync: () => undefined,
+  // @ts-ignore
+  read: (a, b, cb) => {
+    cb(undefined);
+  },
 }));
 
 jest.mock("child_process");

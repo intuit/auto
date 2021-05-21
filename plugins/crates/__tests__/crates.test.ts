@@ -51,6 +51,10 @@ jest.mock("fs", () => ({
   // @ts-ignore
   existsSync: (...args) => existsSync(...args),
   // @ts-ignore
+  read: (a, b, cb) => {
+    cb(undefined, readResult);
+  },
+  // @ts-ignore
   readFile: (a, b, cb) => {
     cb(undefined, readResult);
   },
