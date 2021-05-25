@@ -41,7 +41,7 @@
     "enquirer": "^2.3.4",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.1.0",
+    "tslib": "2.2.0",
     "url-join": "^4.0.0"
   },
   "devDependencies": {

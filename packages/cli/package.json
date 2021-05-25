@@ -59,7 +59,7 @@
     "module-alias": "^2.2.2",
     "signale": "^1.4.0",
     "terminal-link": "^2.1.1",
-    "tslib": "2.1.0"
+    "tslib": "2.2.0"
   },
   "devDependencies": {
     "@types/signale": "^1.2.1",
