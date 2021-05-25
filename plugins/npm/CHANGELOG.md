@@ -1,3 +1,16 @@
+# v10.29.1 (Tue May 25 2021)
+
+#### 🐛 Bug Fix
+
+- fix(npm): Prevents canary releases with double dashed version numbers [#1997](https://github.com/intuit/auto/pull/1997) ([@10hendersonm](https://github.com/10hendersonm))
+- fix(npm): Prevents canary releases with double dashed version numbers ([@10hendersonm](https://github.com/10hendersonm))
+
+#### Authors: 1
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+
+---
+
 # v10.29.0 (Fri May 21 2021)
 
 #### 🚀 Enhancement
