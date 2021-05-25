@@ -2,7 +2,7 @@ import { AutoRc } from "./packages/core";
 
 import { INpmConfig } from "./plugins/npm";
 import { IBrewPluginOptions } from "./plugins/brew";
-import { IGhPagesPluginOptions } from "./plugins/gh-pages";
+// import { IGhPagesPluginOptions } from "./plugins/gh-pages";
 import { IAllContributorsPluginOptions } from "./plugins/all-contributors";
 
 const npmOptions: INpmConfig = {
@@ -22,10 +22,11 @@ const brewOptions: IBrewPluginOptions = {
   name: "auto",
 };
 
-const ghPagesOptions: IGhPagesPluginOptions = {
-  buildCommand: "yarn docs:build",
-  dir: "docs/out",
-};
+// const ghPagesOptions: IGhPagesPluginOptions = {
+//   buildCommand: "yarn docs:build",
+//   dir: "docs/out",
+// };
+//
 
 /** Auto configuration */
 export default function rc(): AutoRc {
@@ -46,7 +47,7 @@ export default function rc(): AutoRc {
       "./scripts/auto-update-curl-version.js",
       ["all-contributors", allContributorsOptions],
       ["brew", brewOptions],
-      ["gh-pages", ghPagesOptions],
+      // ["gh-pages", ghPagesOptions],
     ],
     labels: [
       {
