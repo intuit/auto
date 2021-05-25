@@ -1,3 +1,15 @@
+# v10.29.2 (Tue May 25 2021)
+
+#### 🐛 Bug Fix
+
+- fix publish [#1998](https://github.com/intuit/auto/pull/1998) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.29.1 (Tue May 25 2021)
 
 #### 🐛 Bug Fix
