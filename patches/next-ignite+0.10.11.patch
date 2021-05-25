@@ -1,0 +1,102 @@
+diff --git a/node_modules/next-ignite/dist/cjs/layouts/nav-bar.js b/node_modules/next-ignite/dist/cjs/layouts/nav-bar.js
+index 62f20f3..02efd27 100644
+--- a/node_modules/next-ignite/dist/cjs/layouts/nav-bar.js
++++ b/node_modules/next-ignite/dist/cjs/layouts/nav-bar.js
+@@ -1,2 +1,61 @@
+-"use strict";var _interopRequireDefault=require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports,"__esModule",{value:true});exports.default=void 0;var _react=_interopRequireDefault(require("react"));var _head=_interopRequireDefault(require("next/head"));var _skipNav=require("@reach/skip-nav");var _navbar=require("../components/navbar");var _mobileMenuContext=require("../utils/mobile-menu-context");var _formatPath=require("../utils/format-path");var _isDarkMode=require("../utils/is-dark-mode");const NavBarLayout=({children:content,...props})=>{const menuState=_react.default.useState(false);_react.default.useEffect(()=>{if(typeof document==="undefined"){return}function focusSearch(e){if(e.key==="/"){document.getElementById("search").focus();e.preventDefault()}}document.addEventListener("keydown",focusSearch);return()=>{document.removeEventListener("keydown",focusSearch)}},[]);const isDark=(0,_isDarkMode.useDarkMode)();return _react.default.createElement(_mobileMenuContext.MobileMenuContext.Provider,{value:props.menuState||menuState},_react.default.createElement(_head.default,null,_react.default.createElement("link",{rel:"shortcut icon",media:"(prefers-color-scheme:dark)",href:(0,_formatPath.formatPath)(isDark?process.env.FAVICON_DARK:process.env.FAVICON)})),_react.default.createElement(_skipNav.SkipNavLink,null),_react.default.createElement("div",{id:"ignite",className:"min-h-screen flex flex-col bg-white dark:bg-gray-1000"},_react.default.createElement(_navbar.NavBar,{sections:JSON.parse(process.env.TOP_LEVEL_SECTIONS),hasHomePage:process.env.HAS_HOMEPAGE}),content))};var _default=NavBarLayout;exports.default=_default;
++"use strict";
++var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.default = void 0;
++var _react = _interopRequireDefault(require("react"));
++var _head = _interopRequireDefault(require("next/head"));
++var _skipNav = require("@reach/skip-nav");
++var _navbar = require("../components/navbar");
++var _mobileMenuContext = require("../utils/mobile-menu-context");
++var _formatPath = require("../utils/format-path");
++var _isDarkMode = require("../utils/is-dark-mode");
++const NavBarLayout = ({ children: content, ...props }) => {
++  const menuState = _react.default.useState(false);
++  _react.default.useEffect(() => {
++    if (typeof document === "undefined") {
++      return;
++    }
++    function focusSearch(e) {
++      if (e.key === "/") {
++        document.getElementById("search").focus();
++        e.preventDefault();
++      }
++    }
++    document.addEventListener("keydown", focusSearch);
++    return () => {
++      document.removeEventListener("keydown", focusSearch);
++    };
++  }, []);
++  const isDark = (0, _isDarkMode.useDarkMode)();
++  return _react.default.createElement(
++    _mobileMenuContext.MobileMenuContext.Provider,
++    { value: props.menuState || menuState },
++    _react.default.createElement(
++      _head.default,
++      null,
++      _react.default.createElement("link", {
++        rel: "shortcut icon",
++        media: "(prefers-color-scheme:dark)",
++        href: (0, _formatPath.formatPath)(
++          isDark ? process.env.FAVICON_DARK : process.env.FAVICON
++        ),
++      })
++    ),
++    _react.default.createElement(_skipNav.SkipNavLink, null),
++    _react.default.createElement(
++      "div",
++      {
++        id: "ignite",
++        className: "min-h-screen flex flex-col bg-white dark:bg-gray-1000",
++      },
++      _react.default.createElement(_navbar.NavBar, {
++        sections: JSON.parse(process.env.TOP_LEVEL_SECTIONS),
++        hasHomePage: process.env.HAS_HOMEPAGE,
++      }),
++      content
++    )
++  );
++};
++var _default = NavBarLayout;
++exports.default = _default;
+ //# sourceMappingURL=nav-bar.js.map
+diff --git a/node_modules/next-ignite/dist/cjs/utils/format-path.js b/node_modules/next-ignite/dist/cjs/utils/format-path.js
+index 36db883..3e709e9 100644
+--- a/node_modules/next-ignite/dist/cjs/utils/format-path.js
++++ b/node_modules/next-ignite/dist/cjs/utils/format-path.js
+@@ -1,2 +1,29 @@
+-"use strict";var _interopRequireDefault=require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports,"__esModule",{value:true});exports.formatPath=formatPath;exports.postFixHTML=postFixHTML;var _path=_interopRequireDefault(require("path"));function formatPath(p){return _path.default.join(process.env.BASE_PATH,`/${p.replace(/\.mdx$/,"")}`)}function postFixHTML(p){if(!process.env.STATIC_HTML_URLS){return p}if(p.startsWith("#")){return p}if(_path.default.basename(p).includes("#")){return p.replace("#",".html#")}return`${p}.html`}
++"use strict";
++var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.formatPath = formatPath;
++exports.postFixHTML = postFixHTML;
++var _path = _interopRequireDefault(require("path"));
++function formatPath(p) {
++  if (!p) {
++    return process.env.BASE_PATH;
++  }
++
++  return _path.default.join(
++    process.env.BASE_PATH,
++    `/${p.replace(/\.mdx$/, "")}`
++  );
++}
++function postFixHTML(p) {
++  if (!process.env.STATIC_HTML_URLS) {
++    return p;
++  }
++  if (p.startsWith("#")) {
++    return p;
++  }
++  if (_path.default.basename(p).includes("#")) {
++    return p.replace("#", ".html#");
++  }
++  return `${p}.html`;
++}
+ //# sourceMappingURL=format-path.js.map
