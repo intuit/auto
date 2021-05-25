@@ -1005,6 +1005,9 @@ export default class NPMPlugin implements IPlugin {
           }
         };
 
+        canaryIdentifier = canaryIdentifier.replace(/^-/, "")
+
+
         if (isMonorepo()) {
           const isIndependent = getLernaJson().version === "independent";
           auto.logger.verbose.info("Detected monorepo, using lerna");
@@ -1054,7 +1057,7 @@ export default class NPMPlugin implements IPlugin {
               "--exact",
               "--ignore-scripts",
               "--preid",
-              canaryIdentifier.replace(/^-/, ""),
+              canaryIdentifier,
               ...verboseArgs,
             ]);
 
@@ -1080,7 +1083,7 @@ export default class NPMPlugin implements IPlugin {
             "--no-git-tag-version", // no need to tag and commit,
             "--exact", // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
             ...(isIndependent
-              ? ["--preid", canaryIdentifier.replace(/^-/, "")]
+              ? ["--preid", canaryIdentifier]
               : []),
             ...verboseArgs,
           ]);
