@@ -1233,9 +1233,15 @@ export default class Auto {
 
     const labels = commitsInRelease.map((commit) => commit.labels);
 
+    let hasCanaryLabel = false;
     if (pr) {
       const prLabels = await this.git.getLabels(Number(pr));
+      hasCanaryLabel = prLabels.includes("canary");
       labels.unshift(prLabels);
+    }
+
+    if (options.onlyReleaseCanaryOnLabel && !hasCanaryLabel) {
+      return;
     }
 
     let bump = calculateSemVerBump(labels, this.semVerLabels!, this.config);
@@ -1333,7 +1339,7 @@ export default class Auto {
       }
     }
 
-    const verb = options.dryRun ? "Would have published" : "Published"
+    const verb = options.dryRun ? "Would have published" : "Published";
     this.logger.log.success(
       `${verb} canary version${newVersion ? `: ${newVersion}` : ""}`
     );

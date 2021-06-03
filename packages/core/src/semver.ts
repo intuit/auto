@@ -144,6 +144,12 @@ export const defaultLabels: ILabelDefinition[] = [
     releaseType: SEMVER.patch,
     color: "#f4b2d8",
   },
+  {
+    name: "canary",
+    description: "Create a canary release on updates to this PR",
+    releaseType: "none",
+    color: "#ffef00"
+  }
 ];
 
 /** Given two labels determine the next SEMVER bump. */

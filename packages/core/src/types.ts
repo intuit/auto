@@ -103,6 +103,8 @@ export const globalOptions = t.partial({
      * and instead only want to use baseBranch.
      */
     onlyGraduateWithReleaseLabel: t.boolean,
+    /** Only release a canary version if the canary label is present */
+    onlyReleaseCanaryOnLabel: t.boolean,
   }),
   /** Options to pass to "auto latest" */
   latest: t.partial({
@@ -117,6 +119,8 @@ export const globalOptions = t.partial({
   canary: t.partial({
     /** Always deploy even if marked as skip release */
     force: t.boolean,
+    /** Only release a canary version if the canary label is present */
+    onlyReleaseCanaryOnLabel: t.boolean,
     /** The message used when attaching the canary version to a PR */
     message: t.union([t.literal(false), t.string]),
     /** How the canary version should be attached to a PR */
