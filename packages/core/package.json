@@ -73,7 +73,7 @@
     "tinycolor2": "^1.4.1",
     "ts-node": "^9.1.1",
     "tslib": "2.1.0",
-    "type-fest": "^0.21.1",
+    "type-fest": "^1.2.0",
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },
