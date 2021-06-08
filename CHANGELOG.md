@@ -1,3 +1,23 @@
+# v10.29.3 (Tue Jun 08 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - Revert #1997 [#2010](https://github.com/intuit/auto/pull/2010) (praxis@target.com [@10hendersonm](https://github.com/10hendersonm))
+  - fix(npm): Prevents canary releases with double dashed version numbers [#1997](https://github.com/intuit/auto/pull/1997) ([@10hendersonm](https://github.com/10hendersonm))
+
+#### 📝 Documentation
+
+- Fix broken link to /generated/omit-commits [#2001](https://github.com/intuit/auto/pull/2001) ([@hasparus](https://github.com/hasparus))
+
+#### Authors: 3
+
+- Marty Henderson ([@10hendersonm](https://github.com/10hendersonm))
+- Piotr Monwid-Olechnowicz ([@hasparus](https://github.com/hasparus))
+- Vela CI (praxis@target.com)
+
+---
+
 # v10.29.2 (Tue May 25 2021)
 
 #### 🐛 Bug Fix
