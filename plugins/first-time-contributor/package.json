@@ -40,7 +40,7 @@
     "@auto-it/core": "link:../../packages/core",
     "array.prototype.flatmap": "^1.2.2",
     "endent": "^2.0.1",
-    "tslib": "2.1.0",
+    "tslib": "2.3.0",
     "url-join": "^4.0.0"
   },
   "devDependencies": {
