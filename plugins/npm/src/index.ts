@@ -1079,6 +1079,7 @@ export default class NPMPlugin implements IPlugin {
             "--no-git-reset", // so we can get the version that just published
             "--no-git-tag-version", // no need to tag and commit,
             "--exact", // do not add ^ to canary versions, this can result in `npm i` resolving the wrong canary version
+            "--no-verify-access", // permit automation tokens https://github.com/lerna/lerna/issues/2788
             ...(isIndependent
               ? ["--preid", canaryIdentifier.replace(/^-/, "")]
               : []),
@@ -1257,6 +1258,7 @@ export default class NPMPlugin implements IPlugin {
             "--yes",
             // do not add ^ to next versions, this can result in `npm i` resolving the wrong next version
             "--exact",
+            "--no-verify-access", // permit automation tokens https://github.com/lerna/lerna/issues/2788
             "--no-commit-hooks",
             ...verboseArgs,
           ]);
