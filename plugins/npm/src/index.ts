@@ -25,7 +25,7 @@ import {
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
-import { gt, gte, inc, ReleaseType } from "semver";
+import { gt, gte, inc, prerelease, ReleaseType } from "semver";
 import {
   loadPackageJson,
   getRepo,
@@ -146,6 +146,7 @@ export async function getChangedPackages({
   return [...changed];
 }
 
+
 /** Get the package with the greatest version in a monorepo */
 export function getMonorepoPackage() {
   const packages = getPackages(process.cwd());
@@ -154,7 +155,15 @@ export function getMonorepoPackage() {
     return {} as IPackageJSON;
   }
 
-  const monorepoPackage = packages.reduce((greatest, subPackage) => {
+  // Remove pre-releases so that released package versions take precedence
+  let releasedPackages = packages.filter(subPackage => prerelease(subPackage.package?.version || '') === null);
+  // If doing this would remove all packages, this means were not any @latest releases yet
+  // In that case, restore the original list of packages.
+  if (releasedPackages.length === 0) {
+    releasedPackages = packages;
+  }
+
+  const monorepoPackage = releasedPackages.reduce((greatest, subPackage) => {
     if (subPackage.package.version) {
       if (!greatest.package.version) {
         return subPackage;
