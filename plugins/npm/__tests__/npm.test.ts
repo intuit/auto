@@ -44,6 +44,16 @@ const monorepoPackagesResult = [
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
 ];
 
+const monorepoPackagesWithPrereleaseResult = [
+  { path: "packages/a", name: "@packages/a", package: { version: "0.1.1" } },
+  { path: "packages/b", name: "@packages/b", package: {} },
+  { path: "packages/c", name: "@packages/c", package: { version: "0.1.2" } },
+  { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
+  // This can happen if a new module is published with a breaking version
+  { path: "packages/e", name: "@packages/e", package: { version: "1.0.0-next.0" } },
+  { path: "packages/f", name: "@packages/f", package: { version: "1.0.0-next.0" } },
+];
+
 const packageTemplate = ({
   path,
   name,
@@ -141,6 +151,11 @@ describe("getMonorepoPackage", () => {
 
   test("should find greatest package version", () => {
     monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
+    expect(getMonorepoPackage()).toStrictEqual({ version: "0.1.2" });
+  });
+
+  test("should ignore versions from preleases", () => {
+    monorepoPackages.mockReturnValueOnce(monorepoPackagesWithPrereleaseResult);
     expect(getMonorepoPackage()).toStrictEqual({ version: "0.1.2" });
   });
 });
