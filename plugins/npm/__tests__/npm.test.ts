@@ -183,6 +183,12 @@ describe("greaterRelease", () => {
       await greaterRelease(prefixRelease, "test-package-name", "1.0.0")
     ).toBe("1.0.1");
   });
+  test("should default to packageVersion if (publishedVersion is greater, but is a pre-release)", async () => {
+    execPromise.mockReturnValueOnce("1.0.1-next.0");
+    expect(
+      await greaterRelease(prefixRelease, "test-package-name", "1.0.0")
+    ).toBe("1.0.0");
+  });
 });
 
 describe("getAuthor", () => {
