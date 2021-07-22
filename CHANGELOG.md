@@ -1,3 +1,20 @@
+# v10.30.0 (Thu Jul 22 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Cameron Yick ([@hydrosquall](https://github.com/hydrosquall)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - feat(plugins/npm): exclude prelease versions when calculating monorepo project version [#2035](https://github.com/intuit/auto/pull/2035) ([@hydrosquall](https://github.com/hydrosquall))
+
+#### Authors: 1
+
+- Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+
+---
+
 # v10.29.3 (Tue Jun 08 2021)
 
 #### 🐛 Bug Fix
