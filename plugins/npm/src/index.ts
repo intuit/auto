@@ -52,7 +52,7 @@ async function getPublishedVersion(name: string) {
 }
 
 /**
- * Determine the greatest version between last published version of a
+ * Determine the greatest version between @latest published version of a
  * package and the version in the package.json.
  */
 export async function greaterRelease(
@@ -64,6 +64,13 @@ export async function greaterRelease(
   const publishedVersion = await getPublishedVersion(name);
 
   if (!publishedVersion) {
+    return packageVersion;
+  }
+
+  // If @latest published version is a pre-release,
+  // this means the package has not been published as a stable tag yet
+  // Prefer local version to prevent a new package from adjusting the versions for a whole monorepo.
+  if (prerelease(publishedVersion) !== null) {
     return packageVersion;
   }
 
