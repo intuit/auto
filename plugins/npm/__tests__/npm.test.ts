@@ -1155,6 +1155,7 @@ describe("canary", () => {
       "--no-git-reset",
       "--no-git-tag-version",
       "--exact",
+      "--no-verify-access"
     ]);
   });
 
