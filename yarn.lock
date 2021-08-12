@@ -69,7 +69,7 @@
     fp-ts "^2.5.3"
     get-monorepo-packages "^1.1.0"
     io-ts "^2.1.2"
-    registry-url "^5.1.0"
+    registry-url "^6.0.0"
     semver "^7.0.0"
     tslib "2.1.0"
     typescript-memoize "^1.0.0-alpha.3"
@@ -12536,10 +12536,10 @@ regextras@^0.7.1:
   resolved "https://registry.yarnpkg.com/regextras/-/regextras-0.7.1.tgz#be95719d5f43f9ef0b9fa07ad89b7c606995a3b2"
   integrity sha512-9YXf6xtW+qzQ+hcMQXx95MOvfqXFgsKDZodX3qZB0x2n5Z94ioetIITsBtvJbiOyxa/6s9AtyweBLCdPmPko/w==
 
-registry-url@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-5.1.0.tgz#e98334b50d5434b81136b44ec638d9c2009c5009"
-  integrity sha512-8acYXXTI0AkQv6RAOjE3vOaIXZkT9wo4LOFbBKYQEEnnMNBpKqdUrI6S4NT0KPIo/WVvJ5tE/X5LF/TQUf0ekw==
+registry-url@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/registry-url/-/registry-url-6.0.0.tgz#fa74e05576071a4613416c15ea13afe443ec176c"
+  integrity sha512-3dTUe7E2Uj4xiQf5OhNeF2vnqbtzX1s0xYfU0mDMzkwgvaTUGOWLw7ieXu20ht9w+dURqr5Yg8PRAON9ppGmvA==
   dependencies:
     rc "^1.2.8"
 
