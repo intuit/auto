@@ -570,7 +570,9 @@
       "profile": "https://serendipidata.com/",
       "contributions": [
         "test",
-        "code"
+        "code",
+        "doc",
+        "infra"
       ]
     }
   ],
