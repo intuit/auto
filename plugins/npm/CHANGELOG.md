@@ -1,3 +1,27 @@
+# v10.31.0 (Thu Aug 12 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Cameron Yick ([@hydrosquall](https://github.com/hydrosquall)), for all your work!
+
+#### 🚀 Enhancement
+
+- feat(plugins/npm): permit lerna publish to use automation tokens [#2032](https://github.com/intuit/auto/pull/2032) ([@hydrosquall](https://github.com/hydrosquall))
+
+#### 🐛 Bug Fix
+
+- Upgrade to GitHub-native Dependabot [#1970](https://github.com/intuit/auto/pull/1970) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- doc(plugins/npm): remove manual instructions for working with 2FA automation tokens ([@hydrosquall](https://github.com/hydrosquall))
+- fix: update npx publish CLI flag tests ([@hydrosquall](https://github.com/hydrosquall))
+- feat: permit lerna publish to use automation tokens ([@hydrosquall](https://github.com/hydrosquall))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+
+---
+
 # v10.30.0 (Thu Jul 22 2021)
 
 :tada: This release contains work from a new contributor! :tada:

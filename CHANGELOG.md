@@ -1,3 +1,26 @@
+# v10.31.0 (Thu Aug 12 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Cameron Yick ([@hydrosquall](https://github.com/hydrosquall)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - feat(plugins/npm): permit lerna publish to use automation tokens [#2032](https://github.com/intuit/auto/pull/2032) ([@hydrosquall](https://github.com/hydrosquall))
+
+#### 🐛 Bug Fix
+
+- Upgrade to GitHub-native Dependabot [#1970](https://github.com/intuit/auto/pull/1970) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- [Security] Bump tar from 4.4.13 to 4.4.15 [#2048](https://github.com/intuit/auto/pull/2048) ([@dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+
+#### Authors: 2
+
+- [@dependabot-preview[bot]](https://github.com/dependabot-preview[bot])
+- Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+
+---
+
 # v10.30.0 (Thu Jul 22 2021)
 
 :tada: This release contains work from a new contributor! :tada:
