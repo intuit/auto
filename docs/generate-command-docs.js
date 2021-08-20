@@ -109,14 +109,11 @@ title: "Default Labels"
 layout: 'none'
 ---
 
-<details>
-
-<summary>Click here to see the default label configuration</summary>
+Here is the default label configuration
 
 \`\`\`json
 ${JSON.stringify(defaultLabels, null, 2)}
 \`\`\`
 
-</details>
 `
 );
