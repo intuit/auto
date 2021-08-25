@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/first-time-contributor"
   },
   "files": [
     "dist"
@@ -46,5 +47,6 @@
   "devDependencies": {
     "@octokit/rest": "^18.0.0",
     "@types/array.prototype.flatmap": "^1.2.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

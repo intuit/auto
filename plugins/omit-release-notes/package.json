@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/omit-release-notes"
   },
   "files": [
     "dist"
@@ -42,5 +43,6 @@
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "tslib": "2.1.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

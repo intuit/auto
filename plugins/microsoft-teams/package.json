@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/microsoft-teams"
   },
   "files": [
     "dist"
@@ -47,5 +48,6 @@
   },
   "devDependencies": {
     "@types/jsesc": "^2.5.1"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/sbt"
   },
   "files": [
     "dist"
@@ -44,5 +45,6 @@
     "semver": "^7.0.0",
     "strip-ansi": "^6.0.0",
     "tslib": "1.10.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

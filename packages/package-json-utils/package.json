@@ -15,7 +15,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "packages/package-json-utils"
   },
   "files": [
     "dist"
@@ -46,5 +47,6 @@
   },
   "devDependencies": {
     "@types/parse-github-url": "1.0.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

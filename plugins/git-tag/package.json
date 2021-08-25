@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/git-tag"
   },
   "files": [
     "dist"
@@ -42,5 +43,6 @@
   },
   "devDependencies": {
     "@types/semver": "^7.1.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

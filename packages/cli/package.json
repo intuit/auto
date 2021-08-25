@@ -19,7 +19,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "packages/cli"
   },
   "files": [
     "dist"
@@ -64,5 +65,6 @@
   "devDependencies": {
     "@types/signale": "^1.2.1",
     "pkg": "^4.4.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

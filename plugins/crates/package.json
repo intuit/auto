@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/crates"
   },
   "files": [
     "dist"
@@ -44,5 +45,6 @@
     "toml": "^3.0.0",
     "tslib": "2.1.0",
     "user-home": "^2.0.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

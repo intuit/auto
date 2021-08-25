@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "packages/core"
   },
   "files": [
     "dist"
@@ -95,5 +96,6 @@
     "@types/tinycolor2": "^1.4.1",
     "@types/url-join": "^4.0.0",
     "graphql": "^15.0.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "packages/bot-list"
   },
   "files": [
     "dist"
@@ -38,5 +39,6 @@
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/gem"
   },
   "files": [
     "dist"
@@ -48,5 +49,6 @@
   },
   "devDependencies": {
     "jest-when": "^3.2.1"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }

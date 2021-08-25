@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/auto"
+    "url": "https://github.com/intuit/auto.git",
+    "directory": "plugins/conventional-commits"
   },
   "files": [
     "dist"
@@ -51,5 +52,6 @@
     "@types/conventional-changelog-core": "^4.1.1",
     "@types/conventional-changelog-preset-loader": "^2.3.1",
     "@types/conventional-commits-parser": "^3.0.0"
-  }
+  },
+  "homepage": "https://intuit.github.io/auto/"
 }
