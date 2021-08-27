@@ -163,11 +163,11 @@ export default class Git {
         },
       },
     });
-    this.github.hook.error("request", (error) => {
+    this.github.hook.error("request", (error: any) => {
       if (error) {
         // narrow down the type
-        if ("headers" in error && error.headers.authorization) {
-          delete error.headers.authorization;
+        if (error.response && error.response.headers && error.response.headers.authorization) {
+          delete error.response.headers.authorization;
         }
       }
 
