@@ -38,7 +38,7 @@ export async function sbtGetVersion(): Promise<string> {
 
 /** Set version in sbt to the given value */
 export async function sbtSetVersion(version: string): Promise<string> {
-  return sbtClient(`set every version := \\"${version}\\"`);
+  return sbtClient(`set ThisBuild / version := \\"${version}\\"`);
 }
 
 /** Run sbt publish */
