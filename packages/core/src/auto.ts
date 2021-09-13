@@ -119,7 +119,7 @@ const makeDetail = (summary: string, body: string) => endent`
   <details>
     <summary>${summary}</summary>
     <br />
-    
+
     ${body}
   </details>
 `;
@@ -594,7 +594,7 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Found configuration errors:
-          
+
           ${errors.map(formatError).join("\n")}
         `,
         "\n"
@@ -783,7 +783,7 @@ export default class Auto {
       "auto" version: v${getAutoVersion()}
       "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
-        access['x-github-enterprise-version'] 
+        access['x-github-enterprise-version']
           ? `\nGHE version:    v${access['x-github-enterprise-version']}\n`
           : '\n'}
       ${chalk.underline.white('Project Information:')}
@@ -977,8 +977,8 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Could not detect PR number. pr-check must be run from either a PR or have the PR number supplied via the --pr flag.
-          
-          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed.
         `
       );
       process.exit(1);
@@ -1207,7 +1207,7 @@ export default class Auto {
         None of the plugins that you are using implement the \`canary\` command!
 
         "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
-        
+
         If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
       `);
       process.exit(0);
@@ -1674,11 +1674,16 @@ export default class Auto {
   private async oldRelease(
     options: IShipItOptions
   ): Promise<ShipitInfo | undefined> {
-    const latestTag = await this.git?.getLatestTagInBranch();
+    const currentBranch = getCurrentBranch();
+    const oldVersionBranchPrefix = this.config?.versionBranches as | string;
+    const oldVersionReleaseNumber = currentBranch?.replace(oldVersionBranchPrefix, "") as string;
+    const latestTag = await this.git?.getLatestReleasedTagWithPattern(this.prefixRelease(oldVersionReleaseNumber));
+    this.logger.log.info(`KELVIN LOG Latest tag: ${latestTag}`)
     const result = await this.publishFullRelease({
       ...options,
       from: latestTag,
     });
+    this.logger.log.info('KELVIN LOG result', result)
 
     if (result) {
       result.context = "old";
@@ -1753,8 +1758,8 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.
-          
-          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed.
         `
       );
 
@@ -1924,7 +1929,7 @@ export default class Auto {
           Could not find any tags in the local repository. Exiting early.
 
           The "release" command creates GitHub releases for tags that have already been created in your repo.
-          
+
           If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
         `,
         "\n"
@@ -2073,14 +2078,14 @@ export default class Auto {
         } else {
           this.logger.log.error(endent`
             .autorc author parsing failed!
-  
+
             The author must either be in one of the following formats:
-  
+
             1. Your Name <your_email@mail.com>
             2. An object with "name" and "email"
-  
+
             But you supplied:
-  
+
             ${author}
           `);
         }
@@ -2137,9 +2142,9 @@ export default class Auto {
 
             Name: ${user.name}
             Email: ${user.email}
-  
-            You must do one of the following: 
-  
+
+            You must do one of the following:
+
             - configure the author for your package manager (ex: set "author" in package.json)
             - Set "name" and "email in your .autorc
           `,
@@ -2163,7 +2168,7 @@ export default class Auto {
         endent`
           Cannot find project owner and repository name!
 
-          You must do one of the following: 
+          You must do one of the following:
 
           - configure the repo for your package manager (ex: set "repository" in package.json)
           - configure your git remote 'origin' to point to your project on GitHub.
