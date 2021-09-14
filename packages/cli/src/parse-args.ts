@@ -527,7 +527,10 @@ export const commands: AutoCommand[] = [
     examples: ["{green $} auto shipit"],
     options: [
       ...latestCommandArgs,
-      useVersion,
+      {
+        ...useVersion,
+        description: `${useVersion.description} Currently only supported for the npm plugin.`
+      },
       {
         name: "only-graduate-with-release-label",
         type: Boolean,
