@@ -529,7 +529,7 @@ export const commands: AutoCommand[] = [
       ...latestCommandArgs,
       {
         ...useVersion,
-        description: `${useVersion.description} Currently only supported for the npm plugin.`
+        description: `${useVersion.description} Currently only supported for the **npm plugin**.`
       },
       {
         name: "only-graduate-with-release-label",
