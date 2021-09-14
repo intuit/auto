@@ -195,6 +195,8 @@ export interface IAutoHooks {
         from: string;
         /** Commit to end calculating the version from */
         to: string;
+        /** Override the version to release */
+        useVersion?: string;
         /** The version being released */
         newVersion: string;
         /** Whether the release being made is a prerelease */
@@ -536,13 +538,17 @@ export default class Auto {
   private loadDefaultBehavior() {
     this.hooks.makeRelease.tapPromise("Default", async (options) => {
       if (options.dryRun) {
-        const bump = await this.getVersion({ from: options.from });
+        let releaseVersion;
+
+        if (options.useVersion) {
+          releaseVersion = options.useVersion;
+        } else {
+          const bump = await this.getVersion({ from: options.from });
+          releaseVersion = inc(options.newVersion, bump as ReleaseType);
+        }
 
         this.logger.log.info(
-          `Would have created a release on GitHub for version: ${inc(
-            options.newVersion,
-            bump as ReleaseType
-          )}`
+          `Would have created a release on GitHub for version: ${releaseVersion}`
         );
         this.logger.log.note(
           'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
@@ -1674,16 +1680,11 @@ export default class Auto {
   private async oldRelease(
     options: IShipItOptions
   ): Promise<ShipitInfo | undefined> {
-    const currentBranch = getCurrentBranch();
-    const oldVersionBranchPrefix = this.config?.versionBranches as | string;
-    const oldVersionReleaseNumber = currentBranch?.replace(oldVersionBranchPrefix, "") as string;
-    const latestTag = await this.git?.getLatestReleasedTagWithPattern(this.prefixRelease(oldVersionReleaseNumber));
-    this.logger.log.info(`KELVIN LOG Latest tag: ${latestTag}`)
+    const latestTag = await this.git?.getLatestTagInBranch();
     const result = await this.publishFullRelease({
       ...options,
       from: latestTag,
     });
-    this.logger.log.info('KELVIN LOG result', result)
 
     if (result) {
       result.context = "old";
@@ -1697,19 +1698,13 @@ export default class Auto {
     options: ILatestOptions & {
       /** Internal option to shipit from a certain tag or commit */
       from?: string;
+
+      /** Override the version to release */
+      useVersion?: string;
     }
   ): Promise<ShipitInfo | undefined> {
     if (!this.git || !this.release) {
       throw this.createErrorMessage();
-    }
-
-    const bump = await this.getVersion(options);
-
-    this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
-
-    if (bump === "") {
-      this.logger.log.info("No version published.");
-      return;
     }
 
     const lastRelease = options.from || (await this.git.getLatestRelease());
@@ -1727,20 +1722,31 @@ export default class Auto {
       await this.checkClean();
     }
 
-    this.logger.verbose.info("Calling version hook");
-    await this.hooks.version.promise({
-      bump,
-      dryRun: options.dryRun,
-      quiet: options.quiet,
-    });
-    this.logger.verbose.info("Calling after version hook");
-    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+    if (!options.useVersion) {
+      const bump = await this.getVersion(options);
 
-    if (!options.dryRun) {
-      this.logger.verbose.info("Calling publish hook");
-      await this.hooks.publish.promise({ bump });
-      this.logger.verbose.info("Calling after publish hook");
-      await this.hooks.afterPublish.promise();
+      this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
+
+      if (bump === "") {
+        this.logger.log.info("No version published.");
+        return;
+      }
+
+      this.logger.verbose.info("Calling version hook");
+      await this.hooks.version.promise({
+        bump,
+        dryRun: options.dryRun,
+        quiet: options.quiet,
+      });
+      this.logger.verbose.info("Calling after version hook");
+      await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+
+      if (!options.dryRun) {
+        this.logger.verbose.info("Calling publish hook");
+        await this.hooks.publish.promise({ bump });
+        this.logger.verbose.info("Calling after publish hook");
+        await this.hooks.afterPublish.promise();
+      }
     }
 
     return {
@@ -1810,6 +1816,7 @@ export default class Auto {
       from ||
       (isPrerelease && latestTagInBranch) ||
       (await this.git.getLatestRelease());
+
     let calculatedBump = await this.release.getSemverBump(lastRelease);
 
     // For next releases we also want to take into account any labels on
@@ -1976,9 +1983,13 @@ export default class Auto {
       return;
     }
 
+    this.logger.log.info(`KELVIN LOG rawVersion: ${rawVersion}`)
+
     const newVersion = parse(rawVersion)
       ? this.prefixRelease(rawVersion)
       : rawVersion;
+
+    this.logger.log.info(`KELVIN LOG newVersion: ${newVersion}`)
 
     if (
       !dryRun &&
@@ -1996,6 +2007,7 @@ export default class Auto {
       dryRun,
       from: lastRelease,
       to: to || (await this.git.getSha()),
+      useVersion,
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,

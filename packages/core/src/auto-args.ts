@@ -107,12 +107,18 @@ export type IPRBodyOptions = Omit<ICommentOptions, "edit" | "delete">;
 
 export type ILatestOptions = BaseBranch &
   DryRunOption &
-  Partial<AuthorInformation> &
   NonNullable<AutoRc["latest"]> &
   NoVersionPrefix &
   ChangelogTitle &
   QuietOption &
-  ReleaseCalculationOptions;
+  ReleaseCalculationOptions &
+  Partial<AuthorInformation> &
+  Partial<RepoInformation> & {
+    /** Commit to start calculating the release from */
+    from?: string;
+    /** Override the version to release */
+    useVersion?: string;
+  };
 
 export type IShipItOptions = ILatestOptions & NonNullable<AutoRc["shipit"]>;
 

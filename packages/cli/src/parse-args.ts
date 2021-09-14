@@ -223,6 +223,14 @@ const force: AutoOption = {
   config: true,
 };
 
+const useVersion: AutoOption = {
+  name: "use-version",
+  type: String,
+  group: "main",
+  description:
+    "Version number to publish as. Defaults to reading from the package definition for the platform.",
+}
+
 interface AutoCommand extends Command {
   /** Options for the command */
   options?: AutoOption[];
@@ -469,7 +477,7 @@ export const commands: AutoCommand[] = [
     group: "Release Commands",
     description: endent`
       Create a GitHub release for a tag. Defaults to last tag in branch.
-      
+
       > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
     `,
     options: [
@@ -491,13 +499,7 @@ export const commands: AutoCommand[] = [
         description:
           "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD.",
       },
-      {
-        name: "use-version",
-        type: String,
-        group: "main",
-        description:
-          "Version number to publish as. Defaults to reading from the package definition for the platform.",
-      },
+      useVersion,
       baseBranch,
       prerelease,
     ],
@@ -525,6 +527,7 @@ export const commands: AutoCommand[] = [
     examples: ["{green $} auto shipit"],
     options: [
       ...latestCommandArgs,
+      useVersion,
       {
         name: "only-graduate-with-release-label",
         type: Boolean,
