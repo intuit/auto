@@ -245,6 +245,8 @@ export interface IAutoHooks {
         QuietOption & {
           /** The semver bump to apply */
           bump: SEMVER;
+          /** Override the version to release */
+          useVersion?: string;
         }
     ]
   >;
@@ -256,6 +258,8 @@ export interface IAutoHooks {
       {
         /** The semver bump that was applied in the version hook */
         bump: SEMVER;
+        /** Override the version to release */
+        useVersion?: string;
       }
     ]
   >;
@@ -1707,6 +1711,15 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
+    const bump = await this.getVersion(options);
+
+    this.logger.log.success(`Calculated version bump: ${options.useVersion || bump || "none"}`);
+
+    if (bump === "" && !options.useVersion) {
+      this.logger.log.info("No version published.");
+      return;
+    }
+
     const lastRelease = options.from || (await this.git.getLatestRelease());
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease
@@ -1722,31 +1735,24 @@ export default class Auto {
       await this.checkClean();
     }
 
-    if (!options.useVersion) {
-      const bump = await this.getVersion(options);
+    this.logger.verbose.info("Calling version hook");
+    await this.hooks.version.promise({
+      bump,
+      useVersion: options.useVersion,
+      dryRun: options.dryRun,
+      quiet: options.quiet,
+    });
+    this.logger.verbose.info("Calling after version hook");
+    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
 
-      this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
-
-      if (bump === "") {
-        this.logger.log.info("No version published.");
-        return;
-      }
-
-      this.logger.verbose.info("Calling version hook");
-      await this.hooks.version.promise({
+    if (!options.dryRun) {
+      this.logger.verbose.info("Calling publish hook");
+      await this.hooks.publish.promise({
         bump,
-        dryRun: options.dryRun,
-        quiet: options.quiet,
+        useVersion: options.useVersion
       });
-      this.logger.verbose.info("Calling after version hook");
-      await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
-
-      if (!options.dryRun) {
-        this.logger.verbose.info("Calling publish hook");
-        await this.hooks.publish.promise({ bump });
-        this.logger.verbose.info("Calling after publish hook");
-        await this.hooks.afterPublish.promise();
-      }
+      this.logger.verbose.info("Calling after publish hook");
+      await this.hooks.afterPublish.promise();
     }
 
     return {
@@ -1983,13 +1989,9 @@ export default class Auto {
       return;
     }
 
-    this.logger.log.info(`KELVIN LOG rawVersion: ${rawVersion}`)
-
     const newVersion = parse(rawVersion)
       ? this.prefixRelease(rawVersion)
       : rawVersion;
-
-    this.logger.log.info(`KELVIN LOG newVersion: ${newVersion}`)
 
     if (
       !dryRun &&

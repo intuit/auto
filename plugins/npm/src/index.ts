@@ -898,7 +898,7 @@ export default class NPMPlugin implements IPlugin {
 
     auto.hooks.version.tapPromise(
       this.name,
-      async ({ bump, dryRun, quiet }) => {
+      async ({ bump, useVersion, dryRun, quiet }) => {
         const isBaseBranch = branch === auto.baseBranch;
 
         /** Log the version */
@@ -920,7 +920,7 @@ export default class NPMPlugin implements IPlugin {
               await execPromise("npx", [
                 "lerna",
                 "version",
-                bump,
+                useVersion || bump,
                 ...(await getRegistryArgs()),
                 ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
                 "--yes",
@@ -938,7 +938,7 @@ export default class NPMPlugin implements IPlugin {
 
               logVersion(canaryPackageList.join("\n"));
             } else {
-              logVersion(inc(monorepoVersion, bump as ReleaseType) || bump);
+              logVersion(useVersion || inc(monorepoVersion, bump as ReleaseType) || bump);
             }
 
             return;
@@ -946,8 +946,8 @@ export default class NPMPlugin implements IPlugin {
 
           const monorepoBump =
             isIndependent || !isBaseBranch
-              ? bump
-              : (await bumpLatest(getMonorepoPackage(), bump)) || bump;
+              ? useVersion || bump
+              : useVersion || (await bumpLatest(getMonorepoPackage(), bump)) || bump;
 
           await execPromise("npx", [
             "lerna",
@@ -969,8 +969,8 @@ export default class NPMPlugin implements IPlugin {
         }
 
         const latestBump = isBaseBranch
-          ? (await bumpLatest(await loadPackageJson(), bump)) || bump
-          : bump;
+          ? useVersion || (await bumpLatest(await loadPackageJson(), bump)) || bump
+          : useVersion || bump;
 
         if (dryRun) {
           logVersion(latestBump);
