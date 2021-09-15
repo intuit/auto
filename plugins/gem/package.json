@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gem",
-  "version": "10.31.0",
+  "version": "10.32.0",
   "main": "dist/index.js",
   "description": "",
   "license": "MIT",
