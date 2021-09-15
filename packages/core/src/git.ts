@@ -877,11 +877,6 @@ export default class Git {
     return execPromise("git", ["describe", "--tags", "--abbrev=0", since]);
   }
 
-  /** Get the latest released in the git tree with the provided glob pattern */
-  async getLatestReleasedTagWithPattern(pattern?: string) {
-    return execPromise("git", ["describe", "--tags", "--abbrev=0", "--match", `${pattern}*`]);
-  }
-
   /** Get the tag before latest in the git tree */
   async getPreviousTagInBranch() {
     const latest = await this.getLatestTagInBranch();
