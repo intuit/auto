@@ -1,3 +1,26 @@
+# v10.32.0 (Wed Sep 15 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin)), for all your work!
+
+#### 🚀 Enhancement
+
+- Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### 🐛 Bug Fix
+
+- remove unused function and editorconfig ([@kelyvin](https://github.com/kelyvin))
+- properly leverage useVersion parameter in npm hook and fix tests ([@kelyvin](https://github.com/kelyvin))
+- update args to support --use-version with shipit ([@kelyvin](https://github.com/kelyvin))
+- initial commit ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.29.0 (Fri May 21 2021)
 
 #### 🚀 Enhancement

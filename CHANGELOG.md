@@ -1,3 +1,16 @@
+# v10.32.0 (Wed Sep 15 2021)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/npm`
+  - Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.31.0 (Thu Aug 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:
