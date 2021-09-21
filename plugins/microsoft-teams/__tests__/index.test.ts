@@ -6,7 +6,7 @@ import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
 import createHttpsProxyAgent from "https-proxy-agent";
 
-import MicrosoftTeamsPlugin, { sanitizeMarkdown } from "../src";
+import MicrosoftTeamsPlugin from "../src";
 
 const fetchSpy = jest.fn();
 // @ts-ignore
@@ -204,47 +204,7 @@ describe("createPost", () => {
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
-      undefined
-    );
-
-    expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
-    expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
-  });
-
-  test("should add more indents to nested lists", async () => {
-    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
-
-    await plugin.createPost(
-      mockAuto,
-      sanitizeMarkdown(
-        "# My Notes\n- PR [some link](google.com)\n - Another note"
-      ),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
-      undefined
-    );
-
-    expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
-    expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
-  });
-
-  test("should add more indents to nested lists - 2 spaces", async () => {
-    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
-
-    await plugin.createPost(
-      mockAuto,
-      sanitizeMarkdown(
-        "# My Notes\n- PR [some link](google.com)\n  - Another note"
-      ),
+      "# My Notes\n- PR [some link](google.com)",
       "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       undefined
     );
@@ -263,7 +223,7 @@ describe("createPost", () => {
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      "# My Notes\n- PR [some link](google.com)",
       "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       createHttpsProxyAgent("mock-url")
     );
@@ -276,28 +236,13 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
-  test("should remove markdown code types from block", async () => {
-    const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
-
-    await plugin.createPost(
-      mockAuto,
-      sanitizeMarkdown(
-        `# My Notes\n\`\`\`json\n{ "foo": "bar" }\`\`\`\n- PR [some link](google.com)`
-      ),
-      "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
-      undefined
-    );
-
-    expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
-  });
-
   test("should call Microsoft Office Teams api through https proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     process.env.https_proxy = "https-proxy";
 
     await plugin.createPost(
       mockAuto,
-      sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
+      "# My Notes\n- PR [some link](google.com)",
       "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
       createHttpsProxyAgent("mock-url")
     );
