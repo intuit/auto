@@ -41,7 +41,32 @@ describe("parseCommit", () => {
     ).toStrictEqual(commit);
   });
 
-  test("should add correct semver label to commit", async () => {
+  test("should add correct semver label to commit - skip", async () => {
+    const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+    const autoHooks = makeHooks();
+    conventionalCommitsPlugin.apply({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      semVerLabels: versionLabels,
+      logger: dummyLog(),
+      git: { getCommitsForPR: () => Promise.resolve([]) } as any,
+    } as Auto);
+
+    const logParseHooks = makeLogParseHooks();
+    autoHooks.onCreateLogParse.call({
+      hooks: logParseHooks,
+    } as LogParse);
+
+    const commit = makeCommitFromMsg("chore: normal commit with no bump");
+    expect(
+      await logParseHooks.parseCommit.promise({ ...commit })
+    ).toStrictEqual({
+      ...commit,
+      labels: ["skip-release"],
+    });
+  });
+
+  test("should add correct semver label to commit - fix", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
     conventionalCommitsPlugin.apply({
@@ -477,6 +502,42 @@ describe("prCheck", () => {
     });
 
     expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
+  });
+
+  test("should add skip label for non-release commits", async () => {
+    const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+    const autoHooks = makeHooks();
+    const addLabelToPr = jest.fn();
+    const auto = ({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      semVerLabels: versionLabels,
+      logger: dummyLog(),
+      git: {
+        getLabels: async () => [],
+        getCommitsForPR: async () => {
+          return [
+            {
+              sha: "1234",
+              commit: {
+                message: "chore: normal commit",
+              },
+            },
+          ];
+        },
+        addLabelToPr,
+      },
+    } as unknown) as Auto;
+
+    conventionalCommitsPlugin.apply(auto);
+
+    await auto.hooks.prCheck.promise({
+      pr: {
+        number: 1,
+      } as any,
+    });
+
+    expect(addLabelToPr).toHaveBeenCalledWith(1, "skip-release");
   });
 
   test("should add correct semver label to pr - custom labels", async () => {

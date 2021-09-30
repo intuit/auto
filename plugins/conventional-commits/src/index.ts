@@ -185,15 +185,19 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         .reduce(getHigherSemverTag, SEMVER.noVersion);
 
       if (
-        !bump ||
+        bump === undefined ||
+        bump === null ||
         bump === SEMVER.premajor ||
         bump === SEMVER.preminor ||
         bump === SEMVER.prepatch
       ) {
+        
         return;
       }
+      
+      const bumpOrSkip = bump === SEMVER.noVersion ? 'skip' : bump;
 
-      const label = auto.semVerLabels?.get(bump);
+      const label = auto.semVerLabels?.get(bumpOrSkip);
 
       if (label) {
         await auto.git.addLabelToPr(pr.number, label[0]);
