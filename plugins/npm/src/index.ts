@@ -115,6 +115,7 @@ export async function getChangedPackages({
   version,
 }: GetChangedPackagesArgs) {
   const changed = new Set<string>();
+  logger.veryVerbose.info(`Getting changes for SHA:`, sha)
   const changedFiles = execSync(
     `git --no-pager show --first-parent ${sha} --name-only --pretty=`,
     { encoding: "utf8" }

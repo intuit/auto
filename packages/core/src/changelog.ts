@@ -394,6 +394,7 @@ export default class Changelog {
               return true;
             }
 
+            this.logger.veryVerbose.info(`Rendering changelog line for commit:\n`, commit)
             const line = await this.hooks.renderChangelogLine.promise(
               await this.generateCommitNote(commit),
               commit
