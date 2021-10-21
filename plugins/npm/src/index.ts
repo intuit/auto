@@ -264,8 +264,14 @@ const markdownList = (lines: string[]) =>
   lines.map((line) => `- \`${line}\``).join("\n");
 
 /** Get the previous version. Typically from a package distribution description file. */
-async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
+async function getPreviousVersion(auto: Auto, prereleaseBranch: string, currentBranch: string | undefined) {
   let previousVersion = "";
+
+  let isMaintenanceBranch = false;
+
+  if(auto.config?.versionBranches && currentBranch) {
+    isMaintenanceBranch = currentBranch.includes(typeof auto.config.versionBranches === "boolean" ? "version-" : auto.config.versionBranches)
+  }
 
   if (isMonorepo()) {
     auto.logger.veryVerbose.info(
@@ -281,7 +287,7 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
     } else {
       const releasedPackage = getMonorepoPackage();
 
-      if (!releasedPackage.name && !releasedPackage.version) {
+      if (isMaintenanceBranch || (!releasedPackage.name && !releasedPackage.version)) {
         previousVersion = auto.prefixRelease(monorepoVersion);
       } else {
         previousVersion = await greaterRelease(
@@ -297,15 +303,18 @@ async function getPreviousVersion(auto: Auto, prereleaseBranch: string) {
       "Using package.json to calculate previous version"
     );
     const { version, name } = await loadPackageJson();
-
-    previousVersion = version
-      ? await greaterRelease(
-          auto.prefixRelease,
-          name,
-          auto.prefixRelease(version),
-          prereleaseBranch
-        )
-      : "0.0.0";
+    if(isMaintenanceBranch && version) {
+      previousVersion = version
+    } else {
+      previousVersion = version
+        ? await greaterRelease(
+            auto.prefixRelease,
+            name,
+            auto.prefixRelease(version),
+            prereleaseBranch
+          )
+        : "0.0.0";
+    }
   }
 
   auto.logger.verbose.info(
@@ -736,7 +745,7 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, () =>
-      getPreviousVersion(auto, prereleaseBranch)
+      getPreviousVersion(auto, prereleaseBranch, branch)
     );
 
     auto.hooks.getRepository.tapPromise(this.name, async () => {
@@ -1207,7 +1216,7 @@ export default class NPMPlugin implements IPlugin {
         const lastRelease = await auto.git!.getLatestRelease();
         const latestTag =
           (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
-          (await getPreviousVersion(auto, prereleaseBranch));
+          (await getPreviousVersion(auto, prereleaseBranch, branch));
 
         if (isMonorepo()) {
           auto.logger.verbose.info("Detected monorepo, using lerna");
