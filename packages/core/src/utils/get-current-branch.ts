@@ -3,6 +3,11 @@ import { execSync } from "child_process";
 
 const env = envCi();
 
+/**
+ *
+ */
+const isValidBranch = (branch: string | undefined) => typeof branch === "string" && branch !== "undefined"
+
 /** Get the current branch the git repo is set to */
 export function getCurrentBranch() {
   const isPR = "isPr" in env && env.isPr;
@@ -10,9 +15,9 @@ export function getCurrentBranch() {
   // env-ci sets branch to target branch (ex: main) in some CI services.
   // so we should make sure we aren't in a PR just to be safe
 
-  if (isPR && "prBranch" in env) {
+  if (isPR && "prBranch" in env && isValidBranch(env.prBranch)) {
     branch = env.prBranch;
-  } else {
+  } else if(isValidBranch(env.branch)) {
     branch = env.branch;
   }
 
