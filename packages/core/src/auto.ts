@@ -1685,8 +1685,8 @@ export default class Auto {
     options: IShipItOptions
   ): Promise<ShipitInfo | undefined> {
     const latestTag = await this.git?.getLatestTagInBranch(
-      getCurrentBranch() ||
       env.branch ||
+      getCurrentBranch() ||
       ""
     );
     const result = await this.publishFullRelease({
