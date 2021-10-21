@@ -166,18 +166,18 @@ export function findPlugin(
     return userPlugin;
   }
 
-  const officialPlugin = path.join("@auto-it", pluginPath);
-
-  // Try importing official plugin
-  if (exists(officialPlugin)) {
-    return officialPlugin;
-  }
-
   const canaryPlugin = path.join("@auto-canary", pluginPath);
 
   // Try importing official plugin
   if (exists(canaryPlugin)) {
     return canaryPlugin;
+  }
+
+  const officialPlugin = path.join("@auto-it", pluginPath);
+
+  // Try importing official plugin
+  if (exists(officialPlugin)) {
+    return officialPlugin;
   }
 
   // Try requiring a package
