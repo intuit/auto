@@ -115,7 +115,6 @@ export async function getChangedPackages({
   version,
 }: GetChangedPackagesArgs) {
   const changed = new Set<string>();
-  logger.veryVerbose.info(`Getting changes for SHA:`, sha)
   const changedFiles = execSync(
     `git --no-pager show --first-parent ${sha} --name-only --pretty=`,
     { encoding: "utf8" }
@@ -769,6 +768,14 @@ export default class NPMPlugin implements IPlugin {
           "NPM - Monorepo",
           async (line, commit) => {
             if (!isMonorepo() || !this.monorepoChangelog) {
+              return line;
+            }
+
+            // Allows us to see the commit being assessed
+            auto.logger.veryVerbose.info(`Rendering changelog line for commit:`, commit)
+
+            // adds commits to changelog only if hash is resolvable
+            if(!commit || !commit.hash) {
               return line;
             }
 
