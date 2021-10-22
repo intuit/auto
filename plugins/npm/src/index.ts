@@ -264,14 +264,8 @@ const markdownList = (lines: string[]) =>
   lines.map((line) => `- \`${line}\``).join("\n");
 
 /** Get the previous version. Typically from a package distribution description file. */
-async function getPreviousVersion(auto: Auto, prereleaseBranch: string, currentBranch: string | undefined) {
+async function getPreviousVersion(auto: Auto, prereleaseBranch: string, isMaintenanceBranch: boolean) {
   let previousVersion = "";
-
-  let isMaintenanceBranch = false;
-
-  if(auto.config?.versionBranches && currentBranch) {
-    isMaintenanceBranch = currentBranch.includes(typeof auto.config.versionBranches === "boolean" ? "version-" : auto.config.versionBranches)
-  }
 
   if (isMonorepo()) {
     auto.logger.veryVerbose.info(
@@ -677,6 +671,12 @@ export default class NPMPlugin implements IPlugin {
         ? branch
         : prereleaseBranches[0];
 
+    let isMaintenanceBranch = false;
+
+    if(auto.config?.versionBranches && branch) {
+      isMaintenanceBranch = branch.includes(typeof auto.config.versionBranches === "boolean" ? "version-" : auto.config.versionBranches)
+    }
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
@@ -745,7 +745,7 @@ export default class NPMPlugin implements IPlugin {
     });
 
     auto.hooks.getPreviousVersion.tapPromise(this.name, () =>
-      getPreviousVersion(auto, prereleaseBranch, branch)
+      getPreviousVersion(auto, prereleaseBranch, isMaintenanceBranch)
     );
 
     auto.hooks.getRepository.tapPromise(this.name, async () => {
@@ -1216,7 +1216,7 @@ export default class NPMPlugin implements IPlugin {
         const lastRelease = await auto.git!.getLatestRelease();
         const latestTag =
           (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
-          (await getPreviousVersion(auto, prereleaseBranch, branch));
+          (await getPreviousVersion(auto, prereleaseBranch, isMaintenanceBranch));
 
         if (isMonorepo()) {
           auto.logger.verbose.info("Detected monorepo, using lerna");
