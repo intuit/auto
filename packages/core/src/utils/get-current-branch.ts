@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 const env = envCi();
 
 /**
- *
+ * Validates that the given branch name should be returned by environment context
  */
 const isValidBranch = (branch: string | undefined) => typeof branch === "string" && branch !== "undefined"
 
