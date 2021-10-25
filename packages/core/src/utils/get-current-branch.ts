@@ -1,7 +1,7 @@
-import envCi from "env-ci";
+import envCi, { CiEnv } from "env-ci";
 import { execSync } from "child_process";
 
-const env = envCi();
+const defaultCiEnvironment = envCi();
 
 /**
  * Validates that the given branch name should be returned by environment context
@@ -9,7 +9,7 @@ const env = envCi();
 const isValidBranch = (branch: string | undefined) => typeof branch === "string" && branch !== "undefined"
 
 /** Get the current branch the git repo is set to */
-export function getCurrentBranch() {
+export function getCurrentBranch(env: Partial<CiEnv> = defaultCiEnvironment) {
   const isPR = "isPr" in env && env.isPr;
   let branch: string | undefined;
   // env-ci sets branch to target branch (ex: main) in some CI services.
