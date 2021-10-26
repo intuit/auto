@@ -398,6 +398,42 @@ describe("getPreviousVersion", () => {
 
     expect(await hooks.getPreviousVersion.promise()).toBe("0.1.2");
   });
+
+  test("should ignore greatest published monorepo package in maintenance mode", async () => {
+    execPromise.mockClear()
+    mockFs({
+      "lerna.json": `
+        {
+          "name": "test",
+          "version": "1.5.0"
+        }
+      `,
+      ...monorepoPackagesOnFs,
+    });
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // isMonorepo
+    monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
+    // published version of test package
+    execPromise.mockReturnValueOnce("2.1.0");
+
+    jest.spyOn(Auto, 'getCurrentBranch').mockReturnValueOnce('major-2')
+
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"], versionBranches: 'major-' },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      prefixRelease: (str) => str,
+    } as Auto.Auto);
+
+
+    expect(await hooks.getPreviousVersion.promise()).toBe("1.5.0");
+    expect(execPromise).not.toHaveBeenCalled()
+  });
 });
 
 test("should use string semver if no published package", async () => {
