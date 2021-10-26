@@ -283,6 +283,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://serendipidata.com/"><img src="https://avatars.githubusercontent.com/u/9020979?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Cameron Yick</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=hydrosquall" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=hydrosquall" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=hydrosquall" title="Documentation">📖</a> <a href="#infra-hydrosquall" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="http://kelyvin.com/"><img src="https://avatars.githubusercontent.com/u/1530102?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kelvin Nguyen</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=kelyvin" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://lshadler.github.io/"><img src="https://avatars.githubusercontent.com/u/23409677?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Shadler</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
