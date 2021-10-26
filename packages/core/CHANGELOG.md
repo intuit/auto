@@ -1,3 +1,28 @@
+# v10.32.2 (Tue Oct 26 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+- fix: testing around current branch logic (lucas_shadler@intuit.com)
+- Update packages/core/src/utils/get-current-branch.ts ([@sumwatshade](https://github.com/sumwatshade))
+- fix: try loading canary plugin first (lucas_shadler@intuit.com)
+- fix: check what is passed to changelog render (lucas_shadler@intuit.com)
+- fix: verbose logging on commit details (lucas_shadler@intuit.com)
+- fix: use current branch calculator (lucas_shadler@intuit.com)
+- fix: use env branch first (lucas_shadler@intuit.com)
+- fix: apply branch to getting latest tag (lucas_shadler@intuit.com)
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
 # v10.32.1 (Thu Sep 30 2021)
 
 #### 🐛 Bug Fix
