@@ -91,6 +91,9 @@
     },
     {
       "path": "plugins/sbt"
+    },
+    {
+      "path": "plugins/bazel"
     }
   ]
 }

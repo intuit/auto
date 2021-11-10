@@ -1,0 +1,45 @@
+{
+  "name": "@auto-it/bazel",
+  "version": "10.32.2",
+  "main": "dist/index.js",
+  "description": "",
+  "license": "MIT",
+  "author": {
+    "name": "Andrew Lisowski",
+    "email": "lisowski54@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intuit/auto"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "eslint src --ext .ts",
+    "test": "jest --maxWorkers=2 --config ../../package.json"
+  },
+  "dependencies": {
+    "@auto-it/core": "link:../../packages/core",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
+    "tslib": "1.10.0",
+    "semver":"^7.0.0"
+  }
+}
