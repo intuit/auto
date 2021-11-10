@@ -46,7 +46,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [brew](./plugins/brew) - Automate the creation of Homebrew formulae
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
-- [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+- [cocoapods](./plugins/cocoapods) - Version your [CocoaPod](https://cocoapods.org/), and push to your specs repository!
 - [crates](./plugins/crates) - Publish Rust crates
 - [docker](./plugins/docker) - Publish images with Docker
 - [gem](./plugins/gem) - Publish ruby gems
