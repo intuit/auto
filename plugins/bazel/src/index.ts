@@ -1,6 +1,5 @@
 import { Auto, IPlugin, execPromise, validatePluginConfiguration, getCurrentBranch, determineNextVersion, DEFAULT_PRERELEASE_BRANCHES } from '@auto-it/core';
 import * as t from "io-ts";
-import * as fs from "fs";
 
 import { inc, ReleaseType } from "semver";
 
@@ -34,10 +33,7 @@ async function getPreviousVersion(auto: Auto, versionFile: string) {
 async function writeNewVersion(auto: Auto, version: string, versionFile: string) {
   auto.logger.veryVerbose.info(`Writing version to file `, versionFile)
  
-  fs.writeFile('/Users/joe/test.txt', version, err => {
-    auto.logger.log.error(err)
-    throw new Error("Failed to write version to file")
-  })
+  await execPromise("echo", [version, ">", versionFile]);
 }
 
 /** Reset the scope changes of all the packages  */
