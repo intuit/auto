@@ -1,8 +1,10 @@
-import { Auto, IPlugin, execPromise, validatePluginConfiguration, getCurrentBranch } from '@auto-it/core';
+import { Auto, IPlugin, execPromise, validatePluginConfiguration, getCurrentBranch, determineNextVersion, DEFAULT_PRERELEASE_BRANCHES } from '@auto-it/core';
 import * as t from "io-ts";
 import * as fs from "fs";
 
 import { inc, ReleaseType } from "semver";
+
+const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
 
 const pluginOptions = t.partial({
   /** Path to file (from where auto is executed) where the version is stored */
@@ -38,22 +40,16 @@ async function writeNewVersion(auto: Auto, version: string, versionFile: string)
   })
 }
 
-/** Creates a git tag for the specified version */
-async function sealVersion(version: string){
-  await execPromise("git", ["commit", "-am", "'Update versions'"]);
-  await execPromise("git", [
-    "tag",
-    version,
-    "-m",
-    `"Update version to ${version}"`,
-  ]);
+/** Reset the scope changes of all the packages  */
+async function gitReset() {
+  await execPromise("git", ["reset", "--hard", "HEAD"]);
 }
 
-/** Pushes changes to current branch */
-async function gitPush(auto:Auto) {
-  const branch = getCurrentBranch()
-  await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+/** Generates canary release notes */
+function makeCanaryNotes(canaryVersion: string){
+  return `Try this version out locally by upgrading relevant packages to ${canaryVersion}`
 }
+
 
 /**  Plugin to orchestrate releases in a Bazel repo */
 export default class BazelPlugin implements IPlugin {
@@ -75,6 +71,18 @@ export default class BazelPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+
+    const prereleaseBranches =
+      auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
+
+    const branch = getCurrentBranch();
+    // if ran from baseBranch we publish the prerelease to the first
+    // configured prerelease branch
+    const prereleaseBranch =
+      branch && prereleaseBranches.includes(branch)
+        ? branch
+        : prereleaseBranches[0];
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config
       if (name === this.name && typeof options !== "string") {
@@ -107,8 +115,81 @@ export default class BazelPlugin implements IPlugin {
 
       const version = await getPreviousVersion(auto, this.versionFile)
       
-      await sealVersion(version)
-      await gitPush(auto)
+      // Seal versions via commit and tag
+      await execPromise("git", ["commit", "-am", VERSION_COMMIT_MESSAGE]);
+      await execPromise("git", [
+        "tag",
+        version
+      ]);
+      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
     });
+
+    auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier}) => {
+
+      // Figure out canary version
+      const lastRelease = await auto.git!.getLatestRelease();
+      const [, latestTag = lastRelease] = await auto.git!.getLatestTagInBranch()
+      const current = await auto.getCurrentVersion(lastRelease);
+      const canaryVersion = determineNextVersion(
+        latestTag,
+        current,
+        bump,
+        canaryIdentifier
+      );
+
+      // Write Canary version
+      await writeNewVersion(auto, canaryVersion, this.versionFile)
+
+      // Ship canary release
+      auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
+      await execPromise(this.releaseScript, ["snapshot"]);
+
+      // Reset temporary canary versioning
+      await gitReset();
+
+      return {
+        newVersion: canaryVersion,
+        details: makeCanaryNotes(canaryVersion),
+      };
+    });
+
+    auto.hooks.next.tapPromise(this.name, async (preReleaseVersions, { bump }) => {
+
+      // Figure out next version
+      const lastRelease = await auto.git!.getLatestRelease();
+      const latestTag =
+        (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+        (await getPreviousVersion(auto, this.versionFile));
+      const nextVersion = determineNextVersion(
+        lastRelease,
+        latestTag,
+        bump,
+        prereleaseBranch
+      );
+      const prefixedVersion = auto.prefixRelease(nextVersion);
+      preReleaseVersions.push(prefixedVersion);
+
+      auto.logger.log.info(`Marking version as ${nextVersion}`);
+
+      // Write version to file
+      await writeNewVersion(auto, nextVersion, this.versionFile)
+
+      // Ship canary release
+      auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
+      await execPromise(this.releaseScript, ["snapshot"]);
+
+      // Push next tag
+      await execPromise("git", [
+        "tag",
+        prefixedVersion
+      ]);
+      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+
+      // Reset temporary next versioning
+      await gitReset();
+
+      return preReleaseVersions
+    });
+
   }
 }
