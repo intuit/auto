@@ -159,10 +159,10 @@ export default class BazelPlugin implements IPlugin {
       const prefixedVersion = auto.prefixRelease(nextVersion);
       preReleaseVersions.push(prefixedVersion);
 
-      auto.logger.log.info(`Marking version as ${nextVersion}`);
+      auto.logger.log.info(`Marking version as ${prefixedVersion}`);
 
       // Write version to file
-      await writeNewVersion(auto, nextVersion, this.versionFile)
+      await writeNewVersion(auto, prefixedVersion, this.versionFile)
 
       // Ship canary release
       auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
