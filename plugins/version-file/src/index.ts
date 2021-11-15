@@ -13,11 +13,11 @@ const pluginOptions = t.partial({
   /** Path to file (from where auto is executed) where the version is stored */
   versionFile: t.string,
 
-  /** Bazel script that executes release pipeline stages */
+  /** Optional script that executes release pipeline stages */
   releaseScript: t.string
 });
 
-export type IBazelPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IVersionFilePluginOptions = t.TypeOf<typeof pluginOptions>;
 
 /**
  * Reads version file from location specified in config
@@ -34,7 +34,8 @@ async function writeNewVersion(auto: Auto, version: string, versionFile: string)
 }
 
 /** Reset the scope changes of all the packages  */
-async function gitReset() {
+async function gitReset(auto: Auto) {
+  auto.logger.veryVerbose.info("Hard resetting local changes")
   await execPromise("git", ["reset", "--hard", "HEAD"]);
 }
 
@@ -44,21 +45,21 @@ function makeCanaryNotes(canaryVersion: string){
 }
 
 
-/**  Plugin to orchestrate releases in a Bazel repo */
-export default class BazelPlugin implements IPlugin {
+/**  Plugin to orchestrate releases in a repo where version is maintained in a flat file */
+export default class VersionFilePlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'bazel';
+  name = 'VersionFile';
 
   /** Version file location */
   readonly versionFile: string;
 
   /** Release script location */
-  readonly releaseScript: string
+  readonly releaseScript: string | undefined
 
   /** Initialize the plugin with it's options */
-  constructor(options: IBazelPluginOptions) {
+  constructor(options: IVersionFilePluginOptions) {
     this.versionFile = options.versionFile ?? "VERSION";
-    this.releaseScript = options.releaseScript ?? "./tools/release.sh"
+    this.releaseScript = options.releaseScript
   }
 
 
@@ -109,10 +110,14 @@ export default class BazelPlugin implements IPlugin {
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
 
-      // Call release script
-      await execPromise(this.releaseScript, ["release"])
+      // Call release script if provided
+      if(this.releaseScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
+        await execPromise(this.releaseScript, ["release"])
+      } else {
+        auto.logger.log.info("Skipping calling release script in repo since none was provided");
+      }
       
       // push tag and version change commit up
       await execPromise("git", ["push", auto.remote, branch || auto.baseBranch, "--tags"]);
@@ -127,15 +132,22 @@ export default class BazelPlugin implements IPlugin {
       const nextVersion = inc(current, bump as ReleaseType);
       const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
+      auto.logger.log.info(`Marking version as ${canaryVersion}`);
+
       // Write Canary version
       await writeNewVersion(auto, canaryVersion, this.versionFile)
 
-      // Ship canary release
-      auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
-      await execPromise(this.releaseScript, ["snapshot"]);
+      // Ship canary release if release script is provided
+      if(this.releaseScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
+        await execPromise(this.releaseScript, ["snapshot"]);
+      } else {
+        auto.logger.log.info("Skipping calling release script in repo since none was provided");
+      }
+
 
       // Reset temporary canary versioning
-      await gitReset();
+      await gitReset(auto);
 
       return {
         newVersion: canaryVersion,
@@ -164,9 +176,13 @@ export default class BazelPlugin implements IPlugin {
       // Write version to file
       await writeNewVersion(auto, prefixedVersion, this.versionFile)
 
-      // Ship canary release
-      auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
-      await execPromise(this.releaseScript, ["snapshot"]);
+      // ship next release if release script is provided
+      if(this.releaseScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
+        await execPromise(this.releaseScript, ["snapshot"]);
+      } else {
+        auto.logger.log.info("Skipping calling release script in repo since none was provided");
+      }
 
       // Push next tag
       await execPromise("git", [

@@ -124,11 +124,31 @@ describe("Version File Write Operations", () => {
 })
 
 describe("Test Release Types", () => {
-  test("Full Releases", async () => {
+  test("Full release with no release script", async () => {
     mockFs({
       "VERSION": `1.0.0`,
     });
     const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    await hooks.publish.promise({bump: SEMVER.major})
+
+    // check release script was not called but check changes would be pushed
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["push", "origin", "main", "--tags"]);
+  });
+
+  test("Full release with release script", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
     const hooks = makeHooks();
 
     plugin.apply({
@@ -147,7 +167,7 @@ describe("Test Release Types", () => {
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["push", "origin", "main", "--tags"]);
   });
 
-  test("Canary Release", async () => {
+  test("Canary release with no release script", async () => {
     mockFs({
       "VERSION": `1.0.0`,
     });
@@ -168,14 +188,45 @@ describe("Test Release Types", () => {
 
     await hooks.canary.promise({bump: SEMVER.minor, canaryIdentifier: "canary.368.1"})
 
-    // check release script was called
-    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["snapshot"]);
+    // check release script was not called and local changes were reverted
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["reset", "--hard", "HEAD"]);
 
     // Check the right version was written
     expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.1.0-canary.368.1")
   });
 
-  test("Next Release", async () => {
+  test("Canary release with release script", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.0.0",
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLatestTagInBranch: () => Promise.resolve("1.0.0"),
+      },
+    } as unknown) as Auto);
+
+    await hooks.canary.promise({bump: SEMVER.minor, canaryIdentifier: "canary.368.1"})
+
+    // check release script was called
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["snapshot"]);
+
+    // check local changes were reverted
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["reset", "--hard", "HEAD"]);
+
+    // Check the right version was written
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.1.0-canary.368.1")
+  });
+
+  test("Next release with no release script", async () => {
 
     const prefixRelease: (a: string) => string = (version: string) => {
       return `v${version}`;
@@ -185,6 +236,43 @@ describe("Test Release Types", () => {
       "VERSION": `1.0.0`,
     });
     const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      config: { prereleaseBranches: ["next"] },
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      prefixRelease,
+      getCurrentVersion: () => "1.0.0",
+      git: {
+        getLastTagNotInBaseBranch: async () => undefined,
+        getLatestRelease: () => "1.0.0",
+        getLatestTagInBranch: () => Promise.resolve("1.0.0"),
+      },
+    } as unknown) as Auto);
+
+    await hooks.next.promise(["1.0.0"], {bump: SEMVER.major, fullReleaseNotes:"", releaseNotes:"", commits:[]})
+
+    // check release script was not called but git ops were performed
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["tag", "v2.0.0-next.0"]);
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["push", "origin", "main", "--tags"]);
+
+    // Check the right version was written
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("v2.0.0-next.0")
+  });
+
+  test("Next release with release script", async () => {
+
+    const prefixRelease: (a: string) => string = (version: string) => {
+      return `v${version}`;
+    };
+
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
     const hooks = makeHooks();
 
     plugin.apply(({

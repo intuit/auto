@@ -1,12 +1,12 @@
 {
-  "name": "@auto-it/bazel",
+  "name": "@auto-it/version-file",
   "version": "10.32.2",
   "main": "dist/index.js",
   "description": "",
   "license": "MIT",
   "author": {
-    "name": "Andrew Lisowski",
-    "email": "lisowski54@gmail.com"
+    "name": "Ketan Reddy",
+    "email": "ketan@ketanreddy.com"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
