@@ -1,7 +1,177 @@
-import Auto from '@auto-it/core';
-import Bazel from '../src';
+import Auto, { SEMVER } from '@auto-it/core';
+import mockFs from "mock-fs";
+import fs from "fs";
+import BazelPlugin from '../src';
+import { makeHooks } from '@auto-it/core/dist/utils/make-hooks';
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
-describe('Bazel Plugin', () => {
-  test('should do something', async () => {
+// Mocks
+const execPromise = jest.fn();
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () => (...args: any[]) => execPromise(...args)
+);
+jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+  getCurrentBranch: () => "main",
+}));
+
+beforeEach(() => {
+  execPromise.mockClear();
+});
+afterEach(() => {
+  mockFs.restore();
+})
+
+describe('Version File Read Operations', () => {
+  test("It should return the value in the default file", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    expect(await hooks.getPreviousVersion.promise()).toBe("1.0.0");
+  });
+
+  test("It should return the value in the specified file", async () => {
+    mockFs({
+      "VERSIONFILE": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({versionFile: "VERSIONFILE"});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    expect(await hooks.getPreviousVersion.promise()).toBe("1.0.0");
+  });
+});
+
+describe("Version File Write Operations", () => {
+  test("It should version the file properly for major releases", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    await hooks.version.promise({bump: SEMVER.major})
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("2.0.0")
+    // check that the proper git operations were performed
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "'\"Bump version to: %s [skip ci]\"'"]);
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "2.0.0"]);
+  });
+
+  test("It should version the file properly for minor releases", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    await hooks.version.promise({bump: SEMVER.minor})
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.1.0");
+    // check that the proper git operations were performed
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "'\"Bump version to: %s [skip ci]\"'"]);
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "1.1.0"]);
+  });
+
+  test("It should version the file properly for patch releases", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    await hooks.version.promise({bump: SEMVER.patch})
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.0.1");
+    // check that the proper git operations were performed
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "'\"Bump version to: %s [skip ci]\"'"]);
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "1.0.1"]);
+  });
+})
+
+describe("Test Release Types", () => {
+  test("Full Releases", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto);
+
+    await hooks.publish.promise({bump: SEMVER.major})
+
+    // check release script was called
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["release"]);
+
+    // check changes would be pushed
+    expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["push", "origin", "main", "--tags"]);
+  });
+
+  test("Canary Release", async () => {
+    mockFs({
+      "VERSION": `1.0.0`,
+    });
+    const plugin = new BazelPlugin({});
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.0.0",
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLatestTagInBranch: () => Promise.resolve("1.0.0"),
+      },
+    } as unknown) as Auto);
+
+    await hooks.canary.promise({bump: SEMVER.minor, canaryIdentifier: "canary.368.1"})
+
+    // check release script was called
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["snapshot"]);
+
+    // Check the right version was written
+    expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.1.0-canary.368.1")
   });
 });

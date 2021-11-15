@@ -1,9 +1,13 @@
 import { Auto, IPlugin, execPromise, validatePluginConfiguration, getCurrentBranch, determineNextVersion, DEFAULT_PRERELEASE_BRANCHES } from '@auto-it/core';
+import { promisify } from "util";
 import * as t from "io-ts";
-
+import * as fs from "fs";
 import { inc, ReleaseType } from "semver";
 
 const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
 
 const pluginOptions = t.partial({
   /** Path to file (from where auto is executed) where the version is stored */
@@ -20,20 +24,13 @@ export type IBazelPluginOptions = t.TypeOf<typeof pluginOptions>;
  */
 async function getPreviousVersion(auto: Auto, versionFile: string) {
   auto.logger.veryVerbose.info(`Reading version from file `, versionFile)
-  try {
-    return await execPromise("cat", [versionFile])
-  } catch (e){
-    auto.logger.log.error("Error, looks like the version file doesn't exist or is unreadable")
-  }
-
-  return ""
+  return readFile(versionFile, "utf-8")
 }
 
 /** Writes new version to version file at specified location */
 async function writeNewVersion(auto: Auto, version: string, versionFile: string) {
   auto.logger.veryVerbose.info(`Writing version to file `, versionFile)
- 
-  await execPromise("echo", [version, ">", versionFile]);
+  return writeFile(versionFile, version)
 }
 
 /** Reset the scope changes of all the packages  */
@@ -97,27 +94,28 @@ export default class BazelPlugin implements IPlugin {
       auto.logger.log.info(`Calculated new version as: ${newVersion}`)
 
       if (newVersion){
-        return writeNewVersion(auto, newVersion, this.versionFile)
-      } 
-      
-      auto.logger.log.error(`Error: Unable to calculate new version based off of ${lastVersion} being bumped with a ${bump} release`)
-      throw new Error ("Version bump failed")
+        // Seal versions via commit and tag
+        await writeNewVersion(auto, newVersion, this.versionFile)
+        await execPromise("git", ["commit", "-am", VERSION_COMMIT_MESSAGE]);
+        await execPromise("git", [
+          "tag",
+          newVersion
+        ]);
+        auto.logger.verbose.info("Successfully versioned repo");
+      } else {
+        auto.logger.log.error(`Error: Unable to calculate new version based off of ${lastVersion} being bumped with a ${bump} release`)
+        throw new Error ("Version bump failed")
+      }
     });
 
     auto.hooks.publish.tapPromise(this.name, async () => {
       auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
 
-      await execPromise(this.releaseScript, ["release"]);
-
-      const version = await getPreviousVersion(auto, this.versionFile)
+      // Call release script
+      await execPromise(this.releaseScript, ["release"])
       
-      // Seal versions via commit and tag
-      await execPromise("git", ["commit", "-am", VERSION_COMMIT_MESSAGE]);
-      await execPromise("git", [
-        "tag",
-        version
-      ]);
-      await execPromise("git", ["push", auto.remote, branch, "--tags"]);
+      // push tag and version change commit up
+      await execPromise("git", ["push", auto.remote, branch || auto.baseBranch, "--tags"]);
     });
 
     auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier}) => {
@@ -125,13 +123,9 @@ export default class BazelPlugin implements IPlugin {
       // Figure out canary version
       const lastRelease = await auto.git!.getLatestRelease();
       const [, latestTag = lastRelease] = await auto.git!.getLatestTagInBranch()
-      const current = await auto.getCurrentVersion(lastRelease);
-      const canaryVersion = determineNextVersion(
-        latestTag,
-        current,
-        bump,
-        canaryIdentifier
-      );
+      const current = await auto.getCurrentVersion(latestTag);
+      const nextVersion = inc(current, bump as ReleaseType);
+      const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
       // Write Canary version
       await writeNewVersion(auto, canaryVersion, this.versionFile)
@@ -180,9 +174,6 @@ export default class BazelPlugin implements IPlugin {
         prefixedVersion
       ]);
       await execPromise("git", ["push", auto.remote, branch, "--tags"]);
-
-      // Reset temporary next versioning
-      await gitReset();
 
       return preReleaseVersions
     });
