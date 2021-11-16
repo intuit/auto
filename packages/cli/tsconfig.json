@@ -17,6 +17,9 @@
     },
     {
       "path": "../../plugins/released"
+    },
+    {
+      "path": "../../plugins/version-file"
     }
   ]
 }

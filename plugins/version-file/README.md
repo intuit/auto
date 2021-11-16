@@ -6,7 +6,7 @@ Optional input for a release script to call during the publish/canary/next hooks
 
 ## Installation
 
-This plugin is not included with the `auto` CLI installed via NPM. To install:
+This plugin is included with the `auto` CLI so you do not have to install it. To install if you are using the `auto` API directly:
 
 ```bash
 npm i --save-dev @auto-it/version-file
