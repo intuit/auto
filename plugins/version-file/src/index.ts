@@ -14,7 +14,7 @@ const pluginOptions = t.partial({
   versionFile: t.string,
 
   /** Optional script that executes release pipeline stages */
-  releaseScript: t.string
+  publishScript: t.string
 });
 
 export type IVersionFilePluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -54,12 +54,12 @@ export default class VersionFilePlugin implements IPlugin {
   readonly versionFile: string;
 
   /** Release script location */
-  readonly releaseScript: string | undefined
+  readonly publishScript: string | undefined
 
   /** Initialize the plugin with it's options */
   constructor(options: IVersionFilePluginOptions) {
     this.versionFile = options.versionFile ?? "VERSION";
-    this.releaseScript = options.releaseScript
+    this.publishScript = options.publishScript
   }
 
 
@@ -112,9 +112,9 @@ export default class VersionFilePlugin implements IPlugin {
     auto.hooks.publish.tapPromise(this.name, async () => {
 
       // Call release script if provided
-      if(this.releaseScript){
-        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
-        await execPromise(this.releaseScript, ["release"])
+      if(this.publishScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
+        await execPromise(this.publishScript, ["release"])
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
@@ -138,9 +138,9 @@ export default class VersionFilePlugin implements IPlugin {
       await writeNewVersion(auto, canaryVersion, this.versionFile)
 
       // Ship canary release if release script is provided
-      if(this.releaseScript){
-        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
-        await execPromise(this.releaseScript, ["snapshot"]);
+      if(this.publishScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
+        await execPromise(this.publishScript, ["snapshot"]);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
@@ -177,9 +177,9 @@ export default class VersionFilePlugin implements IPlugin {
       await writeNewVersion(auto, prefixedVersion, this.versionFile)
 
       // ship next release if release script is provided
-      if(this.releaseScript){
-        auto.logger.log.info(`Calling release script in repo at ${this.releaseScript}`);
-        await execPromise(this.releaseScript, ["snapshot"]);
+      if(this.publishScript){
+        auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
+        await execPromise(this.publishScript, ["snapshot"]);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }

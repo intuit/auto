@@ -148,7 +148,7 @@ describe("Test Release Types", () => {
     mockFs({
       "VERSION": `1.0.0`,
     });
-    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
+    const plugin = new BazelPlugin({publishScript:"./tools/release.sh"});
     const hooks = makeHooks();
 
     plugin.apply({
@@ -199,7 +199,7 @@ describe("Test Release Types", () => {
     mockFs({
       "VERSION": `1.0.0`,
     });
-    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
+    const plugin = new BazelPlugin({publishScript:"./tools/release.sh"});
     const hooks = makeHooks();
 
     plugin.apply(({
@@ -272,7 +272,7 @@ describe("Test Release Types", () => {
     mockFs({
       "VERSION": `1.0.0`,
     });
-    const plugin = new BazelPlugin({releaseScript:"./tools/release.sh"});
+    const plugin = new BazelPlugin({publishScript:"./tools/release.sh"});
     const hooks = makeHooks();
 
     plugin.apply(({
