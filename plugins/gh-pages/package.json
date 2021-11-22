@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gh-pages",
-  "version": "10.32.2",
+  "version": "10.32.3",
   "main": "dist/index.js",
   "description": "Automate publishing to your gh-pages documentation website",
   "license": "MIT",
