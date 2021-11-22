@@ -1,3 +1,20 @@
+# v10.32.3 (Mon Nov 22 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(plugin/microsoft-teams): incorrect markdown rendering [#2080](https://github.com/intuit/auto/pull/2080) ([@mathieubergeron](https://github.com/mathieubergeron))
+- fix(plugin/microsoft-teams): incorrect markdown rendering ([@mathieubergeron](https://github.com/mathieubergeron))
+
+#### Authors: 1
+
+- Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron))
+
+---
+
 # v10.32.2 (Tue Oct 26 2021)
 
 #### 🐛 Bug Fix

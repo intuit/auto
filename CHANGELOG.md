@@ -1,3 +1,25 @@
+# v10.32.3 (Mon Nov 22 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/microsoft-teams`
+  - fix(plugin/microsoft-teams): incorrect markdown rendering [#2080](https://github.com/intuit/auto/pull/2080) ([@mathieubergeron](https://github.com/mathieubergeron))
+
+#### 📝 Documentation
+
+- Minor README.md typo [#2106](https://github.com/intuit/auto/pull/2106) ([@orta](https://github.com/orta))
+
+#### Authors: 2
+
+- Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron))
+- Orta Therox ([@orta](https://github.com/orta))
+
+---
+
 # v10.32.2 (Tue Oct 26 2021)
 
 #### 🐛 Bug Fix
