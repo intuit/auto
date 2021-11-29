@@ -126,9 +126,11 @@ export default class VersionFilePlugin implements IPlugin {
     auto.hooks.canary.tapPromise(this.name, async ({ bump, canaryIdentifier}) => {
 
       // Figure out canary version
-      const lastRelease = await auto.git!.getLatestRelease();
-      const [, latestTag = lastRelease] = await auto.git!.getLatestTagInBranch()
-      const current = await auto.getCurrentVersion(latestTag);
+      const lastRelease =
+        (await auto.git!.getLatestRelease()) ||
+        (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+        (await getPreviousVersion(auto, this.versionFile));
+      const current = await auto.getCurrentVersion(lastRelease);
       const nextVersion = inc(current, bump as ReleaseType);
       const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
