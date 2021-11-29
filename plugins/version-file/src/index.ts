@@ -48,7 +48,7 @@ function makeCanaryNotes(canaryVersion: string){
 /**  Plugin to orchestrate releases in a repo where version is maintained in a flat file */
 export default class VersionFilePlugin implements IPlugin {
   /** The name of the plugin */
-  name = 'VersionFile';
+  name = 'version-file';
 
   /** Version file location */
   readonly versionFile: string;
