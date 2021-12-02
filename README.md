@@ -46,7 +46,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 
 - [brew](./plugins/brew) - Automate the creation of Homebrew formulae
 - [chrome](./plugins/chrome) - Publish code to Chrome Web Store
-- [cocoapods](./plugins/cocoapods) - Version your [Cocoapod](https://cocoapods.org/), and push to your specs repository!
+- [cocoapods](./plugins/cocoapods) - Version your [CocoaPod](https://cocoapods.org/), and push to your specs repository!
 - [crates](./plugins/crates) - Publish Rust crates
 - [docker](./plugins/docker) - Publish images with Docker
 - [gem](./plugins/gem) - Publish ruby gems
@@ -285,6 +285,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   </tr>
   <tr>
     <td align="center"><a href="https://lshadler.github.io/"><img src="https://avatars.githubusercontent.com/u/23409677?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas Shadler</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sumwatshade" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mathieubergeron"><img src="https://avatars.githubusercontent.com/u/5585923?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mathieu Bergeron</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=mathieubergeron" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=mathieubergeron" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=mathieubergeron" title="Code">💻</a></td>
   </tr>
 </table>
 
