@@ -13,3 +13,7 @@
 #ignite .toc ol li {
   list-style-type: disc;
 }
+
+.graphViz svg {
+  border: 1px dashed gray;
+}
