@@ -725,6 +725,30 @@ describe("publish", () => {
     ]);
   });
 
+  test("monorepo - should use publishFolder", async () => {
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "--yes",
+      "from-package",
+      false,
+      "--contents",
+      "dist/publish-folder",
+    ]);
+  });
+
   test("should use legacy", async () => {
     mockFs({
       "package.json": `
@@ -752,6 +776,35 @@ describe("publish", () => {
     expect(execPromise).toHaveBeenCalledWith("npm", [
       "publish",
       "--_auth=abcd",
+    ]);
+  });
+
+  test("should use publishFolder", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test",
+          "version": "0.0.0"
+        }
+      `,
+    });
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    execPromise.mockReturnValueOnce("1.0.0");
+
+    await hooks.publish.promise({ bump: Auto.SEMVER.patch });
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "dist/publish-folder",
     ]);
   });
 
@@ -1021,6 +1074,95 @@ describe("canary", () => {
       "--tag",
       "canary",
       "--_auth=abcd",
+    ]);
+  });
+
+  test("should use publishFolder", async () => {
+    mockFs({
+      "package.json": `
+        {
+          "name": "test"
+        }
+      `,
+    });
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      git: {
+        getLatestRelease: () => "1.2.3",
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as unknown) as Auto.Auto);
+
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "canary.123.1",
+    });
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "dist/publish-folder",
+      "--tag",
+      "canary",
+    ]);
+  });
+
+  test("monorepo - should use publishFolder", async () => {
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      git: {
+        getLatestRelease: () => Promise.resolve("1.2.3"),
+        getLatestTagInBranch: () => Promise.resolve("1.2.3"),
+      },
+    } as any);
+
+    const packages = [
+      {
+        path: "path/to/package",
+        name: "@foobar/app",
+        version: "1.2.3-canary.0+abcd",
+      },
+      {
+        path: "path/to/package",
+        name: "@foobar/lib",
+        version: "1.2.3-canary.0+abcd",
+      },
+    ];
+
+    monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
+    getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
+
+    await hooks.canary.promise({
+      bump: Auto.SEMVER.patch,
+      canaryIdentifier: "",
+    });
+    expect(execPromise).toHaveBeenCalledWith("npx", [
+      "lerna",
+      "publish",
+      "1.2.4-0",
+      "--dist-tag",
+      "canary",
+      "--contents",
+      "dist/publish-folder",
+      "--force-publish",
+      "--yes",
+      "--no-git-reset",
+      "--no-git-tag-version",
+      "--exact",
+      "--no-verify-access"
     ]);
   });
 
