@@ -61,12 +61,9 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.1`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 
