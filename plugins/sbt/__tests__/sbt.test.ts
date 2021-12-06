@@ -98,7 +98,7 @@ describe("sbt plugin", () => {
       expect(exec).toHaveBeenCalledTimes(2);
       expect(exec).lastCalledWith("sbt", [
         "--client",
-        'set every version := \\"0.1.0\\"',
+        'set ThisBuild / version := \\"0.1.0\\"',
       ]);
     });
   });
@@ -159,7 +159,7 @@ describe("sbt plugin", () => {
 
       expect(exec).not.toHaveBeenCalledWith("sbt", [
         "--client",
-        'set every version := \\"0.1.0\\"',
+        'set ThisBuild / version := \\"0.1.0\\"',
       ]);
 
       expect(result).toMatchObject({
@@ -187,7 +187,7 @@ describe("sbt plugin", () => {
 
       expect(exec).toHaveBeenCalledWith("sbt", [
         "--client",
-        `set every version := \\"${newVersion}\\"`,
+        `set ThisBuild / version := \\"${newVersion}\\"`,
       ]);
 
       expect(result).toMatchObject({ newVersion });
