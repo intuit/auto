@@ -111,6 +111,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   ) => {
     if (buildFlag) {
       // don't create release, tag, or commit since auto will do this
+      
       await execPromise(this.options.gradleCommand, [
         "updateVersion",
         "-Prelease.useAutomaticVersion=true",
