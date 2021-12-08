@@ -108,25 +108,13 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     commitMsg?: string,
     buildFlag = true,
     commit = true
-  ) => {
-    if (buildFlag) {
-      // don't create release, tag, or commit since auto will do this
-      await execPromise(this.options.gradleCommand, [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
-        "-Prelease.useAutomaticVersion=true",
-        `-Prelease.newVersion=${version}`,
-        ...this.options.gradleOptions,
-      ]);
-    } else {
-      await execPromise(this.options.gradleCommand, [
+  ) => {  
+    await execPromise(this.options.gradleCommand, [
         "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=${version}`,
         ...this.options.gradleOptions,
       ]);
-    }
 
     if (commit) {
       await execPromise("git", [

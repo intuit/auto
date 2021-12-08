@@ -61,9 +61,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.1`,
       ]);
@@ -80,9 +78,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=2.0.0`,
       ]);
@@ -100,9 +96,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=2.0.0`,
       ]);
@@ -119,9 +113,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.2.0`,
       ]);
@@ -138,9 +130,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.0`,
       ]);
@@ -327,9 +317,7 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.0`,
       ]);
@@ -361,9 +349,7 @@ describe("Gradle Plugin - Custom Command", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradlew"), [
-        "release",
-        "runBuildTasks",
-        "checkSnapshotDependencies",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.1`,
         "-P prop=val",
