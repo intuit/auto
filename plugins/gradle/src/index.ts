@@ -106,7 +106,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
-    buildFlag = true,
     commit = true
   ) => {  
     await execPromise(this.options.gradleCommand, [
