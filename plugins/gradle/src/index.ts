@@ -249,7 +249,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         await this.updateGradleVersion(
           canaryReleaseVersion,
           `Prerelease version: ${canaryReleaseVersion} [skip ci]`,
-          false,
           false
         );
 
@@ -311,7 +310,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         await this.updateGradleVersion(
           preReleaseSnapshotVersion,
           `Prerelease version: ${preReleaseSnapshotVersion} [skip ci]`,
-          false,
           false
         );
 
