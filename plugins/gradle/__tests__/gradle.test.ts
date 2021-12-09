@@ -85,8 +85,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
