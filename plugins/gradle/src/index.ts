@@ -106,14 +106,29 @@ export default class GradleReleasePluginPlugin implements IPlugin {
   private readonly updateGradleVersion = async (
     version: string,
     commitMsg?: string,
+    buildFlag = true,
     commit = true
-  ) => {  
-    await execPromise(this.options.gradleCommand, [
+  ) => {
+    if (buildFlag) {
+      // don't create release, tag, or commit since auto will do this
+      await execPromise(this.options.gradleCommand, [
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
         "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=${version}`,
         ...this.options.gradleOptions,
       ]);
+    } else {
+      await execPromise(this.options.gradleCommand, [
+        "updateVersion",
+        "-Prelease.useAutomaticVersion=true",
+        `-Prelease.newVersion=${version}`,
+        ...this.options.gradleOptions,
+      ]);
+    }
 
     if (commit) {
       await execPromise("git", [
@@ -249,6 +264,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         await this.updateGradleVersion(
           canaryReleaseVersion,
           `Prerelease version: ${canaryReleaseVersion} [skip ci]`,
+          false,
           false
         );
 
@@ -310,6 +326,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         await this.updateGradleVersion(
           preReleaseSnapshotVersion,
           `Prerelease version: ${preReleaseSnapshotVersion} [skip ci]`,
+          false,
           false
         );
 
