@@ -61,8 +61,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
@@ -104,8 +107,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
@@ -125,8 +131,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
@@ -146,8 +155,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
@@ -337,8 +349,11 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
@@ -373,8 +388,11 @@ describe("Gradle Plugin - Custom Command", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradlew"), [
+        "createScmAdapter",
+        "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
+        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
