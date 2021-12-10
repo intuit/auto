@@ -116,7 +116,6 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         "initScmAdapter",
         "checkCommitNeeded",
         "checkUpdateNeeded",
-        "unSnapshotVersion",
         "checkSnapshotDependencies",
         "runBuildTasks",
         "updateVersion",
