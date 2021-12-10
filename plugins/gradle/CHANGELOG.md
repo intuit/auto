@@ -1,3 +1,21 @@
+# v10.32.5 (Fri Dec 10 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Reordering the task to avoid the snapshotCheck failure [#2118](https://github.com/intuit/auto/pull/2118) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+- Reordering the task to avoid the snapshotCheck failure ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+
+#### Authors: 2
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
 # v10.32.4 (Fri Dec 10 2021)
 
 :tada: This release contains work from new contributors! :tada:
