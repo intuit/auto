@@ -61,12 +61,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.1`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 
@@ -81,12 +84,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=2.0.0`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 
@@ -102,12 +108,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=2.0.0`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 
@@ -122,12 +131,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.2.0`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
 
@@ -142,12 +154,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
-        `-Prelease.newVersion=1.0.0`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
+        `-Prelease.newVersion=1.0.0`
       ]);
     });
 
@@ -332,12 +347,15 @@ describe("Gradle Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.0`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
       ]);
     });
   });
@@ -367,12 +385,15 @@ describe("Gradle Plugin - Custom Command", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradlew"), [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
+        "updateVersion",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=1.0.1`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
         "-P prop=val",
       ]);
     });
