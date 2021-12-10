@@ -1,3 +1,40 @@
+# v10.32.4 (Fri Dec 10 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+
+:heart: yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+:heart: Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+### Release Notes
+
+#### fixing gradle issue ([#2116](https://github.com/intuit/auto/pull/2116))
+
+This release fixes the Gradle plugin ([#2608](https://github.com/intuit/auto/issues/2068)) for Gradle 6.8+.
+
+---
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - fixing gradle issue [#2116](https://github.com/intuit/auto/pull/2116) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+
+#### 📝 Documentation
+
+- Expand default label configuration by default in Docs [#2060](https://github.com/intuit/auto/pull/2060) ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+#### Authors: 3
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
 # v10.32.3 (Mon Nov 22 2021)
 
 :tada: This release contains work from a new contributor! :tada:
