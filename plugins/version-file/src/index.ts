@@ -132,7 +132,7 @@ export default class VersionFilePlugin implements IPlugin {
         (await getPreviousVersion(auto, this.versionFile));
       const current = await auto.getCurrentVersion(lastRelease);
       const nextVersion = inc(current, bump as ReleaseType);
-      const canaryVersion = `${nextVersion}${canaryIdentifier}`;
+      const canaryVersion = `${nextVersion}-${canaryIdentifier}`;
 
       auto.logger.log.info(`Marking version as ${canaryVersion}`);
 
