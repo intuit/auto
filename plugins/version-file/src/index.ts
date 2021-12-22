@@ -4,7 +4,6 @@ import * as t from "io-ts";
 import * as fs from "fs";
 import { inc, ReleaseType } from "semver";
 
-const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
@@ -97,10 +96,10 @@ export default class VersionFilePlugin implements IPlugin {
       if (newVersion){
         // Seal versions via commit and tag
         await writeNewVersion(auto, newVersion, this.versionFile)
-        await execPromise("git", ["commit", "-am", VERSION_COMMIT_MESSAGE]);
+        await execPromise("git", ["commit", "-am", `Bump version to: v${newVersion} [skip ci]`]);
         await execPromise("git", [
           "tag",
-          newVersion
+          `v${newVersion}`
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
       } else {
