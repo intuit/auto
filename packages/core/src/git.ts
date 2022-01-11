@@ -166,8 +166,8 @@ export default class Git {
     this.github.hook.error("request", (error) => {
       if (error) {
         // narrow down the type
-        if ("headers" in error && error.headers.authorization) {
-          delete error.headers.authorization;
+        if ("headers" in error && error.headers?.authorization) {
+          delete error.headers?.authorization;
         }
       }
 
