@@ -1,3 +1,34 @@
+# v10.32.2 (Tue Oct 26 2021)
+
+#### 🐛 Bug Fix
+
+- fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
+# v10.32.0 (Wed Sep 15 2021)
+
+#### 🚀 Enhancement
+
+- Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### 🐛 Bug Fix
+
+- Add bolding to documentation ([@kelyvin](https://github.com/kelyvin))
+- update cli documentation ([@kelyvin](https://github.com/kelyvin))
+- update args to support --use-version with shipit ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.31.0 (Thu Aug 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:

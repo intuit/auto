@@ -119,12 +119,13 @@
       ]
     },
     {
-      "login": "yogikhan",
-      "name": "Yogesh Khandlewal",
+      "login": "ykhandelwal913",
+      "name": "Yogesh Khandelwal",
       "avatar_url": "https://avatars3.githubusercontent.com/u/16071601?v=4",
-      "profile": "https://github.com/yogikhan",
+      "profile": "https://github.com/ykhandelwal913",
       "contributions": [
-        "code"
+        "code",
+        "test"
       ]
     },
     {
@@ -573,6 +574,48 @@
         "code",
         "doc",
         "infra"
+      ]
+    },
+    {
+      "login": "kelyvin",
+      "name": "Kelvin Nguyen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1530102?v=4",
+      "profile": "http://kelyvin.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "sumwatshade",
+      "name": "Lucas Shadler",
+      "avatar_url": "https://avatars.githubusercontent.com/u/23409677?v=4",
+      "profile": "https://lshadler.github.io/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "mathieubergeron",
+      "name": "Mathieu Bergeron",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5585923?v=4",
+      "profile": "https://github.com/mathieubergeron",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "AndreasWeichselbaum",
+      "name": "Andreas Weichselbaum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/65903773?v=4",
+      "profile": "https://github.com/AndreasWeichselbaum",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
       ]
     }
   ],

@@ -1,3 +1,64 @@
+# v10.32.2 (Tue Oct 26 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+- fix: testing around current branch logic (lucas_shadler@intuit.com)
+- Update packages/core/src/utils/get-current-branch.ts ([@sumwatshade](https://github.com/sumwatshade))
+- fix: try loading canary plugin first (lucas_shadler@intuit.com)
+- fix: check what is passed to changelog render (lucas_shadler@intuit.com)
+- fix: verbose logging on commit details (lucas_shadler@intuit.com)
+- fix: use current branch calculator (lucas_shadler@intuit.com)
+- fix: use env branch first (lucas_shadler@intuit.com)
+- fix: apply branch to getting latest tag (lucas_shadler@intuit.com)
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
+# v10.32.1 (Thu Sep 30 2021)
+
+#### 🐛 Bug Fix
+
+- use strict check so SEMVER.noVersion can add skip-release [#2086](https://github.com/intuit/auto/pull/2086) ([@hborawski](https://github.com/hborawski))
+- remove memoize from getLabels, otherwise label manipulation by plugins doenst work in pr-check ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
+# v10.32.0 (Wed Sep 15 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin)), for all your work!
+
+#### 🚀 Enhancement
+
+- Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### 🐛 Bug Fix
+
+- remove unused function and editorconfig ([@kelyvin](https://github.com/kelyvin))
+- properly leverage useVersion parameter in npm hook and fix tests ([@kelyvin](https://github.com/kelyvin))
+- update args to support --use-version with shipit ([@kelyvin](https://github.com/kelyvin))
+- initial commit ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.29.0 (Fri May 21 2021)
 
 #### 🚀 Enhancement

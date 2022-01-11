@@ -119,7 +119,7 @@ const makeDetail = (summary: string, body: string) => endent`
   <details>
     <summary>${summary}</summary>
     <br />
-    
+
     ${body}
   </details>
 `;
@@ -195,6 +195,8 @@ export interface IAutoHooks {
         from: string;
         /** Commit to end calculating the version from */
         to: string;
+        /** Override the version to release */
+        useVersion?: string;
         /** The version being released */
         newVersion: string;
         /** Whether the release being made is a prerelease */
@@ -243,6 +245,8 @@ export interface IAutoHooks {
         QuietOption & {
           /** The semver bump to apply */
           bump: SEMVER;
+          /** Override the version to release */
+          useVersion?: string;
         }
     ]
   >;
@@ -254,6 +258,8 @@ export interface IAutoHooks {
       {
         /** The semver bump that was applied in the version hook */
         bump: SEMVER;
+        /** Override the version to release */
+        useVersion?: string;
       }
     ]
   >;
@@ -536,13 +542,17 @@ export default class Auto {
   private loadDefaultBehavior() {
     this.hooks.makeRelease.tapPromise("Default", async (options) => {
       if (options.dryRun) {
-        const bump = await this.getVersion({ from: options.from });
+        let releaseVersion;
+
+        if (options.useVersion) {
+          releaseVersion = options.useVersion;
+        } else {
+          const bump = await this.getVersion({ from: options.from });
+          releaseVersion = inc(options.newVersion, bump as ReleaseType);
+        }
 
         this.logger.log.info(
-          `Would have created a release on GitHub for version: ${inc(
-            options.newVersion,
-            bump as ReleaseType
-          )}`
+          `Would have created a release on GitHub for version: ${releaseVersion}`
         );
         this.logger.log.note(
           'The above version would only get released if ran with "shipit" or a custom script that bumps the version using the "version" command'
@@ -594,7 +604,7 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Found configuration errors:
-          
+
           ${errors.map(formatError).join("\n")}
         `,
         "\n"
@@ -783,7 +793,7 @@ export default class Auto {
       "auto" version: v${getAutoVersion()}
       "git"  version: v${gitVersion.replace('git version ', '')}
       "node" version: ${process.version.trim()}${
-        access['x-github-enterprise-version'] 
+        access['x-github-enterprise-version']
           ? `\nGHE version:    v${access['x-github-enterprise-version']}\n`
           : '\n'}
       ${chalk.underline.white('Project Information:')}
@@ -977,8 +987,8 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Could not detect PR number. pr-check must be run from either a PR or have the PR number supplied via the --pr flag.
-          
-          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed.
         `
       );
       process.exit(1);
@@ -1207,7 +1217,7 @@ export default class Auto {
         None of the plugins that you are using implement the \`canary\` command!
 
         "canary" releases are versions that are used solely to test changes. They make sense on some platforms (ex: npm) but not all!
-        
+
         If you think your package manager has the ability to support canaries please file an issue or submit a pull request,
       `);
       process.exit(0);
@@ -1674,7 +1684,9 @@ export default class Auto {
   private async oldRelease(
     options: IShipItOptions
   ): Promise<ShipitInfo | undefined> {
-    const latestTag = await this.git?.getLatestTagInBranch();
+    const latestTag = await this.git?.getLatestTagInBranch(
+      getCurrentBranch() || ""
+    );
     const result = await this.publishFullRelease({
       ...options,
       from: latestTag,
@@ -1692,6 +1704,9 @@ export default class Auto {
     options: ILatestOptions & {
       /** Internal option to shipit from a certain tag or commit */
       from?: string;
+
+      /** Override the version to release */
+      useVersion?: string;
     }
   ): Promise<ShipitInfo | undefined> {
     if (!this.git || !this.release) {
@@ -1700,9 +1715,9 @@ export default class Auto {
 
     const bump = await this.getVersion(options);
 
-    this.logger.log.success(`Calculated version bump: ${bump || "none"}`);
+    this.logger.log.success(`Calculated version bump: ${options.useVersion || bump || "none"}`);
 
-    if (bump === "") {
+    if (bump === "" && !options.useVersion) {
       this.logger.log.info("No version published.");
       return;
     }
@@ -1725,6 +1740,7 @@ export default class Auto {
     this.logger.verbose.info("Calling version hook");
     await this.hooks.version.promise({
       bump,
+      useVersion: options.useVersion,
       dryRun: options.dryRun,
       quiet: options.quiet,
     });
@@ -1733,7 +1749,10 @@ export default class Auto {
 
     if (!options.dryRun) {
       this.logger.verbose.info("Calling publish hook");
-      await this.hooks.publish.promise({ bump });
+      await this.hooks.publish.promise({
+        bump,
+        useVersion: options.useVersion
+      });
       this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
     }
@@ -1753,8 +1772,8 @@ export default class Auto {
       this.logger.log.error(
         endent`
           Could not detect PR number. ${command} must be run from either a PR or have the PR number supplied via the --pr flag.
-          
-          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed. 
+
+          In some CIs your branch might be built before you open a PR and posting the canary version will fail. In this case subsequent builds should succeed.
         `
       );
 
@@ -1805,6 +1824,7 @@ export default class Auto {
       from ||
       (isPrerelease && latestTagInBranch) ||
       (await this.git.getLatestRelease());
+
     let calculatedBump = await this.release.getSemverBump(lastRelease);
 
     // For next releases we also want to take into account any labels on
@@ -1924,7 +1944,7 @@ export default class Auto {
           Could not find any tags in the local repository. Exiting early.
 
           The "release" command creates GitHub releases for tags that have already been created in your repo.
-          
+
           If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
         `,
         "\n"
@@ -1991,6 +2011,7 @@ export default class Auto {
       dryRun,
       from: lastRelease,
       to: to || (await this.git.getSha()),
+      useVersion,
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,
@@ -2073,14 +2094,14 @@ export default class Auto {
         } else {
           this.logger.log.error(endent`
             .autorc author parsing failed!
-  
+
             The author must either be in one of the following formats:
-  
+
             1. Your Name <your_email@mail.com>
             2. An object with "name" and "email"
-  
+
             But you supplied:
-  
+
             ${author}
           `);
         }
@@ -2137,9 +2158,9 @@ export default class Auto {
 
             Name: ${user.name}
             Email: ${user.email}
-  
-            You must do one of the following: 
-  
+
+            You must do one of the following:
+
             - configure the author for your package manager (ex: set "author" in package.json)
             - Set "name" and "email in your .autorc
           `,
@@ -2163,7 +2184,7 @@ export default class Auto {
         endent`
           Cannot find project owner and repository name!
 
-          You must do one of the following: 
+          You must do one of the following:
 
           - configure the repo for your package manager (ex: set "repository" in package.json)
           - configure your git remote 'origin' to point to your project on GitHub.

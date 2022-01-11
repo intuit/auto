@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/microsoft-teams",
-  "version": "10.31.0",
+  "version": "10.32.5",
   "main": "dist/index.js",
   "description": "Microsoft Teams plugin for auto",
   "license": "MIT",
@@ -41,11 +41,7 @@
     "fp-ts": "^2.5.3",
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
-    "jsesc": "^3.0.2",
     "node-fetch": "2.6.1",
     "tslib": "2.1.0"
-  },
-  "devDependencies": {
-    "@types/jsesc": "^2.5.1"
   }
 }

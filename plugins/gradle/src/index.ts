@@ -112,12 +112,15 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     if (buildFlag) {
       // don't create release, tag, or commit since auto will do this
       await execPromise(this.options.gradleCommand, [
-        "release",
+        "createScmAdapter",
+        "initScmAdapter",
+        "checkCommitNeeded",
+        "checkUpdateNeeded",
+        "updateVersion",
+        "checkSnapshotDependencies",
+        "runBuildTasks",
         "-Prelease.useAutomaticVersion=true",
         `-Prelease.newVersion=${version}`,
-        "-x createReleaseTag",
-        "-x preTagCommit",
-        "-x commitNewVersion",
         ...this.options.gradleOptions,
       ]);
     } else {

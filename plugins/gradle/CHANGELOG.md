@@ -1,3 +1,78 @@
+# v10.32.5 (Fri Dec 10 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Reordering the task to avoid the snapshotCheck failure [#2118](https://github.com/intuit/auto/pull/2118) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+- Reordering the task to avoid the snapshotCheck failure ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+
+#### Authors: 2
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
+# v10.32.4 (Fri Dec 10 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+
+:heart: yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+:heart: Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+### Release Notes
+
+#### fixing gradle issue ([#2116](https://github.com/intuit/auto/pull/2116))
+
+This release fixes the Gradle plugin ([#2608](https://github.com/intuit/auto/issues/2068)) for Gradle 6.8+.
+
+---
+
+#### 🐛 Bug Fix
+
+- fixing gradle issue [#2116](https://github.com/intuit/auto/pull/2116) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+- Removing unsnapshot version ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- fixing test ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- Adding some more task ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- Adding individual tasks of release plugin to ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- fixing build ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- removing unused variable ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- fixing gradle issue ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+- testing with release ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal))
+
+#### 📝 Documentation
+
+- Expand default label configuration by default in Docs [#2060](https://github.com/intuit/auto/pull/2060) ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+#### Authors: 3
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
+# v10.32.2 (Tue Oct 26 2021)
+
+#### 🐛 Bug Fix
+
+- fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
 # v10.29.0 (Fri May 21 2021)
 
 #### 🚀 Enhancement

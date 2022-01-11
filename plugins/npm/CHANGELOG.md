@@ -1,3 +1,41 @@
+# v10.32.2 (Tue Oct 26 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+- test: add unit test for maintenance npm calc (lucas_shadler@intuit.com)
+- fix: pull logic to top apply level (lucas_shadler@intuit.com)
+- fix: check if maintenance version (lucas_shadler@intuit.com)
+- fix: check what is passed to changelog render (lucas_shadler@intuit.com)
+- fix: verbose logging on commit details (lucas_shadler@intuit.com)
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
+# v10.32.0 (Wed Sep 15 2021)
+
+#### 🚀 Enhancement
+
+- Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### 🐛 Bug Fix
+
+- properly leverage useVersion parameter in npm hook and fix tests ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.31.0 (Thu Aug 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:

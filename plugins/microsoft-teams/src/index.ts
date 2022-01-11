@@ -1,4 +1,3 @@
-import jsesc from "jsesc";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
@@ -9,9 +8,6 @@ import {
 } from "@auto-it/core";
 import fetch from "node-fetch";
 import * as t from "io-ts";
-
-/** Microsoft Teams accepts markdown, as long as the content was escaped/serialized to a JSON string first  */
-export const sanitizeMarkdown = (markdown: string) => jsesc(markdown);
 
 const pluginOptions = t.partial({
   /** URL of the mircosoft teams to post to */
@@ -127,7 +123,7 @@ export default class MicrosoftTeamsPlugin {
 
         await this.createPost(
           auto,
-          sanitizeMarkdown(releaseNotes),
+          releaseNotes,
           releaseUrl,
           agent
         );

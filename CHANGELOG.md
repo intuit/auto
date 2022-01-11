@@ -1,3 +1,120 @@
+# v10.32.5 (Fri Dec 10 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - Reordering the task to avoid the snapshotCheck failure [#2118](https://github.com/intuit/auto/pull/2118) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+
+#### Authors: 2
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
+# v10.32.4 (Fri Dec 10 2021)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+
+:heart: yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+:heart: Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+### Release Notes
+
+#### fixing gradle issue ([#2116](https://github.com/intuit/auto/pull/2116))
+
+This release fixes the Gradle plugin ([#2608](https://github.com/intuit/auto/issues/2068)) for Gradle 6.8+.
+
+---
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - fixing gradle issue [#2116](https://github.com/intuit/auto/pull/2116) ([@yogeshkhandelwal](https://github.com/yogeshkhandelwal) [@ykhandelwal913](https://github.com/ykhandelwal913))
+
+#### 📝 Documentation
+
+- Expand default label configuration by default in Docs [#2060](https://github.com/intuit/auto/pull/2060) ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+
+#### Authors: 3
+
+- [@yogeshkhandelwal](https://github.com/yogeshkhandelwal)
+- Andreas Weichselbaum ([@AndreasWeichselbaum](https://github.com/AndreasWeichselbaum))
+- yogesh khandelwal ([@ykhandelwal913](https://github.com/ykhandelwal913))
+
+---
+
+# v10.32.3 (Mon Nov 22 2021)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/microsoft-teams`
+  - fix(plugin/microsoft-teams): incorrect markdown rendering [#2080](https://github.com/intuit/auto/pull/2080) ([@mathieubergeron](https://github.com/mathieubergeron))
+
+#### 📝 Documentation
+
+- Minor README.md typo [#2106](https://github.com/intuit/auto/pull/2106) ([@orta](https://github.com/orta))
+
+#### Authors: 2
+
+- Mathieu Bergeron ([@mathieubergeron](https://github.com/mathieubergeron))
+- Orta Therox ([@orta](https://github.com/orta))
+
+---
+
+# v10.32.2 (Tue Oct 26 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/npm`
+  - fix: get latest maintenance major tag from github releases [#2076](https://github.com/intuit/auto/pull/2076) (lucas_shadler@intuit.com [@sumwatshade](https://github.com/sumwatshade))
+
+#### Authors: 2
+
+- lshadler (lucas_shadler@intuit.com)
+- Lucas Shadler ([@sumwatshade](https://github.com/sumwatshade))
+
+---
+
+# v10.32.1 (Thu Sep 30 2021)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`, `@auto-it/conventional-commits`
+  - use strict check so SEMVER.noVersion can add skip-release [#2086](https://github.com/intuit/auto/pull/2086) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
+# v10.32.0 (Wed Sep 15 2021)
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`, `@auto-it/npm`
+  - Support --use-version argument with shipit [#2075](https://github.com/intuit/auto/pull/2075) ([@kelyvin](https://github.com/kelyvin))
+
+#### Authors: 1
+
+- Kelvin Nguyen ([@kelyvin](https://github.com/kelyvin))
+
+---
+
 # v10.31.0 (Thu Aug 12 2021)
 
 :tada: This release contains work from a new contributor! :tada:
