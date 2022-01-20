@@ -617,6 +617,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "torkjel",
+      "name": "Torkjel Hongve",
+      "avatar_url": "https://avatars.githubusercontent.com/u/102654?v=4",
+      "profile": "https://github.com/torkjel",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
