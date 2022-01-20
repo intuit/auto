@@ -2,6 +2,8 @@
 title: Hook APIs
 ---
 
+import { Hooks } from "../../../components/hooks";
+
 Plugins work by "hooking" into various parts of `auto` to control or add to its behavior.
 
 The categories of hooks available to plugins are:
@@ -16,6 +18,8 @@ The hooks that are called depends on the command is run.
 Some hooks are specific to a single command, such as the "Init" hooks, and others are called for every command.
 
 Here is a map of all the hooks and when they are called (open in new tab for more detail):
+
+<Hooks />
 
 ![map of all hooks](/hook-overview.png)
 
