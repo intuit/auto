@@ -1,3 +1,21 @@
+# v10.32.6 (Thu Jan 20 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Torkjel Hongve ([@torkjel](https://github.com/torkjel)), for all your work!
+
+#### 🐛 Bug Fix
+
+- sbt: Avoid clobbering unrelated version settings [#2067](https://github.com/intuit/auto/pull/2067) ([@torkjel](https://github.com/torkjel))
+- Fix tests ([@torkjel](https://github.com/torkjel))
+- sbt: Avoid clobbering unrelated version settings ([@torkjel](https://github.com/torkjel))
+
+#### Authors: 1
+
+- Torkjel Hongve ([@torkjel](https://github.com/torkjel))
+
+---
+
 # v10.32.2 (Tue Oct 26 2021)
 
 #### 🐛 Bug Fix

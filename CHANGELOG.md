@@ -1,3 +1,16 @@
+# v10.32.6 (Thu Jan 20 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/sbt`
+  - sbt: Avoid clobbering unrelated version settings [#2067](https://github.com/intuit/auto/pull/2067) ([@torkjel](https://github.com/torkjel))
+
+#### Authors: 1
+
+- Torkjel Hongve ([@torkjel](https://github.com/torkjel))
+
+---
+
 # v10.32.5 (Fri Dec 10 2021)
 
 :tada: This release contains work from a new contributor! :tada:
