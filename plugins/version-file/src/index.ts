@@ -96,7 +96,7 @@ export default class VersionFilePlugin implements IPlugin {
       if (newVersion){
         // Seal versions via commit and tag
         await writeNewVersion(auto, newVersion, this.versionFile)
-        await execPromise("git", ["commit", "-am", `Bump version to: v${newVersion} [skip ci]`]);
+        await execPromise("git", ["commit", "-am", `"Bump version to: v${newVersion} [skip ci]"`]);
         await execPromise("git", [
           "tag",
           `v${newVersion}`

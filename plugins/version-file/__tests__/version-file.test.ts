@@ -118,7 +118,7 @@ describe("Version File Write Operations", () => {
     await hooks.version.promise({bump: SEMVER.patch})
     expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.0.1");
     // check that the proper git operations were performed
-    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "Bump version to: v1.0.1 [skip ci]"]);
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "\"Bump version to: v1.0.1 [skip ci]\""]);
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "v1.0.1"]);
   });
 })
