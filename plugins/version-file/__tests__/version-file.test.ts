@@ -76,7 +76,7 @@ describe("Version File Write Operations", () => {
     await hooks.version.promise({bump: SEMVER.major})
     expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("2.0.0")
     // check that the proper git operations were performed
-    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "Bump version to: v2.0.0 [skip ci]"]);
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "\"Bump version to: v2.0.0 [skip ci]\""]);
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "v2.0.0"]);
   });
 
@@ -97,7 +97,7 @@ describe("Version File Write Operations", () => {
     await hooks.version.promise({bump: SEMVER.minor})
     expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("1.1.0");
     // check that the proper git operations were performed
-    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "Bump version to: v1.1.0 [skip ci]"]);
+    expect(execPromise).toHaveBeenNthCalledWith(1, "git", ["commit", "-am", "\"Bump version to: v1.1.0 [skip ci]\""]);
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "v1.1.0"]);
   });
 
