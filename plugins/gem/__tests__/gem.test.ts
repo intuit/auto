@@ -3,7 +3,7 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { execSync } from "child_process";
 import { when } from 'jest-when';
-import fs from 'fs/promises'
+import fs from 'fs'
 
 import Gem from "../src";
 import endent from "endent";
@@ -241,7 +241,7 @@ describe("Gem Plugin", () => {
       plugin.apply({ hooks, logger } as any);
       await hooks.version.promise({ bump: SEMVER.minor });
 
-      expect(await fs.readFile('test.gemspec', { encoding: 'utf-8' })).toBe(endent`
+      expect(fs.readFileSync('test.gemspec', { encoding: 'utf-8' })).toBe(endent`
         Gem::Specification.new do |spec|
           spec.version       = "0.2.0"
         end
@@ -274,12 +274,12 @@ describe("Gem Plugin", () => {
       plugin.apply({ hooks, logger } as any);
       await hooks.version.promise({ bump: SEMVER.minor });
 
-      expect(await fs.readFile('gem.gemspec', { encoding: 'utf-8' })).toBe(endent`
+      expect(fs.readFileSync('gem.gemspec', { encoding: 'utf-8' })).toBe(endent`
         Gem::Specification.new do |spec|
           spec.version       = "0.2.0"
         end
       `);
-      expect(await fs.readFile('Gemfile.lock', { encoding: 'utf-8' })).toBe(endent`
+      expect(fs.readFileSync('Gemfile.lock', { encoding: 'utf-8' })).toBe(endent`
         PATH
           remote: .
           specs:
