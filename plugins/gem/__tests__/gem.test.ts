@@ -1,10 +1,10 @@
-import glob from "fast-glob";
+import mockFs from "mock-fs";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { execSync } from "child_process";
 import { when } from 'jest-when';
+import fs from 'fs/promises'
 
-import * as utils from "../src/utils";
 import Gem from "../src";
 import endent from "endent";
 import { SEMVER } from "@auto-it/core";
@@ -25,36 +25,27 @@ jest.mock(
   () => (...args: any[]) => execSpy(...args)
 );
 
-const globSpy = jest.fn();
-jest.mock("fast-glob");
-glob.sync = globSpy;
-
-const readFile = jest.fn();
-const writeFile = jest.fn();
-jest.mock("../src/utils");
-// @ts-ignore
-utils.readFile = readFile as any;
-// @ts-ignore
-utils.writeFile = writeFile as any;
+afterEach(() => {
+  mockFs.restore();
+});
 
 describe("Gem Plugin", () => {
-  beforeEach(() => {
-    globSpy.mockReset();
-    readFile.mockReset();
-  });
-
   test("throws without a gemspec", async () => {
     expect(() => new Gem()).toThrow();
   });
 
   test("loads with a gemspec", async () => {
-    globSpy.mockReturnValueOnce(["test.gemspec"]);
+    mockFs({
+      'test.gemspec': ''
+    })
     expect(() => new Gem()).not.toThrow();
   });
 
   describe("validateConfig", () => {
     test("validates invalid configuration", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
+      mockFs({
+        'test.gemspec': ''
+      })
       const plugin = new Gem();
       const hooks = makeHooks();
 
@@ -66,7 +57,9 @@ describe("Gem Plugin", () => {
     });
 
     test("validates valid configuration", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
+      mockFs({
+        'test.gemspec': ''
+      })
       const plugin = new Gem();
       const hooks = makeHooks();
 
@@ -80,13 +73,13 @@ describe("Gem Plugin", () => {
 
   describe("getPreviousVersion", () => {
     test("gets previous version from gemspec", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-      Gem::Specification.new do |spec|
-        spec.version       = "0.1.0"
-      end
-    `);
-
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.0"
+          end
+        `
+      })
       const plugin = new Gem();
       const hooks = makeHooks();
 
@@ -96,14 +89,18 @@ describe("Gem Plugin", () => {
     });
 
     test("gets previous version from a version file", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      globSpy.mockReturnValueOnce("lib/version/version.rb");
-      readFile.mockReturnValueOnce("");
-      readFile.mockReturnValueOnce(endent`
-      module HelloWorld
-        VERSION = "0.1.14"
-      end  
-    `);
+      mockFs({
+        'test.gemspec': '',
+        lib: {
+          version: {
+            'version.rb': endent`
+              module HelloWorld
+                VERSION = "0.1.14"
+              end  
+            `
+          }
+        }
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -114,7 +111,9 @@ describe("Gem Plugin", () => {
     });
 
     test("throws if no version found", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
+      mockFs({
+        'test.gemspec': ''
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -129,13 +128,14 @@ describe("Gem Plugin", () => {
 
   describe("getAuthor", () => {
     test("gets author from gemspec", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-        Gem::Specification.new do |spec|
-          spec.authors       = ["Andrew Lisowski"]
-          spec.email         = ["lisowski54@gmail.com"]
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.authors       = ["Andrew Lisowski"]
+            spec.email         = ["lisowski54@gmail.com"]
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -151,11 +151,12 @@ describe("Gem Plugin", () => {
 
   describe("getRepository", () => {
     test("returns if no url found", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-        Gem::Specification.new do |spec|
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -166,12 +167,13 @@ describe("Gem Plugin", () => {
     });
 
     test("returns if no repo found in url", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-        Gem::Specification.new do |spec|
-          spec.homepage      = "https://google.com/"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.homepage      = "https://google.com/"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -182,12 +184,13 @@ describe("Gem Plugin", () => {
     });
 
     test("find repo in homepage", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-        Gem::Specification.new do |spec|
-          spec.homepage      = "https://github.com/hipstersmoothie/auto-gem-test"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.homepage      = "https://github.com/hipstersmoothie/auto-gem-test"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -201,13 +204,14 @@ describe("Gem Plugin", () => {
     });
 
     test("prefer repo in source_code_uri", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValueOnce(endent`
-        Gem::Specification.new do |spec|
-          spec.homepage      = "https://github.com/hipstersmoothie/foo-bar"
-          spec.metadata["source_code_uri"] = "https://github.com/hipstersmoothie/auto-gem-test"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.homepage      = "https://github.com/hipstersmoothie/foo-bar"
+            spec.metadata["source_code_uri"] = "https://github.com/hipstersmoothie/auto-gem-test"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -223,12 +227,13 @@ describe("Gem Plugin", () => {
 
   describe("version", () => {
     test("bump version", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
-        Gem::Specification.new do |spec|
-          spec.version       = "0.1.0"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.0"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -236,23 +241,21 @@ describe("Gem Plugin", () => {
       plugin.apply({ hooks, logger } as any);
       await hooks.version.promise({ bump: SEMVER.minor });
 
-      expect(writeFile).toHaveBeenCalledWith(
-        "test.gemspec",
-        endent`
-          Gem::Specification.new do |spec|
-            spec.version       = "0.2.0"
-          end
-        `
-      );
-    });
-
-    test("throws with invalid version", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
+      expect(await fs.readFile('test.gemspec', { encoding: 'utf-8' })).toBe(endent`
         Gem::Specification.new do |spec|
-          spec.version       = "0.1.avc"
+          spec.version       = "0.2.0"
         end
       `);
+    })
+
+    test("throws with invalid version", async () => {
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.avc"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -271,12 +274,13 @@ describe("Gem Plugin", () => {
     });
 
     test("uses bundler + rake as default publishing method", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
-        Gem::Specification.new do |spec|
-          spec.version       = "0.1.0"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.0"
+          end
+        `
+      })
 
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -288,12 +292,13 @@ describe("Gem Plugin", () => {
     });
 
     test("user can configure release command", async () => {
-      globSpy.mockReturnValueOnce(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
-        Gem::Specification.new do |spec|
-          spec.version       = "0.1.0"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.0"
+          end
+        `
+      })
 
       const plugin = new Gem({
         releaseCommand: "gem release --tag --push",
@@ -314,13 +319,14 @@ describe("Gem Plugin", () => {
       execSpy.mockClear();
     });
     test("uses (bundler + rake + gem push) as default publishing method", async () => {
-      globSpy.mockReturnValue(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
-        Gem::Specification.new do |spec|
-          spec.name          = "test"
-          spec.version       = "0.1.0"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `
+      })
 
       const canaryIdentifier = '-canary-x'
       when(execSpy).calledWith("bundle", ["exec", "rake", "build"])
@@ -350,13 +356,14 @@ describe("Gem Plugin", () => {
     });
 
     test("dry-run not release", async () => {
-      globSpy.mockReturnValue(["test.gemspec"]);
-      readFile.mockReturnValue(endent`
-        Gem::Specification.new do |spec|
-          spec.name          = "test"
-          spec.version       = "0.1.0"
-        end
-      `);
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `
+      })
 
       const canaryIdentifier = '-canary-x'
       when(execSpy).calledWith("bundle", ["exec", "rake", "build"])
