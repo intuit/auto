@@ -226,7 +226,7 @@ describe("Gem Plugin", () => {
   });
 
   describe("version", () => {
-    test("bump version", async () => {
+    test("bump version without lock", async () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
@@ -245,6 +245,49 @@ describe("Gem Plugin", () => {
         Gem::Specification.new do |spec|
           spec.version       = "0.2.0"
         end
+      `);
+    })
+
+
+    test("bump version with lock", async () => {
+      mockFs({
+        'gem.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.version       = "0.1.0"
+          end
+        `,
+        'Gemfile.lock': endent`
+          PATH
+            remote: .
+            specs:
+              gem (0.1.0)
+          GEM
+            remote: https://rubygems.org/
+            specs:
+              foo-gem (0.1.0)
+        `
+      })
+
+      const plugin = new Gem();
+      const hooks = makeHooks();
+
+      plugin.apply({ hooks, logger } as any);
+      await hooks.version.promise({ bump: SEMVER.minor });
+
+      expect(await fs.readFile('gem.gemspec', { encoding: 'utf-8' })).toBe(endent`
+        Gem::Specification.new do |spec|
+          spec.version       = "0.2.0"
+        end
+      `);
+      expect(await fs.readFile('Gemfile.lock', { encoding: 'utf-8' })).toBe(endent`
+        PATH
+          remote: .
+          specs:
+            gem (0.2.0)
+        GEM
+          remote: https://rubygems.org/
+          specs:
+            foo-gem (0.1.0)
       `);
     })
 

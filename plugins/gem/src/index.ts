@@ -136,21 +136,18 @@ export default class GemPlugin implements IPlugin {
 
       await this.writeNewVersion(version, canaryVersion, versionFile)
 
-      /** Commit the new version. we wait because "rake build" changes the lock file */
-      /** we don't push that version, is just to clean the stage  */
-      const commitVersion = async () =>
-        execPromise("git", [
-          "commit",
-          "-am",
-          `"update version: ${canaryVersion} [skip ci]"`,
-          "--no-verify",
-        ]);
+      /** Commit the new version which we don't push. It's just to clean the stage */
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"update version: ${canaryVersion} [skip ci]"`,
+        "--no-verify",
+      ]);
 
  
       auto.logger.verbose.info("Running default release command");
       const buildResult = await execPromise("bundle", ["exec", "rake", "build"]);
       const gemPath = GEM_PKG_BUILD_REGEX.exec(buildResult)?.[0]
-      await commitVersion();
       // will push the canary gem
       await execPromise("gem", ["push", `${gemPath}`]);
 
@@ -170,23 +167,19 @@ export default class GemPlugin implements IPlugin {
 
       const [version] = await this.getVersion(auto);
 
-      /** Commit the new version. we wait because "rake build" changes the lock file */
-      const commitVersion = async () =>
-        execPromise("git", [
-          "commit",
-          "-am",
-          `"update version: ${version} [skip ci]"`,
-          "--no-verify",
-        ]);
+      await execPromise("git", [
+        "commit",
+        "-am",
+        `"update version: ${version} [skip ci]"`,
+        "--no-verify",
+      ]);
 
       if (this.options.releaseCommand) {
         auto.logger.verbose.info("Running custom release command");
-        await commitVersion();
         execSync(this.options.releaseCommand, { stdio: "inherit" });
       } else {
         auto.logger.verbose.info("Running default release command");
         await execPromise("bundle", ["exec", "rake", "build"]);
-        await commitVersion();
         // will tag and push
         await execPromise("bundle", ["exec", "rake", "release"]);
       }
@@ -265,6 +258,12 @@ export default class GemPlugin implements IPlugin {
     const content = await readFile(versionFile, { encoding: "utf8" });
     await writeFile(versionFile, content.replace(version, newVersion));
 
+    /** Update the lockfile to ensure no changes would be made on bundle exec rake build */
+    const lockFile = 'Gemfile.lock';
+    if (fs.existsSync(lockFile)) {
+      const lockContent = await readFile(lockFile, { encoding: "utf8" })
+      await writeFile(lockFile, lockContent.replace(` ${this.name} (${version})`, ` ${this.name} (${newVersion})`))
+    }
   }
 
   /** Get the current version of the gem and where it was found */
