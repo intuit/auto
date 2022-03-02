@@ -69,7 +69,7 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.22.1",
     "lint-staged": "^10.0.7",
-    "mock-fs": "^4.13.0",
+    "mock-fs": "^5.1.2",
     "next-ignite": "^0.10.11",
     "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
