@@ -1,3 +1,32 @@
+# v10.33.0 (Fri Mar 04 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Ken Clarke ([@kclarkey](https://github.com/kclarkey))
+
+:heart: Dalton Scharff ([@daltonscharff](https://github.com/daltonscharff))
+
+#### 🚀 Enhancement
+
+- `@auto-it/npm`
+  - feat(plugins/npm): exclude pre-release branches from greaterRelease calculation [#2036](https://github.com/intuit/auto/pull/2036) ([@hydrosquall](https://github.com/hydrosquall))
+  - feat(plugins/npm): add support for passing publishFolder. [#2115](https://github.com/intuit/auto/pull/2115) ([@kclarkey](https://github.com/kclarkey))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix(@octokit/request-error) Fixes depreciation error when accessing error.headers [#2064](https://github.com/intuit/auto/pull/2064) (dalton.scharff@segment.com)
+
+#### Authors: 3
+
+- Cameron Yick ([@hydrosquall](https://github.com/hydrosquall))
+- Dalton Scharff ([@daltonscharff](https://github.com/daltonscharff))
+- Ken Clarke ([@kclarkey](https://github.com/kclarkey))
+
+---
+
 # v10.32.6 (Thu Jan 20 2022)
 
 #### 🐛 Bug Fix
