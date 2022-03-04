@@ -1,3 +1,20 @@
+# v10.33.1 (Fri Mar 04 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Corentin Ardeois ([@ardeois](https://github.com/ardeois)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: update node-fetch [#2158](https://github.com/intuit/auto/pull/2158) ([@ardeois](https://github.com/ardeois))
+- fix: update node-fetch ([@ardeois](https://github.com/ardeois))
+
+#### Authors: 1
+
+- Corentin Ardeois ([@ardeois](https://github.com/ardeois))
+
+---
+
 # v10.33.0 (Fri Mar 04 2022)
 
 :tada: This release contains work from new contributors! :tada:
