@@ -231,6 +231,61 @@ describe("next", () => {
     ]);
   });
 
+  test("works with publishFolder", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.4-next.0"
+      }
+      `,
+    });
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "version",
+      "1.2.4-next.0",
+      "--no-git-tag-version",
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "tag",
+      "1.2.4-next.0",
+      "-m",
+      '"Update version to 1.2.4-next.0"',
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "next",
+      "--tags",
+    ]);
+    expect(execPromise).toHaveBeenCalledWith("npm", [
+      "publish",
+      "dist/publish-folder",
+      "--tag",
+      "next",
+    ]);
+  });
+
   test("works in monorepo", async () => {
     mockFs({
       "package.json": `
@@ -456,6 +511,81 @@ describe("next", () => {
         "abcd",
       ])
     );
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "push",
+      "origin",
+      "next",
+      "--tags",
+    ]);
+  });
+
+  test("works in monorepo - publishFolder", async () => {
+    mockFs({
+      "package.json": `
+      {
+        "name": "test",
+        "version": "1.2.3"
+      }
+      `,
+      "lerna.json": `
+        {
+          "version": "1.2.3"
+        }
+      `,
+    });
+    const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
+    const hooks = makeHooks();
+
+    // isMonorepo
+    monorepoPackages.mockReturnValueOnce([
+      {
+        path: "packages/a",
+        name: "@packages/a",
+        package: { version: "1.2.3" },
+      },
+      {
+        path: "packages/b",
+        name: "@packages/b",
+        package: { version: "1.2.4-next.0" },
+      },
+    ]);
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("");
+    execPromise.mockResolvedValueOnce("1.2.4-next.0");
+
+    plugin.apply(({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      getCurrentVersion: () => "1.2.3",
+      prefixRelease: (v: string) => v,
+      git: {
+        getLatestRelease: () => "1.0.0",
+        getLastTagNotInBaseBranch: () => "1.2.3",
+      },
+    } as unknown) as Auto.Auto);
+
+    expect(
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
+    ).toStrictEqual(["1.2.4-next.0"]);
+
+    expect(execPromise).toHaveBeenCalledWith(
+      "npx",
+      expect.arrayContaining([
+      "lerna", 
+      "publish", 
+      "1.2.4-next.0",
+      "--contents",
+      "dist/publish-folder"
+    ])
+    );
+    expect(execPromise).toHaveBeenCalledWith("git", [
+      "reset",
+      "--hard",
+      "HEAD~1",
+    ]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
       "origin",
