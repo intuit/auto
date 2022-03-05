@@ -175,7 +175,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
       const mockLog = jest.spyOn(logger.log, "info");
 
-      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" , dryRun: true});
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" , dryRun: true});
 
       expect(spy).toHaveBeenCalledTimes(0)
       expect(mockLog).toHaveBeenCalledTimes(1)
@@ -189,9 +189,9 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
-      expect(canaryVersion).toBe("1.0.0-canary123")
+      expect(canaryVersion).toBe("1.0.0-canary123-SNAPSHOT")
     });
 
     test("should not increment version - canary w/ default snapshot", async () => {
@@ -202,9 +202,9 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      const canaryVersion = await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
-      expect(canaryVersion).toBe("1.0.0-canary123")
+      expect(canaryVersion).toBe("1.0.0-canary123-SNAPSHOT")
     });
 
     test("should update gradle version for publish - canary w/ default snapshot", async () => {
@@ -215,7 +215,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "updateVersion",
@@ -232,7 +232,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "publish",
@@ -248,7 +248,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
       const mockLog = jest.spyOn(logger.log, "warn");
 
-      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
       expect(mockLog).toHaveBeenCalledWith(expect.stringMatching("Publish task not found in gradle"));
     });

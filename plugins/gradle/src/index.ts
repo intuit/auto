@@ -144,12 +144,27 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    /** Call gradle publish, if exists, otherwise log warning */
+    const publish = async () => {
+      const { publish } = this.properties;
+  
+      if (publish) {
+        await execPromise(this.options.gradleCommand, [
+          "publish",
+          ...this.options.gradleOptions,
+        ]);
+      } else {
+        auto.logger.log.warn(`Publish task not found in gradle`);
+      }
+    };
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(this.name, pluginOptions, options);
       }
     });
 
+    // TODO: Is this where we can introspect PR files for .api?
     auto.hooks.beforeRun.tap(this.name, async () => {
       this.properties = await getProperties(
         this.options.gradleCommand,
@@ -229,14 +244,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      const { publish } = this.properties;
-
-      if (publish) {
-        await execPromise(this.options.gradleCommand, [
-          "publish",
-          ...this.options.gradleOptions,
-        ]);
-      }
+      await publish();
 
       await execPromise("git", [
         "push",
@@ -252,39 +260,32 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       async ({ dryRun, canaryIdentifier }) => {
         const releaseVersion = await getVersion(
           this.options.gradleCommand,
-          this.options.gradleOptions
+          this.options.gradleOptions,
         );
 
-        const canaryVersion = `${releaseVersion}-${canaryIdentifier}`;
+        const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
+        const canaryVersion = `${releaseVersion}${canaryIdentifier}${snapshotSuffix}`;
 
         if (dryRun) {
           auto.logger.log.info(`Would have published: ${canaryVersion}`);
           return canaryVersion;
         }
 
-        const canaryReleaseVersion = `${canaryVersion}${defaultSnapshotSuffix}`
         await this.updateGradleVersion(
-          canaryReleaseVersion,
-          `Prerelease version: ${canaryReleaseVersion} [skip ci]`,
+          canaryVersion,
+          `Prerelease version: ${canaryVersion} [skip ci]`,
           false,
           false
         );
 
-        const { publish } = this.properties;
-
-        if (publish) {
-          await execPromise(this.options.gradleCommand, [
-            "publish",
-            ...this.options.gradleOptions,
-          ]);
-        } else {
-          auto.logger.log.warn(`Publish task not found in gradle`);
-        }
+        await publish();
 
         return canaryVersion;
       }
     );
 
+    // TODO: We should at least report the correct version to GH -- which could include next
+    //       Maybe, we should publish to `version-SNAPSHOT` _and_ `version-next-SNAPSHOT`?
     auto.hooks.next.tapPromise(
       this.name,
       async (preReleaseVersions, { dryRun, bump }) => {
@@ -332,16 +333,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           false
         );
 
-        const { publish } = this.properties;
-
-        if (publish) {
-          await execPromise(this.options.gradleCommand, [
-            "publish",
-            ...this.options.gradleOptions,
-          ]);
-        } else {
-          auto.logger.log.warn(`Publish task not found in gradle`);
-        }
+        await publish();
 
         return preReleaseVersions;
       }
