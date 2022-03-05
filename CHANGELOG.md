@@ -1,3 +1,16 @@
+# v10.34.0 (Sat Mar 05 2022)
+
+#### 🚀 Enhancement
+
+- `@auto-it/gem`
+  - Improve gem deployment [#2152](https://github.com/intuit/auto/pull/2152) ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.33.1 (Fri Mar 04 2022)
 
 :tada: This release contains work from a new contributor! :tada:

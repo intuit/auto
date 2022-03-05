@@ -1,3 +1,24 @@
+# v10.34.0 (Sat Mar 05 2022)
+
+#### 🚀 Enhancement
+
+- Improve gem deployment [#2152](https://github.com/intuit/auto/pull/2152) ([@zephraph](https://github.com/zephraph))
+
+#### 🐛 Bug Fix
+
+- Merge branch 'main' into improve-gem-deployment ([@zephraph](https://github.com/zephraph))
+- Add test for throwing without name ([@zephraph](https://github.com/zephraph))
+- Resolve issue where lockfile wasn't being updated ([@zephraph](https://github.com/zephraph))
+- Appease the lint gods ([@zephraph](https://github.com/zephraph))
+- Update lockfile when writing new version ([@zephraph](https://github.com/zephraph))
+- Refactor gem tests ([@zephraph](https://github.com/zephraph))
+
+#### Authors: 1
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+
+---
+
 # v10.33.0 (Fri Mar 04 2022)
 
 :tada: This release contains work from new contributors! :tada:
