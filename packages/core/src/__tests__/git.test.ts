@@ -791,7 +791,9 @@ describe("github", () => {
         name: "Request failed",
         message: "The request has failed",
         status: 404,
-        headers,
+        response: {
+          headers
+        }
       });
 
       // eslint-disable-next-line no-new

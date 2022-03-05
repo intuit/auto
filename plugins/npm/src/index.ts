@@ -52,7 +52,7 @@ async function getPublishedVersion(name: string) {
 }
 
 /**
- * Determine the greatest version between last published version of a
+ * Determine the greatest version between @latest published version of a
  * package and the version in the package.json.
  */
 export async function greaterRelease(
@@ -64,6 +64,13 @@ export async function greaterRelease(
   const publishedVersion = await getPublishedVersion(name);
 
   if (!publishedVersion) {
+    return packageVersion;
+  }
+
+  // If @latest published version is a pre-release,
+  // this means the package has not been published as a stable tag yet
+  // Prefer local version to prevent a new package from adjusting the versions for a whole monorepo.
+  if (prerelease(publishedVersion) !== null) {
     return packageVersion;
   }
 
@@ -207,7 +214,7 @@ async function bumpLatest(
   return latestVersion ? inc(latestVersion, version as ReleaseType) : version;
 }
 
-interface GetLegacyAuthArgsOptions {
+interface GetArgsOptions {
   /** whether the project is a monorepo */
   isMonorepo?: boolean;
 }
@@ -215,7 +222,7 @@ interface GetLegacyAuthArgsOptions {
 /** Get the args to use legacy auth */
 function getLegacyAuthArgs(
   useLegacy: boolean,
-  options: GetLegacyAuthArgsOptions = {}
+  options: GetArgsOptions = {}
 ) {
   if (!useLegacy) {
     return [];
@@ -224,6 +231,20 @@ function getLegacyAuthArgs(
   return options.isMonorepo
     ? ["--legacy-auth", process.env.NPM_TOKEN]
     : [`--_auth=${process.env.NPM_TOKEN}`];
+}
+
+/** Get args for publishFolder */
+function getPublishFolderArgs(
+  publishFolder: string | undefined,
+  options: GetArgsOptions = {}
+) {
+  if (!publishFolder) {
+    return [];
+  }
+
+  return options.isMonorepo
+    ? ["--contents", publishFolder]
+    : [publishFolder];
 }
 
 /** Get the args to set the registry. Only used with lerna */
@@ -255,6 +276,12 @@ const pluginOptions = t.partial({
   legacyAuth: t.boolean,
   /** Whether to add package information to monorepo changelogs */
   monorepoChangelog: t.boolean,
+  /** 
+   * Path used when publishing packages. 
+   * When used with npm this is equivalent to npm publish <publishFolder>
+   * When used with lerna this is equivalent to lerna publish --contents <publishFolder>
+   */
+  publishFolder: t.string,
 });
 
 export type INpmConfig = t.TypeOf<typeof pluginOptions>;
@@ -567,6 +594,8 @@ export default class NPMPlugin implements IPlugin {
   private readonly legacyAuth: boolean;
   /** Whether to use legacy auth for npm */
   private readonly commitNextVersion: boolean;
+  /** Path used when publishing packages */
+  private readonly publishFolder: string | undefined;
 
   /** Initialize the plugin with it's options */
   constructor(config: INpmConfig = {}) {
@@ -578,6 +607,7 @@ export default class NPMPlugin implements IPlugin {
     this.forcePublish = config.forcePublish ?? true;
     this.commitNextVersion = config.commitNextVersion ?? false;
     this.canaryScope = config.canaryScope || undefined;
+    this.publishFolder = config.publishFolder || undefined;
   }
 
   /** A memoized version of getLernaPackages */
@@ -1099,6 +1129,7 @@ export default class NPMPlugin implements IPlugin {
             "--dist-tag",
             "canary",
             ...(await getRegistryArgs()),
+            ...getPublishFolderArgs(this.publishFolder, { isMonorepo: true }),
             !isIndependent && "--force-publish",
             ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
             "--yes", // skip prompts,
@@ -1187,6 +1218,7 @@ export default class NPMPlugin implements IPlugin {
         const publishArgs = ["--tag", "canary"];
         await execPromise("npm", [
           "publish",
+          ...getPublishFolderArgs(this.publishFolder), // this is a positional parameter
           ...publishArgs,
           ...verboseArgs,
           ...getLegacyAuthArgs(this.legacyAuth),
@@ -1279,6 +1311,7 @@ export default class NPMPlugin implements IPlugin {
             // you always want a next version to publish
             !isIndependent && "--force-publish",
             ...(await getRegistryArgs()),
+            ...getPublishFolderArgs(this.publishFolder, { isMonorepo: true }),
             ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
             // skip prompts
             "--yes",
@@ -1359,6 +1392,7 @@ export default class NPMPlugin implements IPlugin {
           } else {
             await execPromise("npm", [
               "publish",
+              ...getPublishFolderArgs(this.publishFolder), // this is a positional parameter
               "--tag",
               prereleaseBranch,
               ...verboseArgs,
@@ -1412,6 +1446,7 @@ export default class NPMPlugin implements IPlugin {
           this.exact && "--exact",
           ...verboseArgs,
           ...(await getRegistryArgs()),
+          ...getPublishFolderArgs(this.publishFolder, { isMonorepo: true }),
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
         ]);
       } else {
@@ -1422,6 +1457,7 @@ export default class NPMPlugin implements IPlugin {
         } else {
           await execPromise("npm", [
             "publish",
+            ...getPublishFolderArgs(this.publishFolder), // this is a positional parameter
             ...tag,
             ...verboseArgs,
             ...getLegacyAuthArgs(this.legacyAuth),

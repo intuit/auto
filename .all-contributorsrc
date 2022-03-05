@@ -628,6 +628,26 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "daltonscharff",
+      "name": "Dalton Scharff",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14829777?v=4",
+      "profile": "https://github.com/daltonscharff",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "ardeois",
+      "name": "Corentin Ardeois",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1867939?v=4",
+      "profile": "https://github.com/ardeois",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
