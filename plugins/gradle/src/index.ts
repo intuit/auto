@@ -164,6 +164,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
     });
 
+    // TODO: Is this where we can introspect PR files for .api?
     auto.hooks.beforeRun.tap(this.name, async () => {
       this.properties = await getProperties(
         this.options.gradleCommand,
@@ -284,6 +285,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     // TODO: We should at least report the correct version to GH -- which could include next
+    //       Maybe, we should publish to `version-SNAPSHOT` _and_ `version-next-SNAPSHOT`?
     auto.hooks.next.tapPromise(
       this.name,
       async (preReleaseVersions, { dryRun, bump }) => {
