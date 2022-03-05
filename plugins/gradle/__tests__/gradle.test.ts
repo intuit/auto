@@ -215,7 +215,7 @@ describe("Gradle Plugin", () => {
       const spy = jest.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
-      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "canary123" });
+      await hooks.canary.promise({ bump: Auto.SEMVER.patch, canaryIdentifier: "-canary123" });
 
       expect(spy).toHaveBeenCalledWith(expect.stringMatching("gradle"), [
         "updateVersion",

@@ -144,6 +144,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    /** Call gradle publish, if exists, otherwise log warning */
     const publish = async () => {
       const { publish } = this.properties;
   
@@ -242,7 +243,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      publish();
+      await publish();
 
       await execPromise("git", [
         "push",
@@ -276,7 +277,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           false
         );
 
-        publish();
+        await publish();
 
         return canaryVersion;
       }
@@ -330,7 +331,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
           false
         );
 
-        publish();
+        await publish();
 
         return preReleaseVersions;
       }
