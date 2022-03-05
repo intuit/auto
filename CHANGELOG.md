@@ -1,3 +1,16 @@
+# v10.34.1 (Sat Mar 05 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gradle`
+  - [Gradle] Fix canary version reporting [#2160](https://github.com/intuit/auto/pull/2160) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v10.34.0 (Sat Mar 05 2022)
 
 #### 🚀 Enhancement

@@ -1,3 +1,18 @@
+# v10.34.1 (Sat Mar 05 2022)
+
+#### 🐛 Bug Fix
+
+- [Gradle] Fix canary version reporting [#2160](https://github.com/intuit/auto/pull/2160) ([@sugarmanz](https://github.com/sugarmanz))
+- add todos ([@sugarmanz](https://github.com/sugarmanz))
+- fix test and await on publishing ([@sugarmanz](https://github.com/sugarmanz))
+- report snapshot version to GH ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v10.33.0 (Fri Mar 04 2022)
 
 :tada: This release contains work from new contributors! :tada:
