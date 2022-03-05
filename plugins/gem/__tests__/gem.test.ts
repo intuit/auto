@@ -36,7 +36,12 @@ describe("Gem Plugin", () => {
 
   test("loads with a gemspec", async () => {
     mockFs({
-      'test.gemspec': ''
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `
     })
     expect(() => new Gem()).not.toThrow();
   });
@@ -44,7 +49,12 @@ describe("Gem Plugin", () => {
   describe("validateConfig", () => {
     test("validates invalid configuration", async () => {
       mockFs({
-        'test.gemspec': ''
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `
       })
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -58,7 +68,12 @@ describe("Gem Plugin", () => {
 
     test("validates valid configuration", async () => {
       mockFs({
-        'test.gemspec': ''
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `
       })
       const plugin = new Gem();
       const hooks = makeHooks();
@@ -76,6 +91,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.0"
           end
         `
@@ -90,7 +106,11 @@ describe("Gem Plugin", () => {
 
     test("gets previous version from a version file", async () => {
       mockFs({
-        'test.gemspec': '',
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+          end
+        `,
         lib: {
           version: {
             'version.rb': endent`
@@ -112,7 +132,11 @@ describe("Gem Plugin", () => {
 
     test("throws if no version found", async () => {
       mockFs({
-        'test.gemspec': ''
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+          end
+        `
       })
 
       const plugin = new Gem();
@@ -131,6 +155,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.authors       = ["Andrew Lisowski"]
             spec.email         = ["lisowski54@gmail.com"]
           end
@@ -154,6 +179,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
           end
         `
       })
@@ -170,6 +196,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.homepage      = "https://google.com/"
           end
         `
@@ -187,6 +214,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.homepage      = "https://github.com/hipstersmoothie/auto-gem-test"
           end
         `
@@ -207,7 +235,8 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
-            spec.homepage      = "https://github.com/hipstersmoothie/foo-bar"
+            spec.name                        = "test"
+            spec.homepage                    = "https://github.com/hipstersmoothie/foo-bar"
             spec.metadata["source_code_uri"] = "https://github.com/hipstersmoothie/auto-gem-test"
           end
         `
@@ -230,6 +259,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.0"
           end
         `
@@ -243,6 +273,7 @@ describe("Gem Plugin", () => {
 
       expect(fs.readFileSync('test.gemspec', { encoding: 'utf-8' })).toBe(endent`
         Gem::Specification.new do |spec|
+          spec.name          = "test"
           spec.version       = "0.2.0"
         end
       `);
@@ -253,6 +284,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'gem.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.0"
           end
         `,
@@ -260,11 +292,11 @@ describe("Gem Plugin", () => {
           PATH
             remote: .
             specs:
-              gem (0.1.0)
+              test (0.1.0)
           GEM
             remote: https://rubygems.org/
             specs:
-              foo-gem (0.1.0)
+              foo-test (0.1.0)
         `
       })
 
@@ -276,6 +308,7 @@ describe("Gem Plugin", () => {
 
       expect(fs.readFileSync('gem.gemspec', { encoding: 'utf-8' })).toBe(endent`
         Gem::Specification.new do |spec|
+          spec.name          = "test"
           spec.version       = "0.2.0"
         end
       `);
@@ -283,11 +316,11 @@ describe("Gem Plugin", () => {
         PATH
           remote: .
           specs:
-            gem (0.2.0)
+            test (0.2.0)
         GEM
           remote: https://rubygems.org/
           specs:
-            foo-gem (0.1.0)
+            foo-test (0.1.0)
       `);
     })
 
@@ -295,6 +328,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.avc"
           end
         `
@@ -320,6 +354,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.0"
           end
         `
@@ -338,6 +373,7 @@ describe("Gem Plugin", () => {
       mockFs({
         'test.gemspec': endent`
           Gem::Specification.new do |spec|
+            spec.name          = "test"
             spec.version       = "0.1.0"
           end
         `
@@ -355,6 +391,47 @@ describe("Gem Plugin", () => {
         stdio: "inherit",
       });
     });
+
+    test("Updates lockfile", async () => {
+      mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+            spec.name          = "test"
+            spec.version       = "0.1.0"
+          end
+        `,
+        'Gemfile.lock': endent`
+          PATH
+            remote: .
+            specs:
+              test (0.1.0)
+          GEM
+            remote: https://rubygems.org/
+            specs:
+              foo-test (0.1.0)
+        `
+      })
+
+      const plugin = new Gem();
+      const hooks = makeHooks();
+
+      plugin.apply({ hooks, logger } as any);
+      await hooks.version.promise({ bump: SEMVER.minor });
+      await hooks.publish.promise({ bump: SEMVER.minor });
+
+      expect(execSpy).toHaveBeenCalledWith("bundle", ["exec", "rake", "build"]);
+      expect(fs.readFileSync('Gemfile.lock', { encoding: 'utf-8' })).toBe(endent`
+        PATH
+          remote: .
+          specs:
+            test (0.2.0)
+        GEM
+          remote: https://rubygems.org/
+          specs:
+            foo-test (0.1.0)
+      `);
+    });
+
   });
 
   describe("canary", () => {

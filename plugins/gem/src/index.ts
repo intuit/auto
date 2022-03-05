@@ -37,6 +37,8 @@ export default class GemPlugin implements IPlugin {
   private readonly gemspec: string;
   /** User options for the plugins */
   private readonly options: IGemPluginOptions;
+  /** Name of the gem */
+  private readonly gemName: string;
 
   /** Initialize the plugin with it's options */
   constructor(options: IGemPluginOptions = {}) {
@@ -46,8 +48,15 @@ export default class GemPlugin implements IPlugin {
       throw new Error("No .gemspec found!");
     }
 
+    const gemName = fs.readFileSync(gemspec, { encoding: "utf8" }).match(GEM_SPEC_NAME_REGEX)?.[1];
+
+    if (!gemName) {
+      throw new Error("No name field found in gemspec");
+    }
+
     this.gemspec = gemspec;
     this.options = options;
+    this.gemName = gemName;
   }
 
   /** Tap into auto plugin points. */
@@ -153,11 +162,9 @@ export default class GemPlugin implements IPlugin {
 
       auto.logger.verbose.info("Successfully published canary version");
 
-      const name = await this.loadGemName();
-      
       return {
         newVersion: canaryVersion,
-        details: this.makeInstallDetails(name, canaryVersion),
+        details: this.makeInstallDetails(this.gemName, canaryVersion),
       };
 
     });
@@ -196,14 +203,6 @@ export default class GemPlugin implements IPlugin {
     `gem install ${name} -v ${canaryVersion}`,
     "```",
   ].join("\n");
-  }
-
-  /** loads the gem name from .gemspec */
-  private async loadGemName() {
-    const gemspec = glob.sync("*.gemspec")[0];
-    const content = await readFile(gemspec, { encoding: "utf8" });
-    
-    return content.match(GEM_SPEC_NAME_REGEX)?.[1];
   }
 
   /** write the credentials file when necessary */
@@ -258,11 +257,16 @@ export default class GemPlugin implements IPlugin {
     const content = await readFile(versionFile, { encoding: "utf8" });
     await writeFile(versionFile, content.replace(version, newVersion));
 
-    /** Update the lockfile to ensure no changes would be made on bundle exec rake build */
+    await this.updateLockfile(newVersion, version)
+  }
+
+  /** bump the lockfile version */
+  private async updateLockfile(newVersion: string, oldVersion: string) {
     const lockFile = 'Gemfile.lock';
     if (fs.existsSync(lockFile)) {
-      const lockContent = await readFile(lockFile, { encoding: "utf8" })
-      await writeFile(lockFile, lockContent.replace(` ${this.name} (${version})`, ` ${this.name} (${newVersion})`))
+      let lockContent = await readFile(lockFile, { encoding: "utf8" })
+      lockContent = lockContent.replace(` ${this.gemName} (${oldVersion})`, ` ${this.gemName} (${newVersion})`)
+      await writeFile(lockFile, lockContent)
     }
   }
 
