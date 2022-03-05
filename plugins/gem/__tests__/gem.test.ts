@@ -34,6 +34,16 @@ describe("Gem Plugin", () => {
     expect(() => new Gem()).toThrow();
   });
 
+  test("throws with a gemspec without a name", async () => {
+    mockFs({
+        'test.gemspec': endent`
+          Gem::Specification.new do |spec|
+          end
+        `
+    })
+    expect(() => new Gem()).toThrow();
+  })
+
   test("loads with a gemspec", async () => {
     mockFs({
         'test.gemspec': endent`
