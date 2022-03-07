@@ -41,7 +41,7 @@
     "fp-ts": "^2.5.3",
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",
-    "node-fetch": "2.6.7",
+    "node-fetch": "3.2.2",
     "tslib": "2.1.0"
   }
 }
