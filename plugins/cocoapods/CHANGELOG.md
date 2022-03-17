@@ -1,3 +1,16 @@
+# v10.34.2 (Thu Mar 17 2022)
+
+#### 🐛 Bug Fix
+
+- CocoaPods swap promise.all for reduce to avoid git locking problem [#2169](https://github.com/intuit/auto/pull/2169) ([@hborawski](https://github.com/hborawski))
+- swap promise.all for reduce to avoid git locking problem ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.33.0 (Fri Mar 04 2022)
 
 :tada: This release contains work from new contributors! :tada:
