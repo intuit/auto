@@ -402,6 +402,7 @@ Auto can load `extends` configs in the following ways:
 - from a scoped package `@YOUR_SCOPE/auto-config` (under the `auto` key in the package.json)
 - from a package `auto-config-YOUR_NAME`
 - from a url `https://yourdomain.com/auto-config.json` (must return the content type `application/json`)
+- from a node module `auto-config-module` (this default export must be a plain object or a Promise of plain object)
 
 ### Formats
 
@@ -411,7 +412,7 @@ Auto can load `extends` configs in the following ways:
 }
 ```
 
-Will use the package `@YOUR_SCOPE/auto-config`
+Will use the package `@YOUR_SCOPE/auto-config` (the `auto` key in `package.json` file)
 
 ```json
 {
@@ -419,7 +420,16 @@ Will use the package `@YOUR_SCOPE/auto-config`
 }
 ```
 
-Will use the package `auto-config-joe`
+Will use the package `auto-config-joe` (the `auto` key in `package.json` file)
+
+
+```json
+{
+  "extends": "auto-config-module"
+}
+```
+
+Will use the default export of `auto-config-module` node package
 
 > :warning: If extending from a config package make sure it's a dependency of your project
 

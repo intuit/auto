@@ -202,6 +202,15 @@ export default class Config {
     }
 
     if (!config) {
+      config = tryRequire(extend);
+      this.logger.verbose.note(`${extend} found: ${config}`);
+
+      if (config) {
+        config.extends = extend;
+      }
+    }
+
+    if (!config) {
       throw new Error(`Unable to load extended config ${extend}`);
     }
 

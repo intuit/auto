@@ -14,7 +14,9 @@ beforeEach(() => {
 const log = dummyLog();
 
 const importMock = jest.fn();
-jest.mock("import-cwd", () => (path: string) => importMock(path));
+jest.mock("import-cwd", () => {
+  return (path: any) => importMock(path);
+});
 
 describe("normalizeLabel", () => {
   test("should extend base label", () => {
@@ -146,6 +148,21 @@ describe("loadExtendConfig", () => {
 
     expect(await config.loadExtendConfig("fuego")).toStrictEqual({
       extends: "auto-config-fuego/package.json",
+      noVersionPrefix: true,
+    });
+  });
+
+  test("should load an npm module", async () => {
+    const config = new Config(log);
+
+    importMock.mockImplementation((path) =>
+        path === "auto-config-from-module"
+            ? { noVersionPrefix: true }
+            : undefined
+    );
+
+    expect(await config.loadExtendConfig("auto-config-from-module")).toStrictEqual({
+      extends: "auto-config-from-module",
       noVersionPrefix: true,
     });
   });
