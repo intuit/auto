@@ -39,7 +39,7 @@
     "@auto-it/bot-list": "link:../../packages/bot-list",
     "@auto-it/core": "link:../../packages/core",
     "array.prototype.flatmap": "^1.2.2",
-    "endent": "^2.0.1",
+    "endent": "^2.1.0",
     "tslib": "2.1.0",
     "url-join": "^4.0.0"
   },
