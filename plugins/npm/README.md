@@ -196,7 +196,7 @@ When used with `lerna` in a monorepo, this functionality implements the `--conte
     [
       "npm",
       {
-        "publishFolder": "dist/some-dir"
+        "publishFolder": "./dist/some-dir"
       }
     ]
   ]
