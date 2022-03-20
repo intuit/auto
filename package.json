@@ -54,7 +54,7 @@
     "change-case": "^4.0.0",
     "command-line-docs": "^0.0.6",
     "copy-template-dir": "^1.4.0",
-    "endent": "^2.0.1",
+    "endent": "^2.1.0",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^8.0.0",
     "eslint-config-xo": "^0.33.1",
