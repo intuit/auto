@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/gradle",
-  "version": "10.36.2",
+  "version": "10.36.3",
   "main": "dist/index.js",
   "description": "A plugin that calls gradle-release-plugin with versioning information.",
   "license": "MIT",
