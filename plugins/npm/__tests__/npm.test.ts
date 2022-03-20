@@ -551,7 +551,7 @@ describe("publish", () => {
       Auto.SEMVER.patch,
       "--no-commit-hooks",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "'Bump version to: %s [skip ci]'",
       "--loglevel",
       "silly",
     ]);
@@ -582,7 +582,7 @@ describe("publish", () => {
       Auto.SEMVER.patch,
       "--no-commit-hooks",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "'Bump version to: %s [skip ci]'",
     ]);
   });
 
@@ -842,7 +842,7 @@ describe("publish", () => {
       "1.0.1",
       "--no-commit-hooks",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "'Bump version to: %s [skip ci]'",
     ]);
   });
 

@@ -36,7 +36,6 @@ import setTokenOnCI, { getRegistry, DEFAULT_REGISTRY } from "./set-npm-token";
 import { writeFile, isMonorepo, readFile, getLernaJson } from "./utils";
 
 const { isCi } = envCi();
-const VERSION_COMMIT_MESSAGE = `'"Bump version to: %s [skip ci]"'`;
 
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
@@ -276,8 +275,8 @@ const pluginOptions = t.partial({
   legacyAuth: t.boolean,
   /** Whether to add package information to monorepo changelogs */
   monorepoChangelog: t.boolean,
-  /** 
-   * Path used when publishing packages. 
+  /**
+   * Path used when publishing packages.
    * When used with npm this is equivalent to npm publish <publishFolder>
    * When used with lerna this is equivalent to lerna publish --contents <publishFolder>
    */
@@ -1007,7 +1006,7 @@ export default class NPMPlugin implements IPlugin {
             "-m",
             isIndependent
               ? `'"Bump independent versions [skip ci]"'`
-              : VERSION_COMMIT_MESSAGE,
+              : `'"Bump version to: %s [skip ci]"'`,
             this.exact && "--exact",
             ...verboseArgs,
           ]);
@@ -1029,7 +1028,7 @@ export default class NPMPlugin implements IPlugin {
           latestBump,
           "--no-commit-hooks",
           "-m",
-          VERSION_COMMIT_MESSAGE,
+          "'Bump version to: %s [skip ci]'",
           ...verboseArgs,
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
