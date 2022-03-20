@@ -1,3 +1,23 @@
+# v10.36.0 (Sun Mar 20 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud)), for all your work!
+
+#### 🚀 Enhancement
+
+- Allow load npm module as extends [#2164](https://github.com/intuit/auto/pull/2164) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### 🐛 Bug Fix
+
+- feat: allow load npm module as extends ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v10.33.1 (Fri Mar 04 2022)
 
 :tada: This release contains work from a new contributor! :tada:
