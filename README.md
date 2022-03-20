@@ -184,6 +184,8 @@ Make sure to read our [code of conduct](./CODE_OF_CONDUCT.md).
 
 :star: [html-webpack-insert-text-plugin](https://github.com/hipstersmoothie/html-webpack-insert-text-plugin) - Insert text into the head or body of your HTML
 
+:star: [react-easy-crop](https://github.com/ValentinH/react-easy-crop) - A React component to crop images/videos with easy interactions
+
 ## :nail_care: `auto` Badge :nail_care:
 
 Does your project use `auto`? Then use our custom badge!
