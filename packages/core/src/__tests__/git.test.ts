@@ -631,6 +631,7 @@ describe("github", () => {
 
       getByUsername.mockReturnValueOnce({
         data: { name: "Andrew Lisowski" },
+        status: 200,
       });
 
       expect(await gh.getUserByUsername("andrew")).toStrictEqual({
@@ -792,8 +793,8 @@ describe("github", () => {
         message: "The request has failed",
         status: 404,
         response: {
-          headers
-        }
+          headers,
+        },
       });
 
       // eslint-disable-next-line no-new
