@@ -1,3 +1,18 @@
+# v10.36.1 (Sun Mar 20 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix loading object author from auto rc [#2172](https://github.com/intuit/auto/pull/2172) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `auto`, `@auto-it/core`, `@auto-it/all-contributors`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/npm`, `@auto-it/released`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`
+  - Update octokit [#2171](https://github.com/intuit/auto/pull/2171) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.0 (Sun Mar 20 2022)
 
 #### 🚀 Enhancement

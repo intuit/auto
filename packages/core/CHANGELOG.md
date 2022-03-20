@@ -1,3 +1,20 @@
+# v10.36.1 (Sun Mar 20 2022)
+
+#### 🐛 Bug Fix
+
+- Fix loading object author from auto rc [#2172](https://github.com/intuit/auto/pull/2172) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update octokit [#2171](https://github.com/intuit/auto/pull/2171) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix loading object author from auto rc ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix object to array deprecation warning ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix octokit deprecation warning ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.0 (Sun Mar 20 2022)
 
 :tada: This release contains work from a new contributor! :tada:
