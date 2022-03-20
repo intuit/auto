@@ -4,6 +4,8 @@ import * as t from "io-ts";
 const pluginOptions = t.partial({
   /** Labels the user cannot apply through the PR */
   disabledLabels: t.array(t.string),
+  /** Remove labels that are no longer checked from the PR. */
+  removeStaleLabels: t.boolean,
 });
 
 export type IPrBodyLabelsPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -20,6 +22,7 @@ export default class PrBodyLabelsPlugin implements IPlugin {
   constructor(options: IPrBodyLabelsPluginOptions = {}) {
     this.options = {
       disabledLabels: options.disabledLabels || [],
+      removeStaleLabels: options.removeStaleLabels ?? true,
     };
   }
 
@@ -32,6 +35,7 @@ export default class PrBodyLabelsPlugin implements IPlugin {
 
       await Promise.all(
         auto.labels.map(async (label) => {
+          const hasUnchecked = pr.body?.includes(`- [ ] \`${label.name}\``);
           const hasCheckedLabel =
             pr.body?.includes(`- [x] \`${label.name}\``) ||
             pr.body?.includes(`- [X] \`${label.name}\``);
@@ -41,6 +45,10 @@ export default class PrBodyLabelsPlugin implements IPlugin {
             !this.options.disabledLabels.includes(label.name)
           ) {
             await auto.git?.addLabelToPr(pr.number, label.name);
+          }
+
+          if (hasUnchecked && this.options.removeStaleLabels) {
+            await auto.git?.removeLabel(pr.number, label.name);
           }
         })
       );

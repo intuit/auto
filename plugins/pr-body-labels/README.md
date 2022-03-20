@@ -50,3 +50,13 @@ Labels the user cannot apply through the PR.
   "plugins": [["pr-body-labels", { "disabledLabels": ["release"] }]]
 }
 ```
+
+### `removeStaleLabels`
+
+When using the plugin it will use the checklist in your PR body as the source of truth. This means that manually added label that are present in the pr-body will be removed when `pr-check` runs again. To disable this behavior use the `removeStaleLabels` option.
+
+```json
+{
+  "plugins": [["pr-body-labels", { "removeStaleLabels": false }]]
+}
+```
