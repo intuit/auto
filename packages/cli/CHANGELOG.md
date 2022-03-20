@@ -1,3 +1,15 @@
+# v10.35.0 (Sun Mar 20 2022)
+
+#### 🚀 Enhancement
+
+- Add `lockPrs` option for released plugin [#2166](https://github.com/intuit/auto/pull/2166) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v10.33.0 (Fri Mar 04 2022)
 
 :tada: This release contains work from new contributors! :tada:
