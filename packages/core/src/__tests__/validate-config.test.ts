@@ -116,6 +116,17 @@ describe("validateConfig", () => {
     ).toStrictEqual([]);
   });
 
+  test("should allow author as an object", async () => {
+    expect(
+      await validateAutoRc({
+        author: {
+          name: "Andrew",
+          email: "test@email.com",
+        },
+      })
+    ).toStrictEqual([]);
+  });
+
   test("should catch errors in labels", async () => {
     expect(
       await validateAutoRc({
@@ -479,9 +490,11 @@ describe("validatePlugin", () => {
     // Check no validation issues with intersected options
     expect(
       await validatePlugins(hook, {
-        plugins: [["test-plugin", { auth: "app", channels: ['foo'], atTarget: 'foo' }]],
+        plugins: [
+          ["test-plugin", { auth: "app", channels: ["foo"], atTarget: "foo" }],
+        ],
       })
-      ).toStrictEqual([]);
+    ).toStrictEqual([]);
   });
 
   test("should validate plugin configuration - array of configurations", async () => {
