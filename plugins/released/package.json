@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/released",
-  "version": "10.36.1",
+  "version": "10.36.2",
   "main": "dist/index.js",
   "description": "Released plugin for auto. Comments with version + extra",
   "license": "MIT",
