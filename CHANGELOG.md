@@ -1,3 +1,21 @@
+# v10.36.4 (Sun Mar 20 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/gem`
+  - Gem: use releaseCommand in canary release [#2174](https://github.com/intuit/auto/pull/2174) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🔩 Dependency Updates
+
+- Bump shelljs from 0.8.4 to 0.8.5 [#2132](https://github.com/intuit/auto/pull/2132) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.3 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix
