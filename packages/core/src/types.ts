@@ -4,7 +4,14 @@ import { ILabelDefinition, labelDefinition } from "./semver";
 
 const author = t.partial({
   /** The name and email of the author to make commits with */
-  author: t.string,
+  author: t.union([
+    t.string,
+    t.interface({
+      /** The name of the author to make commits with */ name: t.string,
+      /** The email of the author to make commits with */
+      email: t.string,
+    }),
+  ]),
   /** The name of the author to make commits with */
   name: t.string,
   /** The email of the author to make commits with */
