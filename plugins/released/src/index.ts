@@ -15,6 +15,8 @@ const pluginOptions = t.partial({
   prereleaseLabel: t.string,
   /** Whether to lock the issue once the pull request has been released */
   lockIssues: t.boolean,
+  /** Whether to lock the issue once the pull request has been released */
+  lockPrs: t.boolean,
   /** Whether to comment on PRs made by bots */
   includeBotPrs: t.boolean,
 });
@@ -27,6 +29,7 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   label: "released",
   prereleaseLabel: "prerelease",
   lockIssues: false,
+  lockPrs: false,
   includeBotPrs: false,
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
@@ -153,6 +156,9 @@ export default class ReleasedLabelPlugin implements IPlugin {
           isPrerelease,
           releases,
         });
+        if (this.options.lockPrs && !isPrerelease) {
+          await auto.git!.lockIssue(commit.pullRequest.number);
+        }
 
         pr.data.body?.split("\n").map((line) => messages.push(line));
 

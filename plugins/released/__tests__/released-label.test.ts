@@ -9,6 +9,7 @@ import {
   makeLogParseHooks,
 } from "@auto-it/core/dist/utils/make-hooks";
 import botList from "@auto-it/bot-list";
+import { RestEndpointMethodTypes } from '@octokit/rest';
 
 import ReleasedLabelPlugin from "../src";
 
@@ -515,7 +516,7 @@ describe("release label plugin", () => {
   });
 
   test("should not lock Issues for canaries", async () => {
-    const releasedLabel = new ReleasedLabelPlugin();
+    const releasedLabel = new ReleasedLabelPlugin({ lockIssues: true });
     const autoHooks = makeHooks();
     releasedLabel.apply(({
       hooks: autoHooks,
@@ -534,6 +535,60 @@ describe("release label plugin", () => {
       newVersion: "1.0.0-canary",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
+      response: [{ data: { prerelease: true } } as RestEndpointMethodTypes["repos"]["createRelease"]["response"]],
+    });
+
+    expect(lockIssue).not.toHaveBeenCalled();
+  });
+
+  test("should lock Prs", async () => {
+    const releasedLabel = new ReleasedLabelPlugin({ lockPrs: true });
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    const commit = makeCommitFromMsg(
+        "normal commit with no bump (#123) closes #100",
+        { pullRequest: { number: 123 } },
+    );
+    await autoHooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: "",
+    });
+
+    expect(lockIssue).toHaveBeenCalledWith(123);
+  });
+
+  test("should not lock Prs for canaries", async () => {
+    const releasedLabel = new ReleasedLabelPlugin({ lockPrs: true });
+    const autoHooks = makeHooks();
+    releasedLabel.apply(({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      logger: dummyLog(),
+      options: {},
+      comment,
+      git,
+    } as unknown) as Auto);
+
+    const commit = makeCommitFromMsg(
+        "normal commit with no bump (#123) closes #100",
+        { pullRequest: { number: 123 } },
+    );
+    await autoHooks.afterRelease.promise({
+      lastRelease: "0.1.0",
+      newVersion: "1.0.0-canary",
+      commits: await log.normalizeCommits([commit]),
+      releaseNotes: "",
+      response: [{ data: { prerelease: true } } as RestEndpointMethodTypes["repos"]["createRelease"]["response"]],
     });
 
     expect(lockIssue).not.toHaveBeenCalled();
