@@ -48,6 +48,6 @@
     "tslib": "2.1.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.0.0"
+    "@octokit/rest": "^18.12.0"
   }
 }

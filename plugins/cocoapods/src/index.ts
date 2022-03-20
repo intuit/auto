@@ -262,7 +262,8 @@ export default class CocoapodsPlugin implements IPlugin {
         }
 
         const remoteRepo = pr
-          ? await (await auto.git.getPullRequest(pr)).data.head.repo.clone_url
+          ? (await auto.git.getPullRequest(pr)).data.head.repo?.clone_url ||
+            auto.remote
           : auto.remote;
 
         const lastRelease = await auto.git.getLatestRelease();
@@ -295,11 +296,12 @@ export default class CocoapodsPlugin implements IPlugin {
 
         // Reset changes to podspec file since it doesn't need to be committed
         await this.paths.reduce(
-          (promise, path) => promise.then(async () => {
-            await execPromise("git", ["checkout", path])
-          }),
+          (promise, path) =>
+            promise.then(async () => {
+              await execPromise("git", ["checkout", path]);
+            }),
           Promise.resolve()
-        )
+        );
 
         return canaryVersion;
       }

@@ -166,7 +166,8 @@ export default class Git {
     this.github.hook.error("request", (error) => {
       if (error) {
         // narrow down the type
-        if ("headers" in error && error.headers.authorization) {
+        if ("headers" in error && error.request.headers.authorization) {
+          delete error.request.headers.authorization;
           delete error.headers.authorization;
         }
       }
@@ -479,6 +480,10 @@ export default class Git {
       const user = await this.github.users.getByUsername({
         username,
       });
+
+      if (user.status !== 200) {
+        return;
+      }
 
       return user.data;
     } catch (error) {
@@ -851,7 +856,7 @@ export default class Git {
     releaseNotes: string,
     tag: string,
     prerelease = false,
-    fallbackCommit?: string,
+    fallbackCommit?: string
   ) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 

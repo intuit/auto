@@ -6,7 +6,6 @@ import {
   inFolder,
   validatePluginConfiguration,
 } from "@auto-it/core";
-import { RestEndpointMethodTypes } from "@octokit/rest";
 import envCi from "env-ci";
 import endent from "endent";
 import botList from "@auto-it/bot-list";
@@ -381,12 +380,7 @@ export default class AllContributorsPlugin implements IPlugin {
               auto.git?.getUserByUsername(contributor)
             )
           )
-        ).filter(
-          (
-            c
-          ): c is RestEndpointMethodTypes["users"]["getByUsername"]["response"]["data"] =>
-            Boolean(c)
-        );
+        ).filter((c): c is NonNullable<typeof c> => Boolean(c));
 
         return {
           ...commit,
