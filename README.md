@@ -294,6 +294,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/ardeois"><img src="https://avatars.githubusercontent.com/u/1867939?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Corentin Ardeois</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ardeois" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jBouyoud"><img src="https://avatars.githubusercontent.com/u/1336548?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Julien Bouyoud</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jBouyoud" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=jBouyoud" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jBouyoud" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://valentin-hervieu.fr/"><img src="https://avatars.githubusercontent.com/u/2678610?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Valentin Hervieu</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
