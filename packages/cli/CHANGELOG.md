@@ -1,3 +1,25 @@
+# v10.35.1 (Sun Mar 20 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Valentin Hervieu ([@ValentinH](https://github.com/ValentinH)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(npm): remove quote in commit message for standalone packages [#2165](https://github.com/intuit/auto/pull/2165) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### 📝 Documentation
+
+- docs: add react-easy-crop to "Projects Using auto" [#2162](https://github.com/intuit/auto/pull/2162) ([@ValentinH](https://github.com/ValentinH))
+- docs: fix publishFolder example [#2161](https://github.com/intuit/auto/pull/2161) ([@ValentinH](https://github.com/ValentinH))
+
+#### Authors: 2
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+- Valentin Hervieu ([@ValentinH](https://github.com/ValentinH))
+
+---
+
 # v10.35.0 (Sun Mar 20 2022)
 
 #### 🚀 Enhancement
