@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/sbt",
-  "version": "10.36.3",
+  "version": "10.36.4",
   "main": "dist/index.js",
   "description": "Publish Scala projects with sbt",
   "license": "MIT",
