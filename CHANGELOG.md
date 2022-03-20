@@ -1,3 +1,16 @@
+# v10.36.2 (Sun Mar 20 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/pr-body-labels`
+  - Remove unchecked labels when pr-check runs [#2173](https://github.com/intuit/auto/pull/2173) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.1 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix
