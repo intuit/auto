@@ -48,7 +48,9 @@ export default class GemPlugin implements IPlugin {
       throw new Error("No .gemspec found!");
     }
 
-    const gemName = fs.readFileSync(gemspec, { encoding: "utf8" }).match(GEM_SPEC_NAME_REGEX)?.[1];
+    const gemName = fs
+      .readFileSync(gemspec, { encoding: "utf8" })
+      .match(GEM_SPEC_NAME_REGEX)?.[1];
 
     if (!gemName) {
       throw new Error("No name field found in gemspec");
@@ -108,7 +110,10 @@ export default class GemPlugin implements IPlugin {
     auto.hooks.version.tapPromise(
       this.name,
       async ({ bump, dryRun, quiet }) => {
-        const [version, newTag, versionFile] = await this.getNewVersion(auto, bump as ReleaseType)
+        const [version, newTag, versionFile] = await this.getNewVersion(
+          auto,
+          bump as ReleaseType
+        );
 
         if (dryRun && newTag) {
           if (quiet) {
@@ -120,57 +125,73 @@ export default class GemPlugin implements IPlugin {
           return;
         }
 
-        await this.writeNewVersion(version, newTag, versionFile)
+        await this.writeNewVersion(version, newTag, versionFile);
       }
     );
 
     auto.hooks.canary.tapPromise(
-      this.name, 
+      this.name,
       async ({ bump, canaryIdentifier, dryRun, quiet }) => {
-      await this.writeCredentials(auto)
+        await this.writeCredentials(auto);
 
-      const [version, newTag, versionFile] = await this.getNewVersion(auto, bump as ReleaseType)
+        const [version, newTag, versionFile] = await this.getNewVersion(
+          auto,
+          bump as ReleaseType
+        );
 
-      const canaryVersion = `${newTag}.pre${canaryIdentifier.replace('-','.')}`
-      
-      if (dryRun) {
-        if (quiet) {
-          console.log(canaryVersion);
-        } else {
-          auto.logger.log.info(`Would have published: ${canaryVersion}`);
+        const canaryVersion = `${newTag}.pre${canaryIdentifier.replace(
+          "-",
+          "."
+        )}`;
+
+        if (dryRun) {
+          if (quiet) {
+            console.log(canaryVersion);
+          } else {
+            auto.logger.log.info(`Would have published: ${canaryVersion}`);
+          }
+
+          return;
         }
 
-        return;
+        await this.writeNewVersion(version, canaryVersion, versionFile);
+
+        /** Commit the new version which we don't push. It's just to clean the stage */
+        await execPromise("git", [
+          "commit",
+          "-am",
+          `"update version: ${canaryVersion} [skip ci]"`,
+          "--no-verify",
+        ]);
+
+        auto.logger.verbose.info("Running default release command");
+
+        if (this.options.releaseCommand) {
+          auto.logger.verbose.info("Running custom release command");
+          execSync(this.options.releaseCommand, { stdio: "inherit" });
+        } else {
+          auto.logger.verbose.info("Running default release command");
+          const buildResult = await execPromise("bundle", [
+            "exec",
+            "rake",
+            "build",
+          ]);
+          const gemPath = GEM_PKG_BUILD_REGEX.exec(buildResult)?.[0];
+          // will push the canary gem
+          await execPromise("gem", ["push", `${gemPath}`]);
+        }
+
+        auto.logger.verbose.info("Successfully published canary version");
+
+        return {
+          newVersion: canaryVersion,
+          details: this.makeInstallDetails(this.gemName, canaryVersion),
+        };
       }
-
-      await this.writeNewVersion(version, canaryVersion, versionFile)
-
-      /** Commit the new version which we don't push. It's just to clean the stage */
-      await execPromise("git", [
-        "commit",
-        "-am",
-        `"update version: ${canaryVersion} [skip ci]"`,
-        "--no-verify",
-      ]);
-
- 
-      auto.logger.verbose.info("Running default release command");
-      const buildResult = await execPromise("bundle", ["exec", "rake", "build"]);
-      const gemPath = GEM_PKG_BUILD_REGEX.exec(buildResult)?.[0]
-      // will push the canary gem
-      await execPromise("gem", ["push", `${gemPath}`]);
-
-      auto.logger.verbose.info("Successfully published canary version");
-
-      return {
-        newVersion: canaryVersion,
-        details: this.makeInstallDetails(this.gemName, canaryVersion),
-      };
-
-    });
+    );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      await this.writeCredentials(auto)
+      await this.writeCredentials(auto);
 
       const [version] = await this.getVersion(auto);
 
@@ -195,14 +216,14 @@ export default class GemPlugin implements IPlugin {
 
   /** create the installation details */
   private makeInstallDetails(name: string | undefined, canaryVersion: string) {
-  return [
-    ":sparkles: Test out this PR via:\n",
-    "```bash",
-    `gem ${name}, ${canaryVersion}`,
-    "or",
-    `gem install ${name} -v ${canaryVersion}`,
-    "```",
-  ].join("\n");
+    return [
+      ":sparkles: Test out this PR via:\n",
+      "```bash",
+      `gem ${name}, ${canaryVersion}`,
+      "or",
+      `gem install ${name} -v ${canaryVersion}`,
+      "```",
+    ].join("\n");
   }
 
   /** write the credentials file when necessary */
@@ -241,32 +262,39 @@ export default class GemPlugin implements IPlugin {
   /** resolves the version to a new one */
   private async getNewVersion(auto: Auto, bump: ReleaseType) {
     const [version, versionFile] = await this.getVersion(auto);
-      const newTag = inc(version, bump);
+    const newTag = inc(version, bump);
 
-      if (!newTag) {
-        throw new Error(
-          `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
-        );
-      }
+    if (!newTag) {
+      throw new Error(
+        `The version "${version}" parsed from your version file "${versionFile}" was invalid and could not be incremented. Please fix this!`
+      );
+    }
 
-      return [version, newTag, versionFile];
+    return [version, newTag, versionFile];
   }
 
   /** write the version in the file */
-  private async writeNewVersion(version: string, newVersion: string, versionFile: string){          
+  private async writeNewVersion(
+    version: string,
+    newVersion: string,
+    versionFile: string
+  ) {
     const content = await readFile(versionFile, { encoding: "utf8" });
     await writeFile(versionFile, content.replace(version, newVersion));
 
-    await this.updateLockfile(newVersion, version)
+    await this.updateLockfile(newVersion, version);
   }
 
   /** bump the lockfile version */
   private async updateLockfile(newVersion: string, oldVersion: string) {
-    const lockFile = 'Gemfile.lock';
+    const lockFile = "Gemfile.lock";
     if (fs.existsSync(lockFile)) {
-      let lockContent = await readFile(lockFile, { encoding: "utf8" })
-      lockContent = lockContent.replace(` ${this.gemName} (${oldVersion})`, ` ${this.gemName} (${newVersion})`)
-      await writeFile(lockFile, lockContent)
+      let lockContent = await readFile(lockFile, { encoding: "utf8" });
+      lockContent = lockContent.replace(
+        ` ${this.gemName} (${oldVersion})`,
+        ` ${this.gemName} (${newVersion})`
+      );
+      await writeFile(lockFile, lockContent);
     }
   }
 
