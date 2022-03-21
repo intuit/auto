@@ -70,9 +70,14 @@ describe("Old Version Branches", () => {
     auto.hooks.getPreviousVersion.tap("test", () => "1.0.0");
     await auto.hooks.beforeCommitChangelog.promise({
       bump: SEMVER.major,
+      lastRelease: "1.0.0",
     } as any);
 
-    expect(execSpy).toHaveBeenCalledWith("git", ["branch", "version-1"]);
+    expect(execSpy).toHaveBeenCalledWith("git", [
+      "branch",
+      "version-1",
+      "1.0.0",
+    ]);
   });
 
   test("should be able to customize old version branches", async () => {
@@ -85,8 +90,9 @@ describe("Old Version Branches", () => {
     auto.hooks.getPreviousVersion.tap("test", () => "1.0.0");
     await auto.hooks.beforeCommitChangelog.promise({
       bump: SEMVER.major,
+      lastRelease: "1.0.0",
     } as any);
 
-    expect(execSpy).toHaveBeenCalledWith("git", ["branch", "v1"]);
+    expect(execSpy).toHaveBeenCalledWith("git", ["branch", "v1", "1.0.0"]);
   });
 });
