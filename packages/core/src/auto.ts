@@ -459,13 +459,13 @@ export default class Auto {
     });
     this.hooks.beforeCommitChangelog.tapPromise(
       "Old Version Branches",
-      async ({ bump }) => {
+      async ({ bump, lastRelease }) => {
         if (bump === SEMVER.major && this.config?.versionBranches) {
           const branch = `${this.config.versionBranches}${major(
             await this.hooks.getPreviousVersion.promise()
           )}`;
 
-          await execPromise("git", ["branch", branch]);
+          await execPromise("git", ["branch", branch, lastRelease]);
           this.logger.log.success(`Created old version branch: ${branch}`);
           await execPromise("git", ["push", this.remote, branch]);
         }
@@ -1343,7 +1343,7 @@ export default class Auto {
       }
     }
 
-    const verb = options.dryRun ? "Would have published" : "Published"
+    const verb = options.dryRun ? "Would have published" : "Published";
     this.logger.log.success(
       `${verb} canary version${newVersion ? `: ${newVersion}` : ""}`
     );
@@ -1715,7 +1715,9 @@ export default class Auto {
 
     const bump = await this.getVersion(options);
 
-    this.logger.log.success(`Calculated version bump: ${options.useVersion || bump || "none"}`);
+    this.logger.log.success(
+      `Calculated version bump: ${options.useVersion || bump || "none"}`
+    );
 
     if (bump === "" && !options.useVersion) {
       this.logger.log.info("No version published.");
@@ -1751,7 +1753,7 @@ export default class Auto {
       this.logger.verbose.info("Calling publish hook");
       await this.hooks.publish.promise({
         bump,
-        useVersion: options.useVersion
+        useVersion: options.useVersion,
       });
       this.logger.verbose.info("Calling after publish hook");
       await this.hooks.afterPublish.promise();
