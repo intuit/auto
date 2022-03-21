@@ -1,3 +1,15 @@
+# v10.36.5 (Sun Mar 20 2022)
+
+#### 🐛 Bug Fix
+
+- create major version at last release tag [#2175](https://github.com/intuit/auto/pull/2175) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.3 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix
