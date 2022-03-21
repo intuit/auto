@@ -125,7 +125,7 @@ You will need all the following configuration blocks for all parts of `auto` to 
 </plugin>
 ```
 
-> :warning: Don't forget to set enviornment variables `GH_USER`, `GH_TOKEN`
+> :warning: Don't forget to set environment variables `GH_USER`, `GH_TOKEN`
 
 4. Version
 
