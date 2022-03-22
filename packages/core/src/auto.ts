@@ -264,7 +264,10 @@ export interface IAutoHooks {
     ]
   >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncSeriesHook<[DryRunOption]>;
+  afterVersion: AsyncSeriesHook<[DryRunOption & {
+    /** The version to release, if any */
+    version?: string;
+  }]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncSeriesHook<
     [
@@ -1777,7 +1780,7 @@ export default class Auto {
     const releaseArgs = await this.makeReleaseContext();
 
     this.logger.verbose.info("Calling after version hook");
-    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+    await this.hooks.afterVersion.promise({ dryRun: options.dryRun, version: releaseArgs.newVersion });
 
     if (!options.dryRun) {
       this.logger.verbose.info("Calling publish hook");

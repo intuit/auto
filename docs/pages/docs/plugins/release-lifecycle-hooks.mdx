@@ -132,7 +132,7 @@ _Examples:_
 - [brew](../generated/brew) - Create a new brew formula once the package a=has been versioned
 
 ```ts
-auto.hooks.afterVersion.tapPromise("NPM", async ({ dryRun }) => {});
+auto.hooks.afterVersion.tapPromise("NPM", async ({ dryRun, version }) => {});
 ```
 
 ## publish
