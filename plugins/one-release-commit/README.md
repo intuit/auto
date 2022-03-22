@@ -17,8 +17,13 @@ yarn add -D @auto-it/one-release-commit
 ```json
 {
   "plugins": [
-    "one-release-commit"
-    // other plugins
+    [
+      "one-release-commit",
+      {
+        // Release commit message
+        "commitMessage": ":rocket: New release is on the way :rocket:"
+      }
+    ]
   ]
 }
 ```
