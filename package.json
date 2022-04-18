@@ -68,7 +68,7 @@
     "jest-serializer-path": "^0.1.15",
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.22.1",
-    "lint-staged": "^10.0.7",
+    "lint-staged": "^12.3.8",
     "mock-fs": "^5.1.2",
     "next-ignite": "^0.10.11",
     "patch-package": "^6.2.2",
