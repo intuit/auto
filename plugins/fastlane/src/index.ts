@@ -50,7 +50,7 @@ export type IFastlanePluginOptions = t.TypeOf<typeof pluginOptions>;
  *
  * @param pListPath - The relative path to the podspec file
  */
-export async function getVersion(pListPath: string): string {
+export async function getVersion(pListPath: string): Promise<string> {
   const pListContents = getpListContents(pListPath);
     return await execPromise ("/usr/libexec/PlistBuddy", [
       "-c",
