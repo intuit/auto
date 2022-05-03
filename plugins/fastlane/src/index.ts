@@ -50,9 +50,9 @@ export type IFastlanePluginOptions = t.TypeOf<typeof pluginOptions>;
  *
  * @param pListPath - The relative path to the podspec file
  */
-export function getVersion(pListPath: string): string {
+export async function getVersion(pListPath: string): string {
   const pListContents = getpListContents(pListPath);
-    return execPromise("/usr/libexec/PlistBuddy", [
+    return await execPromise ("/usr/libexec/PlistBuddy", [
       "-c",
       `"Print CFBundleShortVersionString"`,
       pListContents,
@@ -68,16 +68,16 @@ export function getVersion(pListPath: string): string {
  * @param pListPath - The relative path to the pList file
  * @param version - The version to update the pList to
  */
-export function updatepListVersion(pListPath: string, version: string) {
+export async function updatepListVersion(pListPath: string, version: string) {
   const parsedpListContents = getpListContents(pListPath);
   try {
     if (parsedpListContents?.[0]) {
-       execPromise("bundle", [
+       await execPromise("bundle", [
         "exec",
         "fastlane",
         version,
       ]);
-      const newVersionString = execPromise("/usr/libexec/PlistBuddy", [
+      const newVersionString = await execPromise("/usr/libexec/PlistBuddy", [
         "-c",
         `"Print CFBundleShortVersionString"`,
         parsedpListContents,
