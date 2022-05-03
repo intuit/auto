@@ -17,7 +17,6 @@ import * as t from "io-ts";
 import { getpListContents, writepListContents } from "./utilities";
 
 const logPrefix = "[Fastlane-Plugin]";
-const pListCommand = "/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" "
 
 /**
  * Wrapper to add logPrefix to messages
@@ -53,35 +52,36 @@ export type IFastlanePluginOptions = t.TypeOf<typeof pluginOptions>;
  */
 export function getVersion(pListPath: string): string {
   const pListContents = getpListContents(pListPath);
-    return pListCommand.concat.pListContents;
+    return execPromise("/usr/libexec/PlistBuddy", [
+      "-c",
+      `"Print CFBundleShortVersionString"`,
+      pListContents,
+    ]);
 
   throw new Error(`Version could not be found in podspec: ${pListPath}`);
 }
 
 
 /**
- * Updates the version in the podspec to the supplied version
+ * Updates the version in the pList to the supplied version
  *
- * @param pListPath - The relative path to the podspec file
- * @param version - The version to update the podspec to
+ * @param pListPath - The relative path to the pList file
+ * @param version - The version to update the pList to
  */
-export function updatePodspecVersion(pListPath: string, version: string) {
-  const previousVersion = getVersion(pListPath);
-  const parsedContents = getParsedPodspecContents(pListPath);
-  const podspecContents = getPodspecContents(pListPath);
-
+export function updatepListVersion(pListPath: string, version: string) {
+  const parsedpListContents = getpListContents(pListPath);
   try {
-    if (parsedContents?.[0]) {
-      const newVersionString = parsedContents[0].replace(
-        previousVersion,
-        version
-      );
-      const newPodspec = podspecContents.replace(
-        versionRegex,
-        newVersionString
-      );
-
-      writePodspecContents(pListPath, newPodspec);
+    if (parsedpListContents?.[0]) {
+       execPromise("bundle", [
+        "exec",
+        "fastlane",
+        version,
+      ]);
+      const newVersionString = execPromise("/usr/libexec/PlistBuddy", [
+        "-c",
+        `"Print CFBundleShortVersionString"`,
+        parsedpListContents,
+      ]);
     }
   } catch (error) {
     throw new Error(`Error updating version in podspec: ${pListPath}`);
@@ -163,7 +163,7 @@ export default class FastlanePlugin implements IPlugin {
         }
 
         this.paths.forEach((path) => {
-          updatePodspecVersion(path, releaseVersion);
+          updatepListVersion(path, releaseVersion);
         });
 
         await execPromise("git", [
