@@ -32,14 +32,10 @@ const required = t.interface({
 });
 
 const optional = t.partial({
-  /** The fastlane repo to publish to */
-  specsRepo: t.string,
-
-  /** Any additional command line flags to pass to `fastlane increment_version_number` */
-  flags: t.array(t.string),
-
-  /** The command to use for `pod` if it needs to be separate like `bundle exec fastlane` */
+  /** The command to use for `fastlane` if it needs to be separate like `fastlane action increment_version_numer` */
   fastlaneCommand: t.string,
+  /** xcode project path */
+  xcodeproj: t.string,
 });
 
 const pluginOptions = t.intersection([required, optional]);
@@ -59,33 +55,6 @@ export async function getVersion(pListPath: string): Promise<string> {
     ]);
 
   throw new Error(`Version could not be found in podspec: ${pListPath}`);
-}
-
-
-/**
- * Updates the version in the pList to the supplied version
- *
- * @param pListPath - The relative path to the pList file
- * @param version - The version to update the pList to
- */
-export async function updatepListVersion(pListPath: string, version: string) {
-  const parsedpListContents = getpListContents(pListPath);
-  try {
-    if (parsedpListContents?.[0]) {
-       await execPromise("bundle", [
-        "exec",
-        "fastlane",
-        version,
-      ]);
-      const newVersionString = await execPromise("/usr/libexec/PlistBuddy", [
-        "-c",
-        `"Print CFBundleShortVersionString"`,
-        parsedpListContents,
-      ]);
-    }
-  } catch (error) {
-    throw new Error(`Error updating version in podspec: ${pListPath}`);
-  }
 }
 
 /** Use auto to version your pList */
@@ -162,9 +131,12 @@ export default class FastlanePlugin implements IPlugin {
           );
         }
 
-        this.paths.forEach((path) => {
-          updatepListVersion(path, releaseVersion);
-        });
+        await execPromise("fastlane", [
+          "action", 
+          "increment_version_number",
+          `version_number:${releaseVersion}`,
+          `xcodeproj:${this.options.xcodeproj}`,
+          ])
 
         await execPromise("git", [
           "commit",
