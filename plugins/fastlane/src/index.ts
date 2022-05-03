@@ -29,13 +29,14 @@ const logMessage = (msg: string): string => `${logPrefix} ${msg}`;
 const required = t.interface({
   /** Relative path to podspec file */
   pListPath: t.union([t.string, t.array(t.string)]),
+  /** The command to use for `fastlane` if it needs to be separate like `fastlane action increment_version_numer` */
+  fastlaneCommand: t.string,
 });
 
 const optional = t.partial({
-  /** The command to use for `fastlane` if it needs to be separate like `fastlane action increment_version_numer` */
-  fastlaneCommand: t.string,
-  /** xcode project path */
-  xcodeproj: t.string,
+    /** xcode project path */
+    xcodeproj: t.string,
+  
 });
 
 const pluginOptions = t.intersection([required, optional]);
