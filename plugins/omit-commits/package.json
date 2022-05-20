@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/omit-commits",
-  "version": "10.36.5",
+  "version": "10.36.6",
   "main": "dist/index.js",
   "description": "Omit commits plugin for auto",
   "license": "MIT",
