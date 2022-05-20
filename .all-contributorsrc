@@ -680,6 +680,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "sonic-knuckles",
+      "name": "Josh Biddick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/102497932?v=4",
+      "profile": "https://github.com/sonic-knuckles",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
