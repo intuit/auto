@@ -1,3 +1,29 @@
+# v10.37.0 (Fri May 20 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+:heart: Josh Biddick ([@sonic-knuckles](https://github.com/sonic-knuckles))
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/version-file`
+  - Version File Plugin [#2107](https://github.com/intuit/auto/pull/2107) (ketan_reddy@intuit.com)
+
+#### 🐛 Bug Fix
+
+- Update index.mdx [#2184](https://github.com/intuit/auto/pull/2184) ([@sonic-knuckles](https://github.com/sonic-knuckles))
+
+#### Authors: 2
+
+- Josh Biddick ([@sonic-knuckles](https://github.com/sonic-knuckles))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # v10.36.6 (Fri May 20 2022)
 
 :tada: This release contains work from new contributors! :tada:
