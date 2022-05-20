@@ -10,16 +10,7 @@
 
   "references": [
     {
-      "path": "../core"
-    },
-    {
-      "path": "../../plugins/npm"
-    },
-    {
-      "path": "../../plugins/released"
-    },
-    {
-      "path": "../../plugins/version-file"
+      "path": "../../packages/core"
     }
   ]
 }
