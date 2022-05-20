@@ -168,7 +168,6 @@ export default class Git {
         // narrow down the type
         if ("headers" in error && error.request.headers.authorization) {
           delete error.request.headers.authorization;
-          delete error.headers.authorization;
         }
       }
 
