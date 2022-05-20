@@ -1,3 +1,20 @@
+# v10.36.6 (Fri May 20 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Agustin Polo ([@poloagustin](https://github.com/poloagustin)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(git): #2049 removes the use of deprecated error.headers [#2202](https://github.com/intuit/auto/pull/2202) ([@poloagustin](https://github.com/poloagustin))
+- fix(git): #2049 removes the use of deprecated error.headers ([@poloagustin](https://github.com/poloagustin))
+
+#### Authors: 1
+
+- Agustin Polo ([@poloagustin](https://github.com/poloagustin))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix

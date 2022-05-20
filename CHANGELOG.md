@@ -1,3 +1,33 @@
+# v10.36.6 (Fri May 20 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Agustin Polo ([@poloagustin](https://github.com/poloagustin))
+
+:heart: Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+#### 🐛 Bug Fix
+
+- Fix release [#2204](https://github.com/intuit/auto/pull/2204) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add github to known hosts in CI config [#2204](https://github.com/intuit/auto/pull/2204) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - fix(git): #2049 removes the use of deprecated error.headers [#2202](https://github.com/intuit/auto/pull/2202) ([@poloagustin](https://github.com/poloagustin))
+
+#### 📝 Documentation
+
+- `@auto-it/maven`
+  - Fix typo in maven/README.md [#2176](https://github.com/intuit/auto/pull/2176) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 3
+
+- Agustin Polo ([@poloagustin](https://github.com/poloagustin))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix
