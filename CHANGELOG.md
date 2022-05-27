@@ -1,3 +1,16 @@
+# v10.37.1 (Thu May 26 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - #2141: add missed --no-verify-access for lerna publish [#2205](https://github.com/intuit/auto/pull/2205) ([@karpoff](https://github.com/karpoff))
+
+#### Authors: 1
+
+- Anton Karpov ([@karpoff](https://github.com/karpoff))
+
+---
+
 # v10.37.0 (Fri May 20 2022)
 
 :tada: This release contains work from new contributors! :tada:
