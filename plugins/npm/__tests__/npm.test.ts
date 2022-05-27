@@ -681,6 +681,7 @@ describe("publish", () => {
       "--yes",
       "from-package",
       "--exact",
+      "--no-verify-access"
     ]);
   });
 
@@ -703,6 +704,7 @@ describe("publish", () => {
       "--yes",
       "from-package",
       false,
+      "--no-verify-access"
     ]);
   });
 
@@ -728,6 +730,7 @@ describe("publish", () => {
       false,
       "--legacy-auth",
       "abcd",
+      "--no-verify-access"
     ]);
   });
 
@@ -752,6 +755,7 @@ describe("publish", () => {
       false,
       "--contents",
       "dist/publish-folder",
+      "--no-verify-access"
     ]);
   });
 
