@@ -1601,6 +1601,26 @@ describe("Auto", () => {
       expect(spy).not.toHaveBeenCalled();
     });
   });
+
+  describe("teardown", () => {
+    test("should throw when not initialized", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+
+      await expect(auto.teardown()).rejects.not.toBeUndefined();
+    });
+
+    test("should call afterRun hooks", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+
+      const afterRun = jest.fn();
+      auto.hooks.afterRun.tap("test", afterRun);
+      await auto.loadConfig();
+
+      await expect(auto.teardown()).resolves.toBeUndefined();
+    });
+  });
 });
 
 describe("hooks", () => {

@@ -151,6 +151,8 @@ export interface IAutoHooks {
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
   beforeRun: AsyncSeriesHook<[LoadedAutoRc]>;
+  /** Happens after everything else is done. This is a great place to trigger post-actions. */
+  afterRun: AsyncSeriesHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -661,6 +663,18 @@ export default class Auto {
     this.hooks.onCreateRelease.call(this.release);
 
     return config;
+  }
+
+  /**
+   * Gracefully teardown auto
+   */
+  async teardown() {
+    if (!this.config) {
+      throw this.createErrorMessage();
+    }
+
+    this.logger.verbose.success("Teardown `auto`");
+    await this.hooks.afterRun.promise(this.config);
   }
 
   /** Determine the remote we have auth to push to. */
