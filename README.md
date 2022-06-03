@@ -75,6 +75,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 - [slack](./plugins/slack) - Post release notes to slack
 - [twitter](./plugins/twitter) - Post release notes to twitter
 - [upload-assets](./plugins/upload-assets) - Add extra assets to the release
+- [protected-branch](./plugins/protected-branch) - Handle Github branch protections and avoid run auto with an admin token
 
 ## :hammer: Start Developing :hammer:
 
