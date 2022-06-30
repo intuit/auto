@@ -583,7 +583,7 @@ export default class Auto {
 
     this.logger.verbose.success("Loaded `auto` with config:", userConfig);
 
-    // Allow plugins to be overriden for testing
+    // Allow plugins to be overridden for testing
     this.config = {
       ...userConfig,
       plugins: this.options.plugins || userConfig.plugins,
