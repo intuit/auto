@@ -107,13 +107,15 @@ You will need all the following configuration blocks for all parts of `auto` to 
 ```xml
 <scm>
     <connection
-  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</connection>
+  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/${owner}/${repo}.git</connection>
     <developerConnection
-  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/Fuego-Tools/java-test-project.git</developerConnection>
-    <url>https://github.com/Fuego-Tools/java-test-project</url>
+  >scm:git:https://${env.GH_USER}:${env.GH_TOKEN}@github.com/${owner}/${repo}.git</developerConnection>
+    <url>https://github.com/${owner}/${repo}</url>
     <tag>HEAD</tag>
 </scm>
 ```
+
+> :warning: Either replace `${owner}/${repo}` with the corresponding GitHub owner and repository for your project or ensure those are configured as properties within the `pom.xml`
 
 3. Versions Maven Plugin **RECOMMENDED** (Optional)
 
