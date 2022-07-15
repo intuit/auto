@@ -1,3 +1,16 @@
+# v10.37.2 (Fri Jul 15 2022)
+
+#### 🐛 Bug Fix
+
+- Get correct next version when using onlyGraduateWithReleaseLabel [#2229](https://github.com/intuit/auto/pull/2229) ([@adierkens](https://github.com/adierkens))
+- Get correct next version when using onlyGraduateWithReleaseLabel shipit option ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v10.33.0 (Fri May 20 2022)
 
 :tada: This release contains work from a new contributor! :tada:

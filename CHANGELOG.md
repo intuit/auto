@@ -1,3 +1,22 @@
+# v10.37.2 (Fri Jul 15 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/version-file`
+  - Get correct next version when using onlyGraduateWithReleaseLabel [#2229](https://github.com/intuit/auto/pull/2229) ([@adierkens](https://github.com/adierkens))
+
+#### 📝 Documentation
+
+- `@auto-it/maven`
+  - Remove old references in maven instructions [#2226](https://github.com/intuit/auto/pull/2226) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 2
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v10.37.1 (Thu May 26 2022)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,19 @@
+# v10.37.2 (Fri Jul 15 2022)
+
+#### 🐛 Bug Fix
+
+- fix: change old references in maven instructions ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 📝 Documentation
+
+- Remove old references in maven instructions [#2226](https://github.com/intuit/auto/pull/2226) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v10.36.6 (Fri May 20 2022)
 
 :tada: This release contains work from a new contributor! :tada:
