@@ -224,6 +224,7 @@ export function calculateSemVerBump(
     ? !lastMergedCommitLabels.some((label) => releaseLabels.includes(label))
     : lastMergedCommitLabels.some((label) => skipReleaseLabels.includes(label));
   console.log("skipRelease Value: ", skipRelease)
+  
   if (skipRelease) {
     return SEMVER.noVersion;
   }
