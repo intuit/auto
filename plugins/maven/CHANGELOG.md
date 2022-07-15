@@ -1,3 +1,23 @@
+# v10.36.6 (Fri May 20 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Ikko Ashimine ([@eltociear](https://github.com/eltociear)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Fix typo in maven/README.md ([@eltociear](https://github.com/eltociear))
+
+#### 📝 Documentation
+
+- Fix typo in maven/README.md [#2176](https://github.com/intuit/auto/pull/2176) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 1
+
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix

@@ -96,6 +96,9 @@ jobs:
       - attach_workspace:
           at: ~/auto
       - run:
+          name: Add github.com to known hosts
+          command: mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - run:
           name: Release
           command: yarn auto shipit -vv
 

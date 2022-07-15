@@ -1,12 +1,12 @@
 {
-  "name": "@auto-it/chrome",
+  "name": "@auto-it/version-file",
   "version": "10.37.1",
   "main": "dist/index.js",
-  "description": "Chrome publishing plugin for auto",
+  "description": "",
   "license": "MIT",
   "author": {
-    "name": "Andrew Lisowski",
-    "email": "lisowski54@gmail.com"
+    "name": "Ketan Reddy",
+    "email": "ketan@ketanreddy.com"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -27,9 +27,7 @@
     "labels",
     "automated",
     "continuos integration",
-    "changelog",
-    "chrome",
-    "web store"
+    "changelog"
   ],
   "scripts": {
     "build": "tsc -b",
@@ -39,13 +37,9 @@
   },
   "dependencies": {
     "@auto-it/core": "link:../../packages/core",
-    "chrome-webstore-upload-cli": "^1.2.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "semver": "^7.0.0",
-    "tslib": "2.1.0"
-  },
-  "devDependencies": {
-    "@types/semver": "^7.1.0"
+    "tslib": "1.10.0"
   }
 }

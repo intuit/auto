@@ -1,3 +1,20 @@
+# v10.37.1 (Thu May 26 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Anton Karpov ([@karpoff](https://github.com/karpoff)), for all your work!
+
+#### 🐛 Bug Fix
+
+- #2141: add missed --no-verify-access for lerna publish [#2205](https://github.com/intuit/auto/pull/2205) ([@karpoff](https://github.com/karpoff))
+- #2141: add missed --no-verify-access for lerna publish ([@karpoff](https://github.com/karpoff))
+
+#### Authors: 1
+
+- Anton Karpov ([@karpoff](https://github.com/karpoff))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix

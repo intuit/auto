@@ -1,3 +1,72 @@
+# v10.37.1 (Thu May 26 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - #2141: add missed --no-verify-access for lerna publish [#2205](https://github.com/intuit/auto/pull/2205) ([@karpoff](https://github.com/karpoff))
+
+#### Authors: 1
+
+- Anton Karpov ([@karpoff](https://github.com/karpoff))
+
+---
+
+# v10.37.0 (Fri May 20 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+:heart: Josh Biddick ([@sonic-knuckles](https://github.com/sonic-knuckles))
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/version-file`
+  - Version File Plugin [#2107](https://github.com/intuit/auto/pull/2107) (ketan_reddy@intuit.com)
+
+#### 🐛 Bug Fix
+
+- Update index.mdx [#2184](https://github.com/intuit/auto/pull/2184) ([@sonic-knuckles](https://github.com/sonic-knuckles))
+
+#### Authors: 2
+
+- Josh Biddick ([@sonic-knuckles](https://github.com/sonic-knuckles))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
+# v10.36.6 (Fri May 20 2022)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Agustin Polo ([@poloagustin](https://github.com/poloagustin))
+
+:heart: Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+#### 🐛 Bug Fix
+
+- Fix release [#2204](https://github.com/intuit/auto/pull/2204) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add github to known hosts in CI config [#2204](https://github.com/intuit/auto/pull/2204) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- `@auto-it/core`
+  - fix(git): #2049 removes the use of deprecated error.headers [#2202](https://github.com/intuit/auto/pull/2202) ([@poloagustin](https://github.com/poloagustin))
+
+#### 📝 Documentation
+
+- `@auto-it/maven`
+  - Fix typo in maven/README.md [#2176](https://github.com/intuit/auto/pull/2176) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 3
+
+- Agustin Polo ([@poloagustin](https://github.com/poloagustin))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix

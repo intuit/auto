@@ -1447,6 +1447,7 @@ export default class NPMPlugin implements IPlugin {
           ...(await getRegistryArgs()),
           ...getPublishFolderArgs(this.publishFolder, { isMonorepo: true }),
           ...getLegacyAuthArgs(this.legacyAuth, { isMonorepo: true }),
+          "--no-verify-access", // permit automation tokens https://github.com/lerna/lerna/issues/2788
         ]);
       } else {
         const { private: isPrivate } = await loadPackageJson();

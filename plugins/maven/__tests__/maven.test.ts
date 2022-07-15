@@ -147,8 +147,8 @@ describe("maven", () => {
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
                   <scm>
-                    <connection>scm:git:https://github.com/Fuego-Tools/java-test-project.git</connection>
-                    <url>https://github.com/Fuego-Tools/java-test-project</url>
+                    <connection>scm:git:https://github.com/intuit/auto.git</connection>
+                    <url>https://github.com/intuit/auto</url>
                     <tag>HEAD</tag>
                   </scm>
                 </project>
@@ -158,8 +158,8 @@ describe("maven", () => {
 
       expect(await hooks.getRepository.promise()).toStrictEqual(
         expect.objectContaining({
-          owner: "Fuego-Tools",
-          repo: "java-test-project",
+          owner: "intuit",
+          repo: "auto",
         })
       );
     });

@@ -296,6 +296,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   </tr>
   <tr>
     <td align="center"><a href="https://valentin-hervieu.fr/"><img src="https://avatars.githubusercontent.com/u/2678610?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Valentin Hervieu</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=ValentinH" title="Code">💻</a></td>
+    <td align="center"><a href="https://bandism.net/"><img src="https://avatars.githubusercontent.com/u/22633385?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ikko Ashimine</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=eltociear" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/sonic-knuckles"><img src="https://avatars.githubusercontent.com/u/102497932?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Josh Biddick</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sonic-knuckles" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sonic-knuckles" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/karpoff"><img src="https://avatars.githubusercontent.com/u/6905209?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anton Karpov</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=karpoff" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=karpoff" title="Code">💻</a></td>
   </tr>
 </table>
 
