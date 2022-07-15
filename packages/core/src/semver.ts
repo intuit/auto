@@ -217,11 +217,13 @@ export function calculateSemVerBump(
   });
 
   const lastMergedCommitLabels = prLabels[0] || [];
+  console.log("Last merged commit labels : ", lastMergedCommitLabels)
   const releaseLabels = labelMap.get("release") || [];
+  console.log("Release labels value : ", releaseLabels)
   const skipRelease = onlyPublishWithReleaseLabel
     ? !lastMergedCommitLabels.some((label) => releaseLabels.includes(label))
     : lastMergedCommitLabels.some((label) => skipReleaseLabels.includes(label));
-
+  console.log("skip release value: ", skipRelease)
   if (skipRelease) {
     return SEMVER.noVersion;
   }
