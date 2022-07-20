@@ -61,7 +61,7 @@ This will publish releases from the local docker image `someLocalImage:myLocalTa
 {
   "prereleaseBranches": ["develop", "someOtherPrereleaseBranch"],
   "plugins": [
-    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPrereleases": true, "prereleaseTagMapping": { "develop": "next" } }]
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPrereleaseAliases": true, "prereleaseAliasMapping": { "develop": "next" } }]
     // other plugins
   ]
 }
@@ -79,7 +79,7 @@ For pushes to `someOtherReleaseBranch` this will create the following tags:
 ```json
 {
   "plugins": [
-    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPullRequests": true }]
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPullRequestAliases": true }]
     // other plugins
   ]
 }
