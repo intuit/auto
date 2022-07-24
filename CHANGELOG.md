@@ -1,3 +1,16 @@
+# v10.37.3 (Sun Jul 24 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/docker`
+  - (docker plugin) Additional tag alias support [#2232](https://github.com/intuit/auto/pull/2232) ([@ejhayes](https://github.com/ejhayes))
+
+#### Authors: 1
+
+- Eric Hayes ([@ejhayes](https://github.com/ejhayes))
+
+---
+
 # v10.37.2 (Fri Jul 15 2022)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,21 @@
+# v10.37.3 (Sun Jul 24 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Eric Hayes ([@ejhayes](https://github.com/ejhayes)), for all your work!
+
+#### 🐛 Bug Fix
+
+- (docker plugin) Additional tag alias support [#2232](https://github.com/intuit/auto/pull/2232) ([@ejhayes](https://github.com/ejhayes))
+- Update README.md ([@ejhayes](https://github.com/ejhayes))
+- Add support for alias tags for canary (if pull request), pre-releases (with mapping to specific aliases per branch), and latest. All docker alias tags are also pushed to git ([@ejhayes](https://github.com/ejhayes))
+
+#### Authors: 1
+
+- Eric Hayes ([@ejhayes](https://github.com/ejhayes))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix
