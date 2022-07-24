@@ -700,6 +700,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "ejhayes",
+      "name": "Eric Hayes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/310233?v=4",
+      "profile": "https://github.com/ejhayes",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
