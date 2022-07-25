@@ -1,3 +1,16 @@
+# v10.37.4 (Mon Jul 25 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - add missing peer deps [#2240](https://github.com/intuit/auto/pull/2240) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.37.3 (Sun Jul 24 2022)
 
 #### 🐛 Bug Fix
