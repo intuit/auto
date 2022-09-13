@@ -1829,23 +1829,20 @@ export default class Auto {
 
     let calculatedBump = await this.release.getSemverBump(lastRelease);
 
-    // For next releases we also want to take into account any labels on
-    // the PR of next into main
-    if (isPrerelease) {
-      const pr = getPrNumberFromEnv();
+    // Take into account any labels on the PR
+    const pr = getPrNumberFromEnv();
 
-      if (pr && this.semVerLabels) {
-        const prLabels = await this.git.getLabels(pr);
-        this.logger.verbose.info(
-          `Found labels on prerelease branch PR`,
-          prLabels
-        );
-        calculatedBump = calculateSemVerBump(
-          [prLabels, [calculatedBump]],
-          this.semVerLabels,
-          this.config
-        );
-      }
+    if (pr && this.semVerLabels) {
+      const prLabels = await this.git.getLabels(pr);
+      this.logger.verbose.info(
+        `Found labels on prerelease branch PR`,
+        prLabels
+      );
+      calculatedBump = calculateSemVerBump(
+        [prLabels, [calculatedBump]],
+        this.semVerLabels,
+        this.config
+      );
     }
 
     const bump =
