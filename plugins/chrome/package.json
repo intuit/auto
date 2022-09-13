@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/chrome",
-  "version": "10.37.5",
+  "version": "10.37.6",
   "main": "dist/index.js",
   "description": "Chrome publishing plugin for auto",
   "license": "MIT",

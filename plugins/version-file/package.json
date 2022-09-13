@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/version-file",
-  "version": "10.37.5",
+  "version": "10.37.6",
   "main": "dist/index.js",
   "description": "",
   "license": "MIT",
