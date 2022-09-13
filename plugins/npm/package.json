@@ -46,7 +46,7 @@
     "fp-ts": "^2.5.3",
     "get-monorepo-packages": "^1.1.0",
     "io-ts": "^2.1.2",
-    "registry-url": "^5.1.0",
+    "registry-url": "^6.0.1",
     "semver": "^7.0.0",
     "tslib": "2.1.0",
     "typescript-memoize": "^1.0.0-alpha.3",
