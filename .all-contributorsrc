@@ -711,6 +711,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "domoritz",
+      "name": "Dominik Moritz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/589034?v=4",
+      "profile": "https://www.domoritz.de/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
