@@ -1,3 +1,20 @@
+# v10.37.5 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Dominik Moritz ([@domoritz](https://github.com/domoritz)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Bump ts-node [#2255](https://github.com/intuit/auto/pull/2255) ([@domoritz](https://github.com/domoritz))
+
+#### Authors: 1
+
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+
+---
+
 # v10.37.4 (Mon Jul 25 2022)
 
 #### 🐛 Bug Fix
