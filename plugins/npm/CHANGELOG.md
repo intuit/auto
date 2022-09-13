@@ -1,3 +1,21 @@
+# v10.37.6 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Ikko Ashimine ([@eltociear](https://github.com/eltociear)), for all your work!
+
+#### 🐛 Bug Fix
+
+- chore: fix typo in auto.ts [#2223](https://github.com/intuit/auto/pull/2223) ([@eltociear](https://github.com/eltociear))
+- version: take into account current PR labels [#2252](https://github.com/intuit/auto/pull/2252) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
 # v10.37.1 (Thu May 26 2022)
 
 :tada: This release contains work from a new contributor! :tada:
