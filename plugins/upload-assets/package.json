@@ -44,7 +44,7 @@
     "file-type": "^16.0.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "terminal-link": "^2.1.1",
+    "terminal-link": "^3.0.0",
     "tslib": "2.1.0"
   },
   "devDependencies": {

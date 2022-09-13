@@ -70,7 +70,7 @@
     "semver": "^7.0.0",
     "signale": "^1.4.0",
     "tapable": "^2.2.0",
-    "terminal-link": "^2.1.1",
+    "terminal-link": "^3.0.0",
     "tinycolor2": "^1.4.1",
     "ts-node": "^10.9.1",
     "tslib": "2.1.0",
