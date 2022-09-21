@@ -862,6 +862,23 @@ describe("Auto", () => {
       expect(addToChangelog).not.toHaveBeenCalled();
     });
 
+    test("should not commit on noGitCommit", async () => {
+      const auto = new Auto(defaults);
+
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToChangelog = jest.fn();
+      auto.release!.addToChangelog = addToChangelog;
+      const beforeCommitChangelog = jest.fn();
+      auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
+      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+
+      await auto.changelog({ from: "v1.0.0", noGitCommit: true });
+      expect(addToChangelog).toHaveBeenCalled();
+      expect(beforeCommitChangelog).not.toHaveBeenCalled();
+    });
+
     test("should be able to override title", async () => {
       const auto = new Auto(defaults);
 
@@ -1512,13 +1529,17 @@ describe("Auto", () => {
         } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
+      const addToChangelog = jest
+        .spyOn(auto.release!, "addToChangelog")
+        .mockImplementation();
       const beforeCommitChangelog = jest.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
       const afterChangelog = jest.fn();
       auto.hooks.afterChangelog.tap("test", afterChangelog);
 
       await auto.shipit({ noChangelog: true });
+
+      expect(addToChangelog).not.toHaveBeenCalled();
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
       expect(afterChangelog).toHaveBeenCalled();
     });

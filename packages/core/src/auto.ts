@@ -1732,7 +1732,7 @@ export default class Auto {
     await this.makeChangelog({
       ...options,
       quiet: undefined,
-      noCommit: options.noChangelog,
+      noChanges: options.noChangelog,
     });
 
     if (!options.dryRun) {
@@ -1862,7 +1862,8 @@ export default class Auto {
       to,
       title,
       message = "Update CHANGELOG.md [skip ci]",
-      noCommit,
+      noGitCommit,
+      noChanges,
     } = options;
 
     if (!this.release || !this.git) {
@@ -1908,16 +1909,23 @@ export default class Auto {
       currentVersion,
     };
 
-    if (!noCommit) {
+    if (!noChanges) {
       await this.release.addToChangelog(
         releaseNotes,
         lastRelease,
         currentVersion
       );
 
-      await this.hooks.beforeCommitChangelog.promise(context);
-      await execPromise("git", ["commit", "-m", `"${message}"`, "--no-verify"]);
-      this.logger.verbose.info("Committed new changelog.");
+      if (!noGitCommit) {
+        await this.hooks.beforeCommitChangelog.promise(context);
+        await execPromise("git", [
+          "commit",
+          "-m",
+          `"${message}"`,
+          "--no-verify",
+        ]);
+        this.logger.verbose.info("Committed new changelog.");
+      }
     }
 
     await this.hooks.afterChangelog.promise(context);

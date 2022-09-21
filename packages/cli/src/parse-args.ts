@@ -149,6 +149,13 @@ const dryRun: AutoOption = {
   group: "main",
 };
 
+const noGitCommit: AutoOption = {
+  name: "no-git-commit",
+  type: Boolean,
+  description: "Do not commit changes",
+  group: "main",
+};
+
 const url: AutoOption = {
   name: "url",
   type: String,
@@ -460,6 +467,7 @@ export const commands: AutoCommand[] = [
       changelogCommitMessage,
       baseBranch,
       quiet,
+      noGitCommit,
     ],
     examples: [
       {
