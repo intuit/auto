@@ -114,7 +114,7 @@ export async function execute(command: string, args: ApiOptions) {
         
         The token used with auto must have at least "write" permission to your repo (${repoLink}) to create releases and labels.
 
-        You can check the permission for you token by running "auto info".
+        You can check the permission for your token by running "auto info".
       `);
       console.log("");
       auto.logger.verbose.error(error);
