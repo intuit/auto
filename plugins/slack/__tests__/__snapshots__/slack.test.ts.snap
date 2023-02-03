@@ -807,6 +807,52 @@ Object {
 }
 `;
 
+exports[`postToSlack should not call slack api with custom atTarget if false 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "text": Object {
+        "emoji": true,
+        "text": "New Release: ",
+        "type": "plain_text",
+      },
+      "type": "header",
+    },
+    Object {
+      "elements": Array [
+        Object {
+          "text": "<https://git.hub/some/project/releases/v1.0.0|View Release>",
+          "type": "mrkdwn",
+        },
+      ],
+      "type": "context",
+    },
+    Object {
+      "text": Object {
+        "text": "*My Notes*",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": "• PR <google.com|some link>",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    Object {
+      "text": Object {
+        "text": " ",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+  ],
+  "link_names": true,
+}
+`;
+
 exports[`postToSlack should remove markdown code types from block 1`] = `
 Object {
   "blocks": Array [

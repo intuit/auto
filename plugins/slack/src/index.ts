@@ -175,7 +175,7 @@ export function convertToBlocks(
         const splitLines = splitCharacterLimit(line, 3000);
 
         splitLines.forEach((splitLine) => {
-            currentMessage.push(createSectionBlock(splitLine));
+          currentMessage.push(createSectionBlock(splitLine));
         });
       } else {
         currentMessage.push(createSectionBlock(fullSection));
@@ -186,7 +186,7 @@ export function convertToBlocks(
       const splitLines = splitCharacterLimit(line, 3000);
 
       splitLines.forEach((splitLine) => {
-          currentMessage.push(createSectionBlock(splitLine));
+        currentMessage.push(createSectionBlock(splitLine));
       });
     } else if (line) {
       currentMessage.push(createSectionBlock(line));
@@ -202,7 +202,7 @@ const basePluginOptions = t.partial({
   /** URL of the slack to post to */
   url: t.string,
   /** Who to bother when posting to the channel */
-  atTarget: t.string,
+  atTarget: t.union([t.string, t.boolean]),
   /** Allow users to opt into having prereleases posted to slack */
   publishPreRelease: t.boolean,
   /** Additional Title to add at the start of the slack message */
@@ -245,7 +245,7 @@ export default class SlackPlugin implements IPlugin {
       this.options = {
         ...options,
         url: process.env.SLACK_WEBHOOK_URL || options.url || "",
-        atTarget: options.atTarget ? options.atTarget : "channel",
+        atTarget: options.atTarget ?? "channel",
         publishPreRelease: options.publishPreRelease
           ? options.publishPreRelease
           : false,
@@ -371,10 +371,12 @@ export default class SlackPlugin implements IPlugin {
         ? urls.join(", ")
         : `${url(releases[0].data.html_url, "View Release")}`;
 
+    const atTargetTxt = this.options.atTarget
+      ? `@${this.options.atTarget} ${releaseUrl}`
+      : `${releaseUrl}`;
+
     // First add context to share link to release
-    messages[0].unshift(
-      createContextBlock(`@${this.options.atTarget} ${releaseUrl}`)
-    );
+    messages[0].unshift(createContextBlock(atTargetTxt));
     // At text only header
     messages[0].unshift(createHeaderBlock(header));
 
