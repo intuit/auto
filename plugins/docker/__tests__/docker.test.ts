@@ -224,8 +224,9 @@ describe("Docker Plugin", () => {
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
+        "-f",
         "latest",
-        "-mf",
+        "-m",
         '"Tag release alias: latest (1.0.1)"',
       ]);
       expect(exec).toHaveBeenCalledWith("docker", [
@@ -336,8 +337,9 @@ describe("Docker Plugin", () => {
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
+        "-f",
         `pr-${prNumber}`,
-        "-mf",
+        "-m",
         `Tag pull request canary: pr-${prNumber} (1.0.1-canary.${prNumber}.1)`,
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
@@ -415,8 +417,9 @@ describe("Docker Plugin", () => {
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
+        "-f",
         "next",
-        "-mf",
+        "-m",
         '"Tag pre-release alias: next (1.0.1-next.0)"',
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
@@ -481,8 +484,9 @@ describe("Docker Plugin", () => {
       ]);
       expect(exec).toHaveBeenCalledWith("git", [
         "tag",
+        "-f",
         expectedAlias,
-        "-mf",
+        "-m",
         `"Tag pre-release alias: ${expectedAlias} (1.0.1-${expectedAlias}.0)"`,
       ]);
       expect(exec).toHaveBeenCalledWith("git", [

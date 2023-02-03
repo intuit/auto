@@ -151,8 +151,9 @@ export default class DockerPlugin implements IPlugin {
         if (this.options.tagLatest) {
           await execPromise("git", [
             "tag",
+            "-f",
             aliasTag,
-            "-mf",
+            "-m",
             `"Tag release alias: ${aliasTag} (${prefixedTag})"`
           ]);
         }
@@ -209,7 +210,7 @@ export default class DockerPlugin implements IPlugin {
           const aliasImage = `${this.options.registry}:${canaryAliasVersion}`;
           await execPromise("docker", ["tag", this.options.image, aliasImage]);
           await execPromise("docker", ["push", aliasImage]);
-          await execPromise("git", ["tag", `${canaryAliasVersion}`, "-mf", `Tag pull request canary: ${canaryAliasVersion} (${canaryVersion})`]);
+          await execPromise("git", ["tag", "-f", `${canaryAliasVersion}`, "-m", `Tag pull request canary: ${canaryAliasVersion} (${canaryVersion})`]);
           await execPromise("git", ["push", auto.remote, `refs/tags/${canaryAliasVersion}`, "-f"]);
         }
 
@@ -269,8 +270,9 @@ export default class DockerPlugin implements IPlugin {
         if (this.options.tagPrereleaseAliases) {
           await execPromise("git", [
             "tag",
+            "-f",
             prereleaseAlias,
-            "-mf",
+            "-m",
             `"Tag pre-release alias: ${prereleaseAlias} (${prerelease})"`,
           ]);
           await execPromise("docker", ["tag", this.options.image, aliasImage]);
