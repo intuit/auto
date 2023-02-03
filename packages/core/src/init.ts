@@ -285,14 +285,14 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
   let gitIgnore: string;
 
   try {
-    gitIgnore = readFileSync(".env", { encoding: "utf8" });
+    gitIgnore = readFileSync(".gitignore", { encoding: "utf8" });
   } catch (error) {
     gitIgnore = "";
   }
 
   // Add env to gitignore if not already there
   if (!gitIgnore.includes(".env")) {
-    writeFileSync(".env", gitIgnore ? `${gitIgnore}\n.env` : ".env");
+    writeFileSync(".gitignore", gitIgnore ? `${gitIgnore}\n.env\n` : `.env\n`);
   }
 }
 
