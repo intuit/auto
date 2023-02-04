@@ -31,7 +31,6 @@ jobs:
       - run: yarn build && yarn lerna run bundle --scope=auto
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
       NPM_TOKEN: ${{ secrets.CANARY_NPM_TOKEN }}
 
   pr-check:
@@ -90,4 +89,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ steps.PR.outputs.number && secrets.CANARY_NPM_TOKEN || secrets.NPM_TOKEN }}
+          PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
           PR: ${{ steps.PR.outputs.number }}
