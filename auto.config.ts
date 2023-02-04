@@ -27,6 +27,13 @@ export default function rc(): AutoRc {
   return {
     plugins: [
       [
+        "protected-branch",
+        {
+          releaseTemporaryBranchPrefix: "protected-release-",
+          requiredStatusChecks: ["WIP", "build", "test", "lint"],
+        },
+      ],
+      [
         "upload-assets",
         [
           "./packages/cli/binary/auto-linux.gz",
@@ -41,13 +48,6 @@ export default function rc(): AutoRc {
       "./scripts/auto-update-curl-version.js",
       ["all-contributors", allContributorsOptions],
       ["brew", brewOptions],
-      [
-        "protected-branch",
-        {
-          releaseTemporaryBranchPrefix: "protected-release-",
-          requiredStatusChecks: ["WIP", "build", "test", "lint"],
-        },
-      ],
     ],
     labels: [
       {
