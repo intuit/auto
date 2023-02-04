@@ -24,6 +24,8 @@ jobs:
     needs: install
     steps:
       - uses: actions/checkout@v3
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - run: yarn build && yarn lerna run bundle --scope=auto
