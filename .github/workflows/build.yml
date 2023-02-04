@@ -21,6 +21,9 @@ jobs:
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - run: yarn build && yarn lerna run bundle --scope=auto
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.CANARY_NPM_TOKEN }}
 
   pr-check:
     runs-on: ubuntu-latest
@@ -30,6 +33,8 @@ jobs:
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - run: yarn auto pr-check --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
