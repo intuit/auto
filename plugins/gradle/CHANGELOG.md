@@ -1,3 +1,19 @@
+# v10.38.1 (Sat Feb 04 2023)
+
+#### 🐛 Bug Fix
+
+- fix gradle test ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- switch to github actions [#2299](https://github.com/intuit/auto/pull/2299) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:
