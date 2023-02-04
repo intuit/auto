@@ -2,9 +2,13 @@ name: build
 
 on: [push]
 
+# Enabled permissions on GITHUB_TOKEN
 permissions:
+  # To be able to push to the repo
   contents: write
+  # To update the pr description with canary info
   pull-requests: write
+  # For pr-check to create a status
   statuses: write
 
 jobs:
@@ -58,6 +62,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
       - run: yarn test:coverage
       - name: Send CodeCov Results
         run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
