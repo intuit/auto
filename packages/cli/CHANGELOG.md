@@ -1,3 +1,34 @@
+# v10.38.0 (Sat Feb 04 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Jack Westbrook ([@jackw](https://github.com/jackw))
+
+:heart: Damien Cornu ([@damiencornu](https://github.com/damiencornu))
+
+#### 🚀 Enhancement
+
+- Slack: Update atTarget option to disable tagging messages [#2272](https://github.com/intuit/auto/pull/2272) ([@jackw](https://github.com/jackw))
+
+#### 🐛 Bug Fix
+
+- fix: init command add .env to .gitignore [#2262](https://github.com/intuit/auto/pull/2262) ([@damiencornu](https://github.com/damiencornu))
+- Fix typo ([@domoritz](https://github.com/domoritz))
+
+#### 📝 Documentation
+
+- chore: fix typo [#2288](https://github.com/intuit/auto/pull/2288) ([@domoritz](https://github.com/domoritz))
+
+#### Authors: 3
+
+- Damien Cornu ([@damiencornu](https://github.com/damiencornu))
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+- Jack Westbrook ([@jackw](https://github.com/jackw))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:

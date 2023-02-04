@@ -1,3 +1,38 @@
+# v10.38.0 (Sat Feb 04 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Jack Westbrook ([@jackw](https://github.com/jackw))
+
+:heart: Damien Cornu ([@damiencornu](https://github.com/damiencornu))
+
+:heart: Dominik Moritz ([@domoritz](https://github.com/domoritz))
+
+#### 🚀 Enhancement
+
+- Slack: Update atTarget option to disable tagging messages [#2272](https://github.com/intuit/auto/pull/2272) ([@jackw](https://github.com/jackw))
+
+#### 🐛 Bug Fix
+
+- fix: init command add .env to .gitignore [#2262](https://github.com/intuit/auto/pull/2262) ([@damiencornu](https://github.com/damiencornu))
+- (docker plugin) fix git tagging command [#2256](https://github.com/intuit/auto/pull/2256) ([@ejhayes](https://github.com/ejhayes))
+- fix: git tags introduced in #2232 use incorrect syntax ([@ejhayes](https://github.com/ejhayes))
+
+#### 📝 Documentation
+
+- chore: fix typo [#2288](https://github.com/intuit/auto/pull/2288) ([@domoritz](https://github.com/domoritz))
+
+#### Authors: 4
+
+- Damien Cornu ([@damiencornu](https://github.com/damiencornu))
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+- Eric Hayes ([@ejhayes](https://github.com/ejhayes))
+- Jack Westbrook ([@jackw](https://github.com/jackw))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:

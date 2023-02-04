@@ -1,3 +1,25 @@
+# v10.38.0 (Sat Feb 04 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jack Westbrook ([@jackw](https://github.com/jackw)), for all your work!
+
+#### 🚀 Enhancement
+
+- Slack: Update atTarget option to disable tagging messages [#2272](https://github.com/intuit/auto/pull/2272) ([@jackw](https://github.com/jackw))
+
+#### 🐛 Bug Fix
+
+- style(slack): revert unnecessary formatting change ([@jackw](https://github.com/jackw))
+- docs(slack): add example of disabling tagging a message ([@jackw](https://github.com/jackw))
+- feat(slack): allow passing false to atTarget to disable notifications ([@jackw](https://github.com/jackw))
+
+#### Authors: 1
+
+- Jack Westbrook ([@jackw](https://github.com/jackw))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:
