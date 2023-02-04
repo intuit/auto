@@ -686,7 +686,7 @@ export default class Auto {
         : undefined,
     };
     const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
-    const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
+    const gitCredentials = process.env.GH_TOKEN || GIT_TOKENS[envVar];
 
     if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
       this.logger.veryVerbose.note("Using ssh URL as remote");
