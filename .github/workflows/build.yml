@@ -87,3 +87,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ steps.PR.outputs.number && secrets.CANARY_NPM_TOKEN || secrets.NPM_TOKEN }}
+          PR: ${{ steps.PR.outputs.number }}
