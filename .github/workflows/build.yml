@@ -5,6 +5,7 @@ on: [push]
 permissions:
   contents: write
   pull-requests: write
+  statuses: write
 
 jobs:
   # Run install in one step so deps can be cached for other steps
