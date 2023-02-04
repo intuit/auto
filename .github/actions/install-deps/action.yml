@@ -16,6 +16,7 @@ runs:
         path: |
           node_modules
           packages/*/node_modules
+          ~/.pkg-cache
         key: node-modules-${{ runner.os }}-${{ steps.node-version.outputs.version }}-${{ hashFiles('yarn.lock', 'patches/*.patch') }}
         restore-keys: |
           node-modules-${{ runner.os }}-${{ steps.node-version.outputs.version }}-
