@@ -720,7 +720,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/589034?v=4",
       "profile": "https://www.domoritz.de/",
       "contributions": [
-        "code"
+        "code",
+        "test"
       ]
     }
   ],
