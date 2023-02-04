@@ -58,13 +58,12 @@
     "command-line-application": "^0.10.1",
     "endent": "^2.1.0",
     "module-alias": "^2.2.2",
-    "pkg": "^5.8.0",
     "signale": "^1.4.0",
     "terminal-link": "^2.1.1",
     "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/signale": "^1.2.1",
-    "pkg": "^4.4.0"
+    "pkg": "^5.8.0"
   }
 }
