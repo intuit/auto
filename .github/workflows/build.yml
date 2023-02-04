@@ -65,6 +65,8 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
       - run: yarn test:coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send CodeCov Results
         run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
 
