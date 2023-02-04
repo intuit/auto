@@ -2047,10 +2047,6 @@ export default class Auto {
 
   /** Prefix a version with a "v" if needed */
   readonly prefixRelease = (release: string) => {
-    if (!this.release) {
-      throw this.createErrorMessage();
-    }
-
     return this.config?.noVersionPrefix || release.startsWith("v")
       ? release
       : `v${release}`;
