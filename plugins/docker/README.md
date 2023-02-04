@@ -18,33 +18,73 @@ yarn add -D @auto-it/docker
 
 ## Usage
 
-You must first must build the desired image to publish.
+**IMPORTANT:** You must first must build the desired image to publish.
 
-These environment variables tell `auto` what to publish.
+The following options are available for this plugin:
 
-- IMAGE - The image ID, digest, or tag of the locally available image to tag and publish. This is required unless you want to statically tag the local image, in which case you can provide it as an option.
+|option|required|default|environment variable|description|
+|-|-|-|-|-|
+| `image` | X | | `IMAGE` | The image ID, digest, or tag of the locally available image to tag and publish (must be built before this plugin is run) |
+| `registry` | X | | `REGISTRY` | Docker registry to publish to |
+| `tagLatest` | | `false` | `TAG_LATEST` | Tag latest release with `latest` tag |
+| `tagPullRequestAliases` | | `false` | `TAG_PULL_REQUEST_ALIASES` | Tag pull requests with `pr-<number>` tag |
+| `tagPrereleaseAliases` | | `false` | `TAG_PRERELEASE_ALIASES` | Tag prerelease branches
+| `prereleaseAliasMappings` | | `{}` | | Tag prerelease branches with different names (e.g. `{"develop": "next"}`) |
 
+### Example 1: Tag releases only
 ```json
 {
   "plugins": [
-    ["docker", { "registry": "ghcr.io/my/app" }]
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag" }]
     // other plugins
   ]
 }
 ```
 
-If you'd like to tag releases with `latest` too, you can specify the `tagLatest` option:
+This will publish releases from the local docker image `someLocalImage:myLocalTag` to: - `ghcr.io/my/app:<version>`
 
+### Example 2: Tag latest releases
 ```json
 {
-  "plugins": [["docker", { "registry": "ghcr.io/my/app", "tagLatest": true }]]
+  "plugins": [
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagLatest": true }]
+    // other plugins
+  ]
 }
 ```
 
-If you're tagging the locally built image in a static manner, you can also pass `image` instead of `IMAGE` as an environment variable.
+This will publish releases from the local docker image `someLocalImage:myLocalTag` to: - `ghcr.io/my/app:<version>`
+- `ghcr.io/my/app:latest`
 
+### Example 3: Tag Prereleases (with Custom Tags)
 ```json
 {
-  "plugins": [["docker", { "registry": "ghcr.io/my/app", "image": "myapp" }]]
+  "prereleaseBranches": ["develop", "someOtherPrereleaseBranch"],
+  "plugins": [
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPrereleaseAliases": true, "prereleaseAliasMapping": { "develop": "next" } }]
+    // other plugins
+  ]
 }
 ```
+
+For pushes to `develop` branch this will create the following tags:
+- `ghcr.io/my/app:<prereleaseVersion>`
+- `ghcr.io/my/app:next`
+
+For pushes to `someOtherReleaseBranch` this will create the following tags:
+- `ghcr.io/my/app:<prereleaseVersion>`
+- `ghcr.io/my/app:someOtherReleaseBranch`
+
+### Example 4: Tag Pull Requests
+```json
+{
+  "plugins": [
+    ["docker", { "registry": "ghcr.io/my/app", "image": "someLocalImage:myLocalTag", "tagPullRequestAliases": true }]
+    // other plugins
+  ]
+}
+```
+
+If this is run against a pull request the following tags will be created against `someLocalImage:myLocalTag`:
+- `ghcr.io/my/app:<canaryVersion>`
+- `ghcr.io/my/app:pr-<prNumber>`

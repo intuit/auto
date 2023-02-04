@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "10.37.1",
+  "version": "10.37.6",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "license": "MIT",
@@ -39,6 +39,7 @@
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
     "@endemolshinegroup/cosmiconfig-typescript-loader": "^3.0.2",
+    "@octokit/core": "^3.5.1",
     "@octokit/plugin-enterprise-compatibility": "1.3.0",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/plugin-throttling": "^3.6.2",
@@ -71,7 +72,7 @@
     "tapable": "^2.2.0",
     "terminal-link": "^2.1.1",
     "tinycolor2": "^1.4.1",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.9.1",
     "tslib": "2.1.0",
     "type-fest": "^0.21.1",
     "typescript-memoize": "^1.0.0-alpha.3",

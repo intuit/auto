@@ -1,3 +1,49 @@
+# v10.37.6 (Tue Sep 13 2022)
+
+#### 🐛 Bug Fix
+
+- chore: fix typo in auto.ts [#2223](https://github.com/intuit/auto/pull/2223) ([@eltociear](https://github.com/eltociear))
+- version: take into account current PR labels [#2252](https://github.com/intuit/auto/pull/2252) ([@laughedelic](https://github.com/laughedelic))
+- version: take into account current PR labels ([@laughedelic](https://github.com/laughedelic))
+- chore: fix typo in auto.ts ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
+# v10.37.5 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Dominik Moritz ([@domoritz](https://github.com/domoritz)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Bump ts-node [#2255](https://github.com/intuit/auto/pull/2255) ([@domoritz](https://github.com/domoritz))
+- Bump ts-node ([@domoritz](https://github.com/domoritz))
+
+#### Authors: 1
+
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+
+---
+
+# v10.37.4 (Mon Jul 25 2022)
+
+#### 🐛 Bug Fix
+
+- add missing peer deps [#2240](https://github.com/intuit/auto/pull/2240) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- add missing peer deps ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.36.6 (Fri May 20 2022)
 
 :tada: This release contains work from a new contributor! :tada:

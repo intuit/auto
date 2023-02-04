@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/vscode",
-  "version": "10.37.1",
+  "version": "10.37.6",
   "main": "dist/index.js",
   "description": "Publish an vscode extension",
   "license": "MIT",

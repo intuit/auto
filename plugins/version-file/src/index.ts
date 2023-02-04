@@ -160,15 +160,23 @@ export default class VersionFilePlugin implements IPlugin {
 
       // Figure out next version
       const lastRelease = await auto.git!.getLatestRelease();
+      const currentBranch = await getCurrentBranch();
+
+      const latestTagInBranch = await (currentBranch === auto.baseBranch
+        ? auto.git?.getLatestTagInBranch()
+        : auto.git?.getLastTagNotInBaseBranch(prereleaseBranch));
+
       const latestTag =
-        (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
+        latestTagInBranch ||
         (await getPreviousVersion(auto, this.versionFile));
+
       const nextVersion = determineNextVersion(
         lastRelease,
         latestTag,
         bump,
         prereleaseBranch
       );
+
       const prefixedVersion = auto.prefixRelease(nextVersion);
       preReleaseVersions.push(prefixedVersion);
 

@@ -18,7 +18,8 @@ const registry = "registry.io/app";
 const setup = (
   mockGit?: any,
   options?: IDockerPluginOptions,
-  checkEnv?: jest.SpyInstance
+  checkEnv?: jest.SpyInstance,
+  prereleaseBranches: string[] = ["next"],
 ) => {
   const plugin = new DockerPlugin(options || { registry });
   const hooks = makeHooks();
@@ -30,7 +31,7 @@ const setup = (
     remote: "origin",
     logger: dummyLog(),
     prefixRelease: (r: string) => r,
-    config: { prereleaseBranches: ["next"] },
+    config: { prereleaseBranches },
     getCurrentVersion: () => "v1.0.0",
   } as unknown) as Auto.Auto);
 
@@ -65,7 +66,7 @@ describe("Docker Plugin", () => {
       await hooks.beforeRun.promise({
         plugins: [["docker", { registry }]],
       } as any);
-      expect(checkEnv).toBeCalled();
+      expect(checkEnv).toBeCalledWith('docker', 'IMAGE');
     });
 
     test("shouldn't check env with image", async () => {
@@ -74,7 +75,79 @@ describe("Docker Plugin", () => {
       await hooks.beforeRun.promise({
         plugins: [["docker", { registry, image: "test" }]],
       } as any);
-      expect(checkEnv).not.toBeCalled();
+      expect(checkEnv).not.toBeCalledWith('docker','IMAGE');
+    });
+
+    test("should check env without registry", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { }]],
+      } as any);
+      expect(checkEnv).toHaveBeenCalledWith('docker','REGISTRY');
+    });
+
+    test("shouldn't check env with registry", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { registry, image: "test" }]],
+      } as any);
+      expect(checkEnv).not.toHaveBeenCalledWith('docker','REGISTRY');
+    });
+
+    test("should check env without tagLatest", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { }]],
+      } as any);
+      expect(checkEnv).toHaveBeenCalledWith('docker','TAG_LATEST');
+    });
+
+    test("shouldn't check env with tagLatest", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { tagLatest: true }]],
+      } as any);
+      expect(checkEnv).not.toHaveBeenCalledWith('docker','TAG_LATEST');
+    });
+
+    test("should check env without tagPrereleases", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { }]],
+      } as any);
+      expect(checkEnv).toHaveBeenCalledWith('docker','TAG_PRERELEASE_ALIASES');
+    });
+
+    test("shouldn't check env with tagPrereleases", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { tagPrereleaseAliases: true }]],
+      } as any);
+      expect(checkEnv).not.toHaveBeenCalledWith('docker','TAG_PRERELEASE_ALIASES');
+    });
+
+    test("should check env without tagPullRequests", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { }]],
+      } as any);
+      expect(checkEnv).toHaveBeenCalledWith('docker','TAG_PULL_REQUEST_ALIASES');
+    });
+
+    test("shouldn't check env with tagPullRequests", async () => {
+      const checkEnv = jest.fn();
+      const hooks = setup(undefined, undefined, checkEnv);
+      await hooks.beforeRun.promise({
+        plugins: [["docker", { tagPullRequestAliases: true }]],
+      } as any);
+      expect(checkEnv).not.toHaveBeenCalledWith('docker','TAG_PULL_REQUEST_ALIASES');
     });
   });
 
@@ -149,6 +222,13 @@ describe("Docker Plugin", () => {
         "-m",
         '"Update version to 1.0.1"',
       ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "-f",
+        "latest",
+        "-m",
+        '"Tag release alias: latest (1.0.1)"',
+      ]);
       expect(exec).toHaveBeenCalledWith("docker", [
         "tag",
         sourceImage,
@@ -192,6 +272,92 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:1.0.1-canary.123.1`,
       ]);
+      expect(exec).toBeCalledTimes(2);
+    });
+
+    test("should not tag canary version aliases if not a pull request", async () => {
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v1.0.0",
+          getCurrentVersion: () => "v1.0.0",
+        },
+        { registry, image: sourceImage, tagPullRequestAliases: true }
+      );
+
+      const prSpy = jest.spyOn(Auto,"getPrNumberFromEnv").mockImplementation(jest.fn());
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: `canary.123.1`,
+      });
+
+      expect(prSpy).toBeCalled();
+
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1-canary.123.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1-canary.123.1`,
+      ]);
+      expect(exec).toBeCalledTimes(2);
+    });
+
+    test("should tag canary version aliases", async () => {
+      const prNumber = 123;
+      const sourceImage = "app:sha-123";
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v1.0.0",
+          getCurrentVersion: () => "v1.0.0",
+        },
+        { registry, image: sourceImage, tagPullRequestAliases: true }
+      );
+
+      const prSpy = jest.spyOn(Auto,"getPrNumberFromEnv").mockImplementationOnce(() => prNumber);
+
+      await hooks.canary.promise({
+        bump: Auto.SEMVER.patch,
+        canaryIdentifier: `canary.${prNumber}.1`,
+      });
+
+      expect(prSpy).toBeCalled();
+
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1-canary.${prNumber}.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1-canary.${prNumber}.1`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "-f",
+        `pr-${prNumber}`,
+        "-m",
+        `Tag pull request canary: pr-${prNumber} (1.0.1-canary.${prNumber}.1)`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        `refs/tags/pr-${prNumber}`,
+        "-f"
+      ])
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:pr-${prNumber}`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:pr-${prNumber}`,
+      ]);
+      expect(exec).toBeCalledTimes(6);
     });
 
     test("should print canary version in dry run", async () => {
@@ -227,6 +393,135 @@ describe("Docker Plugin", () => {
       expect(exec).not.toHaveBeenCalled();
     });
 
+    test("should tag next version with alias", async () => {
+      const sourceImage = "app:sha-123"
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v0.1.0",
+          getLastTagNotInBaseBranch: () => "v1.0.0",
+        },
+        { 
+          registry,
+          image: sourceImage,
+          tagPrereleaseAliases: true
+        },
+      )
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
+
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "1.0.1-next.0",
+        "-m",
+        '"Tag pre-release: 1.0.1-next.0"',
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "-f",
+        "next",
+        "-m",
+        '"Tag pre-release alias: next (1.0.1-next.0)"',
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "refs/tags/next",
+        "-f"
+      ])
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "next",
+        "--tags",
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1-next.0`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:next`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1-next.0`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:next`,
+      ]);
+      expect(exec).toHaveBeenCalledTimes(8);
+    });
+
+    test("should tag next version with alias mappings", async () => {
+      const sourceImage = "app:sha-123";
+      const expectedAlias = "someOtherAlias";
+
+      const hooks = setup(
+        {
+          getLatestRelease: () => "v0.1.0",
+          getLastTagNotInBaseBranch: () => "v1.0.0",
+        },
+        { 
+          registry,
+          image: sourceImage,
+          tagPrereleaseAliases: true,
+          prereleaseAliasMappings: {
+            "next": expectedAlias
+          }
+        },
+      )
+
+      await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any);
+
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        `1.0.1-${expectedAlias}.0`,
+        "-m",
+        `"Tag pre-release: 1.0.1-${expectedAlias}.0"`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "tag",
+        "-f",
+        expectedAlias,
+        "-m",
+        `"Tag pre-release alias: ${expectedAlias} (1.0.1-${expectedAlias}.0)"`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        `refs/tags/${expectedAlias}`,
+        "-f"
+      ])
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "next",
+        "--tags",
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:1.0.1-${expectedAlias}.0`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "tag",
+        sourceImage,
+        `${registry}:${expectedAlias}`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:1.0.1-${expectedAlias}.0`,
+      ]);
+      expect(exec).toHaveBeenCalledWith("docker", [
+        "push",
+        `${registry}:${expectedAlias}`,
+      ]);
+      expect(exec).toHaveBeenCalledTimes(8);
+    });
+
     test("should tag next version", async () => {
       const sourceImage = "app:sha-123";
       const hooks = setup(
@@ -260,6 +555,7 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:1.0.1-next.0`,
       ]);
+      expect(exec).toHaveBeenCalledTimes(4);
     });
 
     test("return next version in dry run", async () => {
@@ -316,6 +612,14 @@ describe("Docker Plugin", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       await hooks.publish.promise({ bump: Auto.SEMVER.patch });
+
+      expect(exec).toHaveBeenCalledWith("git", [
+        "push",
+        "origin",
+        "refs/tags/latest",
+        "-f"
+      ]);
+
       expect(exec).toHaveBeenCalledWith("docker", [
         "push",
         `${registry}:1.0.1`,

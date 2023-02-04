@@ -1,3 +1,39 @@
+# v10.37.6 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Ikko Ashimine ([@eltociear](https://github.com/eltociear)), for all your work!
+
+#### 🐛 Bug Fix
+
+- chore: fix typo in auto.ts [#2223](https://github.com/intuit/auto/pull/2223) ([@eltociear](https://github.com/eltociear))
+- version: take into account current PR labels [#2252](https://github.com/intuit/auto/pull/2252) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
+# v10.37.3 (Sun Jul 24 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Eric Hayes ([@ejhayes](https://github.com/ejhayes)), for all your work!
+
+#### 🐛 Bug Fix
+
+- (docker plugin) Additional tag alias support [#2232](https://github.com/intuit/auto/pull/2232) ([@ejhayes](https://github.com/ejhayes))
+- Update README.md ([@ejhayes](https://github.com/ejhayes))
+- Add support for alias tags for canary (if pull request), pre-releases (with mapping to specific aliases per branch), and latest. All docker alias tags are also pushed to git ([@ejhayes](https://github.com/ejhayes))
+
+#### Authors: 1
+
+- Eric Hayes ([@ejhayes](https://github.com/ejhayes))
+
+---
+
 # v10.36.5 (Sun Mar 20 2022)
 
 #### 🐛 Bug Fix

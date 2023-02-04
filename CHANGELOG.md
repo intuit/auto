@@ -1,3 +1,84 @@
+# v10.37.6 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Ikko Ashimine ([@eltociear](https://github.com/eltociear)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - chore: fix typo in auto.ts [#2223](https://github.com/intuit/auto/pull/2223) ([@eltociear](https://github.com/eltociear))
+  - version: take into account current PR labels [#2252](https://github.com/intuit/auto/pull/2252) ([@laughedelic](https://github.com/laughedelic))
+
+#### Authors: 2
+
+- Alexey Alekhin ([@laughedelic](https://github.com/laughedelic))
+- Ikko Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
+# v10.37.5 (Tue Sep 13 2022)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Dominik Moritz ([@domoritz](https://github.com/domoritz)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Bump ts-node [#2255](https://github.com/intuit/auto/pull/2255) ([@domoritz](https://github.com/domoritz))
+
+#### Authors: 1
+
+- Dominik Moritz ([@domoritz](https://github.com/domoritz))
+
+---
+
+# v10.37.4 (Mon Jul 25 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - add missing peer deps [#2240](https://github.com/intuit/auto/pull/2240) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.37.3 (Sun Jul 24 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/docker`
+  - (docker plugin) Additional tag alias support [#2232](https://github.com/intuit/auto/pull/2232) ([@ejhayes](https://github.com/ejhayes))
+
+#### Authors: 1
+
+- Eric Hayes ([@ejhayes](https://github.com/ejhayes))
+
+---
+
+# v10.37.2 (Fri Jul 15 2022)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/version-file`
+  - Get correct next version when using onlyGraduateWithReleaseLabel [#2229](https://github.com/intuit/auto/pull/2229) ([@adierkens](https://github.com/adierkens))
+
+#### 📝 Documentation
+
+- `@auto-it/maven`
+  - Remove old references in maven instructions [#2226](https://github.com/intuit/auto/pull/2226) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 2
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v10.37.1 (Thu May 26 2022)
 
 #### 🐛 Bug Fix
