@@ -4,6 +4,7 @@ on: [push]
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   # Run install in one step so deps can be cached for other steps
@@ -32,7 +33,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - run: yarn auto pr-check --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+        id: PR
+      - run: yarn auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+        env:
+          PR: ${{ steps.PR.outputs.number }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
