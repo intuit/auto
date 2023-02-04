@@ -13,5 +13,6 @@ runs:
           plugins/*/node_modules
           packages/*/dist
           plugins/*/dist
+          */cli/binary
         key: ${{ github.run_id }}
         restore-keys: ${{ github.run_id }}
