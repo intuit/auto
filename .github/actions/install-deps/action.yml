@@ -1,0 +1,42 @@
+name: "Setup"
+description: Setup action
+
+runs:
+  using: "composite"
+  steps:
+    - name: Use nodejs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.18
+
+    - name: restore workspace cache
+      uses: actions/cache@v3
+      id: node_modules
+      with:
+        path: |
+          node_modules
+          packages/*/node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'patches/*.patch') }}
+        restore-keys: |
+          node-modules-${{ runner.os }}-
+
+    - run: yarn install --frozen-lockfile --network-timeout 9000000
+      if: steps.node_modules.outputs.cache-hit != 'true'
+      shell: bash
+
+    - name: restore pkg cache
+      uses: actions/cache@v3
+      id: pkg
+      with:
+        path: ~/.pkg-cache
+        key: pkg-cache-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+        restore-keys: |
+          pkg-cache-${{ runner.os }}-
+
+    - name: Install pkg node binaries
+      if: steps.pkg.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        yarn pkg-fetch -n node16 -p macos -a x64
+        yarn pkg-fetch -n node16 -p win -a x64
+        yarn pkg-fetch -n node16 -p linux -a x64

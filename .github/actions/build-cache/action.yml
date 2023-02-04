@@ -1,0 +1,18 @@
+name: "Build Cache"
+description: build cache
+
+runs:
+  using: "composite"
+  steps:
+    - name: build cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          packages/*/node_modules
+          plugins/*/node_modules
+          packages/*/dist
+          plugins/*/dist
+          */cli/binary
+        key: ${{ github.run_id }}
+        restore-keys: ${{ github.run_id }}

@@ -64,6 +64,6 @@
   },
   "devDependencies": {
     "@types/signale": "^1.2.1",
-    "pkg": "^4.4.0"
+    "pkg": "^5.8.0"
   }
 }
