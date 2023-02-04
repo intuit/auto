@@ -1,3 +1,25 @@
+# v10.38.1 (Sat Feb 04 2023)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - this was throwing an error when it didn't have to causing an odd error in the magic zero plugin [#2298](https://github.com/intuit/auto/pull/2298) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️ Pushed to `main`
+
+- full checkout ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- `auto`, `@auto-it/core`, `@auto-it/gradle`
+  - switch to github actions [#2299](https://github.com/intuit/auto/pull/2299) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.38.0 (Sat Feb 04 2023)
 
 :tada: This release contains work from new contributors! :tada:
