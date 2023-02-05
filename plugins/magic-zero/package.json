@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/magic-zero",
-  "version": "10.38.4",
+  "version": "10.38.5",
   "main": "dist/index.js",
   "description": "A plugin that closely adheres to semver versioning for 0.0.x and 0.x.y releases",
   "license": "MIT",
