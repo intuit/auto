@@ -552,6 +552,7 @@ export default class Git {
       ...prInfo,
       owner: this.options.owner,
       repo: this.options.repo,
+      state: "success",
     };
 
     this.logger.verbose.info("Creating status using:\n", args);
