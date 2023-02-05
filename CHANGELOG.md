@@ -1,3 +1,20 @@
+# v10.38.5 (Sun Feb 05 2023)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/protected-branch`
+  - delete branch after release [#2301](https://github.com/intuit/auto/pull/2301) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### ⚠️ Pushed to `main`
+
+- try to fix publish ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.38.1 (Sat Feb 04 2023)
 
 #### 🐛 Bug Fix
