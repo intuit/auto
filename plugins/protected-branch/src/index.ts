@@ -100,5 +100,22 @@ export default class ProtectedBranchPlugin implements IPlugin {
         );
       }
     );
+
+    auto.hooks.afterRelease.tapPromise(this.name, async () => {
+      if (!auto.git) {
+        return;
+      }
+
+      const sha = await auto.git.getSha();
+      const headBranch = `${this.options.releaseTemporaryBranchPrefix}${sha}`;
+
+      auto.logger.log.info("Delete release branch 🗑️ ");
+
+      await auto.git.github.git.deleteRef({
+        owner: auto.git.options.owner,
+        repo: auto.git.options.repo,
+        ref: `heads/${headBranch}`,
+      });
+    });
   }
 }
