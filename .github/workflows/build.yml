@@ -82,6 +82,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: 8BitJonny/gh-get-current-pr@2.2.0
         id: PR
+        with:
+          filterOutClosed: true
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
