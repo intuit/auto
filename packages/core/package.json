@@ -45,7 +45,7 @@
     "@octokit/plugin-throttling": "^3.6.2",
     "@octokit/rest": "^18.12.0",
     "await-to-js": "^3.0.0",
-    "chalk": "^4.0.0",
+    "chalk": "^5.2.0",
     "cosmiconfig": "7.0.0",
     "deepmerge": "^4.0.0",
     "dotenv": "^8.0.0",
