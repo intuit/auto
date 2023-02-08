@@ -1,3 +1,34 @@
+# v10.39.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Dave Pringle ([@UncleDave](https://github.com/UncleDave))
+
+:heart: Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+#### 🚀 Enhancement
+
+- feat(npm): use version commit message from lerna.json [#2277](https://github.com/intuit/auto/pull/2277) ([@UncleDave](https://github.com/UncleDave))
+- non-zero exit code if commit is behind [#2189](https://github.com/intuit/auto/pull/2189) ([@vpipkt](https://github.com/vpipkt))
+
+#### 🐛 Bug Fix
+
+- feat(npm): use version commit message from lerna.json ([@UncleDave](https://github.com/UncleDave))
+
+#### 🏠 Internal
+
+- run actions on PRs [#2318](https://github.com/intuit/auto/pull/2318) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Dave Pringle ([@UncleDave](https://github.com/UncleDave))
+- Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:

@@ -1,3 +1,29 @@
+# v10.39.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jason T Brown ([@vpipkt](https://github.com/vpipkt)), for all your work!
+
+#### 🚀 Enhancement
+
+- non-zero exit code if commit is behind [#2189](https://github.com/intuit/auto/pull/2189) ([@vpipkt](https://github.com/vpipkt))
+
+#### ⚠️ Pushed to `main`
+
+- add more logging to all contributors plugin ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- don't try to update an all-contributorrc that isn't there ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🏠 Internal
+
+- run actions on PRs [#2318](https://github.com/intuit/auto/pull/2318) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+---
+
 # v10.37.6 (Tue Sep 13 2022)
 
 :tada: This release contains work from a new contributor! :tada:
