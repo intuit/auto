@@ -1,3 +1,28 @@
+# v10.39.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Jason T Brown ([@vpipkt](https://github.com/vpipkt)), for all your work!
+
+#### 🚀 Enhancement
+
+- non-zero exit code if commit is behind [#2189](https://github.com/intuit/auto/pull/2189) ([@vpipkt](https://github.com/vpipkt))
+
+#### 🐛 Bug Fix
+
+- non-zero exit code if commit is behind ([@vpipkt](https://github.com/vpipkt))
+
+#### 🏠 Internal
+
+- run actions on PRs [#2318](https://github.com/intuit/auto/pull/2318) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+---
+
 # v10.38.1 (Sat Feb 04 2023)
 
 #### 🐛 Bug Fix
