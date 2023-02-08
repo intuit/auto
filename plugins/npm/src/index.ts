@@ -958,7 +958,8 @@ export default class NPMPlugin implements IPlugin {
 
         if (isMonorepo()) {
           auto.logger.verbose.info("Detected monorepo, using lerna");
-          const monorepoVersion = getLernaJson().version;
+          const lernaJson = getLernaJson();
+          const monorepoVersion = lernaJson.version;
           const isIndependent = monorepoVersion === "independent";
 
           if (dryRun) {
@@ -995,6 +996,20 @@ export default class NPMPlugin implements IPlugin {
               ? useVersion || bump
               : useVersion || (await bumpLatest(getMonorepoPackage(), bump)) || bump;
 
+          let commitMessage = isIndependent
+            ? "Bump independent versions [skip ci]"
+            : "Bump version to: %s [skip ci]";
+
+          const customCommitMessage = lernaJson.command?.version?.message;
+
+          if (typeof customCommitMessage === "string") {
+            commitMessage = customCommitMessage.trim();
+
+            if (customCommitMessage.indexOf("[skip ci]") === -1) {
+              commitMessage += " [skip ci]";
+            }
+          }
+
           await execPromise("npx", [
             "lerna",
             "version",
@@ -1004,9 +1019,7 @@ export default class NPMPlugin implements IPlugin {
             "--yes",
             "--no-push",
             "-m",
-            isIndependent
-              ? `'"Bump independent versions [skip ci]"'`
-              : `'"Bump version to: %s [skip ci]"'`,
+            `'"${commitMessage}"'`,
             this.exact && "--exact",
             ...verboseArgs,
           ]);

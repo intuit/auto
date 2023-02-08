@@ -880,6 +880,92 @@ describe("publish", () => {
     ]);
   });
 
+  test("monorepo - should use commit message from lerna.json", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "command": {
+            "version": {
+              "message": "[skip ci] Custom version commit message"
+            }
+          }
+        }
+      `,
+      ...monorepoPackagesOnFs,
+    });
+
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
+    execPromise.mockReturnValueOnce("1.0.0");
+
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
+    expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
+      "lerna",
+      "version",
+      "1.0.1",
+      "--force-publish",
+      "--no-commit-hooks",
+      "--yes",
+      "--no-push",
+      "-m",
+      "'\"[skip ci] Custom version commit message\"'",
+      false,
+    ]);
+  });
+
+  test("monorepo - should ensure commit message from lerna.json contains [skip ci]", async () => {
+    mockFs({
+      "lerna.json": `
+        {
+          "command": {
+            "version": {
+              "message": "Custom version commit message"
+            }
+          }
+        }
+      `,
+      ...monorepoPackagesOnFs,
+    });
+
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+    } as Auto.Auto);
+
+    monorepoPackages.mockReturnValueOnce(monorepoPackagesResult);
+    execPromise.mockReturnValueOnce("1.0.0");
+
+    await hooks.version.promise({ bump: Auto.SEMVER.patch });
+    expect(execPromise).toHaveBeenNthCalledWith(2, "npx", [
+      "lerna",
+      "version",
+      "1.0.1",
+      "--force-publish",
+      "--no-commit-hooks",
+      "--yes",
+      "--no-push",
+      "-m",
+      "'\"Custom version commit message [skip ci]\"'",
+      false,
+    ]);
+  });
+
   test("should publish private scoped packages to private", async () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
