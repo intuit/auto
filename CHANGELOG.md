@@ -1,3 +1,16 @@
+# v10.39.1 (Wed Feb 08 2023)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/all-contributors`
+  - fix test [#2322](https://github.com/intuit/auto/pull/2322) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.39.0 (Wed Feb 08 2023)
 
 :tada: This release contains work from new contributors! :tada:
