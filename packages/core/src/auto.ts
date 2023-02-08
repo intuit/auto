@@ -512,11 +512,11 @@ export default class Auto {
           );
         } catch (error) {
           // If we are behind or there is no match, exit and skip the release
-          this.logger.log.warn(
+          this.logger.log.error(
             "Current commit is behind, skipping the release to avoid collisions."
           );
-          this.logger.verbose.warn(error);
-          process.exit(0);
+          this.logger.verbose.error(error);
+          process.exit(1);
         }
       }
     );
