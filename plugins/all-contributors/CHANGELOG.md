@@ -1,3 +1,19 @@
+# v10.40.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Bruno Nardini ([@megatroom](https://github.com/megatroom)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add `--no-git-commit` option to `changelog` command [#2258](https://github.com/intuit/auto/pull/2258) ([@megatroom](https://github.com/megatroom))
+
+#### Authors: 1
+
+- Bruno Nardini ([@megatroom](https://github.com/megatroom))
+
+---
+
 # v10.39.1 (Wed Feb 08 2023)
 
 #### 🐛 Bug Fix
