@@ -735,6 +735,18 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "megatroom",
+      "name": "Bruno Nardini",
+      "avatar_url": "https://avatars.githubusercontent.com/u/673904?v=4",
+      "profile": "http://www.brunonardini.com.br/",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

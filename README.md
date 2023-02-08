@@ -304,6 +304,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://www.domoritz.de/"><img src="https://avatars.githubusercontent.com/u/589034?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dominik Moritz</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=domoritz" title="Code">💻</a> <a href="https://github.com/intuit/auto/commits?author=domoritz" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/vpipkt"><img src="https://avatars.githubusercontent.com/u/7798319?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jason T Brown</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=vpipkt" title="Documentation">📖</a> <a href="#infra-vpipkt" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=vpipkt" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=vpipkt" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://www.brunonardini.com.br/"><img src="https://avatars.githubusercontent.com/u/673904?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bruno Nardini</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=megatroom" title="Documentation">📖</a> <a href="#infra-megatroom" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/intuit/auto/commits?author=megatroom" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=megatroom" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
