@@ -57,6 +57,11 @@ export interface DryRunOption {
   dryRun?: boolean;
 }
 
+export interface NoGitCommit {
+  /** Do not commit the changes */
+  noGitCommit?: boolean;
+}
+
 interface ChangelogTitle {
   /** Override the title use in the addition to the CHANGELOG.md. */
   title?: string;
@@ -70,13 +75,14 @@ export type IChangelogOptions = BaseBranch &
   QuietOption &
   DryRunOption &
   NoVersionPrefix &
+  NoGitCommit &
   Partial<AuthorInformation> & {
     /** Commit to start calculating the changelog from */
     from?: string;
     /** Commit to start calculating the changelog to */
     to?: string;
-    /** Don't commit the changelog */
-    noCommit?: boolean;
+    /** Do not make any changes to changelog file */
+    noChanges?: boolean;
   };
 
 export type IReleaseOptions = BaseBranch &
