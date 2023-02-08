@@ -723,6 +723,18 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "vpipkt",
+      "name": "Jason T Brown",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7798319?v=4",
+      "profile": "https://github.com/vpipkt",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
