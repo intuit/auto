@@ -370,6 +370,13 @@ export default class AllContributorsPlugin implements IPlugin {
           "-m",
           '"Update contributors [skip ci]"',
         ]);
+        auto.logger.verbose.warn(
+          'Committed updates to "README.md" and ".all-contributorsrc" files.'
+        );
+      } else {
+        auto.logger.verbose.warn(
+          'No changes to "README.md" or ".all-contributorsrc" files.'
+        );
       }
     });
 
