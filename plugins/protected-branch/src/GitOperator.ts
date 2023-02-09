@@ -71,28 +71,25 @@ export class GitOperator {
     pull_number: number,
     sha: string
   ): Promise<void> {
-    const oldToken = process.env.GITHUB_TOKEN;
-    try {
-      this.logger.verbose.info("Approving PullRequest using:\n", {
-        pull_number,
-        sha,
-      });
+    const approverGit = new Git(
+        {
+          ...this.git.options,
+          token,
+        },
+        this.logger
+    );
 
-      process.env.GITHUB_TOKEN = token;
-      await execPromise("gh", [
-        "api",
-        `/repos/${this.git.options.owner}/${this.git.options.repo}/pulls/${pull_number}/reviews`,
-        "-X",
-        "POST",
-        "-F",
-        `commit_id=${sha}`,
-        "-F",
-        `event=APPROVE`,
-      ]);
-    } finally {
-      process.env.GITHUB_TOKEN = oldToken;
-    }
+    this.logger.verbose.info('Approving PullRequest using:\n', { pull_number, sha });
+    const params: RestEndpointMethodTypes['pulls']['createReview']['parameters'] = {
+      owner: this.git.options.owner,
+      repo: this.git.options.repo,
+      pull_number,
+      commit_id: sha,
+      event: 'APPROVE',
+    };
 
-    this.logger.verbose.info("Approve Pull Request on GitHub.");
+    await approverGit.github.pulls.createReview(params);
+
+    this.logger.verbose.info('Approve PullRequest on GitHub.');
   }
 }
