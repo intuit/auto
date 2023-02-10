@@ -1,3 +1,19 @@
+# v10.42.0 (Fri Feb 10 2023)
+
+#### 🚀 Enhancement
+
+- Feat add `afterRun` hook [#2182](https://github.com/intuit/auto/pull/2182) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### 🐛 Bug Fix
+
+- feat(core): add `afterRun` hook ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v10.40.0 (Wed Feb 08 2023)
 
 :tada: This release contains work from a new contributor! :tada:
