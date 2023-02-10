@@ -136,6 +136,8 @@ export async function execute(command: string, args: ApiOptions) {
     }
 
     process.exit(1);
+  } finally {
+    await auto.teardown();
   }
 }
 
