@@ -672,6 +672,7 @@ describe("Cocoapods Plugin", () => {
       expect(versions).toContain("1.0.0-next.0");
       expect(exec).toBeCalledTimes(6);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
+      expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test2.podspec"]);
 
       expect(mock).toBeCalledTimes(2);
       expect(mock).toHaveBeenCalledWith(
