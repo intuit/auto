@@ -90,6 +90,7 @@ jobs:
         id: PR
         with:
           filterOutClosed: true
+          sha: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
