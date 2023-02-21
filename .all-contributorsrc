@@ -747,6 +747,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "AndreyBozhko",
+      "name": "Andrey Bozhko",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22246447?v=4",
+      "profile": "https://www.linkedin.com/in/andrey-bozhko/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
