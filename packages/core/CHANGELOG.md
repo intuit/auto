@@ -1,3 +1,20 @@
+# v10.42.1 (Tue Feb 21 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko)), for all your work!
+
+#### 🐛 Bug Fix
+
+- chore: fix prompt message [#2330](https://github.com/intuit/auto/pull/2330) ([@AndreyBozhko](https://github.com/AndreyBozhko))
+- update message ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+#### Authors: 1
+
+- Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+---
+
 # v10.42.0 (Fri Feb 10 2023)
 
 #### 🚀 Enhancement

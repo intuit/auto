@@ -1,3 +1,25 @@
+# v10.42.1 (Tue Feb 21 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - chore: fix prompt message [#2330](https://github.com/intuit/auto/pull/2330) ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+#### 🏠 Internal
+
+- fix PR number detection in build action [#2329](https://github.com/intuit/auto/pull/2329) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+---
+
 # v10.42.0 (Fri Feb 10 2023)
 
 #### 🚀 Enhancement
