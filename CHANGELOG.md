@@ -1,3 +1,16 @@
+# v10.42.2 (Wed Feb 22 2023)
+
+#### 🐛 Bug Fix
+
+- `auto`
+  - fix examples for release command [#2332](https://github.com/intuit/auto/pull/2332) ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+#### Authors: 1
+
+- Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+---
+
 # v10.42.1 (Tue Feb 21 2023)
 
 :tada: This release contains work from a new contributor! :tada:
