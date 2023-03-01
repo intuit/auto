@@ -1,3 +1,19 @@
+# v10.43.0 (Wed Mar 01 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Adil Malik ([@amalik2](https://github.com/amalik2)), for all your work!
+
+#### 🚀 Enhancement
+
+- feat: add in beforeVersion lifecycle hook [#2334](https://github.com/intuit/auto/pull/2334) (adil_malik@intuit.com)
+
+#### Authors: 1
+
+- Adil Malik ([@amalik2](https://github.com/amalik2))
+
+---
+
 # v10.42.2 (Wed Feb 22 2023)
 
 #### 🐛 Bug Fix
