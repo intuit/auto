@@ -4,7 +4,7 @@
   "main": "dist/bin/index.js",
   "types": "dist/index.d.ts",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
-  "version": "10.42.2",
+  "version": "10.43.0",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
