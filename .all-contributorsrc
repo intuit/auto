@@ -756,6 +756,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "amalik2",
+      "name": "Adil Malik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25858348?v=4",
+      "profile": "https://github.com/amalik2",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
