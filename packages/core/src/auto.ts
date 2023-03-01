@@ -238,6 +238,17 @@ export interface IAutoHooks {
       }
     ]
   >;
+  /** Ran before the package has been versioned. */
+  beforeVersion: AsyncSeriesHook<
+    [
+      DryRunOption & {
+        /** Commit to start calculating the version from */
+        from: string;
+        /** The commits included in the release */
+        commits: IExtendedCommit[];
+      }
+    ]
+  >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
   version: AsyncSeriesHook<
     [
@@ -1713,6 +1724,18 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
+    const lastRelease = options.from || (await this.git.getLatestRelease());
+    const commitsInRelease = await this.release.getCommitsInRelease(
+      lastRelease
+    );
+
+    this.logger.verbose.info("Calling before version hook");
+    await this.hooks.beforeVersion.promise({
+      dryRun: options.dryRun,
+      commits: commitsInRelease,
+      from: lastRelease,
+    });
+
     const bump = await this.getVersion(options);
 
     this.logger.log.success(
@@ -1723,11 +1746,6 @@ export default class Auto {
       this.logger.log.info("No version published.");
       return;
     }
-
-    const lastRelease = options.from || (await this.git.getLatestRelease());
-    const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
-    );
 
     await this.makeChangelog({
       ...options,

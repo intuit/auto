@@ -95,6 +95,19 @@ _Other examples:_
 
 - [all-contributors](../generated/all-contributors) - Make a commit for new contributions
 
+## beforeVersion
+
+Ran before the package has been versioned. Useful for iterating through the list of
+commits that are going to be included in the current release, and applying/overriding
+the version bump (major/minor/patch) labels applied to their corresponding PRs.
+
+```ts
+auto.hooks.beforeVersion.tapPromise(
+  "NPM",
+  async ({ dryRun, commits, from }) => {}
+);
+```
+
 ## version
 
 Increment the version the package.

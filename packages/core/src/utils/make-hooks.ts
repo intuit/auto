@@ -29,6 +29,7 @@ export const makeHooks = (): IAutoHooks => ({
   getPreviousVersion: new AsyncSeriesBailHook(),
   getRepository: new AsyncSeriesBailHook(),
   prCheck: new AsyncSeriesBailHook(["prInformation"]),
+  beforeVersion: new AsyncSeriesHook(["context"]),
   version: new AsyncSeriesHook(["version"]),
   afterVersion: new AsyncSeriesHook(["context"]),
   publish: new AsyncSeriesHook(["version"]),
