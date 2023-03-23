@@ -83,6 +83,8 @@ export type IChangelogOptions = BaseBranch &
     to?: string;
     /** Do not make any changes to changelog file */
     noChanges?: boolean;
+    /** Override the version to release */
+    useVersion?: string;
   };
 
 export type IReleaseOptions = BaseBranch &

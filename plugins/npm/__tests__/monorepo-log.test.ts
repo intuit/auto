@@ -370,3 +370,69 @@ test("should create extra change logs for sub-packages", async () => {
     "packages/@foobar/release/CHANGELOG.md"
   );
 });
+
+
+test("should respect the useVersion config option", async () => {
+  readFileSync.mockReturnValue('{ "version": "independent" }');
+
+  getLernaPackages.mockImplementation(async () =>
+    Promise.resolve([
+      {
+        path: "packages/@foobar/release",
+        name: "@foobar/release",
+        version: "1.0.0",
+      },
+      {
+        path: "packages/@foobar/party",
+        name: "@foobar/party",
+        version: "1.0.0",
+      },
+    ])
+  );
+
+  exec.mockImplementation(
+    async () =>
+      "packages/@foobar/release/README.md\npackages/@foobar/party/package.json"
+  );
+
+  execPromise.mockResolvedValueOnce("@foobar/release");
+
+  const plugin = new NpmPlugin();
+  const hooks = makeHooks();
+  const update = jest.fn();
+
+  plugin.apply({
+    config: { prereleaseBranches: ["next"] },
+    hooks,
+    logger: dummyLog(),
+    release: {
+      updateChangelogFile: update,
+      makeChangelog: () => {
+        const t = new Changelog(dummyLog(), {
+          owner: "andrew",
+          repo: "test",
+          baseUrl: "https://github.custom.com/",
+          labels: defaultLabels,
+          baseBranch: "main",
+          prereleaseBranches: ["next"],
+        });
+        t.hooks.renderChangelogTitle.tap("test", (label) => label);
+        return t;
+      },
+    } as any,
+  } as Auto.Auto);
+  await hooks.beforeCommitChangelog.promise({
+    bump: Auto.SEMVER.patch,
+    commits: await commitsPromise,
+    currentVersion: "1.0.0",
+    useVersion: "2.0.0-alpha.1",
+    lastRelease: "0.1.0",
+    releaseNotes: "",
+  });
+
+  expect(update).toHaveBeenCalledWith(
+    "v2.0.0-alpha.1",
+    "major\n- [PLAYA-5052] - Some Feature [#12345](https://github.custom.com/pull/12345)",
+    "packages/@foobar/release/CHANGELOG.md"
+  );
+});
