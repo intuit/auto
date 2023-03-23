@@ -78,10 +78,8 @@
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },
-  "peerDependenciesMeta": {
-    "typescript": {
-      "optional": true
-    }
+  "peerDependencies": {
+    "typescript": ">=2.7"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
