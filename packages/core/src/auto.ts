@@ -96,6 +96,8 @@ interface ChangelogLifecycle {
   currentVersion: string;
   /** The last version of the project */
   lastRelease: string;
+  /** Override the version to release */
+  useVersion?: string;
 }
 
 interface TestingToken {
@@ -1933,12 +1935,13 @@ export default class Auto {
     this.logger.log.info("New Release Notes\n", releaseNotes);
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
-    const context = {
+    const context: ChangelogLifecycle = {
       bump,
       commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
       lastRelease,
       currentVersion,
+      useVersion: options.useVersion,
     };
 
     if (!noChanges) {
