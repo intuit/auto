@@ -768,6 +768,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "ds300",
+      "name": "David Sheldrick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1242537?v=4",
+      "profile": "https://github.com/ds300",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
