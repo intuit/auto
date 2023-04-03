@@ -1,3 +1,23 @@
+# v10.44.0 (Mon Apr 03 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Sheldrick ([@ds300](https://github.com/ds300)), for all your work!
+
+#### 🚀 Enhancement
+
+- add useVersion support to npm changelog [#2347](https://github.com/intuit/auto/pull/2347) ([@ds300](https://github.com/ds300))
+
+#### 🐛 Bug Fix
+
+- add useVersion support to npm changelog ([@ds300](https://github.com/ds300))
+
+#### Authors: 1
+
+- David Sheldrick ([@ds300](https://github.com/ds300))
+
+---
+
 # v10.43.0 (Wed Mar 01 2023)
 
 :tada: This release contains work from a new contributor! :tada:
