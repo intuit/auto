@@ -1,3 +1,16 @@
+# v10.45.0 (Wed Apr 19 2023)
+
+#### 🚀 Enhancement
+
+- `@auto-it/slack`
+  - allow channel to be passed to slack plugin [#2352](https://github.com/intuit/auto/pull/2352) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.44.0 (Mon Apr 03 2023)
 
 :tada: This release contains work from a new contributor! :tada:
