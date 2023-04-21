@@ -2192,7 +2192,7 @@ export default class Auto {
       if (!user.name && !user.email) {
         this.logger.log.error(
           endent`
-            Could find a git name and email to commit with!
+            Could not find a git name and email to commit with!
 
             Name: ${user.name}
             Email: ${user.email}
