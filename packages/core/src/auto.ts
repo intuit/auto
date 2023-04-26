@@ -1913,7 +1913,9 @@ export default class Auto {
       );
     }
 
-    const lastRelease = from || (await this.git.getLatestRelease());
+    const latestRelease = await this.git.getLatestRelease();
+    const lastRelease =
+      (from === "latest" && latestRelease) || from || latestRelease;
     const bump = await this.release.getSemverBump(lastRelease, to);
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
@@ -1995,11 +1997,13 @@ export default class Auto {
       return process.exit(1);
     }
 
+    const latestRelease = await this.git.getLatestRelease();
     const isPrerelease = prerelease || this.inPrereleaseBranch();
     let lastRelease =
+      (from === "latest" && latestRelease) ||
       from ||
       (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
-      (await this.git.getLatestRelease());
+      latestRelease;
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);

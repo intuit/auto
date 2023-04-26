@@ -54,6 +54,7 @@ jest.mock("@octokit/rest", () => {
 
     repos = {
       get: jest.fn().mockReturnValue({}),
+      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {
@@ -976,7 +977,6 @@ describe("Auto", () => {
       );
     });
 
-
     test("should use --to commit target", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -995,7 +995,7 @@ describe("Auto", () => {
       auto.hooks.afterRelease.tap("test", afterRelease);
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
-      await auto.runRelease({ to: 'abc'});
+      await auto.runRelease({ to: "abc" });
 
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",

@@ -236,7 +236,7 @@ const useVersion: AutoOption = {
   group: "main",
   description:
     "Version number to publish as. Defaults to reading from the package definition for the platform.",
-}
+};
 
 interface AutoCommand extends Command {
   /** Options for the command */
@@ -455,7 +455,7 @@ export const commands: AutoCommand[] = [
         type: String,
         group: "main",
         description:
-          "Tag to start changelog generation on. Defaults to latest tag.",
+          "Tag to start changelog generation on. Defaults to latest tag or if a prerelease the latest tag in the branch. Provide latest to override.",
       },
       {
         name: "to",
@@ -498,7 +498,7 @@ export const commands: AutoCommand[] = [
         type: String,
         group: "main",
         description:
-          "Git revision (tag, commit sha, ...) to start release notes from. Defaults to latest tag.",
+          "Tag to start changelog generation on. Defaults to latest tag or if a prerelease the latest tag in the branch. Provide latest to override.",
       },
       {
         name: "to",
@@ -518,7 +518,8 @@ export const commands: AutoCommand[] = [
       },
       {
         desc: "Create a GitHub release using provided commit range and version",
-        example: "{green $} auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
+        example:
+          "{green $} auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
       },
     ],
   },
@@ -538,7 +539,7 @@ export const commands: AutoCommand[] = [
       ...latestCommandArgs,
       {
         ...useVersion,
-        description: `${useVersion.description} Currently only supported for the **npm plugin**.`
+        description: `${useVersion.description} Currently only supported for the **npm plugin**.`,
       },
       {
         name: "only-graduate-with-release-label",
