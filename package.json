@@ -50,7 +50,7 @@
     "@types/tapable": "2.2.2",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
-    "all-contributors-cli": "^6.4.0",
+    "all-contributors-cli": "^6.25.0",
     "change-case": "^4.0.0",
     "command-line-docs": "^0.0.6",
     "copy-template-dir": "^1.4.0",
