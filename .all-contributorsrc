@@ -789,6 +789,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "ld-codes",
+      "name": "ld-codes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123950213?v=4",
+      "profile": "https://github.com/ld-codes",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
