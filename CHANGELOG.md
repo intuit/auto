@@ -1,3 +1,20 @@
+# v10.45.2 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@ld-codes](https://github.com/ld-codes), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix typo for empty git user message [#2354](https://github.com/intuit/auto/pull/2354) ([@ld-codes](https://github.com/ld-codes))
+
+#### Authors: 1
+
+- [@ld-codes](https://github.com/ld-codes)
+
+---
+
 # v10.45.1 (Wed Apr 26 2023)
 
 #### 🐛 Bug Fix
