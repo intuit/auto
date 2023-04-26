@@ -1,3 +1,15 @@
+# v10.45.1 (Wed Apr 26 2023)
+
+#### 🐛 Bug Fix
+
+- fixes "some peer dependencies are incorrectly met" when installing via yarn [#2348](https://github.com/intuit/auto/pull/2348) ([@snebjorn](https://github.com/snebjorn))
+
+#### Authors: 1
+
+- Eskild Diderichsen ([@snebjorn](https://github.com/snebjorn))
+
+---
+
 # v10.45.0 (Wed Apr 19 2023)
 
 #### 🚀 Enhancement

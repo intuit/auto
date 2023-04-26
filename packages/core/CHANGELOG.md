@@ -1,3 +1,21 @@
+# v10.45.1 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Eskild Diderichsen ([@snebjorn](https://github.com/snebjorn)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fixes "some peer dependencies are incorrectly met" when installing via yarn [#2348](https://github.com/intuit/auto/pull/2348) ([@snebjorn](https://github.com/snebjorn))
+- fix: missing peer dependency from @auto-it/core requested by ts-node ([@snebjorn](https://github.com/snebjorn))
+- fix: missing peer dependency from @endemolshinegroup/cosmiconfig-typescript-loader requested by ts-node ([@snebjorn](https://github.com/snebjorn))
+
+#### Authors: 1
+
+- Eskild Diderichsen ([@snebjorn](https://github.com/snebjorn))
+
+---
+
 # v10.44.0 (Mon Apr 03 2023)
 
 :tada: This release contains work from a new contributor! :tada:
