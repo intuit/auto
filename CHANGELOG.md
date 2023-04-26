@@ -1,3 +1,30 @@
+# v10.46.0 (Wed Apr 26 2023)
+
+### Release Notes
+
+#### Add --from latest option to release and changelog commands ([#2356](https://github.com/intuit/auto/pull/2356))
+
+You can now use `--from latest` in both the `changelog`and `release` commands. 
+
+This is useful if you want to generate a changelog for a prerelease that includes  all changes since the `latest` release.
+
+```sh
+auto release --from latest --prerelease
+```
+
+---
+
+#### 🚀 Enhancement
+
+- `auto`, `@auto-it/core`
+  - Add --from latest option to release and changelog commands [#2356](https://github.com/intuit/auto/pull/2356) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.45.2 (Wed Apr 26 2023)
 
 :tada: This release contains work from a new contributor! :tada:
