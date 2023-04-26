@@ -144,6 +144,17 @@ interface NextContext extends DryRunOption {
   releaseNotes: string;
 }
 
+interface MakeReleaseContext extends DryRunOption {
+  /** Is current context stand for a pre-release */
+  isPrerelease: boolean;
+  /** Last release name like : "vx.y.z" */
+  lastRelease: string;
+  /** Commit to calculate the release to */
+  to?: string;
+  /** Version to release */
+  newVersion?: string;
+}
+
 type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 export interface IAutoHooks {
@@ -266,7 +277,10 @@ export interface IAutoHooks {
     ]
   >;
   /** Ran after the package has been versioned. */
-  afterVersion: AsyncSeriesHook<[DryRunOption]>;
+  afterVersion: AsyncSeriesHook<[DryRunOption & {
+    /** The version to release, if any */
+    version?: string;
+  }]>;
   /** Publish the package to some package distributor. You must push the tags to github! */
   publish: AsyncSeriesHook<
     [
@@ -1227,7 +1241,13 @@ export default class Auto {
    */
   async runRelease(options: IReleaseOptions = {}) {
     this.logger.verbose.info("Using command: 'release'");
-    await this.makeRelease(options);
+
+    try {
+      const releasedVersion = await this.makeReleaseContext(options);
+      await this.makeRelease(releasedVersion);
+    } catch (e) {
+      this.logger.log.warn("Cannot proceed to release", e);
+    }
   }
 
   /** Create a canary (or test) version of the project */
@@ -1780,8 +1800,12 @@ export default class Auto {
       dryRun: options.dryRun,
       quiet: options.quiet,
     });
+
+    // New new version must be computed, so make release context
+    const releaseArgs = await this.makeReleaseContext();
+
     this.logger.verbose.info("Calling after version hook");
-    await this.hooks.afterVersion.promise({ dryRun: options.dryRun });
+    await this.hooks.afterVersion.promise({ dryRun: options.dryRun, version: releaseArgs.newVersion });
 
     if (!options.dryRun) {
       this.logger.verbose.info("Calling publish hook");
@@ -1793,9 +1817,11 @@ export default class Auto {
       await this.hooks.afterPublish.promise();
     }
 
+    const release = await this.makeRelease(releaseArgs);
+
     return {
-      newVersion: await this.makeRelease(options),
-      commitsInRelease,
+      newVersion: release?.newVersion,
+      commitsInRelease: release?.commitsInRelease || [],
       context: "latest",
     };
   }
@@ -1966,12 +1992,16 @@ export default class Auto {
     await this.hooks.afterChangelog.promise(context);
   }
 
-  /** Make a release over a range of commits */
-  private async makeRelease(args: IReleaseOptions = {}) {
+  /** Retrieve the current releasing context */
+  private async makeReleaseContext(args: IReleaseOptions = {}): Promise<MakeReleaseContext> {
     const options = { ...this.getCommandDefault("release"), ...args };
-    const { dryRun, from, to, useVersion, prerelease = false } = options;
+    const {
+      dryRun,
+      from,
+      to,
+      useVersion, prerelease = false } = options;
 
-    if (!this.release || !this.git) {
+    if (!this.git) {
       throw this.createErrorMessage();
     }
 
@@ -1982,24 +2012,26 @@ export default class Auto {
     // tags indicates that something would definitely go wrong.
     if (err?.message.includes("No names found") && !args.dryRun) {
       this.logger.log.error(
-        endent`
+          endent`
           Could not find any tags in the local repository. Exiting early.
 
           The "release" command creates GitHub releases for tags that have already been created in your repo.
 
           If there are no tags there is nothing to release. If you don't use "shipit" ensure you tag your releases with the new version number.
         `,
-        "\n"
+          "\n"
       );
       this.logger.verbose.error(err);
-      return process.exit(1);
+      process.exit(1);
+      // Only for unit testing while process.exit is mocked
+      throw err;
     }
 
     const isPrerelease = prerelease || this.inPrereleaseBranch();
     let lastRelease =
-      from ||
-      (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
-      (await this.git.getLatestRelease());
+        from ||
+        (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
+        (await this.git.getLatestRelease());
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -2010,32 +2042,45 @@ export default class Auto {
 
     this.logger.log.info('Current "Latest Release" on Github:', lastRelease);
 
+    const rawVersion =
+        useVersion ||
+        (isPrerelease && latestTag) ||
+        (await this.getCurrentVersion(lastRelease)) ||
+        latestTag;
+
+    if (!rawVersion) {
+      return { dryRun, to, lastRelease, newVersion: undefined, isPrerelease };
+    }
+
+    const newVersion = parse(rawVersion)
+        ? this.prefixRelease(rawVersion)
+        : rawVersion;
+
+    return { dryRun, to, lastRelease, newVersion, isPrerelease };
+  }
+
+  /** Make a release over a range of commits */
+  private async makeRelease(makeReleaseContext: MakeReleaseContext) {
+    if (!this.release) {
+      throw this.createErrorMessage();
+    }
+
+    const { dryRun, to, lastRelease, newVersion, isPrerelease } = makeReleaseContext;
     const commitsInRelease = await this.release.getCommitsInRelease(
       lastRelease,
       to
     );
+
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
       to,
       this.versionBump
     );
 
-    this.logger.log.info(`Using release notes:\n${releaseNotes}`);
-
-    const rawVersion =
-      useVersion ||
-      (isPrerelease && latestTag) ||
-      (await this.getCurrentVersion(lastRelease)) ||
-      latestTag;
-
-    if (!rawVersion) {
+    if (!newVersion) {
       this.logger.log.error("Could not calculate next version from last tag.");
       return;
     }
-
-    const newVersion = parse(rawVersion)
-      ? this.prefixRelease(rawVersion)
-      : rawVersion;
 
     if (
       !dryRun &&
@@ -2052,8 +2097,8 @@ export default class Auto {
     const release = await this.hooks.makeRelease.promise({
       dryRun,
       from: lastRelease,
-      to: to || (await this.git.getSha()),
-      useVersion,
+      to: to || (await this.git!.getSha()),
+      useVersion: newVersion,
       isPrerelease,
       newVersion,
       fullReleaseNotes: releaseNotes,
@@ -2070,7 +2115,7 @@ export default class Auto {
       });
     }
 
-    return newVersion;
+    return { newVersion, commitsInRelease };
   }
 
   /** Check if `git status` is clean. */
