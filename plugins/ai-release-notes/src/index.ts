@@ -44,6 +44,7 @@ export default class AiReleaseNotesPlugin implements IPlugin {
 
     auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
       const diff = await fetch(pr.diff_url).then((res) => res.text());
+      console.log("DEBUG", pr);
       const response = await openai.createCompletion({
         model: "gpt-4-32k",
         prompt: [...prompt, pr.body, diff],
