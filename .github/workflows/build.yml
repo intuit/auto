@@ -48,11 +48,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
-        id: PR
+      - name: Get PR number
+        uses: jwalton/gh-find-current-pr@v1
+        id: find-pr
       - run: yarn auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
         env:
-          PR: ${{ steps.PR.outputs.number }}
+          PR: ${{ steps.find-pr.outputs.pr || github.event.number }}
           PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
