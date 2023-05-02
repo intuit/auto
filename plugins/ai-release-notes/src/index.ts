@@ -2,6 +2,7 @@ import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import * as t from "io-ts";
 import { Configuration, OpenAIApi } from "openai";
 import fetch from "node-fetch";
+import endent from "endent";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -11,8 +12,8 @@ const openai = new OpenAIApi(configuration);
 const prompt = [
   "Take the role of an experienced engineer with excellent ability to communicate technical concepts to a non-technical audience.",
   "Your job is to read the diffs, pull request descriptions, and commit descriptions I provide and produce a summary of the changes.",
-  "The summary should be targeted at consumer of the changed code.",
   "Your summaries should be at max 6 sentences long and contain no references to coding.",
+  "Try to also sell the feature like a marketer.",
   "Reply only with the summaries.",
 ];
 
@@ -42,17 +43,42 @@ export default class AiReleaseNotesPlugin implements IPlugin {
       }
     });
 
-    auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
-      const diff = await fetch(pr.patch_url).then((res) => res.text());
-      const body = pr.body?.split("<!-- GITHUB_RELEASE PR BODY")[0];
-      const response = await openai.createCompletion({
-        model: "gpt-4-32k",
-        prompt: [...prompt, body, diff],
-        max_tokens: 7,
-        temperature: 0,
-      });
+    auto.hooks.prCheck.tapPromise(this.name, async ({ pr, dryRun }) => {
+      try {
+        const diff = await fetch(pr.diff_url).then((res) => res.text());
+        const body = pr.body?.split("<!-- GITHUB_RELEASE PR BODY")[0] || "";
+        const response = await openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: [...prompt, body, diff].map((content) => ({
+            role: "user",
+            content,
+          })),
+          temperature: 0,
+          top_p: 1.0,
+          n: 1,
+          frequency_penalty: 0.0,
+          presence_penalty: 0.0,
+          stop: ["#", ";"],
+        });
+        const message = endent`
+          ## Release Notes
 
-      console.log(response);
+          ${response.data.choices[0].message?.content}
+        `;
+
+        if (dryRun) {
+          auto.logger.log.info("Would have posted the following comment:");
+          auto.logger.log.info(message);
+        } else {
+          await auto.prBody({
+            pr: pr.number,
+            context: this.name,
+            message,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     });
   }
 }
