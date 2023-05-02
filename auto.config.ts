@@ -48,6 +48,7 @@ export default function rc(): AutoRc {
       "./scripts/auto-update-curl-version.js",
       ["all-contributors", allContributorsOptions],
       ["brew", brewOptions],
+      "ai-release-notes",
     ],
     labels: [
       {

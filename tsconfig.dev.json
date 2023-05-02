@@ -97,6 +97,9 @@
     },
     {
       "path": "plugins/protected-branch"
+    },
+    {
+      "path": "plugins/ai-release-notes"
     }
   ]
 }
