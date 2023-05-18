@@ -15,7 +15,7 @@ import { execSync, ExecSyncOptionsWithStringEncoding } from "child_process";
 type CommandMap = Record<string, string | undefined>;
 
 /** Safely trim the value if it's a string */
-function trim(val: string | undefined) {
+function trim(val?: string | Buffer) {
   if (typeof val === "string") {
     return val.trim();
   }
@@ -78,7 +78,7 @@ const runExecSync = (
     auto.logger.verbose.info(`Running command: ${command}`);
     auto.logger.veryVerbose.info(endent`
     Supplied Environment (name and char size):
-    
+
     ${Object.entries(options?.env || {})
       .map(([key, value]) => `\t${key}=${value ? value.length : 0}`)
       .join("\n")}
@@ -90,8 +90,8 @@ const runExecSync = (
       auto.logger.log.error(endent`
         Received E2BIG from execSync.
 
-        This usually occurs when the argument list is too large for the command you are trying to run. 
-        
+        This usually occurs when the argument list is too large for the command you are trying to run.
+
         Please consider disabling your 'auto-exec' usage and following this issue for updates: https://github.com/intuit/auto/issues/1294
       `);
     } else {
