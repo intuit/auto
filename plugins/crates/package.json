@@ -44,5 +44,10 @@
     "toml": "^3.0.0",
     "tslib": "2.1.0",
     "user-home": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.1.0",
+    "@types/env-ci": "^3.1.0",
+    "@types/user-home": "^2.0.0"
   }
 }

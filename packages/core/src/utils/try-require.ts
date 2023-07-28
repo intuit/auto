@@ -18,7 +18,13 @@ export default function tryRequire(tryPath: string, from?: string) {
     }
 
     // If a plugin has any errors we want to inform the user
-    if (error.code !== "MODULE_NOT_FOUND") {
+    if (
+      (!error && typeof error !== "object") ||
+      (error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code !== "MODULE_NOT_FOUND")
+    ) {
       throw error;
     }
 
@@ -26,7 +32,9 @@ export default function tryRequire(tryPath: string, from?: string) {
       // Require from __dirname and then common global package places. Needed for npx and global installs
       return requireg(tryPath);
     } catch (error) {
-      logger.veryVerbose.warn(error.message);
+      if (error && typeof error === "object" && "message" in error) {
+        logger.veryVerbose.warn(error.message);
+      }
     }
 
     if (from) {

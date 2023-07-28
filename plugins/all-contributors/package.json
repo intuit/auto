@@ -45,9 +45,12 @@
     "await-to-js": "^3.0.0",
     "endent": "^2.1.0",
     "env-ci": "^5.0.1",
-    "fp-ts": "^2.5.3",
+    "fp-ts": "^2.16.1",
     "fromentries": "^1.2.0",
-    "io-ts": "^2.1.2",
+    "io-ts": "^2.2.20",
     "tslib": "2.1.0"
+  },
+  "devDependencies": {
+    "@types/env-ci": "^3.1.0"
   }
 }

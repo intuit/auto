@@ -40,8 +40,8 @@
   "dependencies": {
     "@auto-it/core": "workspace:*",
     "chrome-webstore-upload-cli": "^1.2.0",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
     "semver": "^7.0.0",
     "tslib": "2.1.0"
   },

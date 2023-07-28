@@ -40,13 +40,15 @@
     "endent": "^2.1.0",
     "env-ci": "^5.0.1",
     "fast-glob": "^3.1.1",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
     "parse-github-url": "1.0.2",
     "semver": "^7.0.0",
     "tslib": "2.1.0"
   },
   "devDependencies": {
+    "@types/env-ci": "^3.1.0",
+    "@types/semver": "^7.1.0",
     "jest-when": "^3.2.1"
   }
 }

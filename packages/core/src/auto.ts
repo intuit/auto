@@ -976,7 +976,11 @@ export default class Auto {
         });
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${
+            error && typeof error === "object" && "status" in error
+              ? error.status
+              : ""
+          }`
         );
       }
 
@@ -1076,7 +1080,10 @@ export default class Auto {
       }
     } catch (error) {
       msg = {
-        description: error.message,
+        description:
+          error && typeof error === "object" && "message" in error
+            ? error.message
+            : "",
         state: "error",
       };
     }
@@ -1097,7 +1104,11 @@ export default class Auto {
         this.logger.log.success("Posted status to Pull Request.");
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${
+            error && typeof error === "object" && "status" in error
+              ? error.status
+              : ""
+          }`
         );
       }
     }

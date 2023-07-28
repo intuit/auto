@@ -43,13 +43,14 @@
     "conventional-changelog-preset-loader": "^2.3.4",
     "conventional-commits-parser": "^3.1.0",
     "endent": "^2.1.0",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
     "tslib": "2.1.0"
   },
   "devDependencies": {
     "@types/conventional-changelog-core": "^4.1.1",
     "@types/conventional-changelog-preset-loader": "^2.3.1",
-    "@types/conventional-commits-parser": "^3.0.0"
+    "@types/conventional-commits-parser": "^3.0.0",
+    "@types/array.prototype.flatmap": "^1.2.0"
   }
 }

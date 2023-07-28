@@ -27,7 +27,7 @@ function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
   exclude: ExcludedHook[]
 ) {
   type HookType = keyof HookObject;
-  const hooks = Object.keys(hookCreatorFn()) as HookType[];
+  const hooks = Object.keys(hookCreatorFn() as {}) as HookType[];
 
   return t.partial(
     fromEntries(
@@ -86,7 +86,7 @@ const runExecSync = (
 
     execResult = trim(execSync(command, options));
   } catch (e) {
-    if (e && e.code === "E2BIG") {
+    if (e && typeof e === "object" && "code" in e && e.code === "E2BIG") {
       auto.logger.log.error(endent`
         Received E2BIG from execSync.
 

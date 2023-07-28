@@ -154,7 +154,14 @@ export default class Config {
         config = (await fetch(extend)).json();
         this.logger.verbose.note(`${extend} found: ${config}`);
       } catch (error) {
-        error.message = `Failed to get extended config from ${extend} -- ${error.message}`;
+        if (
+          error &&
+          typeof error === "object" &&
+          "message" in error &&
+          typeof error.message === "object"
+        ) {
+          error.message = `Failed to get extended config from ${extend} -- ${error.message}`;
+        }
         throw error;
       }
     } else if (extend.startsWith(".")) {

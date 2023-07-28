@@ -40,9 +40,9 @@
   "dependencies": {
     "@auto-it/core": "workspace:*",
     "fast-glob": "^3.1.1",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
-    "jsdom": "^16.2.2",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
+    "jsdom": "^22.1.0",
     "parse-github-url": "^1.0.2",
     "pom-parser": "^1.1.1",
     "prettier": "^2.0.5",
@@ -51,8 +51,9 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
-    "@types/jsdom": "^16.2.3",
+    "@types/jsdom": "^21.1.1",
     "@types/prettier": "^2.0.1",
+    "@types/semver": "^7.1.0",
     "ts-jest": "^26.1.3"
   }
 }

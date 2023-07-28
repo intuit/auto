@@ -173,8 +173,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     const issues = messages
       .map((message) => message.match(closeIssue))
-      .filter((r): r is string[] => Boolean(r))
-      .reduce((all, arr) => [...all, ...arr], [])
+      .filter((r): r is RegExpMatchArray => Boolean(r))
+      .reduce((all, arr) => [...all, ...arr], [] as string[])
       .map((issue) => issue.match(/#(\d+)/i))
       .filter((r: RegExpMatchArray | null): r is RegExpMatchArray => Boolean(r))
       .map((match) => Number(match[1]));

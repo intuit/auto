@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import fs from "fs";
 import path from "path";
 import { promisify } from "util";
 import parseGitHubUrl from "parse-github-url";

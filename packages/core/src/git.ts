@@ -20,6 +20,7 @@ import execPromise from "./utils/exec-promise";
 import { dummyLog, ILogger } from "./utils/logger";
 import { ICommit } from "./log-parse";
 import { buildSearchQuery, ISearchQuery } from "./match-sha-to-pr";
+import { OctokitResponse } from "@octokit/plugin-paginate-rest/dist-types/types";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;
@@ -205,7 +206,7 @@ export default class Git {
 
       return latestRelease.tag_name;
     } catch (e) {
-      if (e.status === 404) {
+      if (e && typeof e === "object" && "status" in e && e.status === 404) {
         this.logger.verbose.info(
           "Couldn't find latest release on GitHub, using first commit."
         );
@@ -279,13 +280,19 @@ export default class Git {
 
       return labels.data.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError("listLabelsOnIssue", args, e);
+      throw new GitAPIError("listLabelsOnIssue", args, e as Error);
     }
   }
 
   /** Get all the information about a PR or issue */
   @memoize()
-  async getPr(prNumber: number) {
+  async getPr(
+    prNumber: number
+  ): Promise<
+    OctokitResponse<
+      RestEndpointMethodTypes["issues"]["get"]["response"]["data"]
+    >
+  > {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
 
     const args: RestEndpointMethodTypes["issues"]["get"]["parameters"] = {
@@ -301,7 +308,7 @@ export default class Git {
       this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
       return info;
     } catch (e) {
-      throw new GitAPIError("getPr", args, e);
+      throw new GitAPIError("getPr", args, e as Error);
     }
   }
 
@@ -322,7 +329,7 @@ export default class Git {
       );
       return info;
     } catch (e) {
-      throw new GitAPIError("getCommit", [], e);
+      throw new GitAPIError("getCommit", [], e as Error);
     }
   }
 
@@ -351,7 +358,7 @@ export default class Git {
 
       return labels.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError("getProjectLabels", args, e);
+      throw new GitAPIError("getProjectLabels", args, e as Error);
     }
   }
 
@@ -403,22 +410,27 @@ export default class Git {
         }, []);
     } catch (error) {
       console.log(error);
-      const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
-      if (tag) {
-        this.logger.log.error(
-          endent`
-            Missing tag "${tag[1]}" so the command could not run.
+      if (typeof error === "string") {
+        const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
-            To fix this run the following command:
+        if (tag) {
+          this.logger.log.error(
+            endent`
+              Missing tag "${tag[1]}" so the command could not run.
+  
+              To fix this run the following command:
+  
+              git fetch --tags\n
+            `
+          );
+          process.exit(1);
+        }
 
-            git fetch --tags\n
-          `
-        );
-        process.exit(1);
+        throw new Error(error);
       }
 
-      throw new Error(error);
+      throw error;
     }
   }
 
