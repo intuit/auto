@@ -36,8 +36,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/bot-list": "workspace:*",
+    "@auto-it/core": "workspace:*",
     "array.prototype.flatmap": "^1.2.2",
     "endent": "^2.1.0",
     "tslib": "2.1.0",

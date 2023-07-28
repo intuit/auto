@@ -37,8 +37,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/bot-list": "workspace:*",
+    "@auto-it/core": "workspace:*",
     "@octokit/rest": "^18.12.0",
     "all-contributors-cli": "6.19.0",
     "anymatch": "^3.1.1",
