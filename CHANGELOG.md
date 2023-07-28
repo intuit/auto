@@ -1,3 +1,39 @@
+# v11.0.0 (Fri Jul 28 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Ashik Vetrivelu ([@ashik94vc](https://github.com/ashik94vc))
+
+:heart: Chris ([@ccremer](https://github.com/ccremer))
+
+### Release Notes
+
+#### upgrade lerna ([#2378](https://github.com/intuit/auto/pull/2378))
+
+This releases upgrades the lerna package in the npm plugin to latest. This is a big upgrade and constitutes a breaking change.
+
+---
+
+#### 💥 Breaking Change
+
+- upgrade lerna [#2378](https://github.com/intuit/auto/pull/2378) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 📝 Documentation
+
+- Update GitHub actions usage example [#2366](https://github.com/intuit/auto/pull/2366) ([@ccremer](https://github.com/ccremer))
+- `@auto-it/gradle`
+  - feat: update broken markdown for gradle-release plugin link [#2374](https://github.com/intuit/auto/pull/2374) ([@ashik94vc](https://github.com/ashik94vc))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Ashik Vetrivelu ([@ashik94vc](https://github.com/ashik94vc))
+- Chris ([@ccremer](https://github.com/ccremer))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes

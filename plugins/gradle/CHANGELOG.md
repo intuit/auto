@@ -1,3 +1,23 @@
+# v11.0.0 (Fri Jul 28 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Ashik Vetrivelu ([@ashik94vc](https://github.com/ashik94vc)), for all your work!
+
+#### 🐛 Bug Fix
+
+- feat: update broken markdown for gradle release plugin link ([@ashik94vc](https://github.com/ashik94vc))
+
+#### 📝 Documentation
+
+- feat: update broken markdown for gradle-release plugin link [#2374](https://github.com/intuit/auto/pull/2374) ([@ashik94vc](https://github.com/ashik94vc))
+
+#### Authors: 1
+
+- Ashik Vetrivelu ([@ashik94vc](https://github.com/ashik94vc))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes
