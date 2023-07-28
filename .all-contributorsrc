@@ -799,6 +799,15 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "ccremer",
+      "name": "Chris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12159026?v=4",
+      "profile": "https://github.com/ccremer",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"
