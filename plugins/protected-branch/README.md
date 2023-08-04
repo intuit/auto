@@ -22,6 +22,8 @@ yarn add -D @auto-it/protected-branch
 
 ## Usage
 
+Add the `protected-branch` plugin to the list in `.autorc`.
+
 No config example:
 
 ```json
