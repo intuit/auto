@@ -4,7 +4,7 @@ Handle GitHub branch protections and avoid running auto with an admin token.
 
 ## Prerequisites
 
-This plugin still needs `Personal Access token` (PAT), but only for a standard user with `write` permission on your repository. No need to have an administrator user.
+This plugin still needs a `Personal Access Token` (PAT), but only for a standard user with `write` permission on your repository. No need to have an admin user.
 
 That also means that you are able to enforce all branch protection requirements for Administrators of your Organization.
 
@@ -33,7 +33,7 @@ No config example:
 }
 ```
 
-Fully-configured example :
+Fully-configured example:
 
 ```json
 {
@@ -55,7 +55,7 @@ Fully-configured example :
 
 ## How to handle branch protection
 
-The plugin's intent is to handle branch protections, without the need to use an administrator's privileges and/or if you don't want to use administrator token in our workflow.
+The plugin's intent is to handle branch protections, without the need to use an administrator's privileges and/or if you don't want to use an administrator token in our workflow.
 
 An example usage in a repository where we want to have the following protected branch configuration:
 
