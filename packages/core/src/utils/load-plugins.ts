@@ -79,7 +79,13 @@ export const getInstalledPlugins = (global = false): InstalledModule[] => {
 
     modules = stdout.split("\n");
   } catch (error) {
-    modules = error.stdout.split("\n");
+    modules =
+      error &&
+      typeof error === "object" &&
+      "stdout" in error &&
+      typeof error.stdout === "string"
+        ? error.stdout.split("\n")
+        : [];
   }
 
   return formatPluginList(modules);

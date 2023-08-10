@@ -38,11 +38,16 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "workspace:*",
     "env-ci": "^5.0.1",
     "semver": "^7.0.0",
     "toml": "^3.0.0",
     "tslib": "2.1.0",
     "user-home": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.1.0",
+    "@types/env-ci": "^3.1.0",
+    "@types/user-home": "^2.0.0"
   }
 }

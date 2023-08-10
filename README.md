@@ -82,7 +82,7 @@ Auto has an extensive plugin system and wide variety of official plugins. Make a
 To get set up, fork and clone the project then run the following command:
 
 ```bash
-yarn
+pnpm
 ```
 
 ### Build/Typecheck
@@ -90,13 +90,13 @@ yarn
 You must build at least once before running the tests or lint.
 
 ```bash
-yarn build
+pnpm build
 ```
 
 In watch mode:
 
 ```bash
-yarn start
+pnpm start
 ```
 
 ### Installing the binary
@@ -104,7 +104,7 @@ yarn start
 Install the bundled binary onto your system. This requires the project to be built or in watch mode.
 
 ```bash
-yarn install-mac
+pnpm install-mac
 ```
 
 If running this for the first time you may also have to run the following command.
@@ -116,25 +116,25 @@ chmod +x /usr/local/bin/auto
 ### Cleaning
 
 ```bash
-yarn clean
+pnpm clean
 ```
 
 ### Linting
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 ### Testing
 
 ```bash
-yarn test
+pnpm test
 ```
 
 ### Run the docs
 
 ```bash
-yarn docs
+pnpm docs
 ```
 
 ### Create a new plugin
@@ -147,7 +147,7 @@ The two arguments are:
 2. A description
 
 ```bash
-yarn create:plugin my-plugin "Do something really cool"
+pnpm create:plugin my-plugin "Do something really cool"
 ```
 
 ### Create a new package
@@ -160,7 +160,7 @@ The two arguments are:
 2. A description
 
 ```bash
-yarn create:package my-package "Do something really cool"
+pnpm create:package my-package "Do something really cool"
 ```
 
 ## :beers: Contributing :beers:
@@ -324,7 +324,7 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 
 ### Adding a Contributor
 
-To add a contributor run `yarn contributors:add`, choose "Add new contributor or edit contribution type" and follow the prompts.
+To add a contributor run `pnpm contributors:add`, choose "Add new contributor or edit contribution type" and follow the prompts.
 
 ## License
 

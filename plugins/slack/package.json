@@ -38,16 +38,15 @@
   },
   "dependencies": {
     "@atomist/slack-messages": "^1.2.2",
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "workspace:*",
     "@octokit/rest": "^18.12.0",
-    "fp-ts": "^2.5.3",
+    "fp-ts": "^2.16.1",
     "https-proxy-agent": "^5.0.0",
-    "io-ts": "^2.1.2",
+    "io-ts": "^2.2.20",
     "node-fetch": "2.6.7",
     "tslib": "2.1.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "2.6.1",
-    "@types/url-join": "^4.0.0"
+    "@types/node-fetch": "2.6.1"
   }
 }

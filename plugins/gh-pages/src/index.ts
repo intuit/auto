@@ -127,7 +127,7 @@ export default class GhPagesPlugin implements IPlugin {
         "Oh no! It looks like there was trouble publishing to GitHub Pages 😢"
       );
 
-      if (error.message.includes("git not clean")) {
+      if (error instanceof Error && error.message.includes("git not clean")) {
         auto.logger.log.error(endent`
           Your repo currently has uncommitted files in it.
           For the gh-pages plugin to work your git state must be clean.

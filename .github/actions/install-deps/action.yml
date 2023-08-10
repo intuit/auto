@@ -9,27 +9,34 @@ runs:
       with:
         node-version: 16.18
 
-    - name: restore workspace cache
-      uses: actions/cache@v3
-      id: node_modules
+    - uses: pnpm/action-setup@v2
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'patches/*.patch') }}
-        restore-keys: |
-          node-modules-${{ runner.os }}-
+        version: 8.1.0
+        run_install: false
 
-    - run: yarn install --frozen-lockfile --network-timeout 9000000
-      if: steps.node_modules.outputs.cache-hit != 'true'
+    - name: Get pnpm store directory
       shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install
 
     - name: restore pkg cache
       uses: actions/cache@v3
       id: pkg
       with:
         path: ~/.pkg-cache
-        key: pkg-cache-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+        key: pkg-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           pkg-cache-${{ runner.os }}-
 
@@ -37,6 +44,6 @@ runs:
       if: steps.pkg.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        yarn pkg-fetch -n node16 -p macos -a x64
-        yarn pkg-fetch -n node16 -p win -a x64
-        yarn pkg-fetch -n node16 -p linux -a x64
+        pnpm pkg-fetch -n node16 -p macos -a x64
+        pnpm pkg-fetch -n node16 -p win -a x64
+        pnpm pkg-fetch -n node16 -p linux -a x64

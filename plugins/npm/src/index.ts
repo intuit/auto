@@ -1604,6 +1604,8 @@ export default class NPMPlugin implements IPlugin {
       await execPromise("npm", ["root"]);
     } catch (error) {
       if (
+        error &&
+        error instanceof Error &&
         // eslint-disable-next-line no-template-curly-in-string
         error.message?.includes("Failed to replace env in config: ${NPM_TOKEN}")
       ) {

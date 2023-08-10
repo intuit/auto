@@ -36,9 +36,9 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
+    "@auto-it/core": "workspace:*",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
     "tslib": "2.1.0"
   }
 }

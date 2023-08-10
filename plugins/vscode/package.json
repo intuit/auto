@@ -36,12 +36,15 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
-    "@auto-it/package-json-utils": "link:../../packages/package-json-utils",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
+    "@auto-it/core": "workspace:*",
+    "@auto-it/package-json-utils": "workspace:*",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
     "semver": "^7.0.0",
     "tslib": "2.1.0",
     "vsce": "^1.83.0"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.1.0"
   }
 }
