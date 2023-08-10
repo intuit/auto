@@ -313,6 +313,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/ld-codes"><img src="https://avatars.githubusercontent.com/u/123950213?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ld-codes</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ld-codes" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=ld-codes" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ccremer"><img src="https://avatars.githubusercontent.com/u/12159026?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Chris</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=ccremer" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Satishpokala124"><img src="https://avatars.githubusercontent.com/u/49762924?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Satish Pokala</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Satishpokala124" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
