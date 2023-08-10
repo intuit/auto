@@ -1,3 +1,32 @@
+# v11.0.1 (Thu Aug 10 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Paul Aldrich ([@aldrichdev](https://github.com/aldrichdev))
+
+:heart: Satish Pokala ([@Satishpokala124](https://github.com/Satishpokala124))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/cocoapods`
+  - [CocoaPods] switch Promise.all for reduce to avoid git lock [#2327](https://github.com/intuit/auto/pull/2327) ([@hborawski](https://github.com/hborawski))
+
+#### 📝 Documentation
+
+- Fix typo in FAQ [#2381](https://github.com/intuit/auto/pull/2381) ([@Satishpokala124](https://github.com/Satishpokala124))
+- `@auto-it/protected-branch`
+  - Update Protected-Branch README.md [#2383](https://github.com/intuit/auto/pull/2383) ([@aldrichdev](https://github.com/aldrichdev))
+
+#### Authors: 3
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+- Paul Aldrich ([@aldrichdev](https://github.com/aldrichdev))
+- Satish Pokala ([@Satishpokala124](https://github.com/Satishpokala124))
+
+---
+
 # v11.0.0 (Fri Jul 28 2023)
 
 :tada: This release contains work from new contributors! :tada:

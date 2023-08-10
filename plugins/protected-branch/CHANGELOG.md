@@ -1,3 +1,25 @@
+# v11.0.1 (Thu Aug 10 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Paul Aldrich ([@aldrichdev](https://github.com/aldrichdev)), for all your work!
+
+#### 🐛 Bug Fix
+
+- [CocoaPods] switch Promise.all for reduce to avoid git lock [#2327](https://github.com/intuit/auto/pull/2327) ([@hborawski](https://github.com/hborawski))
+- Update README.md ([@aldrichdev](https://github.com/aldrichdev))
+
+#### 📝 Documentation
+
+- Update Protected-Branch README.md [#2383](https://github.com/intuit/auto/pull/2383) ([@aldrichdev](https://github.com/aldrichdev))
+
+#### Authors: 2
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+- Paul Aldrich ([@aldrichdev](https://github.com/aldrichdev))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes

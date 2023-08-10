@@ -1,3 +1,16 @@
+# v11.0.1 (Thu Aug 10 2023)
+
+#### 🐛 Bug Fix
+
+- [CocoaPods] switch Promise.all for reduce to avoid git lock [#2327](https://github.com/intuit/auto/pull/2327) ([@hborawski](https://github.com/hborawski))
+- [CocoaPods] switch Promise.all for reduce to avoid git lock ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes
