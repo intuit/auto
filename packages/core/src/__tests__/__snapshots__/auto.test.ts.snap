@@ -82,10 +82,10 @@ exports[`Auto createLabels should create the labels 1`] = `
 }
 `;
 
-exports[`Auto should extend config 1`] = `
+exports[`Auto should extend config and keep overrides 1`] = `
 Object {
   "baseBranch": "main",
-  "extends": "@artsy/auto-config/package.json",
+  "extends": "@artsy",
   "labels": Array [
     Object {
       "changelogTitle": "💥 Breaking Change",
@@ -156,6 +156,7 @@ Object {
       "releaseType": "patch",
     },
   ],
+  "name": "extended",
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
   "plugins": Array [
@@ -169,10 +170,10 @@ Object {
 }
 `;
 
-exports[`Auto should extend local config 1`] = `
+exports[`Auto should extend local config and keep overrides 1`] = `
 Object {
   "baseBranch": "main",
-  "extends": "<PROJECT_ROOT>fake.json",
+  "extends": "./fake.json",
   "labels": Array [
     Object {
       "changelogTitle": "💥 Breaking Change",
@@ -243,6 +244,7 @@ Object {
       "releaseType": "patch",
     },
   ],
+  "name": "extended",
   "noVersionPrefix": true,
   "owner": "foo",
   "plugins": Array [
