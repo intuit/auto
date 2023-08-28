@@ -579,7 +579,8 @@ export default class Auto {
           options.fullReleaseNotes,
           options.newVersion,
           options.isPrerelease,
-          options.to
+          options.to,
+          options.isPrerelease ? false: !this.inOldVersionBranch(),
         );
 
         this.logger.log.info(release.data.html_url);
