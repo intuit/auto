@@ -1,6 +1,10 @@
 name: build
 
-on: [push]
+on:
+  push:
+    branches: [main, next]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 # Enabled permissions on GITHUB_TOKEN
 permissions:
@@ -12,6 +16,8 @@ permissions:
   statuses: write
   # Needed to create PR statuses/checks
   checks: write
+  # To post comments on PRs
+  issues: write
 
 jobs:
   # Run install in one step so deps can be cached for other steps
@@ -84,6 +90,7 @@ jobs:
         id: PR
         with:
           filterOutClosed: true
+          sha: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - name: Prepare repository

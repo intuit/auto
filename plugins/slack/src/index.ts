@@ -215,6 +215,14 @@ const basePluginOptions = t.partial({
   iconEmoji: t.string,
 });
 
+const urlPluginOptions = t.intersection([
+  t.partial({
+    /** Channels to post */
+    channel: t.string,
+  }),
+  basePluginOptions,
+]);
+
 const appPluginOptions = t.intersection([
   t.interface({
     /** Marks we are gonna use app auth */
@@ -225,7 +233,7 @@ const appPluginOptions = t.intersection([
   basePluginOptions,
 ]);
 
-const pluginOptions = t.union([basePluginOptions, appPluginOptions]);
+const pluginOptions = t.union([urlPluginOptions, appPluginOptions]);
 
 export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
 
@@ -450,6 +458,7 @@ export default class SlackPlugin implements IPlugin {
           link_names: true,
           // If not in app auth only one message is constructed
           blocks: messages[0],
+          channel: this.options.channel,
         }),
         headers: { "Content-Type": "application/json" },
         agent,

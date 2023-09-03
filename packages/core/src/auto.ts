@@ -96,6 +96,8 @@ interface ChangelogLifecycle {
   currentVersion: string;
   /** The last version of the project */
   lastRelease: string;
+  /** Override the version to release */
+  useVersion?: string;
 }
 
 interface TestingToken {
@@ -151,6 +153,8 @@ export interface IAutoHooks {
   validateConfig: ValidatePluginHook;
   /** Happens before anything is done. This is a great place to check for platform specific secrets. */
   beforeRun: AsyncSeriesHook<[LoadedAutoRc]>;
+  /** Happens after everything else is done. This is a great place to trigger post-actions. */
+  afterRun: AsyncSeriesHook<[LoadedAutoRc]>;
   /** Happens before `shipit` is run. This is a great way to throw an error if a token or key is not present. */
   beforeShipIt: AsyncSeriesHook<[BeforeShipitContext]>;
   /** Ran before the `changelog` command commits the new release notes to `CHANGELOG.md`. */
@@ -235,6 +239,17 @@ export interface IAutoHooks {
       {
         /** The bump the changelog will make */
         bump: SEMVER | undefined;
+      }
+    ]
+  >;
+  /** Ran before the package has been versioned. */
+  beforeVersion: AsyncSeriesHook<
+    [
+      DryRunOption & {
+        /** Commit to start calculating the version from */
+        from: string;
+        /** The commits included in the release */
+        commits: IExtendedCommit[];
       }
     ]
   >;
@@ -512,11 +527,11 @@ export default class Auto {
           );
         } catch (error) {
           // If we are behind or there is no match, exit and skip the release
-          this.logger.log.warn(
+          this.logger.log.error(
             "Current commit is behind, skipping the release to avoid collisions."
           );
-          this.logger.verbose.warn(error);
-          process.exit(0);
+          this.logger.verbose.error(error);
+          process.exit(1);
         }
       }
     );
@@ -661,6 +676,18 @@ export default class Auto {
     this.hooks.onCreateRelease.call(this.release);
 
     return config;
+  }
+
+  /**
+   * Gracefully teardown auto
+   */
+  async teardown() {
+    if (!this.config) {
+      throw this.createErrorMessage();
+    }
+
+    this.logger.verbose.success("Teardown `auto`");
+    await this.hooks.afterRun.promise(this.config);
   }
 
   /** Determine the remote we have auth to push to. */
@@ -1713,6 +1740,18 @@ export default class Auto {
       throw this.createErrorMessage();
     }
 
+    const lastRelease = options.from || (await this.git.getLatestRelease());
+    const commitsInRelease = await this.release.getCommitsInRelease(
+      lastRelease
+    );
+
+    this.logger.verbose.info("Calling before version hook");
+    await this.hooks.beforeVersion.promise({
+      dryRun: options.dryRun,
+      commits: commitsInRelease,
+      from: lastRelease,
+    });
+
     const bump = await this.getVersion(options);
 
     this.logger.log.success(
@@ -1724,15 +1763,10 @@ export default class Auto {
       return;
     }
 
-    const lastRelease = options.from || (await this.git.getLatestRelease());
-    const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
-    );
-
     await this.makeChangelog({
       ...options,
       quiet: undefined,
-      noCommit: options.noChangelog,
+      noChanges: options.noChangelog,
     });
 
     if (!options.dryRun) {
@@ -1862,7 +1896,8 @@ export default class Auto {
       to,
       title,
       message = "Update CHANGELOG.md [skip ci]",
-      noCommit,
+      noGitCommit,
+      noChanges,
     } = options;
 
     if (!this.release || !this.git) {
@@ -1878,7 +1913,9 @@ export default class Auto {
       );
     }
 
-    const lastRelease = from || (await this.git.getLatestRelease());
+    const latestRelease = await this.git.getLatestRelease();
+    const lastRelease =
+      (from === "latest" && latestRelease) || from || latestRelease;
     const bump = await this.release.getSemverBump(lastRelease, to);
     const releaseNotes = await this.release.generateReleaseNotes(
       lastRelease,
@@ -1900,24 +1937,32 @@ export default class Auto {
     this.logger.log.info("New Release Notes\n", releaseNotes);
 
     const currentVersion = await this.getCurrentVersion(lastRelease);
-    const context = {
+    const context: ChangelogLifecycle = {
       bump,
       commits: await this.release.getCommits(lastRelease, to || undefined),
       releaseNotes,
       lastRelease,
       currentVersion,
+      useVersion: options.useVersion,
     };
 
-    if (!noCommit) {
+    if (!noChanges) {
       await this.release.addToChangelog(
         releaseNotes,
         lastRelease,
         currentVersion
       );
 
-      await this.hooks.beforeCommitChangelog.promise(context);
-      await execPromise("git", ["commit", "-m", `"${message}"`, "--no-verify"]);
-      this.logger.verbose.info("Committed new changelog.");
+      if (!noGitCommit) {
+        await this.hooks.beforeCommitChangelog.promise(context);
+        await execPromise("git", [
+          "commit",
+          "-m",
+          `"${message}"`,
+          "--no-verify",
+        ]);
+        this.logger.verbose.info("Committed new changelog.");
+      }
     }
 
     await this.hooks.afterChangelog.promise(context);
@@ -1952,11 +1997,13 @@ export default class Auto {
       return process.exit(1);
     }
 
+    const latestRelease = await this.git.getLatestRelease();
     const isPrerelease = prerelease || this.inPrereleaseBranch();
     let lastRelease =
+      (from === "latest" && latestRelease) ||
       from ||
       (isPrerelease && (await this.git.getPreviousTagInBranch())) ||
-      (await this.git.getLatestRelease());
+      latestRelease;
 
     // Find base commit or latest release to generate the changelog to HEAD (new tag)
     this.logger.veryVerbose.info(`Using ${lastRelease} as previous release.`);
@@ -2149,7 +2196,7 @@ export default class Auto {
       if (!user.name && !user.email) {
         this.logger.log.error(
           endent`
-            Could find a git name and email to commit with!
+            Could not find a git name and email to commit with!
 
             Name: ${user.name}
             Email: ${user.email}

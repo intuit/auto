@@ -42,7 +42,7 @@ yarn add -D @auto-it/gradle
 
 ## Gradle Project Configuration
 
-This plugin uses the (gradle release plugin)[https://github.com/researchgate/gradle-release] to update the version. Make sure the the latest `gradle-release-plugin` is in your `build.gradle`.
+This plugin uses the [gradle release plugin](https://github.com/researchgate/gradle-release) to update the version. Make sure the the latest `gradle-release-plugin` is in your `build.gradle`.
 
 ```groovy
 plugins {

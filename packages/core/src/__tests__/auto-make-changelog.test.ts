@@ -39,6 +39,7 @@ jest.mock("@octokit/rest", () => {
 
     repos = {
       get: jest.fn().mockReturnValue(Promise.resolve({})),
+      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {

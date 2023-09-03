@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/core",
-  "version": "10.38.5",
+  "version": "11.0.1",
   "description": "Node API for using auto.",
   "main": "dist/auto.js",
   "license": "MIT",
@@ -78,8 +78,11 @@
     "typescript-memoize": "^1.0.0-alpha.3",
     "url-join": "^4.0.0"
   },
+  "peerDependencies": {
+    "typescript": ">=2.7"
+  },
   "peerDependenciesMeta": {
-    "typescript": {
+    "@types/node": {
       "optional": true
     }
   },

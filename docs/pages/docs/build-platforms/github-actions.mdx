@@ -21,31 +21,23 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Prepare repository
-        run: git fetch --unshallow --tags
-
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
         with:
-          node-version: 12.x
+          fetch-depth: '0'
 
-      - name: Cache node modules
-        uses: actions/cache@v1
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          path: node_modules
-          key: yarn-deps-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            yarn-deps-${{ hashFiles('yarn.lock') }}
+          node-version: 'lts/*'
+          cache: 'npm' # or yarn, pnpn
 
       - name: Create Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          yarn install --frozen-lockfile
-          yarn build
+          npm clean-install
+          npm run build
           npx auto shipit
 ```
 
@@ -56,10 +48,10 @@ If you are publishing to the Github Package Registry you will need to change a f
 1. Modify the node action to use the Github Package Registry and your user scope.
 
 ```yaml
-- name: Use Node.js 12.x
-  uses: actions/setup-node@v1
+- name: Setup Node
+  uses: actions/setup-node@v3
   with:
-    node-version: 12.x
+    node-version: 'lts/*'
     registry-url: "https://npm.pkg.github.com"
     scope: "@your-username-scope"
 ```
@@ -69,16 +61,16 @@ If you are publishing to the Github Package Registry you will need to change a f
 ```yaml
 - name: Create Release
   env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   run: |
-    yarn install --frozen-lockfile
-    yarn build
+    npm clean-install
+    npm build
     npx auto shipit
 ```
 
-The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v1` sets up.
-If you aren't using `actions/setup-node@v1` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
+The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v3` sets up.
+If you aren't using `actions/setup-node@v3` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
 
 ## Troubleshooting
 
@@ -95,14 +87,11 @@ You will need to create a token with admin access to your repo and modify your b
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v3
     with:
       # Ensure that git uses your token with admin access to the repo
       token: ${{ secrets.ADMIN_TOKEN }}
-
-  - name: Prepare repository
-    # Fetch full git history and tags
-    run: git fetch --unshallow --tags
+      fetch-depth: '0'
 ```
 
 ## Examples

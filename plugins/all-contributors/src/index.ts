@@ -326,14 +326,21 @@ export default class AllContributorsPlugin implements IPlugin {
       } catch (error) {}
 
       // Go through each package and update code contributions
-      await packages.reduce(async (last, { name, path }) => {
+      await packages.reduce(async (last, { name, path: packagePath }) => {
         // Cannot run git operations in parallel
         await last;
+
+        if (!fs.existsSync(path.join(packagePath, ".all-contributorsrc"))) {
+          auto.logger.verbose.info(
+            `Skipping ${name} because it has no all-contributorsrc file.`
+          );
+          return;
+        }
 
         auto.logger.verbose.info(`Updating contributors for: ${name}`);
 
         const includedCommits = commits.filter((commit) =>
-          commit.files.some((file) => inFolder(path, file))
+          commit.files.some((file) => inFolder(packagePath, file))
         );
 
         if (includedCommits.length > 0) {
@@ -344,7 +351,7 @@ export default class AllContributorsPlugin implements IPlugin {
             `With commits: ${JSON.stringify(includedCommits, null, 2)}`
           );
 
-          process.chdir(path);
+          process.chdir(packagePath);
           await this.updateContributors(auto, includedCommits);
         }
       }, Promise.resolve());
@@ -363,6 +370,13 @@ export default class AllContributorsPlugin implements IPlugin {
           "-m",
           '"Update contributors [skip ci]"',
         ]);
+        auto.logger.verbose.warn(
+          'Committed updates to "README.md" and ".all-contributorsrc" files.'
+        );
+      } else {
+        auto.logger.verbose.warn(
+          'No changes to "README.md" or ".all-contributorsrc" files.'
+        );
       }
     });
 

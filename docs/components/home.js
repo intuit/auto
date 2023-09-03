@@ -166,7 +166,7 @@ const FAQ = () => (
               </p>
 
               <p>
-                Or if you don't want to worry about what command to you need,
+                Or if you don't want to worry about what command you need,
                 just use{" "}
                 <Link href="https://intuit.github.io/auto/docs/generated/shipit">
                   shipit

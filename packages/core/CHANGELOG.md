@@ -1,3 +1,193 @@
+# v10.46.0 (Wed Apr 26 2023)
+
+### Release Notes
+
+#### Add --from latest option to release and changelog commands ([#2356](https://github.com/intuit/auto/pull/2356))
+
+You can now use `--from latest` in both the `changelog`and `release` commands. 
+
+This is useful if you want to generate a changelog for a prerelease that includes  all changes since the `latest` release.
+
+```sh
+auto release --from latest --prerelease
+```
+
+---
+
+#### 🚀 Enhancement
+
+- Add --from latest option to release and changelog commands [#2356](https://github.com/intuit/auto/pull/2356) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### 🐛 Bug Fix
+
+- fix tests ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Add --from latest option to release and changelog commands ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v10.45.2 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@ld-codes](https://github.com/ld-codes), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix typo for empty git user message [#2354](https://github.com/intuit/auto/pull/2354) ([@ld-codes](https://github.com/ld-codes))
+- fix typo for empty git user message ([@ld-codes](https://github.com/ld-codes))
+
+#### Authors: 1
+
+- [@ld-codes](https://github.com/ld-codes)
+
+---
+
+# v10.45.1 (Wed Apr 26 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Eskild Diderichsen ([@snebjorn](https://github.com/snebjorn)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fixes "some peer dependencies are incorrectly met" when installing via yarn [#2348](https://github.com/intuit/auto/pull/2348) ([@snebjorn](https://github.com/snebjorn))
+- fix: missing peer dependency from @auto-it/core requested by ts-node ([@snebjorn](https://github.com/snebjorn))
+- fix: missing peer dependency from @endemolshinegroup/cosmiconfig-typescript-loader requested by ts-node ([@snebjorn](https://github.com/snebjorn))
+
+#### Authors: 1
+
+- Eskild Diderichsen ([@snebjorn](https://github.com/snebjorn))
+
+---
+
+# v10.44.0 (Mon Apr 03 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, David Sheldrick ([@ds300](https://github.com/ds300)), for all your work!
+
+#### 🚀 Enhancement
+
+- add useVersion support to npm changelog [#2347](https://github.com/intuit/auto/pull/2347) ([@ds300](https://github.com/ds300))
+
+#### 🐛 Bug Fix
+
+- add useVersion support to npm changelog ([@ds300](https://github.com/ds300))
+
+#### Authors: 1
+
+- David Sheldrick ([@ds300](https://github.com/ds300))
+
+---
+
+# v10.43.0 (Wed Mar 01 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Adil Malik ([@amalik2](https://github.com/amalik2)), for all your work!
+
+#### 🚀 Enhancement
+
+- feat: add in beforeVersion lifecycle hook [#2334](https://github.com/intuit/auto/pull/2334) (adil_malik@intuit.com)
+
+#### 🐛 Bug Fix
+
+- feat: add in beforeVersion lifecycle hook (adil_malik@intuit.com)
+
+#### Authors: 1
+
+- Adil Malik ([@amalik2](https://github.com/amalik2))
+
+---
+
+# v10.42.1 (Tue Feb 21 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko)), for all your work!
+
+#### 🐛 Bug Fix
+
+- chore: fix prompt message [#2330](https://github.com/intuit/auto/pull/2330) ([@AndreyBozhko](https://github.com/AndreyBozhko))
+- update message ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+#### Authors: 1
+
+- Andrey Bozhko ([@AndreyBozhko](https://github.com/AndreyBozhko))
+
+---
+
+# v10.42.0 (Fri Feb 10 2023)
+
+#### 🚀 Enhancement
+
+- Feat add `afterRun` hook [#2182](https://github.com/intuit/auto/pull/2182) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### 🐛 Bug Fix
+
+- feat(core): add `afterRun` hook ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v10.40.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Bruno Nardini ([@megatroom](https://github.com/megatroom)), for all your work!
+
+#### 🚀 Enhancement
+
+- Add `--no-git-commit` option to `changelog` command [#2258](https://github.com/intuit/auto/pull/2258) ([@megatroom](https://github.com/megatroom))
+
+#### 🐛 Bug Fix
+
+- Add --no-git-commit option to changelog command ([@megatroom](https://github.com/megatroom))
+
+#### Authors: 1
+
+- Bruno Nardini ([@megatroom](https://github.com/megatroom))
+
+---
+
+# v10.39.0 (Wed Feb 08 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Dave Pringle ([@UncleDave](https://github.com/UncleDave))
+
+:heart: Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+#### 🚀 Enhancement
+
+- feat(npm): use version commit message from lerna.json [#2277](https://github.com/intuit/auto/pull/2277) ([@UncleDave](https://github.com/UncleDave))
+- non-zero exit code if commit is behind [#2189](https://github.com/intuit/auto/pull/2189) ([@vpipkt](https://github.com/vpipkt))
+
+#### 🐛 Bug Fix
+
+- non-zero exit code if commit is behind ([@vpipkt](https://github.com/vpipkt))
+
+#### 🏠 Internal
+
+- run actions on PRs [#2318](https://github.com/intuit/auto/pull/2318) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Dave Pringle ([@UncleDave](https://github.com/UncleDave))
+- Jason T Brown ([@vpipkt](https://github.com/vpipkt))
+
+---
+
 # v10.38.1 (Sat Feb 04 2023)
 
 #### 🐛 Bug Fix

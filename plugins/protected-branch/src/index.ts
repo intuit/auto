@@ -111,11 +111,18 @@ export default class ProtectedBranchPlugin implements IPlugin {
 
       auto.logger.log.info("Delete release branch 🗑️ ");
 
-      await auto.git.github.git.deleteRef({
-        owner: auto.git.options.owner,
-        repo: auto.git.options.repo,
-        ref: `heads/${headBranch}`,
-      });
+      try {
+        await auto.git.github.git.deleteRef({
+          owner: auto.git.options.owner,
+          repo: auto.git.options.repo,
+          ref: `heads/${headBranch}`,
+        });
+      } catch (e) {
+        // Silently ignore reference not found error since the ref might already be deleted
+        if (!e || e.status !== 422 || e.message !== "Reference does not exist") {
+          throw e;
+        }
+      }
     });
   }
 }
