@@ -1,16 +1,14 @@
-# Protected-Branch Plugin
+# `protected-branch` Plugin
 
-Handle Github branch protections and avoid run auto with an admin token
+Handle GitHub branch protections and avoid running auto with an admin token.
 
 ## Prerequisites
 
-This plugin still needs `Personal Access token` (PAT), but only with for a standard user with `write` permission on your repository.
+This plugin still needs a `Personal Access Token` (PAT), but only for a standard user with `write` permission on your repository. No need to have an admin user.
 
-That's means no need to have an Administration user.
+That also means that you are able to enforce all branch protection requirements for Administrators of your Organization.
 
-That's also means that you are able to enforce all branches protection requirements for Administrators of your Organization.
-
-When enforcing code owners, This user/ or a team must be designated as Owner/Co-Owner of released files.
+When enforcing CodeOwners, this user or a team must be designated as Owner/Co-Owner of released files.
 
 ## Installation
 
@@ -24,7 +22,9 @@ yarn add -D @auto-it/protected-branch
 
 ## Usage
 
-No config example :
+Add the `protected-branch` plugin to the list in `.autorc`.
+
+No config example:
 
 ```json
 {
@@ -35,7 +35,7 @@ No config example :
 }
 ```
 
-Fully configured example :
+Fully-configured example:
 
 ```json
 {
@@ -57,18 +57,18 @@ Fully configured example :
 
 ## How to handle branch protection
 
-The plugin intent to handled branches protections, without the need to use an administrators privileges or/and don't want to use administrator token in our workflow.
+The plugin's intent is to handle branch protections, without the need to use an administrator's privileges and/or if you don't want to use an administrator token in our workflow.
 
-An example usage in a repository where we want to have the following protected branch configuration :
+An example usage in a repository where we want to have the following protected branch configuration:
 
 ![branch-protection-part-1](doc/branch-protection-1.png)
 ![branch-protection-part-2](doc/branch-protection-2.png)
 
-1. Create a bot account in this org (`auto-release-bot@org.com`)
-2. Create a PAT with this bot user and give a `repo` permissions
-3. On the repository, create a github actions secrets with the previously created PAT
-4. On the repository, add `write` access to the bot account
-5. When using CodeOwners, on the repository, for each released asset, let the bot account be owner and/or co-owners of each asset
+1. Create a bot account in this org (`auto-release-bot@org.com`).
+2. Create a PAT with this bot user and give it `repo` permissions.
+3. On the repository, create a GitHub actions secret with the previously created PAT.
+4. On the repository, grant `write` access to the bot account.
+5. When using CodeOwners, on the repository, for each released asset, let the bot account be owner and/or co-owners of each asset.
 
    ```
    # Automatically released files must be also owned by our automation @bots team
@@ -76,8 +76,7 @@ An example usage in a repository where we want to have the following protected b
    CHANGELOG.md    @prg/owner-team auto-release-bot@org.com
    ```
 
-6. Configure this plugin correctly (see [Configuration](#configuration))
-7. On the repository, be sure add `PROTECTED_BRANCH_REVIEWER_TOKEN` environment variable, and included the relevant permissions
+6. In your build process `.yml`, be sure to add the `PROTECTED_BRANCH_REVIEWER_TOKEN` environment variable, and set it to the secret you created previously:
 
    ```yaml
    permissions:
@@ -94,11 +93,11 @@ An example usage in a repository where we want to have the following protected b
       run: yarn shipit
    ```
 
-8. Ship it !
+7. Ship it!
 
 ## Limitations
 
-This plugin is not yet ready to :
+This plugin is not yet ready to:
 
 - Handle more than 1 review requirement
 - Dynamically list required status checks on target protected branch

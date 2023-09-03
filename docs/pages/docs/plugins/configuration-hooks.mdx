@@ -139,3 +139,15 @@ auto.hooks.validateConfig.tapPromise("test", (name, options) => {
   }
 });
 ```
+
+## afterRun
+
+Happens after any command run.
+This is a great place to trigger post-actions.
+
+```ts
+auto.hooks.afterRun.tapPromise("afterCheck", async (config) => {
+    ...
+  }
+});
+```

@@ -150,7 +150,7 @@ async function getCustomizedDefaultLabels() {
   const addLabels = await prompt<Confirmation>({
     type: "confirm",
     name: "confirmed",
-    message: "Would you like to use customize the default labels?",
+    message: "Would you like to customize the default labels?",
     initial: "no",
   });
 

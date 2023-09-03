@@ -263,10 +263,12 @@ export default class Release {
         : `v${version}`;
     });
 
-    this.logger.verbose.info("Adding new changes to changelog.");
+    const fileName = "CHANGELOG.md";
+
+    this.logger.verbose.info(`Adding new changes to ${fileName}.`);
     const title = await this.hooks.createChangelogTitle.promise();
 
-    await this.updateChangelogFile(title || "", releaseNotes, "CHANGELOG.md");
+    await this.updateChangelogFile(title || "", releaseNotes, fileName);
   }
 
   /**

@@ -723,6 +723,100 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "vpipkt",
+      "name": "Jason T Brown",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7798319?v=4",
+      "profile": "https://github.com/vpipkt",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "megatroom",
+      "name": "Bruno Nardini",
+      "avatar_url": "https://avatars.githubusercontent.com/u/673904?v=4",
+      "profile": "http://www.brunonardini.com.br/",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "AndreyBozhko",
+      "name": "Andrey Bozhko",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22246447?v=4",
+      "profile": "https://www.linkedin.com/in/andrey-bozhko/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "amalik2",
+      "name": "Adil Malik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25858348?v=4",
+      "profile": "https://github.com/amalik2",
+      "contributions": [
+        "doc",
+        "infra",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "ds300",
+      "name": "David Sheldrick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1242537?v=4",
+      "profile": "https://github.com/ds300",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "snebjorn",
+      "name": "Eskild Diderichsen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1266245?v=4",
+      "profile": "https://github.com/snebjorn",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "ld-codes",
+      "name": "ld-codes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123950213?v=4",
+      "profile": "https://github.com/ld-codes",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "ccremer",
+      "name": "Chris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12159026?v=4",
+      "profile": "https://github.com/ccremer",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Satishpokala124",
+      "name": "Satish Pokala",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49762924?v=4",
+      "profile": "https://github.com/Satishpokala124",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "commitConvention": "none"

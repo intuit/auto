@@ -1,13 +1,20 @@
 import * as Auto from "@auto-it/core";
+import Git from "@auto-it/core/dist/git";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
+
 import ProtectedBranchPlugin from "../src";
 
-const execPromise = jest.fn();
+const exec = jest.fn();
 jest.mock(
-    "../../../packages/core/dist/utils/exec-promise",
-    () => (...args: any[]) => execPromise(...args),
+    "@auto-it/core/dist/utils/exec-promise",
+    () =>
+        (...args: unknown[]) =>
+            exec(...args)
 );
+
+jest.mock("@auto-it/core/dist/git");
+const mockAutoGit = Git as unknown as jest.SpyInstance;
 
 describe("Protected-Branch Plugin", () => {
   const mockGetSha = jest.fn();
@@ -16,24 +23,23 @@ describe("Protected-Branch Plugin", () => {
   const mockApprovePr = jest.fn();
 
   function setupProtectedBranchPlugin(
-    checkEnv?: jest.SpyInstance,
-    withoutGit = false
+      checkEnv?: jest.SpyInstance,
+      withoutGit = false
   ): { plugin: ProtectedBranchPlugin; hooks: Auto.IAutoHooks } {
-    const plugin = new ProtectedBranchPlugin({ reviewerToken: "token" });
+    const plugin = new ProtectedBranchPlugin({ reviewerToken: "reviewerToken" });
     const hooks = makeHooks();
 
     plugin.apply(({
       hooks,
       checkEnv,
       git: withoutGit
-        ? undefined
-        : {
+          ? undefined
+          : {
             getSha: mockGetSha,
             github: {
               checks: { create: mockCreateCheck },
               pulls: {
                 create: mockCreatePr,
-                createReview: mockApprovePr,
               },
             },
             options: {
@@ -50,10 +56,11 @@ describe("Protected-Branch Plugin", () => {
   }
 
   beforeEach(() => {
-    execPromise.mockReset();
+    exec.mockReset();
     mockGetSha.mockReset().mockResolvedValueOnce("sha");
     mockCreateCheck.mockReset();
     mockCreatePr.mockReset().mockResolvedValueOnce({ data: { number: 42 } });
+    mockAutoGit.mockReset();
     mockApprovePr.mockReset();
   });
 
@@ -68,16 +75,10 @@ describe("Protected-Branch Plugin", () => {
   describe("validateConfig", () => {
     test("should validate the configuration", async () => {
       const { hooks, plugin } = setupProtectedBranchPlugin();
-      await expect(
-        hooks.validateConfig.promise("not-me", {})
-      ).resolves.toBeUndefined();
-      await expect(
-        hooks.validateConfig.promise(plugin.name, {})
-      ).resolves.toStrictEqual([]);
+      await expect(hooks.validateConfig.promise("not-me", {})).resolves.toBeUndefined();
+      await expect(hooks.validateConfig.promise(plugin.name, {})).resolves.toStrictEqual([]);
 
-      const res = await hooks.validateConfig.promise(plugin.name, {
-        invalidKey: "value",
-      });
+      const res = await hooks.validateConfig.promise(plugin.name, { invalidKey: "value" });
       expect(res).toHaveLength(1);
       // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       expect(res && res[0]).toContain(plugin.name);
@@ -94,11 +95,9 @@ describe("Protected-Branch Plugin", () => {
       const { hooks } = setupProtectedBranchPlugin(checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["protected-branch", {}]],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
-      expect(checkEnv).toHaveBeenCalledWith(
-        "protected-branch",
-        "PROTECTED_BRANCH_REVIEWER_TOKEN"
-      );
+      expect(checkEnv).toHaveBeenCalledWith("protected-branch", "PROTECTED_BRANCH_REVIEWER_TOKEN");
     });
 
     test("shouldn't check env with image", async () => {
@@ -106,6 +105,7 @@ describe("Protected-Branch Plugin", () => {
       const { hooks } = setupProtectedBranchPlugin(checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["protected-branch", { reviewerToken: "token" }]],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
       expect(checkEnv).not.toHaveBeenCalled();
     });
@@ -118,8 +118,16 @@ describe("Protected-Branch Plugin", () => {
       repo: "my-repo",
     };
 
+    function doMockPrApproval() {
+      mockAutoGit.mockReturnValueOnce({
+        github: {
+          pulls: { createReview: mockApprovePr },
+        },
+      });
+    }
+
     function expectCreateRemoteBranch(): void {
-      expect(execPromise).toHaveBeenNthCalledWith(1, "git", [
+      expect(exec).toHaveBeenNthCalledWith(1, "git", [
         "push",
         "--set-upstream",
         "remote",
@@ -146,16 +154,18 @@ describe("Protected-Branch Plugin", () => {
         head: "automatic-release-sha",
         title: "Automatic release",
       });
-      expect(execPromise).toHaveBeenNthCalledWith(2, "gh", [
-        "api",
-        "/repos/TheOwner/my-repo/pulls/42/reviews",
-        "-X",
-        "POST",
-        "-F",
-        "commit_id=sha",
-        "-F",
-        `event=APPROVE`,
-      ]);
+      expect(mockAutoGit).toHaveBeenCalledWith(
+          expect.objectContaining({
+            token: "reviewerToken",
+          }),
+          expect.anything()
+      );
+      expect(mockApprovePr).toHaveBeenCalledWith({
+        ...commonGitArgs,
+        pull_number: 42,
+        commit_id: "sha",
+        event: "APPROVE",
+      });
     }
 
     test("should do nothing without git", async () => {
@@ -163,32 +173,34 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
-      expect(execPromise).not.toHaveBeenCalled();
+      expect(exec).not.toHaveBeenCalled();
       expect(mockGetSha).not.toHaveBeenCalled();
       expect(mockCreateCheck).not.toHaveBeenCalled();
       expect(mockCreatePr).not.toHaveBeenCalled();
-      expect(mockApprovePr).not.toHaveBeenCalled();
+      expect(mockAutoGit).not.toHaveBeenCalled();
     });
 
     test("should do nothing without reviewerToken", async () => {
       const { hooks, plugin } = setupProtectedBranchPlugin();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (plugin as any).options.reviewerToken = undefined;
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
-      expect(execPromise).not.toHaveBeenCalled();
+      expect(exec).not.toHaveBeenCalled();
       expect(mockGetSha).not.toHaveBeenCalled();
       expect(mockCreateCheck).not.toHaveBeenCalled();
       expect(mockCreatePr).not.toHaveBeenCalled();
-      expect(mockApprovePr).not.toHaveBeenCalled();
+      expect(mockAutoGit).not.toHaveBeenCalled();
     });
 
     test("should handle all branch protections", async () => {
       const { hooks } = setupProtectedBranchPlugin();
+      doMockPrApproval();
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
-      expect(execPromise).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections([]);
     });
@@ -197,25 +209,30 @@ describe("Protected-Branch Plugin", () => {
       const ciChecks = ["ci", "release"];
 
       const { hooks, plugin } = setupProtectedBranchPlugin();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (plugin as any).options.requiredStatusChecks = ciChecks;
+
+      doMockPrApproval();
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
-      expect(execPromise).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections(ciChecks);
     });
 
     test("should silently cleanup remote stuff", async () => {
       const { hooks } = setupProtectedBranchPlugin();
-      execPromise
-        .mockResolvedValueOnce("")
-        .mockResolvedValueOnce("")
-        .mockRejectedValueOnce(new Error("couldn't delete remote branch"));
+      exec
+          .mockResolvedValueOnce("")
+          .mockResolvedValueOnce("")
+          .mockRejectedValueOnce(new Error("couldn't delete remote branch"));
+
+      doMockPrApproval();
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
-      expect(execPromise).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections([]);
     });

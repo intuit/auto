@@ -54,6 +54,7 @@ jest.mock("@octokit/rest", () => {
 
     repos = {
       get: jest.fn().mockReturnValue({}),
+      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {
@@ -862,6 +863,23 @@ describe("Auto", () => {
       expect(addToChangelog).not.toHaveBeenCalled();
     });
 
+    test("should not commit on noGitCommit", async () => {
+      const auto = new Auto(defaults);
+
+      auto.logger = dummyLog();
+      await auto.loadConfig();
+
+      const addToChangelog = jest.fn();
+      auto.release!.addToChangelog = addToChangelog;
+      const beforeCommitChangelog = jest.fn();
+      auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
+      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+
+      await auto.changelog({ from: "v1.0.0", noGitCommit: true });
+      expect(addToChangelog).toHaveBeenCalled();
+      expect(beforeCommitChangelog).not.toHaveBeenCalled();
+    });
+
     test("should be able to override title", async () => {
       const auto = new Auto(defaults);
 
@@ -959,7 +977,6 @@ describe("Auto", () => {
       );
     });
 
-
     test("should use --to commit target", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
@@ -978,7 +995,7 @@ describe("Auto", () => {
       auto.hooks.afterRelease.tap("test", afterRelease);
       jest.spyOn(auto.release!, "getCommits").mockImplementation();
 
-      await auto.runRelease({ to: 'abc'});
+      await auto.runRelease({ to: "abc" });
 
       expect(auto.git!.publish).toHaveBeenCalledWith(
         "releaseNotes",
@@ -1512,13 +1529,17 @@ describe("Auto", () => {
         } as any);
       jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
       jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
+      const addToChangelog = jest
+        .spyOn(auto.release!, "addToChangelog")
+        .mockImplementation();
       const beforeCommitChangelog = jest.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
       const afterChangelog = jest.fn();
       auto.hooks.afterChangelog.tap("test", afterChangelog);
 
       await auto.shipit({ noChangelog: true });
+
+      expect(addToChangelog).not.toHaveBeenCalled();
       expect(beforeCommitChangelog).not.toHaveBeenCalled();
       expect(afterChangelog).toHaveBeenCalled();
     });
@@ -1578,6 +1599,26 @@ describe("Auto", () => {
 
       await auto.shipit({ dryRun: true });
       expect(spy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("teardown", () => {
+    test("should throw when not initialized", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+
+      await expect(auto.teardown()).rejects.not.toBeUndefined();
+    });
+
+    test("should call afterRun hooks", async () => {
+      const auto = new Auto({ ...defaults, plugins: [] });
+      auto.logger = dummyLog();
+
+      const afterRun = jest.fn();
+      auto.hooks.afterRun.tap("test", afterRun);
+      await auto.loadConfig();
+
+      await expect(auto.teardown()).resolves.toBeUndefined();
     });
   });
 });
