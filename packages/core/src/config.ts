@@ -105,8 +105,8 @@ export default class Config {
 
     if (rawConfig.extends) {
       rawConfig = merge(
-        rawConfig,
-        await this.loadExtendConfig(rawConfig.extends)
+        await this.loadExtendConfig(rawConfig.extends),
+        rawConfig
       );
     }
 

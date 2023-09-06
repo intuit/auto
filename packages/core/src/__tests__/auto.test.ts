@@ -181,11 +181,11 @@ describe("Auto", () => {
     process.env.GH_TOKEN = "XXXX";
   });
 
-  test("should extend config", async () => {
-    search.mockReturnValueOnce({ config: { ...defaults, extends: "@artsy" } });
+  test("should extend config and keep overrides", async () => {
+    search.mockReturnValueOnce({ config: { ...defaults, extends: "@artsy", name: 'extended' } });
     importMock.mockImplementation((path) =>
       path === "@artsy/auto-config/package.json"
-        ? { auto: { onlyPublishWithReleaseLabel: true } }
+        ? { auto: { onlyPublishWithReleaseLabel: true }, name: '@artsy' }
         : undefined
     );
 
@@ -204,14 +204,14 @@ describe("Auto", () => {
     expect(process.exit).toHaveBeenCalled();
   });
 
-  test("should extend local config", async () => {
+  test("should extend local config and keep overrides", async () => {
     const orig = process.cwd;
     process.cwd = () => "/foo/";
     search.mockReturnValueOnce({
-      config: { ...defaults, extends: "./fake.json" },
+      config: { ...defaults, extends: "./fake.json", name: 'extended' },
     });
     importMock.mockImplementation((path) =>
-      path === "/foo/fake.json" ? { noVersionPrefix: true } : undefined
+      path === "/foo/fake.json" ? { noVersionPrefix: true, name: 'fake' } : undefined
     );
 
     const auto = new Auto();
