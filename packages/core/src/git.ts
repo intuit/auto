@@ -855,7 +855,8 @@ export default class Git {
     releaseNotes: string,
     tag: string,
     prerelease = false,
-    fallbackCommit?: string
+    fallbackCommit?: string,
+    latestRelease = false
   ) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
@@ -867,6 +868,7 @@ export default class Git {
       name: tag,
       body: releaseNotes,
       prerelease,
+      make_latest: latestRelease,
     });
 
     this.logger.veryVerbose.info("Got response from createRelease\n", result);
