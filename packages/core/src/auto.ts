@@ -1005,7 +1005,7 @@ export default class Auto {
       // adding this command without resorting to bash if/else statements.
       if (
         env.isCi &&
-        (env.branch === this.baseBranch || this.inPrereleaseBranch())
+        (env.branch === this.baseBranch || this.inPrereleaseBranch() || this.inOldVersionBranch())
       ) {
         process.exit(0);
       }
