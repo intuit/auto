@@ -13,6 +13,8 @@ jest.mock(
             exec(...args)
 );
 
+jest.mock("@auto-it/core/dist/utils/get-current-branch");
+
 jest.mock("@auto-it/core/dist/git");
 const mockAutoGit = Git as unknown as jest.SpyInstance;
 
@@ -57,6 +59,7 @@ describe("Protected-Branch Plugin", () => {
 
   beforeEach(() => {
     exec.mockReset();
+    (Auto.getCurrentBranch as jest.Mock).mockReset();
     mockGetSha.mockReset().mockResolvedValueOnce("sha");
     mockCreateCheck.mockReset();
     mockCreatePr.mockReset().mockResolvedValueOnce({ data: { number: 42 } });
@@ -95,7 +98,7 @@ describe("Protected-Branch Plugin", () => {
       const { hooks } = setupProtectedBranchPlugin(checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["protected-branch", {}]],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
       expect(checkEnv).toHaveBeenCalledWith("protected-branch", "PROTECTED_BRANCH_REVIEWER_TOKEN");
     });
@@ -117,6 +120,10 @@ describe("Protected-Branch Plugin", () => {
       owner: "TheOwner",
       repo: "my-repo",
     };
+
+    beforeEach(() => {
+      (Auto.getCurrentBranch as jest.Mock).mockReturnValueOnce('current-branch-name');
+    });
 
     function doMockPrApproval() {
       mockAutoGit.mockReturnValueOnce({
@@ -150,7 +157,7 @@ describe("Protected-Branch Plugin", () => {
 
       expect(mockCreatePr).toHaveBeenCalledWith({
         ...commonGitArgs,
-        base: "main",
+        base: "current-branch-name",
         head: "automatic-release-sha",
         title: "Automatic release",
       });
@@ -173,6 +180,7 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
+      expect( (Auto.getCurrentBranch as jest.Mock)).toBeCalledTimes(1);
       expect(exec).not.toHaveBeenCalled();
       expect(mockGetSha).not.toHaveBeenCalled();
       expect(mockCreateCheck).not.toHaveBeenCalled();
@@ -187,6 +195,7 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
+      expect( (Auto.getCurrentBranch as jest.Mock)).toBeCalledTimes(1);
       expect(exec).not.toHaveBeenCalled();
       expect(mockGetSha).not.toHaveBeenCalled();
       expect(mockCreateCheck).not.toHaveBeenCalled();
@@ -200,6 +209,7 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
+      expect( (Auto.getCurrentBranch as jest.Mock)).toBeCalledTimes(1);
       expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections([]);
@@ -216,6 +226,7 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
+      expect( (Auto.getCurrentBranch as jest.Mock)).toBeCalledTimes(1);
       expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections(ciChecks);
@@ -232,6 +243,7 @@ describe("Protected-Branch Plugin", () => {
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
 
+      expect( (Auto.getCurrentBranch as jest.Mock)).toBeCalledTimes(1);
       expect(exec).toHaveBeenCalledTimes(1);
       expectCreateRemoteBranch();
       expectHandleBranchProtections([]);

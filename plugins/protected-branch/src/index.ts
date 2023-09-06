@@ -1,4 +1,4 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import { Auto, getCurrentBranch, IPlugin, validatePluginConfiguration } from '@auto-it/core';
 import * as t from "io-ts";
 import { GitOperator } from "./GitOperator";
 
@@ -60,7 +60,9 @@ export default class ProtectedBranchPlugin implements IPlugin {
         stage: -1,
       },
       async () => {
-        if (!auto.git || !this.options.reviewerToken) {
+        const currentBranch = getCurrentBranch();
+
+        if (!auto.git || !this.options.reviewerToken || !currentBranch) {
           return;
         }
 
@@ -88,7 +90,7 @@ export default class ProtectedBranchPlugin implements IPlugin {
         const prNumber = await gitOperator.createPr(
           "Automatic release",
           headBranch,
-          auto.baseBranch
+          currentBranch
         );
 
         // As reviewer, allowed in : `Restrict who can push to matching branches`
