@@ -1,3 +1,21 @@
+# v11.0.2 (Wed Sep 06 2023)
+
+#### 🐛 Bug Fix
+
+- Fix release creation on oldVersions [#2391](https://github.com/intuit/auto/pull/2391) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: open release PR on current branch instead of base [#2389](https://github.com/intuit/auto/pull/2389) ([@jBouyoud](https://github.com/jBouyoud))
+- fix(core): fix configuration extends overrides order [#2387](https://github.com/intuit/auto/pull/2387) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: allow pr check on old version branches [#2388](https://github.com/intuit/auto/pull/2388) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: create a non latest release when working on oldVersions ([@jBouyoud](https://github.com/jBouyoud))
+- fix: allow pr check on old version branches ([@jBouyoud](https://github.com/jBouyoud))
+- fix(core): fix configuration extends overrides order ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes

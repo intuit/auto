@@ -1,3 +1,17 @@
+# v11.0.2 (Wed Sep 06 2023)
+
+#### 🐛 Bug Fix
+
+- Fix release creation on oldVersions [#2391](https://github.com/intuit/auto/pull/2391) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: open release PR on current branch instead of base [#2389](https://github.com/intuit/auto/pull/2389) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: open release PR on current branch instead of base ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v11.0.1 (Thu Aug 10 2023)
 
 :tada: This release contains work from a new contributor! :tada:
