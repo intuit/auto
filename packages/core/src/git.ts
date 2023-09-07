@@ -868,7 +868,7 @@ export default class Git {
       name: tag,
       body: releaseNotes,
       prerelease,
-      make_latest: latestRelease,
+      make_latest: latestRelease ? "true" : "false",
     });
 
     this.logger.veryVerbose.info("Got response from createRelease\n", result);
