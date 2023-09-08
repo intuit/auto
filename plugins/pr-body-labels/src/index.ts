@@ -35,6 +35,9 @@ export default class PrBodyLabelsPlugin implements IPlugin {
 
       await Promise.all(
         auto.labels.map(async (label) => {
+          const hasLabelOnPr = pr.labels
+            .map((l) => l.name)
+            .includes(label.name);
           const hasUnchecked = pr.body?.includes(`- [ ] \`${label.name}\``);
           const hasCheckedLabel =
             pr.body?.includes(`- [x] \`${label.name}\``) ||
@@ -47,7 +50,7 @@ export default class PrBodyLabelsPlugin implements IPlugin {
             await auto.git?.addLabelToPr(pr.number, label.name);
           }
 
-          if (hasUnchecked && this.options.removeStaleLabels) {
+          if (hasUnchecked && this.options.removeStaleLabels && hasLabelOnPr) {
             await auto.git?.removeLabel(pr.number, label.name);
           }
         })
