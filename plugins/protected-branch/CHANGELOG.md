@@ -1,3 +1,20 @@
+# v11.0.3 (Sun Sep 10 2023)
+
+#### 🐛 Bug Fix
+
+- Bump version to: v11.0.2 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Fix release creation on oldVersions [#2391](https://github.com/intuit/auto/pull/2391) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: open release PR on current branch instead of base [#2389](https://github.com/intuit/auto/pull/2389) ([@jBouyoud](https://github.com/jBouyoud))
+- fix: open release PR on current branch instead of base ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 2
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
 # v11.0.2 (Wed Sep 06 2023)
 
 #### 🐛 Bug Fix

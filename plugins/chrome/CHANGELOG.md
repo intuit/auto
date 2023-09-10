@@ -1,3 +1,15 @@
+# v11.0.3 (Sun Sep 10 2023)
+
+#### 🐛 Bug Fix
+
+- Bump version to: v11.0.2 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v10.46.0 (Wed Apr 26 2023)
 
 ### Release Notes
