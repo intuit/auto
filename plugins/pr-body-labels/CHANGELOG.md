@@ -1,3 +1,16 @@
+# v11.0.4 (Sun Sep 10 2023)
+
+#### 🐛 Bug Fix
+
+- only remove labels if they exist on the PR [#2396](https://github.com/intuit/auto/pull/2396) ([@hborawski](https://github.com/hborawski))
+- only remove labels if they exist on the PR ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 1
+
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+
+---
+
 # v11.0.3 (Sun Sep 10 2023)
 
 #### 🐛 Bug Fix
