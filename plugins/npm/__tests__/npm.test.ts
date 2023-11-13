@@ -1684,12 +1684,16 @@ describe("makeRelease", () => {
     expect(publish).toHaveBeenCalledWith(
       "update package 1",
       "@packages/a",
-      false
+      false,
+      undefined,
+      true
     );
     expect(publish).toHaveBeenCalledWith(
       "update package 2",
       "@packages/b",
-      false
+      false,
+      undefined,
+      true
     );
   });
 });
