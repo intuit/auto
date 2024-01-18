@@ -74,14 +74,6 @@ import { execSync } from "child_process";
 import isBinary from "./utils/is-binary";
 import { gitReset } from "./utils/git-reset";
 
-try {
-  if (require.resolve("typescript")) {
-    require("ts-node/register/transpile-only");
-  }
-} catch (error) {
-  // User doesn't have TS installed, cannot write TS plugins
-}
-
 const proxyUrl = process.env.https_proxy || process.env.http_proxy;
 const env = envCi();
 
@@ -436,7 +428,22 @@ export default class Auto {
   private versionBump?: SEMVER;
 
   /** Initialize auto and it's environment */
-  constructor(options: ApiOptions = {}) {
+  constructor(
+    options: ApiOptions & {
+      /**
+       * Non-cli option to disable ts-node in contexts where a different ts loader is used.
+       */
+      disableTsNode?: boolean;
+    } = {}
+  ) {
+    try {
+      if (require.resolve("typescript") && !options.disableTsNode) {
+        require("ts-node/register/transpile-only");
+      }
+    } catch (error) {
+      // User doesn't have TS installed, cannot write TS plugins
+    }
+
     this.options = options;
     this.baseBranch =
       options.baseBranch || (hasBranch("main") && "main") || "master";
@@ -580,7 +587,7 @@ export default class Auto {
           options.newVersion,
           options.isPrerelease,
           options.to,
-          options.isPrerelease ? false: !this.inOldVersionBranch(),
+          options.isPrerelease ? false : !this.inOldVersionBranch()
         );
 
         this.logger.log.info(release.data.html_url);
@@ -1006,7 +1013,9 @@ export default class Auto {
       // adding this command without resorting to bash if/else statements.
       if (
         env.isCi &&
-        (env.branch === this.baseBranch || this.inPrereleaseBranch() || this.inOldVersionBranch())
+        (env.branch === this.baseBranch ||
+          this.inPrereleaseBranch() ||
+          this.inOldVersionBranch())
       ) {
         process.exit(0);
       }
