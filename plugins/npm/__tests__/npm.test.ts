@@ -1650,6 +1650,7 @@ describe("makeRelease", () => {
       logger: dummyLog(),
       prefixRelease: (str) => str,
       git: { publish } as any,
+      inOldVersionBranch: (bool) => bool,
       release: {
         makeChangelog: () => ({
           generateReleaseNotes: (commits: IExtendedCommit[]) =>
@@ -1661,6 +1662,7 @@ describe("makeRelease", () => {
     await hooks.makeRelease.promise({
       newVersion: "0.1.2",
       from: "",
+      to: "",
       isPrerelease: false,
       fullReleaseNotes: "",
       commits: [
@@ -1684,12 +1686,16 @@ describe("makeRelease", () => {
     expect(publish).toHaveBeenCalledWith(
       "update package 1",
       "@packages/a",
-      false
+      false,
+      undefined,
+      true
     );
     expect(publish).toHaveBeenCalledWith(
       "update package 2",
       "@packages/b",
-      false
+      false,
+      undefined,
+      true
     );
   });
 });
