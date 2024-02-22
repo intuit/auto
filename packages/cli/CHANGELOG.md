@@ -1,3 +1,15 @@
+# v11.0.6 (Thu Feb 22 2024)
+
+#### 🐛 Bug Fix
+
+- NPM: Fix lerna version erroring with unknown registry arg [#2421](https://github.com/intuit/auto/pull/2421) ([@jackw](https://github.com/jackw))
+
+#### Authors: 1
+
+- Jack Westbrook ([@jackw](https://github.com/jackw))
+
+---
+
 # v11.0.5 (Thu Feb 22 2024)
 
 #### 🔩 Dependency Updates
