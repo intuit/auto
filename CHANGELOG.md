@@ -1,3 +1,31 @@
+# v11.0.5 (Thu Feb 22 2024)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: Niccolò Olivieri Achille ([@NiccoloOlivieriAchille](https://github.com/NiccoloOlivieriAchille))
+
+:heart: Niccolò Olivieri Achille ([@Zweer](https://github.com/Zweer))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fixing git `2.43.0` max number issue #2425 [#2426](https://github.com/intuit/auto/pull/2426) ([@NiccoloOlivieriAchille](https://github.com/NiccoloOlivieriAchille))
+
+#### 🔩 Dependency Updates
+
+- `@auto-it/sbt`
+  - Bump strip-ansi from 6.0.0 to 7.0.1 [#2307](https://github.com/intuit/auto/pull/2307) ([@dependabot[bot]](https://github.com/dependabot[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 3
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Niccolò Olivieri Achille ([@NiccoloOlivieriAchille](https://github.com/NiccoloOlivieriAchille))
+
+---
+
 # v11.0.4 (Sun Sep 10 2023)
 
 #### 🐛 Bug Fix

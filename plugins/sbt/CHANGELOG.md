@@ -1,3 +1,20 @@
+# v11.0.5 (Thu Feb 22 2024)
+
+#### 🐛 Bug Fix
+
+- Bump strip-ansi from 6.0.0 to 7.0.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### 🔩 Dependency Updates
+
+- Bump strip-ansi from 6.0.0 to 7.0.1 [#2307](https://github.com/intuit/auto/pull/2307) ([@dependabot[bot]](https://github.com/dependabot[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.0.3 (Sun Sep 10 2023)
 
 #### 🐛 Bug Fix
