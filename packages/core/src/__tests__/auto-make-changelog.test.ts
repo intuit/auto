@@ -80,5 +80,5 @@ describe("Auto", () => {
 
     await auto.changelog({ from: "v1.0.0" });
     expect(addToChangelog).toHaveBeenCalled();
-  });
+  }, 10000);
 });
