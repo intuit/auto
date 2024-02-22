@@ -827,6 +827,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "jackw",
+      "name": "Jack Westbrook",
+      "avatar_url": "https://avatars.githubusercontent.com/u/73201?v=4",
+      "profile": "https://www.heywesty.com/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

@@ -316,6 +316,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   <tr>
     <td align="center"><a href="https://github.com/Satishpokala124"><img src="https://avatars.githubusercontent.com/u/49762924?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Satish Pokala</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Satishpokala124" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/Zweer"><img src="https://avatars.githubusercontent.com/u/825906?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Niccolò Olivieri Achille</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=Zweer" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=Zweer" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.heywesty.com/"><img src="https://avatars.githubusercontent.com/u/73201?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jack Westbrook</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jackw" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=jackw" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jackw" title="Code">💻</a></td>
   </tr>
 </table>
 
