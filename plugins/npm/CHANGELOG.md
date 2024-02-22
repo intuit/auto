@@ -1,3 +1,21 @@
+# v11.0.7 (Thu Feb 22 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Atte Huhtakangas ([@jazmon](https://github.com/jazmon)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(npm): mark releases as latest with lerna [#2414](https://github.com/intuit/auto/pull/2414) ([@jazmon](https://github.com/jazmon))
+- fix(npm): don't mark release as latest if in old version branch ([@jazmon](https://github.com/jazmon))
+- fix(npm): mark releases as latest with lerna ([@jazmon](https://github.com/jazmon))
+
+#### Authors: 1
+
+- Atte Huhtakangas ([@jazmon](https://github.com/jazmon))
+
+---
+
 # v11.0.6 (Thu Feb 22 2024)
 
 #### 🐛 Bug Fix

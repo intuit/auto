@@ -1,3 +1,16 @@
+# v11.0.7 (Thu Feb 22 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix(npm): mark releases as latest with lerna [#2414](https://github.com/intuit/auto/pull/2414) ([@jazmon](https://github.com/jazmon))
+
+#### Authors: 1
+
+- Atte Huhtakangas ([@jazmon](https://github.com/jazmon))
+
+---
+
 # v11.0.6 (Thu Feb 22 2024)
 
 #### 🐛 Bug Fix
