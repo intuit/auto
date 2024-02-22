@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/docker",
-  "version": "11.0.4",
+  "version": "11.0.5",
   "main": "dist/index.js",
   "description": "Facilitates publishing built images to a Docker Registry.",
   "license": "MIT",
