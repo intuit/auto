@@ -817,6 +817,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Zweer",
+      "name": "Niccolò Olivieri Achille",
+      "avatar_url": "https://avatars.githubusercontent.com/u/825906?v=4",
+      "profile": "https://github.com/Zweer",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
