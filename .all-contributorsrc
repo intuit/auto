@@ -838,6 +838,17 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "jazmon",
+      "name": "Atte Huhtakangas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3680110?v=4",
+      "profile": "https://github.com/jazmon",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
