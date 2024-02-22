@@ -1579,8 +1579,17 @@ export default class NPMPlugin implements IPlugin {
 
             auto.logger.log.info(`Using release notes:\n${releaseNotes}`);
 
+            const isLatestRelease =
+              !options.isPrerelease || !auto.inOldVersionBranch();
+
             // 2. make a release for just that package
-            return auto.git?.publish(releaseNotes, tag, options.isPrerelease, undefined, !options.isPrerelease);
+            return auto.git?.publish(
+              releaseNotes,
+              tag,
+              options.isPrerelease,
+              undefined,
+              isLatestRelease
+            );
           })
         );
 
@@ -1604,8 +1613,10 @@ export default class NPMPlugin implements IPlugin {
       await execPromise("npm", ["root"]);
     } catch (error) {
       if (
-        // eslint-disable-next-line no-template-curly-in-string
-        error.message?.includes("Failed to replace env in config: ${NPM_TOKEN}")
+        (error as Error).message?.includes(
+          // eslint-disable-next-line no-template-curly-in-string
+          "Failed to replace env in config: ${NPM_TOKEN}"
+        )
       ) {
         auto.logger.log.error(endent`
           Uh oh! It looks like you don\'t have a NPM_TOKEN available in your environment.

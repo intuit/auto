@@ -50,8 +50,16 @@ const monorepoPackagesWithPrereleaseResult = [
   { path: "packages/c", name: "@packages/c", package: { version: "0.1.2" } },
   { path: "packages/d", name: "@packages/d", package: { version: "0.1.1" } },
   // This can happen if a new module is published with a breaking version
-  { path: "packages/e", name: "@packages/e", package: { version: "1.0.0-next.0" } },
-  { path: "packages/f", name: "@packages/f", package: { version: "1.0.0-next.0" } },
+  {
+    path: "packages/e",
+    name: "@packages/e",
+    package: { version: "1.0.0-next.0" },
+  },
+  {
+    path: "packages/f",
+    name: "@packages/f",
+    package: { version: "1.0.0-next.0" },
+  },
 ];
 
 const packageTemplate = ({
@@ -406,7 +414,7 @@ describe("getPreviousVersion", () => {
   });
 
   test("should ignore greatest published monorepo package in maintenance mode", async () => {
-    execPromise.mockClear()
+    execPromise.mockClear();
     mockFs({
       "lerna.json": `
         {
@@ -424,11 +432,10 @@ describe("getPreviousVersion", () => {
     // published version of test package
     execPromise.mockReturnValueOnce("2.1.0");
 
-    jest.spyOn(Auto, 'getCurrentBranch').mockReturnValueOnce('major-2')
-
+    jest.spyOn(Auto, "getCurrentBranch").mockReturnValueOnce("major-2");
 
     plugin.apply({
-      config: { prereleaseBranches: ["next"], versionBranches: 'major-' },
+      config: { prereleaseBranches: ["next"], versionBranches: "major-" },
       hooks,
       remote: "origin",
       baseBranch: "main",
@@ -436,9 +443,8 @@ describe("getPreviousVersion", () => {
       prefixRelease: (str) => str,
     } as Auto.Auto);
 
-
     expect(await hooks.getPreviousVersion.promise()).toBe("1.5.0");
-    expect(execPromise).not.toHaveBeenCalled()
+    expect(execPromise).not.toHaveBeenCalled();
   });
 });
 
@@ -681,7 +687,7 @@ describe("publish", () => {
       "--yes",
       "from-package",
       "--exact",
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -704,7 +710,7 @@ describe("publish", () => {
       "--yes",
       "from-package",
       false,
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -730,7 +736,7 @@ describe("publish", () => {
       false,
       "--legacy-auth",
       "abcd",
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -755,7 +761,7 @@ describe("publish", () => {
       false,
       "--contents",
       "dist/publish-folder",
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -1258,7 +1264,7 @@ describe("canary", () => {
       "--no-git-reset",
       "--no-git-tag-version",
       "--exact",
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -1429,7 +1435,7 @@ describe("canary", () => {
       "--no-git-reset",
       "--no-git-tag-version",
       "--exact",
-      "--no-verify-access"
+      "--no-verify-access",
     ]);
   });
 
@@ -1650,6 +1656,7 @@ describe("makeRelease", () => {
       logger: dummyLog(),
       prefixRelease: (str) => str,
       git: { publish } as any,
+      inOldVersionBranch: (bool: boolean) => bool,
       release: {
         makeChangelog: () => ({
           generateReleaseNotes: (commits: IExtendedCommit[]) =>
@@ -1661,6 +1668,7 @@ describe("makeRelease", () => {
     await hooks.makeRelease.promise({
       newVersion: "0.1.2",
       from: "",
+      to: "",
       isPrerelease: false,
       fullReleaseNotes: "",
       commits: [
