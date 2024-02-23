@@ -531,6 +531,31 @@ describe("Release", () => {
       expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
     });
 
+    test("creates changelog with named tag", async () => {
+      const gh = new Release(git, {
+        noVersionPrefix: false,
+        prereleaseBranches: ["next"],
+        labels: defaultLabels,
+        baseBranch: "main",
+      });
+      await gh.addToChangelog("# My new Notes", "my-tag-name-v1.0.0", "v1.0.0");
+
+      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+    });
+
+    test("creates changelog with named tag and version prefix", async () => {
+      const gh = new Release(git, {
+        noVersionPrefix: true,
+        prereleaseBranches: ["next"],
+        labels: defaultLabels,
+        baseBranch: "main",
+      });
+      await gh.addToChangelog("# My new Notes", "my-tag-name-1.0.0", "1.0.0");
+
+      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+    });
+
+
     test("prepends to old changelog", async () => {
       const gh = new Release(git, config);
 
