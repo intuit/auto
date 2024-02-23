@@ -1,3 +1,19 @@
+# v11.1.0 (Fri Feb 23 2024)
+
+#### 🚀 Enhancement
+
+- [Feature Request] Allow opting out of ts-node [#2420](https://github.com/intuit/auto/pull/2420) ([@ds300](https://github.com/ds300))
+
+#### 🐛 Bug Fix
+
+- allow opting out of ts-node ([@ds300](https://github.com/ds300))
+
+#### Authors: 1
+
+- David Sheldrick ([@ds300](https://github.com/ds300))
+
+---
+
 # v11.0.5 (Thu Feb 22 2024)
 
 :tada: This release contains work from new contributors! :tada:
