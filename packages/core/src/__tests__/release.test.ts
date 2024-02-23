@@ -540,7 +540,7 @@ describe("Release", () => {
       });
       await gh.addToChangelog("# My new Notes", "my-tag-name-v1.0.0", "v1.0.0");
 
-      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+      expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
     });
 
     test("creates changelog with named tag", async () => {
