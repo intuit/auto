@@ -423,7 +423,9 @@ export default class Release {
   /** Given a tag get the next incremented version */
   async calcNextVersion(lastTag: string) {
     const bump = await this.getSemverBump(lastTag);
-    return inc(lastTag, bump as ReleaseType);
+    const matches = lastTag.match(/(\d+\.\d+\.\d+)/)
+    const lastVersion = matches ? matches[0] : lastTag
+    return inc(lastVersion, bump as ReleaseType);
   }
 
   /** Create the class that will parse the log for PR info */
