@@ -817,6 +817,38 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Zweer",
+      "name": "Niccolò Olivieri Achille",
+      "avatar_url": "https://avatars.githubusercontent.com/u/825906?v=4",
+      "profile": "https://github.com/Zweer",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "jackw",
+      "name": "Jack Westbrook",
+      "avatar_url": "https://avatars.githubusercontent.com/u/73201?v=4",
+      "profile": "https://www.heywesty.com/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "jazmon",
+      "name": "Atte Huhtakangas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3680110?v=4",
+      "profile": "https://github.com/jazmon",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

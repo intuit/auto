@@ -1,3 +1,47 @@
+# v11.0.7 (Thu Feb 22 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Atte Huhtakangas ([@jazmon](https://github.com/jazmon)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix(npm): mark releases as latest with lerna [#2414](https://github.com/intuit/auto/pull/2414) ([@jazmon](https://github.com/jazmon))
+- fix(npm): don't mark release as latest if in old version branch ([@jazmon](https://github.com/jazmon))
+- fix(npm): mark releases as latest with lerna ([@jazmon](https://github.com/jazmon))
+
+#### Authors: 1
+
+- Atte Huhtakangas ([@jazmon](https://github.com/jazmon))
+
+---
+
+# v11.0.6 (Thu Feb 22 2024)
+
+#### 🐛 Bug Fix
+
+- NPM: Fix lerna version erroring with unknown registry arg [#2421](https://github.com/intuit/auto/pull/2421) ([@jackw](https://github.com/jackw))
+- fix(npm): prevent lerna version erroring with unknown registry arg ([@jackw](https://github.com/jackw))
+
+#### Authors: 1
+
+- Jack Westbrook ([@jackw](https://github.com/jackw))
+
+---
+
+# v11.0.5 (Thu Feb 22 2024)
+
+#### 🔩 Dependency Updates
+
+- Bump strip-ansi from 6.0.0 to 7.0.1 [#2307](https://github.com/intuit/auto/pull/2307) ([@dependabot[bot]](https://github.com/dependabot[bot]) [@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.0.3 (Sun Sep 10 2023)
 
 #### 🐛 Bug Fix
