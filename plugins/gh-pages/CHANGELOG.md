@@ -1,3 +1,19 @@
+# v11.1.1 (Sat Feb 24 2024)
+
+#### 🐛 Bug Fix
+
+- Update index.ts ([@eltociear](https://github.com/eltociear))
+
+#### 📝 Documentation
+
+- Update index.ts [#2437](https://github.com/intuit/auto/pull/2437) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 1
+
+- Ikko Eltociear Ashimine ([@eltociear](https://github.com/eltociear))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

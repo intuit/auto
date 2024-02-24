@@ -1,3 +1,28 @@
+# v11.1.1 (Sat Feb 24 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Patrick Ruhkopf ([@restfulhead](https://github.com/restfulhead)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: next version calculation for tags that contain a name/prefix [#2436](https://github.com/intuit/auto/pull/2436) ([@restfulhead](https://github.com/restfulhead))
+- test: improve assertion ([@restfulhead](https://github.com/restfulhead))
+- fix: test names ([@restfulhead](https://github.com/restfulhead))
+- test: for changelog based on tags with names ([@restfulhead](https://github.com/restfulhead))
+- fix: make this work for tags that contain a name/prefix before the version no ([@restfulhead](https://github.com/restfulhead))
+
+#### 📝 Documentation
+
+- Update index.ts [#2437](https://github.com/intuit/auto/pull/2437) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 2
+
+- Ikko Eltociear Ashimine ([@eltociear](https://github.com/eltociear))
+- Patrick Ruhkopf ([@restfulhead](https://github.com/restfulhead))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

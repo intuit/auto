@@ -1,3 +1,22 @@
+# v11.1.1 (Sat Feb 24 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix: next version calculation for tags that contain a name/prefix [#2436](https://github.com/intuit/auto/pull/2436) ([@restfulhead](https://github.com/restfulhead))
+
+#### 📝 Documentation
+
+- `@auto-it/gh-pages`
+  - Update index.ts [#2437](https://github.com/intuit/auto/pull/2437) ([@eltociear](https://github.com/eltociear))
+
+#### Authors: 2
+
+- Ikko Eltociear Ashimine ([@eltociear](https://github.com/eltociear))
+- Patrick Ruhkopf ([@restfulhead](https://github.com/restfulhead))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement
