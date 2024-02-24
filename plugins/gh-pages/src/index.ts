@@ -15,7 +15,7 @@ const required = t.interface({
 });
 
 const optional = t.partial({
-  /** A command to build the documenation website */
+  /** A command to build the documentation website */
   buildCommand: t.string,
   /** The branch to push to */
   branch: t.string,
