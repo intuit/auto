@@ -850,6 +850,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "restfulhead",
+      "name": "Patrick Ruhkopf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/558375?v=4",
+      "profile": "http://ruhkopf.name/",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
