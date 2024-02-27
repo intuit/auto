@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "file:../../packages/core",
     "fp-ts": "^2.5.3",
     "https-proxy-agent": "^5.0.0",
     "io-ts": "^2.1.2",

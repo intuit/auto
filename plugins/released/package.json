@@ -38,8 +38,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/bot-list": "file:../../packages/bot-list",
+    "@auto-it/core": "file:../../packages/core",
     "deepmerge": "^4.0.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
