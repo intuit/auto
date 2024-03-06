@@ -101,6 +101,8 @@ describe("remote parsing", () => {
   test("add token to url if html doesn't auth", async () => {
     const html_url = "https://my.repo";
     const auto = new Auto(defaults);
+    const token = process.env.GITHUB_TOKEN;
+    process.env.GITHUB_TOKEN = "";
     process.env.GH_TOKEN = "XXXX";
     auto.logger = dummyLog();
 
@@ -112,5 +114,6 @@ describe("remote parsing", () => {
 
     // @ts-ignore
     expect(await auto.getRemote()).toBe("https://XXXX@my.repo/");
+    process.env.GITHUB_TOKEN = token;
   });
 });

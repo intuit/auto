@@ -17,6 +17,7 @@ const addContributorMock = jest.fn();
 const envMock = jest.fn();
 const gitShow = jest.fn();
 const writeMock = jest.fn();
+const existsSync = jest.fn().mockReturnValue(true);
 const getLernaPackages = jest.fn();
 
 envMock.mockReturnValue({});
@@ -51,6 +52,7 @@ const mockRead = (result: string) =>
     .mockReturnValueOnce(result);
 
 jest.spyOn(fs, "writeFileSync").mockImplementation(writeMock);
+jest.spyOn(fs, "existsSync").mockImplementation(existsSync);
 
 describe("All Contributors Plugin", () => {
   afterEach(() => {

@@ -15,7 +15,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [x] `unknown-label`" },
+      pr: { body: "- [x] `unknown-label`", labels: [{ name: "patch" }] },
     } as any);
     expect(addLabelToPr).not.toHaveBeenCalled();
   });
@@ -32,7 +32,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [x] `patch`", number: 1 },
+      pr: { body: "- [x] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
   });
@@ -49,7 +49,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [X] `patch`", number: 1 },
+      pr: { body: "- [X] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(addLabelToPr).toHaveBeenCalledWith(1, "patch");
   });
@@ -66,7 +66,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [ ] `patch`", number: 1 },
+      pr: { body: "- [ ] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(removeLabel).toHaveBeenCalledWith(1, "patch");
   });
@@ -83,7 +83,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [ ] `patch`", number: 1 },
+      pr: { body: "- [ ] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(removeLabel).not.toHaveBeenCalledWith(1, "patch");
   });
@@ -100,7 +100,7 @@ describe("Pr-Body-Labels Plugin", () => {
     } as any);
 
     await hooks.prCheck.promise({
-      pr: { body: "- [x] `patch`", number: 1 },
+      pr: { body: "- [x] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(addLabelToPr).not.toHaveBeenCalled();
   });

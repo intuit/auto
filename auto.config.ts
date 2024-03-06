@@ -22,16 +22,17 @@ const brewOptions: IBrewPluginOptions = {
   name: "auto",
 };
 
-// const ghPagesOptions: IGhPagesPluginOptions = {
-//   buildCommand: "yarn docs:build",
-//   dir: "docs/out",
-// };
-//
-
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
     plugins: [
+      [
+        "protected-branch",
+        {
+          releaseTemporaryBranchPrefix: "protected-release-",
+          requiredStatusChecks: ["WIP", "build", "test", "lint"],
+        },
+      ],
       [
         "upload-assets",
         [
@@ -47,7 +48,6 @@ export default function rc(): AutoRc {
       "./scripts/auto-update-curl-version.js",
       ["all-contributors", allContributorsOptions],
       ["brew", brewOptions],
-      // ["gh-pages", ghPagesOptions],
     ],
     labels: [
       {

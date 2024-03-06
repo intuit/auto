@@ -97,6 +97,14 @@ Some less chatty options are:
         // Tag a custom group, like the channel admin
         "atTarget": "channel-admin"
       }
+    ],
+    [
+      "slack",
+      {
+        "url": "https://url-to-your-slack-hook.com",
+        // Disable tagging when posting a message
+        "atTarget": false
+      }
     ]
   ]
 }

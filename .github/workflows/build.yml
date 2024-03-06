@@ -1,0 +1,104 @@
+name: build
+
+on:
+  push:
+    branches: [main, next]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Enabled permissions on GITHUB_TOKEN
+permissions:
+  # To be able to push to the repo
+  contents: write
+  # To update the pr description with canary info
+  pull-requests: write
+  # For pr-check to create a status
+  statuses: write
+  # Needed to create PR statuses/checks
+  checks: write
+  # To post comments on PRs
+  issues: write
+
+jobs:
+  # Run install in one step so deps can be cached for other steps
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-deps
+
+  build:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
+      - uses: ./.github/actions/install-deps
+      - uses: ./.github/actions/build-cache
+      - run: yarn build && yarn lerna run bundle --scope=auto
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.CANARY_NPM_TOKEN }}
+
+  pr-check:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-deps
+      - uses: ./.github/actions/build-cache
+      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+        id: PR
+      - run: yarn auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+        env:
+          PR: ${{ steps.PR.outputs.number }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-deps
+      - uses: ./.github/actions/build-cache
+      - run: yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install-deps
+      - uses: ./.github/actions/build-cache
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
+      - run: yarn test:coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send CodeCov Results
+        run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
+
+  release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+        id: PR
+        with:
+          filterOutClosed: true
+          sha: ${{ github.event.pull_request.head.sha }}
+      - uses: ./.github/actions/install-deps
+      - uses: ./.github/actions/build-cache
+      - name: Prepare repository
+        run: git fetch --unshallow --tags
+      - name: Create Release
+        run: yarn auto shipit -vv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ steps.PR.outputs.number && secrets.CANARY_NPM_TOKEN || secrets.NPM_TOKEN }}
+          PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
+          PR: ${{ steps.PR.outputs.number }}

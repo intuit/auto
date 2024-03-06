@@ -388,6 +388,32 @@ describe("postToSlack", () => {
     expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
   });
 
+  test("should not call slack api with custom atTarget if false", async () => {
+    const plugin = new SlackPlugin({
+      url: "https://custom-slack-url",
+      atTarget: false,
+    });
+    const hooks = makeHooks();
+    process.env.SLACK_TOKEN = "MY_TOKEN";
+    plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
+
+    await hooks.afterRelease.promise({
+      newVersion: "1.0.0",
+      lastRelease: "0.1.0",
+      commits: [makeCommitFromMsg("a patch")],
+      releaseNotes: "# My Notes\n- PR [some link](google.com)",
+      // @ts-ignore
+      response: mockResponse,
+    });
+
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      "https://custom-slack-url?token=MY_TOKEN"
+    );
+    expect(fetchSpy.mock.calls[0][1].body.includes("@")).toBe(false);
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchSnapshot();
+  });
+
   test("should call slack api in env var", async () => {
     process.env.SLACK_WEBHOOK_URL = "https://foo.bar";
     const plugin = new SlackPlugin();

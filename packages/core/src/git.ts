@@ -367,9 +367,10 @@ export default class Git {
         ? await execPromise("git", ["rev-parse", start])
         : "";
 
+      const maxNumber = 2147483647;
       const log = await gitlog({
         repo: process.cwd(),
-        number: Number.MAX_SAFE_INTEGER,
+        number: maxNumber,
         fields: ["hash", "authorName", "authorEmail", "rawBody"],
         // If start === firstCommit then we want to include that commit in the changelog
         // Otherwise it was that last release and should not be included in the release.
@@ -855,7 +856,8 @@ export default class Git {
     releaseNotes: string,
     tag: string,
     prerelease = false,
-    fallbackCommit?: string
+    fallbackCommit?: string,
+    latestRelease = false
   ) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
@@ -867,6 +869,7 @@ export default class Git {
       name: tag,
       body: releaseNotes,
       prerelease,
+      make_latest: `${latestRelease}`,
     });
 
     this.logger.veryVerbose.info("Got response from createRelease\n", result);

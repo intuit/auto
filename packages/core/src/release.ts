@@ -263,10 +263,12 @@ export default class Release {
         : `v${version}`;
     });
 
-    this.logger.verbose.info("Adding new changes to changelog.");
+    const fileName = "CHANGELOG.md";
+
+    this.logger.verbose.info(`Adding new changes to ${fileName}.`);
     const title = await this.hooks.createChangelogTitle.promise();
 
-    await this.updateChangelogFile(title || "", releaseNotes, "CHANGELOG.md");
+    await this.updateChangelogFile(title || "", releaseNotes, fileName);
   }
 
   /**
@@ -421,7 +423,9 @@ export default class Release {
   /** Given a tag get the next incremented version */
   async calcNextVersion(lastTag: string) {
     const bump = await this.getSemverBump(lastTag);
-    return inc(lastTag, bump as ReleaseType);
+    const matches = lastTag.match(/(\d+\.\d+\.\d+)/)
+    const lastVersion = matches ? matches[0] : lastTag
+    return inc(lastVersion, bump as ReleaseType);
   }
 
   /** Create the class that will parse the log for PR info */

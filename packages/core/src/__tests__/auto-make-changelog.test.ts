@@ -39,6 +39,7 @@ jest.mock("@octokit/rest", () => {
 
     repos = {
       get: jest.fn().mockReturnValue(Promise.resolve({})),
+      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {
@@ -79,5 +80,5 @@ describe("Auto", () => {
 
     await auto.changelog({ from: "v1.0.0" });
     expect(addToChangelog).toHaveBeenCalled();
-  });
+  }, 10000);
 });
