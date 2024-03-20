@@ -2,7 +2,7 @@ import { cosmiconfig } from "cosmiconfig";
 import merge from "deepmerge";
 import fetch from "node-fetch";
 import * as path from "path";
-import TypeScriptLoader from "@endemolshinegroup/cosmiconfig-typescript-loader";
+import { TypeScriptLoader as typeScriptLoader } from "cosmiconfig-typescript-loader";
 
 import { getVersionMap } from "./release";
 import { ILogger } from "./utils/logger";
@@ -88,7 +88,7 @@ export default class Config {
         `${name}.config.js`,
       ],
       loaders: {
-        ".ts": TypeScriptLoader,
+        ".ts": typeScriptLoader(),
       },
     });
     const result = await explorer.search();
