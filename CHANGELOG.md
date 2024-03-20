@@ -1,3 +1,16 @@
+# v11.1.2 (Wed Mar 20 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix: remove extra quotes surrounding commitMessage [#2445](https://github.com/intuit/auto/pull/2445) ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+#### Authors: 1
+
+- Mark Potnick ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+---
+
 # v11.1.1 (Sat Feb 24 2024)
 
 #### 🐛 Bug Fix
