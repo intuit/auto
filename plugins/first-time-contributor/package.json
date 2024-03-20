@@ -44,7 +44,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.12.0",
+    "@octokit/rest": "^19.0.13",
     "@types/array.prototype.flatmap": "^1.2.0"
   }
 }
