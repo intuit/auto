@@ -860,6 +860,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "UpstartMPotnick",
+      "name": "Mark Potnick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105386012?v=4",
+      "profile": "https://github.com/UpstartMPotnick",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
