@@ -1311,6 +1311,9 @@ export default class Auto {
 
     if (!pr || !build) {
       const sha = await this.git.getSha();
+      // If the commit sha is a 7 digit number starting with zero
+      // SemVer will reject the version. Include enough of the sha
+      // to include at least one letter in that case.
       const endIndex  = /^0\d{6}/.test(sha) ?
           sha.search(/[a-zA-Z]/) + 1
           : 7;
