@@ -1310,9 +1310,11 @@ export default class Auto {
     }
 
     if (!pr || !build) {
-      canaryIdentifier = `${canaryIdentifier}.${(
-        await this.git.getSha(true)
-      ).slice(0, 7)}`;
+      const sha = await this.git.getSha();
+      const endIndex  = /^0\d{6}/.test(sha) ?
+          sha.search(/[a-zA-Z]/) + 1
+          : 7;
+      canaryIdentifier = `${canaryIdentifier}.${sha.slice(0, endIndex)}`;
     }
 
     canaryIdentifier = `-canary${canaryIdentifier}`;
