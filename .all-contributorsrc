@@ -870,6 +870,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "MichaelRyanWebber",
+      "name": "MichaelRyanWebber",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7769437?v=4",
+      "profile": "https://github.com/MichaelRyanWebber",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
