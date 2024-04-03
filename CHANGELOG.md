@@ -1,3 +1,16 @@
+# v11.1.3 (Wed Apr 03 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix rare issue with canary id from git sha [#2448](https://github.com/intuit/auto/pull/2448) ([@MichaelRyanWebber](https://github.com/MichaelRyanWebber))
+
+#### Authors: 1
+
+- [@MichaelRyanWebber](https://github.com/MichaelRyanWebber)
+
+---
+
 # v11.1.2 (Wed Mar 20 2024)
 
 #### 🐛 Bug Fix
