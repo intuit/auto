@@ -1,3 +1,16 @@
+# v11.1.5 (Thu Apr 04 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - fix chunking large changelogs [#2453](https://github.com/intuit/auto/pull/2453) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.1.4 (Thu Apr 04 2024)
 
 #### 🐛 Bug Fix
