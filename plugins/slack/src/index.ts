@@ -92,13 +92,15 @@ const CHANGELOG_LINE = /^\s*•/;
 type Messages = [Block[], ...Array<Block[] | FileUpload>];
 
 /** Split a long spring into chunks by character limit */
-const splitCharacterLimit = (line: string, charLimit: number) => {
+const splitCharacterLimitAtNewline = (line: string, charLimit: number) => {
   const splitLines = [];
   let buffer = line;
 
   while (buffer) {
-    splitLines.push(buffer.slice(0, charLimit));
-    buffer = buffer.slice(charLimit);
+    // get the \n closest to the char limit
+    const newlineIndex = buffer.lastIndexOf("\n", charLimit) || charLimit;
+    splitLines.push(buffer.slice(0, newlineIndex));
+    buffer = buffer.slice(newlineIndex);
   }
 
   return splitLines;
@@ -172,7 +174,7 @@ export function convertToBlocks(
       const fullSection = lines.join("\n");
 
       if (fullSection.length > 3000) {
-        const splitLines = splitCharacterLimit(fullSection, 3000);
+        const splitLines = splitCharacterLimitAtNewline(fullSection, 3000);
 
         splitLines.forEach((splitLine) => {
           currentMessage.push(createSectionBlock(splitLine));
@@ -183,7 +185,7 @@ export function convertToBlocks(
 
       currentMessage.push(createSpacerBlock());
     } else if (line.length > 3000) {
-      const splitLines = splitCharacterLimit(line, 3000);
+      const splitLines = splitCharacterLimitAtNewline(line, 3000);
 
       splitLines.forEach((splitLine) => {
         currentMessage.push(createSectionBlock(splitLine));
