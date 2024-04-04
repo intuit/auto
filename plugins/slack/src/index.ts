@@ -171,8 +171,8 @@ export function convertToBlocks(
 
       const fullSection = lines.join("\n");
 
-      if (line.length > 3000) {
-        const splitLines = splitCharacterLimit(line, 3000);
+      if (fullSection.length > 3000) {
+        const splitLines = splitCharacterLimit(fullSection, 3000);
 
         splitLines.forEach((splitLine) => {
           currentMessage.push(createSectionBlock(splitLine));
