@@ -149,6 +149,7 @@ export default class UploadAssetsPlugin implements IPlugin {
     dryRun = false,
     id?: string
   ) {
+    const releases = Array.isArray(release) ? release : [release];
     const assets = await glob(this.options.assets);
 
     auto.logger.log.info(endent`
@@ -162,18 +163,14 @@ export default class UploadAssetsPlugin implements IPlugin {
       return [];
     }
 
-    const responses = await Promise.all(
+    const assetUploadRequests = await Promise.all(
       assets.map(async (asset) => {
-        if (!auto.git) {
-          return;
-        }
-
         const file = await readFile(asset);
         const stats = await stat(asset);
         const type = await FileType.fromBuffer(file);
 
         const DEFAULT_BASE_URL = "https://api.github.com";
-        const baseUrl = auto.git.options.baseUrl || DEFAULT_BASE_URL;
+        const baseUrl = auto.git!.options.baseUrl || DEFAULT_BASE_URL;
         const fileName = path.basename(asset);
         const extension = path.extname(fileName);
         const options: RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["parameters"] = {
@@ -185,8 +182,8 @@ export default class UploadAssetsPlugin implements IPlugin {
               ? fileName.replace(extension, `-${id}${extension}`)
               : `${fileName}-${id}`
             : fileName,
-          owner: auto.git.options.owner,
-          repo: auto.git.options.repo,
+          owner: auto.git!.options.owner,
+          repo: auto.git!.options.repo,
           headers: {
             "content-length": stats.size,
             "content-type": type ? type.mime : "application/octet-stream",
@@ -198,34 +195,53 @@ export default class UploadAssetsPlugin implements IPlugin {
           options.baseUrl = `${origin}/api/uploads`;
         }
 
+        return options;
+      })
+    );
+
+    const assetNames = assetUploadRequests.map((o) => o.name);
+    await Promise.all(
+      releases.map(async (release) => {
+        const assetsInRelease = await auto.git!.github.paginate(
+          auto.git!.github.repos.listReleaseAssets,
+          {
+            owner: auto.git!.options.owner,
+            repo: auto.git!.options.repo,
+            release_id: release.data.id,
+          }
+        );
+
+        for (const asset of assetsInRelease) {
+          if (assetNames.includes(asset.name)) {
+            // eslint-disable-next-line no-await-in-loop
+            await auto.git!.github.repos.deleteReleaseAsset({
+              owner: auto.git!.options.owner,
+              repo: auto.git!.options.repo,
+              asset_id: asset.id,
+            });
+          }
+        }
+      })
+    );
+
+    const responses = await Promise.all(
+      assetUploadRequests.map(async (options) => {
         const assetResponses: AssetResponse[] = [];
 
-        // Multiple releases were made
-        if (Array.isArray(release)) {
-          await Promise.all(
-            release.map(async (r) => {
-              const {
-                data: releaseAsset,
-              } = await auto.git!.github.repos.uploadReleaseAsset({
-                ...options,
-                release_id: r.data.id,
-              });
+        await Promise.all(
+          releases.map(async (r) => {
+            const {
+              data: releaseAsset,
+            } = await auto.git!.github.repos.uploadReleaseAsset({
+              ...options,
+              release_id: r.data.id,
+            });
 
-              assetResponses.push(releaseAsset);
-            })
-          );
-        } else {
-          const {
-            data: releaseAsset,
-          } = await auto.git.github.repos.uploadReleaseAsset({
-            ...options,
-            release_id: release.data.id,
-          });
+            assetResponses.push(releaseAsset);
+          })
+        );
 
-          assetResponses.push(releaseAsset);
-        }
-
-        auto.logger.log.success(`Uploaded asset: ${asset}`);
+        auto.logger.log.success(`Uploaded asset: ${options.name}`);
         return assetResponses;
       })
     );
