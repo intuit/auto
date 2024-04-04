@@ -1,3 +1,16 @@
+# v11.1.6 (Thu Apr 04 2024)
+
+#### ⚠️ Pushed to `main`
+
+- `@auto-it/slack`
+  - improve long slack message chunking by chunking at newlines ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.1.5 (Thu Apr 04 2024)
 
 #### 🐛 Bug Fix
