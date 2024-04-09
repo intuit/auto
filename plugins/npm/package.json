@@ -58,6 +58,10 @@
     "@types/env-ci": "^3.1.0",
     "@types/semver": "^7.1.0",
     "@types/url-join": "^4.0.0",
-    "@types/user-home": "^2.0.0"
+    "@types/user-home": "^2.0.0",
+    "lerna": "^7.1.4"
+  },
+  "peerDependencies": {
+    "lerna": "^7.1.4"
   }
 }
