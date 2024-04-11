@@ -11,6 +11,7 @@ import on from "await-to-js";
 import join from "url-join";
 import { gt, lt } from "semver";
 import prettyMs from "pretty-ms";
+import { execSync } from "child_process";
 
 import { Memoize as memoize } from "typescript-memoize";
 
