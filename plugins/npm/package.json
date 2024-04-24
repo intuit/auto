@@ -38,8 +38,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
-    "@auto-it/package-json-utils": "link:../../packages/package-json-utils",
+    "@auto-it/core": "file:../../packages/core",
+    "@auto-it/package-json-utils": "file:../../packages/package-json-utils",
     "await-to-js": "^3.0.0",
     "endent": "^2.1.0",
     "env-ci": "^5.0.1",
