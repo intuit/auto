@@ -41,7 +41,7 @@
     "@endemolshinegroup/cosmiconfig-typescript-loader": "^3.0.2",
     "@octokit/core": "4.2.4",
     "@octokit/plugin-enterprise-compatibility": "2.0.5",
-    "@octokit/plugin-retry": "5.0.3",
+    "@octokit/plugin-retry": "4.1.6",
     "@octokit/plugin-throttling": "6.1.0",
     "@octokit/plugin-rest-endpoint-methods": "7.2.1",
     "@octokit/plugin-paginate-rest": "6.1.2",
