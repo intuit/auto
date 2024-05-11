@@ -154,7 +154,7 @@ export default class Git {
           }
         },
         /** wait after abuse */
-        onAbuseLimit: (retryAfter: number, options: unknown) => {
+        onSecondaryRateLimit: (retryAfter: number, options: unknown) => {
           const opts = options as ThrottleOpts;
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${
