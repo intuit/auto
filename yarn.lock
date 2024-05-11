@@ -25,7 +25,7 @@
     "@octokit/plugin-paginate-rest" "6.1.2"
     "@octokit/plugin-rest-endpoint-methods" "7.2.1"
     "@octokit/plugin-retry" "4.1.6"
-    "@octokit/plugin-throttling" "6.1.0"
+    "@octokit/plugin-throttling" "5.2.3"
     "@octokit/rest" "19.0.13"
     await-to-js "^3.0.0"
     chalk "^4.0.0"
@@ -1925,10 +1925,10 @@
     "@octokit/types" "^9.0.0"
     bottleneck "^2.15.3"
 
-"@octokit/plugin-throttling@6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-6.1.0.tgz#093275e6b542be371acb0631252a428f2f1b0615"
-  integrity sha512-JqMbTiPC0sUSTsLQsdq3JVx1mx8UtTo5mwR80YqPXE93+XhevvSyOR1rO2Z+NbO/r0TK4hqFJSSi/9oIZBxZTg==
+"@octokit/plugin-throttling@5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-5.2.3.tgz#9f552a14dcee5c7326dd9dee64a71ea76b108814"
+  integrity sha512-C9CFg9mrf6cugneKiaI841iG8DOv6P5XXkjmiNNut+swePxQ7RWEdAZRp5rJoE1hjsIqiYcKa/ZkOQ+ujPI39Q==
   dependencies:
     "@octokit/types" "^9.0.0"
     bottleneck "^2.15.3"
