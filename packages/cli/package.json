@@ -45,7 +45,7 @@
     "test": "jest --maxWorkers=2",
     "bundle": "yarn inject-version && yarn package && yarn gzip",
     "inject-version": "node scripts/inject-version.js",
-    "package": "rimraf binary && pkg . --out-path binary",
+    "package": "rimraf binary && pkg . --out-path binary --targets linux,win,macos-x64,macos-arm64",
     "gzip": "ls binary/auto* | xargs gzip"
   },
   "dependencies": {
