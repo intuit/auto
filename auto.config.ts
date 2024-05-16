@@ -18,7 +18,7 @@ const allContributorsOptions: IAllContributorsPluginOptions = {
 };
 
 const brewOptions: IBrewPluginOptions = {
-  executable: "./packages/cli/binary/auto-macos.gz",
+  executable: "./packages/cli/binary/auto-macos-x64.gz",
   name: "auto",
 };
 
@@ -36,9 +36,10 @@ export default function rc(): AutoRc {
       [
         "upload-assets",
         [
-          "./packages/cli/binary/auto-linux.gz",
-          "./packages/cli/binary/auto-macos.gz",
-          "./packages/cli/binary/auto-win.exe.gz",
+          "./packages/cli/binary/auto-linux-x64.gz",
+          "./packages/cli/binary/auto-macos-x64.gz",
+          "./packages/cli/binary/auto-macos-arm64.gz",
+          "./packages/cli/binary/auto-win-x64.exe.gz",
         ],
       ],
       ["npm", npmOptions],
