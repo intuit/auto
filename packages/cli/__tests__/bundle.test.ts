@@ -6,7 +6,9 @@ test("bundle should function", () => {
     (process.platform === "win32" && "win.exe") ||
     (process.platform === "darwin" && "macos") ||
     "linux";
-  const zip = path.join(__dirname, `../binary/auto-${type}`);
+
+  const { arch } = process;
+  const zip = path.join(__dirname, `../binary/auto-${type}-${arch}`);
   const binary = path.join(__dirname, "../auto");
 
   execSync(`gunzip -c ${zip} > ${binary}`);

@@ -36,7 +36,7 @@
     "docs:build": "yarn docs:generate && ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
-    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
+    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos-x64.gz > /usr/local/bin/auto",
     "postinstall": "patch-package"
   },
   "devDependencies": {

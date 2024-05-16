@@ -1,7 +1,6 @@
 # Brew Plugin
 
-Automate the creation of Homebrew formulae.
-This plugin can be use with any other package manager plugin.
+Automate the creation of Homebrew formulae. This plugin can be use with any other package manager plugin.
 
 > NOTE: This plugin does not work in `lerna` monorepos that use `independent` versioning.
 
@@ -38,8 +37,7 @@ To use this plugin you will need to add the required configuration and a templat
 }
 ```
 
-Create a template name `./formula-template.rb` at the root of the project (or use the `formula` option to customize the location)/
-The template file must be a valid homebrew ruby file.
+Create a template name `./formula-template.rb` at the root of the project (or use the `formula` option to customize the location)/ The template file must be a valid homebrew ruby file.
 
 `auto` will replace the following tokens in the template file:
 
@@ -52,14 +50,14 @@ Here is the template `auto` uses to publish it's own `brew` formula:
 class Auto < Formula
   desc "Generate releases based on semantic version labels on pull requests."
   homepage "https://intuit.github.io/auto/home.html"
-  url "https://github.com/intuit/auto/releases/download/$VERSION/auto-macos.gz"
+  url "https://github.com/intuit/auto/releases/download/$VERSION/auto-macos-x64.gz"
   version "$VERSION"
   sha256 "$SHA"
 
   def install
     libexec.install Dir["*"]
-    bin.install libexec/"auto-macos"
-    mv bin/"auto-macos", bin/"auto"
+    bin.install libexec/"auto-macos-x64"
+    mv bin/"auto-macos-x64", bin/"auto"
   end
 
   test do
