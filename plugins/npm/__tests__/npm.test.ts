@@ -616,7 +616,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "\"Bump version to: %s [skip ci]\"",
       false,
     ]);
   });
@@ -645,7 +645,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "\"Bump version to: %s [skip ci]\"",
       false,
     ]);
   });
@@ -674,7 +674,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "\"Bump version to: %s [skip ci]\"",
       "--exact",
     ]);
 
@@ -881,7 +881,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"Bump version to: %s [skip ci]\"'",
+      "\"Bump version to: %s [skip ci]\"",
       false,
     ]);
   });
@@ -924,7 +924,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"[skip ci] Custom version commit message\"'",
+      "\"[skip ci] Custom version commit message\"",
       false,
     ]);
   });
@@ -967,7 +967,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "'\"Custom version commit message [skip ci]\"'",
+      "\"Custom version commit message [skip ci]\"",
       false,
     ]);
   });
@@ -1529,7 +1529,7 @@ describe("canary", () => {
       "--yes",
       "--no-push",
       "-m",
-      `'"Bump independent versions [skip ci]"'`,
+      "\"Bump independent versions [skip ci]\"",
       false,
     ]);
   });

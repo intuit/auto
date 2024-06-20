@@ -1034,7 +1034,7 @@ export default class NPMPlugin implements IPlugin {
             "--yes",
             "--no-push",
             "-m",
-            `'"${commitMessage}"'`,
+            `"${commitMessage}"`,
             this.exact && "--exact",
             ...verboseArgs,
           ]);

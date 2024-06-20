@@ -1,3 +1,16 @@
+# v11.1.4 (Thu Apr 04 2024)
+
+#### 🐛 Bug Fix
+
+- Fix uploading conflicting canary assets [#2451](https://github.com/intuit/auto/pull/2451) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- fix uploading assets with the same name ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

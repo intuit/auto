@@ -319,6 +319,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://www.heywesty.com/"><img src="https://avatars.githubusercontent.com/u/73201?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jack Westbrook</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jackw" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=jackw" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jackw" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jazmon"><img src="https://avatars.githubusercontent.com/u/3680110?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Atte Huhtakangas</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=jazmon" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=jazmon" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=jazmon" title="Code">💻</a></td>
     <td align="center"><a href="http://ruhkopf.name/"><img src="https://avatars.githubusercontent.com/u/558375?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Ruhkopf</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=restfulhead" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=restfulhead" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/UpstartMPotnick"><img src="https://avatars.githubusercontent.com/u/105386012?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mark Potnick</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=UpstartMPotnick" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=UpstartMPotnick" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/MichaelRyanWebber"><img src="https://avatars.githubusercontent.com/u/7769437?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MichaelRyanWebber</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=MichaelRyanWebber" title="Code">💻</a></td>
   </tr>
 </table>
 
@@ -327,7 +329,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification, contributions of any kind welcome!
 
 ### Adding a Contributor
 

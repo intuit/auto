@@ -1,3 +1,21 @@
+# v11.1.3 (Wed Apr 03 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, null[@MichaelRyanWebber](https://github.com/MichaelRyanWebber), for all your work!
+
+#### 🐛 Bug Fix
+
+- Fix rare issue with canary id from git sha [#2448](https://github.com/intuit/auto/pull/2448) ([@MichaelRyanWebber](https://github.com/MichaelRyanWebber))
+- add comment ([@MichaelRyanWebber](https://github.com/MichaelRyanWebber))
+- In the rare case that the first 7 characters of a git sha contains only numbers and begins with 0, SemVer will reject the canaryIdentifier. In such cases, make sure we include enough of the sha to get a letter. ([@MichaelRyanWebber](https://github.com/MichaelRyanWebber))
+
+#### Authors: 1
+
+- [@MichaelRyanWebber](https://github.com/MichaelRyanWebber)
+
+---
+
 # v11.1.1 (Sat Feb 24 2024)
 
 :tada: This release contains work from a new contributor! :tada:

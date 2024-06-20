@@ -1,3 +1,21 @@
+# v11.1.2 (Wed Mar 20 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Mark Potnick ([@UpstartMPotnick](https://github.com/UpstartMPotnick)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: remove extra quotes surrounding commitMessage [#2445](https://github.com/intuit/auto/pull/2445) ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+- test: update test ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+- fix: remove extra quotes surrounding commitMessage ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+#### Authors: 1
+
+- Mark Potnick ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

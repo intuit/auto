@@ -1,3 +1,68 @@
+# v11.1.6 (Thu Apr 04 2024)
+
+#### ⚠️ Pushed to `main`
+
+- `@auto-it/slack`
+  - improve long slack message chunking by chunking at newlines ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.1.5 (Thu Apr 04 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - fix chunking large changelogs [#2453](https://github.com/intuit/auto/pull/2453) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.1.4 (Thu Apr 04 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/upload-assets`
+  - Fix uploading conflicting canary assets [#2451](https://github.com/intuit/auto/pull/2451) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.1.3 (Wed Apr 03 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - Fix rare issue with canary id from git sha [#2448](https://github.com/intuit/auto/pull/2448) ([@MichaelRyanWebber](https://github.com/MichaelRyanWebber))
+
+#### Authors: 1
+
+- [@MichaelRyanWebber](https://github.com/MichaelRyanWebber)
+
+---
+
+# v11.1.2 (Wed Mar 20 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - fix: remove extra quotes surrounding commitMessage [#2445](https://github.com/intuit/auto/pull/2445) ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+#### Authors: 1
+
+- Mark Potnick ([@UpstartMPotnick](https://github.com/UpstartMPotnick))
+
+---
+
 # v11.1.1 (Sat Feb 24 2024)
 
 #### 🐛 Bug Fix
