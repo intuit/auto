@@ -322,6 +322,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://github.com/UpstartMPotnick"><img src="https://avatars.githubusercontent.com/u/105386012?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mark Potnick</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=UpstartMPotnick" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=UpstartMPotnick" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/MichaelRyanWebber"><img src="https://avatars.githubusercontent.com/u/7769437?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MichaelRyanWebber</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=MichaelRyanWebber" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/LittleGreenYoda42"><img src="https://avatars.githubusercontent.com/u/10033977?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Elias</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=LittleGreenYoda42" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
