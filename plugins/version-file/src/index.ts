@@ -141,7 +141,7 @@ export default class VersionFilePlugin implements IPlugin {
       // Ship canary release if release script is provided
       if(this.publishScript){
         auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
-        await execPromise(this.publishScript, ["snapshot"]);
+        await execPromise(this.publishScript, ["canary"]);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
@@ -188,7 +188,7 @@ export default class VersionFilePlugin implements IPlugin {
       // ship next release if release script is provided
       if(this.publishScript){
         auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
-        await execPromise(this.publishScript, ["snapshot"]);
+        await execPromise(this.publishScript, ["next"]);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
