@@ -17,7 +17,7 @@ yarn add -D @auto-it/version-file
 ## Options
 
 - versionFile (optional, default="VERSION"): Path to where the version is stored in the repository. It should be a file containing just the semver. 
-- releaseScript: (optional, default=None): Path to script that runs the publish actions in your repository. If not supplied nothing will be called. If supplied will be called during the `publish`,`canary` and `next` hooks. For the `publish` hook the first parameter passed to the script will be `release` to indicate that a regular release is being called. For `canary` and `next` hooks the first parameter will be `snapshot` to indicate a prerelease version. 
+- releaseScript: (optional, default=None): Path to script that runs the publish actions in your repository. If not supplied nothing will be called. If supplied will be called during the `publish`,`canary` and `next` hooks. For the `publish` hook the first parameter passed to the script will be `release` to indicate that a regular release is being called. For `canary` and `next` hooks the first parameter will be `canary` or `next` to indicate a prerelease version, and let the consumer handle what to do for those types of releases. 
 
 ## Usage
 
