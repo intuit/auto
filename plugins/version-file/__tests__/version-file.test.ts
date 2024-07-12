@@ -217,7 +217,7 @@ describe("Test Release Types", () => {
     await hooks.canary.promise({bump: SEMVER.minor, canaryIdentifier: "canary.368.1"})
 
     // check release script was called
-    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["snapshot"]);
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["canary"]);
 
     // check local changes were reverted
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["reset", "--hard", "HEAD"]);
@@ -293,7 +293,7 @@ describe("Test Release Types", () => {
     await hooks.next.promise(["1.0.0"], {bump: SEMVER.major, fullReleaseNotes:"", releaseNotes:"", commits:[]})
 
     // check release script was called
-    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["snapshot"]);
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", ["next"]);
 
     // Check git ops
     expect(execPromise).toHaveBeenNthCalledWith(2, "git", ["tag", "v2.0.0-next.0"]);
