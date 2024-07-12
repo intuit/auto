@@ -17,7 +17,12 @@ yarn add -D @auto-it/version-file
 ## Options
 
 - versionFile (optional, default="VERSION"): Path to where the version is stored in the repository. It should be a file containing just the semver. 
-- releaseScript: (optional, default=None): Path to script that runs the publish actions in your repository. If not supplied nothing will be called. If supplied will be called during the `publish`,`canary` and `next` hooks. For the `publish` hook the first parameter passed to the script will be `release` to indicate that a regular release is being called. For `canary` and `next` hooks the first parameter will be `canary` or `next` to indicate a prerelease version, and let the consumer handle what to do for those types of releases. 
+- publishScript: (optional, default=None): Path to script that runs the publish actions in your repository. If not supplied nothing will be called. If supplied will be called during the `publish`,`canary` and `next` hooks with the arguments defined in `publishScriptReleaseTypeArgs` for that release type.
+- publishScriptReleaseTypeArgs: (optional, default={
+  "publish": ["release"],
+  "canary": ["snapshot"],
+  "next": ["snapshot"],
+}): Mapping of arguments to pass to the `publishScript` for each release type (`publish`, `canary`, `next`)
 
 ## Usage
 
@@ -34,6 +39,10 @@ yarn add -D @auto-it/version-file
 ```json
 {
   "plugins": [
-    "version-file", {"versionFile": "./tools/Version.txt", "releaseScript":"./tools/publish.sh"}
+    "version-file", {"versionFile": "./tools/Version.txt", "publishScript":"./tools/publish.sh", "publishScriptReleaseTypeArgs": {
+      "publish": ["release"], // (default)
+      "canary": ["snapshot"],
+      "next": ["some", "other", "args"],
+    }}
   ]
 }
