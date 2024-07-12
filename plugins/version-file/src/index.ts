@@ -8,8 +8,11 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 interface ReleaseTypeArgs {
+  /** Args to use when invoking the publishScript during the publish hook */
   publish: string[];
+  /** Args to use when invoking the publishScript during the canary hook */
   canary: string[];
+  /** Args to use when invoking the publishScript during the next hook */
   next: string[];
 }
 
@@ -134,7 +137,7 @@ export default class VersionFilePlugin implements IPlugin {
       // Call release script if provided
       if(this.publishScript){
         auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
-        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs['publish'])
+        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs.publish)
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
@@ -162,7 +165,7 @@ export default class VersionFilePlugin implements IPlugin {
       // Ship canary release if release script is provided
       if(this.publishScript){
         auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
-        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs['canary']);
+        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs.canary);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
@@ -209,7 +212,7 @@ export default class VersionFilePlugin implements IPlugin {
       // ship next release if release script is provided
       if(this.publishScript){
         auto.logger.log.info(`Calling release script in repo at ${this.publishScript}`);
-        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs['next']);
+        await execPromise(this.publishScript, this.publishScriptReleaseTypeArgs.next);
       } else {
         auto.logger.log.info("Skipping calling release script in repo since none was provided");
       }
