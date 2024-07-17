@@ -2,8 +2,7 @@
 title: Non-npm Usage
 ---
 
-If you're on some platform other than [npm](https://npmjs.com) it doesn't make sense to download `auto` through [npm](https://npmjs.com).
-For these situations we package `auto` for all major operating systems (`linux`, `osx`, `windows`).
+If you're on some platform other than [npm](https://npmjs.com) it doesn't make sense to download `auto` through [npm](https://npmjs.com). For these situations we package `auto` for all major operating systems (`linux`, `osx`, `windows`).
 
 ## Installation
 
@@ -11,14 +10,12 @@ Simply download the appropriate version for your operating system and make it ex
 
 ```bash
 # Download a platform specific version of auto
-curl -vkL -o - https://github.com/intuit/auto/releases/download/v11.1.6/auto-linux.gz | gunzip > ~/auto
+curl -vkL -o - https://github.com/intuit/auto/releases/download/v11.1.6/auto-linux-x64.gz | gunzip > ~/auto
 # Make auto executable
 chmod a+x ~/auto
 ```
 
-This executable contains all of the official `auto` plugins so you do not have to download anything extra.
-This version of `auto` uses the [git-tag](../generated/git-tag) plugins as the default instead of [npm](../generated/npm).
-If you specify any plugins this will be overridden.
+This executable contains all of the official `auto` plugins so you do not have to download anything extra. This version of `auto` uses the [git-tag](../generated/git-tag) plugins as the default instead of [npm](../generated/npm). If you specify any plugins this will be overridden.
 
 ### Installation via brew (OSX)
 
@@ -78,8 +75,7 @@ Now that you have `auto` all set up you can use all of it's commands!
 
 ## Plugins
 
-As stated above, all of the official plugins (the ones included in this repo/docs) are included in the binary version of `auto`.
-However you might want to use an unofficial plugin or even write your own.
+As stated above, all of the official plugins (the ones included in this repo/docs) are included in the binary version of `auto`. However you might want to use an unofficial plugin or even write your own.
 
 #### Local Plugins
 
@@ -100,8 +96,7 @@ You could:
 
 #### Hosted Plugins
 
-If you want to share your custom plugins between projects then you can host them on some SCM (ex: GitHub).
-A plugin just needs to consist of an `index.js` that implements your plugin. (or it could be as complex as any NPM package)
+If you want to share your custom plugins between projects then you can host them on some SCM (ex: GitHub). A plugin just needs to consist of an `index.js` that implements your plugin. (or it could be as complex as any NPM package)
 
 Edit your CI build to download these plugins when building.
 

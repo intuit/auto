@@ -11,7 +11,13 @@
     "email": "lisowski54@gmail.com"
   },
   "pkg": {
-    "scripts": "../../plugins/**/dist/**/*.js"
+    "scripts": "../../plugins/**/dist/**/*.js",
+    "targets": [
+      "linux-x64",
+      "win-x64",
+      "macos-x64",
+      "macos-arm64"
+    ]
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

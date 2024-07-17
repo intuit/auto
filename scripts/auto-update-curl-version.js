@@ -28,7 +28,7 @@ module.exports = class TestPlugin {
       fs.writeFileSync(
         filename,
         nonNpmDocs.replace(
-          /(download\/v)(\d+\.\d+\.\d+)(\/auto-linux\.gz)/,
+          /(download\/v)(\d+\.\d+\.\d+)(\/auto-linux-x64\.gz)/,
           `$1${inc(lastRelease, bump)}$3`
         )
       );
