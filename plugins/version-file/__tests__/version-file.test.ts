@@ -302,4 +302,66 @@ describe("Test Release Types", () => {
     // Check the right version was written
     expect(fs.readFileSync("VERSION", "utf-8")).toStrictEqual("v2.0.0-next.0")
   });
+
+  test("Release type args can be provided to override default args for publish script", async () => {
+    const prefixRelease: (a: string) => string = (version: string) => {
+      return `v${version}`;
+    };
+
+    mockFs({
+      VERSION: `1.0.0`,
+    });
+     const plugin = new BazelPlugin({
+       publishScript: "./tools/release.sh",
+       publishScriptReleaseTypeArgs: {
+         publish: ["args", "for", "publish"],
+         canary: ["different", "canary"],
+         next: ["next"],
+       },
+     });
+    const hooks = makeHooks();
+
+    plugin.apply(({
+      hooks,
+      config: { prereleaseBranches: ["next"] },
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      prefixRelease,
+      getCurrentVersion: () => "1.0.0",
+      git: {
+        getLastTagNotInBaseBranch: async () => undefined,
+        getLatestRelease: () => "1.0.0",
+        getLatestTagInBranch: () => Promise.resolve("1.0.0"),
+      },
+    } as unknown) as Auto);
+
+    
+    await hooks.publish.promise({ bump: SEMVER.major });
+
+    expect(execPromise).toHaveBeenNthCalledWith(1, "./tools/release.sh", [
+      "args", "for", "publish"
+    ]);
+
+    await hooks.canary.promise({
+      bump: SEMVER.minor,
+      canaryIdentifier: "canary.368.1",
+    });
+
+    expect(execPromise).toHaveBeenNthCalledWith(3, "./tools/release.sh", [
+      "different",
+      "canary",
+    ]);
+
+    await hooks.next.promise(["1.0.0"], {
+      bump: SEMVER.major,
+      fullReleaseNotes: "",
+      releaseNotes: "",
+      commits: [],
+    });
+
+    expect(execPromise).toHaveBeenNthCalledWith(5, "./tools/release.sh", [
+      "next",
+    ]);
+  })
 });
