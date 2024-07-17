@@ -1,3 +1,20 @@
+# v11.2.0 (Wed Jul 17 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: handling of long strings in slack plugin [#2464](https://github.com/intuit/auto/pull/2464) ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+- fix: handling of long strings in slack ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+#### Authors: 1
+
+- Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+---
+
 # v11.1.6 (Thu Apr 04 2024)
 
 #### ⚠️ Pushed to `main`
