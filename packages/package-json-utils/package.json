@@ -3,7 +3,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Shared utilities for parsing information from a package.json",
-  "version": "11.1.6",
+  "version": "11.2.0",
   "license": "MIT",
   "author": {
     "name": "Andrew Lisowski",
