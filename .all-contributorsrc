@@ -879,6 +879,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "LittleGreenYoda42",
+      "name": "Martin Elias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10033977?v=4",
+      "profile": "https://github.com/LittleGreenYoda42",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"
