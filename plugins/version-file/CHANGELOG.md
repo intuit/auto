@@ -1,3 +1,24 @@
+# v11.2.0 (Wed Jul 17 2024)
+
+#### 🚀 Enhancement
+
+- [Version File] Remove assumption that canary and next should be snapshots [#2467](https://github.com/intuit/auto/pull/2467) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 🐛 Bug Fix
+
+- lint ([@sugarmanz](https://github.com/sugarmanz))
+- readme formatting ([@sugarmanz](https://github.com/sugarmanz))
+- make it non-breaking ([@sugarmanz](https://github.com/sugarmanz))
+- update version-file tests to reflect change ([@sugarmanz](https://github.com/sugarmanz))
+- update version-file docs to reflect change ([@sugarmanz](https://github.com/sugarmanz))
+- let publish script know more about the type of release, instead of hardcoding snapshot for next ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement
