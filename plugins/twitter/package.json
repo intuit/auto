@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/twitter",
-  "version": "11.1.6",
+  "version": "11.2.0",
   "main": "dist/index.js",
   "description": "Twitter plugin for auto",
   "license": "MIT",
