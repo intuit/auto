@@ -70,7 +70,7 @@ export default class VersionFilePlugin implements IPlugin {
   /** Release script location */
   readonly publishScript: string | undefined
 
-  /**  */
+  /** Args to pass to the release script based on release type */
   readonly publishScriptReleaseTypeArgs: ReleaseTypeArgs;
 
   /** Initialize the plugin with it's options */
@@ -123,7 +123,7 @@ export default class VersionFilePlugin implements IPlugin {
         await execPromise("git", ["commit", "-am", `"Bump version to: v${newVersion} [skip ci]"`]);
         await execPromise("git", [
           "tag",
-          `v${newVersion}`
+          auto.prefixRelease(newVersion)
         ]);
         auto.logger.verbose.info("Successfully versioned repo");
       } else {
