@@ -226,6 +226,15 @@ const urlPluginOptions = t.intersection([
   basePluginOptions,
 ]);
 
+const messageFilterOptions = t.partial({
+  filter: t.partial({
+    /** Only post when these packages are changed */
+    packages: t.array(t.string),
+    /** Only post when these strings are found */
+    search: t.array(t.string),
+  }),
+});
+
 const appPluginOptions = t.intersection([
   t.interface({
     /** Marks we are gonna use app auth */
@@ -236,7 +245,10 @@ const appPluginOptions = t.intersection([
   basePluginOptions,
 ]);
 
-const pluginOptions = t.union([urlPluginOptions, appPluginOptions]);
+const pluginOptions = t.intersection([
+  t.union([urlPluginOptions, appPluginOptions]),
+  messageFilterOptions,
+]);
 
 export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
 
@@ -334,13 +346,24 @@ export default class SlackPlugin implements IPlugin {
         const proxyUrl = process.env.https_proxy || process.env.http_proxy;
         const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
 
-        await this.createPost(
-          auto,
-          header,
-          sanitizeMarkdown(releaseNotes),
-          releases,
-          agent
-        );
+        const sanitizedNotes = sanitizeMarkdown(releaseNotes);
+
+        if (
+          this.options.filter?.packages &&
+          !this.options.filter.packages.some((p) => releaseNotes.includes(p))
+        ) {
+          return;
+        }
+
+        // Only post if the search strings match the filter
+        if (
+          this.options.filter?.search &&
+          !this.options.filter.search.some((p) => releaseNotes.includes(p))
+        ) {
+          return;
+        }
+
+        await this.createPost(auto, header, sanitizedNotes, releases, agent);
       }
     );
   }
