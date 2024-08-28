@@ -324,6 +324,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/LittleGreenYoda42"><img src="https://avatars.githubusercontent.com/u/10033977?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Elias</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=LittleGreenYoda42" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/KetanReddy"><img src="https://avatars.githubusercontent.com/u/8703262?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ketan Reddy</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=KetanReddy" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=KetanReddy" title="Code">💻</a></td>
   </tr>
 </table>
 
