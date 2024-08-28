@@ -1,3 +1,17 @@
+# v11.2.1 (Wed Aug 28 2024)
+
+#### 🐛 Bug Fix
+
+- Respect `noVersionPrefix` option in the Version File plugin [#2472](https://github.com/intuit/auto/pull/2472) ([@KetanReddy](https://github.com/KetanReddy))
+- Add tests ([@KetanReddy](https://github.com/KetanReddy))
+- Version File plugin: respect noVersionPrefix ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # v11.2.0 (Wed Jul 17 2024)
 
 #### 🚀 Enhancement
