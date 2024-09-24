@@ -11,6 +11,7 @@ import on from "await-to-js";
 import join from "url-join";
 import { gt, lt } from "semver";
 import prettyMs from "pretty-ms";
+import { execSync } from "child_process";
 
 import { Memoize as memoize } from "typescript-memoize";
 
@@ -379,13 +380,17 @@ export default class Git {
         includeMergeCommitFiles: true,
       });
 
+      const repoRootPath = execSync("git rev-parse --show-toplevel", {
+        encoding: "utf8",
+      }).trim();
+      
       return log
         .map((commit) => ({
           hash: commit.hash,
           authorName: commit.authorName,
           authorEmail: commit.authorEmail,
           subject: commit.rawBody!,
-          files: (commit.files || []).map((file) => path.resolve(file)),
+          files: (commit.files || []).map((file) => path.resolve(repoRootPath,file)),
         }))
         .reduce<ICommit[]>((all, commit) => {
           // The -m option will list a commit for each merge parent. This
