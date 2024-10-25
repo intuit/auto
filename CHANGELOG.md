@@ -1,3 +1,16 @@
+# v11.3.0 (Fri Oct 25 2024)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - private packages should be included in changelogs [#2478](https://github.com/intuit/auto/pull/2478) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.2.1 (Wed Aug 28 2024)
 
 #### 🐛 Bug Fix
