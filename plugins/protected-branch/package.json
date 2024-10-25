@@ -1,6 +1,6 @@
 {
   "name": "@auto-it/protected-branch",
-  "version": "11.2.1",
+  "version": "11.3.0",
   "main": "dist/index.js",
   "description": "Handle Github branch protections",
   "license": "MIT",
