@@ -71,7 +71,7 @@
     "lint-staged": "^10.0.7",
     "mock-fs": "^5.1.2",
     "next-ignite": "^0.10.11",
-    "patch-package": "^6.2.2",
+    "patch-package": "^8.0.0",
     "prettier": "^2.2.1",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.0",
