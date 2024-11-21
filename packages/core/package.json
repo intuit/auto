@@ -79,7 +79,8 @@
     "url-join": "^4.0.0"
   },
   "peerDependencies": {
-    "typescript": ">=2.7"
+    "typescript": ">=2.7",
+    "lerna": "^7.1.4"
   },
   "peerDependenciesMeta": {
     "@types/node": {
@@ -98,6 +99,7 @@
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
     "@types/url-join": "^4.0.0",
-    "graphql": "^15.0.0"
+    "graphql": "^15.0.0",
+    "lerna": "^7.1.4"
   }
 }
