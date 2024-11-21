@@ -49,10 +49,10 @@
     "gzip": "ls binary/auto* | xargs gzip"
   },
   "dependencies": {
-    "@auto-it/core": "link:../core",
-    "@auto-it/npm": "link:../../plugins/npm",
-    "@auto-it/released": "link:../../plugins/released",
-    "@auto-it/version-file": "link:../../plugins/version-file",
+    "@auto-it/core": "file:../core",
+    "@auto-it/npm": "file:../../plugins/npm",
+    "@auto-it/released": "file:../../plugins/released",
+    "@auto-it/version-file": "file:../../plugins/version-file",
     "await-to-js": "^3.0.0",
     "chalk": "^4.0.0",
     "command-line-application": "^0.10.1",
