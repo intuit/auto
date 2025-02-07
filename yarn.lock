@@ -13,10 +13,10 @@
   integrity sha512-K1kQv1BZVtMXQqdpNZt9Pgh85KwamsWX9gYyq1xG4cpyb+EacfMiNfumrju16piFXanCUrCR0P1DowPjV2qV/A==
 
 "@auto-it/bot-list@link:packages/bot-list":
-  version "11.0.1"
+  version "11.0.4"
 
 "@auto-it/core@link:packages/core":
-  version "11.0.1"
+  version "11.0.4"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -60,7 +60,7 @@
     url-join "^4.0.0"
 
 "@auto-it/npm@link:plugins/npm":
-  version "11.0.1"
+  version "11.0.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     "@auto-it/package-json-utils" "link:packages/package-json-utils"
@@ -78,13 +78,13 @@
     user-home "^2.0.0"
 
 "@auto-it/package-json-utils@link:packages/package-json-utils":
-  version "11.0.1"
+  version "11.0.4"
   dependencies:
     parse-author "^2.0.0"
     parse-github-url "1.0.2"
 
 "@auto-it/released@link:plugins/released":
-  version "11.0.1"
+  version "11.0.4"
   dependencies:
     "@auto-it/bot-list" "link:packages/bot-list"
     "@auto-it/core" "link:packages/core"
@@ -94,7 +94,7 @@
     tslib "2.1.0"
 
 "@auto-it/version-file@link:plugins/version-file":
-  version "11.0.1"
+  version "11.0.4"
   dependencies:
     "@auto-it/core" "link:packages/core"
     fp-ts "^2.5.3"
@@ -6755,9 +6755,9 @@ flush-write-stream@^1.0.0:
     readable-stream "^2.3.6"
 
 follow-redirects@^1.15.0:
-  version "1.15.2"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
-  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
+  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
 
 for-in@^1.0.2:
   version "1.0.2"
