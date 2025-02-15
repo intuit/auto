@@ -112,7 +112,8 @@ export default class MavenPlugin implements IPlugin {
 
   /** Detect whether the parent pom.xml has the versions-maven-plugin **/
   private static async detectVersionMavenPlugin(): Promise<boolean> {
-    const pom = await getPom();
+    await maven.createEffectivePom(pluginOptions, Auto);
+    const pom = await getPom("target/output.xml");
     const pomDom = new jsdom.JSDOM(pom.pomXml, { contentType: "text/xml" })
       .window.document;
     const versionsMavenPluginNode = pomDom.evaluate(

@@ -49,3 +49,18 @@ export async function updatePoms(
 
   await execPromise("git", ["commit", "-am", message, "--no-verify"]);
 }
+
+/** Create effective pom file with maven */
+export async function createEffectivePom(
+  options: IMavenPluginOptions,
+  auto: Auto
+) {
+  auto.logger.verbose.info(
+    `Creating effective-pom file in target directory`
+  );
+
+  await executeMaven(options, [
+    "help:effective-pom",
+    "-Doutput='target/output.xml'"
+  ]);
+}
