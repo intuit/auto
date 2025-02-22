@@ -59,8 +59,13 @@ export async function createEffectivePom(
     `Creating effective-pom file in target directory`
   );
 
-  await executeMaven(options, [
-    "help:effective-pom",
-    "-Doutput='target/output.xml'"
-  ]);
+  try {
+    await executeMaven(options, [
+      "help:effective-pom",
+      "-Doutput=target/output.xml"
+    ]);
+  } catch (error) {
+    auto.logger.verbose.error(`Failed to create effective pom: ${error.message}`);
+    throw new Error(`Failed to create effective pom in target directory`);
+  }
 }

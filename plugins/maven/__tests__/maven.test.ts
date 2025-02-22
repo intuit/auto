@@ -270,9 +270,13 @@ describe("maven", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       const call = exec.mock.calls[0][1];
-      expect(call).toContain("tag");
-      expect(call).toContain("v1.0.0");
-      expect(call).toContain('"Update version to v1.0.0"');
+      expect(call).toContain("help:effective-pom");
+      expect(call).toContain("-Doutput=target/output.xml");
+
+      const secondCall = exec.mock.calls[1][1];
+      expect(secondCall).toContain("tag");
+      expect(secondCall).toContain("v1.0.0");
+      expect(secondCall).toContain('"Update version to v1.0.0"');
     });
 
     test("should version release", async () => {
@@ -290,9 +294,13 @@ describe("maven", () => {
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
       const call = exec.mock.calls[0][1];
-      expect(call).toContain("tag");
-      expect(call).toContain("v1.0.1");
-      expect(call).toContain('"Update version to v1.0.1"');
+      expect(call).toContain("help:effective-pom");
+      expect(call).toContain("-Doutput=target/output.xml");
+
+      const secondCall = exec.mock.calls[1][1];
+      expect(secondCall).toContain("tag");
+      expect(secondCall).toContain("v1.0.1");
+      expect(secondCall).toContain('"Update version to v1.0.1"');
     });
 
     test("should replace the previousVersion with the newVersion", async () => {
@@ -359,9 +367,37 @@ describe("maven", () => {
       );
 
       const call = exec.mock.calls[0][1];
-      expect(call).toContain("versions:set");
-      expect(call).toContain("-DgenerateBackupPoms=false");
-      expect(call).toContain("-DnewVersion=1.0.0");
+      expect(call).toContain("help:effective-pom");
+      expect(call).toContain("-Doutput=target/output.xml");
+
+      const secondCall = exec.mock.calls[1][1];
+      expect(secondCall).toContain("versions:set");
+      expect(secondCall).toContain("-DgenerateBackupPoms=false");
+      expect(secondCall).toContain("-DnewVersion=1.0.0");
+    });
+
+    test("should create effective POM file successfully", async () => {
+          mockReadFile(`<project
+                  xmlns="http://maven.apache.org/POM/4.0.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+                  <version>1.0.0-SNAPSHOT</version>
+                  <build>
+                    <plugins>
+                      <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>2.7</version>
+                      </plugin>
+                    </plugins>
+                  </build>
+                </project>`);
+
+          await hooks.beforeRun.promise({} as any);
+
+          const call = exec.mock.calls[0][1];
+          expect(call).toContain("help:effective-pom");
+          expect(call).toContain("-Doutput=target/output.xml");
     });
 
     test("should replace the parent previousVersion with the newVersion", async () => {
@@ -468,7 +504,11 @@ describe("maven", () => {
 
       await hooks.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec.mock.calls[0][1]).toContain("deploy");
+      const call = exec.mock.calls[0][1];
+      expect(call).toContain("help:effective-pom");
+      expect(call).toContain("-Doutput=target/output.xml");
+
+      expect(exec.mock.calls[1][1]).toContain("deploy");
     });
   });
 });
