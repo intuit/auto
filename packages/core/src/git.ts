@@ -358,14 +358,18 @@ export default class Git {
   /** Get the git log for a range of commits */
   @memoize()
   async getGitLog(start: string, end = "HEAD"): Promise<ICommit[]> {
+    console.log('Get git log...');
     try {
       const first = await this.getFirstCommit();
+      console.log('First commit:', first);
       // This "shaExists" is just so we don't have to refactor all the tests
       // in auto.test.ts. If the SHA doesn't really exist then the call to
       // gitlog will fail too.
       const startSha = (await this.shaExists(start))
         ? await execPromise("git", ["rev-parse", start])
         : "";
+
+      console.log('Start SHA:', startSha);
 
       const maxNumber = 2147483647;
       const log = await gitlog({
@@ -378,6 +382,8 @@ export default class Git {
         execOptions: { maxBuffer: Infinity },
         includeMergeCommitFiles: true,
       });
+
+      console.log("Git log:", log);
 
       return log
         .map((commit) => ({
