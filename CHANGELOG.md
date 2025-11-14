@@ -6,6 +6,33 @@ Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all yo
 
 #### 🐛 Bug Fix
 
+- `@auto-it/bot-list`, `auto`, `@auto-it/core`, `@auto-it/package-json-utils`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/magic-zero`, `@auto-it/maven`, `@auto-it/microsoft-teams`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/pr-body-labels`, `@auto-it/protected-branch`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/sbt`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`, `@auto-it/version-file`, `@auto-it/vscode`
+  - Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- `@auto-it/jira`
+  - 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
+
+#### 🏠 Internal
+
+- `@auto-it/cocoapods`
+  - Update some test refs [#2489](https://github.com/intuit/auto/pull/2489) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 4
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC))
+
+---
+
+# v11.3.1 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all your work!
+
+#### 🐛 Bug Fix
+
 - `@auto-it/jira`
   - 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
 
