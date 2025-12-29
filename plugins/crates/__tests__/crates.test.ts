@@ -234,6 +234,7 @@ describe("CratesPlugin", () => {
         expect(exec).toHaveBeenCalledWith("cargo", ["publish"]);
         expect(exec).toHaveBeenCalledWith("git", [
           "push",
+          "--atomic",
           "--follow-tags",
           "--set-upstream",
           "origin",

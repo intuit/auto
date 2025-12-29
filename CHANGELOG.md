@@ -1,3 +1,166 @@
+# v11.3.6 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Andrew Lisowski ([@sfc-gh-alisowski](https://github.com/sfc-gh-alisowski)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - add timeout to npm view [#2513](https://github.com/intuit/auto/pull/2513) ([@sfc-gh-alisowski](https://github.com/sfc-gh-alisowski))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@sfc-gh-alisowski](https://github.com/sfc-gh-alisowski))
+
+---
+
+# v11.3.5 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Kevin Ross ([@rosskevin](https://github.com/rosskevin)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/npm`
+  - Fix inspection of lerna settings #2488 [#2490](https://github.com/intuit/auto/pull/2490) ([@rosskevin](https://github.com/rosskevin))
+
+#### Authors: 1
+
+- Kevin Ross ([@rosskevin](https://github.com/rosskevin))
+
+---
+
+# v11.3.4 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/maven`, `@auto-it/npm`, `@auto-it/sbt`, `@auto-it/vscode`
+  - use atomic git push [#2496](https://github.com/intuit/auto/pull/2496) (nayan_gupta@intuit.com)
+
+#### Authors: 1
+
+- Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta))
+
+---
+
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.1 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/bot-list`, `auto`, `@auto-it/core`, `@auto-it/package-json-utils`, `@auto-it/all-contributors`, `@auto-it/brew`, `@auto-it/chrome`, `@auto-it/cocoapods`, `@auto-it/conventional-commits`, `@auto-it/crates`, `@auto-it/docker`, `@auto-it/exec`, `@auto-it/first-time-contributor`, `@auto-it/gem`, `@auto-it/gh-pages`, `@auto-it/git-tag`, `@auto-it/gradle`, `@auto-it/jira`, `@auto-it/magic-zero`, `@auto-it/maven`, `@auto-it/microsoft-teams`, `@auto-it/npm`, `@auto-it/omit-commits`, `@auto-it/omit-release-notes`, `@auto-it/pr-body-labels`, `@auto-it/protected-branch`, `@auto-it/released`, `@auto-it/s3`, `@auto-it/sbt`, `@auto-it/slack`, `@auto-it/twitter`, `@auto-it/upload-assets`, `@auto-it/version-file`, `@auto-it/vscode`
+  - Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- `@auto-it/jira`
+  - 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
+
+#### 🏠 Internal
+
+- `@auto-it/cocoapods`
+  - Update some test refs [#2489](https://github.com/intuit/auto/pull/2489) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 4
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC))
+
+---
+
+# v11.3.1 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/jira`
+  - 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
+
+#### 🏠 Internal
+
+- `@auto-it/cocoapods`
+  - Update some test refs [#2489](https://github.com/intuit/auto/pull/2489) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 2
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC))
+
+---
+
+# v11.3.0 (Fri Oct 25 2024)
+
+#### 🚀 Enhancement
+
+- `@auto-it/core`
+  - private packages should be included in changelogs [#2478](https://github.com/intuit/auto/pull/2478) ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 1
+
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.2.1 (Wed Aug 28 2024)
+
+#### 🐛 Bug Fix
+
+- `@auto-it/version-file`
+  - Respect `noVersionPrefix` option in the Version File plugin [#2472](https://github.com/intuit/auto/pull/2472) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
+# v11.2.0 (Wed Jul 17 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42)), for all your work!
+
+#### 🚀 Enhancement
+
+- `@auto-it/version-file`
+  - [Version File] Remove assumption that canary and next should be snapshots [#2467](https://github.com/intuit/auto/pull/2467) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 🐛 Bug Fix
+
+- `@auto-it/slack`
+  - fix: handling of long strings in slack plugin [#2464](https://github.com/intuit/auto/pull/2464) ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+#### Authors: 2
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+---
+
 # v11.1.6 (Thu Apr 04 2024)
 
 #### ⚠️ Pushed to `main`

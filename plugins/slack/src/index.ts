@@ -91,16 +91,17 @@ interface Block {
 const CHANGELOG_LINE = /^\s*•/;
 type Messages = [Block[], ...Array<Block[] | FileUpload>];
 
-/** Split a long spring into chunks by character limit */
+/** Split a long string into chunks by character limit */
 const splitCharacterLimitAtNewline = (line: string, charLimit: number) => {
   const splitLines = [];
   let buffer = line;
 
   while (buffer) {
     // get the \n closest to the char limit
-    const newlineIndex = buffer.lastIndexOf("\n", charLimit) || charLimit;
-    splitLines.push(buffer.slice(0, newlineIndex));
-    buffer = buffer.slice(newlineIndex);
+    const newlineIndex = buffer.indexOf("\n", charLimit);
+    const endOfLine = newlineIndex >= 0 ? newlineIndex : charLimit;
+    splitLines.push(buffer.slice(0, endOfLine));
+    buffer = buffer.slice(endOfLine);
   }
 
   return splitLines;

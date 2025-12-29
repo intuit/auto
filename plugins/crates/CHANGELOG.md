@@ -1,3 +1,46 @@
+# v11.3.4 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta)), for all your work!
+
+#### 🐛 Bug Fix
+
+- use atomic git push [#2496](https://github.com/intuit/auto/pull/2496) (nayan_gupta@intuit.com)
+- use atomic git push (nayan_gupta@intuit.com)
+
+#### Authors: 1
+
+- Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta))
+
+---
+
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.2 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- Bump version to: v11.3.1 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

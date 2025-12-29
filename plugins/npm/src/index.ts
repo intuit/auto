@@ -40,14 +40,24 @@ const { isCi } = envCi();
 /** Get the last published version for a npm package */
 async function getPublishedVersion(name: string) {
   try {
-    return await execPromise("npm", [
-      "view",
-      name,
-      "version",
-      "--registry",
-      await getRegistry(),
+    return await Promise.race([
+      new Promise<undefined>((resolve) => {
+        setTimeout(resolve, 30_000);
+      }),
+      // This timeout is very very long (5+ minutes)
+      execPromise("npm", [
+        "view",
+        name,
+        "version",
+        "--registry",
+        await getRegistry(),
+      ]),
     ]);
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("Timeout")) {
+      console.error("Timeout getting published version for", name);
+    }
+  }
 }
 
 /**
@@ -1500,6 +1510,7 @@ export default class NPMPlugin implements IPlugin {
 
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

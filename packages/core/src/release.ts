@@ -471,7 +471,7 @@ export default class Release {
     }
 
     const prsSinceLastRelease = await this.git.searchRepo({
-      q: `is:pr is:merged merged:>=${lastRelease.published_at}`,
+      q: `is:pr AND is:merged AND merged:>=${lastRelease.published_at}`,
     });
 
     if (!prsSinceLastRelease || !prsSinceLastRelease.items) {

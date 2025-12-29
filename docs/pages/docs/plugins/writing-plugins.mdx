@@ -170,6 +170,7 @@ export default class NPMPlugin {
       await execPromise("npm", ["publish"]);
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

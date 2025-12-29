@@ -378,12 +378,13 @@ describe("github", () => {
 
     issuesAndPullRequests.mockReturnValueOnce({ data: true });
     await gh.searchRepo({
-      q: "is:pr is:open",
+      q: "is:pr AND is:open",
       order: "desc",
     });
 
     expect(issuesAndPullRequests).toHaveBeenCalledWith({
-      q: "repo:Adam Dierkens/test is:pr is:open",
+      advanced_search: true,
+      q: "repo:Adam Dierkens/test AND (is:pr AND is:open)",
       order: "desc",
     });
   });

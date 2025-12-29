@@ -299,6 +299,7 @@ export default class DockerPlugin implements IPlugin {
 
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

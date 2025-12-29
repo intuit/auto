@@ -104,7 +104,7 @@ describe("Cocoapods Plugin", () => {
             data: {
               head: {
                 repo: {
-                  clone_url: "https://github.com/intuit-fork/auto.git",
+                  clone_url: "https://github.com/intuit/auto-test.git",
                 },
               },
             },
@@ -200,7 +200,7 @@ describe("Cocoapods Plugin", () => {
       await expect(
         updateSourceLocation(
           "./Test.podspec",
-          "https://github.com/somefork/auto.git"
+          "https://github.com/intuit/auto-fork.git"
         )
       ).rejects.toThrowError(
         "Error updating source location in podspec: ./Test.podspec"
@@ -215,13 +215,13 @@ describe("Cocoapods Plugin", () => {
 
       await updateSourceLocation(
         "./Test.podspec",
-        "https://github.com/somefork/auto.git"
+        "https://github.com/intuit/auto-fork.git"
       );
       expect(mock).lastCalledWith(
         expect.any(String),
         specWithVersion(
           "0.0.1",
-          "{ :git => 'https://github.com/somefork/auto.git', :commit => 'commithash' }"
+          "{ :git => 'https://github.com/intuit/auto-fork.git', :commit => 'commithash' }"
         )
       );
     });
@@ -559,7 +559,7 @@ describe("Cocoapods Plugin", () => {
         expect.any(String),
         specWithVersion(
           "0.1.0-canary.1.1.1",
-          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+          "{ :git => 'https://github.com/intuit/auto-test.git', :commit => 'undefined' }"
         )
       );
     });
@@ -592,14 +592,14 @@ describe("Cocoapods Plugin", () => {
         "./Test.podspec",
         specWithVersion(
           "0.1.0-canary.1.1.1",
-          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+          "{ :git => 'https://github.com/intuit/auto-test.git', :commit => 'undefined' }"
         )
       );
       expect(mock).toHaveBeenCalledWith(
         "./Test2.podspec",
         specWithVersion(
           "0.1.0-canary.1.1.1",
-          "{ :git => 'https://github.com/intuit-fork/auto.git', :commit => 'undefined' }"
+          "{ :git => 'https://github.com/intuit/auto-test.git', :commit => 'undefined' }"
         )
       );
     });

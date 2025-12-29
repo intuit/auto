@@ -109,6 +109,7 @@ export default class CratesPlugin implements IPlugin {
       auto.logger.log.info("Pushing local git changes to origin remote");
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

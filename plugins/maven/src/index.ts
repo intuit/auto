@@ -270,6 +270,7 @@ export default class MavenPlugin implements IPlugin {
 
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,
@@ -298,6 +299,7 @@ export default class MavenPlugin implements IPlugin {
 
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

@@ -879,6 +879,78 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "LittleGreenYoda42",
+      "name": "Martin Elias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10033977?v=4",
+      "profile": "https://github.com/LittleGreenYoda42",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "KetanReddy",
+      "name": "Ketan Reddy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8703262?v=4",
+      "profile": "https://github.com/KetanReddy",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "SimeonC",
+      "name": "Simeon Cheeseman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1085899?v=4",
+      "profile": "https://github.com/SimeonC",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "github-actions[bot]",
+      "name": "github-actions[bot]",
+      "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+      "profile": "https://github.com/apps/github-actions",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "nayanmanojgupta",
+      "name": "Nayan Gupta",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61581273?v=4",
+      "profile": "https://github.com/nayanmanojgupta",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "rosskevin",
+      "name": "Kevin Ross",
+      "avatar_url": "https://avatars.githubusercontent.com/u/136564?v=4",
+      "profile": "https://alienfast.com/",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "sfc-gh-alisowski",
+      "name": "Andrew Lisowski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/196691327?v=4",
+      "profile": "https://github.com/sfc-gh-alisowski",
+      "contributions": [
+        "doc",
+        "test",
+        "code"
+      ]
     }
   ],
   "commitConvention": "none"

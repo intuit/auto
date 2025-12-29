@@ -139,6 +139,7 @@ describe("VSCode Plugin", () => {
 
       expect(exec).toHaveBeenCalledWith("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         "origin",

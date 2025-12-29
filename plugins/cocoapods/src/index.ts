@@ -389,6 +389,7 @@ export default class CocoapodsPlugin implements IPlugin {
     auto.hooks.publish.tapPromise(this.name, async () => {
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

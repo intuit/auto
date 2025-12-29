@@ -138,6 +138,7 @@ export default class SbtPlugin implements IPlugin {
       auto.logger.log.info("Pushing new tag to GitHub");
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

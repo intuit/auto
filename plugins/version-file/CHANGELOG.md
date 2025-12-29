@@ -1,3 +1,64 @@
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.2 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- Bump version to: v11.3.1 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.2.1 (Wed Aug 28 2024)
+
+#### 🐛 Bug Fix
+
+- Respect `noVersionPrefix` option in the Version File plugin [#2472](https://github.com/intuit/auto/pull/2472) ([@KetanReddy](https://github.com/KetanReddy))
+- Add tests ([@KetanReddy](https://github.com/KetanReddy))
+- Version File plugin: respect noVersionPrefix ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
+# v11.2.0 (Wed Jul 17 2024)
+
+#### 🚀 Enhancement
+
+- [Version File] Remove assumption that canary and next should be snapshots [#2467](https://github.com/intuit/auto/pull/2467) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 🐛 Bug Fix
+
+- lint ([@sugarmanz](https://github.com/sugarmanz))
+- readme formatting ([@sugarmanz](https://github.com/sugarmanz))
+- make it non-breaking ([@sugarmanz](https://github.com/sugarmanz))
+- update version-file tests to reflect change ([@sugarmanz](https://github.com/sugarmanz))
+- update version-file docs to reflect change ([@sugarmanz](https://github.com/sugarmanz))
+- let publish script know more about the type of release, instead of hardcoding snapshot for next ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

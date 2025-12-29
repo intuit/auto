@@ -1,3 +1,54 @@
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.2 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all your work!
+
+#### 🐛 Bug Fix
+
+- Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- Bump version to: v11.3.1 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
+- 🐛 correctly parse multiple jira issues links in a message ([@SimeonC](https://github.com/SimeonC))
+
+#### Authors: 3
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC))
+
+---
+
+# v11.3.1 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC)), for all your work!
+
+#### 🐛 Bug Fix
+
+- 🐛 correctly parse multiple jira issues links in a message [#2505](https://github.com/intuit/auto/pull/2505) ([@SimeonC](https://github.com/SimeonC))
+- 🐛 correctly parse multiple jira issues links in a message ([@SimeonC](https://github.com/SimeonC))
+
+#### Authors: 1
+
+- Simeon Cheeseman ([@SimeonC](https://github.com/SimeonC))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

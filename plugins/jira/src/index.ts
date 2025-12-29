@@ -66,6 +66,18 @@ export function parseJira(commit: IExtendedCommit): IJiraCommit {
 const normalizeOptions = (options: IJiraPluginOptions | string) =>
   typeof options === "string" ? { url: options } : options;
 
+/** Remove all jira numbers from the string and return the rest */
+function removeJiraNumbers(subject: string) {
+  let rest;
+  let match = subject.match(jira);
+  while (match) {
+    rest = match[2] || "";
+    match = rest.match(jira);
+  }
+
+  return rest;
+}
+
 /** Include Jira story information in your changelogs */
 export default class JiraPlugin implements IPlugin {
   /** The name of the plugin */
@@ -115,13 +127,20 @@ export default class JiraPlugin implements IPlugin {
           const jiraCommit = parseJira(commit);
 
           if (jiraCommit.jira && this.options.url) {
-            const link = join(this.options.url, ...jiraCommit.jira.number);
-            const [, , rest] = commit.subject.match(jira) || [];
+            const commitRest = removeJiraNumbers(commit.subject);
 
-            line = line.replace(
-              jira,
-              `[${jiraCommit.jira.number}](${link})${rest ? ":" : ""} $2`
+            const links = jiraCommit.jira.number.map(
+              (number) => `[${number}](${join(this.options.url, number)})`
             );
+
+            line = line.replace(jira, (match) => {
+              const lineRest = removeJiraNumbers(match);
+              return `${links.join(",")}${
+                lineRest
+                  ? `${lineRest && commitRest ? ":" : ""} ${lineRest}`
+                  : ""
+              }`;
+            });
           }
 
           return line;

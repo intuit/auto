@@ -988,6 +988,7 @@ describe("publish", () => {
     expect(execPromise).not.toHaveBeenCalledWith("npm", ["publish"]);
     expect(execPromise).toHaveBeenCalledWith("git", [
       "push",
+      "--atomic",
       "--follow-tags",
       "--set-upstream",
       "origin",

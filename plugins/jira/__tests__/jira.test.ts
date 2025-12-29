@@ -12,6 +12,13 @@ import {
 } from "@auto-it/core/dist/utils/make-hooks";
 import JiraPlugin, { parseJira } from "../src";
 
+const multipleJiraMessages = [
+  "PLAYA-5052 PLAYA-6000: Add log",
+  "[PLAYA-5052][PLAYA-6000] - Add log",
+  "[PLAYA-5052] PLAYA-6000: Add log",
+  "PLAYA-5052 [PLAYA-6000] - Add log",
+];
+
 describe("parse jira", () => {
   test("no story", () => {
     const commit = {
@@ -52,18 +59,9 @@ describe("parse jira", () => {
       number: ["PLAYA-5052", "PLAYA-6000"],
     };
 
-    expect(
-      parseJira(makeCommitFromMsg("PLAYA-5052 PLAYA-6000: Add log")).jira
-    ).toStrictEqual(jira);
-    expect(
-      parseJira(makeCommitFromMsg("[PLAYA-5052][PLAYA-6000] - Add log")).jira
-    ).toStrictEqual(jira);
-    expect(
-      parseJira(makeCommitFromMsg("[PLAYA-5052] PLAYA-6000: Add log")).jira
-    ).toStrictEqual(jira);
-    expect(
-      parseJira(makeCommitFromMsg("PLAYA-5052 [PLAYA-6000] - Add log")).jira
-    ).toStrictEqual(jira);
+    multipleJiraMessages.forEach((message) => {
+      expect(parseJira(makeCommitFromMsg(message)).jira).toStrictEqual(jira);
+    });
   });
 });
 
@@ -103,6 +101,31 @@ describe("render jira", () => {
 
     expect(line).toBe(
       "[PLAYA-5052](jira.com/PLAYA-5052): Add log [author](link/to/author)"
+    );
+  });
+
+  test("multiple jira numbers", async () => {
+    const plugin = new JiraPlugin({ url: "jira.com" });
+    const hooks = makeHooks();
+    const changelogHooks = makeChangelogHooks();
+
+    plugin.apply({ hooks, logger: dummyLog() } as Auto);
+    await hooks.onCreateChangelog.promise(
+      { hooks: changelogHooks } as Changelog,
+      { bump: SEMVER.patch }
+    );
+
+    await Promise.all(
+      multipleJiraMessages.map(async (message) => {
+        const line = await changelogHooks.renderChangelogLine.promise(
+          message,
+          makeCommitFromMsg(message)
+        );
+
+        expect(line).toBe(
+          "[PLAYA-5052](jira.com/PLAYA-5052),[PLAYA-6000](jira.com/PLAYA-6000): Add log"
+        );
+      })
     );
   });
 });

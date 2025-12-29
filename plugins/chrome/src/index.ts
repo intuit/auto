@@ -215,6 +215,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       // push to github
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,

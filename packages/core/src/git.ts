@@ -523,7 +523,8 @@ export default class Git {
     options: RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"]
   ) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
-    options.q = `${repo} ${options.q}`;
+    options.q = `${repo} AND (${options.q})`;
+    options.advanced_search = true;
 
     this.logger.verbose.info("Searching repo using:\n", options);
 

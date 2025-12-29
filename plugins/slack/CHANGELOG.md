@@ -1,3 +1,46 @@
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.2 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- Bump version to: v11.3.1 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+#### Authors: 2
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.2.0 (Wed Jul 17 2024)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42)), for all your work!
+
+#### 🐛 Bug Fix
+
+- fix: handling of long strings in slack plugin [#2464](https://github.com/intuit/auto/pull/2464) ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+- fix: handling of long strings in slack ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+#### Authors: 1
+
+- Martin Elias ([@LittleGreenYoda42](https://github.com/LittleGreenYoda42))
+
+---
+
 # v11.1.6 (Thu Apr 04 2024)
 
 #### ⚠️ Pushed to `main`

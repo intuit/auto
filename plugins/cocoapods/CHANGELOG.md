@@ -1,3 +1,69 @@
+# v11.3.4 (Fri Nov 14 2025)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta)), for all your work!
+
+#### 🐛 Bug Fix
+
+- use atomic git push [#2496](https://github.com/intuit/auto/pull/2496) (nayan_gupta@intuit.com)
+- use atomic git push (nayan_gupta@intuit.com)
+
+#### Authors: 1
+
+- Nayan Gupta ([@nayanmanojgupta](https://github.com/nayanmanojgupta))
+
+---
+
+# v11.3.3 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- fix: handle Github API deprecations [#2502](https://github.com/intuit/auto/pull/2502) ([@jBouyoud](https://github.com/jBouyoud))
+
+#### Authors: 1
+
+- Julien Bouyoud ([@jBouyoud](https://github.com/jBouyoud))
+
+---
+
+# v11.3.2 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- Automatic release [#2508](https://github.com/intuit/auto/pull/2508) ([@hipstersmoothie](https://github.com/hipstersmoothie) [@github-actions[bot]](https://github.com/github-actions[bot]))
+- Bump version to: v11.3.1 \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update CHANGELOG.md \[skip ci\] ([@hipstersmoothie](https://github.com/hipstersmoothie))
+- Update test refs in cocoapods ([@adierkens](https://github.com/adierkens))
+
+#### 🏠 Internal
+
+- Update some test refs [#2489](https://github.com/intuit/auto/pull/2489) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 3
+
+- [@github-actions[bot]](https://github.com/github-actions[bot])
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Andrew Lisowski ([@hipstersmoothie](https://github.com/hipstersmoothie))
+
+---
+
+# v11.3.1 (Fri Nov 14 2025)
+
+#### 🐛 Bug Fix
+
+- Update test refs in cocoapods ([@adierkens](https://github.com/adierkens))
+
+#### 🏠 Internal
+
+- Update some test refs [#2489](https://github.com/intuit/auto/pull/2489) ([@adierkens](https://github.com/adierkens))
+
+#### Authors: 1
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+
+---
+
 # v11.1.0 (Fri Feb 23 2024)
 
 #### 🚀 Enhancement

@@ -128,6 +128,7 @@ export default class VscodePlugin implements IPlugin {
 
       await execPromise("git", [
         "push",
+        "--atomic",
         "--follow-tags",
         "--set-upstream",
         auto.remote,
