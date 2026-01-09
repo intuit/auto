@@ -1551,7 +1551,7 @@ export default class NPMPlugin implements IPlugin {
             "The above versions reflect the current git tags pointing at the HEAD commit. During the normal release flow these tags would reflect the latest released version."
           );
 
-          return [];
+          return;
         }
 
         const packagePaths = lernaPackages.map((p) => p.path);
