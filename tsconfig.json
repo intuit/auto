@@ -10,6 +10,8 @@
     "importHelpers": true, // Use tslib for helper code
     /* Syntax: */
     "strict": true,
+    "useUnknownInCatchVariables": false,
+    "skipLibCheck": true,
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,

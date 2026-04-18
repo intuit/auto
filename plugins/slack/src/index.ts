@@ -430,7 +430,7 @@ export default class SlackPlugin implements IPlugin {
                 "Content-Type": "application/json; charset=utf-8",
                 Authorization: `Bearer ${token}`,
               },
-              agent,
+              agent: agent as any,
             });
           }, Promise.resolve());
         } else {
@@ -449,7 +449,7 @@ export default class SlackPlugin implements IPlugin {
                 "application/x-www-form-urlencoded; charset=utf-8",
               Authorization: `Bearer ${token}`,
             },
-            agent,
+            agent: agent as any,
           });
         }
       }, Promise.resolve());
@@ -464,7 +464,7 @@ export default class SlackPlugin implements IPlugin {
           channel: this.options.channel,
         }),
         headers: { "Content-Type": "application/json" },
-        agent,
+        agent: agent as any,
       });
     }
 

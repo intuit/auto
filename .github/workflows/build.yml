@@ -24,14 +24,14 @@ jobs:
   install:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/install-deps
 
   build:
     runs-on: ubuntu-latest
     needs: install
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare repository
         run: git fetch --unshallow --tags
       - uses: ./.github/actions/install-deps
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - uses: 8BitJonny/gh-get-current-pr@2.2.0
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - run: yarn lint
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
@@ -85,7 +85,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: 8BitJonny/gh-get-current-pr@2.2.0
         id: PR
         with:
