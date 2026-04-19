@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@auto-it/bot-list": "link:../../packages/bot-list",
-    "@endemolshinegroup/cosmiconfig-typescript-loader": "^3.0.2",
+    "cosmiconfig-typescript-loader": "^4.4.0",
     "@octokit/core": "^5.2.2",
     "@octokit/plugin-enterprise-compatibility": "^4.1.0",
     "@octokit/plugin-retry": "^6.1.0",
