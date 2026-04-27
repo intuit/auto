@@ -673,6 +673,7 @@ export default class Auto {
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi,
       graphqlBaseUrl: config.githubGraphqlApi,
+      githubAuthTimeout: config.githubAuthTimeout,
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
@@ -1858,6 +1859,7 @@ export default class Auto {
         baseBranch: this.baseBranch,
         graphqlBaseUrl: gitOptions.graphqlBaseUrl,
         agent: gitOptions.agent,
+        githubAuthTimeout: gitOptions.githubAuthTimeout,
       },
       this.logger
     );

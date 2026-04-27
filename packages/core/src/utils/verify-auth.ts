@@ -1,9 +1,16 @@
 import { spawn } from "child_process";
+import createLog from "./logger";
+
+const log = createLog();
 
 /**
  *
  */
-export default function verifyAuth(remote: string, branch: string) {
+export default function verifyAuth(
+  remote: string,
+  branch: string,
+  timeoutSeconds = 5
+) {
   return new Promise<boolean>((resolve) => {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -28,8 +35,11 @@ export default function verifyAuth(remote: string, branch: string) {
       timeout = setTimeout(() => {
         // Kill the spawned process and it's children
         process.kill(-child.pid);
+        log.veryVerbose.info(
+          `verifyAuth timed out after ${timeoutSeconds}s`
+        );
         resolve(false);
-      }, 5 * 1000);
+      }, timeoutSeconds * 1000);
 
       let err = "";
 
