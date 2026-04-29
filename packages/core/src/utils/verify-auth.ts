@@ -3,14 +3,35 @@ import createLog from "./logger";
 
 const log = createLog();
 
+const DEFAULT_TIMEOUT_SECONDS = 5;
+
+/** Coerce arbitrary input into a positive, finite number of seconds. */
+const resolveTimeoutSeconds = (value: unknown): number => {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    if (value !== undefined) {
+      log.log.warn(
+        `Invalid githubAuthTimeout (${String(
+          value
+        )}); expected a positive number. Falling back to ${DEFAULT_TIMEOUT_SECONDS}s.`
+      );
+    }
+
+    return DEFAULT_TIMEOUT_SECONDS;
+  }
+
+  return value;
+};
+
 /**
  *
  */
 export default function verifyAuth(
   remote: string,
   branch: string,
-  timeoutSeconds = 5
+  timeoutSecondsInput?: number
 ) {
+  const timeoutSeconds = resolveTimeoutSeconds(timeoutSecondsInput);
+
   return new Promise<boolean>((resolve) => {
     let timeout: NodeJS.Timeout | null = null;
 
