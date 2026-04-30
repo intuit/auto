@@ -31,6 +31,7 @@ export default function verifyAuth(
   timeoutSecondsInput?: number
 ) {
   const timeoutSeconds = resolveTimeoutSeconds(timeoutSecondsInput);
+  log.veryVerbose.info(`verifyAuth using timeout of ${timeoutSeconds} seconds`);
 
   return new Promise<boolean>((resolve) => {
     let timeout: NodeJS.Timeout | null = null;
