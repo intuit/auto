@@ -724,6 +724,7 @@ export default class Auto {
     const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
     const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
 
+    this.logger.verbose.info("Trying auth ssh URL");
     if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
       this.logger.veryVerbose.note("Using ssh URL as remote");
       return ssh_url;
@@ -738,12 +739,14 @@ export default class Auto {
         host: `${hostname}${port ? `:${port}` : ""}`,
       });
 
+      this.logger.verbose.info("Trying auth token + HTTPS URL");
       if (await this.git.verifyAuth(urlWithAuth)) {
         this.logger.veryVerbose.note("Using token + html URL as remote");
         return urlWithAuth;
       }
     }
 
+    this.logger.verbose.info("Trying auth bare HTTPS URL");
     if (html_url && (await this.git.verifyAuth(html_url))) {
       this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
