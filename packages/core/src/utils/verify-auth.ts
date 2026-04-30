@@ -6,7 +6,7 @@ const log = createLog();
 const DEFAULT_TIMEOUT_SECONDS = 5;
 
 /** Coerce arbitrary input into a positive, finite number of seconds. */
-const resolveTimeoutSeconds = (value: unknown): number => {
+export const resolveTimeoutSeconds = (value: unknown): number => {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     if (value !== undefined) {
       log.log.warn(
