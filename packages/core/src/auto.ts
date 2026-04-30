@@ -746,7 +746,7 @@ export default class Auto {
       }
     }
 
-    this.logger.verbose.info("Trying verifyAuth with bare HTTPS URL");
+    this.logger.verbose.info("Trying verifyAuth with bare html URL");
     if (html_url && (await this.git.verifyAuth(html_url))) {
       this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
