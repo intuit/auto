@@ -5,6 +5,13 @@ const log = createLog();
 
 const DEFAULT_TIMEOUT_SECONDS = 5;
 
+/**
+ * Redact credentials embedded in a remote URL so they are safe to log.
+ * Handles `https://user:password@host/...`
+ */
+export const redactRemote = (remote: string): string =>
+  remote.replace(/(https:\/\/)[^/@\s]+@/g, "$1****@");
+
 /** Coerce arbitrary input into a positive, finite number of seconds. */
 export const resolveTimeoutSeconds = (value: unknown): number => {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
@@ -31,7 +38,10 @@ export default function verifyAuth(
   timeoutSecondsInput?: number
 ) {
   const timeoutSeconds = resolveTimeoutSeconds(timeoutSecondsInput);
-  log.veryVerbose.info(`verifyAuth using timeout of ${timeoutSeconds} seconds`);
+  const safeRemote = redactRemote(remote);
+  log.veryVerbose.info(
+    `verifyAuth using timeout of ${timeoutSeconds} seconds for remote ${safeRemote}`
+  );
 
   return new Promise<boolean>((resolve) => {
     let timeout: NodeJS.Timeout | null = null;
@@ -44,6 +54,8 @@ export default function verifyAuth(
     };
 
     try {
+      const startTime = Date.now();
+
       const child = spawn(
         `git push --dry-run --no-verify ${remote} HEAD:${branch} -q`,
         {
@@ -71,6 +83,12 @@ export default function verifyAuth(
 
       child.on("exit", () => {
         clear();
+        log.veryVerbose.info(
+          `verifyAuth for remote ${safeRemote} completed in ${
+            Date.now() - startTime
+          }ms`
+        );
+
         resolve(
           !err.startsWith("fatal: could not read Username") &&
             !err.startsWith("ssh_askpass") &&
