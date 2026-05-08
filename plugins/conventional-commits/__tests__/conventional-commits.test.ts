@@ -198,6 +198,39 @@ describe("parseCommit", () => {
     });
   });
 
+  test("should not downgrade merge commit bump with PR commit bumps", async () => {
+    const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
+    const autoHooks = makeHooks();
+    conventionalCommitsPlugin.apply({
+      hooks: autoHooks,
+      labels: defaultLabels,
+      semVerLabels: versionLabels,
+      logger: dummyLog(),
+      git: {
+        getCommitsForPR: () =>
+          Promise.resolve([
+            { sha: "1", commit: { message: "feat: add new feature" } },
+            { sha: "2", commit: { message: "chore: update config" } },
+          ]),
+      } as any,
+    } as Auto);
+
+    const logParseHooks = makeLogParseHooks();
+    autoHooks.onCreateLogParse.call({
+      hooks: logParseHooks,
+    } as LogParse);
+
+    const commit = makeCommitFromMsg("feat!: breaking change via squash merge", {
+      pullRequest: { number: 456 },
+    });
+    expect(
+      await logParseHooks.parseCommit.promise({ ...commit })
+    ).toStrictEqual({
+      ...commit,
+      labels: ["major"],
+    });
+  });
+
   test("should skip when not a fix/feat/breaking change commit", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
