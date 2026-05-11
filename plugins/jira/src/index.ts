@@ -25,7 +25,7 @@ interface InputResponse<T = "string"> {
 interface IJiraCommit extends IExtendedCommit {
   /** The jira info for the commit */
   jira?: {
-    /** The jira story numbers attached to teh commit */
+    /** The jira story numbers attached to the commit */
     number: string[];
   };
 }
