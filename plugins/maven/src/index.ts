@@ -111,8 +111,9 @@ export default class MavenPlugin implements IPlugin {
   }
 
   /** Detect whether the parent pom.xml has the versions-maven-plugin **/
-  private static async detectVersionMavenPlugin(): Promise<boolean> {
-    const pom = await getPom();
+  private static async detectVersionMavenPlugin(options: IMavenPluginOptions, auto: Auto): Promise<boolean> {
+    await maven.createEffectivePom(options, auto);
+    const pom = await getPom("target/output.xml");
     const pomDom = new jsdom.JSDOM(pom.pomXml, { contentType: "text/xml" })
       .window.document;
     const versionsMavenPluginNode = pomDom.evaluate(
@@ -182,7 +183,7 @@ export default class MavenPlugin implements IPlugin {
         this.snapshotRelease = true;
       }
 
-      this.versionsMavenPlugin = await MavenPlugin.detectVersionMavenPlugin();
+      this.versionsMavenPlugin = await MavenPlugin.detectVersionMavenPlugin(this.options, auto);
     });
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
