@@ -5,12 +5,12 @@ runs:
   using: "composite"
   steps:
     - name: Use nodejs
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 16.18
+        node-version: 20
 
     - name: restore workspace cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: node_modules
       with:
         path: |
@@ -25,7 +25,7 @@ runs:
       shell: bash
 
     - name: restore pkg cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: pkg
       with:
         path: ~/.pkg-cache
@@ -37,6 +37,6 @@ runs:
       if: steps.pkg.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        yarn pkg-fetch -n node16 -p macos -a x64
-        yarn pkg-fetch -n node16 -p win -a x64
-        yarn pkg-fetch -n node16 -p linux -a x64
+        yarn pkg-fetch -n node18 -p macos -a x64
+        yarn pkg-fetch -n node18 -p win -a x64
+        yarn pkg-fetch -n node18 -p linux -a x64

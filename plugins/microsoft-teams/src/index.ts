@@ -168,7 +168,7 @@ export default class MicrosoftTeamsPlugin {
         ],
       }),
       headers: { "Content-Type": "application/json" },
-      agent,
+      agent: agent as any,
     });
 
     auto.logger.verbose.info("Posted release notes to microsoft teams.");

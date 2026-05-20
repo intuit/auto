@@ -27,7 +27,10 @@ export default function verifyAuth(remote: string, branch: string) {
 
       timeout = setTimeout(() => {
         // Kill the spawned process and it's children
-        process.kill(-child.pid);
+        if (child.pid) {
+          process.kill(-child.pid);
+        }
+
         resolve(false);
       }, 5 * 1000);
 

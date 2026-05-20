@@ -98,8 +98,6 @@ const makePrBodyIdentifier = (context: string) =>
   makeIdentifier("PR BODY", context);
 
 interface ThrottleOpts {
-  /** The request object */
-  request: { /** What retry we are on */ retryCount: number };
   /** API method that was throttled */
   method: string;
   /** URL that was throttled */
@@ -136,26 +134,30 @@ export default class Git {
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
-      previews: ["symmetra-preview"],
       request: { agent: this.options.agent },
       throttle: {
         /** Add a wait once rate limit is hit */
-        onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
+        onRateLimit: (
+          retryAfter: number,
+          opts: ThrottleOpts,
+          _octokit: unknown,
+          retryCount: number
+        ) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
 
-          if (opts.request.retryCount < 5) {
+          if (retryCount < 5) {
             this.logger.log.log(
               `Retrying after ${prettyMs(retryAfter * 1000)}!`
             );
             return true;
           }
         },
-        /** wait after abuse */
-        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
+        /** wait after hitting a secondary rate limit */
+        onSecondaryRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
           this.logger.log.error(
-            `Went over abuse rate limit ${opts.method} ${
+            `Hit secondary rate limit ${opts.method} ${
               opts.url
             }, retrying in ${prettyMs(retryAfter * 1000)}.`
           );
@@ -519,7 +521,10 @@ export default class Git {
   ) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} AND (${options.q})`;
-    options.advanced_search = true;
+    // The REST search endpoint uses the new "advanced search" engine; the
+    // parameter isn't in the typed surface of @octokit/rest, so attach it
+    // via an index cast.
+    (options as Record<string, unknown>).advanced_search = "true";
 
     this.logger.verbose.info("Searching repo using:\n", options);
 

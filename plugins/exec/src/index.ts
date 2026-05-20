@@ -27,7 +27,7 @@ function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
   exclude: ExcludedHook[]
 ) {
   type HookType = keyof HookObject;
-  const hooks = Object.keys(hookCreatorFn()) as HookType[];
+  const hooks = Object.keys(hookCreatorFn() as Record<string, unknown>) as HookType[];
 
   return t.partial(
     fromEntries(
@@ -84,7 +84,8 @@ const runExecSync = (
       .join("\n")}
     `);
 
-    execResult = trim(execSync(command, options));
+    const output = execSync(command, options);
+    execResult = trim(typeof output === "string" ? output : output.toString());
   } catch (e) {
     if (e && e.code === "E2BIG") {
       auto.logger.log.error(endent`
