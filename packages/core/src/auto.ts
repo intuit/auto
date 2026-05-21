@@ -950,13 +950,7 @@ export default class Auto {
     }
 
     let { sha } = options;
-    let prNumber: number | undefined;
-
-    try {
-      prNumber = this.getPrNumber("pr", pr);
-    } catch (error) {
-      // default to sha if no PR found
-    }
+    const prNumber = getPrNumberFromEnv(pr);
 
     this.logger.verbose.info("Using command: 'pr-status'");
 
