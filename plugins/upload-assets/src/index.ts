@@ -21,7 +21,7 @@ const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 const canaryTag = "0.0.0-canary";
 
-const requiredPluginOptions = t.interface({
+const requiredPluginOptions = t.type({
   /** Paths to assets to upload */
   assets: t.array(t.string),
 });
@@ -29,6 +29,16 @@ const requiredPluginOptions = t.interface({
 const optionalPluginOptions = t.partial({
   /** Max number of assets to keep in the canary release */
   maxCanaryAssets: t.number,
+  /** Custom message for header in PR */
+  headerMessage: t.string,
+  /** Filter assets by regular expression */
+  filter: t.string,
+  /** Whether to comment on PRs made by bots */
+  includeBotPrs: t.boolean,
+  /** Group assets by regular expression */
+  group: t.string,
+  /** Compact view for PRs comment */
+  compact: t.boolean,
 });
 
 const pluginOptions = t.intersection([
@@ -64,11 +74,26 @@ export default class UploadAssetsPlugin implements IPlugin {
     this.options = {
       ...normalizedOptions,
       maxCanaryAssets: normalizedOptions.maxCanaryAssets || 300,
+      headerMessage:
+        normalizedOptions.headerMessage || ":baby_chick: Download canary assets:",
+      filter: normalizedOptions.filter || "",
+      includeBotPrs:
+        normalizedOptions.includeBotPrs === undefined
+          ? true
+          : normalizedOptions.includeBotPrs,
+      group: normalizedOptions.group || "",
+      compact: normalizedOptions.compact || false,
     };
   }
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    const headerMessage = this.options.headerMessage;
+    const filter = this.options.filter;
+    const includeBotPrs = this.options.includeBotPrs;
+    const group = this.options.group;
+    const compact = this.options.compact;
+
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
         return validatePluginConfiguration(
@@ -112,23 +137,18 @@ export default class UploadAssetsPlugin implements IPlugin {
 
         const prNumber = getPrNumberFromEnv();
 
-        if (!prNumber) {
+        if (!prNumber || !includeBotPrs) {
           return;
         }
 
-        const assetList = assets
-          .map((asset) => `[${asset.name}](${asset.browser_download_url})  `)
-          .join("\n");
+        const assetList = this.getFilteredList(assets, filter);
+        const groupList = this.getGroupedList(assets, group);
 
-        await auto.git?.addToPrBody(
-          endent`
-            :baby_chick: Download canary assets:
+        const message = compact
+          ? this.getCompactPullRequestMessage(headerMessage, assetList, groupList)
+          : this.getPullRequestMessage(headerMessage, assetList, groupList);
 
-            ${assetList}
-          `,
-          prNumber,
-          "canary-assets"
-        );
+        await auto.git?.addToPrBody(message, prNumber, "canary-assets");
       }
     );
 
@@ -140,6 +160,120 @@ export default class UploadAssetsPlugin implements IPlugin {
       await this.uploadAssets(auto, response);
       await this.cleanupCanaryAssets(auto);
     });
+  }
+
+  // prettier-ignore
+  /** Get link list by type */
+  private getLinkList(assets: AssetResponse[], type: "html" | "markdown"): string {
+    /**  Get Markdown link  */
+    const getMarkdownLink = (asset: AssetResponse) =>
+      `[${asset.name}](${asset.browser_download_url})`;
+
+    /** Get HTML link */
+    const getHTMLLink = (asset: AssetResponse) =>
+      `<a href='${asset.browser_download_url}'>${asset.name}</a><br>`;
+
+    return assets
+      .map(type === "html" ? getHTMLLink : getMarkdownLink)
+      .join("\n");
+  }
+
+  // prettier-ignore
+  /** Get asset list by filter */
+  private getFilteredList(assets: AssetResponse[], filter: string): AssetResponse[] {
+    if (!filter) {
+      return assets;
+    }
+    
+    const regexp = new RegExp(filter, "mi");
+    return assets.filter(({ name }) => regexp.test(name));
+  }
+
+  // prettier-ignore
+  /** Get asset list by group */
+  private getGroupedList(assets: AssetResponse[], group: string): Record<string, AssetResponse[]> | undefined {
+    if (!group) {
+      return;
+    }
+
+    const regexp = new RegExp(group, "mi");
+
+    return assets.reduce(
+      (groupList: Record<string, AssetResponse[]>, asset) => {
+        const name = (regexp.exec(asset.name) || [])[1];
+
+        if (groupList[name]) {
+          groupList[name].push(asset);
+        } else {
+          groupList[name] = [asset];
+        }
+
+        return groupList;
+      },
+      {}
+    );
+  }
+
+  /** Get pull request message */
+  private getPullRequestMessage(
+    message: string,
+    assetList: AssetResponse[],
+    groupList?: Record<string, AssetResponse[]>
+  ): string {
+    /** Get grouped link list */
+    const getGroupedLinkList = (groupList: Record<string, AssetResponse[]>) =>
+      Object.entries(groupList)
+        .map(
+          ([group, assets]) =>
+            endent`
+                ### ${group}
+                ${this.getLinkList(assets, "markdown")}`
+        )
+        .join("\n");
+
+    return endent`
+        ${message}
+  
+        ${
+          groupList
+            ? getGroupedLinkList(groupList)
+            : this.getLinkList(assetList, "markdown")
+        }
+      `;
+  }
+
+  /** Get compact pull request message */
+  private getCompactPullRequestMessage(
+    message: string,
+    assetList: AssetResponse[],
+    groupList?: Record<string, AssetResponse[]>
+  ): string {
+    /** Get grouped link list */
+    const getGroupedLinkList = (groupList: Record<string, AssetResponse[]>) =>
+      Object.entries(groupList)
+        .map(
+          ([group, assets]) => endent`
+          <details>
+            <summary>${group}</summary>
+            <blockquote>
+              ${this.getLinkList(assets, "html")}
+            </blockquote>
+          </details>`
+        )
+        .join("\n");
+
+    return endent`
+      <details>
+        <summary>${message}</summary>
+        <blockquote>
+          ${
+            groupList
+              ? getGroupedLinkList(groupList)
+              : this.getLinkList(assetList, "html")
+          }
+        </blockquote>
+      </details>
+    `;
   }
 
   /** Upload the configured asset to a release */

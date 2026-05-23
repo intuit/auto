@@ -36,8 +36,8 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
-    "@auto-it/package-json-utils": "link:../../packages/package-json-utils",
+    "@auto-it/core": "file:../../packages/core",
+    "@auto-it/package-json-utils": "file:../../packages/package-json-utils",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "semver": "^7.0.0",

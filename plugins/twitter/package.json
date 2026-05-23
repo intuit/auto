@@ -38,7 +38,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "file:../../packages/core",
     "@types/twitter-text": "^3.1.0",
     "endent": "^2.1.0",
     "fp-ts": "^2.5.3",

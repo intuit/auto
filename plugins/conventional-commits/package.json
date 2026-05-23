@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "file:../../packages/core",
     "array.prototype.flatmap": "^1.2.2",
     "conventional-changelog-core": "^4.2.0",
     "conventional-changelog-preset-loader": "^2.3.4",
