@@ -22,10 +22,27 @@ export function dummyLog(): ILogger {
   };
 }
 
+const loggerConfig: signale.SignaleOptions<"error" | "warn"> = { 
+  types: { 
+    error: { 
+      stream: process.stderr,
+      badge: '',
+      label: '',
+      color: ''
+    },
+    warn: {
+      stream: process.stderr,
+      badge: '',
+      label: '',
+      color: ''
+    }
+  }
+}
+
 const logger: ILogger = {
-  log: new signale.Signale(),
-  verbose: new signale.Signale(),
-  veryVerbose: new signale.Signale(),
+  log: new signale.Signale(loggerConfig),
+  verbose: new signale.Signale(loggerConfig),
+  veryVerbose: new signale.Signale(loggerConfig),
 };
 
 /** Turn the logs on an off */
