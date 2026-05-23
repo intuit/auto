@@ -673,6 +673,7 @@ export default class Auto {
       agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi,
       graphqlBaseUrl: config.githubGraphqlApi,
+      githubAuthTimeout: config.githubAuthTimeout,
     };
 
     this.git = this.startGit(githubOptions as IGitOptions);
@@ -723,6 +724,7 @@ export default class Auto {
     const envVar = Object.keys(GIT_TOKENS).find((v) => process.env[v]) || "";
     const gitCredentials = GIT_TOKENS[envVar] || process.env.GH_TOKEN;
 
+    this.logger.verbose.info("Trying verifyAuth with ssh URL");
     if (ssh_url && (await this.git.verifyAuth(ssh_url))) {
       this.logger.veryVerbose.note("Using ssh URL as remote");
       return ssh_url;
@@ -737,12 +739,14 @@ export default class Auto {
         host: `${hostname}${port ? `:${port}` : ""}`,
       });
 
+      this.logger.verbose.info("Trying verifyAuth with token + html URL");
       if (await this.git.verifyAuth(urlWithAuth)) {
         this.logger.veryVerbose.note("Using token + html URL as remote");
         return urlWithAuth;
       }
     }
 
+    this.logger.verbose.info("Trying verifyAuth with bare html URL");
     if (html_url && (await this.git.verifyAuth(html_url))) {
       this.logger.veryVerbose.note("Using bare html URL as remote");
       return html_url;
@@ -1858,6 +1862,7 @@ export default class Auto {
         baseBranch: this.baseBranch,
         graphqlBaseUrl: gitOptions.graphqlBaseUrl,
         agent: gitOptions.agent,
+        githubAuthTimeout: gitOptions.githubAuthTimeout,
       },
       this.logger
     );

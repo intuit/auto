@@ -124,6 +124,14 @@ const defaultOptions: AutoOption[] = [
     description: "Plugins to load auto with. (defaults to just npm)",
     group: "global",
   },
+  {
+    name: "github-auth-timeout",
+    type: Number,
+    description:
+      "Timeout in seconds for the `git push --dry-run` GitHub auth probe. Default: 5.",
+    group: "global",
+    config: true,
+  },
 ];
 
 const baseBranch: AutoOption = {

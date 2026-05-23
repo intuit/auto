@@ -44,6 +44,8 @@ export interface IGitOptions {
   token?: string;
   /** An optional proxy agent to route requests through */
   agent?: HttpsProxyAgent;
+  /** Timeout (in seconds) for the `git push --dry-run` GitHub auth probe */
+  githubAuthTimeout?: number;
 }
 
 /** An error originating from the GitHub */
@@ -177,7 +179,11 @@ export default class Git {
 
   /** Verify the write access authorization to remote repository with push dry-run. */
   async verifyAuth(url: string) {
-    return verifyAuth(url, this.options.baseBranch);
+    return verifyAuth(
+      url,
+      this.options.baseBranch,
+      this.options.githubAuthTimeout
+    );
   }
 
   /** Get the "Latest Release" from GitHub */
