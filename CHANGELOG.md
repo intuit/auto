@@ -1,3 +1,26 @@
+# v11.3.7 (Thu Jun 18 2026)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Prem Sugeendran ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran)), for all your work!
+
+#### 🐛 Bug Fix
+
+- `@auto-it/core`
+  - fix(core): guard against empty release in graduation check [#2531](https://github.com/intuit/auto/pull/2531) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 📝 Documentation
+
+- `@auto-it/jira`
+  - docs: fix typo "teh" → "the" in jira plugin JSDoc [#2529](https://github.com/intuit/auto/pull/2529) ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran))
+
+#### Authors: 2
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- Prem Sugeendran ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran))
+
+---
+
 # v11.3.6 (Fri Nov 14 2025)
 
 :tada: This release contains work from a new contributor! :tada:
