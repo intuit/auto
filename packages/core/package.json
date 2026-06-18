@@ -37,7 +37,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/bot-list": "link:../../packages/bot-list",
+    "@auto-it/bot-list": "file:../../packages/bot-list",
     "@endemolshinegroup/cosmiconfig-typescript-loader": "^3.0.2",
     "@octokit/core": "^3.5.1",
     "@octokit/plugin-enterprise-compatibility": "1.3.0",
