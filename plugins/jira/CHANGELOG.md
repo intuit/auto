@@ -1,3 +1,23 @@
+# v11.3.7 (Thu Jun 18 2026)
+
+:tada: This release contains work from a new contributor! :tada:
+
+Thank you, Prem Sugeendran ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran)), for all your work!
+
+#### 🐛 Bug Fix
+
+- docs: fix typo "teh" â†’ "the" in jira plugin JSDoc ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran))
+
+#### 📝 Documentation
+
+- docs: fix typo "teh" → "the" in jira plugin JSDoc [#2529](https://github.com/intuit/auto/pull/2529) ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran))
+
+#### Authors: 1
+
+- Prem Sugeendran ([@premsreelathasugeendran](https://github.com/premsreelathasugeendran))
+
+---
+
 # v11.3.3 (Fri Nov 14 2025)
 
 #### 🐛 Bug Fix

@@ -1,3 +1,16 @@
+# v11.3.7 (Thu Jun 18 2026)
+
+#### 🐛 Bug Fix
+
+- fix(core): guard against empty release in graduation check [#2531](https://github.com/intuit/auto/pull/2531) ([@sugarmanz](https://github.com/sugarmanz))
+- fix(core): guard against empty release in graduation check ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # v11.3.3 (Fri Nov 14 2025)
 
 #### 🐛 Bug Fix
