@@ -242,11 +242,18 @@ export default class ConventionalCommitsPlugin implements IPlugin {
               | SEMVER.minor
               | SEMVER.patch => Boolean(bump && bump !== "skip"));
 
-            if (prBumps.includes(SEMVER.major)) {
+            // Include the merge commit's own bump so that PR commit bumps
+            // can only upgrade the release type, never downgrade it.
+            // This prevents squash-merged PRs with e.g. "feat!:" title
+            // from being downgraded to "minor" by individual "feat:" commits.
+            const allBumps: (SEMVER.major | SEMVER.minor | SEMVER.patch)[] =
+              bump && bump !== "skip" ? [bump, ...prBumps] : prBumps;
+
+            if (allBumps.includes(SEMVER.major)) {
               bump = SEMVER.major;
-            } else if (prBumps.includes(SEMVER.minor)) {
+            } else if (allBumps.includes(SEMVER.minor)) {
               bump = SEMVER.minor;
-            } else if (prBumps.includes(SEMVER.patch)) {
+            } else if (allBumps.includes(SEMVER.patch)) {
               bump = SEMVER.patch;
             }
           }
