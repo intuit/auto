@@ -1705,6 +1705,62 @@ describe("makeRelease", () => {
       true
     );
   });
+
+  test("dry-run should return undefined to prevent afterRelease hooks", async () => {
+    mockFs({
+      "lerna.json": `
+       { "name": "test", "version": "independent" }
+      `,
+    });
+
+    const plugin = new NPMPlugin();
+    const hooks = makeHooks();
+
+    // Mock exec calls for independent mode
+    execPromise.mockReturnValue("@packages/a\n@packages/b");
+    getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
+
+    const publish = jest.fn();
+    plugin.apply({
+      config: { prereleaseBranches: ["next"] },
+      hooks,
+      remote: "origin",
+      baseBranch: "main",
+      logger: dummyLog(),
+      prefixRelease: (str) => str,
+      git: { publish } as any,
+      inOldVersionBranch: (bool: boolean) => bool,
+      release: {
+        makeChangelog: () => ({
+          generateReleaseNotes: (commits: IExtendedCommit[]) =>
+            Promise.resolve(commits.map((c) => c.subject).join("\n")),
+        }),
+      } as any,
+    } as Auto.Auto);
+
+    // During dry-run, makeRelease should return undefined (not an empty array)
+    // to prevent afterRelease hooks from being triggered
+    const result = await hooks.makeRelease.promise({
+      dryRun: true,
+      newVersion: "0.1.2",
+      from: "",
+      to: "",
+      isPrerelease: false,
+      fullReleaseNotes: "",
+      commits: [
+        {
+          subject: "update package 1",
+          hash: "123",
+          labels: [],
+          files: ["packages/a/package.json"],
+          authors: [{ username: "Jeff", hash: "123" }],
+        },
+      ],
+    });
+
+    expect(result).toBeUndefined();
+    expect(publish).not.toHaveBeenCalled();
+  });
 });
 
 describe("beforeCommitChangelog", () => {
