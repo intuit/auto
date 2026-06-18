@@ -121,7 +121,8 @@ export default class ProtectedBranchPlugin implements IPlugin {
         });
       } catch (e) {
         // Silently ignore reference not found error since the ref might already be deleted
-        if (!e || e.status !== 422 || e.message !== "Reference does not exist") {
+        // GitHub API may return either 422 or 404 for non-existent references
+        if (!e || (e.status !== 422 && e.status !== 404) || e.message !== "Reference does not exist") {
           throw e;
         }
       }
