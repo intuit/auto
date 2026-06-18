@@ -331,6 +331,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="https://alienfast.com/"><img src="https://avatars.githubusercontent.com/u/136564?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kevin Ross</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=rosskevin" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=rosskevin" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=rosskevin" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/sfc-gh-alisowski"><img src="https://avatars.githubusercontent.com/u/196691327?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Lisowski</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=sfc-gh-alisowski" title="Documentation">📖</a> <a href="https://github.com/intuit/auto/commits?author=sfc-gh-alisowski" title="Tests">⚠️</a> <a href="https://github.com/intuit/auto/commits?author=sfc-gh-alisowski" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://https//www.youtube.com/watch?v=v8xL53fo8Q4"><img src="https://avatars.githubusercontent.com/u/271522295?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Prem Sugeendran</b></sub></a><br /><a href="https://github.com/intuit/auto/commits?author=premsreelathasugeendran" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
