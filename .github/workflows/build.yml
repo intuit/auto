@@ -55,6 +55,7 @@ jobs:
           PR: ${{ steps.PR.outputs.number }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PROTECTED_BRANCH_REVIEWER_TOKEN: OFF
 
   lint:
     runs-on: ubuntu-latest
