@@ -1,7 +1,6 @@
 import {
   Auto,
   execPromise,
-  getCurrentBranch,
   IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
@@ -61,6 +60,8 @@ export default class SbtPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    let releaseTag: string | undefined;
+
     // exact copy-paste from the git-tag plugin
     /** Get the latest tag in the repo, if none then the first commit */
     async function getTag() {
@@ -124,6 +125,7 @@ export default class SbtPlugin implements IPlugin {
           "-m",
           `"Update version to ${prefixedTag}"`,
         ]);
+        releaseTag = prefixedTag;
 
         auto.logger.verbose.info(`Set version in sbt to "${newTag}"`);
         await sbtSetVersion(newTag);
@@ -131,6 +133,10 @@ export default class SbtPlugin implements IPlugin {
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
+      if (!releaseTag) {
+        throw new Error("Can't push release tag before versioning!");
+      }
+
       auto.logger.verbose.info("Run sbt publish");
       const publishLogs = await sbtPublish(this.options.publishCommand);
       auto.logger.verbose.info("Output:\n", publishLogs);
@@ -138,11 +144,8 @@ export default class SbtPlugin implements IPlugin {
       auto.logger.log.info("Pushing new tag to GitHub");
       await execPromise("git", [
         "push",
-        "--atomic",
-        "--follow-tags",
-        "--set-upstream",
         auto.remote,
-        getCurrentBranch() || auto.baseBranch,
+        `refs/tags/${releaseTag}`,
       ]);
     });
 

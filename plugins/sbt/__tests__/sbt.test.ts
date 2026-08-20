@@ -50,6 +50,7 @@ describe("sbt plugin", () => {
         remote: "stubRemote",
         prefixRelease,
         git: {
+          getLatestTagInBranch: async () => "0.0.0",
           getLastTagNotInBaseBranch: async () => undefined,
           getLatestRelease: async () => "0.0.1",
         },
@@ -104,16 +105,25 @@ describe("sbt plugin", () => {
   });
 
   describe("publish hook", () => {
-    test("should call sbt publish", async () => {
+    test("should publish and push only the release tag", async () => {
       exec.mockReturnValue("");
+      await hooks.version.promise({
+        bump: Auto.SEMVER.minor,
+      });
+      exec.mockClear();
 
       await hooks.publish.promise({
         bump: Auto.SEMVER.minor,
       });
 
-      expect(exec).toHaveBeenCalledWith("sbt", [
+      expect(exec).toHaveBeenNthCalledWith(1, "sbt", [
         "--client",
         "publish",
+      ]);
+      expect(exec).toHaveBeenNthCalledWith(2, "git", [
+        "push",
+        "stubRemote",
+        "refs/tags/v0.1.0",
       ]);
     });
 
@@ -122,12 +132,16 @@ describe("sbt plugin", () => {
         publishCommand: "+publishLocal",
       });
       exec.mockReturnValue("");
+      await hooks.version.promise({
+        bump: Auto.SEMVER.minor,
+      });
+      exec.mockClear();
 
       await hooks.publish.promise({
         bump: Auto.SEMVER.minor,
       });
 
-      expect(exec).toHaveBeenCalledWith("sbt", [
+      expect(exec).toHaveBeenNthCalledWith(1, "sbt", [
         "--client",
         "+publishLocal",
       ]);
