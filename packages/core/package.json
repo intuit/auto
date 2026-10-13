@@ -64,7 +64,7 @@
     "log-symbols": "^4.0.0",
     "node-fetch": "2.6.7",
     "parse-author": "^2.0.0",
-    "parse-github-url": "1.0.2",
+    "parse-github-url": "1.0.4",
     "pretty-ms": "^7.0.0",
     "requireg": "^0.2.2",
     "semver": "^7.0.0",
