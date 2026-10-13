@@ -46,7 +46,7 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@types/jest": "^26.0.0",
     "@types/mock-fs": "^4.13.0",
-    "@types/parse-github-url": "1.0.0",
+    "@types/parse-github-url": "1.0.3",
     "@types/tapable": "2.2.2",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
