@@ -24,14 +24,14 @@ jobs:
   install:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/install-deps
 
   build:
     runs-on: ubuntu-latest
     needs: install
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Prepare repository
         run: git fetch --unshallow --tags
       - uses: ./.github/actions/install-deps
@@ -45,10 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+      - uses: ./.github/actions/pr-lookup
         id: PR
       - run: yarn auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
         env:
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - run: yarn lint
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
@@ -78,18 +78,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send CodeCov Results
-        run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_KEY
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     needs: build
     steps:
-      - uses: actions/checkout@v3
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/pr-lookup
         id: PR
         with:
-          filterOutClosed: true
+          only-open: true
           sha: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
