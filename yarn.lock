@@ -10370,10 +10370,10 @@ mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
-mock-fs@^5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.1.2.tgz#6fa486e06d00f8793a8d2228de980eff93ce6db7"
-  integrity sha512-YkjQkdLulFrz0vD4BfNQdQRVmgycXTV7ykuHMlyv+C8WCHazpkiQRDthwa02kSyo8wKnY9wRptHfQLgmf0eR+A==
+mock-fs@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.5.0.tgz#94a46d299aaa588e735a201cbe823c876e91f385"
+  integrity sha512-d/P1M/RacgM3dB0sJ8rjeRNXxtapkPCUnMGmIN0ixJ16F/E4GUZCvWcSGfWGz8eaXYvn1s9baUwNjI4LOPEjiA==
 
 modern-normalize@^1.0.0:
   version "1.1.0"

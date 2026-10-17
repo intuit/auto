@@ -17,6 +17,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=24"
+  },
   "workspaces": [
     "packages/*",
     "plugins/*"
@@ -31,9 +34,9 @@
     "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
-    "docs": "yarn docs:generate && ignite dev",
+    "docs": "yarn docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite dev",
     "docs:generate": "./docs/generate-command-docs.js",
-    "docs:build": "yarn docs:generate && ignite build",
+    "docs:build": "yarn docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
     "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
@@ -70,7 +73,7 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^7.1.4",
     "lint-staged": "^10.0.7",
-    "mock-fs": "^5.1.2",
+    "mock-fs": "^5.5.0",
     "next-ignite": "^0.10.11",
     "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
