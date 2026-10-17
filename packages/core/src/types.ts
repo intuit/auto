@@ -69,6 +69,8 @@ export const globalOptions = t.partial({
   prereleaseBranches: t.array(t.string),
   /** Configured auto plugins */
   plugins: t.array(t.union([t.string, t.tuple([t.string, t.any])])),
+  /** Timeout (in seconds) for the `git push --dry-run` GitHub auth probe used by verifyAuth. */
+  githubAuthTimeout: t.number,
   /** Whether to prefix the version with a "v" */
   noVersionPrefix: t.boolean,
   /**
