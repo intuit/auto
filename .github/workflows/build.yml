@@ -36,8 +36,8 @@ jobs:
         run: git fetch --unshallow --tags
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - run: yarn build
-      # - run: yarn build && yarn lerna run bundle --scope=auto
+      - run: pnpm build
+      # - run: pnpm build && pnpm --filter auto bundle
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.CANARY_NPM_TOKEN }}
@@ -51,7 +51,7 @@ jobs:
       - uses: ./.github/actions/build-cache
       - uses: ./.github/actions/pr-lookup
         id: PR
-      - run: yarn auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+      - run: pnpm auto pr-check --pr $PR --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
         env:
           PR: ${{ steps.PR.outputs.number }}
     env:
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - run: yarn lint
+      - run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
         run: git fetch --unshallow --tags
-      - run: yarn test:coverage
+      - run: pnpm test:coverage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send CodeCov Results
@@ -94,12 +94,15 @@ jobs:
         with:
           only-open: true
           sha: ${{ github.event.pull_request.head.sha }}
+      # No dependency caches in the job that holds the npm tokens
       - uses: ./.github/actions/install-deps
+        with:
+          cache: false
       - uses: ./.github/actions/build-cache
       - name: Prepare repository
         run: git fetch --unshallow --tags
       - name: Create Release
-        run: yarn auto shipit -vv
+        run: pnpm auto shipit -vv
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ steps.PR.outputs.number && secrets.CANARY_NPM_TOKEN || secrets.NPM_TOKEN }}

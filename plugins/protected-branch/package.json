@@ -36,7 +36,7 @@
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "workspace:*",
     "@octokit/rest": "^18.12.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
