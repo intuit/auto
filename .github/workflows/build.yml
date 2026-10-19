@@ -36,7 +36,8 @@ jobs:
         run: git fetch --unshallow --tags
       - uses: ./.github/actions/install-deps
       - uses: ./.github/actions/build-cache
-      - run: yarn build && yarn lerna run bundle --scope=auto
+      - run: yarn build
+      # - run: yarn build && yarn lerna run bundle --scope=auto
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.CANARY_NPM_TOKEN }}
