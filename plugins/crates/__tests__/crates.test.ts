@@ -147,6 +147,12 @@ describe("CratesPlugin", () => {
         expect(writeFileSync).toHaveBeenCalledTimes(1);
       });
     });
+
+    test("does not write to file during a dry run", () => {
+      const versionNew = bumpVersion(Auto.SEMVER.minor, true);
+      expect(versionNew).toBe("1.3.0");
+      expect(writeFileSync).not.toHaveBeenCalled();
+    });
   });
 
   describe("hooks", () => {
@@ -217,6 +223,17 @@ describe("CratesPlugin", () => {
           `'Bump version to: 1.2.4 [skip ci]'`,
           "--no-verify",
         ]);
+      });
+
+      test("does not modify Cargo.toml or commit during a dry run", async () => {
+        const plugin = new CratesPlugin();
+        readFileSync.mockReturnValueOnce(sampleCargoToml);
+
+        const hooks = makeHooks();
+        plugin.apply({ hooks, logger: dummyLog() } as Auto.Auto);
+        await hooks.version.promise({ bump: Auto.SEMVER.patch, dryRun: true });
+        expect(writeFileSync).not.toHaveBeenCalled();
+        expect(exec).not.toHaveBeenCalled();
       });
     });
 

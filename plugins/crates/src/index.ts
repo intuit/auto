@@ -26,8 +26,8 @@ export function checkForCreds() {
   return fs.existsSync(credsFile);
 }
 
-/** Bump the version in cargo.toml */
-export function bumpVersion(bumpBy: SEMVER) {
+/** Bump the version in cargo.toml. When dryRun is set, only compute the new version. */
+export function bumpVersion(bumpBy: SEMVER, dryRun = false) {
   const filePath = path.join(process.cwd(), "Cargo.toml");
   const content = fs.readFileSync(filePath).toString();
   const config = toml.parse(content);
@@ -36,6 +36,10 @@ export function bumpVersion(bumpBy: SEMVER) {
 
   if (!versionNew) {
     throw new Error(`Could not increment previous version: ${versionOld}`);
+  }
+
+  if (dryRun) {
+    return versionNew;
   }
 
   const replaceOld = `version = "${versionOld}"`;
@@ -75,7 +79,7 @@ export default class CratesPlugin implements IPlugin {
     auto.hooks.version.tapPromise(
       this.name,
       async ({ bump, dryRun, quiet }) => {
-        const versionNew = bumpVersion(bump);
+        const versionNew = bumpVersion(bump, dryRun);
 
         if (dryRun) {
           if (quiet) {
