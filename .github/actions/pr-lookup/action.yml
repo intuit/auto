@@ -1,0 +1,30 @@
+name: "PR Lookup"
+description: Find the pull request for the current event, or else for a commit
+
+inputs:
+  sha:
+    description: Commit to look up when the event has no pull request. Defaults to the commit that triggered the run.
+    required: false
+  only-open:
+    description: Only return open pull requests
+    required: false
+    default: "false"
+
+outputs:
+  number:
+    description: The pull request number, or empty if none was found
+    value: ${{ steps.lookup.outputs.number }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Look up pull request
+      id: lookup
+      shell: bash
+      run: bash "$GITHUB_ACTION_PATH/pr-lookup.sh"
+      env:
+        GH_TOKEN: ${{ github.token }}
+        # Not an input default: callers pass an empty `sha` on push events,
+        # which would override a default instead of falling back to it.
+        COMMIT_SHA: ${{ inputs.sha || github.sha }}
+        ONLY_OPEN: ${{ inputs.only-open }}

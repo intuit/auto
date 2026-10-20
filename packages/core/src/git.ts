@@ -285,7 +285,9 @@ export default class Git {
 
   /** Get all the information about a PR or issue */
   @memoize()
-  async getPr(prNumber: number) {
+  async getPr(
+    prNumber: number
+  ): Promise<RestEndpointMethodTypes["issues"]["get"]["response"]> {
     this.logger.verbose.info(`Getting info for PR: ${prNumber}`);
 
     const args: RestEndpointMethodTypes["issues"]["get"]["parameters"] = {
@@ -307,7 +309,9 @@ export default class Git {
 
   /** Get information about specific commit */
   @memoize()
-  async getCommit(sha: string) {
+  async getCommit(
+    sha: string
+  ): Promise<RestEndpointMethodTypes["repos"]["getCommit"]["response"]> {
     this.logger.verbose.info(`Getting info for commit: ${sha}`);
 
     try {
@@ -493,7 +497,9 @@ export default class Git {
 
   /** Get all the information about a PR or issue */
   @memoize()
-  async getPullRequest(pr: number) {
+  async getPullRequest(
+    pr: number
+  ): Promise<RestEndpointMethodTypes["pulls"]["get"]["response"]> {
     this.logger.verbose.info(`Getting Pull Request: ${pr}`);
 
     const args: RestEndpointMethodTypes["pulls"]["get"]["parameters"] = {
@@ -549,7 +555,11 @@ export default class Git {
   }
 
   /** Create a status (or checkmark) on a commit */
-  async createStatus(prInfo: IPRInfo) {
+  async createStatus(
+    prInfo: IPRInfo
+  ): Promise<
+    RestEndpointMethodTypes["repos"]["createCommitStatus"]["response"]
+  > {
     const args = {
       ...prInfo,
       owner: this.options.owner,
@@ -569,7 +579,9 @@ export default class Git {
   }
 
   /** Add a label to the project */
-  async createLabel(label: ILabelDefinition) {
+  async createLabel(
+    label: ILabelDefinition
+  ): Promise<RestEndpointMethodTypes["issues"]["createLabel"]["response"]> {
     this.logger.verbose.info(
       `Creating "${label.releaseType || "general"}" label :\n${label.name}`
     );
@@ -592,7 +604,9 @@ export default class Git {
   }
 
   /** Update a label on the project */
-  async updateLabel(label: ILabelDefinition) {
+  async updateLabel(
+    label: ILabelDefinition
+  ): Promise<RestEndpointMethodTypes["issues"]["updateLabel"]["response"]> {
     this.logger.verbose.info(
       `Updating "${label.releaseType || "generic"}" label :\n${label.name}`
     );
@@ -616,7 +630,10 @@ export default class Git {
   }
 
   /** Add a label to and issue or pull request */
-  async addLabelToPr(pr: number, label: string) {
+  async addLabelToPr(
+    pr: number,
+    label: string
+  ): Promise<RestEndpointMethodTypes["issues"]["addLabels"]["response"]> {
     this.logger.verbose.info(`Creating "${label}" label to PR ${pr}`);
 
     const result = await this.github.issues.addLabels({
@@ -633,7 +650,10 @@ export default class Git {
   }
 
   /** Add a label to and issue or pull request */
-  async removeLabel(pr: number, label: string) {
+  async removeLabel(
+    pr: number,
+    label: string
+  ): Promise<RestEndpointMethodTypes["issues"]["removeLabel"]["response"]> {
     this.logger.verbose.info(`Removing "${label}" from #${pr}`);
 
     const result = await this.github.issues.removeLabel({
@@ -650,7 +670,9 @@ export default class Git {
   }
 
   /** Lock an issue */
-  async lockIssue(issue: number) {
+  async lockIssue(
+    issue: number
+  ): Promise<RestEndpointMethodTypes["issues"]["lock"]["response"]> {
     this.logger.verbose.info(`Locking #${issue} issue...`);
 
     const result = await this.github.issues.lock({
@@ -764,7 +786,11 @@ export default class Git {
   }
 
   /** Create a comment on an issue or pull request */
-  async createComment(message: string, pr: number, context = "default") {
+  async createComment(
+    message: string,
+    pr: number,
+    context = "default"
+  ): Promise<RestEndpointMethodTypes["issues"]["createComment"]["response"]> {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info("Using comment identifier:", commentIdentifier);
@@ -787,7 +813,14 @@ export default class Git {
   }
 
   /** Edit a comment on an issue or pull request */
-  async editComment(message: string, pr: number, context = "default") {
+  async editComment(
+    message: string,
+    pr: number,
+    context = "default"
+  ): Promise<
+    | RestEndpointMethodTypes["issues"]["createComment"]["response"]
+    | RestEndpointMethodTypes["issues"]["updateComment"]["response"]
+  > {
     const commentIdentifier = makeCommentIdentifier(context);
 
     this.logger.verbose.info("Using comment identifier:", commentIdentifier);
@@ -811,7 +844,11 @@ export default class Git {
   }
 
   /** Create a comment on a pull request body */
-  async addToPrBody(message: string, pr: number, context = "default") {
+  async addToPrBody(
+    message: string,
+    pr: number,
+    context = "default"
+  ): Promise<RestEndpointMethodTypes["issues"]["update"]["response"]> {
     const id = makePrBodyIdentifier(context);
 
     this.logger.verbose.info("Using PR body identifier:", id);
@@ -859,7 +896,7 @@ export default class Git {
     prerelease = false,
     fallbackCommit?: string,
     latestRelease = false
-  ) {
+  ): Promise<RestEndpointMethodTypes["repos"]["createRelease"]["response"]> {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
     const result = await this.github.repos.createRelease({

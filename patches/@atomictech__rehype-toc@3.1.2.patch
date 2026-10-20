@@ -1,7 +1,7 @@
-diff --git a/node_modules/@atomictech/rehype-toc/lib/create-toc.js b/node_modules/@atomictech/rehype-toc/lib/create-toc.js
+diff --git a/lib/create-toc.js b/lib/create-toc.js
 index b576955..fbec54f 100644
---- a/node_modules/@atomictech/rehype-toc/lib/create-toc.js
-+++ b/node_modules/@atomictech/rehype-toc/lib/create-toc.js
+--- a/lib/create-toc.js
++++ b/lib/create-toc.js
 @@ -120,7 +120,7 @@ function createListItem(heading, options) {
                  properties: {
                      className: options_1.buildClass(options.cssClasses.link, heading.tagName),

@@ -17,12 +17,15 @@
   "files": [
     "dist"
   ],
-  "workspaces": [
-    "packages/*",
-    "plugins/*"
-  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "devEngines": {
+    "runtime": { "name": "node", "version": "^24.0.0", "onFail": "download" }
+  },
   "scripts": {
-    "clean": "lerna clean --yes && rimraf node_modules '+(packages|plugins)/**/+(dist|tsconfig.tsbuildinfo)'",
+    "clean": "rimraf node_modules '+(packages|plugins)/*/node_modules' '+(packages|plugins)/**/+(dist|tsconfig.tsbuildinfo)'",
     "build": "tsc -b tsconfig.dev.json",
     "start": "npm run build -- --watch",
     "lint": "eslint packages plugins --ext .ts --cache",
@@ -31,16 +34,23 @@
     "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
-    "docs": "yarn docs:generate && ignite dev",
+    "docs": "pnpm docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite dev",
     "docs:generate": "./docs/generate-command-docs.js",
-    "docs:build": "yarn docs:generate && ignite build",
+    "docs:build": "pnpm docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
-    "install-mac": "yarn lerna run bundle --scope=auto && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
-    "postinstall": "patch-package"
+    "install-mac": "pnpm --filter auto bundle && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
   },
   "devDependencies": {
     "@atomictech/rehype-toc": "3.1.2",
+    "@auto-it/all-contributors": "workspace:*",
+    "@auto-it/brew": "workspace:*",
+    "@auto-it/first-time-contributor": "workspace:*",
+    "@auto-it/npm": "workspace:*",
+    "@auto-it/pr-body-labels": "workspace:*",
+    "@auto-it/protected-branch": "workspace:*",
+    "@auto-it/released": "workspace:*",
+    "@auto-it/upload-assets": "workspace:*",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
@@ -61,6 +71,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.1",
     "eslint-plugin-jsdoc": "^32.3.0",
+    "fast-glob": "^3.1.1",
     "graphql": "^15.0.0",
     "husky": "^5.2.0",
     "jest": "~26.6.3",
@@ -69,12 +80,14 @@
     "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^7.1.4",
     "lint-staged": "^10.0.7",
-    "mock-fs": "^5.1.2",
+    "mock-fs": "^5.5.0",
     "next-ignite": "^0.10.11",
-    "patch-package": "^6.2.2",
     "prettier": "^2.2.1",
     "push-dir": "^0.4.1",
+    "requireg": "^0.2.2",
     "rimraf": "^3.0.0",
+    "semver": "^7.0.0",
+    "signale": "^1.4.0",
     "simple-react-lightbox": "^3.1.2-3",
     "title-case": "^3.0.2",
     "ts-jest": "^26.1.3",
@@ -92,7 +105,7 @@
     ],
     "*.{ts,tsx}": [
       "prettier --parser typescript --write",
-      "yarn lint --fix"
+      "pnpm lint --fix"
     ]
   },
   "jest": {
