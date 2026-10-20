@@ -16,6 +16,9 @@ jobs:
         run: git fetch --unshallow --tags
       - name: Install dependencies
         uses: pnpm/setup@v3
+        with:
+          runtime: node@24
+          cache: true
       - name: Check node version
         run: node --version
       - name: Build
@@ -28,6 +31,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install dependencies
         uses: pnpm/setup@v3
+        with:
+          runtime: node@24
+          cache: true
       - name: Lint
         run: pnpm lint
 
@@ -40,6 +46,9 @@ jobs:
         run: git fetch --unshallow --tags
       - name: Install dependencies
         uses: pnpm/setup@v3
+        with:
+          runtime: node@24
+          cache: true
       - name: Test
         run: pnpm test:coverage
         env:
