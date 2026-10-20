@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, next]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fetch git tags
+        run: git fetch --unshallow --tags
+      - name: Install dependencies
+        uses: pnpm/setup@v3
+      - name: Check node version
+        run: node --version
+      - name: Build
+        run: pnpm -r run build
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install dependencies
+        uses: pnpm/setup@v3
+      - name: Lint
+        run: pnpm lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fetch git tags
+        run: git fetch --unshallow --tags
+      - name: Install dependencies
+        uses: pnpm/setup@v3
+      - name: Test
+        run: pnpm test:coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send CodeCov Results
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
