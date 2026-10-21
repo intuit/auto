@@ -225,6 +225,31 @@ describe("github", () => {
     expect(createRelease).toHaveBeenCalled();
   });
 
+  test("publish truncates release notes over the GitHub body limit", async () => {
+    const gh = new Git(options);
+    const releaseNotes = "a".repeat(125_001);
+
+    await gh.publish(releaseNotes, "tag");
+
+    expect(createRelease).toHaveBeenCalled();
+
+    const { body } = createRelease.mock.calls[0][0];
+
+    expect(body.length).toBe(125_000);
+    expect(body).toContain("Release notes truncated");
+    expect(body.startsWith(releaseNotes.slice(0, 100))).toBe(true);
+  });
+
+  test("publish does not truncate release notes under the limit", async () => {
+    const gh = new Git(options);
+
+    await gh.publish("releaseNotes", "tag");
+
+    const { body } = createRelease.mock.calls[0][0];
+
+    expect(body).toBe("releaseNotes");
+  });
+
   describe("Name of the group", () => {
     test("default graphql API", async () => {
       const gh = new Git(options);

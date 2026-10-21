@@ -64,6 +64,9 @@ class GitAPIError extends Error {
 
 const taggedPackageRegex = /(\S+)@(\S+)/;
 
+/** The maximum number of characters GitHub allows in a release body */
+const MAX_RELEASE_BODY_LENGTH = 125_000;
+
 /**
  * Extract a version from a tag.
  *
@@ -862,13 +865,27 @@ export default class Git {
   ) {
     this.logger.verbose.info("Creating release on GitHub for tag:", tag);
 
+    let body = releaseNotes;
+
+    if (body.length > MAX_RELEASE_BODY_LENGTH) {
+      const truncationNote =
+        "\n\n_Release notes truncated: they exceeded GitHub's 125,000 character limit for a release body. See the CHANGELOG for the full release notes._";
+
+      this.logger.verbose.info(
+        "Release notes are too long for a GitHub release body. Truncating them."
+      );
+      body =
+        body.slice(0, MAX_RELEASE_BODY_LENGTH - truncationNote.length) +
+        truncationNote;
+    }
+
     const result = await this.github.repos.createRelease({
       owner: this.options.owner,
       repo: this.options.repo,
       tag_name: tag,
       target_commitish: fallbackCommit,
       name: tag,
-      body: releaseNotes,
+      body,
       prerelease,
       make_latest: `${latestRelease}`,
     });
