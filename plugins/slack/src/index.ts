@@ -435,18 +435,51 @@ export default class SlackPlugin implements IPlugin {
           }, Promise.resolve());
         } else {
           const languageMap: Record<string, string> = { md: "markdown" };
+          const title = languageMap[message.language] || message.language;
+          const content = Buffer.from(message.code, "utf-8");
 
-          await fetch("https://slack.com/api/files.upload", {
+          const uploadUrlResponse = await fetch(
+            "https://slack.com/api/files.getUploadURLExternal",
+            {
+              method: "POST",
+              body: new URLSearchParams({
+                filename: title,
+                length: String(content.length),
+              }) as any,
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=utf-8",
+                Authorization: `Bearer ${token}`,
+              },
+              agent,
+            }
+          );
+          const uploadUrlResult = await uploadUrlResponse.json();
+
+          if (!uploadUrlResult.ok) {
+            throw new Error(
+              `Failed to get slack upload URL: ${uploadUrlResult.error}`
+            );
+          }
+
+          await fetch(uploadUrlResult.upload_url, {
             method: "POST",
-            body: new URLSearchParams({
-              channels: channels.join(","),
-              content: message.code,
-              title: languageMap[message.language] || message.language,
-              filetype: languageMap[message.language] || message.language,
-            }) as any,
+            body: content,
             headers: {
-              "Content-Type":
-                "application/x-www-form-urlencoded; charset=utf-8",
+              "Content-Type": "application/octet-stream",
+              Authorization: `Bearer ${token}`,
+            },
+            agent,
+          });
+
+          await fetch("https://slack.com/api/files.completeUploadExternal", {
+            method: "POST",
+            body: JSON.stringify({
+              files: [{ id: uploadUrlResult.file_id, title }],
+              channels: channels.join(","),
+            }),
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
               Authorization: `Bearer ${token}`,
             },
             agent,
