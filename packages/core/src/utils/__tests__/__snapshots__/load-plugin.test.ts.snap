@@ -1,23 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`listPlugins should get plugins from autorc 1`] = `
-Array [
+exports[`listPlugins > should get plugins from autorc 1`] = `
+[
   "Found the following plugins in your .autorc:
 
 - npm (@auto-it/npm)",
 ]
 `;
 
-exports[`listPlugins should get plugins from local module 1`] = `
-Array [
+exports[`listPlugins > should get plugins from local module 1`] = `
+[
   "Found the following plugins in your .autorc:
 
 - npm (@auto-it/npm)",
 ]
 `;
 
-exports[`listPlugins should get plugins from local module 2`] = `
-Array [
+exports[`listPlugins > should get plugins from local module 2`] = `
+[
   "Found the following plugins installed in your project:
 
 - npm (../some/folder/node_modules/@auto-it/npm)
@@ -25,8 +25,8 @@ Array [
 ]
 `;
 
-exports[`listPlugins should get plugins from local module 3`] = `
-Array [
+exports[`listPlugins > should get plugins from local module 3`] = `
+[
   "Found the following plugins globally installed in your environment:
 
 - npm (/some/folder/node_modules/@auto-it/npm)

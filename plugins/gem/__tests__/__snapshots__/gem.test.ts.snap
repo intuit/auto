@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Gem Plugin validateConfig validates invalid configuration 1`] = `
-Array [
-  "\\"gem\\"
+exports[`Gem Plugin > validateConfig > validates invalid configuration 1`] = `
+[
+  ""gem"
 
 Found unknown configuration keys: command
 ",

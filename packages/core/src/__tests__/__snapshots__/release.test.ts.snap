@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Release generateReleaseNotes should allow user to configure section headings 1`] = `
+exports[`Release > generateReleaseNotes > should allow user to configure section headings 1`] = `
 "#### 💥 Breaking Change
 
 - First [#1234](https://github.com/web/site/pull/1234) (adam@dierkens.com)
@@ -22,7 +22,7 @@ exports[`Release generateReleaseNotes should allow user to configure section hea
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should detect pre-release branches 1`] = `
+exports[`Release > generateReleaseNotes > should detect pre-release branches 1`] = `
 "#### 🐛 Bug Fix
 
 - Autobots roll out! (adam@dierkens.com)
@@ -36,7 +36,7 @@ exports[`Release generateReleaseNotes should detect pre-release branches 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should find matching PRs for shas through search 1`] = `
+exports[`Release > generateReleaseNotes > should find matching PRs for shas through search 1`] = `
 "#### 💥 Breaking Change
 
 - Doom Patrol enabled (adam@dierkens.com)
@@ -50,7 +50,7 @@ exports[`Release generateReleaseNotes should find matching PRs for shas through 
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should get extra user data for login 1`] = `
+exports[`Release > generateReleaseNotes > should get extra user data for login 1`] = `
 "#### 🐛 Bug Fix
 
 - I have a login attached [#1235](https://github.com/web/site/pull/1235) ([@adierkens](https://github.com/adierkens))
@@ -60,7 +60,7 @@ exports[`Release generateReleaseNotes should get extra user data for login 1`] =
 - Adam Dierkens ([@adierkens](https://github.com/adierkens))"
 `;
 
-exports[`Release generateReleaseNotes should ignore closed prs 1`] = `
+exports[`Release > generateReleaseNotes > should ignore closed prs 1`] = `
 "#### 🐛 Bug Fix
 
 - Doom Patrol enabled (adam@dierkens.com)
@@ -71,7 +71,7 @@ exports[`Release generateReleaseNotes should ignore closed prs 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
+exports[`Release > generateReleaseNotes > should include PR-less commits 1`] = `
 "#### 🚀 Enhancement
 
 - First Feature [#1235](https://github.com/web/site/pull/1235) (adam@dierkens.com)
@@ -85,7 +85,7 @@ exports[`Release generateReleaseNotes should include PR-less commits 1`] = `
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`] = `
+exports[`Release > generateReleaseNotes > should include PRs merged to other PRs 1`] = `
 "#### 🐛 Bug Fix
 
 - Doom [#12343](https://github.com/web/site/pull/12343) (adam@dierkens.com)
@@ -96,7 +96,7 @@ exports[`Release generateReleaseNotes should include PRs merged to other PRs 1`]
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should match commits with related PRs 1`] = `
+exports[`Release > generateReleaseNotes > should match commits with related PRs 1`] = `
 "#### 🚀 Enhancement
 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
@@ -110,7 +110,7 @@ exports[`Release generateReleaseNotes should match commits with related PRs 1`] 
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = `
+exports[`Release > generateReleaseNotes > should match rebased commits to PRs 1`] = `
 "#### 🚀 Enhancement
 
 - Feature [#124](https://github.com/web/site/pull/124) (adam@dierkens.com)
@@ -125,23 +125,23 @@ exports[`Release generateReleaseNotes should match rebased commits to PRs 1`] = 
 - Adam Dierkens (adam@dierkens.com)"
 `;
 
-exports[`Release getCommits should be able to omit by username 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should be able to omit by username 1`] = `
+[
+  {
     "authorEmail": "lisowski54@gmail.com",
     "authorName": "Andrew Lisowski",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 123,
     },
     "subject": "Second",
@@ -149,21 +149,21 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should ignore rebased commits if no last release 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should ignore rebased commits if no last release 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 123,
     },
     "subject": "Second",
@@ -171,30 +171,30 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should include PR opener in authors (in case of external rebase) 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should include PR opener in authors (in case of external rebase) 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
-      Object {
+      {
         "email": "renovate@automation.com",
         "login": "renovate",
         "name": "Renovate",
         "username": "renovate",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [
+    "labels": [
       "skip-release",
       "minor",
     ],
-    "pullRequest": Object {
+    "pullRequest": {
       "body": undefined,
       "number": 124,
     },
@@ -203,42 +203,42 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should match rebased commits to PRs 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should match rebased commits to PRs 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 124,
     },
     "subject": "Feature",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "1a2b",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "1a2b",
-    "labels": Array [
+    "labels": [
       "skip-release",
       "minor",
     ],
-    "pullRequest": Object {
+    "pullRequest": {
       "number": 123,
     },
     "subject": "I was rebased",
@@ -246,42 +246,42 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should match rebased commits to PRs with first commit 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should match rebased commits to PRs with first commit 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 124,
     },
     "subject": "Feature",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "1a2b",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "1a2b",
-    "labels": Array [
+    "labels": [
       "skip-release",
       "minor",
     ],
-    "pullRequest": Object {
+    "pullRequest": {
       "number": 123,
     },
     "subject": "I was rebased",
@@ -289,42 +289,42 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should not omit commits in next branch 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should not omit commits in next branch 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 124,
     },
     "subject": "Feature",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "1a2b",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "1a2b",
-    "labels": Array [
+    "labels": [
       "skip-release",
       "minor",
     ],
-    "pullRequest": Object {
+    "pullRequest": {
       "number": 123,
     },
     "subject": "I wasn't released previously",
@@ -332,74 +332,74 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should not resolve authors with no PR commits 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should not resolve authors with no PR commits 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "foo",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "First",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "foo",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Second",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "foo",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Third",
   },
 ]
 `;
 
-exports[`Release getCommits should omit commits that have already been released 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should omit commits that have already been released 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 124,
     },
     "subject": "Feature",
@@ -407,13 +407,13 @@ Array [
 ]
 `;
 
-exports[`Release getCommits should resolve authors with PR commits 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should resolve authors with PR commits 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "foo",
         "login": "adam",
@@ -421,90 +421,90 @@ Array [
         "username": "adam",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "First",
   },
-  Object {
+  {
     "authorEmail": "andrew@users.noreply.github.com",
     "authorName": "Andrew Lisowski",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "hash": undefined,
         "login": "andrew",
         "name": "Andrew Lisowski",
         "username": "andrew",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 123,
     },
     "subject": "Second",
   },
-  Object {
+  {
     "authorEmail": "lisowski54@gmail.com",
     "authorName": "Andrew Lisowski",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "lisowski54@gmail.com",
         "name": "Andrew Lisowski",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
-    "pullRequest": Object {
+    "labels": [],
+    "pullRequest": {
       "number": 123,
     },
     "subject": "Second",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "hash": "foo",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Third",
   },
 ]
 `;
 
-exports[`Release getCommits should use latest title of PR 1`] = `
-Array [
-  Object {
+exports[`Release > getCommits > should use latest title of PR 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
-      Object {
+      {
         "login": "adam",
         "name": "Adam Dierkens",
         "username": "adam",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [
+    "labels": [
       "skip-release",
       "minor",
     ],
-    "pullRequest": Object {
+    "pullRequest": {
       "body": undefined,
       "number": 124,
     },

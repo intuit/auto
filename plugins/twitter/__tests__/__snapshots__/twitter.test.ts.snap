@@ -1,12 +1,12 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Twitter Plugin should be able to configure message 1`] = `
+exports[`Twitter Plugin > should be able to configure message 1`] = `
 "v1.1.0 of Test-Repo was released!
 
 https://foo.com"
 `;
 
-exports[`Twitter Plugin should handle long release notes 1`] = `
+exports[`Twitter Plugin > should handle long release notes 1`] = `
 "A new minor version of Test-Repo was released!
 
 🐛  Bug Fix
@@ -24,7 +24,7 @@ exports[`Twitter Plugin should handle long release notes 1`] = `
 https://foo.com"
 `;
 
-exports[`Twitter Plugin should post correct message 1`] = `
+exports[`Twitter Plugin > should post correct message 1`] = `
 "A new minor version of Test-Repo was released!
 
 🐛  Bug Fix

@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Exec Plugin should warn about invalid config 1`] = `
-Array [
-  "\\"exec\\"
+exports[`Exec Plugin > should warn about invalid config 1`] = `
+[
+  ""exec"
 
 Found unknown configuration keys: notAHook
 ",

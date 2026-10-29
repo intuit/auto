@@ -1,10 +1,10 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`github getGitLog - merge commits 1`] = `
-Object {
+exports[`github > getGitLog - merge commits 1`] = `
+{
   "authorEmail": "lisowski54@gmail.com",
   "authorName": "Andrew Lisowski",
-  "files": Array [
+  "files": [
     "<PROJECT_ROOT>/docs/pages/quick-merge.md",
     "<PROJECT_ROOT>/packages/cli/README.md",
     "<PROJECT_ROOT>/packages/core/src/__tests__/auto.test.ts",
@@ -46,22 +46,22 @@ determine if branch behind remote and exit before trying to publish",
 }
 `;
 
-exports[`github getGitLog 1`] = `
-Array [
-  Object {
+exports[`github > getGitLog 1`] = `
+[
+  {
     "authorEmail": "lisowski54@gmail.com",
     "authorName": "Andrew Lisowski",
-    "files": Array [
+    "files": [
       "<PROJECT_ROOT>/src/__tests__/git.test.ts",
     ],
     "hash": "a7f6634429731055a5a44bae24ac88c5f9822e58",
     "subject": "update tests
 ",
   },
-  Object {
+  {
     "authorEmail": "lisowski54@gmail.com",
     "authorName": "Andrew Lisowski",
-    "files": Array [
+    "files": [
       "<PROJECT_ROOT>/.circleci/config.yml",
       "<PROJECT_ROOT>/.gitignore",
       "<PROJECT_ROOT>/.vscode/settings.json",
