@@ -28,7 +28,7 @@
     "lint": "eslint packages plugins --ext .ts --cache",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
-    "auto": "chmod +x ./packages/cli/dist/bin/auto.js && ./packages/cli/dist/bin/auto.js",
+    "auto": "chmod +x ./packages/cli/dist/bin/auto.mjs && ./packages/cli/dist/bin/auto.mjs",
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "pnpm docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite dev",

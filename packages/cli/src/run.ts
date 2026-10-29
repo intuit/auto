@@ -2,7 +2,8 @@
 
 /* eslint-disable complexity */
 
-import Auto, {
+import {
+  Auto,
   ApiOptions,
   IInfoOptions,
   ICanaryOptions,
@@ -20,7 +21,7 @@ import Auto, {
   LabelExistsError,
 } from "@auto-it/core";
 import endent from "endent";
-import on from "await-to-js";
+import { to as on } from "await-to-js";
 import link from "terminal-link";
 
 /** Spin up the "auto" node API and provide it the parsed CLI args. */

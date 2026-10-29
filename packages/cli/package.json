@@ -1,7 +1,7 @@
 {
   "name": "auto",
-  "bin": "dist/bin/auto.js",
-  "main": "dist/bin/index.js",
+  "bin": "dist/bin/auto.mjs",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "CLI tools to help facilitate semantic versioning based on GitHub PR labels",
   "version": "11.3.6",
@@ -9,9 +9,6 @@
   "author": {
     "name": "Andrew Lisowski",
     "email": "lisowski54@gmail.com"
-  },
-  "pkg": {
-    "scripts": "../../plugins/**/dist/**/*.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
