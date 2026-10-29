@@ -22,6 +22,7 @@
     "noEmit": true,
 
     "lib": ["dom", "es2017"],
+    "types": ["node"],
     "allowImportingTsExtensions": true
   }
 }

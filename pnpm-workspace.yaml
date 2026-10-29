@@ -22,5 +22,6 @@ allowBuilds:
   nx: false
 
 catalog:
+  "@types/node": ^24.19.2
   tsdown: 0.23.1
-  typescript: 7.0.2
+  typescript: 6.0.3

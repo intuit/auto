@@ -92,13 +92,14 @@
     "@types/graphql": "^14.2.0",
     "@types/jest": "~26.0.7",
     "@types/lodash.chunk": "^4.2.6",
-    "@types/node": "^13.1.8",
+    "@types/node": "catalog:",
     "@types/node-fetch": "2.6.1",
     "@types/semver": "^7.1.0",
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
     "@types/url-join": "^4.0.0",
     "graphql": "^15.0.0",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   }
 }
