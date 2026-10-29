@@ -79,7 +79,7 @@
     "lint-staged": "^10.0.7",
     "mock-fs": "^5.5.0",
     "next-ignite": "^0.10.11",
-    "prettier": "^2.2.1",
+    "prettier": "^3.9.10",
     "push-dir": "^0.4.1",
     "requireg": "^0.2.2",
     "rimraf": "^3.0.0",

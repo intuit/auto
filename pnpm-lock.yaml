@@ -300,8 +300,8 @@ importers:
         specifier: ^0.10.11
         version: 0.10.11(patch_hash=9750db87812e029d201e8ea608e720754c84de9500a9b5291a3b2e1132adc7ff)(@babel/core@7.14.0(supports-color@8.1.1))(@types/babel__core@7.1.14)(encoding@0.1.13)(supports-color@8.1.1)(ts-node@10.9.1(@types/node@13.13.51)(typescript@7.0.2))(typescript@7.0.2)(webpack@4.46.0(supports-color@8.1.1))
       prettier:
-        specifier: ^2.2.1
-        version: 2.2.1
+        specifier: ^3.9.10
+        version: 3.9.10
       push-dir:
         specifier: ^0.4.1
         version: 0.4.1
@@ -7777,6 +7777,11 @@ packages:
   prettier@2.2.1:
     resolution: {integrity: sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
+
+  prettier@3.9.10:
+    resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
+    engines: {node: '>=14'}
     hasBin: true
 
   pretty-bytes@5.6.0:
@@ -17973,6 +17978,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@2.2.1: {}
+
+  prettier@3.9.10: {}
 
   pretty-bytes@5.6.0: {}
 
