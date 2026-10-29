@@ -46,7 +46,7 @@ export interface InteractiveInitHooks {
         variable: string;
         /** The message to ask the user for the the env var */
         message: string;
-      }>
+      }>,
     ]
   >;
 }
@@ -390,12 +390,15 @@ export default class InteractiveInit {
           }
         });
 
-      autoRc.plugins = await plugins.reduce(async (last, plugin) => {
-        return [
-          ...(await last),
-          (await this.hooks.configurePlugin.promise(plugin)) || plugin,
-        ];
-      }, Promise.resolve([] as PluginConfig[]));
+      autoRc.plugins = await plugins.reduce(
+        async (last, plugin) => {
+          return [
+            ...(await last),
+            (await this.hooks.configurePlugin.promise(plugin)) || plugin,
+          ];
+        },
+        Promise.resolve([] as PluginConfig[])
+      );
     }
 
     this.tapDefaults();

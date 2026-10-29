@@ -9,7 +9,7 @@ import {
   makeLogParseHooks,
 } from "@auto-it/core/dist/utils/make-hooks";
 import botList from "@auto-it/bot-list";
-import { RestEndpointMethodTypes } from '@octokit/rest';
+import { RestEndpointMethodTypes } from "@octokit/rest";
 
 import ReleasedLabelPlugin from "../src";
 
@@ -81,14 +81,14 @@ describe("release label plugin", () => {
     const autoHooks = makeHooks();
     const logParseHooks = makeLogParseHooks();
 
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
     autoHooks.onCreateLogParse.call({ hooks: logParseHooks } as LogParse);
 
     const included = makeCommitFromMsg("normal commit with no bump");
@@ -103,14 +103,14 @@ describe("release label plugin", () => {
   test("should do nothing without PRs", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump");
     await autoHooks.afterRelease.promise({
@@ -126,14 +126,14 @@ describe("release label plugin", () => {
   test("should do nothing without new version", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump");
     await autoHooks.afterRelease.promise({
@@ -148,14 +148,14 @@ describe("release label plugin", () => {
   test("should do nothing with PR that doesn't exist", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     getPr.mockRejectedValueOnce(new Error("PR dont exist"));
     const commit = makeCommitFromMsg("normal commit with no bump (#123)");
@@ -174,14 +174,14 @@ describe("release label plugin", () => {
   test("should do nothing without commits", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await autoHooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -196,14 +196,14 @@ describe("release label plugin", () => {
   test("should do nothing with skip release label", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       config: { labels: defaultLabels },
       hooks: autoHooks,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump (#123)", {
       labels: ["skip-release"],
@@ -221,14 +221,14 @@ describe("release label plugin", () => {
   test("should comment and label PRs", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump (#123)");
     await autoHooks.afterRelease.promise({
@@ -251,14 +251,14 @@ describe("release label plugin", () => {
   test("should do nothing for bots", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump");
     commit.authors[0].username = botList[0];
@@ -280,14 +280,14 @@ describe("release label plugin", () => {
   test("should include bot PRs if configured to do so", async () => {
     const releasedLabel = new ReleasedLabelPlugin({ includeBotPrs: true });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump");
     commit.authors[0].username = botList[0];
@@ -309,14 +309,14 @@ describe("release label plugin", () => {
   test("should work with a null PR body", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     getPr.mockReturnValueOnce({ data: { body: null, head: { ref: "next" } } });
     const commit = makeCommitFromMsg("normal commit with no bump (#123)");
@@ -343,14 +343,14 @@ describe("release label plugin", () => {
         ":rocket: %TYPE is fixed. %TYPE was released in [%VERSION](https://github.com/intuit/auto/releases/tag/%VERSION) :rocket:",
     });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg("normal commit with no bump (#123)");
     await autoHooks.afterRelease.promise({
@@ -374,14 +374,14 @@ describe("release label plugin", () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
 
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     getLabels.mockReturnValueOnce(["released"]);
 
@@ -401,7 +401,7 @@ describe("release label plugin", () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
 
-    releasedLabel.apply(({
+    releasedLabel.apply({
       config: { prereleaseBranches: ["next"], labels: [] },
       hooks: autoHooks,
       labels: defaultLabels,
@@ -409,7 +409,7 @@ describe("release label plugin", () => {
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     getPr.mockReturnValueOnce({ data: { body: "", head: { ref: "next" } } });
     getLabels.mockReturnValueOnce(["released"]);
@@ -430,14 +430,14 @@ describe("release label plugin", () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
 
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await autoHooks.afterRelease.promise({
       lastRelease: "0.1.0",
@@ -454,14 +454,14 @@ describe("release label plugin", () => {
   test("should comment and lined Issues", async () => {
     const releasedLabel = new ReleasedLabelPlugin();
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     commits.mockReturnValueOnce(
       Promise.resolve([{ commit: { message: "fixes #420" } }])
@@ -493,14 +493,14 @@ describe("release label plugin", () => {
   test("should lock Issues", async () => {
     const releasedLabel = new ReleasedLabelPlugin({ lockIssues: true });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg(
       "normal commit with no bump (#123) closes #100"
@@ -518,14 +518,14 @@ describe("release label plugin", () => {
   test("should not lock Issues for canaries", async () => {
     const releasedLabel = new ReleasedLabelPlugin({ lockIssues: true });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg(
       "normal commit with no bump (#123) closes #100"
@@ -535,7 +535,11 @@ describe("release label plugin", () => {
       newVersion: "1.0.0-canary",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
-      response: [{ data: { prerelease: true } } as RestEndpointMethodTypes["repos"]["createRelease"]["response"]],
+      response: [
+        {
+          data: { prerelease: true },
+        } as RestEndpointMethodTypes["repos"]["createRelease"]["response"],
+      ],
     });
 
     expect(lockIssue).not.toHaveBeenCalled();
@@ -544,18 +548,18 @@ describe("release label plugin", () => {
   test("should lock Prs", async () => {
     const releasedLabel = new ReleasedLabelPlugin({ lockPrs: true });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg(
-        "normal commit with no bump (#123) closes #100",
-        { pullRequest: { number: 123 } },
+      "normal commit with no bump (#123) closes #100",
+      { pullRequest: { number: 123 } }
     );
     await autoHooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -570,25 +574,29 @@ describe("release label plugin", () => {
   test("should not lock Prs for canaries", async () => {
     const releasedLabel = new ReleasedLabelPlugin({ lockPrs: true });
     const autoHooks = makeHooks();
-    releasedLabel.apply(({
+    releasedLabel.apply({
       hooks: autoHooks,
       labels: defaultLabels,
       logger: dummyLog(),
       options: {},
       comment,
       git,
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     const commit = makeCommitFromMsg(
-        "normal commit with no bump (#123) closes #100",
-        { pullRequest: { number: 123 } },
+      "normal commit with no bump (#123) closes #100",
+      { pullRequest: { number: 123 } }
     );
     await autoHooks.afterRelease.promise({
       lastRelease: "0.1.0",
       newVersion: "1.0.0-canary",
       commits: await log.normalizeCommits([commit]),
       releaseNotes: "",
-      response: [{ data: { prerelease: true } } as RestEndpointMethodTypes["repos"]["createRelease"]["response"]],
+      response: [
+        {
+          data: { prerelease: true },
+        } as RestEndpointMethodTypes["repos"]["createRelease"]["response"],
+      ],
     });
 
     expect(lockIssue).not.toHaveBeenCalled();

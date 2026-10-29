@@ -7,11 +7,12 @@ const exec = jest.fn();
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => exec(...args),
+  () =>
+    (...args: any[]) =>
+      exec(...args)
 );
 
-const rawOutput =
-  `[[0minfo[0m] entering *experimental* thin client - BEEP WHIRR
+const rawOutput = `[[0minfo[0m] entering *experimental* thin client - BEEP WHIRR
 [[0minfo[0m] terminate the server with \`shutdown\`
 > print version
 1.2.3[0J
@@ -21,8 +22,7 @@ const rawOutput =
 const cleanedOutput = `1.2.3
 [success] Total time: 2 s, completed Apr 27, 2021 3:39:23 AM`;
 
-const rawAggregationOutput =
-  `[[0minfo[0m] entering *experimental* thin client - BEEP WHIRR
+const rawAggregationOutput = `[[0minfo[0m] entering *experimental* thin client - BEEP WHIRR
 [[0minfo[0m] terminate the server with \`shutdown\`
 > set version/aggregate := false
 [info] Defining version / aggregate[0J
@@ -35,7 +35,7 @@ const rawAggregationOutput =
 describe("sbt plugin", () => {
   let hooks: Auto.IAutoHooks;
   const prefixRelease: (a: string) => string = jest.fn(
-    (version) => `v${version}`,
+    (version) => `v${version}`
   );
   const options: ISbtPluginOptions = {};
   const logger = dummyLog();
@@ -43,19 +43,17 @@ describe("sbt plugin", () => {
   const setup = (options: ISbtPluginOptions) => {
     const plugin = new SbtPlugin(options);
     hooks = makeHooks();
-    plugin.apply(
-      ({
-        hooks,
-        logger,
-        remote: "stubRemote",
-        prefixRelease,
-        git: {
-          getLastTagNotInBaseBranch: async () => undefined,
-          getLatestRelease: async () => "0.0.1",
-        },
-        getCurrentVersion: async () => "0.0.1",
-      } as unknown) as Auto.Auto,
-    );
+    plugin.apply({
+      hooks,
+      logger,
+      remote: "stubRemote",
+      prefixRelease,
+      git: {
+        getLastTagNotInBaseBranch: async () => undefined,
+        getLatestRelease: async () => "0.0.1",
+      },
+      getCurrentVersion: async () => "0.0.1",
+    } as unknown as Auto.Auto);
   };
 
   beforeEach(() => {
@@ -79,11 +77,9 @@ describe("sbt plugin", () => {
     });
 
     test("should error if it can't parse version value", async () => {
-      exec
-        .mockReturnValueOnce(rawAggregationOutput)
-        .mockReturnValueOnce("");
+      exec.mockReturnValueOnce(rawAggregationOutput).mockReturnValueOnce("");
       await expect(sbtGetVersion()).rejects.toThrowError(
-        `Failed to read version from sbt: `,
+        `Failed to read version from sbt: `
       );
     });
   });
@@ -111,10 +107,7 @@ describe("sbt plugin", () => {
         bump: Auto.SEMVER.minor,
       });
 
-      expect(exec).toHaveBeenCalledWith("sbt", [
-        "--client",
-        "publish",
-      ]);
+      expect(exec).toHaveBeenCalledWith("sbt", ["--client", "publish"]);
     });
 
     test("should call sbt publish with custom command", async () => {
@@ -127,10 +120,7 @@ describe("sbt plugin", () => {
         bump: Auto.SEMVER.minor,
       });
 
-      expect(exec).toHaveBeenCalledWith("sbt", [
-        "--client",
-        "+publishLocal",
-      ]);
+      expect(exec).toHaveBeenCalledWith("sbt", ["--client", "+publishLocal"]);
     });
   });
 
@@ -164,11 +154,7 @@ describe("sbt plugin", () => {
 
       expect(result).toMatchObject({
         newVersion: "1.2.3",
-        details: [
-          "```",
-          cleanedOutput,
-          "```",
-        ].join("\n"),
+        details: ["```", cleanedOutput, "```"].join("\n"),
       });
     });
 
@@ -204,10 +190,7 @@ describe("sbt plugin", () => {
         canaryIdentifier: "-canary.42.1",
       });
 
-      expect(exec).toHaveBeenCalledWith("sbt", [
-        "--client",
-        "+publishLocal",
-      ]);
+      expect(exec).toHaveBeenCalledWith("sbt", ["--client", "+publishLocal"]);
     });
   });
 });

@@ -31,7 +31,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -42,7 +42,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -62,7 +62,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -73,7 +73,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -110,7 +110,7 @@ describe("Upload Assets Plugin", () => {
       );
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -122,7 +122,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",
@@ -149,7 +149,7 @@ describe("Upload Assets Plugin", () => {
       );
     const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -160,7 +160,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",
@@ -187,7 +187,7 @@ describe("Upload Assets Plugin", () => {
       );
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -199,7 +199,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",
@@ -222,7 +222,7 @@ describe("Upload Assets Plugin", () => {
       );
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -234,7 +234,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",
@@ -257,7 +257,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -268,7 +268,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -304,7 +304,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -315,7 +315,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -338,7 +338,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -349,7 +349,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -382,7 +382,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -393,7 +393,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue(new Array(300).fill({})),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -420,7 +420,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -431,7 +431,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue(new Array(303).fill({})),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",
@@ -459,7 +459,7 @@ describe("Upload Assets Plugin", () => {
     const uploadReleaseAsset = jest.fn().mockResolvedValue({});
     const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -470,7 +470,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue(new Array(300).fill({})),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.afterRelease.promise({
       newVersion: "1.0.0",

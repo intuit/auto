@@ -34,7 +34,8 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
 
-const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
+const closeIssue =
+  /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
 
 /** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {

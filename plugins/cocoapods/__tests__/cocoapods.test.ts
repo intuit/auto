@@ -65,8 +65,11 @@ const mockPodspecs = (contents: FakePodspec[]) => {
 
 let exec = jest.fn();
 // @ts-ignore
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
-  exec(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () =>
+    (...args) =>
+      exec(...args)
 );
 const logger = dummyLog();
 
@@ -93,7 +96,7 @@ describe("Cocoapods Plugin", () => {
     hooks = makeHooks();
     multiHooks = makeHooks();
     const apply = (p: CocoapodsPlugin, h: Auto.IAutoHooks) => {
-      p.apply(({
+      p.apply({
         hooks: h,
         logger: logger,
         prefixRelease,
@@ -112,7 +115,7 @@ describe("Cocoapods Plugin", () => {
         },
         remote: "https://github.com/intuit/auto.git",
         getCurrentVersion: async () => "0.0.1",
-      } as unknown) as Auto.Auto);
+      } as unknown as Auto.Auto);
     };
 
     apply(plugin, hooks);
@@ -229,15 +232,13 @@ describe("Cocoapods Plugin", () => {
   describe("validateConfig hook", () => {
     test("should validate options", async () => {
       expect(
-        ((await hooks.validateConfig.promise("cocoapods", {})) || [])
+        (await hooks.validateConfig.promise("cocoapods", {})) || []
       ).toHaveLength(1);
       expect(
-        ((await hooks.validateConfig.promise("cocoapods", options)) || [])
-          
+        (await hooks.validateConfig.promise("cocoapods", options)) || []
       ).toHaveLength(0);
       expect(
-        ((await hooks.validateConfig.promise("cocoapods", multiOptions)) || [])
-          
+        (await hooks.validateConfig.promise("cocoapods", multiOptions)) || []
       ).toHaveLength(0);
     });
   });

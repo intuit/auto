@@ -17,8 +17,9 @@ jest.mock("../src/utils.ts");
 jest.mock("env-ci", () => () => ({
   isCi: true,
 }));
-jest.mock("registry-url", () => (scope?: string) =>
-  scope ? "foo.registry.com" : "npm.registry.com"
+jest.mock(
+  "registry-url",
+  () => (scope?: string) => (scope ? "foo.registry.com" : "npm.registry.com")
 );
 jest.mock("user-home", () => "/User/name");
 

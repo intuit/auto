@@ -215,10 +215,8 @@ function makeExactType(
 }
 
 /** Create a function to validation a configuration based on the configDeceleration  */
-export const validateIoConfiguration = (
-  name: string,
-  configDeceleration: t.Any | t.HasProps
-) =>
+export const validateIoConfiguration =
+  (name: string, configDeceleration: t.Any | t.HasProps) =>
   /** A function the will validate a configuration based on the configDeceleration */
   async (rc: unknown): Promise<Array<ConfigError | string>> => {
     const looseRc = configDeceleration.decode(rc);

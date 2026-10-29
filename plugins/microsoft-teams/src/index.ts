@@ -121,12 +121,7 @@ export default class MicrosoftTeamsPlugin {
         const proxyUrl = process.env.https_proxy || process.env.http_proxy;
         const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
 
-        await this.createPost(
-          auto,
-          releaseNotes,
-          releaseUrl,
-          agent
-        );
+        await this.createPost(auto, releaseNotes, releaseUrl, agent);
       }
     );
   }

@@ -261,11 +261,12 @@ export default class Git {
   async getLabels(prNumber: number): Promise<string[]> {
     this.logger.verbose.info(`Getting labels for PR: ${prNumber}`);
 
-    const args: RestEndpointMethodTypes["issues"]["listLabelsOnIssue"]["parameters"] = {
-      owner: this.options.owner,
-      repo: this.options.repo,
-      issue_number: prNumber,
-    };
+    const args: RestEndpointMethodTypes["issues"]["listLabelsOnIssue"]["parameters"] =
+      {
+        owner: this.options.owner,
+        repo: this.options.repo,
+        issue_number: prNumber,
+      };
 
     this.logger.verbose.info("Getting issue labels using:", args);
 

@@ -67,7 +67,7 @@ describe("Brew Plugin", () => {
     const brewPlugin = new Brew({ name: "foo", executable: "./foo" });
     const autoHooks = makeHooks();
 
-    brewPlugin.apply(({
+    brewPlugin.apply({
       hooks: autoHooks,
       logger: dummyLog(),
       git: {
@@ -75,7 +75,7 @@ describe("Brew Plugin", () => {
           throw new Error();
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await autoHooks.afterVersion.promise({});
 
@@ -112,11 +112,11 @@ describe("Brew Plugin", () => {
     const brewPlugin = new Brew({ name: "foo", executable: "./foo" });
     const autoHooks = makeHooks();
 
-    brewPlugin.apply(({
+    brewPlugin.apply({
       hooks: autoHooks,
       logger: dummyLog(),
       git: { getLatestTagInBranch: () => "v1.0.0" },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     existsSync.mockReturnValueOnce(false);
     readFileSync.mockReturnValueOnce("");
@@ -131,11 +131,11 @@ describe("Brew Plugin", () => {
     const brewPlugin = new Brew({ name: "foo", executable: "./foo" });
     const autoHooks = makeHooks();
 
-    brewPlugin.apply(({
+    brewPlugin.apply({
       hooks: autoHooks,
       logger: dummyLog(),
       git: { getLatestTagInBranch: () => "v1.0.0" },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     existsSync.mockReturnValueOnce(true);
     readFileSync.mockReturnValueOnce("");
@@ -150,11 +150,11 @@ describe("Brew Plugin", () => {
     const brewPlugin = new Brew({ name: "foo", executable: "./foo" });
     const autoHooks = makeHooks();
 
-    brewPlugin.apply(({
+    brewPlugin.apply({
       hooks: autoHooks,
       logger: dummyLog(),
       git: { getLatestTagInBranch: () => "v1.0.0" },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     readFileSync.mockReturnValueOnce("$VERSION $SHA");
     exec.mockReturnValueOnce("1234 1234");
@@ -174,11 +174,11 @@ describe("Brew Plugin", () => {
     ]);
     const autoHooks = makeHooks();
 
-    brewPlugin.apply(({
+    brewPlugin.apply({
       hooks: autoHooks,
       logger: dummyLog(),
       git: { getLatestTagInBranch: () => "v1.0.0" },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     readFileSync.mockReturnValue("$VERSION $SHA");
     exec.mockReturnValue("1234 1234");

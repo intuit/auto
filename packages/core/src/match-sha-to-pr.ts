@@ -29,7 +29,7 @@ interface ISearchEdge {
             /** Name of the label */
             name: string;
           };
-        }
+        },
       ];
     };
   };

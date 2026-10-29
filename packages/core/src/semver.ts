@@ -2,11 +2,7 @@ import type { ReleaseCalculationOptions } from "./types";
 import * as t from "io-ts";
 
 export type VersionLabel =
-  | SEMVER.major
-  | SEMVER.minor
-  | SEMVER.patch
-  | "skip"
-  | "release";
+  SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" | "release";
 
 enum SEMVER {
   major = "major",
@@ -168,8 +164,8 @@ export const getReleaseType = (releaseType?: ReleaseType) =>
   releaseType === "none" || releaseType === "skip"
     ? SEMVER.noVersion
     : releaseType === "release"
-    ? SEMVER.patch
-    : releaseType || SEMVER.patch;
+      ? SEMVER.patch
+      : releaseType || SEMVER.patch;
 
 /**
  * Determine the version bump from the labels on merged PRs.

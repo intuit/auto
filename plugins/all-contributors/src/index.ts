@@ -50,7 +50,7 @@ const contributionTypes = [
   "userTesting",
   "video",
 ] as const;
-type Contribution = typeof contributionTypes[number];
+type Contribution = (typeof contributionTypes)[number];
 
 /** Determine if it's a valid contribution type */
 const isContribution = (

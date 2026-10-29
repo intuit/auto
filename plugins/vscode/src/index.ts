@@ -55,8 +55,8 @@ export default class VscodePlugin implements IPlugin {
     const verboseArgs = isQuiet
       ? ["--loglevel", "silent"]
       : isVerbose
-      ? ["--loglevel", "silly"]
-      : [];
+        ? ["--loglevel", "silly"]
+        : [];
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config

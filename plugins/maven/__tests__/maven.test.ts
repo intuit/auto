@@ -52,7 +52,9 @@ execSync.mockImplementation(exec);
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => exec(...args)
+  () =>
+    (...args: any[]) =>
+      exec(...args)
 );
 
 describe("maven", () => {

@@ -7,7 +7,15 @@ import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
 import parseAuthor from "parse-author";
-import { gt, lte, compareBuild, inc, parse, type ReleaseType, major } from "semver";
+import {
+  gt,
+  lte,
+  compareBuild,
+  inc,
+  parse,
+  type ReleaseType,
+  major,
+} from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -136,7 +144,8 @@ interface NextContext extends DryRunOption {
   releaseNotes: string;
 }
 
-type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+type PublishResponse =
+  RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
@@ -163,7 +172,7 @@ export interface IAutoHooks {
         commitsInRelease: IExtendedCommit[];
         /** The type of release made by shipit */
         context: ShipitContext;
-      }
+      },
     ]
   >;
   /** Ran after the `release` command has run. */
@@ -180,7 +189,7 @@ export interface IAutoHooks {
         releaseNotes: string;
         /** The response from creating the new release. */
         response?: PublishResponse | PublishResponse[];
-      }
+      },
     ]
   >;
   /** Override what happens when "releasing" code to a Github release */
@@ -201,7 +210,7 @@ export interface IAutoHooks {
         fullReleaseNotes: string;
         /** The commits included in the release */
         commits: IExtendedCommit[];
-      }
+      },
     ],
     PublishResponse | PublishResponse[] | void
   >;
@@ -231,7 +240,7 @@ export interface IAutoHooks {
       {
         /** The bump the changelog will make */
         bump: SEMVER | undefined;
-      }
+      },
     ]
   >;
   /** Ran before the package has been versioned. */
@@ -242,7 +251,7 @@ export interface IAutoHooks {
         from: string;
         /** The commits included in the release */
         commits: IExtendedCommit[];
-      }
+      },
     ]
   >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
@@ -254,7 +263,7 @@ export interface IAutoHooks {
           bump: SEMVER;
           /** Override the version to release */
           useVersion?: string;
-        }
+        },
     ]
   >;
   /** Ran after the package has been versioned. */
@@ -267,7 +276,7 @@ export interface IAutoHooks {
         bump: SEMVER;
         /** Override the version to release */
         useVersion?: string;
-      }
+      },
     ]
   >;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
@@ -279,7 +288,7 @@ export interface IAutoHooks {
           bump: SEMVER;
           /** The post-version identifier to add to the version */
           canaryIdentifier: string;
-        }
+        },
     ],
     | string
     | {
@@ -308,7 +317,7 @@ export interface IAutoHooks {
       DryRunOption & {
         /** The complete information about the PR */
         pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
-      }
+      },
     ]
   >;
 }
@@ -451,10 +460,10 @@ export default class Auto {
       "quiet" in options && options.quiet
         ? "quiet"
         : Array.isArray(options.verbose) && options.verbose.length > 1
-        ? "veryVerbose"
-        : options.verbose
-        ? "verbose"
-        : undefined
+          ? "veryVerbose"
+          : options.verbose
+            ? "verbose"
+            : undefined
     );
     this.logger = createLog();
     this.hooks = makeHooks();
@@ -872,13 +881,12 @@ export default class Auto {
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
     const oldVersionBranchPrefix = this.config?.versionBranches as
-      | string
-      | undefined;
+      string | undefined;
 
     return Boolean(
       oldVersionBranchPrefix &&
-        branch &&
-        new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
+      branch &&
+      new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
     );
   }
 
@@ -1314,9 +1322,7 @@ export default class Auto {
       // If the commit sha is a 7 digit number starting with zero
       // SemVer will reject the version. Include enough of the sha
       // to include at least one letter in that case.
-      const endIndex  = /^0\d{6}/.test(sha) ?
-          sha.search(/[a-zA-Z]/) + 1
-          : 7;
+      const endIndex = /^0\d{6}/.test(sha) ? sha.search(/[a-zA-Z]/) + 1 : 7;
       canaryIdentifier = `${canaryIdentifier}.${sha.slice(0, endIndex)}`;
     }
 
@@ -1485,9 +1491,8 @@ export default class Auto {
       latestTagInBaseBranch ||
       (await this.git.getFirstCommit());
 
-    const fullReleaseNotes = await this.release.generateReleaseNotes(
-      lastRelease
-    );
+    const fullReleaseNotes =
+      await this.release.generateReleaseNotes(lastRelease);
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1757,9 +1762,8 @@ export default class Auto {
     }
 
     const lastRelease = options.from || (await this.git.getLatestRelease());
-    const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
-    );
+    const commitsInRelease =
+      await this.release.getCommitsInRelease(lastRelease);
 
     this.logger.verbose.info("Calling before version hook");
     await this.hooks.beforeVersion.promise({
@@ -2328,9 +2332,8 @@ export default class Auto {
       );
 
       if (query) {
-        const result = await this.git.graphql<Record<string, ISearchResult>>(
-          query
-        );
+        const result =
+          await this.git.graphql<Record<string, ISearchResult>>(query);
 
         if (result?.[`hash_${commit}`]) {
           const number = result[`hash_${commit}`].edges[0]?.node?.number;

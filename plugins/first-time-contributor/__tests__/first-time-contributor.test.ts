@@ -15,7 +15,9 @@ exec.mockReturnValue("");
 // @ts-ignore
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => exec(...args)
+  () =>
+    (...args: any[]) =>
+      exec(...args)
 );
 
 const setup = (

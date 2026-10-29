@@ -19,7 +19,9 @@ export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
 /** Calls sbt in the client and returns cleaned up logs */
 export async function sbtClient(input: string): Promise<string> {
   const output = await execPromise("sbt", ["--client", input]);
-  const cleanOutput = stripAnsi(output).replace(/(.*\n)*^>.*$/m, "").trim();
+  const cleanOutput = stripAnsi(output)
+    .replace(/(.*\n)*^>.*$/m, "")
+    .trim();
   return cleanOutput;
 }
 
@@ -82,7 +84,7 @@ export default class SbtPlugin implements IPlugin {
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       if (!auto.git) {
         throw new Error(
-          "Can't calculate previous version without Git initialized!",
+          "Can't calculate previous version without Git initialized!"
         );
       }
 
@@ -127,7 +129,7 @@ export default class SbtPlugin implements IPlugin {
 
         auto.logger.verbose.info(`Set version in sbt to "${newTag}"`);
         await sbtSetVersion(newTag);
-      },
+      }
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
@@ -187,13 +189,9 @@ export default class SbtPlugin implements IPlugin {
         auto.logger.verbose.info("Successfully published canary version");
         return {
           newVersion: canaryVersion,
-          details: [
-            "```",
-            publishLogs,
-            "```",
-          ].join("\n"),
+          details: ["```", publishLogs, "```"].join("\n"),
         };
-      },
+      }
     );
   }
 }

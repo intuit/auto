@@ -1,11 +1,11 @@
-import { defineConfig, type UserConfig } from 'tsdown'
+import { defineConfig, type UserConfig } from "tsdown";
 
 export const baseConfig: UserConfig = defineConfig({
-  format: 'cjs',
+  format: "cjs",
   fixedExtension: false,
-  outputOptions: { exports: 'named' },
+  outputOptions: { exports: "named" },
   sourcemap: true,
-  target: ['esnext'],
+  target: ["esnext"],
   dts: true,
-  clean: true
-})
+  clean: true,
+});

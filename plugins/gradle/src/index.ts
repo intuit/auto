@@ -5,7 +5,7 @@ import {
   validatePluginConfiguration,
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
-  determineNextVersion
+  determineNextVersion,
 } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
@@ -70,10 +70,8 @@ async function getVersion(
   gradleCommand: string,
   gradleOptions: string[]
 ): Promise<string> {
-  const {
-    version = "0.0.0",
-    snapshotSuffix = defaultSnapshotSuffix,
-  } = await getProperties(gradleCommand, gradleOptions);
+  const { version = "0.0.0", snapshotSuffix = defaultSnapshotSuffix } =
+    await getProperties(gradleCommand, gradleOptions);
 
   return version.replace(snapshotSuffix, "");
 }
@@ -147,7 +145,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
     /** Call gradle publish, if exists, otherwise log warning */
     const publish = async () => {
       const { publish } = this.properties;
-  
+
       if (publish) {
         await execPromise(this.options.gradleCommand, [
           "publish",
@@ -171,10 +169,8 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         this.options.gradleOptions
       );
 
-      const {
-        version = "",
-        snapshotSuffix = defaultSnapshotSuffix,
-      } = this.properties;
+      const { version = "", snapshotSuffix = defaultSnapshotSuffix } =
+        this.properties;
       if (version.endsWith(snapshotSuffix)) {
         this.snapshotRelease = true;
       }
@@ -261,7 +257,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       async ({ dryRun, canaryIdentifier }) => {
         const releaseVersion = await getVersion(
           this.options.gradleCommand,
-          this.options.gradleOptions,
+          this.options.gradleOptions
         );
 
         const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
@@ -312,7 +308,10 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         }
 
         const nextRegex = /(-next).*/;
-        const preReleaseSnapshotVersion = nextVersion.replace(nextRegex, defaultSnapshotSuffix)
+        const preReleaseSnapshotVersion = nextVersion.replace(
+          nextRegex,
+          defaultSnapshotSuffix
+        );
 
         if (dryRun) {
           return preReleaseVersions;
@@ -340,35 +339,38 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
     );
 
-    auto.hooks.afterShipIt.tapPromise(this.name, async ({ dryRun, context }) => {
-      if (!this.snapshotRelease || dryRun || context !== "latest") {
-        return;
+    auto.hooks.afterShipIt.tapPromise(
+      this.name,
+      async ({ dryRun, context }) => {
+        if (!this.snapshotRelease || dryRun || context !== "latest") {
+          return;
+        }
+
+        const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
+        const releaseVersion = await getVersion(
+          this.options.gradleCommand,
+          this.options.gradleOptions
+        );
+
+        // snapshots precede releases, so if we had a minor/major release,
+        // then we need to set up snapshots on the next version
+        const newVersion = `${inc(releaseVersion, "patch")}${snapshotSuffix}`;
+
+        await this.updateGradleVersion(
+          newVersion,
+          `prepare snapshot version: ${newVersion} [skip ci]`,
+          false
+        );
+
+        await execPromise("git", [
+          "push",
+          "--atomic",
+          "--follow-tags",
+          "--set-upstream",
+          auto.remote,
+          auto.baseBranch,
+        ]);
       }
-
-      const { snapshotSuffix = defaultSnapshotSuffix } = this.properties;
-      const releaseVersion = await getVersion(
-        this.options.gradleCommand,
-        this.options.gradleOptions
-      );
-
-      // snapshots precede releases, so if we had a minor/major release,
-      // then we need to set up snapshots on the next version
-      const newVersion = `${inc(releaseVersion, "patch")}${snapshotSuffix}`;
-
-      await this.updateGradleVersion(
-        newVersion,
-        `prepare snapshot version: ${newVersion} [skip ci]`,
-        false
-      );
-
-      await execPromise("git", [
-        "push",
-        "--atomic",
-        "--follow-tags",
-        "--set-upstream",
-        auto.remote,
-        auto.baseBranch,
-      ]);
-    });
+    );
   }
 }

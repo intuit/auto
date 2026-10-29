@@ -20,14 +20,18 @@ execPromise.mockResolvedValue("");
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => execPromise(...args)
+  () =>
+    (...args: any[]) =>
+      execPromise(...args)
 );
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
-  () => (...args: any[]) => getLernaPackages(...args)
+  () =>
+    (...args: any[]) =>
+      getLernaPackages(...args)
 );
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
@@ -54,7 +58,7 @@ describe("next", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -66,7 +70,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -108,7 +112,7 @@ describe("next", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -120,7 +124,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], {
@@ -144,7 +148,7 @@ describe("next", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -156,7 +160,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -188,7 +192,7 @@ describe("next", () => {
     const plugin = new NPMPlugin({ legacyAuth: true });
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -200,7 +204,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -243,7 +247,7 @@ describe("next", () => {
     const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -255,7 +259,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -320,7 +324,7 @@ describe("next", () => {
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -332,7 +336,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -389,7 +393,7 @@ describe("next", () => {
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -401,7 +405,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -439,7 +443,7 @@ describe("next", () => {
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -451,7 +455,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], {
@@ -483,7 +487,7 @@ describe("next", () => {
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -495,7 +499,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -553,7 +557,7 @@ describe("next", () => {
     execPromise.mockResolvedValueOnce("");
     execPromise.mockResolvedValueOnce("1.2.4-next.0");
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -565,7 +569,7 @@ describe("next", () => {
         getLatestRelease: () => "1.0.0",
         getLastTagNotInBaseBranch: () => "1.2.3",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -574,12 +578,12 @@ describe("next", () => {
     expect(execPromise).toHaveBeenCalledWith(
       "npx",
       expect.arrayContaining([
-      "lerna", 
-      "publish", 
-      "1.2.4-next.0",
-      "--contents",
-      "dist/publish-folder"
-    ])
+        "lerna",
+        "publish",
+        "1.2.4-next.0",
+        "--contents",
+        "dist/publish-folder",
+      ])
     );
     expect(execPromise).toHaveBeenCalledWith("git", [
       "reset",
@@ -650,7 +654,7 @@ describe("next", () => {
       return Promise.resolve("");
     });
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -661,7 +665,7 @@ describe("next", () => {
         getLatestRelease: () => "@foo/foo@0.1.0",
         getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)
@@ -733,7 +737,7 @@ describe("next", () => {
       return Promise.resolve("");
     });
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -744,7 +748,7 @@ describe("next", () => {
         getLatestRelease: () => "@foo/foo@0.1.0",
         getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], {
@@ -803,7 +807,7 @@ describe("next", () => {
       return Promise.resolve("");
     });
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -814,7 +818,7 @@ describe("next", () => {
         getLatestRelease: () => "@foo/foo@0.1.0",
         getLastTagNotInBaseBranch: () => "@foo/foo@1.0.0-next.0",
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.next.promise([], { bump: Auto.SEMVER.patch } as any)

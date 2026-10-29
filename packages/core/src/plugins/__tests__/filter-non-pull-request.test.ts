@@ -13,7 +13,7 @@ const setup = () => {
   const hooks = makeHooks();
   const logParseHooks = makeLogParseHooks();
 
-  plugin.apply({ hooks, git: ({ getPr } as unknown) as Git } as Auto);
+  plugin.apply({ hooks, git: { getPr } as unknown as Git } as Auto);
   hooks.onCreateLogParse.call({ hooks: logParseHooks } as LogParse);
 
   return logParseHooks;

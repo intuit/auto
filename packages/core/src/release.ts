@@ -10,7 +10,10 @@ import { Memoize as memoize } from "typescript-memoize";
 import type { ICreateLabelsOptions } from "./auto-args";
 import Changelog from "./changelog";
 import Git from "./git";
-import LogParse, { type ICommitAuthor, type IExtendedCommit } from "./log-parse";
+import LogParse, {
+  type ICommitAuthor,
+  type IExtendedCommit,
+} from "./log-parse";
 import SEMVER, {
   calculateSemVerBump,
   type IVersionLabels,
@@ -423,8 +426,8 @@ export default class Release {
   /** Given a tag get the next incremented version */
   async calcNextVersion(lastTag: string) {
     const bump = await this.getSemverBump(lastTag);
-    const matches = lastTag.match(/(\d+\.\d+\.\d+)/)
-    const lastVersion = matches ? matches[0] : lastTag
+    const matches = lastTag.match(/(\d+\.\d+\.\d+)/);
+    const lastVersion = matches ? matches[0] : lastTag;
     return inc(lastVersion, bump as ReleaseType);
   }
 

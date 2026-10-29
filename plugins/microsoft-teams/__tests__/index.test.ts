@@ -210,9 +210,7 @@ describe("createPost", () => {
     );
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
+    expect(fetchSpy.mock.calls[0][0]).toBe("https://custom-microsoft-url");
     expect(fetchSpy.mock.calls[0][1].agent).toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
@@ -229,9 +227,7 @@ describe("createPost", () => {
     );
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
+    expect(fetchSpy.mock.calls[0][0]).toBe("https://custom-microsoft-url");
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
@@ -248,15 +244,15 @@ describe("createPost", () => {
     );
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
+    expect(fetchSpy.mock.calls[0][0]).toBe("https://custom-microsoft-url");
     expect(fetchSpy.mock.calls[0][1].agent).not.toBeUndefined();
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
   test("should call Microsoft Office Teams api", async () => {
-    const plugin = new MicrosoftTeamsPlugin({ url: "https://custom-microsoft-url" });
+    const plugin = new MicrosoftTeamsPlugin({
+      url: "https://custom-microsoft-url",
+    });
     const hooks = makeHooks();
     plugin.apply({ hooks, options: {}, ...mockAuto } as Auto);
 
@@ -270,12 +266,9 @@ describe("createPost", () => {
     });
 
     expect(fetchSpy).toHaveBeenCalled();
-    expect(fetchSpy.mock.calls[0][0]).toBe(
-      "https://custom-microsoft-url"
-    );
+    expect(fetchSpy.mock.calls[0][0]).toBe("https://custom-microsoft-url");
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
-
 
   // test("should call Microsoft Office Teams api with custom atTarget", async () => {
   //   const plugin = new MicrosoftTeamsPlugin({

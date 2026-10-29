@@ -25,14 +25,18 @@ exec.mockReturnValue("");
 jest.mock("../src/set-npm-token.ts");
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => execPromise(...args)
+  () =>
+    (...args: any[]) =>
+      execPromise(...args)
 );
 jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "main",
 }));
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
-  () => (...args: any[]) => getLernaPackages(...args)
+  () =>
+    (...args: any[]) =>
+      getLernaPackages(...args)
 );
 jest.mock("env-ci", () => () => ({ isCi: false }));
 jest.mock("get-monorepo-packages", () => () => monorepoPackages());
@@ -616,7 +620,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Bump version to: %s [skip ci]\"",
+      '"Bump version to: %s [skip ci]"',
       false,
     ]);
   });
@@ -645,7 +649,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Bump version to: %s [skip ci]\"",
+      '"Bump version to: %s [skip ci]"',
       false,
     ]);
   });
@@ -674,7 +678,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Bump version to: %s [skip ci]\"",
+      '"Bump version to: %s [skip ci]"',
       "--exact",
     ]);
 
@@ -881,7 +885,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Bump version to: %s [skip ci]\"",
+      '"Bump version to: %s [skip ci]"',
       false,
     ]);
   });
@@ -924,7 +928,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"[skip ci] Custom version commit message\"",
+      '"[skip ci] Custom version commit message"',
       false,
     ]);
   });
@@ -967,7 +971,7 @@ describe("publish", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Custom version commit message [skip ci]\"",
+      '"Custom version commit message [skip ci]"',
       false,
     ]);
   });
@@ -1013,7 +1017,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1024,7 +1028,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1045,7 +1049,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1056,7 +1060,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     const log = jest.fn();
     jest.spyOn(console, "log").mockImplementation(log);
@@ -1082,7 +1086,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1093,7 +1097,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     expect(
       await hooks.canary.promise({
@@ -1116,7 +1120,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1127,7 +1131,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     // first version exists
     execPromise.mockReturnValueOnce(true);
@@ -1155,7 +1159,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin({ legacyAuth: true });
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1166,7 +1170,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1191,7 +1195,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin({ publishFolder: "dist/publish-folder" });
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1202,7 +1206,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.resolve("1.2.3"),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1280,7 +1284,7 @@ describe("canary", () => {
     const plugin = new NPMPlugin();
     const hooks = makeHooks();
 
-    plugin.apply(({
+    plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
       remote: "origin",
@@ -1291,7 +1295,7 @@ describe("canary", () => {
         getLatestRelease: () => "1.2.3",
         getLatestTagInBranch: () => Promise.reject(new Error()),
       },
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1530,7 +1534,7 @@ describe("canary", () => {
       "--yes",
       "--no-push",
       "-m",
-      "\"Bump independent versions [skip ci]\"",
+      '"Bump independent versions [skip ci]"',
       false,
     ]);
   });

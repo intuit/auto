@@ -386,9 +386,8 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
           if (names.includes(d)) {
             const depName = d.match(/@\S+\/\S+/) ? d.split("/")[1] : d;
 
-            newJson.dependencies![
-              addCanaryScope(canaryScope, depName)
-            ] = newJson.dependencies![d];
+            newJson.dependencies![addCanaryScope(canaryScope, depName)] =
+              newJson.dependencies![d];
             delete newJson.dependencies![d];
           }
         });
@@ -701,8 +700,8 @@ export default class NPMPlugin implements IPlugin {
     const verboseArgs = isQuiet
       ? ["--loglevel", "silent"]
       : isVerbose
-      ? ["--loglevel", "silly"]
-      : [];
+        ? ["--loglevel", "silly"]
+        : [];
     const prereleaseBranches =
       auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
     const branch = getCurrentBranch();
@@ -947,9 +946,8 @@ export default class NPMPlugin implements IPlugin {
           const title = `v${
             useVersion || inc(lernaPackage.version, bump as ReleaseType)
           }`;
-          const releaseNotes = await changelog.generateReleaseNotes(
-            includedCommits
-          );
+          const releaseNotes =
+            await changelog.generateReleaseNotes(includedCommits);
 
           if (releaseNotes.trim()) {
             await auto.release!.updateChangelogFile(

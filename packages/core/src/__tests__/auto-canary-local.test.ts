@@ -26,7 +26,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     issues = {
-      listLabelsOnIssue: listLabelsOnIssue.mockReturnValue({ data: []}),
+      listLabelsOnIssue: listLabelsOnIssue.mockReturnValue({ data: [] }),
     };
 
     hook = {

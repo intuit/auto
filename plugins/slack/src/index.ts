@@ -12,7 +12,8 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
-type ReleaseResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+type ReleaseResponse =
+  RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 /** Transform markdown into slack friendly text */
 export const sanitizeMarkdown = (markdown: string) =>

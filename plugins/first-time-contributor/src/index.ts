@@ -85,7 +85,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                   }
                 }
               }
-            `)
+            `);
 
             if (
               userCommits &&
