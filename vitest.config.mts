@@ -16,8 +16,8 @@ const workspaceDist = new RegExp(
  * names, `<package>/dist/*` subpaths and relative `../packages/*\/dist/*`
  * paths, since all of them resolve into a dist folder.
  */
-const workspaceSource = (): Plugin => ({
-  name: "workspace-source",
+const resolveToSource = (): Plugin => ({
+  name: "resolve-to-source",
   enforce: "pre",
   async resolveId(source, importer, options) {
     const resolved = await this.resolve(source, importer, {
@@ -38,7 +38,7 @@ const workspaceSource = (): Plugin => ({
 });
 
 export default defineConfig({
-  plugins: [workspaceSource()],
+  plugins: [resolveToSource()],
   test: {
     globals: true,
     environment: "node",
@@ -55,7 +55,7 @@ export default defineConfig({
       reporter: ["cobertura", "html", "lcov", "text"],
       include: ["packages/**/*.ts", "plugins/**/*.ts"],
       exclude: ["**/dist/**", "**/*.test.ts", "**/__tests__/**"],
-      // Jest wrote coverage even when tests failed, and CI uploads it either way.
+      // Jest wrote coverage even when tests failed.
       reportOnFailure: true,
     },
   },

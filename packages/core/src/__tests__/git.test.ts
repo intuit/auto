@@ -801,7 +801,7 @@ describe("github", () => {
 
       expect(
         errorHandler.bind(undefined, error({ authorization: "token abc" }))
-      ).toThrow(error().message);
+      ).toThrow(expect.objectContaining({ message: error().message }));
     });
   });
 });

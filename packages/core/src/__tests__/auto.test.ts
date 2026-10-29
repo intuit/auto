@@ -5,8 +5,16 @@ import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import { loadPlugin } from "../utils/load-plugins";
-import child from "child_process";
+import { execSync } from "child_process";
 import execPromise from "../utils/exec-promise";
+
+vi.mock("child_process", async (importOriginal) => {
+  const mod = {
+    ...(await importOriginal<typeof import("child_process")>()),
+    execSync: vi.fn(),
+  };
+  return { ...mod, default: mod };
+});
 
 const exec = vi.fn();
 vi.mock("../utils/exec-promise");
@@ -100,10 +108,8 @@ describe("Auto", () => {
     // @ts-ignore
     loadPlugin.mockClear();
 
-    vi.spyOn(child, "execSync")
-      .mockImplementation(() => undefined)
-      // @ts-ignore
-      .mockReturnValue("");
+    // @ts-ignore
+    vi.mocked(execSync).mockReturnValue("");
   });
 
   test("should use args", async () => {
@@ -1744,10 +1750,8 @@ describe("Auto", () => {
 
 describe("hooks", () => {
   beforeEach(() => {
-    vi.spyOn(child, "execSync")
-      .mockImplementation(() => undefined)
-      // @ts-ignore
-      .mockReturnValue("");
+    // @ts-ignore
+    vi.mocked(execSync).mockReturnValue("");
   });
 
   test("should be able to modifyConfig", async () => {

@@ -1,11 +1,17 @@
 import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
-import child from "child_process";
+import { execSync } from "child_process";
 
-vi.spyOn(child, "execSync")
-  .mockImplementation(() => undefined)
-  // @ts-ignore
-  .mockReturnValue("");
+vi.mock("child_process", async (importOriginal) => {
+  const mod = {
+    ...(await importOriginal<typeof import("child_process")>()),
+    execSync: vi.fn(),
+  };
+  return { ...mod, default: mod };
+});
+
+// @ts-ignore
+vi.mocked(execSync).mockReturnValue("");
 
 const importMock = vi.fn();
 vi.mock("import-cwd", () => ({ default: (path: string) => importMock(path) }));

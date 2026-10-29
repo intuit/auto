@@ -7,7 +7,7 @@ import "mock-fs";
 vi.mock("requireg", () => ({ default: createRequire(import.meta.url) }));
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const workspaceSource = new RegExp(
+const workspaceSrcFile = new RegExp(
   `^${root.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")}/(packages|plugins)/([^/]+)/src/(.+)\\.ts$`
 );
 
@@ -18,7 +18,7 @@ registerHooks({
   resolve(specifier, context, nextResolve) {
     const resolved = nextResolve(specifier, context);
     const match = resolved.url.startsWith("file:")
-      ? workspaceSource.exec(fileURLToPath(resolved.url))
+      ? workspaceSrcFile.exec(fileURLToPath(resolved.url))
       : null;
 
     if (!match) {
