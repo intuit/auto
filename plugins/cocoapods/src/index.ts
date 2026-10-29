@@ -10,7 +10,7 @@ import {
   determineNextVersion,
 } from "@auto-it/core";
 
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 import * as t from "io-ts";
 

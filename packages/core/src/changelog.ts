@@ -3,9 +3,9 @@ import { URL } from "url";
 import join from "url-join";
 import botList from "@auto-it/bot-list";
 
-import { ICommitAuthor, IExtendedCommit } from "./log-parse";
-import SEMVER, { ILabelDefinition } from "./semver";
-import { ILogger } from "./utils/logger";
+import type { ICommitAuthor, IExtendedCommit } from "./log-parse";
+import SEMVER, { type ILabelDefinition } from "./semver";
+import type { ILogger } from "./utils/logger";
 import { makeChangelogHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
 import { automatedCommentIdentifier } from "./git";

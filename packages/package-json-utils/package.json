@@ -35,7 +35,7 @@
     "cli"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2"
@@ -46,6 +46,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/parse-github-url": "1.0.0"
+    "@types/parse-github-url": "1.0.0",
+    "tsdown": "catalog:"
   }
 }

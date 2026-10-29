@@ -31,7 +31,7 @@
     "changelog"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -45,6 +45,7 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "@types/url-join": "^4.0.0"
+    "@types/url-join": "^4.0.0",
+    "tsdown": "catalog:"
   }
 }

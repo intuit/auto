@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { CiEnv } from "env-ci";
+import type { CiEnv } from "env-ci";
 import { getCurrentBranch } from "../auto";
 
 jest.mock('child_process')

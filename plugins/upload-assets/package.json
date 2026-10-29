@@ -32,7 +32,7 @@
     "assets"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@octokit/rest": "^18.12.0",
-    "env-ci": "^5.0.1"
+    "env-ci": "^5.0.1",
+    "tsdown": "catalog:"
   }
 }

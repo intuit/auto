@@ -5,11 +5,11 @@ import {
   SyncHook,
   AsyncSeriesHook,
 } from "tapable";
-import { IAutoHooks } from "../auto";
-import { IChangelogHooks } from "../changelog";
-import { ILogParseHooks } from "../log-parse";
-import { IReleaseHooks } from "../release";
-import { InteractiveInitHooks } from "../init";
+import type { IAutoHooks } from "../auto";
+import type { IChangelogHooks } from "../changelog";
+import type { ILogParseHooks } from "../log-parse";
+import type { IReleaseHooks } from "../release";
+import type { InteractiveInitHooks } from "../init";
 
 /** Make the hooks for "auto" */
 export const makeHooks = (): IAutoHooks => ({

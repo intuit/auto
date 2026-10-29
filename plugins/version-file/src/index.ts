@@ -2,7 +2,7 @@ import { Auto, IPlugin, execPromise, validatePluginConfiguration, getCurrentBran
 import { promisify } from "util";
 import * as t from "io-ts";
 import * as fs from "fs";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);

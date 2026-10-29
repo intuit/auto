@@ -1,4 +1,4 @@
-import envCi, { CiEnv } from "env-ci";
+import envCi, { type CiEnv } from "env-ci";
 import { execSync } from "child_process";
 
 const defaultCiEnvironment = envCi();

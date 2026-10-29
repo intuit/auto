@@ -10,7 +10,7 @@ import path from "path";
 import endent from "endent";
 import glob from "fast-glob";
 import parseGitHubUrl from "parse-github-url";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 import * as t from "io-ts";
 import envCi from "env-ci";
 import { readFile, writeFile, mkdir } from "./utils";

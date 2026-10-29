@@ -9,7 +9,7 @@ import {
   getPrNumberFromEnv,
 } from "@auto-it/core";
 import * as t from "io-ts";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 const pluginOptions = t.partial({
   /** The source image, if a static name and/or tag */

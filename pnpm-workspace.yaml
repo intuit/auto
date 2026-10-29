@@ -20,3 +20,7 @@ allowBuilds:
   ejs: false
   fsevents: false
   nx: false
+
+catalog:
+  tsdown: 0.23.1
+  typescript: 7.0.2

@@ -13,7 +13,7 @@ import fs from "fs";
 import path from "path";
 import match from "anymatch";
 import on from "await-to-js";
-import { IExtendedCommit } from "@auto-it/core/src/log-parse";
+import type { IExtendedCommit } from "@auto-it/core/src/log-parse";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
 

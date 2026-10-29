@@ -31,7 +31,7 @@
     "all-contributors"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -51,6 +51,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/env-ci": "^3.1.0"
+    "@types/env-ci": "^3.1.0",
+    "tsdown": "catalog:"
   }
 }

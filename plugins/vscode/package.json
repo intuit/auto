@@ -30,7 +30,7 @@
     "changelog"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -45,6 +45,7 @@
     "vsce": "^1.83.0"
   },
   "devDependencies": {
-    "@types/semver": "^7.1.0"
+    "@types/semver": "^7.1.0",
+    "tsdown": "catalog:"
   }
 }

@@ -3,7 +3,7 @@ import * as glob from "fast-glob";
 import * as fs from "fs";
 import * as jsdom from "jsdom";
 import * as prettier from "prettier";
-import { IMavenPluginOptions, getPom } from "./index";
+import { type IMavenPluginOptions, getPom } from "./index";
 
 /** Update the version in the pom.xml file **/
 export async function updatePomVersion(

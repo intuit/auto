@@ -31,7 +31,7 @@
     "node"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -98,6 +98,7 @@
     "@types/signale": "^1.2.1",
     "@types/tinycolor2": "^1.4.1",
     "@types/url-join": "^4.0.0",
-    "graphql": "^15.0.0"
+    "graphql": "^15.0.0",
+    "tsdown": "catalog:"
   }
 }

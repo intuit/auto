@@ -32,7 +32,7 @@
     "crates.io"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -48,6 +48,7 @@
   "devDependencies": {
     "@types/env-ci": "^3.1.0",
     "@types/semver": "^7.1.0",
-    "@types/user-home": "^2.0.0"
+    "@types/user-home": "^2.0.0",
+    "tsdown": "catalog:"
   }
 }

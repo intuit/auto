@@ -5,10 +5,10 @@ import * as path from "path";
 import TypeScriptLoader from "@endemolshinegroup/cosmiconfig-typescript-loader";
 
 import { getVersionMap } from "./release";
-import { ILogger } from "./utils/logger";
+import type { ILogger } from "./utils/logger";
 import tryRequire from "./utils/try-require";
 import endent from "endent";
-import { ILabelDefinition, defaultLabels } from "./semver";
+import { type ILabelDefinition, defaultLabels } from "./semver";
 
 export const DEFAULT_PRERELEASE_BRANCHES = ["next"];
 

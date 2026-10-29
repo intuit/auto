@@ -1,5 +1,5 @@
 import { Auto } from "../auto";
-import { IPRStatusOptions } from "../auto-args";
+import type { IPRStatusOptions } from "../auto-args";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";

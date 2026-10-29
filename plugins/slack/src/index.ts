@@ -1,4 +1,4 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import { githubToSlack, url } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 

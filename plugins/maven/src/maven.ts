@@ -1,5 +1,5 @@
 import { Auto, execPromise } from "@auto-it/core";
-import { IMavenPluginOptions } from "./index";
+import type { IMavenPluginOptions } from "./index";
 
 const mavenDefaults = {
   mavenCommand: "/usr/bin/mvn",

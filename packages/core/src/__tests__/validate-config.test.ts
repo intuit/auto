@@ -1,7 +1,7 @@
 import {
   validateAutoRc,
   validatePlugins,
-  ValidatePluginHook,
+  type ValidatePluginHook,
   formatError,
   validatePluginConfiguration,
 } from "../validate-config";

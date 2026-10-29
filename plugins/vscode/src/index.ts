@@ -5,7 +5,7 @@ import {
   execPromise,
 } from "@auto-it/core";
 import * as t from "io-ts";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 import * as vsce from "vsce";
 import {
   getRepo,

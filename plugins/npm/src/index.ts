@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import endent from "endent";
 import { Memoize as memoize } from "typescript-memoize";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
@@ -25,7 +25,7 @@ import {
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
-import { gt, gte, inc, prerelease, ReleaseType } from "semver";
+import { gt, gte, inc, prerelease, type ReleaseType } from "semver";
 import {
   loadPackageJson,
   getRepo,

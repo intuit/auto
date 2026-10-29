@@ -31,7 +31,7 @@
     "slack"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@types/node-fetch": "2.6.1",
-    "@types/url-join": "^4.0.0"
+    "@types/url-join": "^4.0.0",
+    "tsdown": "catalog:"
   }
 }

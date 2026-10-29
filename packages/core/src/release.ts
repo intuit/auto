@@ -1,34 +1,34 @@
-import { AsyncReturnType } from "type-fest";
+import type { AsyncReturnType } from "type-fest";
 import on from "await-to-js";
 import * as fs from "fs";
 import chunk from "lodash.chunk";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 import { promisify } from "util";
 
 import { AsyncSeriesBailHook, SyncHook } from "tapable";
 import { Memoize as memoize } from "typescript-memoize";
-import { ICreateLabelsOptions } from "./auto-args";
+import type { ICreateLabelsOptions } from "./auto-args";
 import Changelog from "./changelog";
 import Git from "./git";
-import LogParse, { ICommitAuthor, IExtendedCommit } from "./log-parse";
+import LogParse, { type ICommitAuthor, type IExtendedCommit } from "./log-parse";
 import SEMVER, {
   calculateSemVerBump,
-  IVersionLabels,
+  type IVersionLabels,
   isVersionLabel,
-  ILabelDefinition,
+  type ILabelDefinition,
   defaultLabels,
 } from "./semver";
 import execPromise from "./utils/exec-promise";
-import { dummyLog, ILogger } from "./utils/logger";
+import { dummyLog, type ILogger } from "./utils/logger";
 import { makeReleaseHooks } from "./utils/make-hooks";
 import { execSync } from "child_process";
 import {
   buildSearchQuery,
-  ISearchResult,
+  type ISearchResult,
   processQueryResult,
-  ISearchQuery,
+  type ISearchQuery,
 } from "./match-sha-to-pr";
-import { LoadedAutoRc } from "./types";
+import type { LoadedAutoRc } from "./types";
 
 /** Construct a map of label => semver label */
 export const getVersionMap = (labels = defaultLabels) =>

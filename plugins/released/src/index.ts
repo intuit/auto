@@ -1,6 +1,6 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import botList from "@auto-it/bot-list";
 
 import merge from "deepmerge";

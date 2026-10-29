@@ -11,7 +11,7 @@ import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 import * as t from "io-ts";
 import path from "path";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 /** Global functions for usage in module */
 const defaultSnapshotSuffix = "-SNAPSHOT";

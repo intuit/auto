@@ -1,5 +1,5 @@
-import { Options as CoreOptions } from "conventional-changelog-core";
-import { Commit, sync as parse } from "conventional-commits-parser";
+import type { Options as CoreOptions } from "conventional-changelog-core";
+import { type Commit, sync as parse } from "conventional-commits-parser";
 import { promisify } from "util";
 import conventionalChangelogPresetLoader from "conventional-changelog-preset-loader";
 import flatMap from "array.prototype.flatmap";

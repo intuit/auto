@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { app, Command, Option } from "command-line-application";
+import { app, type Command, type Option } from "command-line-application";
 import endent from "endent";
 
 import {

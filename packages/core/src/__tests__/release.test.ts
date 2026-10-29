@@ -1,7 +1,7 @@
 import Git from "../git";
 import LogParse from "../log-parse";
 import Release, { getVersionMap } from "../release";
-import SEMVER, { defaultLabels, ILabelDefinition } from "../semver";
+import SEMVER, { defaultLabels, type ILabelDefinition } from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import child from "child_process";

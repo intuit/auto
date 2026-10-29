@@ -2,7 +2,7 @@ import { enterpriseCompatibility } from "@octokit/plugin-enterprise-compatibilit
 import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
-import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
+import { Octokit, type RestEndpointMethodTypes } from "@octokit/rest";
 import { gitlogPromise as gitlog } from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import tinyColor from "tinycolor2";
@@ -14,12 +14,12 @@ import prettyMs from "pretty-ms";
 
 import { Memoize as memoize } from "typescript-memoize";
 
-import { ILabelDefinition } from "./semver";
+import type { ILabelDefinition } from "./semver";
 import verifyAuth from "./utils/verify-auth";
 import execPromise from "./utils/exec-promise";
-import { dummyLog, ILogger } from "./utils/logger";
-import { ICommit } from "./log-parse";
-import { buildSearchQuery, ISearchQuery } from "./match-sha-to-pr";
+import { dummyLog, type ILogger } from "./utils/logger";
+import type { ICommit } from "./log-parse";
+import { buildSearchQuery, type ISearchQuery } from "./match-sha-to-pr";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, K>>;

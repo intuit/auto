@@ -1,4 +1,4 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import dotenv from "dotenv";
 import envCi from "env-ci";
 import fs from "fs";
@@ -7,7 +7,7 @@ import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
 import parseAuthor from "parse-author";
-import { gt, lte, compareBuild, inc, parse, ReleaseType, major } from "semver";
+import { gt, lte, compareBuild, inc, parse, type ReleaseType, major } from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -20,7 +20,7 @@ import { parse as parseUrl, format } from "url";
 import on from "await-to-js";
 
 import createHttpsProxyAgent from "https-proxy-agent";
-import {
+import type {
   ApiOptions,
   IInfoOptions,
   ICanaryOptions,
@@ -40,24 +40,24 @@ import {
 } from "./auto-args";
 import Changelog from "./changelog";
 import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
-import Git, { IGitOptions, IPRInfo } from "./git";
+import Git, { type IGitOptions, type IPRInfo } from "./git";
 import InteractiveInit from "./init";
-import LogParse, { IExtendedCommit } from "./log-parse";
+import LogParse, { type IExtendedCommit } from "./log-parse";
 import Release, { getVersionMap } from "./release";
 import SEMVER, {
   calculateSemVerBump,
-  IVersionLabels,
-  ILabelDefinition,
+  type IVersionLabels,
+  type ILabelDefinition,
   preVersionMap,
 } from "./semver";
 import execPromise from "./utils/exec-promise";
-import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
-import createLog, { ILogger, setLogLevel } from "./utils/logger";
+import { loadPlugin, type IPlugin, listPlugins } from "./utils/load-plugins";
+import createLog, { type ILogger, setLogLevel } from "./utils/logger";
 import { makeHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
-import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
+import { buildSearchQuery, type ISearchResult } from "./match-sha-to-pr";
 import getRepository from "./utils/get-repository";
-import {
+import type {
   RepoInformation,
   AuthorInformation,
   AutoRc,
@@ -66,7 +66,7 @@ import {
 import {
   validateAutoRc,
   validatePlugins,
-  ValidatePluginHook,
+  type ValidatePluginHook,
   formatError,
 } from "./validate-config";
 import { omit } from "./utils/omit";
@@ -2363,9 +2363,9 @@ export { default as InteractiveInit } from "./init";
 export { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 export { getCurrentBranch } from "./utils/get-current-branch";
 export { validatePluginConfiguration } from "./validate-config";
-export { ILogger } from "./utils/logger";
-export { IPlugin } from "./utils/load-plugins";
-export { ICommitAuthor, IExtendedCommit } from "./log-parse";
+export type { ILogger } from "./utils/logger";
+export type { IPlugin } from "./utils/load-plugins";
+export type { ICommitAuthor, IExtendedCommit } from "./log-parse";
 
 export { default as Auto } from "./auto";
 export { default as SEMVER } from "./semver";
@@ -2373,8 +2373,8 @@ export * from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export {
   default as getLernaPackages,
-  LernaPackage,
+  type LernaPackage,
 } from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";
 
-export { AutoRc } from "./types";
+export type { AutoRc } from "./types";

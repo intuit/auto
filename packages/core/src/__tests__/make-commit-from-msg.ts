@@ -1,4 +1,4 @@
-import { IExtendedCommit } from "../log-parse";
+import type { IExtendedCommit } from "../log-parse";
 
 /** Construct a dummy commit for testing. */
 const makeCommitFromMsg = (

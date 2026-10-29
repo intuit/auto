@@ -32,7 +32,7 @@
     "omit"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
@@ -42,5 +42,8 @@
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
     "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:"
   }
 }

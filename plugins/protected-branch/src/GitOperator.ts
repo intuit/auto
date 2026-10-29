@@ -1,7 +1,7 @@
 import { execPromise } from "@auto-it/core";
 import Git from "@auto-it/core/dist/git";
 import { ILogger } from "@auto-it/core/dist/utils/logger";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 
 /**
  * Utility class to handle all Git/Github related interactions

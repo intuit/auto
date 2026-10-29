@@ -39,7 +39,7 @@
     "cli"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2",
@@ -65,6 +65,7 @@
   "devDependencies": {
     "@types/signale": "^1.2.1",
     "dotenv": "^8.0.0",
-    "pkg": "^5.8.0"
+    "pkg": "^5.8.0",
+    "tsdown": "catalog:"
   }
 }

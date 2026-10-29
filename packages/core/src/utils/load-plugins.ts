@@ -6,10 +6,10 @@ import glob from "fast-glob";
 
 import * as path from "path";
 import { Auto } from "../auto";
-import { ILogger } from "./logger";
+import type { ILogger } from "./logger";
 import tryRequire from "./try-require";
 import InteractiveInit from "../init";
-import { LoadedAutoRc } from "../types";
+import type { LoadedAutoRc } from "../types";
 import isBinary from "./is-binary";
 
 export type IPluginConstructor = new (options?: any) => IPlugin;

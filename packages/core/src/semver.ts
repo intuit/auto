@@ -1,4 +1,4 @@
-import { ReleaseCalculationOptions } from "./types";
+import type { ReleaseCalculationOptions } from "./types";
 import * as t from "io-ts";
 
 export type VersionLabel =

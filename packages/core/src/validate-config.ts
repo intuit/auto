@@ -2,7 +2,7 @@
 
 import * as t from "io-ts";
 import { isRight } from "fp-ts/lib/Either";
-import { autoRc, AutoRc } from "./types";
+import { autoRc, type AutoRc } from "./types";
 import { AsyncSeriesBailHook } from "tapable";
 import { omit } from "./utils/omit";
 import chalk from "chalk";

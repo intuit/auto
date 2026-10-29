@@ -1,6 +1,6 @@
 import Config, { normalizeLabel, normalizeLabels } from "../config";
 import { dummyLog } from "../utils/logger";
-import SEMVER, { ILabelDefinition } from "../semver";
+import SEMVER, { type ILabelDefinition } from "../semver";
 
 const fetchSpy = jest.fn();
 

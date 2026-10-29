@@ -1,5 +1,5 @@
 import endent from "endent";
-import Changelog, { IGenerateReleaseNotesOptions } from "../changelog";
+import Changelog, { type IGenerateReleaseNotesOptions } from "../changelog";
 import LogParse from "../log-parse";
 import { dummyLog } from "../utils/logger";
 

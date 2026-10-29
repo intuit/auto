@@ -6,7 +6,7 @@ import {
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 /** Manage your projects version through just a git tag. */
 export default class GitTagPlugin implements IPlugin {
