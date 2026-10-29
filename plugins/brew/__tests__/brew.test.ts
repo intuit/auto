@@ -5,47 +5,50 @@ import { execSync } from "child_process";
 
 import Brew from "../src";
 
-const exec = jest.fn();
-const existsSync = jest.fn();
-const mkdirSync = jest.fn();
-const readFileSync = jest.fn();
-const writeFileSync = jest.fn();
+const exec = vi.fn();
+const existsSync = vi.fn();
+const mkdirSync = vi.fn();
+const readFileSync = vi.fn();
+const writeFileSync = vi.fn();
 
-jest.mock("fs", () => ({
-  // @ts-ignore
-  read: (a, b, cb) => {
-    cb(undefined);
-  },
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  mkdirSync: (...args) => mkdirSync(...args),
-  // @ts-ignore
-  readFileSync: (...args) => readFileSync(...args),
-  // @ts-ignore
-  writeFileSync: (...args) => writeFileSync(...args),
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, "{}");
-  },
-  // @ts-ignore
-  writeFile: (a, b, cb) => {
-    cb(undefined, "{}");
-  },
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-}));
+vi.mock("fs", () => {
+  const mod = {
+    // @ts-ignore
+    read: (a, b, cb) => {
+      cb(undefined);
+    },
+    // @ts-ignore
+    existsSync: (...args) => existsSync(...args),
+    // @ts-ignore
+    mkdirSync: (...args) => mkdirSync(...args),
+    // @ts-ignore
+    readFileSync: (...args) => readFileSync(...args),
+    // @ts-ignore
+    writeFileSync: (...args) => writeFileSync(...args),
+    // @ts-ignore
+    readFile: (a, b, cb) => {
+      cb(undefined, "{}");
+    },
+    // @ts-ignore
+    writeFile: (a, b, cb) => {
+      cb(undefined, "{}");
+    },
+    ReadStream: function () {},
+    WriteStream: function () {},
+    // @ts-ignore
+    closeSync: () => undefined,
+  };
+  return { ...mod, default: mod };
+});
 
-jest.mock("child_process");
+vi.mock("child_process");
 
 // @ts-ignore
 execSync.mockImplementation(exec);
 
 describe("Brew Plugin", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should do nothing with an uninitialized auto", async () => {
@@ -60,7 +63,7 @@ describe("Brew Plugin", () => {
   });
 
   test("should exit when there are errors", async () => {
-    const exit = jest.fn();
+    const exit = vi.fn();
     // @ts-ignore
     process.exit = exit;
 

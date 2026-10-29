@@ -1,12 +1,21 @@
 import path from "path";
 import tryRequire from "../try-require";
 
-jest.mock("test", () => "success", {
-  virtual: true,
-});
+const modules = vi.hoisted(() => ({
+  test: "success",
+  npm: "success",
+}));
 
-jest.mock("npm", () => "success", {
-  virtual: true,
+// core falls back to requireg, which the setup file maps to Node's require.
+// That can't see vi.mock modules, so serve this file's modules from it.
+vi.mock("requireg", async () => {
+  const { createRequire } = await import("module");
+  const require = createRequire(import.meta.url);
+
+  return {
+    default: (id: string) =>
+      id in modules ? modules[id as keyof typeof modules] : require(id),
+  };
 });
 
 describe("try require", () => {

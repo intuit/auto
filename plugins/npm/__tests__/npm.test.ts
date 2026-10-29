@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { execSync } from "child_process";
 import mockFs from "mock-fs";
 
@@ -12,34 +13,28 @@ import NPMPlugin, {
 } from "../src";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
-const exec = jest.fn();
-const execPromise = jest.fn();
-const getLernaPackages = jest.fn();
-const monorepoPackages = jest.fn();
+const exec = vi.fn();
+const execPromise = vi.fn();
+const getLernaPackages = vi.fn();
+const monorepoPackages = vi.fn();
 
-jest.mock("child_process");
+vi.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 
-jest.mock("../src/set-npm-token.ts");
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      execPromise(...args)
-);
-jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+vi.mock("../src/set-npm-token.ts");
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => execPromise(...args),
+}));
+vi.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "main",
 }));
-jest.mock(
-  "../../../packages/core/dist/utils/get-lerna-packages",
-  () =>
-    (...args: any[]) =>
-      getLernaPackages(...args)
-);
-jest.mock("env-ci", () => () => ({ isCi: false }));
-jest.mock("get-monorepo-packages", () => () => monorepoPackages());
+vi.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  default: (...args: any[]) => getLernaPackages(...args),
+}));
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false }) }));
+vi.mock("get-monorepo-packages", () => ({ default: () => monorepoPackages() }));
 
 const monorepoPackagesResult = [
   { path: "packages/a", name: "@packages/a", package: { version: "0.1.1" } },
@@ -436,7 +431,7 @@ describe("getPreviousVersion", () => {
     // published version of test package
     execPromise.mockReturnValueOnce("2.1.0");
 
-    jest.spyOn(Auto, "getCurrentBranch").mockReturnValueOnce("major-2");
+    vi.spyOn(Auto, "getCurrentBranch").mockReturnValueOnce("major-2");
 
     plugin.apply({
       config: { prereleaseBranches: ["next"], versionBranches: "major-" },
@@ -1062,8 +1057,8 @@ describe("canary", () => {
       },
     } as unknown as Auto.Auto);
 
-    const log = jest.fn();
-    jest.spyOn(console, "log").mockImplementation(log);
+    const log = vi.fn();
+    vi.spyOn(console, "log").mockImplementation(log);
 
     await hooks.canary.promise({
       bump: Auto.SEMVER.patch,
@@ -1375,8 +1370,8 @@ describe("canary", () => {
       },
     ];
 
-    const log = jest.fn();
-    jest.spyOn(console, "log").mockImplementation(log);
+    const log = vi.fn();
+    vi.spyOn(console, "log").mockImplementation(log);
     monorepoPackages.mockReturnValueOnce(packages.map((p) => ({ package: p })));
     getLernaPackages.mockImplementation(async () => Promise.resolve(packages));
 
@@ -1652,7 +1647,7 @@ describe("makeRelease", () => {
     execPromise.mockReturnValue("@packages/a\n@packages/b");
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
-    const publish = jest.fn();
+    const publish = vi.fn();
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,
@@ -1712,7 +1707,7 @@ describe("makeRelease", () => {
 });
 
 describe("beforeCommitChangelog", () => {
-  let updateChangelogFile: jest.Mock;
+  let updateChangelogFile: Mock;
 
   async function subPackageChangelogTest(
     options: INpmConfig = {},
@@ -1726,7 +1721,7 @@ describe("beforeCommitChangelog", () => {
     execPromise.mockResolvedValue(changed);
     getLernaPackages.mockReturnValueOnce(monorepoPackagesResult);
 
-    updateChangelogFile = jest.fn();
+    updateChangelogFile = vi.fn();
     plugin.apply({
       config: { prereleaseBranches: ["next"] },
       hooks,

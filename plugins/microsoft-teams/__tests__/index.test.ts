@@ -8,11 +8,13 @@ import createHttpsProxyAgent from "https-proxy-agent";
 
 import MicrosoftTeamsPlugin from "../src";
 
-const fetchSpy = jest.fn();
+const fetchSpy = vi.fn();
 // @ts-ignore
-jest.mock("node-fetch", () => (...args) => {
-  fetchSpy(...args);
-});
+vi.mock("node-fetch", () => ({
+  default: (...args) => {
+    fetchSpy(...args);
+  },
+}));
 
 beforeEach(() => {
   fetchSpy.mockClear();
@@ -42,7 +44,7 @@ describe("createPost", () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
@@ -59,7 +61,7 @@ describe("createPost", () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -77,7 +79,7 @@ describe("createPost", () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       hooks,
@@ -100,7 +102,7 @@ describe("createPost", () => {
     const plugin = new MicrosoftTeamsPlugin({ url: undefined });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -121,7 +123,7 @@ describe("createPost", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -150,7 +152,7 @@ describe("createPost", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -179,7 +181,7 @@ describe("createPost", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,

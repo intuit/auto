@@ -6,14 +6,11 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 // Mocks
-const execPromise = jest.fn();
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      execPromise(...args)
-);
-jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+const execPromise = vi.fn();
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => execPromise(...args),
+}));
+vi.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "main",
 }));
 

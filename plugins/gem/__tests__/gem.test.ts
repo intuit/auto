@@ -11,21 +11,18 @@ import { SEMVER } from "@auto-it/core";
 
 const logger = dummyLog();
 
-const execSyncSpy = jest.fn();
-jest.mock("child_process");
+const execSyncSpy = vi.fn();
+vi.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(execSyncSpy);
 
-const execSpy = jest.fn();
+const execSpy = vi.fn();
 execSpy.mockReturnValue("");
 
 // @ts-ignore
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      execSpy(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => execSpy(...args),
+}));
 
 afterEach(() => {
   mockFs.restore();

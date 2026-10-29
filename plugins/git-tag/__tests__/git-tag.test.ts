@@ -4,16 +4,13 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 import GitTag from "../src";
 
-const exec = jest.fn();
-jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+const exec = vi.fn();
+vi.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 const setup = (mockGit?: any) => {
   const plugin = new GitTag();

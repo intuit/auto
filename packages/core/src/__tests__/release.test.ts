@@ -4,43 +4,45 @@ import Release, { getVersionMap } from "../release";
 import SEMVER, { defaultLabels, type ILabelDefinition } from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
-import child from "child_process";
 import { getCurrentBranch } from "../utils/get-current-branch";
 import { DEFAULT_PRERELEASE_BRANCHES } from "../config";
 
-const { execSync } = child;
-const exec = jest.fn();
-child.execSync = exec.mockReturnValue("");
+const exec = vi.fn().mockReturnValue("");
 
-afterAll(() => {
-  child.execSync = execSync;
+vi.mock("child_process", async (importOriginal) => {
+  const mod = {
+    ...(await importOriginal<typeof import("child_process")>()),
+    // @ts-ignore
+    execSync: (...args) => exec(...args),
+  };
+  return { ...mod, default: mod };
 });
 
-const constructor = jest.fn();
-const getGitLog = jest.fn();
-const graphql = jest.fn();
-const getUserByEmail = jest.fn();
-const getPr = jest.fn().mockReturnValue(Promise.resolve());
-const getPullRequest = jest.fn();
-const getLatestRelease = jest.fn();
-const getSha = jest.fn();
-const getCommit = jest
+const constructor = vi.fn();
+const getGitLog = vi.fn();
+const graphql = vi.fn();
+const getUserByEmail = vi.fn();
+const getPr = vi.fn().mockReturnValue(Promise.resolve());
+const getPullRequest = vi.fn();
+const getLatestRelease = vi.fn();
+const getSha = vi.fn();
+const getCommit = vi
   .fn()
   .mockReturnValue(Promise.resolve({ data: { author: { login: "" } } }));
-const createStatus = jest.fn();
-const getProject = jest.fn();
-const createComment = jest.fn();
-const changedPackages = jest.fn();
-const getCommitsForPR = jest.fn().mockReturnValue(Promise.resolve(undefined));
-const getUserByUsername = jest.fn();
-const getProjectLabels = jest.fn();
-const createLabel = jest.fn();
-const updateLabel = jest.fn();
-const getPullRequests = jest.fn();
-const getLatestReleaseInfo = jest.fn();
-const searchRepo = jest.fn();
-const getCommitDate = jest.fn();
-const getFirstCommit = jest.fn();
+const createStatus = vi.fn();
+const getProject = vi.fn();
+const createComment = vi.fn();
+const changedPackages = vi.fn();
+const getCommitsForPR = vi.fn().mockReturnValue(Promise.resolve(undefined));
+const getUserByUsername = vi.fn();
+const getProjectLabels = vi.fn();
+const createLabel = vi.fn();
+const updateLabel = vi.fn();
+const getPullRequests = vi.fn();
+const getLatestReleaseInfo = vi.fn();
+const searchRepo = vi.fn();
+const getCommitDate = vi.fn();
+const getFirstCommit = vi.fn();
 
 getProject.mockResolvedValue({
   html_url: "https://github.com/web/site",
@@ -51,59 +53,54 @@ const mockLabels = (labels: string[]) => ({
 });
 
 // @ts-ignore
-jest.mock(
-  "../git.ts",
-  () =>
-    class MockGit {
-      constructor(...args: any[]) {
-        constructor(...args);
-      }
-
-      options = { owner: "test", repo: "test", version: "1.0.0" };
-      graphql = graphql;
-      getGitLog = getGitLog;
-      getPr = getPr;
-      getLatestRelease = getLatestRelease;
-      getPullRequest = getPullRequest;
-      getSha = getSha;
-      createStatus = createStatus;
-      createComment = createComment;
-      getProject = getProject;
-      changedPackages = changedPackages;
-      getCommitsForPR = getCommitsForPR;
-      getUserByUsername = getUserByUsername;
-      getProjectLabels = getProjectLabels;
-      createLabel = createLabel;
-      updateLabel = updateLabel;
-      getPullRequests = getPullRequests;
-      getLatestReleaseInfo = getLatestReleaseInfo;
-      searchRepo = searchRepo;
-      getCommitDate = getCommitDate;
-      getFirstCommit = getFirstCommit;
-      getCommit = getCommit;
-      getUserByEmail = getUserByEmail;
+vi.mock("../git.ts", () => ({
+  default: class MockGit {
+    constructor(...args: any[]) {
+      constructor(...args);
     }
-);
+
+    options = { owner: "test", repo: "test", version: "1.0.0" };
+    graphql = graphql;
+    getGitLog = getGitLog;
+    getPr = getPr;
+    getLatestRelease = getLatestRelease;
+    getPullRequest = getPullRequest;
+    getSha = getSha;
+    createStatus = createStatus;
+    createComment = createComment;
+    getProject = getProject;
+    changedPackages = changedPackages;
+    getCommitsForPR = getCommitsForPR;
+    getUserByUsername = getUserByUsername;
+    getProjectLabels = getProjectLabels;
+    createLabel = createLabel;
+    updateLabel = updateLabel;
+    getPullRequests = getPullRequests;
+    getLatestReleaseInfo = getLatestReleaseInfo;
+    searchRepo = searchRepo;
+    getCommitDate = getCommitDate;
+    getFirstCommit = getFirstCommit;
+    getCommit = getCommit;
+    getUserByEmail = getUserByEmail;
+  },
+}));
 
 getGitLog.mockReturnValue([]);
 
-const execSpy = jest.fn();
+const execSpy = vi.fn();
 // @ts-ignore
-jest.mock(
-  "../utils/exec-promise.ts",
-  () =>
-    (...args) =>
-      execSpy(...args)
-);
+vi.mock("../utils/exec-promise.ts", () => ({
+  default: (...args) => execSpy(...args),
+}));
 
-const currentBranch = jest.fn();
+const currentBranch = vi.fn();
 currentBranch.mockReturnValue("main");
-jest.mock("../utils/get-current-branch.ts");
+vi.mock("../utils/get-current-branch.ts");
 // @ts-ignore
 getCurrentBranch.mockImplementation(currentBranch);
 
-const existsSync = jest.fn();
-const writeSpy = jest.fn();
+const existsSync = vi.fn();
+const writeSpy = vi.fn();
 
 let readResult = "{}";
 
@@ -113,26 +110,29 @@ const config = {
   labels: defaultLabels,
 };
 
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, readResult);
-  },
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  writeFile: (file, data, cb) => {
-    cb(undefined, writeSpy(file, data));
-  },
-  // @ts-ignore
-  read: (a, b, cb) => {
-    cb(undefined);
-  },
-}));
+vi.mock("fs", () => {
+  const mod = {
+    // @ts-ignore
+    existsSync: (...args) => existsSync(...args),
+    // @ts-ignore
+    readFile: (a, b, cb) => {
+      cb(undefined, readResult);
+    },
+    ReadStream: function () {},
+    WriteStream: function () {},
+    // @ts-ignore
+    closeSync: () => undefined,
+    // @ts-ignore
+    writeFile: (file, data, cb) => {
+      cb(undefined, writeSpy(file, data));
+    },
+    // @ts-ignore
+    read: (a, b, cb) => {
+      cb(undefined);
+    },
+  };
+  return { ...mod, default: mod };
+});
 
 const logParse = new LogParse();
 const git = new Git({
@@ -168,7 +168,7 @@ describe("getVersionMap", () => {
 
 describe("Release", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     getUserByUsername.mockReset();
   });
 
@@ -378,7 +378,7 @@ describe("Release", () => {
     test("should omit commits that have already been released", async () => {
       const gh = new Release(git, config);
 
-      jest.spyOn(console, "log").mockImplementationOnce(() => {});
+      vi.spyOn(console, "log").mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: "2019-01-16",
       });
@@ -409,7 +409,7 @@ describe("Release", () => {
     test("should not omit commits in next branch", async () => {
       const gh = new Release(git, config);
 
-      jest.spyOn(console, "log").mockImplementationOnce(() => {});
+      vi.spyOn(console, "log").mockImplementationOnce(() => {});
       getLatestReleaseInfo.mockReturnValueOnce({
         published_at: "2019-01-16",
       });
@@ -1192,7 +1192,7 @@ describe("Release", () => {
 
     test("should log that it has created the labels", async () => {
       const mockLogger = dummyLog();
-      jest.spyOn(mockLogger.log, "log").mockImplementation();
+      vi.spyOn(mockLogger.log, "log").mockImplementation(() => undefined);
 
       const gh = new Release(
         git,

@@ -4,7 +4,7 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 
 import S3, { IUploadAssetsPluginOptions } from "../src";
 
-jest.mock("aws-cli-js");
+vi.mock("aws-cli-js");
 
 describe("S3 Plugin", () => {
   test("should warn about keys", async () => {
@@ -15,7 +15,7 @@ describe("S3 Plugin", () => {
     };
     const plugin = new S3(options);
     const hooks = makeHooks();
-    const checkEnv = jest.fn();
+    const checkEnv = vi.fn();
 
     plugin.apply({ checkEnv, hooks } as any);
     await hooks.beforeRun.promise({} as any);

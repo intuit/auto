@@ -8,9 +8,9 @@ import GradleReleasePlugin, {
 
 import execPromise from "../../../packages/core/dist/utils/exec-promise";
 
-const exec = jest.fn();
+const exec = vi.fn();
 
-jest.mock("../../../packages/core/dist/utils/exec-promise");
+vi.mock("../../../packages/core/dist/utils/exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 exec.mockImplementation(() => {
@@ -19,7 +19,7 @@ exec.mockImplementation(() => {
 
 describe("Gradle Plugin", () => {
   let hooks: Auto.IAutoHooks;
-  const prefixRelease: (a: string) => string = jest.fn(
+  const prefixRelease: (a: string) => string = vi.fn(
     (version) => `v${version}`
   );
   const options: IGradleReleasePluginPluginOptions = {};
@@ -60,7 +60,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
@@ -83,7 +83,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.major });
@@ -107,7 +107,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.major });
@@ -130,7 +130,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.minor });
@@ -153,7 +153,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
@@ -176,9 +176,9 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
-      const mockLog = jest.spyOn(logger.log, "info");
+      const mockLog = vi.spyOn(logger.log, "info");
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,
@@ -195,7 +195,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       const canaryVersion = await hooks.canary.promise({
@@ -211,7 +211,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       const canaryVersion = await hooks.canary.promise({
@@ -227,7 +227,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.canary.promise({
@@ -247,7 +247,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.canary.promise({
@@ -265,9 +265,9 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
-      const mockLog = jest.spyOn(logger.log, "warn");
+      const mockLog = vi.spyOn(logger.log, "warn");
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,
@@ -284,7 +284,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.next.promise([], {
@@ -316,7 +316,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
 
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
@@ -335,7 +335,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
 
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
@@ -358,7 +358,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
 
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
@@ -378,7 +378,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce("");
       await hooks.beforeRun.promise({} as any);
 
-      const mockLog = jest.spyOn(logger.log, "warn");
+      const mockLog = vi.spyOn(logger.log, "warn");
 
       await hooks.next.promise([], {
         bump: Auto.SEMVER.major,
@@ -401,7 +401,7 @@ describe("Gradle Plugin", () => {
       exec.mockReturnValueOnce(properties);
       await hooks.beforeRun.promise({} as any);
 
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce(properties).mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
@@ -423,7 +423,7 @@ describe("Gradle Plugin", () => {
 
 describe("Gradle Plugin - Custom Command", () => {
   let hooks: Auto.IAutoHooks;
-  const prefixRelease: (a: string) => string = jest.fn(
+  const prefixRelease: (a: string) => string = vi.fn(
     (version) => `v${version}`
   );
   const options: IGradleReleasePluginPluginOptions = {
@@ -439,7 +439,7 @@ describe("Gradle Plugin - Custom Command", () => {
 
   describe("version", () => {
     test("should version release - patch version - with custom gradle command", async () => {
-      const spy = jest.fn();
+      const spy = vi.fn();
       exec.mockReturnValueOnce("version: 1.0.0").mockImplementation(spy);
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch });

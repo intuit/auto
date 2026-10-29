@@ -1,13 +1,14 @@
-import envCi from "env-ci";
+import type { Mock } from "vitest";
 import { dummyLog } from "../utils/logger";
 
-jest.mock("env-ci");
+const envSpy: Mock = vi.hoisted(() =>
+  vi.fn(() => ({
+    isCi: true,
+    branch: "main",
+  }))
+);
 
-const envSpy = envCi as jest.Mock;
-envSpy.mockImplementation(() => ({
-  isCi: true,
-  branch: "main",
-}));
+vi.mock("env-ci", () => ({ default: envSpy }));
 
 import { Auto } from "../auto";
 
@@ -17,7 +18,7 @@ const defaults = {
   repo: "bar",
 };
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -28,7 +29,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
+      get: vi.fn().mockReturnValue({}),
     };
 
     hook = {
@@ -41,11 +42,11 @@ jest.mock("@octokit/rest", () => {
 
 describe("Auto", () => {
   describe("pr-check", () => {
-    jest.setTimeout(10 * 1000);
-    let createStatus: jest.Mock;
+    vi.setConfig({ testTimeout: 10 * 1000 });
+    let createStatus: Mock;
 
     beforeEach(() => {
-      createStatus = jest.fn();
+      createStatus = vi.fn();
     });
 
     const required = {
@@ -54,7 +55,7 @@ describe("Auto", () => {
 
     test("should exit successfully if ran from main + CI", async () => {
       const auto = new Auto(defaults);
-      const exit = jest.fn();
+      const exit = vi.fn();
 
       envSpy.mockImplementationOnce(() => ({
         isCi: true,

@@ -1,9 +1,10 @@
+import type { Mock } from "vitest";
 import execPromise from "../exec-promise";
 import getRepository from "../get-repository";
 
-const execSpy = execPromise as jest.Mock;
+const execSpy = execPromise as Mock;
 // @ts-ignore
-jest.mock("../exec-promise.ts");
+vi.mock("../exec-promise.ts");
 
 describe("getRepository", () => {
   test("should do nothing without a configured remote", async () => {

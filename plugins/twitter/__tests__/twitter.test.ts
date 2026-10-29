@@ -3,9 +3,9 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import endent from "endent";
 import TwitterPlugin from "../src";
 
-const tweet = jest.fn();
+const tweet = vi.fn();
 // @ts-ignore
-jest.mock("tweet-tweet", () => () => (m, cb) => tweet(m, cb()));
+vi.mock("tweet-tweet", () => ({ default: () => (m, cb) => tweet(m, cb()) }));
 const mockResponse = {
   data: { html_url: "https://foo.com" },
 } as any;

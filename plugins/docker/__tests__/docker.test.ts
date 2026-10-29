@@ -1,26 +1,24 @@
+import type { MockInstance } from "vitest";
 import * as Auto from "@auto-it/core";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 import DockerPlugin, { IDockerPluginOptions } from "../src";
 
-const exec = jest.fn();
-jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+const exec = vi.fn();
+vi.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 const registry = "registry.io/app";
 
 const setup = (
   mockGit?: any,
   options?: IDockerPluginOptions,
-  checkEnv?: jest.SpyInstance,
+  checkEnv?: MockInstance,
   prereleaseBranches: string[] = ["next"]
 ) => {
   const plugin = new DockerPlugin(options || { registry });
@@ -63,25 +61,25 @@ describe("Docker Plugin", () => {
 
   describe("beforeRun", () => {
     test("should check env without image", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { registry }]],
       } as any);
-      expect(checkEnv).toBeCalledWith("docker", "IMAGE");
+      expect(checkEnv).toHaveBeenCalledWith("docker", "IMAGE");
     });
 
     test("shouldn't check env with image", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { registry, image: "test" }]],
       } as any);
-      expect(checkEnv).not.toBeCalledWith("docker", "IMAGE");
+      expect(checkEnv).not.toHaveBeenCalledWith("docker", "IMAGE");
     });
 
     test("should check env without registry", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", {}]],
@@ -90,7 +88,7 @@ describe("Docker Plugin", () => {
     });
 
     test("shouldn't check env with registry", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { registry, image: "test" }]],
@@ -99,7 +97,7 @@ describe("Docker Plugin", () => {
     });
 
     test("should check env without tagLatest", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", {}]],
@@ -108,7 +106,7 @@ describe("Docker Plugin", () => {
     });
 
     test("shouldn't check env with tagLatest", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { tagLatest: true }]],
@@ -117,7 +115,7 @@ describe("Docker Plugin", () => {
     });
 
     test("should check env without tagPrereleases", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", {}]],
@@ -126,7 +124,7 @@ describe("Docker Plugin", () => {
     });
 
     test("shouldn't check env with tagPrereleases", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { tagPrereleaseAliases: true }]],
@@ -138,7 +136,7 @@ describe("Docker Plugin", () => {
     });
 
     test("should check env without tagPullRequests", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", {}]],
@@ -150,7 +148,7 @@ describe("Docker Plugin", () => {
     });
 
     test("shouldn't check env with tagPullRequests", async () => {
-      const checkEnv = jest.fn();
+      const checkEnv = vi.fn();
       const hooks = setup(undefined, undefined, checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["docker", { tagPullRequestAliases: true }]],
@@ -283,7 +281,7 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:1.0.1-canary.123.1`,
       ]);
-      expect(exec).toBeCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(2);
     });
 
     test("should not tag canary version aliases if not a pull request", async () => {
@@ -296,16 +294,16 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage, tagPullRequestAliases: true }
       );
 
-      const prSpy = jest
+      const prSpy = vi
         .spyOn(Auto, "getPrNumberFromEnv")
-        .mockImplementation(jest.fn());
+        .mockImplementation(vi.fn());
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,
         canaryIdentifier: `canary.123.1`,
       });
 
-      expect(prSpy).toBeCalled();
+      expect(prSpy).toHaveBeenCalled();
 
       expect(exec).toHaveBeenCalledWith("docker", [
         "tag",
@@ -316,7 +314,7 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:1.0.1-canary.123.1`,
       ]);
-      expect(exec).toBeCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(2);
     });
 
     test("should tag canary version aliases", async () => {
@@ -330,7 +328,7 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage, tagPullRequestAliases: true }
       );
 
-      const prSpy = jest
+      const prSpy = vi
         .spyOn(Auto, "getPrNumberFromEnv")
         .mockImplementationOnce(() => prNumber);
 
@@ -339,7 +337,7 @@ describe("Docker Plugin", () => {
         canaryIdentifier: `canary.${prNumber}.1`,
       });
 
-      expect(prSpy).toBeCalled();
+      expect(prSpy).toHaveBeenCalled();
 
       expect(exec).toHaveBeenCalledWith("docker", [
         "tag",
@@ -372,7 +370,7 @@ describe("Docker Plugin", () => {
         "push",
         `${registry}:pr-${prNumber}`,
       ]);
-      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledTimes(6);
     });
 
     test("should print canary version in dry run", async () => {
@@ -385,8 +383,8 @@ describe("Docker Plugin", () => {
         { registry, image: sourceImage }
       );
 
-      const log = jest.fn();
-      jest.spyOn(console, "log").mockImplementation(log);
+      const log = vi.fn();
+      vi.spyOn(console, "log").mockImplementation(log);
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,

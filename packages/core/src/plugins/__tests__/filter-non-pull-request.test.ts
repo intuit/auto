@@ -6,7 +6,7 @@ import { makeHooks, makeLogParseHooks } from "../../utils/make-hooks";
 
 import FilterNonPullRequestPlugin from "../filter-non-pull-request";
 
-const getPr = jest.fn();
+const getPr = vi.fn();
 
 const setup = () => {
   const plugin = new FilterNonPullRequestPlugin();

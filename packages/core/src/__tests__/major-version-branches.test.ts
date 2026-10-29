@@ -1,18 +1,22 @@
+import type { Mock } from "vitest";
 import { Auto } from "../auto";
 import SEMVER from "../semver";
 import execPromise from "../utils/exec-promise";
 
-const execSpy = execPromise as jest.Mock;
-jest.mock("../utils/exec-promise");
+const execSpy = execPromise as Mock;
+vi.mock("../utils/exec-promise");
 
-const search = jest.fn();
-jest.mock("cosmiconfig", () => ({
-  cosmiconfig: () => ({
-    search,
-  }),
-}));
+const search = vi.fn();
+vi.mock("cosmiconfig", () => {
+  const mod = {
+    cosmiconfig: () => ({
+      search,
+    }),
+  };
+  return { ...mod, default: mod };
+});
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -23,7 +27,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      get: jest.fn().mockReturnValueOnce({}),
+      get: vi.fn().mockReturnValueOnce({}),
     };
 
     hook = {

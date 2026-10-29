@@ -1,16 +1,18 @@
 import { Auto } from "../auto";
 import execPromise from "../utils/exec-promise";
 
-const exec = jest.fn();
-jest.mock("../utils/exec-promise");
+const exec = vi.fn();
+vi.mock("../utils/exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 exec.mockImplementation(() => {
   throw new Error();
 });
 
-jest.mock("env-ci", () => () => ({
-  isCi: true,
+vi.mock("env-ci", () => ({
+  default: () => ({
+    isCi: true,
+  }),
 }));
 
 const defaults = {

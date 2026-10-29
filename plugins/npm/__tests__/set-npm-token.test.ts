@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 /* eslint-disable no-template-curly-in-string */
 
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
@@ -6,22 +7,24 @@ import { loadPackageJson } from "@auto-it/package-json-utils";
 import setNpmToken, { getRegistry } from "../src/set-npm-token";
 import * as utils from "../src/utils";
 
-const loadPackageJsonSpy = loadPackageJson as jest.Mock;
-const readFile = utils.readFile as jest.Mock;
-const writeFile = utils.writeFile as jest.Mock;
-const isMonorepo = utils.isMonorepo as jest.Mock;
-const getLernaJson = utils.getLernaJson as jest.Mock;
+const loadPackageJsonSpy = loadPackageJson as Mock;
+const readFile = utils.readFile as Mock;
+const writeFile = utils.writeFile as Mock;
+const isMonorepo = utils.isMonorepo as Mock;
+const getLernaJson = utils.getLernaJson as Mock;
 
-jest.mock("@auto-it/package-json-utils");
-jest.mock("../src/utils.ts");
-jest.mock("env-ci", () => () => ({
-  isCi: true,
+vi.mock("@auto-it/package-json-utils");
+vi.mock("../src/utils.ts");
+vi.mock("env-ci", () => ({
+  default: () => ({
+    isCi: true,
+  }),
 }));
-jest.mock(
-  "registry-url",
-  () => (scope?: string) => (scope ? "foo.registry.com" : "npm.registry.com")
-);
-jest.mock("user-home", () => "/User/name");
+vi.mock("registry-url", () => ({
+  default: (scope?: string) =>
+    scope ? "foo.registry.com" : "npm.registry.com",
+}));
+vi.mock("user-home", () => ({ default: "/User/name" }));
 
 describe("set npm token", () => {
   beforeEach(() => {

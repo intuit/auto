@@ -9,9 +9,9 @@ const defaults = {
 
 process.env.GH_TOKEN = "XXXX";
 
-const reposGet = jest.fn();
+const reposGet = vi.fn();
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -29,14 +29,11 @@ jest.mock("@octokit/rest", () => {
   return { Octokit };
 });
 
-const execSpy = jest.fn();
+const execSpy = vi.fn();
 // @ts-ignore
-jest.mock(
-  "../utils/exec-promise.ts",
-  () =>
-    (...args) =>
-      execSpy(...args)
-);
+vi.mock("../utils/exec-promise.ts", () => ({
+  default: (...args) => execSpy(...args),
+}));
 
 describe("remote parsing", () => {
   test("should fall back to origin when no git", async () => {

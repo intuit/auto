@@ -35,7 +35,7 @@
     "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2 --config ../../package.json"
+    "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",

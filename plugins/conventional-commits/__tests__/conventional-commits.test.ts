@@ -262,11 +262,11 @@ describe("normalizeCommit", () => {
     const logParse = new LogParse();
     const autoHooks = makeHooks();
     const mockGit = {
-      getUserByEmail: jest.fn(),
-      searchRepo: jest.fn(),
-      getCommitDate: jest.fn(),
-      getFirstCommit: jest.fn(),
-      getPr: jest.fn(),
+      getUserByEmail: vi.fn(),
+      searchRepo: vi.fn(),
+      getCommitDate: vi.fn(),
+      getFirstCommit: vi.fn(),
+      getPr: vi.fn(),
       getCommitsForPR: () =>
         Promise.resolve([
           { sha: "1", commit: { message: "chore: child commit" } },
@@ -299,11 +299,11 @@ describe("normalizeCommit", () => {
     const logParse = new LogParse();
     const autoHooks = makeHooks();
     const mockGit = {
-      getUserByEmail: jest.fn(),
-      searchRepo: jest.fn(),
-      getCommitDate: jest.fn(),
-      getFirstCommit: jest.fn(),
-      getPr: jest.fn(),
+      getUserByEmail: vi.fn(),
+      searchRepo: vi.fn(),
+      getCommitDate: vi.fn(),
+      getFirstCommit: vi.fn(),
+      getPr: vi.fn(),
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () =>
         Promise.resolve([
@@ -336,11 +336,11 @@ describe("normalizeCommit", () => {
     const logParse = new LogParse();
     const autoHooks = makeHooks();
     const mockGit = {
-      getUserByEmail: jest.fn(),
-      searchRepo: jest.fn(),
-      getCommitDate: jest.fn(),
-      getFirstCommit: jest.fn(),
-      getPr: jest.fn(),
+      getUserByEmail: vi.fn(),
+      searchRepo: vi.fn(),
+      getCommitDate: vi.fn(),
+      getFirstCommit: vi.fn(),
+      getPr: vi.fn(),
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () => Promise.resolve([commit]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
@@ -369,11 +369,11 @@ describe("normalizeCommit", () => {
     const logParse = new LogParse();
     const autoHooks = makeHooks();
     const mockGit = {
-      getUserByEmail: jest.fn(),
-      searchRepo: jest.fn(),
-      getCommitDate: jest.fn(),
-      getFirstCommit: jest.fn(),
-      getPr: jest.fn(),
+      getUserByEmail: vi.fn(),
+      searchRepo: vi.fn(),
+      getCommitDate: vi.fn(),
+      getFirstCommit: vi.fn(),
+      getPr: vi.fn(),
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () => Promise.resolve([commit]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
@@ -400,11 +400,11 @@ describe("normalizeCommit", () => {
     const logParse = new LogParse();
     const autoHooks = makeHooks();
     const mockGit = {
-      getUserByEmail: jest.fn(),
-      searchRepo: jest.fn(),
-      getCommitDate: jest.fn(),
-      getFirstCommit: jest.fn(),
-      getPr: jest.fn(),
+      getUserByEmail: vi.fn(),
+      searchRepo: vi.fn(),
+      getCommitDate: vi.fn(),
+      getFirstCommit: vi.fn(),
+      getPr: vi.fn(),
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () =>
         Promise.resolve([commit, makeCommitFromMsg("chore: a test 2")]),
@@ -431,7 +431,7 @@ describe("prCheck", () => {
   test("should not add semver label to pr if semver label exists", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
     const customLabels = [
       ...defaultLabels,
       { name: "my-major", releaseType: SEMVER.major } as any,
@@ -473,7 +473,7 @@ describe("prCheck", () => {
   test("should add correct semver label to pr - one commit", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
     const auto = {
       hooks: autoHooks,
       labels: defaultLabels,
@@ -509,7 +509,7 @@ describe("prCheck", () => {
   test("should add skip label for non-release commits", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
     const auto = {
       hooks: autoHooks,
       labels: defaultLabels,
@@ -551,7 +551,7 @@ describe("prCheck", () => {
     ];
     const versionLabelsCustom = getVersionMap(customLabels);
     const autoHooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
     const auto = {
       hooks: autoHooks,
       labels: customLabels,
@@ -587,7 +587,7 @@ describe("prCheck", () => {
   test("should add correct semver label to pr - multiple commit", async () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
     const auto = {
       hooks: autoHooks,
       labels: defaultLabels,

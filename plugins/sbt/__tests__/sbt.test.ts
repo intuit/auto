@@ -3,14 +3,11 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import SbtPlugin, { ISbtPluginOptions, sbtClient, sbtGetVersion } from "../src";
 
-const exec = jest.fn();
+const exec = vi.fn();
 
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 const rawOutput = `[[0minfo[0m] entering *experimental* thin client - BEEP WHIRR
 [[0minfo[0m] terminate the server with \`shutdown\`
@@ -34,7 +31,7 @@ const rawAggregationOutput = `[[0minfo[0m] entering *experimental* thin client
 
 describe("sbt plugin", () => {
   let hooks: Auto.IAutoHooks;
-  const prefixRelease: (a: string) => string = jest.fn(
+  const prefixRelease: (a: string) => string = vi.fn(
     (version) => `v${version}`
   );
   const options: ISbtPluginOptions = {};
@@ -78,7 +75,7 @@ describe("sbt plugin", () => {
 
     test("should error if it can't parse version value", async () => {
       exec.mockReturnValueOnce(rawAggregationOutput).mockReturnValueOnce("");
-      await expect(sbtGetVersion()).rejects.toThrowError(
+      await expect(sbtGetVersion()).rejects.toThrow(
         `Failed to read version from sbt: `
       );
     });
@@ -92,7 +89,7 @@ describe("sbt plugin", () => {
         bump: Auto.SEMVER.minor,
       });
       expect(exec).toHaveBeenCalledTimes(2);
-      expect(exec).lastCalledWith("sbt", [
+      expect(exec).toHaveBeenLastCalledWith("sbt", [
         "--client",
         'set ThisBuild / version := \\"0.1.0\\"',
       ]);

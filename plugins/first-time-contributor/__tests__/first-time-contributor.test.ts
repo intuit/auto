@@ -9,16 +9,13 @@ import {
 
 import FirstTimeContributor from "../src";
 
-const graphql = jest.fn();
-const exec = jest.fn();
+const graphql = vi.fn();
+const exec = vi.fn();
 exec.mockReturnValue("");
 // @ts-ignore
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 const setup = (
   contributors: Array<
@@ -36,7 +33,7 @@ const setup = (
     git: {
       graphql,
       options: { repo: "repo", owner: "test" },
-      getUserByUsername: jest.fn().mockReturnValue({}),
+      getUserByUsername: vi.fn().mockReturnValue({}),
       github: {
         repos: {
           listContributors: () => Promise.resolve({ data: contributors }),
@@ -57,7 +54,7 @@ const setup = (
 
 describe("First Time Contributor Plugin", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("should include all authors with no past contributors", async () => {

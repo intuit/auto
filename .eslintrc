@@ -18,6 +18,12 @@
 
   "plugins": ["jest", "@typescript-eslint", "eslint-plugin-jsdoc", "import"],
 
+  // Jest is no longer installed (tests run on Vitest), so jest/no-deprecated-functions
+  // can't detect its version. 26 is the last Jest the repo used.
+  "settings": {
+    "jest": { "version": 26 }
+  },
+
   "rules": {
     "import/no-extraneous-dependencies": 2,
     /* xo config */

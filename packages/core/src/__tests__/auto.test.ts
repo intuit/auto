@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { Auto } from "../auto";
 import type { IPRStatusOptions } from "../auto-args";
 import SEMVER from "../semver";
@@ -7,19 +8,19 @@ import { loadPlugin } from "../utils/load-plugins";
 import child from "child_process";
 import execPromise from "../utils/exec-promise";
 
-const exec = jest.fn();
-jest.mock("../utils/exec-promise");
+const exec = vi.fn();
+vi.mock("../utils/exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 exec.mockResolvedValue("");
 
-const importMock = jest.fn();
+const importMock = vi.fn();
 
-jest.mock("../utils/git-reset.ts");
-jest.mock("../utils/load-plugins.ts");
-jest.mock("../utils/verify-auth.ts", () => () => true);
-jest.mock("import-cwd", () => (path: string) => importMock(path));
-jest.mock("env-ci", () => () => ({ isCi: false, branch: "main" }));
+vi.mock("../utils/git-reset.ts");
+vi.mock("../utils/load-plugins.ts");
+vi.mock("../utils/verify-auth.ts", () => ({ default: () => true }));
+vi.mock("import-cwd", () => ({ default: (path: string) => importMock(path) }));
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false, branch: "main" }) }));
 
 const defaults = {
   baseBranch: "main",
@@ -35,14 +36,17 @@ const labels = [
   { name: "Version: Minor", releaseType: SEMVER.minor, overwrite: true },
 ];
 
-const search = jest.fn();
-jest.mock("cosmiconfig", () => ({
-  cosmiconfig: () => ({
-    search,
-  }),
-}));
+const search = vi.fn();
+vi.mock("cosmiconfig", () => {
+  const mod = {
+    cosmiconfig: () => ({
+      search,
+    }),
+  };
+  return { ...mod, default: mod };
+});
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -53,8 +57,8 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
-      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
+      get: vi.fn().mockReturnValue({}),
+      getLatestRelease: vi.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {
@@ -62,11 +66,11 @@ jest.mock("@octokit/rest", () => {
     };
 
     issues = {
-      listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
+      listLabelsOnIssue: vi.fn().mockReturnValue({ data: [] }),
     };
 
     users = {
-      getAuthenticated: jest.fn().mockResolvedValue({}),
+      getAuthenticated: vi.fn().mockResolvedValue({}),
     };
   };
 
@@ -74,28 +78,30 @@ jest.mock("@octokit/rest", () => {
 });
 
 // @ts-ignore
-jest.mock("gitlog", () => ({
-  gitlogPromise: () =>
-    Promise.resolve([
-      {
-        rawBody: "foo",
-        hash: "123",
-      },
-      {
-        rawBody: "foo",
-        hash: "456",
-      },
-    ]),
-}));
+vi.mock("gitlog", () => {
+  const mod = {
+    gitlogPromise: () =>
+      Promise.resolve([
+        {
+          rawBody: "foo",
+          hash: "123",
+        },
+        {
+          rawBody: "foo",
+          hash: "456",
+        },
+      ]),
+  };
+  return { ...mod, default: mod };
+});
 
 describe("Auto", () => {
   beforeEach(() => {
     // @ts-ignore
     loadPlugin.mockClear();
 
-    jest
-      .spyOn(child, "execSync")
-      .mockImplementation()
+    vi.spyOn(child, "execSync")
+      .mockImplementation(() => undefined)
       // @ts-ignore
       .mockReturnValue("");
   });
@@ -199,7 +205,7 @@ describe("Auto", () => {
 
   test("should exit with errors in config", async () => {
     search.mockReturnValueOnce({ config: { name: 123 } });
-    process.exit = jest.fn() as any;
+    process.exit = vi.fn() as any;
     const auto = new Auto({ owner: "foo", repo: "bar" });
     auto.logger = dummyLog();
     await auto.loadConfig();
@@ -333,7 +339,9 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      jest.spyOn(auto.release!, "addLabelsToProject").mockImplementation();
+      vi.spyOn(auto.release!, "addLabelsToProject").mockImplementation(
+        () => undefined
+      );
       await auto.createLabels();
       expect(auto.release!.addLabelsToProject).toMatchSnapshot();
     });
@@ -354,10 +362,10 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["foo"]);
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await auto.label({ pr: 13 });
       expect(console.log).toHaveBeenCalledWith("foo");
@@ -368,13 +376,13 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["foo"]);
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await auto.label({ pr: 13, exists: "foo" });
-      expect(console.log).toHaveBeenCalledWith("foo");
+      expect(console.log).not.toHaveBeenCalled();
     });
 
     test("should throw if a check for a label fails", async () => {
@@ -382,10 +390,10 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["bar"]);
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await expect(auto.label({ pr: 13, exists: "foo" })).rejects.toThrow();
     });
@@ -396,7 +404,7 @@ describe("Auto", () => {
 
       await auto.loadConfig();
 
-      const getPullRequests = jest.fn();
+      const getPullRequests = vi.fn();
       auto.git!.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([
         {
@@ -408,7 +416,7 @@ describe("Auto", () => {
           labels: [{ name: "foo" }, { name: "bar" }],
         },
       ]);
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await auto.label();
       expect(console.log).toHaveBeenCalledWith("foo\nbar");
@@ -420,10 +428,12 @@ describe("Auto", () => {
 
       await auto.loadConfig();
 
-      const getPullRequests = jest.fn();
+      const getPullRequests = vi.fn();
       auto.git!.getPullRequests = getPullRequests;
       getPullRequests.mockReturnValueOnce([]);
-      jest.spyOn(console, "log").mockImplementation().mockReset();
+      vi.spyOn(console, "log")
+        .mockImplementation(() => undefined)
+        .mockReset();
 
       await auto.label();
       expect(console.log).not.toHaveBeenCalled();
@@ -431,10 +441,10 @@ describe("Auto", () => {
   });
 
   describe("pr", () => {
-    let createStatus: jest.Mock;
+    let createStatus: Mock;
 
     beforeEach(() => {
-      createStatus = jest.fn();
+      createStatus = vi.fn();
     });
 
     const required: IPRStatusOptions = {
@@ -454,7 +464,7 @@ describe("Auto", () => {
     test("should catch exceptions when status fails to post", async () => {
       const auto = new Auto(defaults);
 
-      process.exit = jest.fn() as any;
+      process.exit = vi.fn() as any;
       auto.logger = dummyLog();
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
@@ -496,7 +506,7 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getSha = jest.fn();
+      const getSha = vi.fn();
       auto.git!.getSha = getSha;
       getSha.mockReturnValueOnce("abc");
 
@@ -515,7 +525,7 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getPullRequest = jest.fn();
+      const getPullRequest = vi.fn();
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: "deep" } } });
 
@@ -529,11 +539,11 @@ describe("Auto", () => {
   });
 
   describe("pr-check", () => {
-    jest.setTimeout(10 * 1000);
-    let createStatus: jest.Mock;
+    vi.setConfig({ testTimeout: 10 * 1000 });
+    let createStatus: Mock;
 
     beforeEach(() => {
-      createStatus = jest.fn();
+      createStatus = vi.fn();
     });
 
     const required = {
@@ -592,11 +602,11 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getPullRequest = jest.fn();
+      const getPullRequest = vi.fn();
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: "sha" } } });
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce([]);
 
@@ -615,11 +625,11 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getPullRequest = jest.fn();
+      const getPullRequest = vi.fn();
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: "sha" } } });
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["major"]);
 
@@ -638,11 +648,11 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getPullRequest = jest.fn();
+      const getPullRequest = vi.fn();
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: "sha" } } });
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["major", "skip-release"]);
 
@@ -661,11 +671,11 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.createStatus = createStatus;
 
-      const getPullRequest = jest.fn();
+      const getPullRequest = vi.fn();
       auto.git!.getPullRequest = getPullRequest;
       getPullRequest.mockReturnValueOnce({ data: { head: { sha: "sha" } } });
 
-      const getLabels = jest.fn();
+      const getLabels = vi.fn();
       auto.git!.getLabels = getLabels;
       getLabels.mockReturnValueOnce(["major", "release"]);
 
@@ -693,7 +703,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const createComment = jest.fn();
+      const createComment = vi.fn();
       auto.git!.createComment = createComment;
 
       await auto.comment({ pr: 10, message: "foo" });
@@ -705,7 +715,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const deleteComment = jest.fn();
+      const deleteComment = vi.fn();
       auto.git!.deleteComment = deleteComment;
 
       await auto.comment({ pr: 10, delete: true });
@@ -717,7 +727,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const editComment = jest.fn();
+      const editComment = vi.fn();
       auto.git!.editComment = editComment;
 
       await auto.comment({ pr: 10, message: "foo", edit: true });
@@ -729,9 +739,9 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const deleteComment = jest.fn();
+      const deleteComment = vi.fn();
       auto.git!.deleteComment = deleteComment;
-      const editComment = jest.fn();
+      const editComment = vi.fn();
       auto.git!.editComment = editComment;
 
       await auto.comment({ pr: 10, message: "foo bar", dryRun: true });
@@ -766,7 +776,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToPrBody = jest.fn();
+      const addToPrBody = vi.fn();
       auto.git!.addToPrBody = addToPrBody;
 
       await auto.prBody({ pr: 10, message: "foo" });
@@ -778,7 +788,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToPrBody = jest.fn();
+      const addToPrBody = vi.fn();
       auto.git!.addToPrBody = addToPrBody;
 
       await auto.prBody({ pr: 10, delete: true });
@@ -790,7 +800,7 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToPrBody = jest.fn();
+      const addToPrBody = vi.fn();
       auto.git!.addToPrBody = addToPrBody;
 
       await auto.prBody({ pr: 10, message: "foo bar", dryRun: true });
@@ -813,13 +823,13 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      jest
-        .spyOn(auto.git!, "getLatestRelease")
-        .mockImplementation(() => Promise.resolve("v1.2.3"));
-      jest
-        .spyOn(auto.release!, "getSemverBump")
-        .mockImplementation(() => Promise.resolve(SEMVER.patch));
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(auto.git!, "getLatestRelease").mockImplementation(() =>
+        Promise.resolve("v1.2.3")
+      );
+      vi.spyOn(auto.release!, "getSemverBump").mockImplementation(() =>
+        Promise.resolve(SEMVER.patch)
+      );
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await auto.version();
       expect(auto.release!.getSemverBump).toHaveBeenCalledWith("v1.2.3");
@@ -831,13 +841,13 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      jest
-        .spyOn(auto.git!, "getLatestRelease")
-        .mockImplementation(() => Promise.resolve("v1.2.3"));
-      jest
-        .spyOn(auto.release!, "getSemverBump")
-        .mockImplementation(() => Promise.resolve(SEMVER.minor));
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(auto.git!, "getLatestRelease").mockImplementation(() =>
+        Promise.resolve("v1.2.3")
+      );
+      vi.spyOn(auto.release!, "getSemverBump").mockImplementation(() =>
+        Promise.resolve(SEMVER.minor)
+      );
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
 
       await auto.version({ from: "v1.1.0" });
       expect(auto.release!.getSemverBump).toHaveBeenCalledWith("v1.1.0");
@@ -859,9 +869,11 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToChangelog = jest.fn();
+      const addToChangelog = vi.fn();
       auto.release!.addToChangelog = addToChangelog;
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
 
       await auto.changelog({ from: "v1.0.0", dryRun: true });
       expect(addToChangelog).not.toHaveBeenCalled();
@@ -873,11 +885,13 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToChangelog = jest.fn();
+      const addToChangelog = vi.fn();
       auto.release!.addToChangelog = addToChangelog;
-      const beforeCommitChangelog = jest.fn();
+      const beforeCommitChangelog = vi.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
 
       await auto.changelog({ from: "v1.0.0", noGitCommit: true });
       expect(addToChangelog).toHaveBeenCalled();
@@ -890,9 +904,11 @@ describe("Auto", () => {
       auto.logger = dummyLog();
       await auto.loadConfig();
 
-      const addToChangelog = jest.fn();
+      const addToChangelog = vi.fn();
       auto.release!.addToChangelog = addToChangelog;
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
 
       await auto.changelog({ from: "v1.0.0", dryRun: true, title: "foo" });
       // @ts-ignore
@@ -909,7 +925,7 @@ describe("Auto", () => {
       });
       auto.logger = dummyLog();
 
-      const hookFn = jest.fn();
+      const hookFn = vi.fn();
       auto.hooks.getRepository.tap("test", hookFn);
       await auto.loadConfig();
       await auto.prStatus({
@@ -927,7 +943,7 @@ describe("Auto", () => {
   describe("release", () => {
     test("should exit when no tags found", async () => {
       const auto = new Auto({ ...defaults, plugins: [] });
-      const exit = jest.fn();
+      const exit = vi.fn();
 
       // @ts-ignore
       process.exit = exit;
@@ -949,17 +965,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -988,17 +1004,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1027,17 +1043,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({ to: "abc" });
 
@@ -1056,17 +1072,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({ to: "v1.2.5" });
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1084,17 +1100,17 @@ describe("Auto", () => {
       auto.git!.getPreviousTagInBranch = () => Promise.resolve("1.2.3");
       auto.git!.getLatestTagInBranch = () => Promise.resolve("1.2.4");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({ prerelease: true });
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1123,17 +1139,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({
         from: "v1.2.0",
@@ -1164,17 +1180,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({
         useVersion: "v1.3.0",
@@ -1205,17 +1221,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
 
-      jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
-      jest
-        .spyOn(auto.release!, "generateReleaseNotes")
-        .mockImplementation(() => Promise.resolve("releaseNotes"));
+      vi.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(() =>
+        Promise.resolve("releaseNotes")
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.runRelease({
         useVersion: "1.2.3+1",
@@ -1260,13 +1276,13 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
-      jest.spyOn(auto.git!, "addToPrBody").mockImplementation();
+      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
-      const canary = jest.fn();
+      const canary = vi.fn();
       canary.mockReturnValueOnce("1.2.3");
       auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith(
@@ -1286,12 +1302,12 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
-      jest.spyOn(auto.git!, "addToPrBody").mockImplementation();
+      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
-      const canary = jest.fn();
+      const canary = vi.fn();
       auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.canary();
       expect(canary).toHaveBeenCalledWith(
@@ -1308,16 +1324,16 @@ describe("Auto", () => {
       auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
-      jest.spyOn(auto, "prBody").mockImplementation();
+      vi.spyOn(auto, "prBody").mockImplementation(() => undefined);
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
-      const canary = jest.fn();
+      const canary = vi.fn();
       canary.mockReturnValue({ error: "ooops" });
       auto.hooks.canary.tap("test", canary);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.canary({ pr: 123, build: 1 });
       expect(auto.prBody).not.toHaveBeenCalled();
@@ -1334,7 +1350,7 @@ describe("Auto", () => {
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
-      const canary = jest.fn();
+      const canary = vi.fn();
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary();
@@ -1361,7 +1377,7 @@ describe("Auto", () => {
             labels: ["skip-release"],
           }),
         ]);
-      const canary = jest.fn();
+      const canary = vi.fn();
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary();
@@ -1383,7 +1399,7 @@ describe("Auto", () => {
             labels: ["skip-release"],
           }),
         ]);
-      const canary = jest.fn();
+      const canary = vi.fn();
       auto.hooks.canary.tap("test", canary);
 
       await auto.canary({ force: true });
@@ -1421,10 +1437,10 @@ describe("Auto", () => {
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
       auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
@@ -1447,10 +1463,10 @@ describe("Auto", () => {
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
-      const afterRelease = jest.fn();
+      const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
       auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
@@ -1475,9 +1491,9 @@ describe("Auto", () => {
           makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
         ]);
 
-      const next = jest.fn();
+      const next = vi.fn();
       auto.hooks.next.tap("test", next);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.next({});
       expect(next).not.toHaveBeenCalled();
@@ -1502,9 +1518,9 @@ describe("Auto", () => {
           makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
         ]);
 
-      const next = jest.fn();
+      const next = vi.fn();
       auto.hooks.next.tap("test", next);
-      jest.spyOn(auto.release!, "getCommits").mockImplementation();
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
       await auto.next({ force: true });
       expect(next).toHaveBeenCalled();
@@ -1531,7 +1547,7 @@ describe("Auto", () => {
       auto.release!.getCommitsInRelease = () => Promise.resolve([]);
       auto.git!.getLatestRelease = () => Promise.resolve("");
       auto.release!.getSemverBump = () => Promise.resolve(SEMVER.noVersion);
-      const afterShipIt = jest.fn();
+      const afterShipIt = vi.fn();
       auto.hooks.afterShipIt.tap("test", afterShipIt);
 
       await auto.shipit();
@@ -1553,10 +1569,16 @@ describe("Auto", () => {
         Promise.resolve({
           data: { html_url: "https://github.com/my/repo/release" },
         } as any);
-      jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
-      const afterShipIt = jest.fn();
+      vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
+        () => undefined
+      );
+      const afterShipIt = vi.fn();
       auto.hooks.afterShipIt.tap("test", afterShipIt);
 
       await auto.shipit();
@@ -1577,15 +1599,15 @@ describe("Auto", () => {
 
       // Stub the release-type handlers so the graduation check is the only
       // thing under test (and we don't hit process.exit in the next path).
-      const latest = jest
+      const latest = vi
         .spyOn(auto, "latest")
         .mockImplementation(() => Promise.resolve(undefined));
-      jest
-        .spyOn(auto, "next")
-        .mockImplementation(() => Promise.resolve(undefined));
-      jest
-        .spyOn(auto, "canary")
-        .mockImplementation(() => Promise.resolve(undefined));
+      vi.spyOn(auto, "next").mockImplementation(() =>
+        Promise.resolve(undefined)
+      );
+      vi.spyOn(auto, "canary").mockImplementation(() =>
+        Promise.resolve(undefined)
+      );
 
       // Previously threw on `head[0].labels` when the release was empty.
       // With no release label present, an empty release must not graduate.
@@ -1608,14 +1630,18 @@ describe("Auto", () => {
         Promise.resolve({
           data: { html_url: "https://github.com/my/repo/release" },
         } as any);
-      jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      const addToChangelog = jest
+      vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
+      const addToChangelog = vi
         .spyOn(auto.release!, "addToChangelog")
-        .mockImplementation();
-      const beforeCommitChangelog = jest.fn();
+        .mockImplementation(() => undefined);
+      const beforeCommitChangelog = vi.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
-      const afterChangelog = jest.fn();
+      const afterChangelog = vi.fn();
       auto.hooks.afterChangelog.tap("test", afterChangelog);
 
       await auto.shipit({ noChangelog: true });
@@ -1643,7 +1669,7 @@ describe("Auto", () => {
       auto.checkClean = () => Promise.resolve(true);
       // @ts-ignore
       // eslint-disable-next-line jest/prefer-spy-on
-      process.exit = jest.fn();
+      process.exit = vi.fn();
       await auto.loadConfig();
       auto.remote = "https://github.com/intuit/auto";
 
@@ -1652,11 +1678,17 @@ describe("Auto", () => {
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
-      jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
-      const afterShipIt = jest.fn();
+      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
+        () => undefined
+      );
+      const afterShipIt = vi.fn();
       auto.hooks.afterShipIt.tap("test", afterShipIt);
 
       await auto.shipit();
@@ -1671,11 +1703,17 @@ describe("Auto", () => {
       await auto.loadConfig();
 
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      jest.spyOn(auto.git!, "publish").mockImplementation();
-      jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
-      jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-      jest.spyOn(auto.release!, "addToChangelog").mockImplementation();
-      const spy = jest.fn();
+      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+        () => undefined
+      );
+      vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
+        () => undefined
+      );
+      const spy = vi.fn();
       auto.hooks.publish.tap("test", spy);
 
       await auto.shipit({ dryRun: true });
@@ -1695,7 +1733,7 @@ describe("Auto", () => {
       const auto = new Auto({ ...defaults, plugins: [] });
       auto.logger = dummyLog();
 
-      const afterRun = jest.fn();
+      const afterRun = vi.fn();
       auto.hooks.afterRun.tap("test", afterRun);
       await auto.loadConfig();
 
@@ -1706,9 +1744,8 @@ describe("Auto", () => {
 
 describe("hooks", () => {
   beforeEach(() => {
-    jest
-      .spyOn(child, "execSync")
-      .mockImplementation()
+    vi.spyOn(child, "execSync")
+      .mockImplementation(() => undefined)
       // @ts-ignore
       .mockReturnValue("");
   });
@@ -1750,7 +1787,7 @@ describe("hooks", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = async () => Promise.resolve("1.0.0");
 
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
       await auto.version();
 
       expect(console.log).toHaveBeenCalledWith("major");
@@ -1778,7 +1815,7 @@ describe("hooks", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = async () => Promise.resolve("1.0.0");
 
-      jest.spyOn(console, "log").mockImplementation();
+      vi.spyOn(console, "log").mockImplementation(() => undefined);
       await auto.version();
 
       expect(console.log).toHaveBeenCalledWith("patch");

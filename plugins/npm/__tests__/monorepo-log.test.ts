@@ -10,45 +10,42 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 
 import NpmPlugin from "../src";
 
-const exec = jest.fn();
-const execPromise = jest.fn();
-const getLernaPackages = jest.fn();
-const readFileSync = jest.fn();
+const exec = vi.fn();
+const execPromise = vi.fn();
+const getLernaPackages = vi.fn();
+const readFileSync = vi.fn();
 
-jest.mock("child_process");
+vi.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock(
-  "../../../packages/core/dist/utils/get-lerna-packages",
-  () =>
-    (...args: any[]) =>
-      getLernaPackages(...args)
-);
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      execPromise(...args)
-);
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: jest.fn().mockReturnValue(true),
-  // @ts-ignore
-  readFile: jest.fn(),
-  // @ts-ignore
-  readFileSync: () => readFileSync(),
-  // @ts-ignore
-  read: (a, b, cb) => {
-    cb(undefined);
-  },
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  writeFile: jest.fn(),
+vi.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  default: (...args: any[]) => getLernaPackages(...args),
 }));
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => execPromise(...args),
+}));
+vi.mock("fs", () => {
+  const mod = {
+    // @ts-ignore
+    existsSync: vi.fn().mockReturnValue(true),
+    // @ts-ignore
+    readFile: vi.fn(),
+    // @ts-ignore
+    readFileSync: () => readFileSync(),
+    // @ts-ignore
+    read: (a, b, cb) => {
+      cb(undefined);
+    },
+    ReadStream: function () {},
+    WriteStream: function () {},
+    // @ts-ignore
+    closeSync: () => undefined,
+    // @ts-ignore
+    writeFile: vi.fn(),
+  };
+  return { ...mod, default: mod };
+});
 
 const logParse = new LogParse();
 const commitsPromise = logParse.normalizeCommits([
@@ -338,7 +335,7 @@ test("should create extra change logs for sub-packages", async () => {
 
   const plugin = new NpmPlugin();
   const hooks = makeHooks();
-  const update = jest.fn();
+  const update = vi.fn();
 
   plugin.apply({
     config: { prereleaseBranches: ["next"] },
@@ -402,7 +399,7 @@ test("should respect the useVersion config option", async () => {
 
   const plugin = new NpmPlugin();
   const hooks = makeHooks();
-  const update = jest.fn();
+  const update = vi.fn();
 
   plugin.apply({
     config: { prereleaseBranches: ["next"] },
