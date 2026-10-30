@@ -34,7 +34,7 @@ function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
       hooks
         .map((name) => [name, t.string] as const)
         .filter(([hook]) => !exclude.includes(hook as any))
-    ) as Record<Exclude<HookType, typeof exclude[number]>, t.StringC>
+    ) as Record<Exclude<HookType, (typeof exclude)[number]>, t.StringC>
   );
 }
 

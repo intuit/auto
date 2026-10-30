@@ -36,12 +36,17 @@ addContributor.mockImplementation(addContributorMock);
 // @ts-ignore
 env.mockImplementation(envMock);
 // @ts-ignore
-jest.mock("../../../packages/core/dist/utils/exec-promise", () => (...args) =>
-  gitShow(...args)
+jest.mock(
+  "../../../packages/core/dist/utils/exec-promise",
+  () =>
+    (...args) =>
+      gitShow(...args)
 );
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
-  () => (...args: any[]) => getLernaPackages(...args)
+  () =>
+    (...args: any[]) =>
+      getLernaPackages(...args)
 );
 jest.spyOn(process, "chdir").mockReturnValue();
 
@@ -163,8 +168,7 @@ describe("All Contributors Plugin", () => {
         git: {
           getPullRequest: () => ({
             data: {
-              body:
-                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design, doc\r\n\r\n",
+              body: "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design, doc\r\n\r\n",
             },
           }),
         } as any,
@@ -191,8 +195,7 @@ describe("All Contributors Plugin", () => {
         git: {
           getPullRequest: () => ({
             data: {
-              body:
-                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc\r\n\r\n",
+              body: "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc\r\n\r\n",
             },
           }),
         } as any,
@@ -219,8 +222,7 @@ describe("All Contributors Plugin", () => {
         git: {
           getPullRequest: () => ({
             data: {
-              body:
-                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n\r\n",
+              body: "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n\r\n",
             },
           }),
         } as any,
@@ -247,8 +249,7 @@ describe("All Contributors Plugin", () => {
         git: {
           getPullRequest: () => ({
             data: {
-              body:
-                "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n- @adam - doc\r\n\r\n",
+              body: "# What Changed\r\n\r\nsee title\r\n\r\n# Why\r\n\r\ncloses #1147 \r\n\r\n# Contributions\r\n\r\n- @andrew - design123, doc456\r\n- @adam - doc\r\n\r\n",
             },
           }),
         } as any,

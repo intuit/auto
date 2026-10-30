@@ -1,16 +1,18 @@
 import { execPromise } from "@auto-it/core";
 import Git from "@auto-it/core/dist/git";
 import { ILogger } from "@auto-it/core/dist/utils/logger";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 
 /**
  * Utility class to handle all Git/Github related interactions
  */
 export class GitOperator {
-
   /** Initialize this class */
   // eslint-disable-next-line no-useless-constructor
-  constructor(private readonly git: Git, private readonly logger: ILogger) {}
+  constructor(
+    private readonly git: Git,
+    private readonly logger: ILogger
+  ) {}
 
   /** Push HEAD to a remote branch */
   public async pushBranch(remote: string, branch: string): Promise<void> {
@@ -72,24 +74,28 @@ export class GitOperator {
     sha: string
   ): Promise<void> {
     const approverGit = new Git(
-        {
-          ...this.git.options,
-          token,
-        },
-        this.logger
+      {
+        ...this.git.options,
+        token,
+      },
+      this.logger
     );
 
-    this.logger.verbose.info('Approving PullRequest using:\n', { pull_number, sha });
-    const params: RestEndpointMethodTypes['pulls']['createReview']['parameters'] = {
-      owner: this.git.options.owner,
-      repo: this.git.options.repo,
+    this.logger.verbose.info("Approving PullRequest using:\n", {
       pull_number,
-      commit_id: sha,
-      event: 'APPROVE',
-    };
+      sha,
+    });
+    const params: RestEndpointMethodTypes["pulls"]["createReview"]["parameters"] =
+      {
+        owner: this.git.options.owner,
+        repo: this.git.options.repo,
+        pull_number,
+        commit_id: sha,
+        event: "APPROVE",
+      };
 
     await approverGit.github.pulls.createReview(params);
 
-    this.logger.verbose.info('Approve PullRequest on GitHub.');
+    this.logger.verbose.info("Approve PullRequest on GitHub.");
   }
 }

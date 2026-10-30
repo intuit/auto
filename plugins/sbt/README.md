@@ -18,9 +18,7 @@ yarn add -D @auto-it/sbt
 
 ```json
 {
-  "plugins": [
-    "sbt"
-  ]
+  "plugins": ["sbt"]
 }
 ```
 

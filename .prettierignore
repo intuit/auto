@@ -8,3 +8,5 @@ docs/generated
 dist/
 test-plugin-malformed.js
 lerna.json
+.all-contributorsrc
+pnpm-lock.yaml

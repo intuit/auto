@@ -189,7 +189,9 @@ describe("parseCommit", () => {
       hooks: logParseHooks,
     } as LogParse);
 
-    const commit = makeCommitFromMsg("fix lint", {pullRequest: {number: 123}});
+    const commit = makeCommitFromMsg("fix lint", {
+      pullRequest: { number: 123 },
+    });
     expect(
       await logParseHooks.parseCommit.promise({ ...commit })
     ).toStrictEqual({
@@ -259,7 +261,7 @@ describe("normalizeCommit", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const logParse = new LogParse();
     const autoHooks = makeHooks();
-    const mockGit = ({
+    const mockGit = {
       getUserByEmail: jest.fn(),
       searchRepo: jest.fn(),
       getCommitDate: jest.fn(),
@@ -270,7 +272,7 @@ describe("normalizeCommit", () => {
           { sha: "1", commit: { message: "chore: child commit" } },
           { sha: "2", commit: { message: "chore: another commit" } },
         ]),
-    } as unknown) as Git;
+    } as unknown as Git;
     conventionalCommitsPlugin.apply({
       hooks: autoHooks,
       labels: defaultLabels,
@@ -296,7 +298,7 @@ describe("normalizeCommit", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const logParse = new LogParse();
     const autoHooks = makeHooks();
-    const mockGit = ({
+    const mockGit = {
       getUserByEmail: jest.fn(),
       searchRepo: jest.fn(),
       getCommitDate: jest.fn(),
@@ -310,7 +312,7 @@ describe("normalizeCommit", () => {
           makeCommitFromMsg("unrelated", { hash: "2" }),
         ]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
-    } as unknown) as Git;
+    } as unknown as Git;
     conventionalCommitsPlugin.apply({
       hooks: autoHooks,
       labels: defaultLabels,
@@ -333,7 +335,7 @@ describe("normalizeCommit", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const logParse = new LogParse();
     const autoHooks = makeHooks();
-    const mockGit = ({
+    const mockGit = {
       getUserByEmail: jest.fn(),
       searchRepo: jest.fn(),
       getCommitDate: jest.fn(),
@@ -342,7 +344,7 @@ describe("normalizeCommit", () => {
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () => Promise.resolve([commit]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
-    } as unknown) as Git;
+    } as unknown as Git;
 
     conventionalCommitsPlugin.apply({
       hooks: autoHooks,
@@ -366,7 +368,7 @@ describe("normalizeCommit", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const logParse = new LogParse();
     const autoHooks = makeHooks();
-    const mockGit = ({
+    const mockGit = {
       getUserByEmail: jest.fn(),
       searchRepo: jest.fn(),
       getCommitDate: jest.fn(),
@@ -375,7 +377,7 @@ describe("normalizeCommit", () => {
       getLatestRelease: () => Promise.resolve("1.2.3"),
       getGitLog: () => Promise.resolve([commit]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
-    } as unknown) as Git;
+    } as unknown as Git;
 
     conventionalCommitsPlugin.apply({
       hooks: autoHooks,
@@ -397,7 +399,7 @@ describe("normalizeCommit", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const logParse = new LogParse();
     const autoHooks = makeHooks();
-    const mockGit = ({
+    const mockGit = {
       getUserByEmail: jest.fn(),
       searchRepo: jest.fn(),
       getCommitDate: jest.fn(),
@@ -407,7 +409,7 @@ describe("normalizeCommit", () => {
       getGitLog: () =>
         Promise.resolve([commit, makeCommitFromMsg("chore: a test 2")]),
       getCommitsForPR: () => Promise.resolve([{ sha: "1" }]),
-    } as unknown) as Git;
+    } as unknown as Git;
 
     conventionalCommitsPlugin.apply({
       hooks: autoHooks,
@@ -436,7 +438,7 @@ describe("prCheck", () => {
     ];
     const versionLabelsCustom = getVersionMap(customLabels);
 
-    const auto = ({
+    const auto = {
       hooks: autoHooks,
       labels: customLabels,
       semVerLabels: versionLabelsCustom,
@@ -455,7 +457,7 @@ describe("prCheck", () => {
         },
         addLabelToPr,
       },
-    } as unknown) as Auto;
+    } as unknown as Auto;
 
     conventionalCommitsPlugin.apply(auto);
 
@@ -472,7 +474,7 @@ describe("prCheck", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
     const addLabelToPr = jest.fn();
-    const auto = ({
+    const auto = {
       hooks: autoHooks,
       labels: defaultLabels,
       semVerLabels: versionLabels,
@@ -491,7 +493,7 @@ describe("prCheck", () => {
         },
         addLabelToPr,
       },
-    } as unknown) as Auto;
+    } as unknown as Auto;
 
     conventionalCommitsPlugin.apply(auto);
 
@@ -508,7 +510,7 @@ describe("prCheck", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
     const addLabelToPr = jest.fn();
-    const auto = ({
+    const auto = {
       hooks: autoHooks,
       labels: defaultLabels,
       semVerLabels: versionLabels,
@@ -527,7 +529,7 @@ describe("prCheck", () => {
         },
         addLabelToPr,
       },
-    } as unknown) as Auto;
+    } as unknown as Auto;
 
     conventionalCommitsPlugin.apply(auto);
 
@@ -550,7 +552,7 @@ describe("prCheck", () => {
     const versionLabelsCustom = getVersionMap(customLabels);
     const autoHooks = makeHooks();
     const addLabelToPr = jest.fn();
-    const auto = ({
+    const auto = {
       hooks: autoHooks,
       labels: customLabels,
       semVerLabels: versionLabelsCustom,
@@ -569,7 +571,7 @@ describe("prCheck", () => {
         },
         addLabelToPr,
       },
-    } as unknown) as Auto;
+    } as unknown as Auto;
 
     conventionalCommitsPlugin.apply(auto);
 
@@ -586,7 +588,7 @@ describe("prCheck", () => {
     const conventionalCommitsPlugin = new ConventionalCommitsPlugin();
     const autoHooks = makeHooks();
     const addLabelToPr = jest.fn();
-    const auto = ({
+    const auto = {
       hooks: autoHooks,
       labels: defaultLabels,
       semVerLabels: versionLabels,
@@ -617,7 +619,7 @@ describe("prCheck", () => {
         },
         addLabelToPr,
       },
-    } as unknown) as Auto;
+    } as unknown as Auto;
 
     conventionalCommitsPlugin.apply(auto);
 

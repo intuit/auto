@@ -1,20 +1,28 @@
 {
   "compilerOptions": {
-    "module": "commonjs", // Resolve modules the node way
-    "lib": ["dom", "es2017"], // Use newest ecma script features
-    /* Outputs: */
-    "sourceMap": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "experimentalDecorators": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
     "declaration": true,
     "declarationMap": true,
-    "target": "es2017", // Target Node 10.x
-    "importHelpers": true, // Use tslib for helper code
-    /* Syntax: */
-    "strict": true,
-    "downlevelIteration": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "noUnusedLocals": true
+
+    "module": "esnext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+
+    "lib": ["dom", "es2017"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   }
 }

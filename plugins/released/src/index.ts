@@ -1,6 +1,6 @@
 import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
 import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import botList from "@auto-it/bot-list";
 
 import merge from "deepmerge";
@@ -34,7 +34,8 @@ const defaultOptions: Required<IReleasedLabelPluginOptions> = {
   message: `:rocket: ${TYPE} was released in ${VERSION} :rocket:`,
 };
 
-const closeIssue = /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
+const closeIssue =
+  /(?:Close|Closes|Closed|Fix|Fixes|Fixed|Resolve|Resolves|Resolved)\s((?:#\d+(?:,\s)?)+)/gi;
 
 /** Comment on merged pull requests and issues with the new version */
 export default class ReleasedLabelPlugin implements IPlugin {

@@ -5,7 +5,7 @@ import {
   execPromise,
 } from "@auto-it/core";
 import * as t from "io-ts";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 import * as vsce from "vsce";
 import {
   getRepo,
@@ -55,8 +55,8 @@ export default class VscodePlugin implements IPlugin {
     const verboseArgs = isQuiet
       ? ["--loglevel", "silent"]
       : isVerbose
-      ? ["--loglevel", "silly"]
-      : [];
+        ? ["--loglevel", "silly"]
+        : [];
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config

@@ -5,11 +5,11 @@ import { prompt } from "enquirer";
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
 import { makeInteractiveInitHooks } from "./utils/make-hooks";
-import SEMVER, { defaultLabels, ILabelDefinition } from "./semver";
+import SEMVER, { defaultLabels, type ILabelDefinition } from "./semver";
 import { loadPlugin } from "./utils/load-plugins";
-import { ILogger } from "./utils/logger";
+import type { ILogger } from "./utils/logger";
 import { readFileSync, writeFileSync } from "fs";
-import {
+import type {
   AutoRc,
   RepoInformation,
   AuthorInformation,
@@ -46,7 +46,7 @@ export interface InteractiveInitHooks {
         variable: string;
         /** The message to ask the user for the the env var */
         message: string;
-      }>
+      }>,
     ]
   >;
 }
@@ -390,12 +390,15 @@ export default class InteractiveInit {
           }
         });
 
-      autoRc.plugins = await plugins.reduce(async (last, plugin) => {
-        return [
-          ...(await last),
-          (await this.hooks.configurePlugin.promise(plugin)) || plugin,
-        ];
-      }, Promise.resolve([] as PluginConfig[]));
+      autoRc.plugins = await plugins.reduce(
+        async (last, plugin) => {
+          return [
+            ...(await last),
+            (await this.hooks.configurePlugin.promise(plugin)) || plugin,
+          ];
+        },
+        Promise.resolve([] as PluginConfig[])
+      );
     }
 
     this.tapDefaults();

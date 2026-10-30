@@ -29,7 +29,7 @@ describe("Gradle Plugin", () => {
     exec.mockClear();
     const plugin = new GradleReleasePlugin(options);
     hooks = makeHooks();
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger,
       remote: "stubRemote",
@@ -39,7 +39,7 @@ describe("Gradle Plugin", () => {
         getLatestRelease: async () => "0.0.1",
       },
       getCurrentVersion: async () => "0.0.1",
-    } as unknown) as Auto.Auto);
+    } as unknown as Auto.Auto);
   });
 
   describe("getPreviousVersion", () => {

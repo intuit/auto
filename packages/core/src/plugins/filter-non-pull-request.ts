@@ -1,6 +1,6 @@
 import on from "await-to-js";
 
-import { Auto, IPlugin } from "../auto";
+import { Auto, type IPlugin } from "../auto";
 
 /** Filter out PR numbers that might generate errors. */
 export default class FilterNonPullRequestPlugin implements IPlugin {

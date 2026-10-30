@@ -21,14 +21,16 @@ jest.mock("vsce");
 jest.mock("@auto-it/package-json-utils");
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => exec(...args)
+  () =>
+    (...args: any[]) =>
+      exec(...args)
 );
 
 const setup = (mockGit?: any) => {
   const plugin = new Vscode();
   const hooks = makeHooks();
 
-  plugin.apply(({
+  plugin.apply({
     hooks,
     git: mockGit,
     remote: "origin",
@@ -36,7 +38,7 @@ const setup = (mockGit?: any) => {
     prefixRelease: (r: string) => `v${r}`,
     config: { prereleaseBranches: ["next"] },
     getCurrentVersion: () => "v1.0.0",
-  } as unknown) as Auto.Auto);
+  } as unknown as Auto.Auto);
 
   return hooks;
 };

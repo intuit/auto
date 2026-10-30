@@ -37,7 +37,7 @@ describe("Upload Assets Plugin", () => {
     const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
     const addToPrBody = jest.fn();
 
-    plugin.apply(({
+    plugin.apply({
       hooks,
       logger: dummyLog(),
       prefixRelease: (v) => v,
@@ -50,7 +50,7 @@ describe("Upload Assets Plugin", () => {
           paginate: jest.fn().mockResolvedValue([]),
         },
       },
-    } as unknown) as Auto);
+    } as unknown as Auto);
 
     await hooks.canary.promise({
       canaryIdentifier: "canary.123",

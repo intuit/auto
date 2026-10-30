@@ -5,7 +5,7 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import endent from "endent";
-import { diff, ReleaseType } from "semver";
+import { diff, type ReleaseType } from "semver";
 import twitter from "tweet-tweet";
 import tweetValidation from "twitter-text";
 import { promisify } from "util";

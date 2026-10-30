@@ -1,7 +1,7 @@
 ## Using in scripts
 
 The following will only run the test:visual script when the PR has has the  
- Visual label.
+Visual label.
 
 ```bash
 export PATH=$(npm bin):$PATH

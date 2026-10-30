@@ -31,7 +31,12 @@ jest.mock("@octokit/rest", () => {
 
 const execSpy = jest.fn();
 // @ts-ignore
-jest.mock("../utils/exec-promise.ts", () => (...args) => execSpy(...args));
+jest.mock(
+  "../utils/exec-promise.ts",
+  () =>
+    (...args) =>
+      execSpy(...args)
+);
 
 describe("remote parsing", () => {
   test("should fall back to origin when no git", async () => {

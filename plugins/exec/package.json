@@ -30,17 +30,20 @@
     "changelog"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "workspace:*",
     "endent": "^2.1.0",
     "fp-ts": "^2.5.3",
     "fromentries": "^1.2.0",
     "io-ts": "^2.1.2",
-    "tslib": "2.1.0"
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:"
   }
 }

@@ -1,4 +1,4 @@
-import envCi, { CiEnv } from "env-ci";
+import envCi, { type CiEnv } from "env-ci";
 import { execSync } from "child_process";
 
 const defaultCiEnvironment = envCi();
@@ -6,7 +6,8 @@ const defaultCiEnvironment = envCi();
 /**
  * Validates that the given branch name should be returned by environment context
  */
-const isValidBranch = (branch: string | undefined) => typeof branch === "string" && branch !== "undefined"
+const isValidBranch = (branch: string | undefined) =>
+  typeof branch === "string" && branch !== "undefined";
 
 /** Get the current branch the git repo is set to */
 export function getCurrentBranch(env: Partial<CiEnv> = defaultCiEnvironment) {
@@ -17,7 +18,7 @@ export function getCurrentBranch(env: Partial<CiEnv> = defaultCiEnvironment) {
 
   if (isPR && "prBranch" in env && isValidBranch(env.prBranch)) {
     branch = env.prBranch;
-  } else if(isValidBranch(env.branch)) {
+  } else if (isValidBranch(env.branch)) {
     branch = env.branch;
   }
 

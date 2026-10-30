@@ -22,7 +22,9 @@ execSpy.mockReturnValue("");
 // @ts-ignore
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => execSpy(...args)
+  () =>
+    (...args: any[]) =>
+      execSpy(...args)
 );
 
 afterEach(() => {

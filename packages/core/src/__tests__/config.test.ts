@@ -1,11 +1,16 @@
 import Config, { normalizeLabel, normalizeLabels } from "../config";
 import { dummyLog } from "../utils/logger";
-import SEMVER, { ILabelDefinition } from "../semver";
+import SEMVER, { type ILabelDefinition } from "../semver";
 
 const fetchSpy = jest.fn();
 
 // @ts-ignore
-jest.mock("node-fetch", () => (...args) => fetchSpy(...args));
+jest.mock(
+  "node-fetch",
+  () =>
+    (...args) =>
+      fetchSpy(...args)
+);
 
 beforeEach(() => {
   fetchSpy.mockClear();
@@ -156,12 +161,12 @@ describe("loadExtendConfig", () => {
     const config = new Config(log);
 
     importMock.mockImplementation((path) =>
-        path === "auto-config-from-module"
-            ? { noVersionPrefix: true }
-            : undefined
+      path === "auto-config-from-module" ? { noVersionPrefix: true } : undefined
     );
 
-    expect(await config.loadExtendConfig("auto-config-from-module")).toStrictEqual({
+    expect(
+      await config.loadExtendConfig("auto-config-from-module")
+    ).toStrictEqual({
       extends: "auto-config-from-module",
       noVersionPrefix: true,
     });

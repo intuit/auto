@@ -27,14 +27,7 @@ Simply supply the names of the account to filter
 
 ```json
 {
-  "plugins": [
-    [
-      "twitter",
-      {
-        /* options */
-      }
-    ]
-  ]
+  "plugins": [["twitter", {/* options */}]]
 }
 ```
 

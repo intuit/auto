@@ -43,7 +43,9 @@ const readResult = "{}";
 
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => exec(...args)
+  () =>
+    (...args: any[]) =>
+      exec(...args)
 );
 // @ts-ignore
 jest.mock("env-ci", () => () => ({ isCi: false }));

@@ -1,3 +1,3 @@
 require("mock-fs");
 
-jest.mock('requireg', () => require);
+jest.mock("requireg", () => require);

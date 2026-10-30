@@ -21,11 +21,15 @@ execSync.mockImplementation(exec);
 
 jest.mock(
   "../../../packages/core/dist/utils/get-lerna-packages",
-  () => (...args: any[]) => getLernaPackages(...args)
+  () =>
+    (...args: any[]) =>
+      getLernaPackages(...args)
 );
 jest.mock(
   "../../../packages/core/dist/utils/exec-promise",
-  () => (...args: any[]) => execPromise(...args)
+  () =>
+    (...args: any[]) =>
+      execPromise(...args)
 );
 jest.mock("fs", () => ({
   // @ts-ignore
@@ -370,7 +374,6 @@ test("should create extra change logs for sub-packages", async () => {
     "packages/@foobar/release/CHANGELOG.md"
   );
 });
-
 
 test("should respect the useVersion config option", async () => {
   readFileSync.mockReturnValue('{ "version": "independent" }');

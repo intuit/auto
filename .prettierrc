@@ -1,0 +1,9 @@
+{
+  "trailingComma": "es5",
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": { "trailingComma": "none" }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { Auto } from "../auto";
-import { IPRStatusOptions } from "../auto-args";
+import type { IPRStatusOptions } from "../auto-args";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
@@ -182,10 +182,12 @@ describe("Auto", () => {
   });
 
   test("should extend config and keep overrides", async () => {
-    search.mockReturnValueOnce({ config: { ...defaults, extends: "@artsy", name: 'extended' } });
+    search.mockReturnValueOnce({
+      config: { ...defaults, extends: "@artsy", name: "extended" },
+    });
     importMock.mockImplementation((path) =>
       path === "@artsy/auto-config/package.json"
-        ? { auto: { onlyPublishWithReleaseLabel: true }, name: '@artsy' }
+        ? { auto: { onlyPublishWithReleaseLabel: true }, name: "@artsy" }
         : undefined
     );
 
@@ -208,10 +210,12 @@ describe("Auto", () => {
     const orig = process.cwd;
     process.cwd = () => "/foo/";
     search.mockReturnValueOnce({
-      config: { ...defaults, extends: "./fake.json", name: 'extended' },
+      config: { ...defaults, extends: "./fake.json", name: "extended" },
     });
     importMock.mockImplementation((path) =>
-      path === "/foo/fake.json" ? { noVersionPrefix: true, name: 'fake' } : undefined
+      path === "/foo/fake.json"
+        ? { noVersionPrefix: true, name: "fake" }
+        : undefined
     );
 
     const auto = new Auto();
@@ -986,10 +990,10 @@ describe("Auto", () => {
 
       jest.spyOn(auto.git!, "publish").mockReturnValueOnce({ data: {} } as any);
       jest
-          .spyOn(auto.release!, "generateReleaseNotes")
-          .mockImplementation(() => Promise.resolve("releaseNotes"));
+        .spyOn(auto.release!, "generateReleaseNotes")
+        .mockImplementation(() => Promise.resolve("releaseNotes"));
       auto.release!.getCommitsInRelease = () =>
-          Promise.resolve([makeCommitFromMsg("Test Commit")]);
+        Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = jest.fn();
@@ -998,22 +1002,22 @@ describe("Auto", () => {
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
-          "v1.2.3",
-          undefined,
-          undefined
+        "v1.2.3",
+        undefined,
+        undefined
       );
       expect(auto.git!.publish).toHaveBeenCalledWith(
-          "releaseNotes",
-          "v1.2.4",
-          false,
-          "",
-          true
+        "releaseNotes",
+        "v1.2.4",
+        false,
+        "",
+        true
       );
       expect(afterRelease).toHaveBeenCalledWith(
-          expect.objectContaining({
-            lastRelease: "v1.2.3",
-            newVersion: "v1.2.4",
-          })
+        expect.objectContaining({
+          lastRelease: "v1.2.3",
+          newVersion: "v1.2.4",
+        })
       );
     });
 
@@ -1576,7 +1580,9 @@ describe("Auto", () => {
       const latest = jest
         .spyOn(auto, "latest")
         .mockImplementation(() => Promise.resolve(undefined));
-      jest.spyOn(auto, "next").mockImplementation(() => Promise.resolve(undefined));
+      jest
+        .spyOn(auto, "next")
+        .mockImplementation(() => Promise.resolve(undefined));
       jest
         .spyOn(auto, "canary")
         .mockImplementation(() => Promise.resolve(undefined));

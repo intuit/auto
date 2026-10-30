@@ -39,17 +39,17 @@ Fully-configured example:
 
 ```json
 {
-   "plugins": [
-      [
-         "protected-branch",
-         {
-            "reviewerToken": "redacted", // Probably better idea to set it in `PROTECTED_BRANCH_REVIEWER_TOKEN` environment variable
-            "releaseTemporaryBranchPrefix": "protected-release-",
-            "requiredStatusChecks": ["check-1", "check-2"]
-         }
-      ]
-      // other plugins
-   ]
+  "plugins": [
+    [
+      "protected-branch",
+      {
+        "reviewerToken": "redacted", // Probably better idea to set it in `PROTECTED_BRANCH_REVIEWER_TOKEN` environment variable
+        "releaseTemporaryBranchPrefix": "protected-release-",
+        "requiredStatusChecks": ["check-1", "check-2"]
+      }
+    ]
+    // other plugins
+  ]
 }
 ```
 
@@ -80,17 +80,17 @@ An example usage in a repository where we want to have the following protected b
 
    ```yaml
    permissions:
-    # Needed to create PR statuses/checks
-    checks: write
-    statuses: write
-    # Needed to push git tags, release
-    contents: write
+     # Needed to create PR statuses/checks
+     checks: write
+     statuses: write
+     # Needed to push git tags, release
+     contents: write
    ...
-    # On auto shipit job step
-    - name: Release
-      env:
-        PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.<<YOUR-GITHUB-ACTIONS-SECRET-NAME>> }}
-      run: yarn shipit
+   # On auto shipit job step
+   - name: Release
+     env:
+       PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.<<YOUR-GITHUB-ACTIONS-SECRET-NAME>> }}
+     run: yarn shipit
    ```
 
 7. Ship it!

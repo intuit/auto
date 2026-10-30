@@ -1,0 +1,27 @@
+# Keep in sync with "packages" in lerna.json, which the npm plugin reads.
+packages:
+  - packages/*
+  - plugins/*
+
+patchedDependencies:
+  "@atomictech/rehype-toc@3.1.2": patches/@atomictech__rehype-toc@3.1.2.patch
+  next-ignite@0.10.11: patches/next-ignite@0.10.11.patch
+
+# None of these install scripts are needed: @parcel/watcher ships prebuilds,
+# nx's postinstall is a no-op without nx.json, dtrace-provider and fsevents@1
+# are optional native builds, and the rest only print banners.
+allowBuilds:
+  "@fortawesome/fontawesome-common-types": false
+  "@fortawesome/fontawesome-svg-core": false
+  "@fortawesome/free-solid-svg-icons": false
+  "@parcel/watcher": false
+  core-js: false
+  dtrace-provider: false
+  ejs: false
+  fsevents: false
+  nx: false
+
+catalog:
+  "@types/node": ^24.19.2
+  tsdown: 0.23.1
+  typescript: 6.0.3

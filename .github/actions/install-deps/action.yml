@@ -1,42 +1,34 @@
 name: "Setup"
 description: Setup action
 
+inputs:
+  cache:
+    description: Restore and save the pnpm store and pkg binary caches. Turn off in jobs that hold publishing secrets.
+    required: false
+    default: "true"
+
 runs:
   using: "composite"
   steps:
+    # Reads the pnpm version from the root package.json `packageManager` field
+    - name: Setup pnpm
+      uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
     - name: Use nodejs
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: 16.18
+        node-version-file: .node-version
+        cache: ${{ inputs.cache == 'true' && 'pnpm' || '' }}
+        package-manager-cache: ${{ inputs.cache == 'true' }}
 
-    - name: restore workspace cache
-      uses: actions/cache@v3
-      id: node_modules
-      with:
-        path: |
-          node_modules
-          packages/*/node_modules
-        key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'patches/*.patch') }}
-        restore-keys: |
-          node-modules-${{ runner.os }}-
-
-    - run: yarn install --frozen-lockfile --network-timeout 9000000
-      if: steps.node_modules.outputs.cache-hit != 'true'
+    - run: pnpm install --frozen-lockfile
       shell: bash
 
     - name: restore pkg cache
-      uses: actions/cache@v3
-      id: pkg
+      if: inputs.cache == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.pkg-cache
-        key: pkg-cache-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+        key: pkg-cache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           pkg-cache-${{ runner.os }}-
-
-    - name: Install pkg node binaries
-      if: steps.pkg.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        yarn pkg-fetch -n node16 -p macos -a x64
-        yarn pkg-fetch -n node16 -p win -a x64
-        yarn pkg-fetch -n node16 -p linux -a x64

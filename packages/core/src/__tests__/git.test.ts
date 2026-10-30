@@ -527,8 +527,7 @@ describe("github", () => {
       await gh.addToPrBody("Some long thing", 22);
       expect(update).toHaveBeenCalledWith(
         expect.objectContaining({
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
         })
       );
     });
@@ -550,16 +549,14 @@ describe("github", () => {
 
       get.mockReturnValueOnce({
         data: {
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n\nSome long thing\nand more\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n\nSome long thing\nand more\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
         },
       });
 
       await gh.addToPrBody("Something else", 22);
       expect(update).toHaveBeenCalledWith(
         expect.objectContaining({
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
         })
       );
     });
@@ -569,16 +566,14 @@ describe("github", () => {
 
       get.mockReturnValueOnce({
         data: {
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n",
         },
       });
 
       await gh.addToPrBody("Some long thing", 22, "PERF");
       expect(update).toHaveBeenCalledWith(
         expect.objectContaining({
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n<!-- GITHUB_RELEASE PR BODY: PERF -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: PERF -->\n",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->\n\n<!-- GITHUB_RELEASE PR BODY: PERF -->\nSome long thing\n<!-- GITHUB_RELEASE PR BODY: PERF -->\n",
         })
       );
     });
@@ -589,8 +584,7 @@ describe("github", () => {
       get.mockReturnValueOnce({ data: { body: "# My Content" } });
       get.mockReturnValueOnce({
         data: {
-          body:
-            "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->",
+          body: "# My Content\n<!-- GITHUB_RELEASE PR BODY: default -->\nSomething else\n<!-- GITHUB_RELEASE PR BODY: default -->",
         },
       });
       await gh.addToPrBody("Some long thing", 22);

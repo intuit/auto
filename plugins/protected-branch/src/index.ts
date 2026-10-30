@@ -1,4 +1,9 @@
-import { Auto, getCurrentBranch, IPlugin, validatePluginConfiguration } from '@auto-it/core';
+import {
+  Auto,
+  getCurrentBranch,
+  IPlugin,
+  validatePluginConfiguration,
+} from "@auto-it/core";
 import * as t from "io-ts";
 import { GitOperator } from "./GitOperator";
 
@@ -121,7 +126,11 @@ export default class ProtectedBranchPlugin implements IPlugin {
         });
       } catch (e) {
         // Silently ignore reference not found error since the ref might already be deleted
-        if (!e || e.status !== 422 || e.message !== "Reference does not exist") {
+        if (
+          !e ||
+          e.status !== 422 ||
+          e.message !== "Reference does not exist"
+        ) {
           throw e;
         }
       }

@@ -9,7 +9,7 @@ import {
   getPrNumberFromEnv,
 } from "@auto-it/core";
 import * as t from "io-ts";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 
 const pluginOptions = t.partial({
   /** The source image, if a static name and/or tag */
@@ -27,16 +27,16 @@ const pluginOptions = t.partial({
 });
 
 /** Convert string/number to boolean value */
-function toBoolean(v?: string|number) {
-  return String(v).search(/(true|1)/i) >= 0
+function toBoolean(v?: string | number) {
+  return String(v).search(/(true|1)/i) >= 0;
 }
 
 enum DOCKER_PLUGIN_ENV_VARS {
-  IMAGE = 'IMAGE',
-  REGISTRY = 'REGISTRY',
-  TAG_LATEST = 'TAG_LATEST',
-  TAG_PRERELEASE_ALIASES = 'TAG_PRERELEASE_ALIASES',
-  TAG_PULL_REQUEST_ALIASES = 'TAG_PULL_REQUEST_ALIASES'
+  IMAGE = "IMAGE",
+  REGISTRY = "REGISTRY",
+  TAG_LATEST = "TAG_LATEST",
+  TAG_PRERELEASE_ALIASES = "TAG_PRERELEASE_ALIASES",
+  TAG_PULL_REQUEST_ALIASES = "TAG_PULL_REQUEST_ALIASES",
 }
 
 export type IDockerPluginOptions = t.TypeOf<typeof pluginOptions>;
@@ -51,12 +51,21 @@ export default class DockerPlugin implements IPlugin {
 
   /** Initialize the plugin with it's options */
   constructor(private readonly options: IDockerPluginOptions) {
-    this.options.image = options.image || process.env[DOCKER_PLUGIN_ENV_VARS.IMAGE];
-    this.options.registry = options.registry || process.env[DOCKER_PLUGIN_ENV_VARS.REGISTRY];
-    this.options.tagLatest = options.tagLatest || toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_LATEST]);
-    this.options.tagPrereleaseAliases = options.tagPrereleaseAliases || toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_PRERELEASE_ALIASES]);
-    this.options.tagPullRequestAliases = options.tagPullRequestAliases || toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_PULL_REQUEST_ALIASES]);
-    this.options.prereleaseAliasMappings = options.prereleaseAliasMappings || {};
+    this.options.image =
+      options.image || process.env[DOCKER_PLUGIN_ENV_VARS.IMAGE];
+    this.options.registry =
+      options.registry || process.env[DOCKER_PLUGIN_ENV_VARS.REGISTRY];
+    this.options.tagLatest =
+      options.tagLatest ||
+      toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_LATEST]);
+    this.options.tagPrereleaseAliases =
+      options.tagPrereleaseAliases ||
+      toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_PRERELEASE_ALIASES]);
+    this.options.tagPullRequestAliases =
+      options.tagPullRequestAliases ||
+      toBoolean(process.env[DOCKER_PLUGIN_ENV_VARS.TAG_PULL_REQUEST_ALIASES]);
+    this.options.prereleaseAliasMappings =
+      options.prereleaseAliasMappings || {};
   }
 
   /** Tap into auto plugin points. */
@@ -98,7 +107,10 @@ export default class DockerPlugin implements IPlugin {
       }
 
       if (!dockerPlugin?.[1]?.tagPullRequestAliases) {
-        auto.checkEnv(this.name, DOCKER_PLUGIN_ENV_VARS.TAG_PULL_REQUEST_ALIASES);
+        auto.checkEnv(
+          this.name,
+          DOCKER_PLUGIN_ENV_VARS.TAG_PULL_REQUEST_ALIASES
+        );
       }
     });
 
@@ -125,9 +137,13 @@ export default class DockerPlugin implements IPlugin {
 
         if (dryRun && newTag) {
           if (quiet) {
-            console.log(this.options.tagLatest ? [newTag, aliasTag].join(', ') : newTag);
+            console.log(
+              this.options.tagLatest ? [newTag, aliasTag].join(", ") : newTag
+            );
           } else {
-            auto.logger.log.info(`Would have published: ${this.options.tagLatest ? [newTag, aliasTag].join(', ') : newTag}`);
+            auto.logger.log.info(
+              `Would have published: ${this.options.tagLatest ? [newTag, aliasTag].join(", ") : newTag}`
+            );
           }
 
           return;
@@ -154,7 +170,7 @@ export default class DockerPlugin implements IPlugin {
             "-f",
             aliasTag,
             "-m",
-            `"Tag release alias: ${aliasTag} (${prefixedTag})"`
+            `"Tag release alias: ${aliasTag} (${prefixedTag})"`,
           ]);
         }
 
@@ -193,9 +209,15 @@ export default class DockerPlugin implements IPlugin {
 
         if (dryRun) {
           if (quiet) {
-            console.log(prNumber ? [canaryVersion, canaryAliasVersion].join(', ') : canaryVersion);
+            console.log(
+              prNumber
+                ? [canaryVersion, canaryAliasVersion].join(", ")
+                : canaryVersion
+            );
           } else {
-            auto.logger.log.info(`Would have published: ${prNumber ? [canaryVersion, canaryAliasVersion].join(', ') : canaryVersion}`);
+            auto.logger.log.info(
+              `Would have published: ${prNumber ? [canaryVersion, canaryAliasVersion].join(", ") : canaryVersion}`
+            );
           }
 
           return;
@@ -210,8 +232,19 @@ export default class DockerPlugin implements IPlugin {
           const aliasImage = `${this.options.registry}:${canaryAliasVersion}`;
           await execPromise("docker", ["tag", this.options.image, aliasImage]);
           await execPromise("docker", ["push", aliasImage]);
-          await execPromise("git", ["tag", "-f", `${canaryAliasVersion}`, "-m", `Tag pull request canary: ${canaryAliasVersion} (${canaryVersion})`]);
-          await execPromise("git", ["push", auto.remote, `refs/tags/${canaryAliasVersion}`, "-f"]);
+          await execPromise("git", [
+            "tag",
+            "-f",
+            `${canaryAliasVersion}`,
+            "-m",
+            `Tag pull request canary: ${canaryAliasVersion} (${canaryVersion})`,
+          ]);
+          await execPromise("git", [
+            "push",
+            auto.remote,
+            `refs/tags/${canaryAliasVersion}`,
+            "-f",
+          ]);
         }
 
         auto.logger.verbose.info("Successfully published canary version");
@@ -232,7 +265,10 @@ export default class DockerPlugin implements IPlugin {
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
           : prereleaseBranches[0];
-        const prereleaseAlias = (this.options.prereleaseAliasMappings as {[key: string]: string})[prereleaseBranch] ?? prereleaseBranch;
+        const prereleaseAlias =
+          (this.options.prereleaseAliasMappings as { [key: string]: string })[
+            prereleaseBranch
+          ] ?? prereleaseBranch;
 
         const lastRelease = await auto.git.getLatestRelease();
         const current =
@@ -277,7 +313,12 @@ export default class DockerPlugin implements IPlugin {
           ]);
           await execPromise("docker", ["tag", this.options.image, aliasImage]);
           await execPromise("docker", ["push", aliasImage]);
-          await execPromise("git", ["push", auto.remote, `refs/tags/${prereleaseAlias}`, "-f"]);
+          await execPromise("git", [
+            "push",
+            auto.remote,
+            `refs/tags/${prereleaseAlias}`,
+            "-f",
+          ]);
         }
 
         return preReleaseVersions;
@@ -294,7 +335,12 @@ export default class DockerPlugin implements IPlugin {
       );
 
       if (this.options.tagLatest) {
-        await execPromise("git", ["push", auto.remote, `refs/tags/latest`, "-f"]);
+        await execPromise("git", [
+          "push",
+          auto.remote,
+          `refs/tags/latest`,
+          "-f",
+        ]);
       }
 
       await execPromise("git", [

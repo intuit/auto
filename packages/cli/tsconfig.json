@@ -4,22 +4,6 @@
 
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true
-  },
-
-  "references": [
-    {
-      "path": "../core"
-    },
-    {
-      "path": "../../plugins/npm"
-    },
-    {
-      "path": "../../plugins/released"
-    },
-    {
-      "path": "../../plugins/version-file"
-    }
-  ]
+    "rootDir": "./src"
+  }
 }

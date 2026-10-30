@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import endent from "endent";
 import { Memoize as memoize } from "typescript-memoize";
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
@@ -25,7 +25,7 @@ import {
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
-import { gt, gte, inc, prerelease, ReleaseType } from "semver";
+import { gt, gte, inc, prerelease, type ReleaseType } from "semver";
 import {
   loadPackageJson,
   getRepo,
@@ -386,9 +386,8 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
           if (names.includes(d)) {
             const depName = d.match(/@\S+\/\S+/) ? d.split("/")[1] : d;
 
-            newJson.dependencies![
-              addCanaryScope(canaryScope, depName)
-            ] = newJson.dependencies![d];
+            newJson.dependencies![addCanaryScope(canaryScope, depName)] =
+              newJson.dependencies![d];
             delete newJson.dependencies![d];
           }
         });
@@ -701,8 +700,8 @@ export default class NPMPlugin implements IPlugin {
     const verboseArgs = isQuiet
       ? ["--loglevel", "silent"]
       : isVerbose
-      ? ["--loglevel", "silly"]
-      : [];
+        ? ["--loglevel", "silly"]
+        : [];
     const prereleaseBranches =
       auto.config?.prereleaseBranches || DEFAULT_PRERELEASE_BRANCHES;
     const branch = getCurrentBranch();
@@ -947,9 +946,8 @@ export default class NPMPlugin implements IPlugin {
           const title = `v${
             useVersion || inc(lernaPackage.version, bump as ReleaseType)
           }`;
-          const releaseNotes = await changelog.generateReleaseNotes(
-            includedCommits
-          );
+          const releaseNotes =
+            await changelog.generateReleaseNotes(includedCommits);
 
           if (releaseNotes.trim()) {
             await auto.release!.updateChangelogFile(

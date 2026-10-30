@@ -1,4 +1,4 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import dotenv from "dotenv";
 import envCi from "env-ci";
 import fs from "fs";
@@ -7,7 +7,15 @@ import link from "terminal-link";
 import icons from "log-symbols";
 import chalk from "chalk";
 import parseAuthor from "parse-author";
-import { gt, lte, compareBuild, inc, parse, ReleaseType, major } from "semver";
+import {
+  gt,
+  lte,
+  compareBuild,
+  inc,
+  parse,
+  type ReleaseType,
+  major,
+} from "semver";
 import {
   AsyncParallelHook,
   AsyncSeriesBailHook,
@@ -20,7 +28,7 @@ import { parse as parseUrl, format } from "url";
 import on from "await-to-js";
 
 import createHttpsProxyAgent from "https-proxy-agent";
-import {
+import type {
   ApiOptions,
   IInfoOptions,
   ICanaryOptions,
@@ -40,24 +48,24 @@ import {
 } from "./auto-args";
 import Changelog from "./changelog";
 import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
-import Git, { IGitOptions, IPRInfo } from "./git";
+import Git, { type IGitOptions, type IPRInfo } from "./git";
 import InteractiveInit from "./init";
-import LogParse, { IExtendedCommit } from "./log-parse";
+import LogParse, { type IExtendedCommit } from "./log-parse";
 import Release, { getVersionMap } from "./release";
 import SEMVER, {
   calculateSemVerBump,
-  IVersionLabels,
-  ILabelDefinition,
+  type IVersionLabels,
+  type ILabelDefinition,
   preVersionMap,
 } from "./semver";
 import execPromise from "./utils/exec-promise";
-import { loadPlugin, IPlugin, listPlugins } from "./utils/load-plugins";
-import createLog, { ILogger, setLogLevel } from "./utils/logger";
+import { loadPlugin, type IPlugin, listPlugins } from "./utils/load-plugins";
+import createLog, { type ILogger, setLogLevel } from "./utils/logger";
 import { makeHooks } from "./utils/make-hooks";
 import { getCurrentBranch } from "./utils/get-current-branch";
-import { buildSearchQuery, ISearchResult } from "./match-sha-to-pr";
+import { buildSearchQuery, type ISearchResult } from "./match-sha-to-pr";
 import getRepository from "./utils/get-repository";
-import {
+import type {
   RepoInformation,
   AuthorInformation,
   AutoRc,
@@ -66,7 +74,7 @@ import {
 import {
   validateAutoRc,
   validatePlugins,
-  ValidatePluginHook,
+  type ValidatePluginHook,
   formatError,
 } from "./validate-config";
 import { omit } from "./utils/omit";
@@ -136,7 +144,8 @@ interface NextContext extends DryRunOption {
   releaseNotes: string;
 }
 
-type PublishResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+type PublishResponse =
+  RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 export interface IAutoHooks {
   /** Modify what is in the config. You must return the config in this hook. */
@@ -163,7 +172,7 @@ export interface IAutoHooks {
         commitsInRelease: IExtendedCommit[];
         /** The type of release made by shipit */
         context: ShipitContext;
-      }
+      },
     ]
   >;
   /** Ran after the `release` command has run. */
@@ -180,7 +189,7 @@ export interface IAutoHooks {
         releaseNotes: string;
         /** The response from creating the new release. */
         response?: PublishResponse | PublishResponse[];
-      }
+      },
     ]
   >;
   /** Override what happens when "releasing" code to a Github release */
@@ -201,7 +210,7 @@ export interface IAutoHooks {
         fullReleaseNotes: string;
         /** The commits included in the release */
         commits: IExtendedCommit[];
-      }
+      },
     ],
     PublishResponse | PublishResponse[] | void
   >;
@@ -231,7 +240,7 @@ export interface IAutoHooks {
       {
         /** The bump the changelog will make */
         bump: SEMVER | undefined;
-      }
+      },
     ]
   >;
   /** Ran before the package has been versioned. */
@@ -242,7 +251,7 @@ export interface IAutoHooks {
         from: string;
         /** The commits included in the release */
         commits: IExtendedCommit[];
-      }
+      },
     ]
   >;
   /** Version the package. This is a good opportunity to `git tag` the release also.  */
@@ -254,7 +263,7 @@ export interface IAutoHooks {
           bump: SEMVER;
           /** Override the version to release */
           useVersion?: string;
-        }
+        },
     ]
   >;
   /** Ran after the package has been versioned. */
@@ -267,7 +276,7 @@ export interface IAutoHooks {
         bump: SEMVER;
         /** Override the version to release */
         useVersion?: string;
-      }
+      },
     ]
   >;
   /** Used to publish a canary release. In this hook you get the semver bump and the unique canary postfix ID. */
@@ -279,7 +288,7 @@ export interface IAutoHooks {
           bump: SEMVER;
           /** The post-version identifier to add to the version */
           canaryIdentifier: string;
-        }
+        },
     ],
     | string
     | {
@@ -308,7 +317,7 @@ export interface IAutoHooks {
       DryRunOption & {
         /** The complete information about the PR */
         pr: RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
-      }
+      },
     ]
   >;
 }
@@ -451,10 +460,10 @@ export default class Auto {
       "quiet" in options && options.quiet
         ? "quiet"
         : Array.isArray(options.verbose) && options.verbose.length > 1
-        ? "veryVerbose"
-        : options.verbose
-        ? "verbose"
-        : undefined
+          ? "veryVerbose"
+          : options.verbose
+            ? "verbose"
+            : undefined
     );
     this.logger = createLog();
     this.hooks = makeHooks();
@@ -872,13 +881,12 @@ export default class Auto {
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
     const oldVersionBranchPrefix = this.config?.versionBranches as
-      | string
-      | undefined;
+      string | undefined;
 
     return Boolean(
       oldVersionBranchPrefix &&
-        branch &&
-        new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
+      branch &&
+      new RegExp(`^${escapeRegExp(oldVersionBranchPrefix)}`).test(branch)
     );
   }
 
@@ -1314,9 +1322,7 @@ export default class Auto {
       // If the commit sha is a 7 digit number starting with zero
       // SemVer will reject the version. Include enough of the sha
       // to include at least one letter in that case.
-      const endIndex  = /^0\d{6}/.test(sha) ?
-          sha.search(/[a-zA-Z]/) + 1
-          : 7;
+      const endIndex = /^0\d{6}/.test(sha) ? sha.search(/[a-zA-Z]/) + 1 : 7;
       canaryIdentifier = `${canaryIdentifier}.${sha.slice(0, endIndex)}`;
     }
 
@@ -1485,9 +1491,8 @@ export default class Auto {
       latestTagInBaseBranch ||
       (await this.git.getFirstCommit());
 
-    const fullReleaseNotes = await this.release.generateReleaseNotes(
-      lastRelease
-    );
+    const fullReleaseNotes =
+      await this.release.generateReleaseNotes(lastRelease);
     const commits = await this.release.getCommitsInRelease(lastTag);
     const releaseNotes = await this.release.generateReleaseNotes(lastTag);
     const labels = commits.map((commit) => commit.labels);
@@ -1757,9 +1762,8 @@ export default class Auto {
     }
 
     const lastRelease = options.from || (await this.git.getLatestRelease());
-    const commitsInRelease = await this.release.getCommitsInRelease(
-      lastRelease
-    );
+    const commitsInRelease =
+      await this.release.getCommitsInRelease(lastRelease);
 
     this.logger.verbose.info("Calling before version hook");
     await this.hooks.beforeVersion.promise({
@@ -2328,9 +2332,8 @@ export default class Auto {
       );
 
       if (query) {
-        const result = await this.git.graphql<Record<string, ISearchResult>>(
-          query
-        );
+        const result =
+          await this.git.graphql<Record<string, ISearchResult>>(query);
 
         if (result?.[`hash_${commit}`]) {
           const number = result[`hash_${commit}`].edges[0]?.node?.number;
@@ -2363,9 +2366,9 @@ export { default as InteractiveInit } from "./init";
 export { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 export { getCurrentBranch } from "./utils/get-current-branch";
 export { validatePluginConfiguration } from "./validate-config";
-export { ILogger } from "./utils/logger";
-export { IPlugin } from "./utils/load-plugins";
-export { ICommitAuthor, IExtendedCommit } from "./log-parse";
+export type { ILogger } from "./utils/logger";
+export type { IPlugin } from "./utils/load-plugins";
+export type { ICommitAuthor, IExtendedCommit } from "./log-parse";
 
 export { default as Auto } from "./auto";
 export { default as SEMVER } from "./semver";
@@ -2373,8 +2376,8 @@ export * from "./semver";
 export { default as execPromise } from "./utils/exec-promise";
 export {
   default as getLernaPackages,
-  LernaPackage,
+  type LernaPackage,
 } from "./utils/get-lerna-packages";
 export { default as inFolder } from "./utils/in-folder";
 
-export { AutoRc } from "./types";
+export type { AutoRc } from "./types";

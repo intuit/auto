@@ -13,7 +13,7 @@ import fs from "fs";
 import path from "path";
 import match from "anymatch";
 import on from "await-to-js";
-import { IExtendedCommit } from "@auto-it/core/src/log-parse";
+import type { IExtendedCommit } from "@auto-it/core/src/log-parse";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
 
@@ -50,7 +50,7 @@ const contributionTypes = [
   "userTesting",
   "video",
 ] as const;
-type Contribution = typeof contributionTypes[number];
+type Contribution = (typeof contributionTypes)[number];
 
 /** Determine if it's a valid contribution type */
 const isContribution = (

@@ -1,7 +1,7 @@
 import Git from "../git";
 import LogParse from "../log-parse";
 import Release, { getVersionMap } from "../release";
-import SEMVER, { defaultLabels, ILabelDefinition } from "../semver";
+import SEMVER, { defaultLabels, type ILabelDefinition } from "../semver";
 import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import child from "child_process";
@@ -89,7 +89,12 @@ getGitLog.mockReturnValue([]);
 
 const execSpy = jest.fn();
 // @ts-ignore
-jest.mock("../utils/exec-promise.ts", () => (...args) => execSpy(...args));
+jest.mock(
+  "../utils/exec-promise.ts",
+  () =>
+    (...args) =>
+      execSpy(...args)
+);
 
 const currentBranch = jest.fn();
 currentBranch.mockReturnValue("main");
@@ -554,7 +559,6 @@ describe("Release", () => {
 
       expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
     });
-
 
     test("prepends to old changelog", async () => {
       const gh = new Release(git, config);

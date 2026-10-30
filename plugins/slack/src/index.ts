@@ -1,4 +1,4 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import { githubToSlack, url } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -12,7 +12,8 @@ import {
 import fetch from "node-fetch";
 import * as t from "io-ts";
 
-type ReleaseResponse = RestEndpointMethodTypes["repos"]["createRelease"]["response"];
+type ReleaseResponse =
+  RestEndpointMethodTypes["repos"]["createRelease"]["response"];
 
 /** Transform markdown into slack friendly text */
 export const sanitizeMarkdown = (markdown: string) =>

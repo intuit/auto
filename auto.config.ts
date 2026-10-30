@@ -1,9 +1,9 @@
-import { AutoRc } from "./packages/core";
+import type { AutoRc } from "./packages/core";
 
-import { INpmConfig } from "./plugins/npm";
-import { IBrewPluginOptions } from "./plugins/brew";
+import type { INpmConfig } from "./plugins/npm";
+import type { IBrewPluginOptions } from "./plugins/brew";
 // import { IGhPagesPluginOptions } from "./plugins/gh-pages";
-import { IAllContributorsPluginOptions } from "./plugins/all-contributors";
+import type { IAllContributorsPluginOptions } from "./plugins/all-contributors";
 
 const npmOptions: INpmConfig = {
   exact: true,

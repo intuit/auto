@@ -31,13 +31,13 @@
     "conventional commits"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
     "test": "jest --maxWorkers=2 --config ../../package.json"
   },
   "dependencies": {
-    "@auto-it/core": "link:../../packages/core",
+    "@auto-it/core": "workspace:*",
     "array.prototype.flatmap": "^1.2.2",
     "conventional-changelog-core": "^4.2.0",
     "conventional-changelog-preset-loader": "^2.3.4",
@@ -45,11 +45,13 @@
     "endent": "^2.1.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
-    "tslib": "2.1.0"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
+    "@types/array.prototype.flatmap": "^1.2.0",
     "@types/conventional-changelog-core": "^4.1.1",
     "@types/conventional-changelog-preset-loader": "^2.3.1",
-    "@types/conventional-commits-parser": "^3.0.0"
+    "@types/conventional-commits-parser": "^3.0.0",
+    "tsdown": "catalog:"
   }
 }

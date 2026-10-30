@@ -21,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 'lts/*'
-          cache: 'npm' # or yarn, pnpn
+          node-version: "lts/*"
+          cache: "npm" # or yarn, pnpm
 
       - name: Create Release
         env:
@@ -49,9 +49,9 @@ If you are publishing to the Github Package Registry you will need to change a f
 
 ```yaml
 - name: Setup Node
-  uses: actions/setup-node@v3
+  uses: actions/setup-node@v7
   with:
-    node-version: 'lts/*'
+    node-version: "lts/*"
     registry-url: "https://npm.pkg.github.com"
     scope: "@your-username-scope"
 ```
@@ -69,8 +69,8 @@ If you are publishing to the Github Package Registry you will need to change a f
     npx auto shipit
 ```
 
-The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v3` sets up.
-If you aren't using `actions/setup-node@v3` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
+The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v7` sets up.
+If you aren't using `actions/setup-node@v7` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
 
 ## Troubleshooting
 
@@ -87,11 +87,11 @@ You will need to create a token with admin access to your repo and modify your b
 
 ```yaml
 steps:
-  - uses: actions/checkout@v3
+  - uses: actions/checkout@v7
     with:
       # Ensure that git uses your token with admin access to the repo
       token: ${{ secrets.ADMIN_TOKEN }}
-      fetch-depth: '0'
+      fetch-depth: "0"
 ```
 
 ## Examples

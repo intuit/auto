@@ -2,7 +2,7 @@
 
 import * as t from "io-ts";
 import { isRight } from "fp-ts/lib/Either";
-import { autoRc, AutoRc } from "./types";
+import { autoRc, type AutoRc } from "./types";
 import { AsyncSeriesBailHook } from "tapable";
 import { omit } from "./utils/omit";
 import chalk from "chalk";
@@ -215,10 +215,8 @@ function makeExactType(
 }
 
 /** Create a function to validation a configuration based on the configDeceleration  */
-export const validateIoConfiguration = (
-  name: string,
-  configDeceleration: t.Any | t.HasProps
-) =>
+export const validateIoConfiguration =
+  (name: string, configDeceleration: t.Any | t.HasProps) =>
   /** A function the will validate a configuration based on the configDeceleration */
   async (rc: unknown): Promise<Array<ConfigError | string>> => {
     const looseRc = configDeceleration.decode(rc);

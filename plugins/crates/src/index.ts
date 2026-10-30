@@ -2,7 +2,7 @@ import { Auto, execPromise, IPlugin, SEMVER } from "@auto-it/core";
 import envCi from "env-ci";
 import fs from "fs";
 import path from "path";
-import { inc, ReleaseType } from "semver";
+import { inc, type ReleaseType } from "semver";
 import toml from "toml";
 import userHome from "user-home";
 

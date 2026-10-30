@@ -1,4 +1,4 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
+import type { RestEndpointMethodTypes } from "@octokit/rest";
 import {
   Auto,
   getPrNumberFromEnv,
@@ -14,8 +14,10 @@ import { promisify } from "util";
 import link from "terminal-link";
 import * as t from "io-ts";
 
-type AssetResponse = RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["response"]["data"];
-type GitHubRelease = RestEndpointMethodTypes["repos"]["getReleaseByTag"]["response"]["data"];
+type AssetResponse =
+  RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["response"]["data"];
+type GitHubRelease =
+  RestEndpointMethodTypes["repos"]["getReleaseByTag"]["response"]["data"];
 
 const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
@@ -173,22 +175,23 @@ export default class UploadAssetsPlugin implements IPlugin {
         const baseUrl = auto.git!.options.baseUrl || DEFAULT_BASE_URL;
         const fileName = path.basename(asset);
         const extension = path.extname(fileName);
-        const options: RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["parameters"] = {
-          // placeholder to appease typescript
-          release_id: -1,
-          data: (file as unknown) as string,
-          name: id
-            ? extension
-              ? fileName.replace(extension, `-${id}${extension}`)
-              : `${fileName}-${id}`
-            : fileName,
-          owner: auto.git!.options.owner,
-          repo: auto.git!.options.repo,
-          headers: {
-            "content-length": stats.size,
-            "content-type": type ? type.mime : "application/octet-stream",
-          },
-        };
+        const options: RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["parameters"] =
+          {
+            // placeholder to appease typescript
+            release_id: -1,
+            data: file as unknown as string,
+            name: id
+              ? extension
+                ? fileName.replace(extension, `-${id}${extension}`)
+                : `${fileName}-${id}`
+              : fileName,
+            owner: auto.git!.options.owner,
+            repo: auto.git!.options.repo,
+            headers: {
+              "content-length": stats.size,
+              "content-type": type ? type.mime : "application/octet-stream",
+            },
+          };
 
         if (baseUrl !== DEFAULT_BASE_URL) {
           const { origin } = new URL(baseUrl);
@@ -230,12 +233,11 @@ export default class UploadAssetsPlugin implements IPlugin {
 
         await Promise.all(
           releases.map(async (r) => {
-            const {
-              data: releaseAsset,
-            } = await auto.git!.github.repos.uploadReleaseAsset({
-              ...options,
-              release_id: r.data.id,
-            });
+            const { data: releaseAsset } =
+              await auto.git!.github.repos.uploadReleaseAsset({
+                ...options,
+                release_id: r.data.id,
+              });
 
             assetResponses.push(releaseAsset);
           })

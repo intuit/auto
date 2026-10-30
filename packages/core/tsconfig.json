@@ -4,13 +4,6 @@
 
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true
-  },
-
-  "references": [
-    {
-      "path": "../../packages/bot-list"
-    }
-  ]
+    "rootDir": "./src"
+  }
 }

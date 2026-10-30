@@ -1,5 +1,5 @@
-import { Options as CoreOptions } from "conventional-changelog-core";
-import { Commit, sync as parse } from "conventional-commits-parser";
+import type { Options as CoreOptions } from "conventional-changelog-core";
+import { type Commit, sync as parse } from "conventional-commits-parser";
 import { promisify } from "util";
 import conventionalChangelogPresetLoader from "conventional-changelog-preset-loader";
 import flatMap from "array.prototype.flatmap";
@@ -191,11 +191,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         bump === SEMVER.preminor ||
         bump === SEMVER.prepatch
       ) {
-        
         return;
       }
-      
-      const bumpOrSkip = bump === SEMVER.noVersion ? 'skip' : bump;
+
+      const bumpOrSkip = bump === SEMVER.noVersion ? "skip" : bump;
 
       const label = auto.semVerLabels?.get(bumpOrSkip);
 
@@ -237,10 +236,10 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             );
             const prBumps = (
               await Promise.all(prCommits.map((c) => getBump(c.commit.message)))
-            ).filter((bump): bump is
-              | SEMVER.major
-              | SEMVER.minor
-              | SEMVER.patch => Boolean(bump && bump !== "skip"));
+            ).filter(
+              (bump): bump is SEMVER.major | SEMVER.minor | SEMVER.patch =>
+                Boolean(bump && bump !== "skip")
+            );
 
             if (prBumps.includes(SEMVER.major)) {
               bump = SEMVER.major;

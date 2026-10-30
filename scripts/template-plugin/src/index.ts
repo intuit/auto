@@ -1,4 +1,4 @@
-import { Auto, IPlugin, validatePluginConfiguration } from '@auto-it/core';
+import { type Auto, type IPlugin, validatePluginConfiguration } from '@auto-it/core';
 import * as t from "io-ts";
 
 const pluginOptions = t.partial({

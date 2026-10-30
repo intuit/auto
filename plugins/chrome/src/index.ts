@@ -6,7 +6,7 @@ import {
 } from "@auto-it/core";
 import * as fs from "fs";
 import * as path from "path";
-import { inc, ReleaseType, gte } from "semver";
+import { inc, type ReleaseType, gte } from "semver";
 import { promisify } from "util";
 import * as t from "io-ts";
 
