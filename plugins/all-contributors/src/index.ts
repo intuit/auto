@@ -1,6 +1,6 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   getLernaPackages,
   inFolder,
@@ -161,7 +161,7 @@ function getExtraContributors(body?: string | null) {
       }
 
       contributions
-        .split(",")
+        ?.split(",")
         .map((contribution) => contribution.trim())
         .forEach((contribution) =>
           authorContributions[username].add(contribution)
@@ -476,7 +476,7 @@ export default class AllContributorsPlugin implements IPlugin {
           [...contributions]
             .filter(isContribution)
             .forEach((contribution) =>
-              authorContributions[username].add(contribution)
+              authorContributions[username]?.add(contribution)
             );
         });
       }

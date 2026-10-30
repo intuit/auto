@@ -1,8 +1,8 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
   execPromise,
   getCurrentBranch,
-  IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
 import { inc, type ReleaseType } from "semver";

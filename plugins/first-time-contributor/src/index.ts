@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
-import { Auto, getCurrentBranch, IPlugin } from "@auto-it/core";
-import { ICommitAuthor } from "@auto-it/core/dist/log-parse";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, getCurrentBranch } from "@auto-it/core";
+import type { ICommitAuthor } from "@auto-it/core/dist/log-parse";
 import botList from "@auto-it/bot-list";
 import flatMap from "array.prototype.flatmap";
 import endent from "endent";
@@ -74,7 +75,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
                 repository(name: "${auto.git?.options.repo}", owner: "${auto.git?.options.owner}") {
                   object(expression: "${getCurrentBranch()}") {
                     ... on Commit {
-                      history(after: "${commits[commits.length - 1].hash} 0", first: 1, author: { id: "${user.node_id}" }) {
+                      history(after: "${commits[commits.length - 1]?.hash} 0", first: 1, author: { id: "${user.node_id}" }) {
                         edges {
                           node {
                             message

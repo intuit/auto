@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { app, type Command, type Option } from "command-line-application";
 import endent from "endent";
 
-import {
+import type {
   ApiOptions,
   GlobalOptions,
   ICanaryOptions,
@@ -16,8 +16,8 @@ import {
   IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
-  getAutoVersion,
 } from "@auto-it/core";
+import { getAutoVersion } from "@auto-it/core";
 
 export type Flags =
   | keyof GlobalOptions

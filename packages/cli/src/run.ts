@@ -2,8 +2,7 @@
 
 /* eslint-disable complexity */
 
-import {
-  Auto,
+import type {
   ApiOptions,
   IInfoOptions,
   ICanaryOptions,
@@ -17,8 +16,8 @@ import {
   IShipItOptions,
   IVersionOptions,
   INextOptions,
-  LabelExistsError,
 } from "@auto-it/core";
+import { Auto, LabelExistsError } from "@auto-it/core";
 import endent from "endent";
 import { to as on } from "await-to-js";
 import link from "terminal-link";

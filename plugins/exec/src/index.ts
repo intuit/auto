@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import {
   makeHooks,
   makeReleaseHooks,
@@ -10,7 +11,8 @@ import {
 import * as t from "io-ts";
 import fromEntries from "fromentries";
 import endent from "endent";
-import { execSync, ExecSyncOptionsWithStringEncoding } from "child_process";
+import type { ExecSyncOptionsWithStringEncoding } from "child_process";
+import { execSync } from "child_process";
 
 type CommandMap = Record<string, string | undefined>;
 

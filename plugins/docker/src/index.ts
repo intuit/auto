@@ -1,8 +1,8 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
   determineNextVersion,
   execPromise,
-  IPlugin,
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
   validatePluginConfiguration,

@@ -1,4 +1,5 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import { execSync } from "child_process";
 import fs from "fs";
 import * as t from "io-ts";

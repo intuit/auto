@@ -1630,7 +1630,7 @@ export default class Auto {
       !options.onlyGraduateWithReleaseLabel ||
       (options.onlyGraduateWithReleaseLabel &&
         head.length > 0 &&
-        head[0].labels.some((l) =>
+        head[0]?.labels.some((l) =>
           this.semVerLabels?.get("release")?.includes(l)
         ));
     const isPrereleaseBranch = this.config?.prereleaseBranches?.some(
@@ -2337,7 +2337,7 @@ export default class Auto {
           await this.git.graphql<Record<string, ISearchResult>>(query);
 
         if (result?.[`hash_${commit}`]) {
-          const number = result[`hash_${commit}`].edges[0]?.node?.number;
+          const number = result[`hash_${commit}`]?.edges[0]?.node?.number;
 
           if (number) {
             pr = String(number);

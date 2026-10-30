@@ -1,4 +1,5 @@
-import { Auto, IPlugin } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto } from "@auto-it/core";
 import * as t from "io-ts";
 
 const pluginOptions = t.partial({

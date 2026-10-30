@@ -1,13 +1,13 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
   determineNextVersion,
 } from "@auto-it/core";
-import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 import * as t from "io-ts";
 import path from "path";

@@ -5,9 +5,9 @@ import conventionalChangelogPresetLoader from "conventional-changelog-preset-loa
 import flatMap from "array.prototype.flatmap";
 import * as t from "io-ts";
 
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   SEMVER,
   getReleaseType,
   getHigherSemverTag,
@@ -141,7 +141,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
         };
       }
 
-      return this.storedGetBump(message);
+      return this.storedGetBump?.(message);
     };
 
     auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {

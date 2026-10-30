@@ -8,20 +8,22 @@ import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
 
+import type {
+  LernaPackage,
+  ILogger,
+  IPlugin,
+  ShipitRelease,
+} from "@auto-it/core";
 import {
   Auto,
   determineNextVersion,
   getCurrentBranch,
   getLernaPackages,
-  LernaPackage,
   inFolder,
   execPromise,
-  ILogger,
-  IPlugin,
   InteractiveInit,
   SEMVER,
   validatePluginConfiguration,
-  ShipitRelease,
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";

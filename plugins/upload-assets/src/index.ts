@@ -1,8 +1,8 @@
 import type { RestEndpointMethodTypes } from "@octokit/rest";
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
   getPrNumberFromEnv,
-  IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
 import endent from "endent";

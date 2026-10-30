@@ -1,7 +1,7 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
   getCurrentBranch,
-  IPlugin,
   validatePluginConfiguration,
 } from "@auto-it/core";
 import * as t from "io-ts";

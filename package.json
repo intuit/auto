@@ -26,6 +26,7 @@
     "build": "pnpm -r run build",
     "start": "pnpm -r --parallel run start",
     "lint": "oxlint packages plugins",
+    "type-check": "pnpm -r --no-bail --no-sort run type-check",
     "test": "vitest run --no-file-parallelism",
     "test:coverage": "npm run test -- --coverage",
     "auto": "chmod +x ./packages/cli/dist/bin/auto.mjs && ./packages/cli/dist/bin/auto.mjs",

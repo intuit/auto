@@ -1,9 +1,8 @@
+import type { IPlugin, ILogger } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
-  ILogger,
   getPrNumberFromEnv,
   DEFAULT_PRERELEASE_BRANCHES,
   getCurrentBranch,

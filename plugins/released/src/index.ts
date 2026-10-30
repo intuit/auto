@@ -1,5 +1,6 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
-import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
+import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
 import botList from "@auto-it/bot-list";
 

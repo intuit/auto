@@ -1,6 +1,6 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
   SEMVER,

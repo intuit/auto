@@ -88,7 +88,7 @@ function reporter<T>(validation: t.Validation<T>) {
         acc[item.path] = [];
       }
 
-      acc[item.path].push(item);
+      acc[item.path]?.push(item);
       return acc;
     },
     {}
@@ -106,7 +106,7 @@ function reporter<T>(validation: t.Validation<T>) {
           .map((g) => g.expectedType)
           .map((t) => `"${t}"`)
           .join(" or ");
-        const value = group[0].value;
+        const value = group[0]?.value;
 
         return {
           expectedType,

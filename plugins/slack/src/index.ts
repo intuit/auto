@@ -2,9 +2,9 @@ import type { RestEndpointMethodTypes } from "@octokit/rest";
 import { githubToSlack, url } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   getCurrentBranch,
   InteractiveInit,
   validatePluginConfiguration,

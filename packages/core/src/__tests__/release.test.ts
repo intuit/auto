@@ -514,14 +514,14 @@ describe("Release", () => {
         "v0.0.0"
       );
 
-      expect(writeSpy.mock.calls[0][1].includes(`# My new Notes`)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(`# My new Notes`)).toBe(true);
     });
 
     test("creates new changelog if one didn't exist", async () => {
       const gh = new Release(git, config);
       await gh.addToChangelog("# My new Notes", "v1.0.0", "v1.0.0");
 
-      expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(`v1.0.1`)).toBe(true);
     });
 
     test("creates changelog with v in versions", async () => {
@@ -533,7 +533,7 @@ describe("Release", () => {
       });
       await gh.addToChangelog("# My new Notes", "1.0.0", "1.0.0");
 
-      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(`1.0.1`)).toBe(true);
     });
 
     test("creates changelog with named tag and version prefix", async () => {
@@ -545,7 +545,7 @@ describe("Release", () => {
       });
       await gh.addToChangelog("# My new Notes", "my-tag-name-v1.0.0", "v1.0.0");
 
-      expect(writeSpy.mock.calls[0][1].includes(`v1.0.1`)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(`v1.0.1`)).toBe(true);
     });
 
     test("creates changelog with named tag", async () => {
@@ -557,7 +557,7 @@ describe("Release", () => {
       });
       await gh.addToChangelog("# My new Notes", "my-tag-name-1.0.0", "1.0.0");
 
-      expect(writeSpy.mock.calls[0][1].includes(`1.0.1`)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(`1.0.1`)).toBe(true);
     });
 
     test("prepends to old changelog", async () => {
@@ -571,7 +571,7 @@ describe("Release", () => {
         "asdfasdlkfjlkj435l2j",
         "v0.0.0"
       );
-      expect(writeSpy.mock.calls[0][1].includes(readResult)).toBe(true);
+      expect(writeSpy.mock.calls[0]?.[1].includes(readResult)).toBe(true);
     });
   });
 
