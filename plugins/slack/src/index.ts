@@ -444,7 +444,7 @@ export default class SlackPlugin implements IPlugin {
               content: message.code,
               title: languageMap[message.language] || message.language,
               filetype: languageMap[message.language] || message.language,
-            }) as any,
+            }),
             headers: {
               "Content-Type":
                 "application/x-www-form-urlencoded; charset=utf-8",

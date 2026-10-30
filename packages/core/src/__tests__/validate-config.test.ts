@@ -273,7 +273,6 @@ describe("validateConfig", () => {
           );
         }
 
-        // eslint-disable-next-line jest/no-if
         if (options.other && typeof options.other !== "number") {
           errors.push(
             formatError({

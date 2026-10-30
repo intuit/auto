@@ -179,7 +179,7 @@ describe("Cocoapods Plugin", () => {
 
       const mock = vi.spyOn(utilities, "writePodspecContents");
 
-      await updatePodspecVersion("./Test.podspec", "0.0.2");
+      updatePodspecVersion("./Test.podspec", "0.0.2");
       expect(mock).toHaveBeenLastCalledWith(
         expect.any(String),
         specWithVersion("0.0.2")

@@ -441,7 +441,7 @@ export default class CocoapodsPlugin implements IPlugin {
       }
     } catch (error) {
       this.logger?.log.warn(
-        `Error Checking for existing Specs repositories: ${error}`
+        `Error Checking for existing Specs repositories: ${String(error)}`
       );
     }
 
@@ -477,7 +477,7 @@ export default class CocoapodsPlugin implements IPlugin {
     } catch (error) {
       this.logger?.log.error(
         logMessage(
-          `Error pushing to specs repo: ${this.options.specsRepo}. Error: ${error}`
+          `Error pushing to specs repo: ${this.options.specsRepo}. Error: ${String(error)}`
         )
       );
       process.exit(1);

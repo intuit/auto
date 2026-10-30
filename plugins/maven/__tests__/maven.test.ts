@@ -414,7 +414,6 @@ describe("maven", () => {
       readFile.mockImplementation((path, options, callback) => {
         if (path === "pom.xml") {
           callback(undefined, oldParentPomXml);
-          // eslint-disable-next-line jest/no-if
         } else if (path === "child/pom.xml") {
           callback(undefined, oldChildPomXml);
         }

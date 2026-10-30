@@ -14,7 +14,6 @@ import {
   IPRBodyOptions,
   IPRCheckOptions,
   IPRStatusOptions,
-  IReleaseOptions,
   IShipItOptions,
   IVersionOptions,
   INextOptions,
@@ -83,7 +82,7 @@ export async function execute(command: string, args: ApiOptions) {
         await auto.changelog(args as IChangelogOptions);
         break;
       case "release":
-        await auto.runRelease(args as IReleaseOptions);
+        await auto.runRelease(args);
         break;
       case "shipit":
         await auto.shipit(args as IShipItOptions);

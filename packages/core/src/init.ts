@@ -359,8 +359,12 @@ export default class InteractiveInit {
 
   /** Load the default behavior */
   private tapDefaults() {
-    this.hooks.getRepo.tapPromise("Init Default", this.getRepoInformation);
-    this.hooks.getAuthor.tapPromise("Init Default", this.getAuthorInformation);
+    this.hooks.getRepo.tapPromise("Init Default", () =>
+      this.getRepoInformation()
+    );
+    this.hooks.getAuthor.tapPromise("Init Default", () =>
+      this.getAuthorInformation()
+    );
     this.hooks.createEnv.tap("Init Default", (vars) => [
       ...vars,
       {

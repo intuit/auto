@@ -206,6 +206,7 @@ export default class MavenPlugin implements IPlugin {
     auto.hooks.getAuthor.tapPromise(this.name, async () => {
       const { developer } = this.properties;
       auto.logger.verbose.info(
+        // oxlint-disable-next-line typescript/no-base-to-string, typescript/restrict-template-expressions -- logs [object Object] today; fixing the message changes output
         `Found author information in pom.xml: ${developer}`
       );
       return developer;

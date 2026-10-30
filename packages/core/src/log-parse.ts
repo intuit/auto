@@ -10,8 +10,8 @@ export interface ICommitAuthor {
   username?: string;
   /** The commit this author created */
   hash?: string;
-  /** The type of user */
-  type?: "Bot" | "User" | string;
+  /** The type of user, such as "Bot" or "User" */
+  type?: string;
 }
 
 export interface IPullRequest {

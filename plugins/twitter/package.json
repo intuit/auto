@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsdown",
     "start": "npm run build -- -w",
-    "lint": "eslint src --ext .ts",
+    "lint": "oxlint src",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "dependencies": {

@@ -389,7 +389,7 @@ export default class Git {
           hash: commit.hash,
           authorName: commit.authorName,
           authorEmail: commit.authorEmail,
-          subject: commit.rawBody!,
+          subject: commit.rawBody,
           files: (commit.files || []).map((file) => path.resolve(file)),
         }))
         .reduce<ICommit[]>((all, commit) => {
@@ -891,6 +891,7 @@ export default class Git {
   }
 
   /** Create a release for the GitHub project */
+  // oxlint-disable-next-line max-params -- public API, changing the signature would break callers
   async publish(
     releaseNotes: string,
     tag: string,
@@ -1015,7 +1016,7 @@ export default class Git {
     const key = `hash_${sha}`;
     const result = await this.graphql<ISearchQuery>(query);
 
-    if (!result || !result[key] || !result[key].edges[0]) {
+    if (!result?.[key]?.edges[0]) {
       return;
     }
 

@@ -272,6 +272,7 @@ describe("createPost", () => {
     expect(fetchSpy.mock.calls[0][1].body).toMatchSnapshot();
   });
 
+  // oxlint-disable-next-line vitest/no-commented-out-tests -- restore once @mentions work, see the TODO in src/index.ts
   // test("should call Microsoft Office Teams api with custom atTarget", async () => {
   //   const plugin = new MicrosoftTeamsPlugin({
   //     url: "https://custom-microsoft-url",

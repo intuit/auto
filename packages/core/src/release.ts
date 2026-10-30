@@ -477,7 +477,7 @@ export default class Release {
       q: `is:pr AND is:merged AND merged:>=${lastRelease.published_at}`,
     });
 
-    if (!prsSinceLastRelease || !prsSinceLastRelease.items) {
+    if (!prsSinceLastRelease?.items) {
       return [];
     }
 
@@ -510,7 +510,7 @@ export default class Release {
         this.git.getPr(modifiedCommit.pullRequest.number)
       );
 
-      if (err || !info || !info.data) {
+      if (err || !info?.data) {
         return modifiedCommit;
       }
 

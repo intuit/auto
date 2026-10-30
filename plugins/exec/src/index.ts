@@ -86,7 +86,7 @@ const runExecSync = (
 
     execResult = trim(execSync(command, options));
   } catch (e) {
-    if (e && e.code === "E2BIG") {
+    if (e?.code === "E2BIG") {
       auto.logger.log.error(endent`
         Received E2BIG from execSync.
 
@@ -220,8 +220,7 @@ export default class ExecPlugin implements IPlugin {
     });
 
     Object.entries(this.options).forEach(
-      ([name, command]) =>
-        command && this.applyHook(auto, name, command as string | CommandMap)
+      ([name, command]) => command && this.applyHook(auto, name, command)
     );
   }
 

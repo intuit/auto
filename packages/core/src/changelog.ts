@@ -444,7 +444,7 @@ export default class Changelog {
 
         const pr = commit.pullRequest;
 
-        if (!pr || !pr.body) {
+        if (!pr?.body) {
           return;
         }
 
