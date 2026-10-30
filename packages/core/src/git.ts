@@ -12,6 +12,7 @@ import join from "url-join";
 import { gt, lt } from "semver";
 import prettyMs from "pretty-ms";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used as @memoize(); typescript-eslint 4 drops TS 5+ decorators from the AST
 import { Memoize as memoize } from "typescript-memoize";
 
 import type { ILabelDefinition } from "./semver";

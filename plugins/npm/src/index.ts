@@ -2,6 +2,7 @@ import envCi from "env-ci";
 import * as fs from "fs";
 import path from "path";
 import endent from "endent";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used as @memoize(); typescript-eslint 4 drops TS 5+ decorators from the AST
 import { Memoize as memoize } from "typescript-memoize";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
