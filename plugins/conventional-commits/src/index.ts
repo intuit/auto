@@ -137,7 +137,8 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             const bump =
               VERSIONS[result.level] ||
               (this.options.defaultReleaseType as
-                (typeof VERSIONS)[number] | "skip");
+                | (typeof VERSIONS)[number]
+                | "skip");
             return bump;
           }
         };

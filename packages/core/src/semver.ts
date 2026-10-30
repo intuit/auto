@@ -2,7 +2,11 @@ import type { ReleaseCalculationOptions } from "./types";
 import * as t from "io-ts";
 
 export type VersionLabel =
-  SEMVER.major | SEMVER.minor | SEMVER.patch | "skip" | "release";
+  | SEMVER.major
+  | SEMVER.minor
+  | SEMVER.patch
+  | "skip"
+  | "release";
 
 enum SEMVER {
   major = "major",

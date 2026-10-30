@@ -38,7 +38,7 @@
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
     "install-mac": "pnpm --filter auto bundle && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
-    "format:diff": "prettier --cache --list-different '**/*.{js,md,mdx,ts,tsx,yml,mts}'"
+    "format:diff": "oxfmt --list-different '**/*.{js,md,mdx,ts,tsx,yml,mts}'"
   },
   "devDependencies": {
     "@atomictech/rehype-toc": "3.1.2",
@@ -72,9 +72,9 @@
     "lint-staged": "^17.6.0",
     "mock-fs": "^5.5.0",
     "next-ignite": "^0.10.11",
+    "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
     "oxlint-tsgolint": "^7.0.2005",
-    "prettier": "^3.9.10",
     "push-dir": "^0.4.1",
     "requireg": "^0.2.2",
     "rimraf": "^3.0.0",
@@ -95,10 +95,10 @@
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
-      "prettier --write"
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.{ts,tsx}": [
-      "prettier --parser typescript --write",
+      "oxfmt --no-error-on-unmatched-pattern",
       "oxlint --fix"
     ]
   }

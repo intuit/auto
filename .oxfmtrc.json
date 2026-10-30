@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "overrides": [
+    {
+      "files": ["*.md"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "scripts/template-plugin/",
+    "CHANGELOG.md",
+    "coverage",
+    ".next",
+    ".mdx-data",
+    "docs/out",
+    "docs/generated",
+    "dist/",
+    "test-plugin-malformed.js",
+    "lerna.json",
+    ".all-contributorsrc",
+    "pnpm-lock.yaml"
+  ]
+}

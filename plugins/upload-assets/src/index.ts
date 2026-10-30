@@ -254,9 +254,9 @@ export default class UploadAssetsPlugin implements IPlugin {
   }
 
   // prettier-ignore
-  private async getCanaryGitHubRelease(auto: Auto): Promise<GitHubRelease | undefined>
+  private async getCanaryGitHubRelease(auto: Auto): Promise<GitHubRelease | undefined>;
   // prettier-ignore
-  private async getCanaryGitHubRelease(auto: Auto, create: true): Promise<GitHubRelease>
+  private async getCanaryGitHubRelease(auto: Auto, create: true): Promise<GitHubRelease>;
   // prettier-ignore
   /** Get the release all the canaries are stored in */
   private async getCanaryGitHubRelease(auto: Auto, create = false): Promise<GitHubRelease | undefined> {

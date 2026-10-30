@@ -881,7 +881,8 @@ export default class Auto {
   inOldVersionBranch(): boolean {
     const branch = getCurrentBranch();
     const oldVersionBranchPrefix = this.config?.versionBranches as
-      string | undefined;
+      | string
+      | undefined;
 
     return Boolean(
       oldVersionBranchPrefix &&
