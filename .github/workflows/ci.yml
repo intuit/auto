@@ -23,6 +23,18 @@ jobs:
   #     - name: Build
   #       run: pnpm -r run build
 
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install dependencies
+        uses: pnpm/setup@v3
+      - name: Build
+        run: pnpm -r run build
+      - name: Check for unformatted files
+        run: pnpm format:diff
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +56,7 @@ jobs:
         uses: pnpm/setup@v3
       - name: Build
         run: pnpm -r run build
-      - name: Lint
+      - name: Type check
         run: pnpm type-check
 
   test:

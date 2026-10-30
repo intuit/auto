@@ -37,7 +37,8 @@
     "docs:build": "pnpm docs:generate && NODE_OPTIONS=--openssl-legacy-provider ignite build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",
-    "install-mac": "pnpm --filter auto bundle && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto"
+    "install-mac": "pnpm --filter auto bundle && gunzip -c ./packages/cli/binary/auto-macos.gz > /usr/local/bin/auto",
+    "format:diff": "prettier --cache --list-different '**/*.{js,md,mdx,ts,tsx,yml,mts}'"
   },
   "devDependencies": {
     "@atomictech/rehype-toc": "3.1.2",
