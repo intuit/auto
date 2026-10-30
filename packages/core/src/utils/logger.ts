@@ -6,11 +6,11 @@ export interface ILogger {
   /** The level at which to log messages */
   logLevel?: LogLevel;
   /** The default logger. Always on */
-  log: signale.Signale<signale.DefaultMethods>;
+  log: signale.Signale;
   /** The verbose log. Has more debug logs */
-  verbose: signale.Signale<signale.DefaultMethods>;
+  verbose: signale.Signale;
   /** The very verbose log. Has all debug logs */
-  veryVerbose: signale.Signale<signale.DefaultMethods>;
+  veryVerbose: signale.Signale;
 }
 
 /** Create a dummy logger for testing. */

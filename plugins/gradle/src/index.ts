@@ -162,6 +162,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
     });
 
+    // oxlint-disable-next-line no-warning-comments -- open question kept for follow-up
     // TODO: Is this where we can introspect PR files for .api?
     auto.hooks.beforeRun.tap(this.name, async () => {
       this.properties = await getProperties(
@@ -281,6 +282,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
       }
     );
 
+    // oxlint-disable-next-line no-warning-comments -- open question kept for follow-up
     // TODO: We should at least report the correct version to GH -- which could include next
     //       Maybe, we should publish to `version-SNAPSHOT` _and_ `version-next-SNAPSHOT`?
     auto.hooks.next.tapPromise(

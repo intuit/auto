@@ -53,9 +53,7 @@ const contributionTypes = [
 type Contribution = (typeof contributionTypes)[number];
 
 /** Determine if it's a valid contribution type */
-const isContribution = (
-  contribution: string | Contribution
-): contribution is Contribution =>
+const isContribution = (contribution: string): contribution is Contribution =>
   contributionTypes.includes(contribution as Contribution);
 
 /** Get an rc file if there is one. */
@@ -176,7 +174,7 @@ function getExtraContributors(body?: string | null) {
 /** Determine which files need to display contributors and generate contributors */
 function generateContributorReadme(
   config: AllContributorsRc,
-  contributors: any
+  contributors: Contributor[]
 ) {
   return Promise.all(
     (config.files || ["README.md"]).map(async (file) => {
@@ -487,6 +485,7 @@ export default class AllContributorsPlugin implements IPlugin {
     auto.logger.verbose.info("Found contributions:", authorContributions);
 
     // 2. Determine if contributor has update
+    // oxlint-disable-next-line typescript/await-thenable -- dropping `await` changes when each iteration runs
     for await (const [username, contributions] of Object.entries(
       authorContributions
     )) {

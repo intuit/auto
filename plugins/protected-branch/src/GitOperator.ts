@@ -8,7 +8,6 @@ import type { RestEndpointMethodTypes } from "@octokit/rest";
  */
 export class GitOperator {
   /** Initialize this class */
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private readonly git: Git,
     private readonly logger: ILogger

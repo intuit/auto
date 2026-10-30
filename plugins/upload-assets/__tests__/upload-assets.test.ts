@@ -387,7 +387,9 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease, deleteReleaseAsset },
-          paginate: vi.fn().mockResolvedValue(new Array(300).fill({})),
+          paginate: vi
+            .fn()
+            .mockResolvedValue(Array.from({ length: 300 }).fill({})),
         },
       },
     } as unknown as Auto);
@@ -425,7 +427,9 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
-          paginate: vi.fn().mockResolvedValue(new Array(303).fill({})),
+          paginate: vi
+            .fn()
+            .mockResolvedValue(Array.from({ length: 303 }).fill({})),
         },
       },
     } as unknown as Auto);
@@ -464,7 +468,9 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
-          paginate: vi.fn().mockResolvedValue(new Array(300).fill({})),
+          paginate: vi
+            .fn()
+            .mockResolvedValue(Array.from({ length: 300 }).fill({})),
         },
       },
     } as unknown as Auto);

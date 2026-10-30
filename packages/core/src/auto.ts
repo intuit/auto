@@ -48,7 +48,7 @@ import type {
 } from "./auto-args";
 import Changelog from "./changelog";
 import Config, { DEFAULT_PRERELEASE_BRANCHES } from "./config";
-import Git, { type IGitOptions, type IPRInfo } from "./git";
+import Git, { type IGitOptions } from "./git";
 import InteractiveInit from "./init";
 import LogParse, { type IExtendedCommit } from "./log-parse";
 import Release, { getVersionMap } from "./release";
@@ -1110,7 +1110,7 @@ export default class Auto {
           ...msg,
           target_url,
           sha,
-        } as IPRInfo);
+        });
 
         this.logger.log.success("Posted status to Pull Request.");
       } catch (error) {
@@ -1989,6 +1989,7 @@ export default class Auto {
   }
 
   /** Make a release over a range of commits */
+  // oxlint-disable-next-line complexity -- oxlint also counts default parameters and optional chains, which ESLint 7 didn't
   private async makeRelease(args: IReleaseOptions = {}) {
     const options = { ...this.getCommandDefault("release"), ...args };
     const { dryRun, from, to, useVersion, prerelease = false } = options;
@@ -2241,7 +2242,7 @@ export default class Auto {
 
     const author = await this.hooks.getRepository.promise();
 
-    if (!author || !author.owner || !author.repo) {
+    if (!author?.owner || !author.repo) {
       this.logger.log.error(
         endent`
           Cannot find project owner and repository name!
@@ -2349,12 +2350,21 @@ export default class Auto {
   }
 
   /** Get the default for a command from the config */
-  private getCommandDefault(name: string) {
+  private getCommandDefault(
+    name:
+      | "comment"
+      | "canary"
+      | "next"
+      | "changelog"
+      | "release"
+      | "latest"
+      | "shipit"
+  ) {
     if (!this.config) {
       return {};
     }
 
-    const commandConfig = this.config[name as keyof AutoRc];
+    const commandConfig = this.config[name];
     return typeof commandConfig === "object" ? commandConfig : {};
   }
 }

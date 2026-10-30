@@ -138,12 +138,8 @@ export default class Config {
    * @param extend - Path or name of config to find
    */
   async loadExtendConfig(extend: string) {
-    let config:
-      | ConfigObject
-      | {
-          /** package.json field with auto config */
-          auto: ConfigObject;
-        };
+    // The config itself, or a package.json with the config in its auto field
+    let config: ConfigObject;
 
     if (extend.endsWith(".js") || extend.endsWith(".mjs")) {
       throw new Error("Extended config cannot be a JavaScript file");

@@ -2,7 +2,6 @@ import envCi from "env-ci";
 import * as fs from "fs";
 import path from "path";
 import endent from "endent";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used as @memoize(); typescript-eslint 4 drops TS 5+ decorators from the AST
 import { Memoize as memoize } from "typescript-memoize";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
 import * as t from "io-ts";
@@ -513,7 +512,7 @@ const tagIndependentNextReleases = async (
   // Get all version updates
   const updates = await getIndependentNextReleases(bump, prereleaseBranch);
 
-  if (!updates || !updates.length) {
+  if (!updates?.length) {
     return;
   }
 
@@ -833,7 +832,7 @@ export default class NPMPlugin implements IPlugin {
             );
 
             // adds commits to changelog only if hash is resolvable
-            if (!commit || !commit.hash) {
+            if (!commit?.hash) {
               return line;
             }
 
@@ -1320,13 +1319,13 @@ export default class NPMPlugin implements IPlugin {
                 prereleaseBranch
               );
 
-              if (!packageUpdates || !packageUpdates.length) {
-                auto.logger.log.warn(
-                  "No independent package version updates found. No canary releases would be made"
-                );
-              } else {
+              if (packageUpdates?.length) {
                 packageUpdates.forEach((p) =>
                   preReleaseVersions.push(`${p.name}@${p.newVersion}`)
+                );
+              } else {
+                auto.logger.log.warn(
+                  "No independent package version updates found. No canary releases would be made"
                 );
               }
             } else {
@@ -1532,6 +1531,7 @@ export default class NPMPlugin implements IPlugin {
         ).split("\n");
 
         if (options.dryRun) {
+          // oxlint-disable-next-line typescript/no-floating-promises -- fire-and-forget today; awaiting or making it synchronous changes error handling
           newTags.map(async (tag) => {
             const lernaPackage = lernaPackages.find((p) =>
               tag.includes(p.name)

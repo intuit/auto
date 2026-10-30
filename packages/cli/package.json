@@ -38,7 +38,7 @@
   "scripts": {
     "build": "tsdown",
     "start": "npm run build -- -w",
-    "lint": "eslint src --ext .ts",
+    "lint": "oxlint src",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2",
     "bundle": "pnpm run inject-version && pnpm run package && pnpm run gzip",
     "inject-version": "node scripts/inject-version.js",

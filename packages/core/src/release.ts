@@ -6,7 +6,6 @@ import { inc, type ReleaseType } from "semver";
 import { promisify } from "util";
 
 import { AsyncSeriesBailHook, SyncHook } from "tapable";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used as @memoize(); typescript-eslint 4 drops TS 5+ decorators from the AST
 import { Memoize as memoize } from "typescript-memoize";
 import type { ICreateLabelsOptions } from "./auto-args";
 import Changelog from "./changelog";
@@ -478,7 +477,7 @@ export default class Release {
       q: `is:pr AND is:merged AND merged:>=${lastRelease.published_at}`,
     });
 
-    if (!prsSinceLastRelease || !prsSinceLastRelease.items) {
+    if (!prsSinceLastRelease?.items) {
       return [];
     }
 
@@ -511,7 +510,7 @@ export default class Release {
         this.git.getPr(modifiedCommit.pullRequest.number)
       );
 
-      if (err || !info || !info.data) {
+      if (err || !info?.data) {
         return modifiedCommit;
       }
 

@@ -1,0 +1,284 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "jest",
+    "vitest",
+    "jsdoc"
+  ],
+
+  "categories": {
+    "correctness": "warn"
+  },
+
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "warn"
+  },
+
+  "ignorePatterns": [
+    "**/node_modules",
+    "**/dist",
+    // A fixture that is deliberately not valid JavaScript
+    "packages/core/src/utils/__tests__/test-plugin-malformed.js"
+  ],
+
+  // The correctness category is the starting point. On top of it, each rule
+  // below carries over a rule from the old ESLint config or one of its presets.
+  "rules": {
+    /* Correctness rules that only come with opting into a plugin, and that the
+       old config didn't enable */
+
+    "vitest/hoisted-apis-on-top": "off",
+    "vitest/no-conditional-tests": "off",
+    "vitest/prefer-snapshot-hint": "off",
+    "vitest/require-awaited-expect-poll": "off",
+    "vitest/require-local-test-context-for-concurrent-snapshots": "off",
+    "vitest/require-mock-type-parameters": "off",
+    "vitest/require-to-throw-message": "off",
+    "vitest/warn-todo": "off",
+    "jsdoc/check-property-names": "off",
+    "jsdoc/no-defaults": "off",
+    "jsdoc/require-property": "off",
+    "jsdoc/require-property-description": "off",
+    "jsdoc/require-property-name": "off",
+    "jsdoc/require-property-type": "off",
+    "jsdoc/require-yields": "off",
+
+    /* The jest plugin is only on for the rules vitest doesn't have. These are
+       its copies of vitest rules, which would report everything twice. */
+
+    "jest/expect-expect": "off",
+    "jest/no-conditional-expect": "off",
+    "jest/no-disabled-tests": "off",
+    "jest/no-focused-tests": "off",
+    "jest/no-standalone-expect": "off",
+    "jest/prefer-snapshot-hint": "off",
+    "jest/require-to-throw-message": "off",
+    "jest/valid-describe-callback": "off",
+    "jest/valid-expect": "off",
+    "jest/valid-expect-in-promise": "off",
+    "jest/valid-title": "off",
+
+    /* Rules set in the old .eslintrc */
+
+    "complexity": ["error", { "max": 25 }],
+    "vitest/prefer-strict-equal": "error",
+    "vitest/prefer-spy-on": "error",
+    "vitest/no-standalone-expect": "error",
+    "jest/no-export": "error",
+    "vitest/no-duplicate-hooks": "warn",
+    "vitest/prefer-to-have-length": "warn",
+    "typescript/no-unnecessary-type-arguments": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "typescript/no-unnecessary-boolean-literal-compare": "error",
+    "typescript/no-unnecessary-qualifier": "error",
+    "typescript/no-this-alias": "error",
+    "no-useless-constructor": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/prefer-reduce-type-parameter": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/prefer-for-of": "error",
+    "typescript/prefer-optional-chain": "error",
+    "typescript/prefer-readonly": "error",
+    "typescript/array-type": ["error", { "default": "array-simple" }],
+    "no-unused-vars": ["error", { "caughtErrors": "none" }],
+    "jsdoc/check-tag-names": "warn",
+    "jsdoc/implements-on-classes": "warn",
+    "jsdoc/require-param-description": "warn",
+    "jsdoc/require-returns-description": "warn",
+
+    /* plugin:@typescript-eslint/recommended */
+
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/ban-types": "error",
+    "no-array-constructor": "error",
+    "no-empty-function": "error",
+    "typescript/no-empty-interface": "error",
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-extra-non-null-assertion": "error",
+    "typescript/no-inferrable-types": "error",
+    "typescript/no-misused-new": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-non-null-asserted-optional-chain": "error",
+    "typescript/no-var-requires": "error",
+    "typescript/prefer-namespace-keyword": "error",
+    "typescript/triple-slash-reference": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+
+    /* plugin:jest/recommended (mapped to the vitest rules where oxlint has them) */
+
+    "vitest/expect-expect": "warn",
+    "vitest/no-commented-out-tests": "warn",
+    "vitest/no-conditional-expect": "error",
+    "vitest/no-disabled-tests": "warn",
+    "jest/no-done-callback": "error",
+    "vitest/no-focused-tests": "error",
+    "vitest/no-identical-title": "error",
+    "vitest/no-interpolation-in-snapshots": "error",
+    "vitest/no-mocks-import": "error",
+    "vitest/no-test-prefixes": "error",
+    "vitest/valid-expect-in-promise": "error",
+    "vitest/valid-expect": "error",
+    "vitest/valid-title": "error",
+    "vitest/valid-describe-callback": "error",
+
+    /* plugin:import/errors and plugin:import/warnings */
+
+    "import/no-named-as-default": "warn",
+    "import/no-named-as-default-member": "warn",
+    "import/no-duplicates": "warn",
+    "import/namespace": "error",
+    "import/default": "error",
+    "import/export": "error",
+
+    /* eslint-config-xo */
+
+    "for-direction": "error",
+    "no-async-promise-executor": "error",
+    "no-await-in-loop": "error",
+    "no-compare-neg-zero": "error",
+    "no-cond-assign": "error",
+    "no-constant-condition": "error",
+    "no-control-regex": "error",
+    "no-debugger": "error",
+    "no-dupe-else-if": "error",
+    "no-duplicate-case": "error",
+    "no-empty-character-class": "error",
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "no-ex-assign": "error",
+    "no-extra-boolean-cast": "error",
+    "no-inner-declarations": "error",
+    "no-invalid-regexp": "error",
+    "no-irregular-whitespace": "error",
+    "no-loss-of-precision": "error",
+    "no-misleading-character-class": "error",
+    "no-promise-executor-return": "error",
+    "no-prototype-builtins": "error",
+    "no-regex-spaces": "error",
+    "no-sparse-arrays": "error",
+    "no-template-curly-in-string": "error",
+    "no-unreachable-loop": "error",
+    "no-unsafe-finally": "error",
+    "use-isnan": "error",
+    "accessor-pairs": [
+      "error",
+      {
+        "enforceForClassMembers": true,
+        "getWithoutSet": false,
+        "setWithoutGet": true
+      }
+    ],
+    "array-callback-return": [
+      "error",
+      { "allowImplicit": true, "checkForEach": false }
+    ],
+    "block-scoped-var": "error",
+    "default-case": "error",
+    "eqeqeq": "error",
+    "grouped-accessor-pairs": ["error", "getBeforeSet"],
+    "guard-for-in": "error",
+    "no-alert": "error",
+    "no-caller": "error",
+    "no-case-declarations": "error",
+    "no-constructor-return": "error",
+    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-empty-pattern": "error",
+    "no-eq-null": "error",
+    "no-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-extra-label": "error",
+    "no-fallthrough": "error",
+    "no-global-assign": "error",
+    "no-implicit-coercion": "error",
+    "no-implicit-globals": "error",
+    "no-implied-eval": "error",
+    "no-iterator": "error",
+    "no-labels": "error",
+    "no-lone-blocks": "error",
+    "no-multi-str": "error",
+    "no-new-func": "error",
+    "no-new-wrappers": "error",
+    "no-new": "error",
+    "no-proto": "error",
+    "no-return-assign": ["error", "always"],
+    "no-script-url": "error",
+    "no-self-assign": ["error", { "props": true }],
+    "no-self-compare": "error",
+    "no-sequences": "error",
+    "no-throw-literal": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unused-expressions": "error",
+    "no-unused-labels": "error",
+    "no-useless-call": "error",
+    "no-useless-concat": "error",
+    "no-useless-escape": "error",
+    "no-useless-return": "error",
+    "no-void": "error",
+    "no-warning-comments": "warn",
+    "no-with": "error",
+    "prefer-promise-reject-errors": ["error", { "allowEmptyReject": true }],
+    "prefer-regex-literals": "error",
+    "radix": "error",
+    "yoda": "error",
+    "no-delete-var": "error",
+    "no-label-var": "error",
+    "no-restricted-globals": ["error", "event"],
+    "no-shadow-restricted-names": "error",
+    "no-restricted-imports": [
+      "error",
+      "domain",
+      "freelist",
+      "smalloc",
+      "sys",
+      "colors"
+    ],
+    "func-name-matching": ["error", { "considerPropertyDescriptor": true }],
+    "func-names": ["error", "never"],
+    "max-depth": ["warn", { "max": 4 }],
+    "max-nested-callbacks": ["warn", { "max": 4 }],
+    "max-params": ["warn", { "max": 4 }],
+    "new-cap": [
+      "error",
+      { "newIsCap": true, "capIsNew": true, "properties": true }
+    ],
+    "no-lonely-if": "error",
+    "no-multi-assign": "error",
+    "no-negated-condition": "error",
+    "no-unneeded-ternary": "error",
+    "one-var": ["error", "never"],
+    "operator-assignment": ["error", "always"],
+    "prefer-exponentiation-operator": "error",
+    "no-class-assign": "error",
+    "no-useless-computed-key": ["error", { "enforceForClassMembers": true }],
+    "no-useless-rename": "error",
+    "require-yield": "error",
+    "symbol-description": "error",
+    "typescript/dot-notation": "error",
+    "no-object-constructor": "error",
+    "unicorn/no-new-buffer": "error"
+  },
+
+  "overrides": [
+    {
+      "files": ["**/*.test.*"],
+      "rules": {
+        "import/namespace": "off",
+        "no-import-assign": "off",
+        "no-empty-function": "off",
+        "typescript/no-explicit-any": "off",
+        "max-nested-callbacks": "off",
+        // expect(object.method).toHaveBeenCalled() reads a method unbound
+        "typescript/unbound-method": "off"
+      }
+    }
+  ]
+}

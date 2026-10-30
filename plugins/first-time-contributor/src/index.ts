@@ -87,10 +87,7 @@ export default class FirstTimeContributorPlugin implements IPlugin {
               }
             `);
 
-            if (
-              userCommits &&
-              userCommits.repository.object.history.edges.length === 0
-            ) {
+            if (userCommits?.repository.object.history.edges.length === 0) {
               newContributors.push(author);
             }
           }

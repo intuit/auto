@@ -149,7 +149,7 @@ export default class TwitterPlugin implements IPlugin {
 
         const versionBump = diff(newVersion, lastRelease) || "patch";
 
-        if (isGreaterThan(this.options.threshold as ReleaseType, versionBump)) {
+        if (isGreaterThan(this.options.threshold, versionBump)) {
           return;
         }
 

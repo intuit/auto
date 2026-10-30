@@ -89,11 +89,8 @@ describe("Protected-Branch Plugin", () => {
         invalidKey: "value",
       });
       expect(res).toHaveLength(1);
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       expect(res && res[0]).toContain(plugin.name);
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       expect(res && res[0]).toContain("Found unknown configuration keys:");
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       expect(res && res[0]).toContain("invalidKey");
     });
   });
@@ -104,7 +101,6 @@ describe("Protected-Branch Plugin", () => {
       const { hooks } = setupProtectedBranchPlugin(checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["protected-branch", {}]],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
       expect(checkEnv).toHaveBeenCalledWith(
         "protected-branch",
@@ -117,7 +113,6 @@ describe("Protected-Branch Plugin", () => {
       const { hooks } = setupProtectedBranchPlugin(checkEnv);
       await hooks.beforeRun.promise({
         plugins: [["protected-branch", { reviewerToken: "token" }]],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
       expect(checkEnv).not.toHaveBeenCalled();
     });
@@ -203,7 +198,6 @@ describe("Protected-Branch Plugin", () => {
 
     test("should do nothing without reviewerToken", async () => {
       const { hooks, plugin } = setupProtectedBranchPlugin();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (plugin as any).options.reviewerToken = undefined;
 
       await expect(hooks.publish.promise(options)).resolves.toBeUndefined();
@@ -232,7 +226,6 @@ describe("Protected-Branch Plugin", () => {
       const ciChecks = ["ci", "release"];
 
       const { hooks, plugin } = setupProtectedBranchPlugin();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (plugin as any).options.requiredStatusChecks = ciChecks;
 
       doMockPrApproval();

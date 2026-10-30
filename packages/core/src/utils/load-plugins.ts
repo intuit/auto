@@ -218,7 +218,8 @@ export function loadPlugin(
       return new plugin.default(options);
     }
 
-    return new (plugin as IPluginConstructor)(options);
+    const Plugin = plugin as IPluginConstructor;
+    return new Plugin(options);
   } catch (error) {
     logger.log.error(
       `Plugin at the following path encountered an error: ${pluginPath}`

@@ -92,7 +92,7 @@ export default class VersionFilePlugin implements IPlugin {
       publish: ["release"],
       canary: ["snapshot"],
       next: ["snapshot"],
-      ...(options.publishScriptReleaseTypeArgs ?? {}),
+      ...options.publishScriptReleaseTypeArgs,
     };
   }
 
@@ -217,6 +217,7 @@ export default class VersionFilePlugin implements IPlugin {
       async (preReleaseVersions, { bump }) => {
         // Figure out next version
         const lastRelease = await auto.git!.getLatestRelease();
+        // oxlint-disable-next-line typescript/await-thenable -- dropping `await` changes when the rest of the hook runs
         const currentBranch = await getCurrentBranch();
 
         const latestTagInBranch = await (currentBranch === auto.baseBranch

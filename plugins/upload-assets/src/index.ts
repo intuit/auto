@@ -314,11 +314,13 @@ export default class UploadAssetsPlugin implements IPlugin {
       return;
     }
 
+    /* oxlint-disable typescript/no-base-to-string, typescript/restrict-template-expressions -- logs [object Object] for each asset today; fixing the message changes output */
     auto.logger.log.info(endent`
       Deleting old canary assets:
 
       ${assetsToDelete.map((asset) => `  - ${asset}`).join("\n")}
     `);
+    /* oxlint-enable typescript/no-base-to-string, typescript/restrict-template-expressions */
 
     await Promise.all(
       assetsToDelete.map(async (assetToDelete) => {
