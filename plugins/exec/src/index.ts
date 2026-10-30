@@ -24,10 +24,10 @@ function trim(val: string | undefined) {
 }
 
 /** Convert a "makeHooks" function into an io-ts interface */
-function makeHooksType<HookObject, ExcludedHook extends keyof HookObject>(
-  hookCreatorFn: () => HookObject,
-  exclude: ExcludedHook[]
-) {
+function makeHooksType<
+  HookObject extends object,
+  ExcludedHook extends keyof HookObject,
+>(hookCreatorFn: () => HookObject, exclude: ExcludedHook[]) {
   type HookType = keyof HookObject;
   const hooks = Object.keys(hookCreatorFn()) as HookType[];
 
@@ -71,7 +71,7 @@ const createEnv = (args: any[]) => ({
 /** Wraps execSync around debugging and error handling */
 const runExecSync = (
   command: string,
-  options: ExecSyncOptionsWithStringEncoding | undefined,
+  options: ExecSyncOptionsWithStringEncoding,
   auto: Auto
 ): string | undefined => {
   let execResult;
@@ -88,7 +88,7 @@ const runExecSync = (
 
     execResult = trim(execSync(command, options));
   } catch (e) {
-    if (e?.code === "E2BIG") {
+    if ((e as NodeJS.ErrnoException | undefined)?.code === "E2BIG") {
       auto.logger.log.error(endent`
         Received E2BIG from execSync.
 

@@ -71,7 +71,7 @@ function reporter<T>(validation: t.Validation<T>) {
 
     return {
       path,
-      expectedType: error.context[error.context.length - 1].type.name,
+      expectedType: error.context[error.context.length - 1]!.type.name,
       value: error.value,
     };
   });
@@ -259,12 +259,12 @@ export const validateIoConfiguration =
 
       if (matchingMissingMember && "left" in matchingMissingMember) {
         const correct = Object.keys(
-          matchingMissingMember.left[0].context[0].actual as any
+          matchingMissingMember.left[0]!.context[0]!.actual as any
         );
         const missing =
-          matchingMissingMember.left[0].context[
-            matchingMissingMember.left[0].context.length - 1
-          ].key;
+          matchingMissingMember.left[0]!.context[
+            matchingMissingMember.left[0]!.context.length - 1
+          ]!.key;
 
         return [
           `${errorPath(

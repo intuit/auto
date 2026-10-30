@@ -462,7 +462,7 @@ export default class Changelog {
           return;
         }
 
-        const depth = getHeaderDepth(lines[notesStart]);
+        const depth = getHeaderDepth(lines[notesStart]!);
         visited.add(pr.number);
         let notes = "";
 

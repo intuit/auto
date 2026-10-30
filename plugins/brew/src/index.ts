@@ -67,7 +67,7 @@ export default class BrewPlugin implements IPlugin {
       const version = await auto.git.getLatestTagInBranch();
       const sha = execSync(`shasum --algorithm 256 ${executable}`, {
         encoding: "utf8",
-      }).split(" ")[0];
+      }).split(" ")[0]!;
 
       auto.logger.log.info(
         `Updating "${name}" brew formula: ${version}#${sha}`

@@ -1,4 +1,5 @@
 import type { RestEndpointMethodTypes } from "@octokit/rest";
+import type { Agent } from "http";
 import { githubToSlack, url } from "@atomist/slack-messages";
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -125,7 +126,7 @@ export function convertToBlocks(
       currentMessage.push(createSpacerBlock());
       currentMessage.push(createDividerBlock());
     } else if (line.startsWith("```")) {
-      const [, language] = line.match(/```(\S+)/) || ["", "detect"];
+      const [, language = "detect"] = line.match(/```(\S+)/) || ["", "detect"];
       const lines: string[] = [];
 
       for (const codeBlockLine of lineIterator) {
@@ -381,7 +382,7 @@ export default class SlackPlugin implements IPlugin {
     const releaseUrl =
       urls.length > 1
         ? urls.join(", ")
-        : `${url(releases[0].data.html_url, "View Release")}`;
+        : `${url(releases[0]!.data.html_url, "View Release")}`;
 
     const atTargetTxt = this.options.atTarget
       ? `@${this.options.atTarget} ${releaseUrl}`
@@ -431,7 +432,7 @@ export default class SlackPlugin implements IPlugin {
                 "Content-Type": "application/json; charset=utf-8",
                 Authorization: `Bearer ${token}`,
               },
-              agent,
+              agent: agent as Agent | undefined,
             });
           }, Promise.resolve());
         } else {
@@ -450,7 +451,7 @@ export default class SlackPlugin implements IPlugin {
                 "application/x-www-form-urlencoded; charset=utf-8",
               Authorization: `Bearer ${token}`,
             },
-            agent,
+            agent: agent as Agent | undefined,
           });
         }
       }, Promise.resolve());
@@ -465,7 +466,7 @@ export default class SlackPlugin implements IPlugin {
           channel: this.options.channel,
         }),
         headers: { "Content-Type": "application/json" },
-        agent,
+        agent: agent as Agent | undefined,
       });
     }
 

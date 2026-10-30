@@ -90,7 +90,7 @@ getGitLog.mockReturnValue([]);
 const execSpy = vi.fn();
 // @ts-ignore
 vi.mock("../utils/exec-promise.ts", () => ({
-  default: (...args) => execSpy(...args),
+  default: (...args: unknown[]) => execSpy(...args),
 }));
 
 const currentBranch = vi.fn();

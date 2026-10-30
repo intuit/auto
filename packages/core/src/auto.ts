@@ -992,7 +992,7 @@ export default class Auto {
         });
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${(error as { status?: number }).status}`
         );
       }
 
@@ -1094,7 +1094,7 @@ export default class Auto {
       }
     } catch (error) {
       msg = {
-        description: error.message,
+        description: (error as Error).message,
         state: "error",
       };
     }
@@ -1115,7 +1115,7 @@ export default class Auto {
         this.logger.log.success("Posted status to Pull Request.");
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${(error as { status?: number }).status}`
         );
       }
     }

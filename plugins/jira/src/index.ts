@@ -57,7 +57,7 @@ export function parseJira(commit: IExtendedCommit): IJiraCommit {
   return {
     ...commit,
     jira: {
-      number: matches.map((match) => match[1]),
+      number: matches.map((match) => match[1]!),
     },
   };
 }

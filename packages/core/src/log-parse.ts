@@ -78,13 +78,13 @@ export function parsePR(commit: IExtendedCommit): IExtendedCommit {
       number: Number(prMatch[1]),
       base: prMatch[2],
     },
-    subject: prMatch[3].trim(),
+    subject: prMatch[3]!.trim(),
   };
 }
 
 /** Parse the PR information for the squashed commit message */
 export function parseSquashPR(commit: IExtendedCommit): IExtendedCommit {
-  const firstLine = commit.subject.split("\n")[0];
+  const firstLine = commit.subject.split("\n")[0]!;
   const squashMerge = /\(#(\d+)\)$/;
 
   const squashMergeMatch = firstLine?.match(squashMerge);

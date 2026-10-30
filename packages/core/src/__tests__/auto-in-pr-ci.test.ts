@@ -66,7 +66,9 @@ describe("canary in ci", () => {
     auto.hooks.canary.tap("test", canary);
     const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
 
     await auto.canary();
     expect(canary).toHaveBeenCalledWith(
@@ -89,7 +91,9 @@ describe("canary in ci", () => {
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
     const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1 });
@@ -111,7 +115,9 @@ describe("canary in ci", () => {
     auto.git!.addToPrBody = addToPrBody;
     const comment = vi.fn();
     auto.comment = comment;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1, target: "comment" });
@@ -134,7 +140,9 @@ describe("canary in ci", () => {
     auto.git!.addToPrBody = addToPrBody;
     const prStatus = vi.fn();
     auto.prStatus = prStatus;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1, target: "status" });
@@ -157,7 +165,9 @@ describe("canary in ci", () => {
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
     const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
 
     await auto.canary({ pr: 123, build: 1, message: "false" });
     expect(process.exit).toHaveBeenCalled();
@@ -175,7 +185,9 @@ describe("canary in ci", () => {
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
     const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
     auto.hooks.canary.tap(
       "test",
       ({ canaryIdentifier }) => `1.2.4-${canaryIdentifier}`
@@ -196,7 +208,9 @@ describe("canary in ci", () => {
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
     const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
     auto.hooks.canary.tap(
       "test",
       ({ canaryIdentifier }) => `1.2.4-${canaryIdentifier}`
@@ -217,7 +231,9 @@ describe("shipit in ci", () => {
     await auto.loadConfig();
 
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-    vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
+    vi.spyOn(auto.git!, "addToPrBody").mockImplementation(
+      () => undefined as any
+    );
     auto.release!.getCommitsInRelease = () => Promise.resolve([]);
     auto.release!.getCommits = () => Promise.resolve([]);
     const canary = vi.fn();
@@ -257,7 +273,9 @@ describe("next in ci", () => {
     const afterRelease = vi.fn();
     auto.hooks.afterRelease.tap("test", afterRelease);
     auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(
+      () => undefined as any
+    );
 
     await auto.next({});
     expect(prBody).toHaveBeenCalledWith({

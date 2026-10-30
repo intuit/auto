@@ -126,7 +126,12 @@ export default class ProtectedBranchPlugin implements IPlugin {
         });
       } catch (e) {
         // Silently ignore reference not found error since the ref might already be deleted
-        if (e?.status !== 422 || e.message !== "Reference does not exist") {
+        const error = e as { status?: number; message?: string } | undefined;
+
+        if (
+          error?.status !== 422 ||
+          error.message !== "Reference does not exist"
+        ) {
           throw e;
         }
       }

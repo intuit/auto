@@ -135,7 +135,9 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
           if (result?.level !== null && result?.level !== undefined) {
             const bump =
-              VERSIONS[result.level] || this.options.defaultReleaseType;
+              VERSIONS[result.level] ||
+              (this.options.defaultReleaseType as
+                (typeof VERSIONS)[number] | "skip");
             return bump;
           }
         };
@@ -199,7 +201,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
       const label = auto.semVerLabels?.get(bumpOrSkip);
 
       if (label) {
-        await auto.git.addLabelToPr(pr.number, label[0]);
+        await auto.git.addLabelToPr(pr.number, label[0]!);
       }
     });
 
@@ -265,7 +267,7 @@ export default class ConventionalCommitsPlugin implements IPlugin {
               `
             );
 
-            commit.labels = [...commit.labels, incrementLabel[0]];
+            commit.labels = [...commit.labels, incrementLabel[0]!];
           }
         } catch (error) {
           auto.logger.verbose.info(

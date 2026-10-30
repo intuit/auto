@@ -75,7 +75,7 @@ const makeTweet = ({
       .replace("%link", url);
 
   let truncatedNotes = releaseNotes
-    .split("#### Authors")[0]
+    .split("#### Authors")[0]!
     .replace(/#### /gm, "")
     .replace(/\(?\[\S+\]\(\S+\)/gm, "")
     .trim();

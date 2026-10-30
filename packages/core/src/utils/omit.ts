@@ -1,7 +1,7 @@
 import fromEntries from "fromentries";
 
 /** Omit properties from an object */
-export const omit = <Props, Prop extends keyof Props>(
+export const omit = <Props extends object, Prop extends keyof Props>(
   obj: Props,
   keys: Prop[]
 ) =>

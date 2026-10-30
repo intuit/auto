@@ -156,7 +156,7 @@ describe("generateReleaseNotes", () => {
     const normalized = await logParse.normalizeCommits([
       makeCommitFromMsg("Some Feature (#1234)", { labels: ["minor"] }),
     ]);
-    normalized[0].authors[0].username = "invalid-email-address";
+    normalized[0]!.authors[0]!.username = "invalid-email-address";
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
@@ -287,7 +287,7 @@ describe("generateReleaseNotes", () => {
       }),
     ]);
 
-    normalized[0].authors[0].username = "adam";
+    normalized[0]!.authors[0]!.username = "adam";
 
     expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
   });
@@ -365,7 +365,7 @@ describe("generateReleaseNotes", () => {
   test("should include PR-less commits as the default label", async () => {
     const options = testOptions();
     options.labels[1] = {
-      ...options.labels[1],
+      ...options.labels[1]!,
       default: true,
     };
     const changelog = new Changelog(dummyLog(), options);
@@ -579,7 +579,7 @@ describe("generateReleaseNotes", () => {
     expect(
       await changelog.generateReleaseNotes([
         {
-          ...commits[0],
+          ...commits[0]!,
           hash: "1",
           files: [],
           authorName: "Adam Dierkens",
@@ -682,7 +682,7 @@ describe("generateReleaseNotes", () => {
         labels: ["minor"],
       },
     ]);
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.pullRequest!.body = endent`
       # Why
 
       Some words
@@ -713,7 +713,7 @@ describe("generateReleaseNotes", () => {
         labels: ["minor"],
       },
     ]);
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.pullRequest!.body = endent`
       ## Release Notes
 
       Here is how you upgrade
@@ -740,7 +740,7 @@ describe("generateReleaseNotes", () => {
         labels: ["minor"],
       },
     ]);
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.pullRequest!.body = endent`
       # Why
 
       Some words
@@ -775,7 +775,7 @@ describe("generateReleaseNotes", () => {
         labels: ["minor"],
       },
     ]);
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.pullRequest!.body = endent`
       # Why
 
       Some words
@@ -799,8 +799,8 @@ describe("generateReleaseNotes", () => {
         labels: ["minor"],
       },
     ]);
-    commits[0].authors[0].username = "renovate-bot";
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.authors[0]!.username = "renovate-bot";
+    commits[0]!.pullRequest!.body = endent`
       # Why
 
       Some words
@@ -841,7 +841,7 @@ describe("generateReleaseNotes", () => {
         labels: ["minor", "no-notes"],
       },
     ]);
-    commits[0].pullRequest!.body = endent`
+    commits[0]!.pullRequest!.body = endent`
       # Why
 
       Some words

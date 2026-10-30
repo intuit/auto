@@ -154,17 +154,21 @@ function getExtraContributors(body?: string | null) {
         return;
       }
 
-      const [, username, contributions] = contributor;
+      const [, username, contributions] = contributor as [
+        string,
+        string,
+        string,
+      ];
 
       if (!authorContributions[username]) {
         authorContributions[username] = new Set();
       }
 
       contributions
-        ?.split(",")
+        .split(",")
         .map((contribution) => contribution.trim())
         .forEach((contribution) =>
-          authorContributions[username].add(contribution)
+          authorContributions[username]!.add(contribution)
         );
     });
 
@@ -528,10 +532,7 @@ export default class AllContributorsPlugin implements IPlugin {
       // if the all-contributors has not been generated ... generate it
       try {
         // test if the first file in the list of files has been init
-        const file = path.join(
-          process.cwd(),
-          config.files ? config.files[0] : "README.md"
-        );
+        const file = path.join(process.cwd(), config.files?.[0] ?? "README.md");
 
         const displayFile = file ? fs.readFileSync(file, "utf8") : "";
 

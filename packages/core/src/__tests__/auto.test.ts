@@ -346,7 +346,7 @@ describe("Auto", () => {
       await auto.loadConfig();
 
       vi.spyOn(auto.release!, "addLabelsToProject").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       await auto.createLabels();
       expect(auto.release!.addLabelsToProject).toMatchSnapshot();
@@ -878,7 +878,7 @@ describe("Auto", () => {
       const addToChangelog = vi.fn();
       auto.release!.addToChangelog = addToChangelog;
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
 
       await auto.changelog({ from: "v1.0.0", dryRun: true });
@@ -896,7 +896,7 @@ describe("Auto", () => {
       const beforeCommitChangelog = vi.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
 
       await auto.changelog({ from: "v1.0.0", noGitCommit: true });
@@ -913,7 +913,7 @@ describe("Auto", () => {
       const addToChangelog = vi.fn();
       auto.release!.addToChangelog = addToChangelog;
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
 
       await auto.changelog({ from: "v1.0.0", dryRun: true, title: "foo" });
@@ -981,7 +981,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1020,7 +1022,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease();
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1059,7 +1063,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({ to: "abc" });
 
@@ -1088,7 +1094,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({ to: "v1.2.5" });
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1116,7 +1124,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({ prerelease: true });
       expect(auto.release!.generateReleaseNotes).toHaveBeenCalledWith(
@@ -1155,7 +1165,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({
         from: "v1.2.0",
@@ -1196,7 +1208,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({
         useVersion: "v1.3.0",
@@ -1237,7 +1251,9 @@ describe("Auto", () => {
       auto.hooks.getPreviousVersion.tap("test", () => "1.2.4");
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.runRelease({
         useVersion: "1.2.3+1",
@@ -1282,13 +1298,17 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
-      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
+      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(
+        () => undefined as any
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
       const canary = vi.fn();
       canary.mockReturnValueOnce("1.2.3");
       auto.hooks.canary.tap("test", canary);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.canary({ pr: 123, build: 1 });
       expect(canary).toHaveBeenCalledWith(
@@ -1308,12 +1328,16 @@ describe("Auto", () => {
       await auto.loadConfig();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
-      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
+      vi.spyOn(auto.git!, "addToPrBody").mockImplementation(
+        () => undefined as any
+      );
       auto.release!.getCommitsInRelease = () =>
         Promise.resolve([makeCommitFromMsg("Test Commit")]);
       const canary = vi.fn();
       auto.hooks.canary.tap("test", canary);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.canary();
       expect(canary).toHaveBeenCalledWith(
@@ -1330,7 +1354,7 @@ describe("Auto", () => {
       auto.checkClean = () => Promise.resolve(true);
       auto.logger = dummyLog();
       await auto.loadConfig();
-      vi.spyOn(auto, "prBody").mockImplementation(() => undefined);
+      vi.spyOn(auto, "prBody").mockImplementation(() => undefined as any);
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
       auto.git!.getSha = () => Promise.resolve("abc");
       auto.release!.getCommitsInRelease = () =>
@@ -1339,7 +1363,9 @@ describe("Auto", () => {
       const canary = vi.fn();
       canary.mockReturnValue({ error: "ooops" });
       auto.hooks.canary.tap("test", canary);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.canary({ pr: 123, build: 1 });
       expect(auto.prBody).not.toHaveBeenCalled();
@@ -1446,7 +1472,9 @@ describe("Auto", () => {
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
       auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
@@ -1472,7 +1500,9 @@ describe("Auto", () => {
       const afterRelease = vi.fn();
       auto.hooks.afterRelease.tap("test", afterRelease);
       auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.next({});
       expect(afterRelease).toHaveBeenCalled();
@@ -1499,7 +1529,9 @@ describe("Auto", () => {
 
       const next = vi.fn();
       auto.hooks.next.tap("test", next);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.next({});
       expect(next).not.toHaveBeenCalled();
@@ -1526,7 +1558,9 @@ describe("Auto", () => {
 
       const next = vi.fn();
       auto.hooks.next.tap("test", next);
-      vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+      vi.spyOn(auto.release!, "getCommits").mockImplementation(
+        () => undefined as any
+      );
 
       await auto.next({ force: true });
       expect(next).toHaveBeenCalled();
@@ -1576,13 +1610,13 @@ describe("Auto", () => {
           data: { html_url: "https://github.com/my/repo/release" },
         } as any);
       vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       const afterShipIt = vi.fn();
       auto.hooks.afterShipIt.tap("test", afterShipIt);
@@ -1637,14 +1671,14 @@ describe("Auto", () => {
           data: { html_url: "https://github.com/my/repo/release" },
         } as any);
       vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       const addToChangelog = vi
         .spyOn(auto.release!, "addToChangelog")
-        .mockImplementation(() => undefined);
+        .mockImplementation(() => undefined as any);
       const beforeCommitChangelog = vi.fn();
       auto.hooks.beforeCommitChangelog.tap("test", beforeCommitChangelog);
       const afterChangelog = vi.fn();
@@ -1684,15 +1718,15 @@ describe("Auto", () => {
       // @ts-ignore
       auto.makeChangelog = () => Promise.resolve();
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined);
+      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined as any);
       vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       const afterShipIt = vi.fn();
       auto.hooks.afterShipIt.tap("test", afterShipIt);
@@ -1709,15 +1743,15 @@ describe("Auto", () => {
       await auto.loadConfig();
 
       auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined);
+      vi.spyOn(auto.git!, "publish").mockImplementation(() => undefined as any);
       vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       vi.spyOn(auto.release!, "addToChangelog").mockImplementation(
-        () => undefined
+        () => undefined as any
       );
       const spy = vi.fn();
       auto.hooks.publish.tap("test", spy);

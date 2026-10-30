@@ -293,7 +293,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
-          : prereleaseBranches[0];
+          : prereleaseBranches[0]!;
         const lastRelease = await auto.git?.getLatestRelease();
         const current =
           (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||
