@@ -1,7 +1,7 @@
 import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
 
-jest.mock("env-ci", () => () => ({ pr: 123 }));
+vi.mock("env-ci", () => ({ default: () => ({ pr: 123 }) }));
 
 const defaults = {
   owner: "foo",
@@ -10,14 +10,14 @@ const defaults = {
 
 process.env.GH_TOKEN = "XXXX";
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
+      get: vi.fn().mockReturnValue({}),
     };
 
     hook = {
@@ -34,7 +34,7 @@ describe("comment", () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    const createComment = jest.fn();
+    const createComment = vi.fn();
     auto.git!.createComment = createComment;
 
     await auto.comment({ message: "foo" });

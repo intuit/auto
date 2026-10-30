@@ -2,8 +2,8 @@ import endent from "endent";
 import execPromise from "../exec-promise";
 import getLernaPackages from "../get-lerna-packages";
 
-const exec = jest.fn();
-jest.mock("../exec-promise");
+const exec = vi.fn();
+vi.mock("../exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 

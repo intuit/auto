@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`canary don't force publish canaries 1`] = `
-Object {
+exports[`canary > don't force publish canaries 1`] = `
+{
   "details": ":sparkles: Test out this PR locally via:
 
 \`\`\`bash

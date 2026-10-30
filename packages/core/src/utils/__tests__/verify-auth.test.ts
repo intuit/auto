@@ -1,8 +1,9 @@
+import type { Mock } from "vitest";
 import verifyAuth from "../verify-auth";
 import childProcess from "child_process";
 
-const spawn = childProcess.spawn as jest.Mock;
-jest.mock("child_process");
+const spawn = childProcess.spawn as Mock;
+vi.mock("child_process");
 
 describe("verify-auth", () => {
   test("should handle error", async () => {

@@ -34,7 +34,7 @@
     "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2 --config ../../package.json"
+    "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "dependencies": {
     "@auto-it/bot-list": "workspace:*",
@@ -90,7 +90,6 @@
     "@types/dotenv": "^8.2.0",
     "@types/env-ci": "^3.1.0",
     "@types/graphql": "^14.2.0",
-    "@types/jest": "~26.0.7",
     "@types/lodash.chunk": "^4.2.6",
     "@types/node": "catalog:",
     "@types/node-fetch": "2.6.1",

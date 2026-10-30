@@ -1,17 +1,24 @@
 import { Auto } from "../auto";
 import { dummyLog } from "../utils/logger";
-import child from "child_process";
+import { execSync } from "child_process";
 
-jest
-  .spyOn(child, "execSync")
-  .mockImplementation()
-  // @ts-ignore
-  .mockReturnValue("");
+vi.mock("child_process", async (importOriginal) => {
+  const mod = {
+    ...(await importOriginal<typeof import("child_process")>()),
+    execSync: vi.fn(),
+  };
+  return { ...mod, default: mod };
+});
 
-const importMock = jest.fn();
-jest.mock("import-cwd", () => (path: string) => importMock(path));
-jest.mock("env-ci", () => () => ({ isCi: false, branch: "main" }));
-jest.mock("../utils/exec-promise", () => () => Promise.resolve(""));
+// @ts-ignore
+vi.mocked(execSync).mockReturnValue("");
+
+const importMock = vi.fn();
+vi.mock("import-cwd", () => ({ default: (path: string) => importMock(path) }));
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false, branch: "main" }) }));
+vi.mock("../utils/exec-promise", () => ({
+  default: () => Promise.resolve(""),
+}));
 
 const defaults = {
   owner: "foo",
@@ -20,14 +27,17 @@ const defaults = {
 
 process.env.GH_TOKEN = "XXXX";
 
-const search = jest.fn();
-jest.mock("cosmiconfig", () => ({
-  cosmiconfig: () => ({
-    search,
-  }),
-}));
+const search = vi.fn();
+vi.mock("cosmiconfig", () => {
+  const mod = {
+    cosmiconfig: () => ({
+      search,
+    }),
+  };
+  return { ...mod, default: mod };
+});
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -38,8 +48,8 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      get: jest.fn().mockReturnValue(Promise.resolve({})),
-      getLatestRelease: jest.fn().mockReturnValue({ data: { tag_name: "" } }),
+      get: vi.fn().mockReturnValue(Promise.resolve({})),
+      getLatestRelease: vi.fn().mockReturnValue({ data: { tag_name: "" } }),
     };
 
     hook = {
@@ -51,17 +61,20 @@ jest.mock("@octokit/rest", () => {
 });
 
 // @ts-ignore
-jest.mock("gitlog", () => ({
-  gitlogPromise: () =>
-    Promise.resolve([
-      {
-        rawBody: "foo",
-      },
-      {
-        rawBody: "foo",
-      },
-    ]),
-}));
+vi.mock("gitlog", () => {
+  const mod = {
+    gitlogPromise: () =>
+      Promise.resolve([
+        {
+          rawBody: "foo",
+        },
+        {
+          rawBody: "foo",
+        },
+      ]),
+  };
+  return { ...mod, default: mod };
+});
 
 describe("Auto", () => {
   test("should add to changelog", async () => {
@@ -73,10 +86,14 @@ describe("Auto", () => {
     auto.logger = dummyLog();
     await auto.loadConfig();
 
-    const addToChangelog = jest.fn();
+    const addToChangelog = vi.fn();
     auto.release!.addToChangelog = addToChangelog;
-    jest.spyOn(auto.release!, "generateReleaseNotes").mockImplementation();
-    jest.spyOn(auto.release!, "getCommitsInRelease").mockImplementation();
+    vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
+      () => undefined
+    );
+    vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
+      () => undefined
+    );
 
     await auto.changelog({ from: "v1.0.0" });
     expect(addToChangelog).toHaveBeenCalled();

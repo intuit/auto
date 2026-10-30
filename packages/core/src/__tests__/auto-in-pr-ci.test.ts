@@ -5,18 +5,20 @@ import makeCommitFromMsg from "./make-commit-from-msg";
 import endent from "endent";
 import execPromise from "../utils/exec-promise";
 
-const exec = jest.fn();
-jest.mock("../utils/exec-promise");
+const exec = vi.fn();
+vi.mock("../utils/exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 exec.mockResolvedValue("");
 
-jest.mock("env-ci", () => () => ({
-  pr: 123,
-  build: 1,
-  isCi: true,
-  isPr: true,
-  branch: "ci-test",
+vi.mock("env-ci", () => ({
+  default: () => ({
+    pr: 123,
+    build: 1,
+    isCi: true,
+    isPr: true,
+    branch: "ci-test",
+  }),
 }));
 
 const defaults = {
@@ -26,20 +28,20 @@ const defaults = {
 
 process.env.GH_TOKEN = "XXX";
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
+      get: vi.fn().mockReturnValue({}),
     };
 
     issues = {
-      createComment: jest.fn().mockReturnValue({ data: [] }),
-      listComments: jest.fn().mockReturnValue({ data: [] }),
-      listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
+      createComment: vi.fn().mockReturnValue({ data: [] }),
+      listComments: vi.fn().mockReturnValue({ data: [] }),
+      listLabelsOnIssue: vi.fn().mockReturnValue({ data: [] }),
     };
 
     hook = {
@@ -60,11 +62,11 @@ describe("canary in ci", () => {
     await auto.loadConfig();
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const canary = jest.fn();
+    const canary = vi.fn();
     auto.hooks.canary.tap("test", canary);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
     await auto.canary();
     expect(canary).toHaveBeenCalledWith(
@@ -85,9 +87,9 @@ describe("canary in ci", () => {
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1 });
@@ -105,11 +107,11 @@ describe("canary in ci", () => {
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    const comment = jest.fn();
+    const comment = vi.fn();
     auto.comment = comment;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1, target: "comment" });
@@ -128,11 +130,11 @@ describe("canary in ci", () => {
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    const prStatus = jest.fn();
+    const prStatus = vi.fn();
     auto.prStatus = prStatus;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
     auto.hooks.canary.tap("test", () => "1.2.4-canary.123.1");
 
     const version = await auto.canary({ pr: 123, build: 1, target: "status" });
@@ -147,15 +149,15 @@ describe("canary in ci", () => {
     auto.checkClean = () => Promise.resolve(true);
 
     // @ts-ignore
-    jest.spyOn(process, "exit").mockImplementationOnce(() => {});
+    vi.spyOn(process, "exit").mockImplementationOnce(() => {});
     auto.logger = dummyLog();
     await auto.loadConfig();
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
     await auto.canary({ pr: 123, build: 1, message: "false" });
     expect(process.exit).toHaveBeenCalled();
@@ -171,9 +173,9 @@ describe("canary in ci", () => {
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
     auto.hooks.canary.tap(
       "test",
       ({ canaryIdentifier }) => `1.2.4-${canaryIdentifier}`
@@ -192,9 +194,9 @@ describe("canary in ci", () => {
     await auto.loadConfig();
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
-    const addToPrBody = jest.fn();
+    const addToPrBody = vi.fn();
     auto.git!.addToPrBody = addToPrBody;
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
     auto.hooks.canary.tap(
       "test",
       ({ canaryIdentifier }) => `1.2.4-${canaryIdentifier}`
@@ -215,10 +217,10 @@ describe("shipit in ci", () => {
     await auto.loadConfig();
 
     auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
-    jest.spyOn(auto.git!, "addToPrBody").mockImplementation();
+    vi.spyOn(auto.git!, "addToPrBody").mockImplementation(() => undefined);
     auto.release!.getCommitsInRelease = () => Promise.resolve([]);
     auto.release!.getCommits = () => Promise.resolve([]);
-    const canary = jest.fn();
+    const canary = vi.fn();
     auto.hooks.canary.tap("test", canary);
 
     await auto.shipit();
@@ -236,11 +238,11 @@ describe("next in ci", () => {
     const auto = new Auto({ ...defaults, plugins: [] });
 
     // @ts-ignore
-    jest.spyOn(console, "log").mockImplementation();
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
     exec.mockResolvedValue("v1.0.0");
     // @ts-ignore
     auto.checkClean = () => Promise.resolve(true);
-    const prBody = jest.fn();
+    const prBody = vi.fn();
     // @ts-ignore
     auto.prBody = prBody;
     auto.logger = dummyLog();
@@ -252,10 +254,10 @@ describe("next in ci", () => {
     auto.release!.getCommitsInRelease = () =>
       Promise.resolve([makeCommitFromMsg("Test Commit")]);
 
-    const afterRelease = jest.fn();
+    const afterRelease = vi.fn();
     auto.hooks.afterRelease.tap("test", afterRelease);
     auto.hooks.next.tap("test", () => ["1.2.4-next.0"]);
-    jest.spyOn(auto.release!, "getCommits").mockImplementation();
+    vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
 
     await auto.next({});
     expect(prBody).toHaveBeenCalledWith({
@@ -284,7 +286,7 @@ describe("next in ci", () => {
     // @ts-ignore
     auto.inPrereleaseBranch = () => true;
     // @ts-ignore
-    jest.spyOn(console, "log").mockImplementation();
+    vi.spyOn(console, "log").mockImplementation(() => undefined);
     auto.git!.getLatestTagInBranch = () => Promise.resolve("1.4.0-next.0");
     auto.release!.getSemverBump = () => Promise.resolve(SEMVER.patch);
 

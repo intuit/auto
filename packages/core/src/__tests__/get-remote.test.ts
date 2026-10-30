@@ -1,12 +1,12 @@
 import { Auto } from "../auto";
 import { execSync } from "child_process";
 
-const exec = jest.fn();
+const exec = vi.fn();
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 
-jest.mock("child_process");
+vi.mock("child_process");
 
 describe("getRemote", () => {
   let processEnvs: typeof process.env;

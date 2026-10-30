@@ -1,104 +1,104 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`convertToBlocks work for simple additional release notes 1`] = `
-Array [
-  Array [
-    Object {
-      "text": Object {
+exports[`convertToBlocks > work for simple additional release notes 1`] = `
+[
+  [
+    {
+      "text": {
         "text": "*Release Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
-        "text": "*Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
+    {
+      "text": {
+        "text": "*Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
-        "text": "This release changes the tag used for the \\"Canary Releases Assets\\" created by the \`upload-assets\` plugin to be \`0.0.0-canary\`.",
+    {
+      "text": {
+        "text": "This release changes the tag used for the "Canary Releases Assets" created by the \`upload-assets\` plugin to be \`0.0.0-canary\`.",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "This new tag is a valid semantic version and can be used with other auto commands.",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*🐛 Bug Fix*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• \`@auto-it/upload-assets\`
-   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+   • Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "*Authors: 1*",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
           "type": "mrkdwn",
         },
@@ -109,25 +109,25 @@ Array [
 ]
 `;
 
-exports[`convertToBlocks work for simple additional release notes with code examples 1`] = `
-Array [
-  Array [
-    Object {
-      "text": Object {
+exports[`convertToBlocks > work for simple additional release notes with code examples 1`] = `
+[
+  [
+    {
+      "text": {
         "text": "*Release Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
-        "text": "*Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
+    {
+      "text": {
+        "text": "*Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver (*<https://github.com/intuit/auto/pull/1802|#1802>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "\`md\`:
 
 ",
@@ -135,8 +135,8 @@ Array [
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "\`\`\`
 > Code example
 \`\`\`",
@@ -144,74 +144,74 @@ Array [
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*🐛 Bug Fix*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• \`@auto-it/upload-assets\`
-   • Don't create \\"Canary Release Assets\\" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
+   • Don't create "Canary Release Assets" during non-canary builds + Change that releases tag to valid semver <https://github.com/intuit/auto/pull/1802|#1802> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*📝 Documentation*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• add automated TOC to hooks documentation <https://github.com/intuit/auto/pull/1801|#1801> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "*Authors: 1*",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)
 • Other",
           "type": "mrkdwn",
@@ -223,45 +223,45 @@ Array [
 ]
 `;
 
-exports[`convertToBlocks work for simple case 1`] = `
-Array [
-  Array [
-    Object {
-      "text": Object {
+exports[`convertToBlocks > work for simple case 1`] = `
+[
+  [
+    {
+      "text": {
         "text": "*🐛 Bug Fix*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• build the s3 plugin <https://github.com/intuit/auto/pull/1804|#1804> (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "*Authors: 1*",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
           "type": "mrkdwn",
         },
@@ -272,59 +272,59 @@ Array [
 ]
 `;
 
-exports[`convertToBlocks works with really long changelog line 1`] = `
-Array [
-  Array [
-    Object {
-      "text": Object {
+exports[`convertToBlocks > works with really long changelog line 1`] = `
+[
+  [
+    {
+      "text": {
         "text": "*🐛 Bug Fix*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus tempus interdum nec sed orci. Cras ultrices vehicula metus, quis lacinia ex. Ut eget fringilla augue. Fusce a nunc arcu. Nunc fermentum enim elit, sed laoreet nibh auctor sed. Curabitur erat tellus, tincidunt in augue eu, laoreet auctor massa. Aliquam posuere malesuada quam quis mollis. Donec mollis lorem ac metus tempus, consectetur egestas nunc aliquam. Nam varius laoreet urna, at egestas magna laoreet in. Fusce faucibus a tortor blandit pulvinar. Integer at elit a sapien fringilla luctus. Duis sed sapien eget tortor sagittis tristique a id mi. Nam eu suscipit urna. Etiam sapien mauris, pellentesque quis ornare vitae, sodales id mi. Vestibulum dictum est at magna cursus, at aliquam odio tincidunt. Donec interdum iaculis pharetra. Praesent at vulputate libero. Pellentesque in est a ligula egestas scelerisque. Nulla posuere viverra diam a malesuada. Donec interdum lectus eros, non dictum odio viverra viverra. Mauris erat urna, placerat quis velit at, laoreet consectetur ligula. Donec sit amet fermentum quam, sed mattis lectus. In id metus eleifend, pharetra turpis quis, scelerisque turpis. In quis placerat lorem. Pellentesque eget nunc lectus. Curabitur porttitor enim sit amet lectus scelerisque, quis vehicula sem rutrum. Quisque convallis risus in feugiat venenatis. Vivamus elementum ligula et nibh efficitur aliquam. Curabitur eu fringilla mauris. Maecenas gravida nibh non viverra sodales. Integer et consequat magna. Ut nec rhoncus quam. Sed mollis fermentum massa, eu semper purus ultrices quis. Suspendisse dictum purus ut erat varius viverra. Aliquam erat volutpat. Suspendisse id diam nibh. Pellentesque congue ex eu neque posuere, eu maximus ligula faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut placerat luctus leo. Vestibulum nibh eros, varius quis posuere et, volutpat non leo. Donec pulvinar porta ligula, at molestie leo semper non. Ut tincidunt, mi a vehicula dictum, nulla tellus facilisis ante, id porta turpis metus sit amet est. Integer quis orci odio. Donec quis maximus ante. Morbi interdum commodo justo. Fusce a velit hendrerit augue tempor aliquet eget eu tortor. Integer in lacinia purus. Nunc ornare efficitur suscipit. Vivamus tincidunt ante quis sodales sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin non mi ac diam rutrum tincidunt. Sed hendrerit viverra ex ut tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus t",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "empus interdum nec sed orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus tempus interdum nec sed orci. Cras ultrices vehicula metus, quis lacinia ex. Ut eget fringilla augue. Fusce a nunc arcu. Nunc fermentum enim elit, sed laoreet nibh auctor sed. Curabitur erat tellus, tincidunt in augue eu, laoreet auctor massa. Aliquam posuere malesuada quam quis mollis. Donec mollis lorem ac metus tempus, consectetur egestas nunc aliquam. Nam varius laoreet urna, at egestas magna laoreet in. Fusce faucibus a tortor blandit pulvinar. Integer at elit a sapien fringilla luctus. Duis sed sapien eget tortor sagittis tristique a id mi. Nam eu suscipit urna. Etiam sapien mauris, pellentesque quis ornare vitae, sodales id mi. Vestibulum dictum est at magna cursus, at aliquam odio tincidunt. Donec interdum iaculis pharetra. Praesent at vulputate libero. Pellentesque in est a ligula egestas scelerisque. Nulla posuere viverra diam a malesuada. Donec interdum lectus eros, non dictum odio viverra viverra. Mauris erat urna, placerat quis velit at, laoreet consectetur ligula. Donec sit amet fermentum quam, sed mattis lectus. In id metus eleifend, pharetra turpis quis, scelerisque turpis. In quis placerat lorem. Pellentesque eget nunc lectus. Curabitur porttitor enim sit amet lectus scelerisque, quis vehicula sem rutrum. Quisque convallis risus in feugiat venenatis. Vivamus elementum ligula et nibh efficitur aliquam. Curabitur eu fringilla mauris. Maecenas gravida nibh non viverra sodales. Integer et consequat magna. Ut nec rhoncus quam. Sed mollis fermentum massa, eu semper purus ultrices quis. Suspendisse dictum purus ut erat varius viverra. Aliquam erat volutpat. Suspendisse id diam nibh. Pellentesque congue ex eu neque posuere, eu maximus ligula faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut placerat luctus leo. Vestibulum nibh eros, varius quis posuere et, volutpat non leo. Donec pulvinar porta ligula, at molestie leo semper non. Ut tincidunt, mi a vehicula dictum, nulla tellus facilisis ante, id porta turpis metus sit amet est. Integer quis orci odio. Donec quis maximus ante. Morbi interdum commodo justo. Fusce a velit hendrerit augue tempor aliquet eget eu tortor. Integer in lacinia purus. Nunc ornare efficitur suscipit. Vivamus tincidunt ante quis sodales sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin non mi ac diam rutrum tincidunt. Sed hendrerit viverra ex ut tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "Cras vitae velit a lectus tempus interdum nec sed orci. ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "*Authors: 1*",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
           "type": "mrkdwn",
         },
@@ -335,45 +335,45 @@ Array [
 ]
 `;
 
-exports[`convertToBlocks works with really long line 1`] = `
-Array [
-  Array [
-    Object {
-      "text": Object {
+exports[`convertToBlocks > works with really long line 1`] = `
+[
+  [
+    {
+      "text": {
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus tempus interdum nec sed orci. Cras ultrices vehicula metus, quis lacinia ex. Ut eget fringilla augue. Fusce a nunc arcu. Nunc fermentum enim elit, sed laoreet nibh auctor sed. Curabitur erat tellus, tincidunt in augue eu, laoreet auctor massa. Aliquam posuere malesuada quam quis mollis. Donec mollis lorem ac metus tempus, consectetur egestas nunc aliquam. Nam varius laoreet urna, at egestas magna laoreet in. Fusce faucibus a tortor blandit pulvinar. Integer at elit a sapien fringilla luctus. Duis sed sapien eget tortor sagittis tristique a id mi. Nam eu suscipit urna. Etiam sapien mauris, pellentesque quis ornare vitae, sodales id mi. Vestibulum dictum est at magna cursus, at aliquam odio tincidunt. Donec interdum iaculis pharetra. Praesent at vulputate libero. Pellentesque in est a ligula egestas scelerisque. Nulla posuere viverra diam a malesuada. Donec interdum lectus eros, non dictum odio viverra viverra. Mauris erat urna, placerat quis velit at, laoreet consectetur ligula. Donec sit amet fermentum quam, sed mattis lectus. In id metus eleifend, pharetra turpis quis, scelerisque turpis. In quis placerat lorem. Pellentesque eget nunc lectus. Curabitur porttitor enim sit amet lectus scelerisque, quis vehicula sem rutrum. Quisque convallis risus in feugiat venenatis. Vivamus elementum ligula et nibh efficitur aliquam. Curabitur eu fringilla mauris. Maecenas gravida nibh non viverra sodales. Integer et consequat magna. Ut nec rhoncus quam. Sed mollis fermentum massa, eu semper purus ultrices quis. Suspendisse dictum purus ut erat varius viverra. Aliquam erat volutpat. Suspendisse id diam nibh. Pellentesque congue ex eu neque posuere, eu maximus ligula faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut placerat luctus leo. Vestibulum nibh eros, varius quis posuere et, volutpat non leo. Donec pulvinar porta ligula, at molestie leo semper non. Ut tincidunt, mi a vehicula dictum, nulla tellus facilisis ante, id porta turpis metus sit amet est. Integer quis orci odio. Donec quis maximus ante. Morbi interdum commodo justo. Fusce a velit hendrerit augue tempor aliquet eget eu tortor. Integer in lacinia purus. Nunc ornare efficitur suscipit. Vivamus tincidunt ante quis sodales sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin non mi ac diam rutrum tincidunt. Sed hendrerit viverra ex ut tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus tem",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "pus interdum nec sed orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cras vitae velit a lectus tempus interdum nec sed orci. Cras ultrices vehicula metus, quis lacinia ex. Ut eget fringilla augue. Fusce a nunc arcu. Nunc fermentum enim elit, sed laoreet nibh auctor sed. Curabitur erat tellus, tincidunt in augue eu, laoreet auctor massa. Aliquam posuere malesuada quam quis mollis. Donec mollis lorem ac metus tempus, consectetur egestas nunc aliquam. Nam varius laoreet urna, at egestas magna laoreet in. Fusce faucibus a tortor blandit pulvinar. Integer at elit a sapien fringilla luctus. Duis sed sapien eget tortor sagittis tristique a id mi. Nam eu suscipit urna. Etiam sapien mauris, pellentesque quis ornare vitae, sodales id mi. Vestibulum dictum est at magna cursus, at aliquam odio tincidunt. Donec interdum iaculis pharetra. Praesent at vulputate libero. Pellentesque in est a ligula egestas scelerisque. Nulla posuere viverra diam a malesuada. Donec interdum lectus eros, non dictum odio viverra viverra. Mauris erat urna, placerat quis velit at, laoreet consectetur ligula. Donec sit amet fermentum quam, sed mattis lectus. In id metus eleifend, pharetra turpis quis, scelerisque turpis. In quis placerat lorem. Pellentesque eget nunc lectus. Curabitur porttitor enim sit amet lectus scelerisque, quis vehicula sem rutrum. Quisque convallis risus in feugiat venenatis. Vivamus elementum ligula et nibh efficitur aliquam. Curabitur eu fringilla mauris. Maecenas gravida nibh non viverra sodales. Integer et consequat magna. Ut nec rhoncus quam. Sed mollis fermentum massa, eu semper purus ultrices quis. Suspendisse dictum purus ut erat varius viverra. Aliquam erat volutpat. Suspendisse id diam nibh. Pellentesque congue ex eu neque posuere, eu maximus ligula faucibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut placerat luctus leo. Vestibulum nibh eros, varius quis posuere et, volutpat non leo. Donec pulvinar porta ligula, at molestie leo semper non. Ut tincidunt, mi a vehicula dictum, nulla tellus facilisis ante, id porta turpis metus sit amet est. Integer quis orci odio. Donec quis maximus ante. Morbi interdum commodo justo. Fusce a velit hendrerit augue tempor aliquet eget eu tortor. Integer in lacinia purus. Nunc ornare efficitur suscipit. Vivamus tincidunt ante quis sodales sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin non mi ac diam rutrum tincidunt. Sed hendrerit viverra ex ut tristique. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus ornare suscipit. Cras a ante vel leo suscipit efficitur eget id orci. Maecenas sagittis sem placerat ligula sollicitudin mattis. Mauris nec massa volutpat, vestibulum ipsum vel, ultrices lacus. Cr",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "as vitae velit a lectus tempus interdum nec sed orci. ",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
+    {
       "type": "divider",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "*Authors: 1*",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "• Andrew Lisowski (<https://github.com/hipstersmoothie|@hipstersmoothie>)",
           "type": "mrkdwn",
         },
@@ -384,43 +384,43 @@ Array [
 ]
 `;
 
-exports[`postToSlack should add more indents to nested lists - 2 spaces 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should add more indents to nested lists - 2 spaces 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>
    • Another note",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -431,43 +431,43 @@ Object {
 }
 `;
 
-exports[`postToSlack should add more indents to nested lists 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should add more indents to nested lists 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>
    • Another note",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -478,49 +478,49 @@ Object {
 }
 `;
 
-exports[`postToSlack should add title 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should add title 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "text": "My Cool Project",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "emoji": true,
         "text": "New Release: ",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -531,42 +531,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Release: ",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -577,42 +577,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api in env var 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api in env var 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Release: ",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://git.hub/some/project/releases/v1.0.0|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -623,42 +623,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api through http proxy 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api through http proxy 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -669,42 +669,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api through https proxy 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api through https proxy 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -715,42 +715,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api with custom atTarget 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api with custom atTarget 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Release: ",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@here <https://git.hub/some/project/releases/v1.0.0|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -761,42 +761,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should call slack api with minimal config 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should call slack api with minimal config 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -807,42 +807,42 @@ Object {
 }
 `;
 
-exports[`postToSlack should not call slack api with custom atTarget if false 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should not call slack api with custom atTarget if false 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Release: ",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "<https://git.hub/some/project/releases/v1.0.0|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "• PR <google.com|some link>",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": " ",
         "type": "mrkdwn",
       },
@@ -853,35 +853,35 @@ Object {
 }
 `;
 
-exports[`postToSlack should remove markdown code types from block 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "text": Object {
+exports[`postToSlack > should remove markdown code types from block 1`] = `
+{
+  "blocks": [
+    {
+      "text": {
         "emoji": true,
         "text": "New Releases: 1.0.0",
         "type": "plain_text",
       },
       "type": "header",
     },
-    Object {
-      "elements": Array [
-        Object {
+    {
+      "elements": [
+        {
           "text": "@channel <https://google.com|View Release>",
           "type": "mrkdwn",
         },
       ],
       "type": "context",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "*My Notes*",
         "type": "mrkdwn",
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "\`json\`:
 
 ",
@@ -889,10 +889,10 @@ Object {
       },
       "type": "section",
     },
-    Object {
-      "text": Object {
+    {
+      "text": {
         "text": "\`\`\`
-{ \\"foo\\": \\"bar\\" }\`\`\`
+{ "foo": "bar" }\`\`\`
 • PR <google.com|some link>
 \`\`\`",
         "type": "mrkdwn",

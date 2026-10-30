@@ -2,8 +2,10 @@ import { Auto } from "../auto";
 import SEMVER from "../semver";
 import { dummyLog } from "../utils/logger";
 
-jest.mock("env-ci", () => () => ({
-  branch: "local-test",
+vi.mock("env-ci", () => ({
+  default: () => ({
+    branch: "local-test",
+  }),
 }));
 
 const defaults = {
@@ -11,18 +13,18 @@ const defaults = {
   repo: "bar",
 };
 
-const listLabelsOnIssue = jest.fn();
+const listLabelsOnIssue = vi.fn();
 
 process.env.GH_TOKEN = "XXXX";
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
     authenticate = () => undefined;
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
+      get: vi.fn().mockReturnValue({}),
     };
 
     issues = {
@@ -46,10 +48,10 @@ test("shipit should publish canary in locally when not on baseBranch", async () 
 
   auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
   auto.git!.getSha = () => Promise.resolve("abcdefghijklmnop");
-  jest.spyOn(auto.git!, "createComment").mockImplementation();
+  vi.spyOn(auto.git!, "createComment").mockImplementation(() => undefined);
   auto.release!.getCommitsInRelease = () => Promise.resolve([]);
   auto.release!.getCommits = () => Promise.resolve([]);
-  const canary = jest.fn();
+  const canary = vi.fn();
   auto.hooks.canary.tap("test", canary);
 
   await auto.shipit();
@@ -74,10 +76,10 @@ test("canary should use PR labels correctly", async () => {
 
   auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
   auto.git!.getSha = () => Promise.resolve("abcdefghijklmnop");
-  jest.spyOn(auto.git!, "createComment").mockImplementation();
+  vi.spyOn(auto.git!, "createComment").mockImplementation(() => undefined);
   auto.release!.getCommitsInRelease = () => Promise.resolve([]);
   auto.release!.getCommits = () => Promise.resolve([]);
-  const canary = jest.fn();
+  const canary = vi.fn();
   auto.hooks.canary.tap("test", canary);
   listLabelsOnIssue.mockReturnValueOnce({
     data: [{ name: "internal" }, { name: "release" }],

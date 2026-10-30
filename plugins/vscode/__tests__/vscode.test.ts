@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import * as Auto from "@auto-it/core";
 
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
@@ -11,20 +12,17 @@ import * as vsce from "vsce";
 
 import Vscode from "../src";
 
-const exec = jest.fn();
-const loadPackageJsonSpy = loadPackageJson as jest.Mock;
-const getAuthorSpy = getAuthor as jest.Mock;
-const getRepoSpy = getRepo as jest.Mock;
-const publishSpy = vsce.publish as jest.Mock;
+const exec = vi.fn();
+const loadPackageJsonSpy = loadPackageJson as Mock;
+const getAuthorSpy = getAuthor as Mock;
+const getRepoSpy = getRepo as Mock;
+const publishSpy = vsce.publish as Mock;
 
-jest.mock("vsce");
-jest.mock("@auto-it/package-json-utils");
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("vsce");
+vi.mock("@auto-it/package-json-utils");
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 const setup = (mockGit?: any) => {
   const plugin = new Vscode();

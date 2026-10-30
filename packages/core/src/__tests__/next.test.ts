@@ -3,15 +3,15 @@ import { dummyLog } from "../utils/logger";
 import makeCommitFromMsg from "./make-commit-from-msg";
 import execPromise from "../utils/exec-promise";
 
-const exec = jest.fn();
-jest.mock("../utils/exec-promise");
+const exec = vi.fn();
+vi.mock("../utils/exec-promise");
 // @ts-ignore
 execPromise.mockImplementation(exec);
 exec.mockResolvedValue("");
 
-jest.mock("../utils/git-reset.ts");
-jest.mock("../utils/load-plugins.ts");
-jest.mock("env-ci", () => () => ({ isCi: false, branch: "next" }));
+vi.mock("../utils/git-reset.ts");
+vi.mock("../utils/load-plugins.ts");
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false, branch: "next" }) }));
 
 const defaults = {
   baseBranch: "main",
@@ -19,7 +19,7 @@ const defaults = {
   repo: "bar",
 };
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -30,7 +30,7 @@ jest.mock("@octokit/rest", () => {
     };
 
     repos = {
-      get: jest.fn().mockReturnValue({}),
+      get: vi.fn().mockReturnValue({}),
     };
 
     hook = {
@@ -38,11 +38,11 @@ jest.mock("@octokit/rest", () => {
     };
 
     issues = {
-      listLabelsOnIssue: jest.fn().mockReturnValue({ data: [] }),
+      listLabelsOnIssue: vi.fn().mockReturnValue({ data: [] }),
     };
 
     users = {
-      getAuthenticated: jest.fn().mockResolvedValue({}),
+      getAuthenticated: vi.fn().mockResolvedValue({}),
     };
   };
 
@@ -50,19 +50,22 @@ jest.mock("@octokit/rest", () => {
 });
 
 // @ts-ignore
-jest.mock("gitlog", () => ({
-  gitlogPromise: () =>
-    Promise.resolve([
-      {
-        rawBody: "foo",
-        hash: "123",
-      },
-      {
-        rawBody: "foo",
-        hash: "456",
-      },
-    ]),
-}));
+vi.mock("gitlog", () => {
+  const mod = {
+    gitlogPromise: () =>
+      Promise.resolve([
+        {
+          rawBody: "foo",
+          hash: "123",
+        },
+        {
+          rawBody: "foo",
+          hash: "456",
+        },
+      ]),
+  };
+  return { ...mod, default: mod };
+});
 
 test("falls back to local baseBranch if it doesn't exist on origin", async () => {
   const auto = new Auto({ ...defaults, plugins: [] });
@@ -82,8 +85,8 @@ test("falls back to local baseBranch if it doesn't exist on origin", async () =>
       makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
     ]);
 
-  jest.spyOn(auto.release!, "getCommits").mockImplementation();
-  const next = jest.fn();
+  vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+  const next = vi.fn();
   auto.hooks.next.tap("test", next);
 
   await auto.next({});

@@ -1,10 +1,7 @@
-import envCi from "env-ci";
-
-jest.mock("env-ci");
-
-const envSpy = envCi as jest.Mock;
-envSpy.mockImplementation(() => ({
-  isCi: false,
+vi.mock("env-ci", () => ({
+  default: () => ({
+    isCi: false,
+  }),
 }));
 
 import Auto, { SEMVER } from "@auto-it/core";
@@ -20,7 +17,7 @@ const options = {
   repo: "repo",
 };
 
-jest.spyOn(console, "log").mockImplementation();
+vi.spyOn(console, "log").mockImplementation(() => undefined);
 
 describe("Upload Assets Plugin", () => {
   test("should do nothing without a response", async () => {
@@ -28,8 +25,8 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -39,7 +36,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -59,8 +56,8 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -70,7 +67,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -103,12 +100,12 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest
+    const uploadReleaseAsset = vi
       .fn()
       .mockImplementation(({ name }) =>
         Promise.resolve({ data: { id: 2, name } })
       );
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -119,7 +116,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -142,12 +139,12 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest
+    const uploadReleaseAsset = vi
       .fn()
       .mockImplementation(({ name }) =>
         Promise.resolve({ data: { id: 2, name } })
       );
-    const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const getReleaseByTag = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -157,7 +154,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, getReleaseByTag },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -180,12 +177,12 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest
+    const uploadReleaseAsset = vi
       .fn()
       .mockImplementation(({ name }) =>
         Promise.resolve({ data: { id: 2, name } })
       );
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -196,7 +193,7 @@ describe("Upload Assets Plugin", () => {
         getFirstCommit: () => "abc",
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -215,12 +212,12 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/test.txt"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest
+    const uploadReleaseAsset = vi
       .fn()
       .mockImplementation(({ name }) =>
         Promise.resolve({ data: { id: 2, name } })
       );
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -231,7 +228,7 @@ describe("Upload Assets Plugin", () => {
         getFirstCommit: () => "abc",
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -254,8 +251,8 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -265,7 +262,7 @@ describe("Upload Assets Plugin", () => {
         options: { ...options, baseUrl: "https://github.my.com/api/v3" },
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -301,8 +298,8 @@ describe("Upload Assets Plugin", () => {
       ],
     });
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -312,7 +309,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -335,8 +332,8 @@ describe("Upload Assets Plugin", () => {
       assets: [path.join(__dirname, "./test-assets/test*.txt")],
     });
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -346,7 +343,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);
@@ -378,9 +375,9 @@ describe("Upload Assets Plugin", () => {
       ],
     });
     const hooks = makeHooks();
-    const deleteReleaseAsset = jest.fn();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const deleteReleaseAsset = vi.fn();
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -390,7 +387,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, createRelease, deleteReleaseAsset },
-          paginate: jest.fn().mockResolvedValue(new Array(300).fill({})),
+          paginate: vi.fn().mockResolvedValue(new Array(300).fill({})),
         },
       },
     } as unknown as Auto);
@@ -416,9 +413,9 @@ describe("Upload Assets Plugin", () => {
       ],
     });
     const hooks = makeHooks();
-    const deleteReleaseAsset = jest.fn();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const deleteReleaseAsset = vi.fn();
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const getReleaseByTag = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -428,7 +425,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
-          paginate: jest.fn().mockResolvedValue(new Array(303).fill({})),
+          paginate: vi.fn().mockResolvedValue(new Array(303).fill({})),
         },
       },
     } as unknown as Auto);
@@ -455,9 +452,9 @@ describe("Upload Assets Plugin", () => {
       ],
     });
     const hooks = makeHooks();
-    const deleteReleaseAsset = jest.fn();
-    const uploadReleaseAsset = jest.fn().mockResolvedValue({});
-    const getReleaseByTag = jest.fn().mockResolvedValue({ data: { id: 1 } });
+    const deleteReleaseAsset = vi.fn();
+    const uploadReleaseAsset = vi.fn().mockResolvedValue({});
+    const getReleaseByTag = vi.fn().mockResolvedValue({ data: { id: 1 } });
 
     plugin.apply({
       hooks,
@@ -467,7 +464,7 @@ describe("Upload Assets Plugin", () => {
         options,
         github: {
           repos: { uploadReleaseAsset, getReleaseByTag, deleteReleaseAsset },
-          paginate: jest.fn().mockResolvedValue(new Array(300).fill({})),
+          paginate: vi.fn().mockResolvedValue(new Array(300).fill({})),
         },
       },
     } as unknown as Auto);

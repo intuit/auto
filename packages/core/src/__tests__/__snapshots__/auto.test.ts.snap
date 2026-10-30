@@ -1,11 +1,11 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Auto createLabels should create the labels 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      Array [
-        Object {
+exports[`Auto > createLabels > should create the labels 1`] = `
+[MockFunction addLabelsToProject] {
+  "calls": [
+    [
+      [
+        {
           "changelogTitle": "💥 Breaking Change",
           "color": "#C5000B",
           "description": "Increment the major version when merged",
@@ -13,7 +13,7 @@ exports[`Auto createLabels should create the labels 1`] = `
           "overwrite": true,
           "releaseType": "major",
         },
-        Object {
+        {
           "changelogTitle": "🐛 Bug Fix",
           "color": "#870048",
           "description": "Increment the patch version when merged",
@@ -21,7 +21,7 @@ exports[`Auto createLabels should create the labels 1`] = `
           "overwrite": true,
           "releaseType": "patch",
         },
-        Object {
+        {
           "changelogTitle": "🚀 Enhancement",
           "color": "#F1A60E",
           "description": "Increment the minor version when merged",
@@ -29,40 +29,40 @@ exports[`Auto createLabels should create the labels 1`] = `
           "overwrite": true,
           "releaseType": "minor",
         },
-        Object {
+        {
           "color": "#bf5416",
           "description": "Preserve the current version when merged",
           "name": "skip-release",
           "releaseType": "skip",
         },
-        Object {
+        {
           "color": "#007f70",
           "description": "Create a release when this pr is merged",
           "name": "release",
           "releaseType": "release",
         },
-        Object {
+        {
           "changelogTitle": "🏠 Internal",
           "color": "#696969",
           "description": "Changes only affect the internal API",
           "name": "internal",
           "releaseType": "none",
         },
-        Object {
+        {
           "changelogTitle": "📝 Documentation",
           "color": "#cfd3d7",
           "description": "Changes only affect the documentation",
           "name": "documentation",
           "releaseType": "none",
         },
-        Object {
+        {
           "changelogTitle": "🧪 Tests",
           "color": "#ffd3cc",
           "description": "Add or improve existing tests",
           "name": "tests",
           "releaseType": "none",
         },
-        Object {
+        {
           "changelogTitle": "🔩 Dependency Updates",
           "color": "#8732bc",
           "description": "Update one or more dependencies version",
@@ -70,11 +70,11 @@ exports[`Auto createLabels should create the labels 1`] = `
           "releaseType": "none",
         },
       ],
-      Object {},
+      {},
     ],
   ],
-  "results": Array [
-    Object {
+  "results": [
+    {
       "type": "return",
       "value": undefined,
     },
@@ -82,73 +82,73 @@ exports[`Auto createLabels should create the labels 1`] = `
 }
 `;
 
-exports[`Auto should extend config and keep overrides 1`] = `
-Object {
+exports[`Auto > should extend config and keep overrides 1`] = `
+{
   "baseBranch": "main",
   "extends": "@artsy",
-  "labels": Array [
-    Object {
+  "labels": [
+    {
       "changelogTitle": "💥 Breaking Change",
       "color": "#C5000B",
       "description": "Increment the major version when merged",
       "name": "major",
       "releaseType": "major",
     },
-    Object {
+    {
       "changelogTitle": "🚀 Enhancement",
       "color": "#F1A60E",
       "description": "Increment the minor version when merged",
       "name": "minor",
       "releaseType": "minor",
     },
-    Object {
+    {
       "changelogTitle": "🐛 Bug Fix",
       "color": "#870048",
       "description": "Increment the patch version when merged",
       "name": "patch",
       "releaseType": "patch",
     },
-    Object {
+    {
       "color": "#bf5416",
       "description": "Preserve the current version when merged",
       "name": "skip-release",
       "releaseType": "skip",
     },
-    Object {
+    {
       "color": "#007f70",
       "description": "Create a release when this pr is merged",
       "name": "release",
       "releaseType": "release",
     },
-    Object {
+    {
       "changelogTitle": "🏠 Internal",
       "color": "#696969",
       "description": "Changes only affect the internal API",
       "name": "internal",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "📝 Documentation",
       "color": "#cfd3d7",
       "description": "Changes only affect the documentation",
       "name": "documentation",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🧪 Tests",
       "color": "#ffd3cc",
       "description": "Add or improve existing tests",
       "name": "tests",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🔩 Dependency Updates",
       "color": "#8732bc",
       "description": "Update one or more dependencies version",
       "name": "dependencies",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🏎 Performance",
       "color": "#f4b2d8",
       "description": "Improve performance of an existing feature",
@@ -159,10 +159,10 @@ Object {
   "name": "extended",
   "onlyPublishWithReleaseLabel": true,
   "owner": "foo",
-  "plugins": Array [
+  "plugins": [
     "npm",
   ],
-  "prereleaseBranches": Array [
+  "prereleaseBranches": [
     "next",
   ],
   "repo": "bar",
@@ -170,73 +170,73 @@ Object {
 }
 `;
 
-exports[`Auto should extend local config and keep overrides 1`] = `
-Object {
+exports[`Auto > should extend local config and keep overrides 1`] = `
+{
   "baseBranch": "main",
   "extends": "./fake.json",
-  "labels": Array [
-    Object {
+  "labels": [
+    {
       "changelogTitle": "💥 Breaking Change",
       "color": "#C5000B",
       "description": "Increment the major version when merged",
       "name": "major",
       "releaseType": "major",
     },
-    Object {
+    {
       "changelogTitle": "🚀 Enhancement",
       "color": "#F1A60E",
       "description": "Increment the minor version when merged",
       "name": "minor",
       "releaseType": "minor",
     },
-    Object {
+    {
       "changelogTitle": "🐛 Bug Fix",
       "color": "#870048",
       "description": "Increment the patch version when merged",
       "name": "patch",
       "releaseType": "patch",
     },
-    Object {
+    {
       "color": "#bf5416",
       "description": "Preserve the current version when merged",
       "name": "skip-release",
       "releaseType": "skip",
     },
-    Object {
+    {
       "color": "#007f70",
       "description": "Create a release when this pr is merged",
       "name": "release",
       "releaseType": "release",
     },
-    Object {
+    {
       "changelogTitle": "🏠 Internal",
       "color": "#696969",
       "description": "Changes only affect the internal API",
       "name": "internal",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "📝 Documentation",
       "color": "#cfd3d7",
       "description": "Changes only affect the documentation",
       "name": "documentation",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🧪 Tests",
       "color": "#ffd3cc",
       "description": "Add or improve existing tests",
       "name": "tests",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🔩 Dependency Updates",
       "color": "#8732bc",
       "description": "Update one or more dependencies version",
       "name": "dependencies",
       "releaseType": "none",
     },
-    Object {
+    {
       "changelogTitle": "🏎 Performance",
       "color": "#f4b2d8",
       "description": "Improve performance of an existing feature",
@@ -247,10 +247,10 @@ Object {
   "name": "extended",
   "noVersionPrefix": true,
   "owner": "foo",
-  "plugins": Array [
+  "plugins": [
     "npm",
   ],
-  "prereleaseBranches": Array [
+  "prereleaseBranches": [
     "next",
   ],
   "repo": "bar",

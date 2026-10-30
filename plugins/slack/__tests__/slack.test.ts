@@ -9,11 +9,13 @@ import createHttpsProxyAgent from "https-proxy-agent";
 import SlackPlugin, { sanitizeMarkdown, convertToBlocks } from "../src";
 import endent from "endent";
 
-const fetchSpy = jest.fn();
+const fetchSpy = vi.fn();
 // @ts-ignore
-jest.mock("node-fetch", () => (...args) => {
-  fetchSpy(...args);
-});
+vi.mock("node-fetch", () => ({
+  default: (...args) => {
+    fetchSpy(...args);
+  },
+}));
 
 beforeEach(() => {
   fetchSpy.mockClear();
@@ -43,7 +45,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks } as Auto);
 
@@ -60,7 +62,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -78,7 +80,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       hooks,
@@ -101,7 +103,7 @@ describe("postToSlack", () => {
     const plugin = new SlackPlugin({ url: undefined });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({ hooks, options: {} } as Auto);
 
@@ -122,7 +124,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -151,7 +153,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -180,7 +182,7 @@ describe("postToSlack", () => {
     });
     const hooks = makeHooks();
 
-    jest.spyOn(plugin, "createPost").mockImplementation();
+    vi.spyOn(plugin, "createPost").mockImplementation(() => undefined);
     // @ts-ignore
     plugin.apply({
       ...mockAuto,
@@ -203,7 +205,7 @@ describe("postToSlack", () => {
   test("should warn when no token", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     const logger = dummyLog();
-    jest.spyOn(logger.verbose, "warn").mockImplementation();
+    vi.spyOn(logger.verbose, "warn").mockImplementation(() => undefined);
     process.env.SLACK_TOKEN = "";
 
     await plugin.createPost(

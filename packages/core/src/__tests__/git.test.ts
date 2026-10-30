@@ -1,33 +1,33 @@
 import Git from "../git";
 
-const authenticate = jest.fn();
-const listLabelsOnIssue = jest.fn();
-const createRelease = jest.fn();
-const getLatestRelease = jest.fn();
-const getUser = jest.fn();
-const getByUsername = jest.fn();
-const getPr = jest.fn();
-const createCommitStatus = jest.fn();
-const createComment = jest.fn();
-const updateComment = jest.fn();
-const listComments = jest.fn();
-const deleteComment = jest.fn();
-const listCommits = jest.fn();
-const getProject = jest.fn();
-const listLabelsForRepo = jest.fn();
-const issuesAndPullRequests = jest.fn();
-const createLabel = jest.fn();
-const updateLabel = jest.fn();
-const addLabels = jest.fn();
-const removeLabel = jest.fn();
-const list = jest.fn();
-const lock = jest.fn();
-const errorHook = jest.fn();
-const get = jest.fn();
-const update = jest.fn();
-const paginate = jest.fn();
+const authenticate = vi.fn();
+const listLabelsOnIssue = vi.fn();
+const createRelease = vi.fn();
+const getLatestRelease = vi.fn();
+const getUser = vi.fn();
+const getByUsername = vi.fn();
+const getPr = vi.fn();
+const createCommitStatus = vi.fn();
+const createComment = vi.fn();
+const updateComment = vi.fn();
+const listComments = vi.fn();
+const deleteComment = vi.fn();
+const listCommits = vi.fn();
+const getProject = vi.fn();
+const listLabelsForRepo = vi.fn();
+const issuesAndPullRequests = vi.fn();
+const createLabel = vi.fn();
+const updateLabel = vi.fn();
+const addLabels = vi.fn();
+const removeLabel = vi.fn();
+const list = vi.fn();
+const lock = vi.fn();
+const errorHook = vi.fn();
+const get = vi.fn();
+const update = vi.fn();
+const paginate = vi.fn();
 
-jest.mock("@octokit/rest", () => {
+vi.mock("@octokit/rest", () => {
   const Octokit = class MockOctokit {
     static plugin = () => Octokit;
 
@@ -93,7 +93,7 @@ const options = {
 
 describe("github", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("getLabels", () => {
@@ -309,7 +309,7 @@ describe("github", () => {
   });
 
   test("getLastTagNotInBaseBranch", async () => {
-    const getTags = jest.fn();
+    const getTags = vi.fn();
     const gh = new Git(options);
     gh.getTags = getTags;
 
@@ -801,7 +801,7 @@ describe("github", () => {
 
       expect(
         errorHandler.bind(undefined, error({ authorization: "token abc" }))
-      ).toThrow(error());
+      ).toThrow(expect.objectContaining({ message: error().message }));
     });
   });
 });

@@ -1,6 +1,6 @@
 import parseArgs from "../src/parse-args";
 
-const log = jest.fn();
+const log = vi.fn();
 // @ts-ignore
 global.console = { log };
 
@@ -30,13 +30,13 @@ describe("root parser", () => {
   });
 
   test("should exit when required arg is not included", () => {
-    process.exit = jest.fn() as any;
+    process.exit = vi.fn() as any;
     parseArgs(["pr-status"]);
     expect(process.exit).toHaveBeenCalled();
   });
 
   test("should exit when required string is provided as flag", () => {
-    process.exit = jest.fn() as any;
+    process.exit = vi.fn() as any;
     parseArgs(["pr-check", "--pr", "24", "--url"]);
     expect(process.exit).toHaveBeenCalled();
   });
@@ -61,7 +61,7 @@ describe("root parser", () => {
   });
 
   test("error when on in array of options to is not present", () => {
-    process.exit = jest.fn() as any;
+    process.exit = vi.fn() as any;
     parseArgs(["comment"]);
     expect(process.exit).toHaveBeenCalled();
   });

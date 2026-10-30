@@ -39,7 +39,7 @@
     "build": "tsdown",
     "start": "npm run build -- -w",
     "lint": "eslint src --ext .ts",
-    "test": "jest --maxWorkers=2",
+    "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2",
     "bundle": "pnpm run inject-version && pnpm run package && pnpm run gzip",
     "inject-version": "node scripts/inject-version.js",
     "package": "rimraf binary && pkg . --out-path binary",

@@ -34,50 +34,50 @@ example_4 = "4.0.0"
 example_5 = "5.0.0"
 `;
 
-const exec = jest.fn();
-const existsSync = jest.fn();
-const readFileSync = jest.fn();
-const writeFile = jest.fn();
-const writeFileSync = jest.fn();
+const exec = vi.fn();
+const existsSync = vi.fn();
+const readFileSync = vi.fn();
+const writeFile = vi.fn();
+const writeFileSync = vi.fn();
 const readResult = "{}";
 
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
-// @ts-ignore
-jest.mock("env-ci", () => () => ({ isCi: false }));
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  read: (a, b, cb) => {
-    cb(undefined, readResult);
-  },
-  // @ts-ignore
-  readFile: (a, b, cb) => {
-    cb(undefined, readResult);
-  },
-  // @ts-ignore
-  readFileSync: (...args) => readFileSync(...args),
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  writeFile: (file, data, cb) => {
-    cb(undefined, writeFile(file, data));
-  },
-  // @ts-ignore
-  writeFileSync: (file, data) => {
-    writeFileSync(file, data);
-  },
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
 }));
+// @ts-ignore
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false }) }));
+vi.mock("fs", () => {
+  const mod = {
+    // @ts-ignore
+    existsSync: (...args) => existsSync(...args),
+    // @ts-ignore
+    read: (a, b, cb) => {
+      cb(undefined, readResult);
+    },
+    // @ts-ignore
+    readFile: (a, b, cb) => {
+      cb(undefined, readResult);
+    },
+    // @ts-ignore
+    readFileSync: (...args) => readFileSync(...args),
+    ReadStream: function () {},
+    WriteStream: function () {},
+    // @ts-ignore
+    closeSync: () => undefined,
+    // @ts-ignore
+    writeFile: (file, data, cb) => {
+      cb(undefined, writeFile(file, data));
+    },
+    // @ts-ignore
+    writeFileSync: (file, data) => {
+      writeFileSync(file, data);
+    },
+  };
+  return { ...mod, default: mod };
+});
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("CratesPlugin", () => {

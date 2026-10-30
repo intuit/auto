@@ -12,22 +12,22 @@ import env from "env-ci";
 
 import AllContributors from "../src";
 
-const generateMock = jest.fn();
-const addContributorMock = jest.fn();
-const envMock = jest.fn();
-const gitShow = jest.fn();
-const writeMock = jest.fn();
-const existsSync = jest.fn().mockReturnValue(true);
-const getLernaPackages = jest.fn();
+const generateMock = vi.fn();
+const addContributorMock = vi.fn();
+const envMock = vi.fn();
+const gitShow = vi.fn();
+const writeMock = vi.fn();
+const existsSync = vi.fn().mockReturnValue(true);
+const getLernaPackages = vi.fn();
 
 envMock.mockReturnValue({});
 getLernaPackages.mockReturnValue(Promise.resolve([]));
 gitShow.mockReturnValue(Promise.resolve(""));
 
-jest.mock("env-ci");
-jest.mock("child_process");
-jest.mock("all-contributors-cli/dist/contributors");
-jest.mock("all-contributors-cli/dist/generate");
+vi.mock("env-ci");
+vi.mock("child_process");
+vi.mock("all-contributors-cli/dist/contributors");
+vi.mock("all-contributors-cli/dist/generate");
 
 // @ts-ignore
 generateReadme.mockImplementation(generateMock);
@@ -36,39 +36,33 @@ addContributor.mockImplementation(addContributorMock);
 // @ts-ignore
 env.mockImplementation(envMock);
 // @ts-ignore
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args) =>
-      gitShow(...args)
-);
-jest.mock(
-  "../../../packages/core/dist/utils/get-lerna-packages",
-  () =>
-    (...args: any[]) =>
-      getLernaPackages(...args)
-);
-jest.spyOn(process, "chdir").mockReturnValue();
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args) => gitShow(...args),
+}));
+vi.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  default: (...args: any[]) => getLernaPackages(...args),
+}));
+vi.spyOn(process, "chdir").mockReturnValue();
 
 const mockRead = (result: string) =>
-  jest
+  vi
     .spyOn(fs, "readFileSync")
     // @ts-ignore
     .mockReturnValueOnce(result);
 
-jest.spyOn(fs, "writeFileSync").mockImplementation(writeMock);
-jest.spyOn(fs, "existsSync").mockImplementation(existsSync);
+vi.spyOn(fs, "writeFileSync").mockImplementation(writeMock);
+vi.spyOn(fs, "existsSync").mockImplementation(existsSync);
 
 describe("All Contributors Plugin", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("beforeShipit", () => {
     test("should not do anything for certain release types", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       releasedLabel.apply({
         comment: comment as any,
@@ -92,7 +86,7 @@ describe("All Contributors Plugin", () => {
     test("should not do anything without a PR", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: undefined });
 
@@ -112,7 +106,7 @@ describe("All Contributors Plugin", () => {
     test("should not do anything if PR doesn't exist", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -132,7 +126,7 @@ describe("All Contributors Plugin", () => {
     test("should not do anything if no extra contributions found", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -157,7 +151,7 @@ describe("All Contributors Plugin", () => {
     test("should comment confirming extra contributions", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -184,7 +178,7 @@ describe("All Contributors Plugin", () => {
     test("should warn about unknown contribution types", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -211,7 +205,7 @@ describe("All Contributors Plugin", () => {
     test("should warn about unknown contribution types - no valid", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -238,7 +232,7 @@ describe("All Contributors Plugin", () => {
     test("should warn about unknown contribution types - some valid", async () => {
       const releasedLabel = new AllContributors();
       const autoHooks = makeHooks();
-      const comment = jest.fn();
+      const comment = vi.fn();
 
       envMock.mockReturnValueOnce({ pr: 123 });
 
@@ -612,7 +606,7 @@ describe("All Contributors Plugin", () => {
       const releasedLabel = new AllContributors();
       const hooks = makeHooks();
       const logParseHooks = makeLogParseHooks();
-      const getUserByUsername = jest.fn();
+      const getUserByUsername = vi.fn();
       getUserByUsername.mockReturnValueOnce({ login: "some_guy" });
       getUserByUsername.mockReturnValueOnce({ login: "other_guy" });
 

@@ -1,17 +1,19 @@
 import exec from "../exec-promise";
 
-const warn = jest.fn();
-const error = jest.fn();
+const warn = vi.fn();
+const error = vi.fn();
 
-jest.mock("../logger.ts", () => () => ({
-  // @ts-ignore
-  log: { warn: (...args) => warn(...args) },
-  // @ts-ignore
-  verbose: { error: (...args) => error(...args) },
+vi.mock("../logger.ts", () => ({
+  default: () => ({
+    // @ts-ignore
+    log: { warn: (...args) => warn(...args) },
+    // @ts-ignore
+    verbose: { error: (...args) => error(...args) },
+  }),
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test("resolves stdout", async () => {
@@ -55,7 +57,7 @@ test("appends stdout and stderr", async () => {
 });
 
 test("prints stderr when exec exits without a code", async () => {
-  jest.spyOn(console, "log").mockImplementation();
+  vi.spyOn(console, "log").mockImplementation(() => undefined);
   await exec('>&2 echo "this error"');
 
   return expect(warn).toHaveBeenCalledWith("this error\n");

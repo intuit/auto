@@ -7,37 +7,35 @@ import { dummyLog, setLogLevel } from "../logger";
 
 const logger = dummyLog();
 
-jest.mock(
-  "auto-plugin-foo",
-  () => ({
+const modules = vi.hoisted(() => ({
+  "auto-plugin-foo": {
     default: class {
       name = "foo";
     },
-  }),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  "@my-scope/auto-plugin-bar",
-  () => ({
+  },
+  "@my-scope/auto-plugin-bar": {
     default: class {
       name = "bar";
     },
-  }),
-  { virtual: true }
-);
-jest.mock(
-  "@auto-it/baz",
-  () => ({
+  },
+  "@auto-it/baz": {
     default: class {
       name = "baz";
     },
-  }),
-  {
-    virtual: true,
-  }
-);
+  },
+}));
+
+// core falls back to requireg, which the setup file maps to Node's require.
+// That can't see vi.mock modules, so serve this file's modules from it.
+vi.mock("requireg", async () => {
+  const { createRequire } = await import("module");
+  const require = createRequire(import.meta.url);
+
+  return {
+    default: (id: string) =>
+      id in modules ? modules[id as keyof typeof modules] : require(id),
+  };
+});
 
 describe("loadPlugins", () => {
   beforeEach(() => {
@@ -115,9 +113,9 @@ describe("loadPlugins", () => {
   });
 });
 
-const exec = jest.fn();
+const exec = vi.fn();
 
-jest.mock("child_process");
+vi.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 
@@ -176,7 +174,7 @@ describe("getInstalledPlugins", () => {
   });
 });
 
-const log = jest.fn();
+const log = vi.fn();
 console.log = log;
 
 describe("listPlugins", () => {

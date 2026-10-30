@@ -48,7 +48,7 @@ const specWithVersion = (
       `;
 
 const mockPodspec = (contents: string) => {
-  return jest.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
+  return vi.spyOn(utilities, "getPodspecContents").mockReturnValue(contents);
 };
 
 interface FakePodspec {
@@ -56,21 +56,18 @@ interface FakePodspec {
   contents: string;
 }
 const mockPodspecs = (contents: FakePodspec[]) => {
-  return jest
+  return vi
     .spyOn(utilities, "getPodspecContents")
     .mockImplementation((path) => {
       return contents.find((podspec) => podspec.path === path).contents;
     });
 };
 
-let exec = jest.fn();
+let exec = vi.fn();
 // @ts-ignore
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args) => exec(...args),
+}));
 const logger = dummyLog();
 
 describe("Cocoapods Plugin", () => {
@@ -89,7 +86,7 @@ describe("Cocoapods Plugin", () => {
   };
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
     exec.mockClear();
     const plugin = new CocoapodsPlugin(options);
     const multiPlugin = new CocoapodsPlugin(multiOptions);
@@ -169,23 +166,24 @@ describe("Cocoapods Plugin", () => {
     test("should throw error if there is an error writing file", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      jest
-        .spyOn(utilities, "writePodspecContents")
-        .mockImplementationOnce(() => {
-          throw new Error("Filesystem Error");
-        });
+      vi.spyOn(utilities, "writePodspecContents").mockImplementationOnce(() => {
+        throw new Error("Filesystem Error");
+      });
 
       expect(
         updatePodspecVersion.bind(null, "./Test.podspec", "0.0.2")
-      ).toThrowError("Error updating version in podspec: ./Test.podspec");
+      ).toThrow("Error updating version in podspec: ./Test.podspec");
     });
     test("should successfully write new version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
 
       await updatePodspecVersion("./Test.podspec", "0.0.2");
-      expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.0.2"));
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("0.0.2")
+      );
     });
   });
   describe("updateSourceLocation", () => {
@@ -194,25 +192,23 @@ describe("Cocoapods Plugin", () => {
 
       exec.mockReturnValue("commithash");
 
-      jest
-        .spyOn(utilities, "writePodspecContents")
-        .mockImplementationOnce(() => {
-          throw new Error("Filesystem Error");
-        });
+      vi.spyOn(utilities, "writePodspecContents").mockImplementationOnce(() => {
+        throw new Error("Filesystem Error");
+      });
 
       await expect(
         updateSourceLocation(
           "./Test.podspec",
           "https://github.com/intuit/auto-fork.git"
         )
-      ).rejects.toThrowError(
+      ).rejects.toThrow(
         "Error updating source location in podspec: ./Test.podspec"
       );
     });
     test("should successfully write new source location", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
 
       exec.mockReturnValue(Promise.resolve("commithash"));
 
@@ -220,7 +216,7 @@ describe("Cocoapods Plugin", () => {
         "./Test.podspec",
         "https://github.com/intuit/auto-fork.git"
       );
-      expect(mock).lastCalledWith(
+      expect(mock).toHaveBeenLastCalledWith(
         expect.any(String),
         specWithVersion(
           "0.0.1",
@@ -260,7 +256,7 @@ describe("Cocoapods Plugin", () => {
     test("should throw if no version found", async () => {
       mockPodspec(specWithVersion(""));
 
-      await expect(hooks.getPreviousVersion.promise()).rejects.toThrowError(
+      await expect(hooks.getPreviousVersion.promise()).rejects.toThrow(
         "Version could not be found in podspec: ./Test.podspec"
       );
     });
@@ -283,7 +279,7 @@ describe("Cocoapods Plugin", () => {
     test("should do nothing on dryRun", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mockLog = jest.spyOn(logger.log, "info");
+      const mockLog = vi.spyOn(logger.log, "info");
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch, dryRun: true });
 
@@ -293,8 +289,8 @@ describe("Cocoapods Plugin", () => {
     test("should not use logger on quiet dryRun", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mockLog = jest.spyOn(logger.log, "info");
-      const mockConsole = jest.spyOn(console, "log");
+      const mockLog = vi.spyOn(logger.log, "info");
+      const mockConsole = vi.spyOn(console, "log");
 
       await hooks.version.promise({
         bump: Auto.SEMVER.patch,
@@ -309,29 +305,38 @@ describe("Cocoapods Plugin", () => {
     test("should version release - patch version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
 
       await hooks.version.promise({ bump: Auto.SEMVER.patch });
 
-      expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.0.2"));
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("0.0.2")
+      );
     });
     test("should version release - minor version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
 
       await hooks.version.promise({ bump: Auto.SEMVER.minor });
 
-      expect(mock).lastCalledWith(expect.any(String), specWithVersion("0.1.0"));
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("0.1.0")
+      );
     });
     test("should version release - major version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
 
       await hooks.version.promise({ bump: Auto.SEMVER.major });
 
-      expect(mock).lastCalledWith(expect.any(String), specWithVersion("1.0.0"));
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("1.0.0")
+      );
     });
     test("should release version multiple podspecs - patch", async () => {
       mockPodspecs([
@@ -344,7 +349,7 @@ describe("Cocoapods Plugin", () => {
           contents: specWithVersion("0.0.1"),
         },
       ]);
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
       await multiHooks.version.promise({ bump: Auto.SEMVER.patch });
       expect(mock).toHaveBeenCalledTimes(2);
       expect(mock).toHaveBeenNthCalledWith(
@@ -369,7 +374,7 @@ describe("Cocoapods Plugin", () => {
           contents: specWithVersion("0.0.1"),
         },
       ]);
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
       await multiHooks.version.promise({ bump: Auto.SEMVER.minor });
       expect(mock).toHaveBeenCalledTimes(2);
       expect(mock).toHaveBeenNthCalledWith(
@@ -394,7 +399,7 @@ describe("Cocoapods Plugin", () => {
           contents: specWithVersion("0.0.1"),
         },
       ]);
-      const mock = jest.spyOn(utilities, "writePodspecContents");
+      const mock = vi.spyOn(utilities, "writePodspecContents");
       await multiHooks.version.promise({ bump: Auto.SEMVER.major });
       expect(mock).toHaveBeenCalledTimes(2);
       expect(mock).toHaveBeenNthCalledWith(
@@ -411,7 +416,7 @@ describe("Cocoapods Plugin", () => {
     test("should throw if there is an error writing new version", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      const mock = jest
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           if (contents.includes("1.0.0")) {
@@ -421,11 +426,12 @@ describe("Cocoapods Plugin", () => {
 
       await expect(
         hooks.version.promise({ bump: Auto.SEMVER.major })
-      ).rejects.toThrowError(
-        "Error updating version in podspec: ./Test.podspec"
-      );
+      ).rejects.toThrow("Error updating version in podspec: ./Test.podspec");
 
-      expect(mock).lastCalledWith(expect.any(String), specWithVersion("1.0.0"));
+      expect(mock).toHaveBeenLastCalledWith(
+        expect.any(String),
+        specWithVersion("1.0.0")
+      );
     });
   });
 
@@ -444,8 +450,12 @@ describe("Cocoapods Plugin", () => {
 
       await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
 
-      expect(exec).toBeCalledTimes(1);
-      expect(exec).lastCalledWith("pod", ["lib", "lint", "./Test.podspec"]);
+      expect(exec).toHaveBeenCalledTimes(1);
+      expect(exec).toHaveBeenLastCalledWith("pod", [
+        "lib",
+        "lint",
+        "./Test.podspec",
+      ]);
     });
     test("should call pod lib lint for each podspec with dryRun flag", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -461,7 +471,7 @@ describe("Cocoapods Plugin", () => {
 
       await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
 
-      expect(exec).toBeCalledTimes(2);
+      expect(exec).toHaveBeenCalledTimes(2);
       expect(exec).toHaveBeenNthCalledWith(1, "pod", [
         "lib",
         "lint",
@@ -491,8 +501,8 @@ describe("Cocoapods Plugin", () => {
 
       await hook.beforeShipIt.promise({ releaseType: "latest", dryRun: true });
 
-      expect(exec).toBeCalledTimes(1);
-      expect(exec).lastCalledWith("notpod", [
+      expect(exec).toHaveBeenCalledTimes(1);
+      expect(exec).toHaveBeenLastCalledWith("notpod", [
         "lib",
         "lint",
         "--flag",
@@ -504,9 +514,9 @@ describe("Cocoapods Plugin", () => {
   describe("canary hook", () => {
     test("should do nothing on dryRun", async () => {
       mockPodspec(specWithVersion("0.0.1"));
-      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      vi.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
 
-      const mockLog = jest.spyOn(logger.log, "info");
+      const mockLog = vi.spyOn(logger.log, "info");
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,
@@ -519,10 +529,10 @@ describe("Cocoapods Plugin", () => {
     });
     test("should not use logger on quiet dryRun", async () => {
       mockPodspec(specWithVersion("0.0.1"));
-      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      vi.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
 
-      const mockLog = jest.spyOn(logger.log, "info");
-      const mockConsole = jest.spyOn(console, "log");
+      const mockLog = vi.spyOn(logger.log, "info");
+      const mockConsole = vi.spyOn(console, "log");
 
       await hooks.canary.promise({
         bump: Auto.SEMVER.patch,
@@ -536,12 +546,12 @@ describe("Cocoapods Plugin", () => {
       expect(mockConsole).toHaveBeenCalledTimes(1);
     });
     test("should tag with canary version", async () => {
-      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      vi.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
       let podSpec = specWithVersion("0.0.1");
-      jest
-        .spyOn(utilities, "getPodspecContents")
-        .mockImplementation(() => podSpec);
-      const mock = jest
+      vi.spyOn(utilities, "getPodspecContents").mockImplementation(
+        () => podSpec
+      );
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           podSpec = contents;
@@ -553,7 +563,7 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");
-      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledTimes(3);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
 
       expect(mock).toHaveBeenLastCalledWith(
@@ -565,15 +575,15 @@ describe("Cocoapods Plugin", () => {
       );
     });
     test("should tag multiple podspeccs with canary version", async () => {
-      jest.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
+      vi.spyOn(Auto, "getPrNumberFromEnv").mockReturnValue(1);
       const specs = {
         "./Test.podspec": specWithVersion("0.0.1"),
         "./Test2.podspec": specWithVersion("0.0.1"),
       };
-      jest
-        .spyOn(utilities, "getPodspecContents")
-        .mockImplementation((path) => specs[path]);
-      const mock = jest
+      vi.spyOn(utilities, "getPodspecContents").mockImplementation(
+        (path) => specs[path]
+      );
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           specs[path] = contents;
@@ -585,10 +595,10 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");
-      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledTimes(6);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test2.podspec"]);
-      expect(mock).toBeCalledTimes(4);
+      expect(mock).toHaveBeenCalledTimes(4);
       expect(mock).toHaveBeenCalledWith(
         "./Test.podspec",
         specWithVersion(
@@ -606,10 +616,10 @@ describe("Cocoapods Plugin", () => {
     });
     test("should tag with canary version with no PR number", async () => {
       let podSpec = specWithVersion("0.0.1");
-      jest
-        .spyOn(utilities, "getPodspecContents")
-        .mockImplementation(() => podSpec);
-      const mock = jest
+      vi.spyOn(utilities, "getPodspecContents").mockImplementation(
+        () => podSpec
+      );
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           podSpec = contents;
@@ -621,7 +631,7 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(newVersion).toBe("0.1.0-canary.1.1.1");
-      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledTimes(3);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
 
       expect(mock).toHaveBeenLastCalledWith(
@@ -648,15 +658,15 @@ describe("Cocoapods Plugin", () => {
       expect(versions).toStrictEqual(["0.0.1", "0.0.2", "0.1.0-next.0"]);
     });
     test("should tag with next version", async () => {
-      jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
+      vi.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
       const specs = {
         "./Test.podspec": specWithVersion("0.0.1"),
         "./Test2.podspec": specWithVersion("0.0.1"),
       };
-      jest
-        .spyOn(utilities, "getPodspecContents")
-        .mockImplementation((path) => specs[path]);
-      const mock = jest
+      vi.spyOn(utilities, "getPodspecContents").mockImplementation(
+        (path) => specs[path]
+      );
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           specs[path] = contents;
@@ -671,11 +681,11 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(versions).toContain("1.0.0-next.0");
-      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledTimes(6);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test2.podspec"]);
 
-      expect(mock).toBeCalledTimes(2);
+      expect(mock).toHaveBeenCalledTimes(2);
       expect(mock).toHaveBeenCalledWith(
         "./Test.podspec",
         specWithVersion("1.0.0-next.0")
@@ -686,12 +696,12 @@ describe("Cocoapods Plugin", () => {
       );
     });
     test("should tag with next version for multiple podspecs", async () => {
-      jest.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
+      vi.spyOn(Auto, "getCurrentBranch").mockReturnValue("next");
       let podSpec = specWithVersion("0.0.1");
-      jest
-        .spyOn(utilities, "getPodspecContents")
-        .mockImplementation(() => podSpec);
-      const mock = jest
+      vi.spyOn(utilities, "getPodspecContents").mockImplementation(
+        () => podSpec
+      );
+      const mock = vi
         .spyOn(utilities, "writePodspecContents")
         .mockImplementation((path, contents) => {
           podSpec = contents;
@@ -706,7 +716,7 @@ describe("Cocoapods Plugin", () => {
       });
 
       expect(versions).toContain("1.0.0-next.0");
-      expect(exec).toBeCalledTimes(4);
+      expect(exec).toHaveBeenCalledTimes(4);
       expect(exec).toHaveBeenCalledWith("git", ["checkout", "./Test.podspec"]);
 
       expect(mock).toHaveBeenLastCalledWith(
@@ -730,8 +740,12 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(2);
-      expect(exec).lastCalledWith("pod", ["trunk", "push", "./Test.podspec"]);
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenLastCalledWith("pod", [
+        "trunk",
+        "push",
+        "./Test.podspec",
+      ]);
     });
     test("should push multiple podspecs to trunk if no specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
@@ -746,7 +760,7 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(3);
+      expect(exec).toHaveBeenCalledTimes(3);
       expect(exec).toHaveBeenCalledWith("pod", [
         "trunk",
         "push",
@@ -772,8 +786,8 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(2);
-      expect(exec).lastCalledWith("notpod", [
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenLastCalledWith("notpod", [
         "trunk",
         "push",
         "./Test.podspec",
@@ -796,8 +810,8 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(2);
-      expect(exec).lastCalledWith("bundle", [
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenLastCalledWith("bundle", [
         "exec",
         "pod",
         "trunk",
@@ -825,8 +839,8 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(2);
-      expect(exec).lastCalledWith("pod", [
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(exec).toHaveBeenLastCalledWith("pod", [
         "trunk",
         "push",
         "--sources",
@@ -855,7 +869,7 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(5);
+      expect(exec).toHaveBeenCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
       expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",
@@ -897,7 +911,7 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledTimes(6);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
       expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",
@@ -948,7 +962,7 @@ describe("Cocoapods Plugin", () => {
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(5);
+      expect(exec).toHaveBeenCalledTimes(5);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
       expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",
@@ -977,7 +991,7 @@ describe("Cocoapods Plugin", () => {
     test("should delete autoPublishRepo if it exists and push to specs repo if specsRepo in options", async () => {
       mockPodspec(specWithVersion("0.0.1"));
 
-      exec = jest.fn().mockImplementation((...args) => {
+      exec = vi.fn().mockImplementation((...args) => {
         if (args[1]?.[1] === "list") {
           return `
 autoPublishRepo
@@ -1011,7 +1025,7 @@ trunk
 
       await hook.publish.promise({ bump: Auto.SEMVER.patch });
 
-      expect(exec).toBeCalledTimes(6);
+      expect(exec).toHaveBeenCalledTimes(6);
       expect(exec).toHaveBeenNthCalledWith(2, "pod", ["repo", "list"]);
       expect(exec).toHaveBeenNthCalledWith(3, "pod", [
         "repo",

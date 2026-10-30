@@ -1,11 +1,8 @@
-import envCi from "env-ci";
-
-jest.mock("env-ci");
-
-const envSpy = envCi as jest.Mock;
-envSpy.mockImplementation(() => ({
-  isCi: true,
-  pr: 123,
+vi.mock("env-ci", () => ({
+  default: () => ({
+    isCi: true,
+    pr: 123,
+  }),
 }));
 
 import Auto, { SEMVER } from "@auto-it/core";
@@ -21,7 +18,7 @@ const options = {
   repo: "repo",
 };
 
-jest.spyOn(console, "log").mockImplementation();
+vi.spyOn(console, "log").mockImplementation(() => undefined);
 
 describe("Upload Assets Plugin", () => {
   test("should add to pr body for pull requests", async () => {
@@ -29,13 +26,13 @@ describe("Upload Assets Plugin", () => {
       path.join(__dirname, "./test-assets/macos"),
     ]);
     const hooks = makeHooks();
-    const uploadReleaseAsset = jest.fn().mockImplementation(({ name }) =>
+    const uploadReleaseAsset = vi.fn().mockImplementation(({ name }) =>
       Promise.resolve({
         data: { id: 2, name, browser_download_url: `http://${name}` },
       })
     );
-    const createRelease = jest.fn().mockResolvedValue({ data: { id: 1 } });
-    const addToPrBody = jest.fn();
+    const createRelease = vi.fn().mockResolvedValue({ data: { id: 1 } });
+    const addToPrBody = vi.fn();
 
     plugin.apply({
       hooks,
@@ -47,7 +44,7 @@ describe("Upload Assets Plugin", () => {
         addToPrBody,
         github: {
           repos: { uploadReleaseAsset, createRelease },
-          paginate: jest.fn().mockResolvedValue([]),
+          paginate: vi.fn().mockResolvedValue([]),
         },
       },
     } as unknown as Auto);

@@ -1,15 +1,18 @@
 import { Auto } from "../auto";
 
-jest.mock("fs", () => ({
-  read: () => undefined,
-  readFileSync: () => 'FOO="test value"',
-  closeSync: () => undefined,
-  existsSync: () => true,
-  readFile: () => undefined,
-  ReadStream: function () {},
-  WriteStream: function () {},
-  writeFile: () => undefined,
-}));
+vi.mock("fs", () => {
+  const mod = {
+    read: () => undefined,
+    readFileSync: () => 'FOO="test value"',
+    closeSync: () => undefined,
+    existsSync: () => true,
+    readFile: () => undefined,
+    ReadStream: function () {},
+    WriteStream: function () {},
+    writeFile: () => undefined,
+  };
+  return { ...mod, default: mod };
+});
 
 test("should load .env file and override and env vars that are already set", async () => {
   process.env.FOO = "old value";

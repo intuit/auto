@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import Auto, { SEMVER } from "@auto-it/core";
 import {
   makeHooks,
@@ -16,20 +17,20 @@ const getMockAuto = () => {
     hooks,
     logger: {
       verbose: {
-        info: jest.fn(),
+        info: vi.fn(),
       },
       veryVerbose: {
-        info: jest.fn(),
+        info: vi.fn(),
       },
       log: {
-        error: jest.fn(),
+        error: vi.fn(),
       },
     },
   };
 };
 
-const execSpy = execSync as jest.Mock;
-jest.mock("child_process");
+const execSpy = execSync as Mock;
+vi.mock("child_process");
 
 describe("Exec Plugin", () => {
   beforeEach(() => {
@@ -65,7 +66,7 @@ describe("Exec Plugin", () => {
   });
 
   test("logs an E2BIG error with special handling", async () => {
-    const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+    const mockExit = vi.spyOn(process, "exit").mockImplementation(() => {});
     execSpy.mockImplementation(() => {
       const error = new Error("E2BIG");
       error.code = "E2BIG";
@@ -92,7 +93,7 @@ describe("Exec Plugin", () => {
   });
 
   test("logs other errors normally", async () => {
-    const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+    const mockExit = vi.spyOn(process, "exit").mockImplementation(() => {});
     execSpy.mockImplementation(() => {
       const error = new Error("random error");
       error.code = "random";

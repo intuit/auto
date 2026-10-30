@@ -6,7 +6,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("not add labels not present in project", async () => {
     const plugin = new PrBodyLabels();
     const hooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
 
     plugin.apply({
       hooks,
@@ -23,7 +23,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("add labels present in project", async () => {
     const plugin = new PrBodyLabels();
     const hooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
 
     plugin.apply({
       hooks,
@@ -40,7 +40,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("add labels present in project capital X", async () => {
     const plugin = new PrBodyLabels();
     const hooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
 
     plugin.apply({
       hooks,
@@ -57,7 +57,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("should remove labels if unchecked", async () => {
     const plugin = new PrBodyLabels();
     const hooks = makeHooks();
-    const removeLabel = jest.fn();
+    const removeLabel = vi.fn();
 
     plugin.apply({
       hooks,
@@ -74,7 +74,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("should not remove labels if removeStaleLabels=false", async () => {
     const plugin = new PrBodyLabels({ removeStaleLabels: false });
     const hooks = makeHooks();
-    const removeLabel = jest.fn();
+    const removeLabel = vi.fn();
 
     plugin.apply({
       hooks,
@@ -91,7 +91,7 @@ describe("Pr-Body-Labels Plugin", () => {
   test("not add labels in disabledLabels list", async () => {
     const plugin = new PrBodyLabels({ disabledLabels: ["patch"] });
     const hooks = makeHooks();
-    const addLabelToPr = jest.fn();
+    const addLabelToPr = vi.fn();
 
     plugin.apply({
       hooks,

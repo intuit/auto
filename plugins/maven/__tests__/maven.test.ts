@@ -3,44 +3,63 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import MavenPlugin, { IMavenPluginOptions } from "../src";
 import { execSync } from "child_process";
-import * as glob from "fast-glob";
+import { createRequire } from "module";
 
-const exec = jest.fn();
-const existsSync = jest.fn();
-const mkdirSync = jest.fn();
-const readFile = jest.fn();
-const readFileSync = jest.fn();
-const writeFile = jest.fn();
-const writeFileSync = jest.fn();
+const exec = vi.fn();
+const existsSync = vi.fn();
+const mkdirSync = vi.fn();
+const readFile = vi.fn();
+const readFileSync = vi.fn();
+const writeFile = vi.fn();
+const writeFileSync = vi.fn();
 
-jest.mock("fs", () => ({
-  // @ts-ignore
-  existsSync: (...args) => existsSync(...args),
-  // @ts-ignore
-  mkdirSync: (...args) => mkdirSync(...args),
-  // @ts-ignore
-  readFileSync: (...args) => readFileSync(...args),
-  // @ts-ignore
-  writeFileSync: (...args) => writeFileSync(...args),
-  // @ts-ignore
-  readFile: (...args) => readFile(...args),
-  // @ts-ignore
-  writeFile: (...args) => writeFile(...args),
-  ReadStream: function () {},
-  WriteStream: function () {},
-  // @ts-ignore
-  closeSync: () => undefined,
-  // @ts-ignore
-  read: (a, b, cb) => {
-    cb(undefined);
-  },
-}));
+vi.mock("fs", () => {
+  const mod = {
+    // @ts-ignore
+    existsSync: (...args) => existsSync(...args),
+    // @ts-ignore
+    mkdirSync: (...args) => mkdirSync(...args),
+    // @ts-ignore
+    readFileSync: (...args) => readFileSync(...args),
+    // @ts-ignore
+    writeFileSync: (...args) => writeFileSync(...args),
+    // @ts-ignore
+    readFile: (...args) => readFile(...args),
+    // @ts-ignore
+    writeFile: (...args) => writeFile(...args),
+    ReadStream: function () {},
+    WriteStream: function () {},
+    // @ts-ignore
+    closeSync: () => undefined,
+    // @ts-ignore
+    read: (a, b, cb) => {
+      cb(undefined);
+    },
+  };
+  return { ...mod, default: mod };
+});
 
-jest.mock("child_process");
-jest.mock("fast-glob");
+// pom-parser is CommonJS in node_modules, so it reads pom.xml with Node's own
+// fs, which vi.mock("fs") doesn't reach.
+vi.spyOn(createRequire(import.meta.url)("fs"), "readFile").mockImplementation(
+  // @ts-ignore
+  (...args) => readFile(...args)
+);
+
+vi.mock("child_process");
+
+const globSync = vi.fn();
+
+vi.mock("fast-glob", () => {
+  const mod = {
+    // @ts-ignore
+    sync: (...args) => globSync(...args),
+  };
+  return { ...mod, default: mod };
+});
 
 const mockGlob = (result: string[]) =>
-  jest.spyOn(glob, "sync").mockImplementation(() => result);
+  globSync.mockImplementation(() => result);
 
 const mockReadFile = (result: string) =>
   readFile.mockImplementation((path, options, callback) =>
@@ -50,22 +69,19 @@ const mockReadFile = (result: string) =>
 // @ts-ignore
 execSync.mockImplementation(exec);
 
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      exec(...args)
-);
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => exec(...args),
+}));
 
 describe("maven", () => {
   let hooks: Auto.IAutoHooks;
-  const prefixRelease: (a: string) => string = jest.fn(
+  const prefixRelease: (a: string) => string = vi.fn(
     (version) => `v${version}`
   );
   const options: IMavenPluginOptions = {};
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const plugin = new MavenPlugin(options);
     hooks = makeHooks();
     plugin.apply({ hooks, logger: dummyLog(), prefixRelease } as Auto.Auto);

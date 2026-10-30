@@ -16,23 +16,23 @@ import ReleasedLabelPlugin from "../src";
 const git = new Git({ owner: "1", repo: "2", baseBranch: "main" });
 const log = new LogParse();
 
-const comment = jest.fn();
-const addLabelToPr = jest.fn();
+const comment = vi.fn();
+const addLabelToPr = vi.fn();
 git.addLabelToPr = addLabelToPr;
 
-const getPr = jest.fn();
+const getPr = vi.fn();
 git.getPullRequest = getPr;
 getPr.mockReturnValue({ data: { body: "", head: { ref: "test" } } });
 
-const commits = jest.fn();
+const commits = vi.fn();
 git.getCommitsForPR = commits;
 commits.mockReturnValue([]);
 
-const getLabels = jest.fn();
+const getLabels = vi.fn();
 git.getLabels = getLabels;
 getLabels.mockReturnValue([]);
 
-const lockIssue = jest.fn();
+const lockIssue = vi.fn();
 git.lockIssue = lockIssue;
 lockIssue.mockReturnValue([]);
 

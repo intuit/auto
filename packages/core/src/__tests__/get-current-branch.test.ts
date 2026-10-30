@@ -2,11 +2,11 @@ import { execSync } from "child_process";
 import type { CiEnv } from "env-ci";
 import { getCurrentBranch } from "../auto";
 
-jest.mock("child_process");
+vi.mock("child_process");
 
 describe("getCurrentBranch", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("when isPr", () => {

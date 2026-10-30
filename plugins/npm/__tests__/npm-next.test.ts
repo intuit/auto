@@ -7,35 +7,29 @@ import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import NPMPlugin from "../src";
 
-const exec = jest.fn();
-const execPromise = jest.fn();
-const getLernaPackages = jest.fn();
-const monorepoPackages = jest.fn();
+const exec = vi.fn();
+const execPromise = vi.fn();
+const getLernaPackages = vi.fn();
+const monorepoPackages = vi.fn();
 
-jest.mock("child_process");
+vi.mock("child_process");
 // @ts-ignore
 execSync.mockImplementation(exec);
 exec.mockReturnValue("");
 execPromise.mockResolvedValue("");
 
-jest.mock(
-  "../../../packages/core/dist/utils/exec-promise",
-  () =>
-    (...args: any[]) =>
-      execPromise(...args)
-);
-jest.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
+vi.mock("../../../packages/core/dist/utils/exec-promise", () => ({
+  default: (...args: any[]) => execPromise(...args),
+}));
+vi.mock("../../../packages/core/dist/utils/get-current-branch", () => ({
   getCurrentBranch: () => "next",
 }));
-jest.mock(
-  "../../../packages/core/dist/utils/get-lerna-packages",
-  () =>
-    (...args: any[]) =>
-      getLernaPackages(...args)
-);
-jest.mock("env-ci", () => () => ({ isCi: false }));
-jest.mock("get-monorepo-packages", () => () => monorepoPackages());
-jest.mock("registry-url", () => () => "https://registry.npm.org");
+vi.mock("../../../packages/core/dist/utils/get-lerna-packages", () => ({
+  default: (...args: any[]) => getLernaPackages(...args),
+}));
+vi.mock("env-ci", () => ({ default: () => ({ isCi: false }) }));
+vi.mock("get-monorepo-packages", () => ({ default: () => monorepoPackages() }));
+vi.mock("registry-url", () => ({ default: () => "https://registry.npm.org" }));
 
 afterEach(() => {
   mockFs.restore();

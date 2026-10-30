@@ -1,14 +1,15 @@
+import type { Mock } from "vitest";
 import { execPromise } from "@auto-it/core";
 import GhPages, { IGhPagesPluginOptions } from "../src";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { execSync } from "child_process";
 
-const execSyncSpy = execSync as jest.Mock;
-jest.mock("child_process");
+const execSyncSpy = execSync as Mock;
+vi.mock("child_process");
 
-const execSpy = execPromise as jest.Mock;
-jest.mock("@auto-it/core");
+const execSpy = execPromise as Mock;
+vi.mock("@auto-it/core");
 
 /** Create a test for gh-pages plugin */
 function createTest(

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`All Contributors Plugin beforeShipit should comment confirming extra contributions 1`] = `
+exports[`All Contributors Plugin > beforeShipit > should comment confirming extra contributions 1`] = `
 "# Extra Contributions
 
 The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
@@ -8,7 +8,7 @@ The following contributions will be added to all-contributors (as well as any co
 - @andrew - design, doc"
 `;
 
-exports[`All Contributors Plugin beforeShipit should warn about unknown contribution types - no valid 1`] = `
+exports[`All Contributors Plugin > beforeShipit > should warn about unknown contribution types - no valid 1`] = `
 "# Extra Contributions
 
 No valid contribution types found!
@@ -21,7 +21,7 @@ These contributions will not be counted and you should fix them.
 - \`design123\`,- \`doc456\`"
 `;
 
-exports[`All Contributors Plugin beforeShipit should warn about unknown contribution types - some valid 1`] = `
+exports[`All Contributors Plugin > beforeShipit > should warn about unknown contribution types - some valid 1`] = `
 "# Extra Contributions
 
 The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::
@@ -36,7 +36,7 @@ These contributions will not be counted and you should fix them.
 - \`design123\`,- \`doc456\`"
 `;
 
-exports[`All Contributors Plugin beforeShipit should warn about unknown contribution types 1`] = `
+exports[`All Contributors Plugin > beforeShipit > should warn about unknown contribution types 1`] = `
 "# Extra Contributions
 
 The following contributions will be added to all-contributors (as well as any code contributions) when this PR is released :tada::

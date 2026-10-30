@@ -1,84 +1,84 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`normalizeCommits should do nothing with normal commits 1`] = `
-Array [
-  Object {
+exports[`normalizeCommits > should do nothing with normal commits 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "First",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Second",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Third",
   },
 ]
 `;
 
-exports[`normalizeCommits should strip whitespace in subject 1`] = `
-Array [
-  Object {
+exports[`normalizeCommits > should strip whitespace in subject 1`] = `
+[
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "First PR",
   },
-  Object {
+  {
     "authorEmail": "adam@dierkens.com",
     "authorName": "Adam Dierkens",
-    "authors": Array [
-      Object {
+    "authors": [
+      {
         "email": "adam@dierkens.com",
         "name": "Adam Dierkens",
       },
     ],
-    "files": Array [],
+    "files": [],
     "hash": "foo",
-    "labels": Array [],
+    "labels": [],
     "pullRequest": undefined,
     "subject": "Second PR",
   },

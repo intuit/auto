@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import endent from "endent";
 import Changelog, { type IGenerateReleaseNotesOptions } from "../changelog";
 import LogParse from "../log-parse";
@@ -7,8 +8,8 @@ import makeCommitFromMsg from "./make-commit-from-msg";
 import SEMVER, { defaultLabels } from "../semver";
 import { getCurrentBranch } from "../utils/get-current-branch";
 
-const currentBranchSpy = getCurrentBranch as jest.Mock;
-jest.mock("../utils/get-current-branch");
+const currentBranchSpy = getCurrentBranch as Mock;
+vi.mock("../utils/get-current-branch");
 
 const testOptions = (): IGenerateReleaseNotesOptions => ({
   owner: "foobar",

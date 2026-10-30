@@ -2,15 +2,10 @@ import Config, { normalizeLabel, normalizeLabels } from "../config";
 import { dummyLog } from "../utils/logger";
 import SEMVER, { type ILabelDefinition } from "../semver";
 
-const fetchSpy = jest.fn();
+const fetchSpy = vi.fn();
 
 // @ts-ignore
-jest.mock(
-  "node-fetch",
-  () =>
-    (...args) =>
-      fetchSpy(...args)
-);
+vi.mock("node-fetch", () => ({ default: (...args) => fetchSpy(...args) }));
 
 beforeEach(() => {
   fetchSpy.mockClear();
@@ -18,9 +13,9 @@ beforeEach(() => {
 
 const log = dummyLog();
 
-const importMock = jest.fn();
-jest.mock("import-cwd", () => {
-  return (path: any) => importMock(path);
+const importMock = vi.fn();
+vi.mock("import-cwd", () => {
+  return { default: (path: any) => importMock(path) };
 });
 
 describe("normalizeLabel", () => {
@@ -106,7 +101,7 @@ describe("loadExtendConfig", () => {
 
   test("should call fetch on URL with config", async () => {
     const config = new Config(log);
-    const mockFetchJson = jest.fn();
+    const mockFetchJson = vi.fn();
     mockFetchJson.mockReturnValue({});
 
     fetchSpy.mockResolvedValueOnce({
