@@ -1,6 +1,6 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
   getCurrentBranch,
@@ -107,7 +107,7 @@ export default class VersionFilePlugin implements IPlugin {
     const prereleaseBranch =
       branch && prereleaseBranches.includes(branch)
         ? branch
-        : prereleaseBranches[0];
+        : prereleaseBranches[0]!;
 
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       // If it's a string thats valid config

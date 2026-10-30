@@ -1,15 +1,28 @@
-import { loadPackageJson, getRepo } from ".";
+import { getRepo } from "../src";
 
-const packageJsonSpy = loadPackageJson as jest.Mock;
-jest.mock("../src/utils");
+const readFile = vi.fn();
+
+vi.mock("fs", () => ({
+  readFile: (...args: unknown[]) => readFile(...args),
+}));
+
+/** Make the next package.json read return this object */
+const mockPackageJson = (json: Record<string, unknown>) =>
+  readFile.mockImplementationOnce(
+    (
+      _path: string,
+      _encoding: string,
+      callback: (error: null, data: string) => void
+    ) => callback(null, JSON.stringify(json))
+  );
 
 test("should return nothing without a repo", async () => {
-  packageJsonSpy.mockReturnValueOnce({});
+  mockPackageJson({});
   expect(await getRepo()).toBeUndefined();
 });
 
 test("should return nothing without an owner", async () => {
-  packageJsonSpy.mockReturnValueOnce({
+  mockPackageJson({
     repository: { url: "fake.com" },
   });
 
@@ -17,7 +30,7 @@ test("should return nothing without an owner", async () => {
 });
 
 test("should return nothing without an package name", async () => {
-  packageJsonSpy.mockReturnValueOnce({
+  mockPackageJson({
     repository: { url: "fake.com" },
   });
 
@@ -25,7 +38,7 @@ test("should return nothing without an package name", async () => {
 });
 
 test("should correctly parse package info", async () => {
-  packageJsonSpy.mockReturnValueOnce({
+  mockPackageJson({
     version: "1.0.0",
     repository: { url: "https://github.com/black-panther/operation-foo" },
   });
@@ -37,7 +50,7 @@ test("should correctly parse package info", async () => {
 });
 
 test("should correctly parse package info - string", async () => {
-  packageJsonSpy.mockReturnValueOnce({
+  mockPackageJson({
     version: "1.0.0",
     repository: "black-panther/operation-foo",
   });

@@ -1,4 +1,5 @@
 import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
+import type { Agent } from "http";
 
 import {
   Auto,
@@ -164,7 +165,7 @@ export default class MicrosoftTeamsPlugin {
         ],
       }),
       headers: { "Content-Type": "application/json" },
-      agent,
+      agent: agent as Agent | undefined,
     });
 
     auto.logger.verbose.info("Posted release notes to microsoft teams.");

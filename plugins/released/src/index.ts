@@ -1,5 +1,6 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
-import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
+import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
 import botList from "@auto-it/bot-list";
 
@@ -174,8 +175,8 @@ export default class ReleasedLabelPlugin implements IPlugin {
 
     const issues = messages
       .map((message) => message.match(closeIssue))
-      .filter((r): r is string[] => Boolean(r))
-      .reduce((all, arr) => [...all, ...arr], [])
+      .filter((r): r is RegExpMatchArray => Boolean(r))
+      .reduce<string[]>((all, arr) => [...all, ...arr], [])
       .map((issue) => issue.match(/#(\d+)/i))
       .filter((r: RegExpMatchArray | null): r is RegExpMatchArray => Boolean(r))
       .map((match) => Number(match[1]));

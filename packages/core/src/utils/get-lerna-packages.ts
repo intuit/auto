@@ -17,7 +17,7 @@ export default async function getLernaPackages() {
   response.split("\n").forEach((packageInfo) => {
     const [packagePath, name, version] = packageInfo.split(":");
 
-    if (version !== "MISSING") {
+    if (packagePath && name && version && version !== "MISSING") {
       packages.push({ path: packagePath, name, version });
     }
   });

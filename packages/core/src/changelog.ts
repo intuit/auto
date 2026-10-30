@@ -287,7 +287,7 @@ export default class Changelog {
     const subject = commit.subject
       ? commit.subject
           .split("\n")[0]
-          .trim()
+          ?.trim()
           .replace("[skip ci]", "\\[skip ci\\]")
       : "";
 
@@ -462,19 +462,19 @@ export default class Changelog {
           return;
         }
 
-        const depth = getHeaderDepth(lines[notesStart]);
+        const depth = getHeaderDepth(lines[notesStart]!);
         visited.add(pr.number);
         let notes = "";
 
         for (let index = notesStart; index < lines.length; index++) {
           const line = lines[index];
-          const isTitle = line.match(title);
+          const isTitle = line?.match(title);
 
           if (
-            (line.startsWith("#") &&
+            (line?.startsWith("#") &&
               getHeaderDepth(line) <= depth &&
               !isTitle) ||
-            line.startsWith(automatedCommentIdentifier)
+            line?.startsWith(automatedCommentIdentifier)
           ) {
             break;
           }

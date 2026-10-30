@@ -2,8 +2,7 @@
 
 /* eslint-disable complexity */
 
-import {
-  Auto,
+import type {
   ApiOptions,
   IInfoOptions,
   ICanaryOptions,
@@ -17,8 +16,8 @@ import {
   IShipItOptions,
   IVersionOptions,
   INextOptions,
-  LabelExistsError,
 } from "@auto-it/core";
+import { Auto, LabelExistsError } from "@auto-it/core";
 import endent from "endent";
 import { to as on } from "await-to-js";
 import link from "terminal-link";
@@ -100,7 +99,7 @@ export async function execute(command: string, args: ApiOptions) {
         throw new Error(`idk what i'm doing.`);
     }
   } catch (error) {
-    if (error.status === 404) {
+    if ((error as { status?: number }).status === 404) {
       const [, project] = await on(auto.git!.getProject());
       const repoLink = link(
         `${auto.git?.options.owner}/${auto.git?.options.repo}`,
@@ -118,7 +117,9 @@ export async function execute(command: string, args: ApiOptions) {
       `);
       console.log("");
       auto.logger.verbose.error(error);
-    } else if (error.message.includes("TypeError: Cannot read property 'tap")) {
+    } else if (
+      (error as Error).message.includes("TypeError: Cannot read property 'tap")
+    ) {
       auto.logger.log.error(endent`
         One of the plugins you're using calls an unknown hook!
 

@@ -1,9 +1,5 @@
-import {
-  Auto,
-  IPlugin,
-  SEMVER,
-  validatePluginConfiguration,
-} from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, SEMVER, validatePluginConfiguration } from "@auto-it/core";
 import endent from "endent";
 import { diff, type ReleaseType } from "semver";
 import twitter from "tweet-tweet";
@@ -79,7 +75,7 @@ const makeTweet = ({
       .replace("%link", url);
 
   let truncatedNotes = releaseNotes
-    .split("#### Authors")[0]
+    .split("#### Authors")[0]!
     .replace(/#### /gm, "")
     .replace(/\(?\[\S+\]\(\S+\)/gm, "")
     .trim();

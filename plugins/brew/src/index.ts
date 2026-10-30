@@ -1,4 +1,5 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import { execSync } from "child_process";
 import fs from "fs";
 import * as t from "io-ts";
@@ -66,7 +67,7 @@ export default class BrewPlugin implements IPlugin {
       const version = await auto.git.getLatestTagInBranch();
       const sha = execSync(`shasum --algorithm 256 ${executable}`, {
         encoding: "utf8",
-      }).split(" ")[0];
+      }).split(" ")[0]!;
 
       auto.logger.log.info(
         `Updating "${name}" brew formula: ${version}#${sha}`

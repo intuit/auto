@@ -1,4 +1,5 @@
-import { Auto, execPromise, IPlugin, SEMVER } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, execPromise, SEMVER } from "@auto-it/core";
 import envCi from "env-ci";
 import fs from "fs";
 import path from "path";

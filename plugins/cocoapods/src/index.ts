@@ -1,9 +1,8 @@
+import type { IPlugin, ILogger } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
-  ILogger,
   getPrNumberFromEnv,
   DEFAULT_PRERELEASE_BRANCHES,
   getCurrentBranch,
@@ -200,13 +199,13 @@ export default class CocoapodsPlugin implements IPlugin {
     auto.hooks.getPreviousVersion.tapPromise(this.name, async () => {
       // Due to CocoaPods being git backed, all the versions will be the same
       // so there are no git tag collisions
-      return auto.prefixRelease(getVersion(this.paths[0]));
+      return auto.prefixRelease(getVersion(this.paths[0]!));
     });
 
     auto.hooks.version.tapPromise(
       this.name,
       async ({ bump, dryRun, quiet }) => {
-        const previousVersion = getVersion(this.paths[0]);
+        const previousVersion = getVersion(this.paths[0]!);
         const releaseVersion = inc(previousVersion, bump as ReleaseType);
         if (dryRun && releaseVersion) {
           if (quiet) {
@@ -319,7 +318,7 @@ export default class CocoapodsPlugin implements IPlugin {
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
-          : prereleaseBranches[0];
+          : prereleaseBranches[0]!;
         const lastRelease = await auto.git.getLatestRelease();
         const current =
           (await auto.git.getLastTagNotInBaseBranch(prereleaseBranch)) ||
@@ -367,9 +366,9 @@ export default class CocoapodsPlugin implements IPlugin {
     auto.hooks.beforeShipIt.tapPromise(this.name, async ({ dryRun }) => {
       if (dryRun) {
         auto.logger.log.info(logMessage('dryRun - running "pod lib lint"'));
-        const [pod, ...commands] = this.options.podCommand?.split(" ") || [
-          "pod",
-        ];
+        const [pod = "pod", ...commands] = this.options.podCommand?.split(
+          " "
+        ) || ["pod"];
         await this.paths.reduce(
           (promise, path) =>
             promise.then(() =>
@@ -403,7 +402,9 @@ export default class CocoapodsPlugin implements IPlugin {
    *
    */
   async publishPodSpec(podLogLevel: string[]) {
-    const [pod, ...commands] = this.options.podCommand?.split(" ") || ["pod"];
+    const [pod = "pod", ...commands] = this.options.podCommand?.split(" ") || [
+      "pod",
+    ];
     if (!this.options.specsRepo) {
       this.logger?.log.info(logMessage(`Pushing to Cocoapods trunk`));
       await this.paths.reduce(

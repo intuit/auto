@@ -32,7 +32,7 @@ vi.mock("@octokit/rest", () => {
 const execSpy = vi.fn();
 // @ts-ignore
 vi.mock("../utils/exec-promise.ts", () => ({
-  default: (...args) => execSpy(...args),
+  default: (...args: unknown[]) => execSpy(...args),
 }));
 
 describe("remote parsing", () => {

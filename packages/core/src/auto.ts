@@ -992,7 +992,7 @@ export default class Auto {
         });
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${(error as { status?: number }).status}`
         );
       }
 
@@ -1094,7 +1094,7 @@ export default class Auto {
       }
     } catch (error) {
       msg = {
-        description: error.message,
+        description: (error as Error).message,
         state: "error",
       };
     }
@@ -1115,7 +1115,7 @@ export default class Auto {
         this.logger.log.success("Posted status to Pull Request.");
       } catch (error) {
         throw new Error(
-          `Failed to post status to Pull Request with error code ${error.status}`
+          `Failed to post status to Pull Request with error code ${(error as { status?: number }).status}`
         );
       }
     }
@@ -1630,7 +1630,7 @@ export default class Auto {
       !options.onlyGraduateWithReleaseLabel ||
       (options.onlyGraduateWithReleaseLabel &&
         head.length > 0 &&
-        head[0].labels.some((l) =>
+        head[0]?.labels.some((l) =>
           this.semVerLabels?.get("release")?.includes(l)
         ));
     const isPrereleaseBranch = this.config?.prereleaseBranches?.some(
@@ -2337,7 +2337,7 @@ export default class Auto {
           await this.git.graphql<Record<string, ISearchResult>>(query);
 
         if (result?.[`hash_${commit}`]) {
-          const number = result[`hash_${commit}`].edges[0]?.node?.number;
+          const number = result[`hash_${commit}`]?.edges[0]?.node?.number;
 
           if (number) {
             pr = String(number);

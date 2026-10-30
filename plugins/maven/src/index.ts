@@ -1,4 +1,5 @@
-import { Auto, execPromise, IPlugin, IExtendedCommit } from "@auto-it/core";
+import type { IPlugin, IExtendedCommit } from "@auto-it/core";
+import { Auto, execPromise } from "@auto-it/core";
 import parseGitHubUrl from "parse-github-url";
 import { promisify } from "util";
 import * as t from "io-ts";

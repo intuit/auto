@@ -1,4 +1,5 @@
-import { Auto, IPlugin, validatePluginConfiguration } from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import { Aws, Options } from "aws-cli-js";
 import * as t from "io-ts";
 

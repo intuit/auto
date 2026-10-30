@@ -1,9 +1,5 @@
-import {
-  Auto,
-  execPromise,
-  IPlugin,
-  validatePluginConfiguration,
-} from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, execPromise, validatePluginConfiguration } from "@auto-it/core";
 import * as fs from "fs";
 import * as path from "path";
 import { inc, type ReleaseType, gte } from "semver";

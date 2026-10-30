@@ -77,7 +77,7 @@ const taggedPackageRegex = /(\S+)@(\S+)/;
 function getVersionFromTag(tag: string) {
   if (taggedPackageRegex.test(tag)) {
     const [, , version] = tag.match(taggedPackageRegex)!;
-    return version;
+    return version!;
   }
 
   return tag;
@@ -205,7 +205,7 @@ export default class Git {
 
       return latestRelease.tag_name;
     } catch (e) {
-      if (e.status === 404) {
+      if ((e as { status?: number }).status === 404) {
         this.logger.verbose.info(
           "Couldn't find latest release on GitHub, using first commit."
         );
@@ -280,7 +280,7 @@ export default class Git {
 
       return labels.data.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError("listLabelsOnIssue", args, e);
+      throw new GitAPIError("listLabelsOnIssue", args, e as Error);
     }
   }
 
@@ -304,7 +304,7 @@ export default class Git {
       this.logger.veryVerbose.info('Got response for "issues.get":\n', info);
       return info;
     } catch (e) {
-      throw new GitAPIError("getPr", args, e);
+      throw new GitAPIError("getPr", args, e as Error);
     }
   }
 
@@ -327,7 +327,7 @@ export default class Git {
       );
       return info;
     } catch (e) {
-      throw new GitAPIError("getCommit", [], e);
+      throw new GitAPIError("getCommit", [], e as Error);
     }
   }
 
@@ -356,7 +356,7 @@ export default class Git {
 
       return labels.map((l) => l.name);
     } catch (e) {
-      throw new GitAPIError("getProjectLabels", args, e);
+      throw new GitAPIError("getProjectLabels", args, e as Error);
     }
   }
 
@@ -409,7 +409,7 @@ export default class Git {
         }, []);
     } catch (error) {
       console.log(error);
-      const tag = error.match(/ambiguous argument '(\S+)\.\.\S+'/);
+      const tag = (error as string).match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {
         this.logger.log.error(
@@ -424,7 +424,7 @@ export default class Git {
         process.exit(1);
       }
 
-      throw new Error(error);
+      throw new Error(error as string);
     }
   }
 

@@ -1,8 +1,8 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
   determineNextVersion,
   execPromise,
-  IPlugin,
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
   validatePluginConfiguration,
@@ -264,7 +264,7 @@ export default class DockerPlugin implements IPlugin {
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
-          : prereleaseBranches[0];
+          : prereleaseBranches[0]!;
         const prereleaseAlias =
           (this.options.prereleaseAliasMappings as { [key: string]: string })[
             prereleaseBranch

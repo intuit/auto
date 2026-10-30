@@ -150,7 +150,8 @@ export default class Config {
         config = (await fetch(extend)).json();
         this.logger.verbose.note(`${extend} found: ${config}`);
       } catch (error) {
-        error.message = `Failed to get extended config from ${extend} -- ${error.message}`;
+        (error as Error).message =
+          `Failed to get extended config from ${extend} -- ${(error as Error).message}`;
         throw error;
       }
     } else if (extend.startsWith(".")) {

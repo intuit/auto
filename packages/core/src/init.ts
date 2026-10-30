@@ -61,6 +61,7 @@ async function getLabel(label?: ILabelDefinition) {
     };
   }
 
+  // @ts-expect-error enquirer types `validate` as taking a string, but snippet prompts pass their state
   const response = await prompt<LabelResponse>({
     type: "snippet",
     name: "value",
@@ -85,7 +86,6 @@ async function getLabel(label?: ILabelDefinition) {
           color: #{color}
         }`,
     /** Check if returned config is valid */
-    // @ts-ignore
     validate: (state: {
       /** The result of the prompt */
       values: ILabelDefinition;

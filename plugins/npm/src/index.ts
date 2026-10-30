@@ -8,20 +8,22 @@ import * as t from "io-ts";
 import { execSync } from "child_process";
 import on from "await-to-js";
 
+import type {
+  LernaPackage,
+  ILogger,
+  IPlugin,
+  ShipitRelease,
+} from "@auto-it/core";
 import {
   Auto,
   determineNextVersion,
   getCurrentBranch,
   getLernaPackages,
-  LernaPackage,
   inFolder,
   execPromise,
-  ILogger,
-  IPlugin,
   InteractiveInit,
   SEMVER,
   validatePluginConfiguration,
-  ShipitRelease,
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import getPackages from "get-monorepo-packages";
@@ -376,7 +378,7 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
     packages.map(async ([p, packageJson]) => {
       const newJson = { ...packageJson };
       const name = packageJson.name.match(/@\S+\/\S+/)
-        ? packageJson.name.split("/")[1]
+        ? packageJson.name.split("/")[1]!
         : packageJson.name;
 
       newJson.name = addCanaryScope(canaryScope, name);
@@ -384,10 +386,10 @@ async function setCanaryScope(canaryScope: string, paths: string[]) {
       if (newJson.dependencies) {
         Object.keys(newJson.dependencies).forEach((d) => {
           if (names.includes(d)) {
-            const depName = d.match(/@\S+\/\S+/) ? d.split("/")[1] : d;
+            const depName = d.match(/@\S+\/\S+/) ? d.split("/")[1]! : d;
 
             newJson.dependencies![addCanaryScope(canaryScope, depName)] =
-              newJson.dependencies![d];
+              newJson.dependencies![d]!;
             delete newJson.dependencies![d];
           }
         });
@@ -710,7 +712,7 @@ export default class NPMPlugin implements IPlugin {
     const prereleaseBranch =
       branch && prereleaseBranches.includes(branch)
         ? branch
-        : prereleaseBranches[0];
+        : prereleaseBranches[0]!;
 
     let isMaintenanceBranch = false;
 
@@ -880,7 +882,7 @@ export default class NPMPlugin implements IPlugin {
 
                 lineMap.root.push(line);
               } else {
-                const [packageName, change] = monoRepoLine;
+                const [packageName, change] = monoRepoLine as [string, string];
 
                 if (!lineMap[packageName]) {
                   lineMap[packageName] = [];
@@ -1107,7 +1109,7 @@ export default class NPMPlugin implements IPlugin {
             (isIndependent && `pre${bump}`) ||
             determineNextVersion(
               lastRelease,
-              inPrerelease ? latestTag : packagesBefore[0].version,
+              inPrerelease ? latestTag : packagesBefore[0]!.version,
               bump,
               canaryIdentifier
             );
@@ -1206,7 +1208,7 @@ export default class NPMPlugin implements IPlugin {
             return { error: "No packages were changed. No canary published." };
           }
 
-          const version = versioned.version.split("+")[0];
+          const version = versioned.version.split("+")[0]!;
 
           return {
             newVersion: this.canaryScope

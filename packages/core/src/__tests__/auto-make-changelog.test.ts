@@ -89,10 +89,10 @@ describe("Auto", () => {
     const addToChangelog = vi.fn();
     auto.release!.addToChangelog = addToChangelog;
     vi.spyOn(auto.release!, "generateReleaseNotes").mockImplementation(
-      () => undefined
+      () => undefined as any
     );
     vi.spyOn(auto.release!, "getCommitsInRelease").mockImplementation(
-      () => undefined
+      () => undefined as any
     );
 
     await auto.changelog({ from: "v1.0.0" });

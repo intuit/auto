@@ -71,7 +71,7 @@ function reporter<T>(validation: t.Validation<T>) {
 
     return {
       path,
-      expectedType: error.context[error.context.length - 1].type.name,
+      expectedType: error.context[error.context.length - 1]!.type.name,
       value: error.value,
     };
   });
@@ -88,7 +88,7 @@ function reporter<T>(validation: t.Validation<T>) {
         acc[item.path] = [];
       }
 
-      acc[item.path].push(item);
+      acc[item.path]?.push(item);
       return acc;
     },
     {}
@@ -106,7 +106,7 @@ function reporter<T>(validation: t.Validation<T>) {
           .map((g) => g.expectedType)
           .map((t) => `"${t}"`)
           .join(" or ");
-        const value = group[0].value;
+        const value = group[0]?.value;
 
         return {
           expectedType,
@@ -259,12 +259,12 @@ export const validateIoConfiguration =
 
       if (matchingMissingMember && "left" in matchingMissingMember) {
         const correct = Object.keys(
-          matchingMissingMember.left[0].context[0].actual as any
+          matchingMissingMember.left[0]!.context[0]!.actual as any
         );
         const missing =
-          matchingMissingMember.left[0].context[
-            matchingMissingMember.left[0].context.length - 1
-          ].key;
+          matchingMissingMember.left[0]!.context[
+            matchingMissingMember.left[0]!.context.length - 1
+          ]!.key;
 
         return [
           `${errorPath(

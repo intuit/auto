@@ -48,7 +48,9 @@ test("shipit should publish canary in locally when not on baseBranch", async () 
 
   auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
   auto.git!.getSha = () => Promise.resolve("abcdefghijklmnop");
-  vi.spyOn(auto.git!, "createComment").mockImplementation(() => undefined);
+  vi.spyOn(auto.git!, "createComment").mockImplementation(
+    () => undefined as any
+  );
   auto.release!.getCommitsInRelease = () => Promise.resolve([]);
   auto.release!.getCommits = () => Promise.resolve([]);
   const canary = vi.fn();
@@ -76,7 +78,9 @@ test("canary should use PR labels correctly", async () => {
 
   auto.git!.getLatestRelease = () => Promise.resolve("1.2.3");
   auto.git!.getSha = () => Promise.resolve("abcdefghijklmnop");
-  vi.spyOn(auto.git!, "createComment").mockImplementation(() => undefined);
+  vi.spyOn(auto.git!, "createComment").mockImplementation(
+    () => undefined as any
+  );
   auto.release!.getCommitsInRelease = () => Promise.resolve([]);
   auto.release!.getCommits = () => Promise.resolve([]);
   const canary = vi.fn();

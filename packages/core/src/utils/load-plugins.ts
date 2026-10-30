@@ -50,9 +50,10 @@ const formatPluginList = (plugins: string[]): InstalledModule[] =>
       const parts = plugin.includes("node_modules/")
         ? plugin.split("node_modules/")
         : plugin.split("auto/plugins/");
-      const name = parts[parts.length - 1]
-        .replace("@auto-it/", "")
-        .replace("@auto-canary/", "");
+      const name = parts[parts.length - 1]!.replace("@auto-it/", "").replace(
+        "@auto-canary/",
+        ""
+      );
 
       if (excluded.includes(name)) {
         return undefined;
@@ -79,7 +80,7 @@ export const getInstalledPlugins = (global = false): InstalledModule[] => {
 
     modules = stdout.split("\n");
   } catch (error) {
-    modules = error.stdout.split("\n");
+    modules = (error as { stdout: string }).stdout.split("\n");
   }
 
   return formatPluginList(modules);

@@ -1,4 +1,4 @@
-import { ILogger } from "@auto-it/core";
+import type { ILogger } from "@auto-it/core";
 import envCi from "env-ci";
 import path from "path";
 import registryUrl from "registry-url";

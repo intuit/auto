@@ -1,9 +1,5 @@
-import {
-  Auto,
-  IPlugin,
-  SEMVER,
-  validatePluginConfiguration,
-} from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, SEMVER, validatePluginConfiguration } from "@auto-it/core";
 import { satisfies } from "semver";
 import * as t from "io-ts";
 

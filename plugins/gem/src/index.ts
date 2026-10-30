@@ -1,9 +1,5 @@
-import {
-  Auto,
-  IPlugin,
-  validatePluginConfiguration,
-  execPromise,
-} from "@auto-it/core";
+import type { IPlugin } from "@auto-it/core";
+import { Auto, validatePluginConfiguration, execPromise } from "@auto-it/core";
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
@@ -95,7 +91,7 @@ export default class GemPlugin implements IPlugin {
         return;
       }
 
-      const { owner, name } = parseGitHubUrl(repoUrl[1]) || {};
+      const { owner, name } = parseGitHubUrl(repoUrl[1]!) || {};
 
       if (!owner || !name) {
         return;
@@ -270,7 +266,7 @@ export default class GemPlugin implements IPlugin {
       );
     }
 
-    return [version, newTag, versionFile];
+    return [version, newTag, versionFile] as const;
   }
 
   /** write the version in the file */
@@ -299,13 +295,13 @@ export default class GemPlugin implements IPlugin {
   }
 
   /** Get the current version of the gem and where it was found */
-  private async getVersion(auto: Auto) {
+  private async getVersion(auto: Auto): Promise<[string, string]> {
     let content = await readFile(this.gemspec, { encoding: "utf8" });
     let version = content.match(/version\s*=\s*["']([\S ]+)["']/);
 
     if (version?.[0]?.match(VERSION_REGEX)) {
       auto.logger.verbose.info(`Found version in gemspec: ${version[1]}`);
-      return [version[1], this.gemspec];
+      return [version[1]!, this.gemspec];
     }
 
     const versionFile = glob.sync("lib/**/version.rb")[0];
@@ -318,7 +314,7 @@ export default class GemPlugin implements IPlugin {
         auto.logger.verbose.info(
           `Found version in "${versionFile}": ${version[1]}`
         );
-        return [version[1], versionFile];
+        return [version[1]!, versionFile];
       }
     }
 

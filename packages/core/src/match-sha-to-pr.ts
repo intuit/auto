@@ -136,7 +136,7 @@ export function processQueryResult({
   );
 
   if (prs.length) {
-    const pr = prs[0].node;
+    const pr = prs[0]!.node;
     const labels: ILabelDefinition[] = pr.labels
       ? pr.labels.edges.map((edge) => edge.node)
       : [];
@@ -149,7 +149,7 @@ export function processQueryResult({
     commit.labels = ["pushToBaseBranch", ...commit.labels];
   }
 
-  commit.subject = commit.subject.split("\n")[0];
+  commit.subject = commit.subject.split("\n")[0]!;
 
   return commit;
 }

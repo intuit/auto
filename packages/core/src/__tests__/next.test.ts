@@ -85,7 +85,9 @@ test("falls back to local baseBranch if it doesn't exist on origin", async () =>
       makeCommitFromMsg("Test Commit", { labels: ["skip-release"] }),
     ]);
 
-  vi.spyOn(auto.release!, "getCommits").mockImplementation(() => undefined);
+  vi.spyOn(auto.release!, "getCommits").mockImplementation(
+    () => undefined as any
+  );
   const next = vi.fn();
   auto.hooks.next.tap("test", next);
 

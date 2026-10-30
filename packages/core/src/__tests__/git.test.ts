@@ -422,7 +422,7 @@ describe("github", () => {
       await gh.createComment("Some long thing", 22, "default");
 
       expect(deleteComment).toHaveBeenCalled();
-      expect(deleteComment.mock.calls[0][0].comment_id).toBe(1337);
+      expect(deleteComment.mock.calls[0]?.[0].comment_id).toBe(1337);
       expect(createComment).toHaveBeenCalled();
     });
 
@@ -459,7 +459,7 @@ describe("github", () => {
       await gh.createComment("Some new thing", 22, "PERF");
 
       expect(deleteComment).toHaveBeenCalled();
-      expect(deleteComment.mock.calls[0][0].comment_id).toBe(1000);
+      expect(deleteComment.mock.calls[0]?.[0].comment_id).toBe(1000);
     });
   });
 
@@ -489,7 +489,7 @@ describe("github", () => {
       await gh.editComment("Some long thing", 22, "default");
 
       expect(updateComment).toHaveBeenCalled();
-      expect(updateComment.mock.calls[0][0].comment_id).toBe(1337);
+      expect(updateComment.mock.calls[0]?.[0].comment_id).toBe(1337);
       expect(createComment).not.toHaveBeenCalled();
     });
 
@@ -797,7 +797,9 @@ describe("github", () => {
 
       expect(errorHook).toHaveBeenCalled();
 
-      const errorHandler = errorHook.mock.calls[0][1] as (error: Error) => void;
+      const errorHandler = errorHook.mock.calls[0]?.[1] as (
+        error: Error
+      ) => void;
 
       expect(
         errorHandler.bind(undefined, error({ authorization: "token abc" }))

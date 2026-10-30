@@ -1,13 +1,13 @@
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   execPromise,
   validatePluginConfiguration,
   getCurrentBranch,
   DEFAULT_PRERELEASE_BRANCHES,
   determineNextVersion,
 } from "@auto-it/core";
-import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 import * as t from "io-ts";
 import path from "path";
@@ -293,7 +293,7 @@ export default class GradleReleasePluginPlugin implements IPlugin {
         const branch = getCurrentBranch() || "";
         const prereleaseBranch = prereleaseBranches.includes(branch)
           ? branch
-          : prereleaseBranches[0];
+          : prereleaseBranches[0]!;
         const lastRelease = await auto.git?.getLatestRelease();
         const current =
           (await auto.git?.getLastTagNotInBaseBranch(prereleaseBranch)) ||

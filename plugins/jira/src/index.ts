@@ -2,13 +2,13 @@ import join from "url-join";
 import { prompt } from "enquirer";
 import * as t from "io-ts";
 
+import type { IPlugin } from "@auto-it/core";
 import {
   Auto,
-  IPlugin,
   InteractiveInit,
   validatePluginConfiguration,
 } from "@auto-it/core";
-import { IExtendedCommit } from "@auto-it/core/dist/log-parse";
+import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
 const pluginOptions = t.interface({
   /** Url to a hosted JIRA instance */
@@ -57,7 +57,7 @@ export function parseJira(commit: IExtendedCommit): IJiraCommit {
   return {
     ...commit,
     jira: {
-      number: matches.map((match) => match[1]),
+      number: matches.map((match) => match[1]!),
     },
   };
 }
