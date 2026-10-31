@@ -1,4 +1,4 @@
-import mockFs from "mock-fs";
+import { mockFs } from "../../../scripts/mock-fs";
 import { execSync } from "child_process";
 import fs from "fs";
 
@@ -6,6 +6,8 @@ import * as Auto from "@auto-it/core";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import NPMPlugin from "../src";
+
+vi.mock("fs");
 
 const exec = vi.fn();
 const execPromise = vi.fn();

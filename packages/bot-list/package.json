@@ -35,9 +35,9 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "start": "npm run build -- -w",
+    "start": "tsdown -w",
     "lint": "oxlint src",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "devDependencies": {

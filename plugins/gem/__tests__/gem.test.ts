@@ -1,4 +1,4 @@
-import mockFs from "mock-fs";
+import { mockFs } from "../../../scripts/mock-fs";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
 import { execSync } from "child_process";
@@ -8,6 +8,25 @@ import fs from "fs";
 import Gem from "../src";
 import endent from "endent";
 import { SEMVER } from "@auto-it/core";
+
+vi.mock("fs");
+// fast-glob is external, so it ignores vi.mock("fs") unless handed the mock.
+vi.mock("fast-glob", async (importOriginal) => {
+  const { default: glob } = await importOriginal<{
+    default: typeof import("fast-glob");
+  }>();
+  const { default: mockedFs } = await import("fs");
+
+  return {
+    default: {
+      ...glob,
+      sync: (
+        source: string | string[],
+        options?: Parameters<typeof glob.sync>[1]
+      ) => glob.sync(source, { ...options, fs: mockedFs }),
+    },
+  };
+});
 
 const logger = dummyLog();
 

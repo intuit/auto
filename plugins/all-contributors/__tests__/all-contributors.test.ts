@@ -1,6 +1,6 @@
 import * as Auto from "@auto-it/core";
-import generateReadme from "all-contributors-cli/dist/generate";
-import addContributor from "all-contributors-cli/dist/contributors";
+import { generate as generateReadme } from "all-contributors-cli/dist/generate";
+import { addContributor } from "all-contributors-cli/dist/contributors";
 import {
   makeHooks,
   makeLogParseHooks,

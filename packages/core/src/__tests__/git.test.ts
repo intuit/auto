@@ -383,7 +383,7 @@ describe("github", () => {
     });
 
     expect(issuesAndPullRequests).toHaveBeenCalledWith({
-      advanced_search: true,
+      advanced_search: "true",
       q: "repo:Adam Dierkens/test AND (is:pr AND is:open)",
       order: "desc",
     });
