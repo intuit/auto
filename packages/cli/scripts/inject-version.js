@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: path.join(__dirname, "../../../.env") });
 
-const autoPath = path.join(__dirname, "../dist/bin/auto.mjs");
+const autoPath = path.join(__dirname, "../dist/bin/auto.js");
 
 const nextVersion = execSync(`${autoPath} shipit -dq`, {
   encoding: "utf-8",

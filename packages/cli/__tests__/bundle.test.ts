@@ -3,10 +3,10 @@ import { execSync } from "child_process";
 
 test("bundle should function", () => {
   const type =
-    (process.platform === "win32" && "win.exe") ||
-    (process.platform === "darwin" && "macos") ||
-    "linux";
-  const zip = path.join(__dirname, `../binary/auto-${type}`);
+    (process.platform === "win32" && "win-x64.exe") ||
+    (process.platform === "darwin" && "darwin-arm64") ||
+    "linux-x64";
+  const zip = path.join(__dirname, `../build/auto-${type}`);
   const binary = path.join(__dirname, "../auto");
 
   execSync(`gunzip -c ${zip} > ${binary}`);
