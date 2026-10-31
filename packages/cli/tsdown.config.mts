@@ -9,9 +9,9 @@ const config: UserConfig[] = [
   // The CLI binary is emitted as ESM at dist/bin/auto.mjs
   mergeConfig(baseConfig, {
     entry: { "bin/auto": "./src/bin/auto.ts" },
-    // format: "esm",
-    // fixedExtension: true,
-    // platform: "node",
+    format: "esm",
+    fixedExtension: true,
+    platform: "node",
     shims: true,
     // endent only has an `exports.default`, which Node's ESM/CJS interop can't see
     deps: { alwaysBundle: ["endent"] },
@@ -19,16 +19,8 @@ const config: UserConfig[] = [
     ...(process.env.AUTO_CLI_VERSION && {
       env: { AUTO_CLI_VERSION: process.env.AUTO_CLI_VERSION },
     }),
-    // dts: false,
-    clean: true,
-    sourcemap: false,
-    exe: {
-      targets: [
-        { platform: 'linux', arch: 'x64', nodeVersion: '25.7.0' },
-        { platform: 'darwin', arch: 'arm64', nodeVersion: '25.7.0' },
-        { platform: 'win', arch: 'x64', nodeVersion: '25.7.0' },
-      ],
-    },
+    dts: false,
+    clean: false,
   }),
 ];
 
