@@ -27,9 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
+        uses: pnpm/setup@v3.1.2
       - name: Build
         run: pnpm -r run build
       - name: Check for unformatted files
@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
+        uses: pnpm/setup@v3.1.2
       - name: Build
         run: pnpm -r run build
       - name: Lint
@@ -51,9 +51,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
+        uses: pnpm/setup@v3.1.2
       - name: Build
         run: pnpm -r run build
       - name: Type check
@@ -63,11 +63,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Fetch git tags
         run: git fetch --unshallow --tags
       - name: Install dependencies
-        uses: pnpm/setup@v3
+        uses: pnpm/setup@v3.1.2
       - name: Build
         run: pnpm -r run build
       - name: Test
@@ -75,6 +75,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send CodeCov Results
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        uses: codecov/codecov-action@v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
