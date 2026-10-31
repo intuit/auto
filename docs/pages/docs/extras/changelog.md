@@ -17,7 +17,7 @@ Change `shipit` behavior.
 
 ## Release Notes
 
-`auto shipit` will only ship to `latest` on the base branch ([which is configurable]()). If ran locally or from a PR it will create a `canary` release that doesn't interfere with your `latest` release.
+`auto shipit` will only ship to `latest` on the base branch ([which is configurable](<>)). If ran locally or from a PR it will create a `canary` release that doesn't interfere with your `latest` release.
 ```
 
 This will create a special section at the top of the changelog that collects all the additional release notes from merged PRs. Below is a sample of what it might look like.
@@ -30,7 +30,7 @@ This will create a special section at the top of the changelog that collects all
 
 _From #371_
 
-`auto shipit` will only ship to `latest` on the base branch ([which is configurable]()). If ran locally or from a PR it will create a `canary` release that doesn't interfere with your `latest` release.
+`auto shipit` will only ship to `latest` on the base branch ([which is configurable](<>)). If ran locally or from a PR it will create a `canary` release that doesn't interfere with your `latest` release.
 
 ---
 
