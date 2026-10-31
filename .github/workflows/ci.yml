@@ -47,7 +47,7 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-  type-check:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -57,7 +57,7 @@ jobs:
       - name: Build
         run: pnpm -r run build
       - name: Type check
-        run: pnpm type-check
+        run: pnpm typecheck
 
   test:
     runs-on: ubuntu-latest

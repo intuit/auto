@@ -21,6 +21,7 @@ allowBuilds:
   fsevents: false
   keytar: false
   nx: false
+  simple-git-hooks: true
 
 # jest-when only needs Vitest's global `expect`. Without this, pnpm
 # auto-installs its jest peer, which pulls all of Jest into the repo.
