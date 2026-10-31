@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "start": "npm run build -- -w",
+    "start": "tsdown -w",
     "lint": "oxlint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"

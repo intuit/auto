@@ -7,8 +7,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  # Install and build once. The other jobs restore node_modules and dist from
-  # this run's cache instead of installing and building again.
+  # Build once. The other jobs install from the pnpm store this job caches and
+  # restore the build output from this run's cache instead of building again.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +20,7 @@ jobs:
           cache: true
       - name: Build
         run: pnpm -r run build
-      - name: Save install and build
+      - name: Save build
         uses: actions/cache/save@v6.1.0
         with:
           # Restores must use the same paths, or they miss the cache
@@ -36,11 +36,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Setup pnpm and Node.js
+      - name: Install dependencies
         uses: pnpm/setup@v3.1.2
         with:
-          install: false
-      - name: Restore install and build
+          cache: true
+      - name: Restore build
         uses: actions/cache/restore@v6.1.0
         with:
           path: *build-cache-path
@@ -55,11 +55,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Setup pnpm and Node.js
+      - name: Install dependencies
         uses: pnpm/setup@v3.1.2
         with:
-          install: false
-      - name: Restore install and build
+          cache: true
+      - name: Restore build
         uses: actions/cache/restore@v6.1.0
         with:
           path: *build-cache-path
@@ -74,11 +74,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Setup pnpm and Node.js
+      - name: Install dependencies
         uses: pnpm/setup@v3.1.2
         with:
-          install: false
-      - name: Restore install and build
+          cache: true
+      - name: Restore build
         uses: actions/cache/restore@v6.1.0
         with:
           path: *build-cache-path
@@ -95,11 +95,11 @@ jobs:
         uses: actions/checkout@v7.0.1
       - name: Fetch git tags
         run: git fetch --unshallow --tags
-      - name: Setup pnpm and Node.js
+      - name: Install dependencies
         uses: pnpm/setup@v3.1.2
         with:
-          install: false
-      - name: Restore install and build
+          cache: true
+      - name: Restore build
         uses: actions/cache/restore@v6.1.0
         with:
           path: *build-cache-path

@@ -40,7 +40,6 @@ const resolveToSource = (): Plugin => ({
 export default defineConfig({
   plugins: [resolveToSource()],
   test: {
-    globals: true,
     environment: "node",
     include: ["**/__tests__/*.test.{ts,tsx,js}"],
     exclude: ["**/node_modules/**", "**/dist/**", "**/scripts/**"],
@@ -58,5 +57,9 @@ export default defineConfig({
       // Jest wrote coverage even when tests failed.
       reportOnFailure: true,
     },
+    projects: [
+      'packages/*',
+      'plugins/*'
+    ]
   },
 });
