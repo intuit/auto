@@ -20,8 +20,8 @@ jobs:
           cache: true
       - name: Build
         run: pnpm -r run build
-      - name: Bundle
-        run: pnpm -r run bundle
+      # - name: Bundle
+      #   run: pnpm -r run bundle
       - name: Save build
         uses: actions/cache/save@v6.1.0
         with:
