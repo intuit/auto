@@ -1,10 +1,11 @@
 import { defineConfig, type UserConfig } from "tsdown";
+import { dependencies } from "./package.json";
 
 const config: UserConfig = defineConfig({
   entry: { "bin/auto": "./src/bin/auto.ts" },
   shims: true,
   // endent only has an `exports.default`, which Node's ESM/CJS interop can't see
-  deps: { alwaysBundle: ["endent"] },
+  deps: { alwaysBundle: Object.keys(dependencies) },
   // Bake the version into standalone binaries (see scripts/inject-version.js)
   ...(process.env.AUTO_CLI_VERSION && {
     env: { AUTO_CLI_VERSION: process.env.AUTO_CLI_VERSION },
