@@ -57,8 +57,7 @@
     "endent": "^2.1.0",
     "module-alias": "^2.3.4",
     "signale": "^1.4.0",
-    "terminal-link": "^5.0.0",
-    "tslib": "^2.8.1"
+    "terminal-link": "^5.0.0"
   },
   "devDependencies": {
     "@types/signale": "^1.4.7",

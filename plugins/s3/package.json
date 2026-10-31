@@ -40,8 +40,7 @@
     "@auto-it/core": "workspace:*",
     "aws-cli-js": "^2.2.3",
     "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
-    "tslib": "^2.8.1"
+    "io-ts": "^2.2.22"
   },
   "devDependencies": {
     "tsdown": "catalog:"

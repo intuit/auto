@@ -48,8 +48,7 @@
     "env-ci": "^11.2.0",
     "fp-ts": "^2.16.11",
     "fromentries": "^1.2.0",
-    "io-ts": "^2.2.22",
-    "tslib": "^2.8.1"
+    "io-ts": "^2.2.22"
   },
   "devDependencies": {
     "@types/env-ci": "^3.1.4",

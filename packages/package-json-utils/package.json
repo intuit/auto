@@ -43,8 +43,7 @@
   },
   "dependencies": {
     "parse-author": "^2.0.0",
-    "parse-github-url": "1.0.4",
-    "tslib": "^2.8.1"
+    "parse-github-url": "1.0.4"
   },
   "devDependencies": {
     "@types/parse-github-url": "1.0.3",

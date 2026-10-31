@@ -363,9 +363,6 @@ importers:
       terminal-link:
         specifier: ^5.0.0
         version: 5.0.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/signale':
         specifier: ^1.4.7
@@ -490,9 +487,6 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.19.2)(typescript@6.0.3)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       type-fest:
         specifier: ^5.10.0
         version: 5.10.0
@@ -539,9 +533,6 @@ importers:
       parse-github-url:
         specifier: 1.0.4
         version: 1.0.4
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/parse-github-url':
         specifier: 1.0.3
@@ -585,9 +576,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/env-ci':
         specifier: ^3.1.4
@@ -607,9 +595,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -632,9 +617,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -657,9 +639,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -691,9 +670,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/array.prototype.flatmap':
         specifier: ^1.2.6
@@ -716,9 +692,6 @@ importers:
       toml:
         specifier: ^5.0.1
         version: 5.0.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       user-home:
         specifier: ^3.0.0
         version: 3.0.0
@@ -750,9 +723,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -778,9 +748,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -800,9 +767,6 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       url-join:
         specifier: ^6.0.0
         version: 6.0.0
@@ -843,9 +807,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/env-ci':
         specifier: ^3.1.4
@@ -877,9 +838,6 @@ importers:
       push-dir:
         specifier: ^0.4.1
         version: 0.4.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -893,9 +851,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -918,9 +873,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -943,9 +895,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       url-join:
         specifier: ^6.0.0
         version: 6.0.0
@@ -968,9 +917,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1008,9 +954,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/jsdom':
         specifier: ^30.0.0
@@ -1039,9 +982,6 @@ importers:
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1079,9 +1019,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       typescript-memoize:
         specifier: ^1.1.1
         version: 1.1.1
@@ -1119,9 +1056,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1138,9 +1072,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1157,9 +1088,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1179,9 +1107,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1204,9 +1129,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@octokit/rest':
         specifier: ^22.0.1
@@ -1229,9 +1151,6 @@ importers:
       io-ts:
         specifier: ^2.2.22
         version: 2.2.22(fp-ts@2.16.11)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1254,9 +1173,6 @@ importers:
       strip-ansi:
         specifier: ^7.2.0
         version: 7.2.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1288,9 +1204,6 @@ importers:
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1316,9 +1229,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       tweet-tweet:
         specifier: ^1.0.4
         version: 1.0.4
@@ -1356,9 +1266,6 @@ importers:
       terminal-link:
         specifier: ^5.0.0
         version: 5.0.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@octokit/rest':
         specifier: ^22.0.1
@@ -1384,9 +1291,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1412,9 +1316,6 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       vsce:
         specifier: ^2.15.0
         version: 2.15.0
