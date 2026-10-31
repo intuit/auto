@@ -27,7 +27,7 @@ import endent from "endent";
 import { parse as parseUrl, format } from "url";
 import on from "await-to-js";
 
-import createHttpsProxyAgent from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 import type {
   ApiOptions,
   IInfoOptions,
@@ -359,10 +359,10 @@ export function determineNextVersion(
   bump: SEMVER,
   tag?: string
 ) {
-  const next = inc(lastVersion, `pre${bump}` as ReleaseType, tag);
+  const next = inc(lastVersion, `pre${bump}` as ReleaseType, undefined, tag);
 
   return !next || lte(next, currentVersion)
-    ? inc(currentVersion, "prerelease", tag) || "prerelease"
+    ? inc(currentVersion, "prerelease", undefined, tag) || "prerelease"
     : next;
 }
 
@@ -679,7 +679,7 @@ export default class Auto {
       repo: config.repo,
       ...repository,
       token,
-      agent: proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined,
+      agent: proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined,
       baseUrl: config.githubApi,
       graphqlBaseUrl: config.githubGraphqlApi,
     };

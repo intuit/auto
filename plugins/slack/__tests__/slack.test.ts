@@ -4,7 +4,7 @@ import { dummyLog } from "@auto-it/core/src/utils/logger";
 import { makeHooks } from "@auto-it/core/src/utils/make-hooks";
 import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
-import createHttpsProxyAgent from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 import SlackPlugin, { sanitizeMarkdown, convertToBlocks } from "../src";
 import endent from "endent";
@@ -286,14 +286,14 @@ describe("postToSlack", () => {
   test("should call slack api through http proxy", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
-    process.env.http_proxy = "http-proxy";
+    process.env.http_proxy = "http://http-proxy";
 
     await plugin.createPost(
       mockAuto,
       "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
       [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
-      createHttpsProxyAgent("mock-url")
+      new HttpsProxyAgent("http://mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -324,14 +324,14 @@ describe("postToSlack", () => {
   test("should call slack api through https proxy", async () => {
     const plugin = new SlackPlugin("https://custom-slack-url");
     process.env.SLACK_TOKEN = "MY_TOKEN";
-    process.env.https_proxy = "https-proxy";
+    process.env.https_proxy = "http://https-proxy";
 
     await plugin.createPost(
       mockAuto,
       "New Releases: 1.0.0",
       sanitizeMarkdown("# My Notes\n- PR [some link](google.com)"),
       [{ data: { tag_name: "1.0.0", html_url: "https://google.com" } }] as any,
-      createHttpsProxyAgent("mock-url")
+      new HttpsProxyAgent("http://mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();

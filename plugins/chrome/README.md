@@ -11,6 +11,7 @@ To publish to the chrome web store you will need the following secrets set in yo
 - `CLIENT_ID`
 - `CLIENT_SECRET`
 - `REFRESH_TOKEN`
+- `PUBLISHER_ID` (the publisher ID of your Chrome Web Store developer account)
 
 ## Installation
 

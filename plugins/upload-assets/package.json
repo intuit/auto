@@ -41,16 +41,16 @@
   "dependencies": {
     "@auto-it/core": "workspace:*",
     "endent": "^2.1.0",
-    "fast-glob": "^3.1.1",
-    "file-type": "^16.0.0",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
-    "terminal-link": "^2.1.1",
+    "fast-glob": "^3.3.3",
+    "file-type": "^22.3.0",
+    "fp-ts": "^2.16.11",
+    "io-ts": "^2.2.22",
+    "terminal-link": "^5.0.0",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.12.0",
-    "env-ci": "^5.0.1",
+    "@octokit/rest": "^22.0.1",
+    "env-ci": "^11.2.0",
     "tsdown": "catalog:"
   }
 }

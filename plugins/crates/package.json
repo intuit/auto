@@ -40,16 +40,16 @@
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
-    "env-ci": "^5.0.1",
-    "semver": "^7.0.0",
-    "toml": "^3.0.0",
+    "env-ci": "^11.2.0",
+    "semver": "^7.8.5",
+    "toml": "^5.0.1",
     "tslib": "^2.8.1",
-    "user-home": "^2.0.0"
+    "user-home": "^3.0.0"
   },
   "devDependencies": {
-    "@types/env-ci": "^3.1.0",
-    "@types/semver": "^7.1.0",
-    "@types/user-home": "^2.0.0",
+    "@types/env-ci": "^3.1.4",
+    "@types/semver": "^7.8.0",
+    "@types/user-home": "^2.0.2",
     "tsdown": "catalog:"
   }
 }

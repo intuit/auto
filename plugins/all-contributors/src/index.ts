@@ -17,8 +17,8 @@ import type { IExtendedCommit } from "@auto-it/core/src/log-parse";
 import * as t from "io-ts";
 import fromEntries from "fromentries";
 
-import addContributor from "all-contributors-cli/dist/contributors";
-import generateReadme from "all-contributors-cli/dist/generate";
+import { addContributor } from "all-contributors-cli/dist/contributors";
+import { generate as generateReadme } from "all-contributors-cli/dist/generate";
 
 const contributionTypes = [
   "blog",
@@ -185,7 +185,7 @@ function generateContributorReadme(
       const oldReadMe = fs.readFileSync(file, {
         encoding: "utf-8",
       });
-      const newReadMe = await generateReadme(
+      const newReadMe = generateReadme(
         {
           contributorsPerLine: 7,
           imageSize: 100,

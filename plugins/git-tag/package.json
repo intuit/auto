@@ -38,11 +38,11 @@
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
-    "semver": "^7.0.0",
+    "semver": "^7.8.5",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/semver": "^7.1.0",
+    "@types/semver": "^7.8.0",
     "tsdown": "catalog:"
   }
 }
