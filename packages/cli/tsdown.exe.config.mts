@@ -24,7 +24,7 @@ const config: UserConfig = defineConfig({
     env: { AUTO_CLI_VERSION: process.env.AUTO_CLI_VERSION },
   }),
   // dts: false,
-  clean: true,
+  clean: false,
   sourcemap: false,
   exe: {
     targets: [

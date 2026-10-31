@@ -20,6 +20,8 @@ jobs:
           cache: true
       - name: Build
         run: pnpm -r run build
+      - name: Bundle
+        run: pnpm -r run bundle
       - name: Save build
         uses: actions/cache/save@v6.1.0
         with:
@@ -27,7 +29,7 @@ jobs:
           path: &build-cache-path |
             packages/*/dist
             plugins/*/dist
-            */cli/binary
+            */cli/build
           key: &build-cache-key build-${{ github.run_id }}
 
   format:
