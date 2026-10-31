@@ -2,7 +2,6 @@ import { existsSync } from "node:fs";
 import { createRequire, registerHooks } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import "mock-fs";
 
 vi.mock("requireg", () => ({ default: createRequire(import.meta.url) }));
 
