@@ -22,7 +22,7 @@
     "noEmit": true,
 
     "lib": ["dom", "es2017"],
-    "types": ["node"],
+    "types": ["node", "vitest/globals", "vitest/importMeta"],
     "allowImportingTsExtensions": true
   }
 }
