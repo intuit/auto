@@ -7,74 +7,109 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-  #     - name: Fetch git tags
-  #       run: git fetch --unshallow --tags
-  #     - name: Install dependencies
-  #       uses: pnpm/setup@v3
-  #       with:
-  #         node-version-file: mise.toml
-  #     - name: Check node version
-  #       run: node --version
-  #     - name: Build
-  #       run: pnpm -r run build
-
-  format:
+  # Install and build once. The other jobs restore node_modules and dist from
+  # this run's cache instead of installing and building again.
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install dependencies
         uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
       - name: Build
         run: pnpm -r run build
+      - name: Save install and build
+        uses: actions/cache/save@v6.1.0
+        with:
+          # Restores must use the same paths, or they miss the cache
+          path: &build-cache-path |
+            packages/*/dist
+            plugins/*/dist
+            */cli/binary
+          key: &build-cache-key build-${{ github.run_id }}
+
+  format:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Setup pnpm and Node.js
+        uses: pnpm/setup@v3.1.2
+        with:
+          install: false
+      - name: Restore install and build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
       - name: Check for unformatted files
         run: pnpm format:diff
 
   lint:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Install dependencies
+      - name: Setup pnpm and Node.js
         uses: pnpm/setup@v3.1.2
-      - name: Build
-        run: pnpm -r run build
+        with:
+          install: false
+      - name: Restore install and build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
       - name: Lint
         run: pnpm lint
 
   typecheck:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
-      - name: Install dependencies
+      - name: Setup pnpm and Node.js
         uses: pnpm/setup@v3.1.2
-      - name: Build
-        run: pnpm -r run build
+        with:
+          install: false
+      - name: Restore install and build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
       - name: Type check
         run: pnpm typecheck
 
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Fetch git tags
         run: git fetch --unshallow --tags
-      - name: Install dependencies
+      - name: Setup pnpm and Node.js
         uses: pnpm/setup@v3.1.2
-      - name: Build
-        run: pnpm -r run build
+        with:
+          install: false
+      - name: Restore install and build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
       - name: Test
         run: pnpm test:coverage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Send CodeCov Results
+      - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

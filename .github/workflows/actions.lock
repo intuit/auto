@@ -6,10 +6,16 @@ workflows:
     '.github/workflows/build.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/ci.yml':
+        - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
         - 'codecov/codecov-action@v7.1.1'
         - 'pnpm/setup@v3.1.2'
 dependencies:
+    'actions/cache@v6.1.0':
+        ref: 'v6.1.0'
+        commit: 'sha1-55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
+        owner_id: 44036562
+        repo_id: 215566462
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
