@@ -7,7 +7,6 @@ import type { IAllContributorsPluginOptions } from "./plugins/all-contributors";
 
 const npmOptions: INpmConfig = {
   exact: true,
-  canaryScope: "@auto-canary",
 };
 
 const allContributorsOptions: IAllContributorsPluginOptions = {
@@ -25,8 +24,7 @@ const brewOptions: IBrewPluginOptions = {
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
-    // Loaded by path so the root needs no workspace links to them. Canary
-    // releases rename the packages, which breaks those links.
+    // Loaded by path so the root needs no workspace links to them
     plugins: [
       [
         "./plugins/protected-branch",
