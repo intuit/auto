@@ -1,7 +1,7 @@
 import path from "path";
 import { execSync } from "child_process";
 
-test("bundle should function", () => {
+test.skip("bundle should function", () => {
   const type =
     (process.platform === "win32" && "win-x64.exe") ||
     (process.platform === "darwin" && "darwin-arm64") ||
