@@ -120,8 +120,6 @@ jobs:
           path: *build-cache-path
           key: *build-cache-key
           fail-on-cache-miss: true
-      - name: Prepare repository
-        run: git fetch --unshallow --tags
       - name: Create Release
         run: pnpm auto shipit -vv
         env:
