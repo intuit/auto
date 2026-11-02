@@ -220,3 +220,7 @@ docs/public/search-index.json
 # Local agent issue tracker
 .scratch/
 packages/cli/build
+
+# Temporary
+CONTEXT.md
+docs/adr

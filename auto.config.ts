@@ -7,7 +7,6 @@ import type { IAllContributorsPluginOptions } from "./plugins/all-contributors";
 
 const npmOptions: INpmConfig = {
   exact: true,
-  canaryScope: "@auto-canary",
 };
 
 const allContributorsOptions: IAllContributorsPluginOptions = {
@@ -25,29 +24,30 @@ const brewOptions: IBrewPluginOptions = {
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
+    // Loaded by path so the root needs no workspace links to them
     plugins: [
       [
-        "protected-branch",
+        "./plugins/protected-branch",
         {
           releaseTemporaryBranchPrefix: "protected-release-",
           requiredStatusChecks: ["WIP", "build", "test", "lint"],
         },
       ],
       [
-        "upload-assets",
+        "./plugins/upload-assets",
         [
           "./packages/cli/binary/auto-linux.gz",
           "./packages/cli/binary/auto-macos.gz",
           "./packages/cli/binary/auto-win.exe.gz",
         ],
       ],
-      ["npm", npmOptions],
-      "released",
-      "first-time-contributor",
-      "pr-body-labels",
+      ["./plugins/npm", npmOptions],
+      "./plugins/released",
+      "./plugins/first-time-contributor",
+      "./plugins/pr-body-labels",
       "./scripts/auto-update-curl-version.js",
-      ["all-contributors", allContributorsOptions],
-      ["brew", brewOptions],
+      ["./plugins/all-contributors", allContributorsOptions],
+      ["./plugins/brew", brewOptions],
     ],
     labels: [
       {

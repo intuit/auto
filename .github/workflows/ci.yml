@@ -4,7 +4,24 @@ on:
   push:
     branches: [main, next]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled]
+
+# Enabled permissions on GITHUB_TOKEN
+permissions:
+  # To be able to push to the repo
+  contents: write
+  # To update the pr description with canary info
+  pull-requests: write
+  # For pr-check to create a status
+  statuses: write
+  # Needed to create PR statuses/checks
+  checks: write
+  # To post comments on PRs
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # Build once. The other jobs install from the pnpm store this job caches and
@@ -100,3 +117,65 @@ jobs:
         uses: codecov/codecov-action@v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  release-canary:
+    runs-on: ubuntu-latest
+    if: >-
+      !contains(github.event.head_commit.message, 'ci skip') &&
+      !contains(github.event.head_commit.message, 'skip ci') &&
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'canary')
+    needs: [build, test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Fetch git tags
+        run: git fetch --unshallow --tags
+      - name: Install dependencies
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
+      - name: Restore build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
+      - name: Create Release
+        run: pnpm auto shipit -vv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ github.event.pull_request.number && secrets.NPM_TOKEN }}
+          PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+
+  release:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref_name == 'main' &&
+      !contains(github.event.head_commit.message, 'ci skip') &&
+      !contains(github.event.head_commit.message, 'skip ci')
+    needs: [build, test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Fetch git tags
+        run: git fetch --unshallow --tags
+      - name: Install dependencies
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
+      - name: Restore build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
+      - name: Create Release
+        run: pnpm auto shipit -vv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ github.event.pull_request.number && secrets.NPM_TOKEN }}
+          PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GH_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
