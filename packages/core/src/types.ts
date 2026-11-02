@@ -7,8 +7,9 @@ const author = z
     /** The name and email of the author to make commits with */
     author: z.union([
       z.string(),
-      // Extra keys weren't rejected here under io-ts either
-      z.looseObject({
+      // Extra keys weren't rejected here under io-ts either. z.object
+      // accepts them too, without adding an index signature to the type.
+      z.object({
         /** The name of the author to make commits with */ name: z.string(),
         /** The email of the author to make commits with */
         email: z.string(),
