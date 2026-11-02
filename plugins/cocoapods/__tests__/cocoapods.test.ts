@@ -1052,3 +1052,20 @@ trunk
     });
   });
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const options = { podspecPath: "./Test.podspec" };
+    const plugin = new CocoapodsPlugin(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});

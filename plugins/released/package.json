@@ -42,8 +42,7 @@
     "@auto-it/bot-list": "workspace:*",
     "@auto-it/core": "workspace:*",
     "deepmerge": "^4.3.1",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@octokit/rest": "^22.0.1",

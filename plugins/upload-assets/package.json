@@ -43,9 +43,8 @@
     "endent": "^2.1.0",
     "fast-glob": "^3.3.3",
     "file-type": "^22.3.0",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
-    "terminal-link": "^5.0.0"
+    "terminal-link": "^5.0.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@octokit/rest": "^22.0.1",

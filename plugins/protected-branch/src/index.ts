@@ -4,19 +4,21 @@ import {
   getCurrentBranch,
   validatePluginConfiguration,
 } from "@auto-it/core";
-import * as t from "io-ts";
+import { z } from "zod";
 import { GitOperator } from "./GitOperator";
 
-const pluginOptions = t.partial({
-  /** Personal access token for who need to approve release commit changes */
-  reviewerToken: t.string,
-  /** Branch prefix for release branch, default to "automatic-release-" */
-  releaseTemporaryBranchPrefix: t.string,
-  /** List of required status checks for protected branch */
-  requiredStatusChecks: t.array(t.string),
-});
+const pluginOptions = z
+  .strictObject({
+    /** Personal access token for who need to approve release commit changes */
+    reviewerToken: z.string(),
+    /** Branch prefix for release branch, default to "automatic-release-" */
+    releaseTemporaryBranchPrefix: z.string(),
+    /** List of required status checks for protected branch */
+    requiredStatusChecks: z.array(z.string()),
+  })
+  .partial();
 
-export type IProtectedBranchPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IProtectedBranchPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Handle Github branch protections */
 export default class ProtectedBranchPlugin implements IPlugin {

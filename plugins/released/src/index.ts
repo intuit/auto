@@ -5,24 +5,26 @@ import type { RestEndpointMethodTypes } from "@octokit/rest";
 import botList from "@auto-it/bot-list";
 
 import merge from "deepmerge";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  /** Message to use when posting on issues and pull requests */
-  message: t.string,
-  /** The label to add to issues and pull requests */
-  label: t.string,
-  /** The label to add to issues and pull requests that are in a prerelease */
-  prereleaseLabel: t.string,
-  /** Whether to lock the issue once the pull request has been released */
-  lockIssues: t.boolean,
-  /** Whether to lock the issue once the pull request has been released */
-  lockPrs: t.boolean,
-  /** Whether to comment on PRs made by bots */
-  includeBotPrs: t.boolean,
-});
+const pluginOptions = z
+  .strictObject({
+    /** Message to use when posting on issues and pull requests */
+    message: z.string(),
+    /** The label to add to issues and pull requests */
+    label: z.string(),
+    /** The label to add to issues and pull requests that are in a prerelease */
+    prereleaseLabel: z.string(),
+    /** Whether to lock the issue once the pull request has been released */
+    lockIssues: z.boolean(),
+    /** Whether to lock the issue once the pull request has been released */
+    lockPrs: z.boolean(),
+    /** Whether to comment on PRs made by bots */
+    includeBotPrs: z.boolean(),
+  })
+  .partial();
 
-export type IReleasedLabelPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IReleasedLabelPluginOptions = z.infer<typeof pluginOptions>;
 
 const TYPE = "%TYPE";
 const VERSION = "%VERSION";

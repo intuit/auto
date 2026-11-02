@@ -9,22 +9,24 @@ import {
 } from "@auto-it/core";
 import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
-import * as t from "io-ts";
+import { z } from "zod";
 import path from "path";
 import { inc, type ReleaseType } from "semver";
 
 /** Global functions for usage in module */
 const defaultSnapshotSuffix = "-SNAPSHOT";
 
-const pluginOptions = t.partial({
-  /** The gradle binary to release the project with */
-  gradleCommand: t.string,
+const pluginOptions = z
+  .strictObject({
+    /** The gradle binary to release the project with */
+    gradleCommand: z.string(),
 
-  /** A list of gradle command customizations to pass to gradle */
-  gradleOptions: t.array(t.string),
-});
+    /** A list of gradle command customizations to pass to gradle */
+    gradleOptions: z.array(z.string()),
+  })
+  .partial();
 
-export type IGradleReleasePluginPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IGradleReleasePluginPluginOptions = z.infer<typeof pluginOptions>;
 
 export interface IGradleProperties {
   /** version */

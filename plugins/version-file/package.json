@@ -38,9 +38,8 @@
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
-    "semver": "^7.8.5"
+    "semver": "^7.8.5",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/semver": "^7.8.0",

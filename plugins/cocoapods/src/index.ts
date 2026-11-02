@@ -11,7 +11,7 @@ import {
 
 import { inc, type ReleaseType } from "semver";
 
-import * as t from "io-ts";
+import { z } from "zod";
 
 import { getPodspecContents, writePodspecContents } from "./utilities";
 
@@ -31,24 +31,26 @@ const sourceLineRegex = /\.source.*(?<source>\{\s*:\s*git.*\})/;
  */
 const logMessage = (msg: string): string => `${logPrefix} ${msg}`;
 
-const required = t.interface({
+const required = z.strictObject({
   /** Relative path to podspec file */
-  podspecPath: t.union([t.string, t.array(t.string)]),
+  podspecPath: z.union([z.string(), z.array(z.string())]),
 });
 
-const optional = t.partial({
-  /** The Cocoapods repo to publish to */
-  specsRepo: t.string,
+const optional = z
+  .strictObject({
+    /** The Cocoapods repo to publish to */
+    specsRepo: z.string(),
 
-  /** Any additional command line flags to pass to `pod repo push` */
-  flags: t.array(t.string),
+    /** Any additional command line flags to pass to `pod repo push` */
+    flags: z.array(z.string()),
 
-  /** The command to use for `pod` if it needs to be separate like `bundle exec pod` */
-  podCommand: t.string,
-});
+    /** The command to use for `pod` if it needs to be separate like `bundle exec pod` */
+    podCommand: z.string(),
+  })
+  .partial();
 
-const pluginOptions = t.intersection([required, optional]);
-export type ICocoapodsPluginOptions = t.TypeOf<typeof pluginOptions>;
+const pluginOptions = required.extend(optional.shape);
+export type ICocoapodsPluginOptions = z.infer<typeof pluginOptions>;
 
 /**
  * Returns the regex'd version of the podspec file

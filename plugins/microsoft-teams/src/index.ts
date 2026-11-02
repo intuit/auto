@@ -7,20 +7,22 @@ import {
   getCurrentBranch,
 } from "@auto-it/core";
 import fetch from "node-fetch";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  /** URL of the mircosoft teams to post to */
-  url: t.string,
-  /** Who to bother when posting to the channel */
-  atTarget: t.string,
-  /** Allow users to opt into having prereleases posted to mircosoft teams */
-  publishPreRelease: t.boolean,
-  /** Additional Title to add at the start of the mircosoft teams message */
-  title: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** URL of the mircosoft teams to post to */
+    url: z.string(),
+    /** Who to bother when posting to the channel */
+    atTarget: z.string(),
+    /** Allow users to opt into having prereleases posted to mircosoft teams */
+    publishPreRelease: z.boolean(),
+    /** Additional Title to add at the start of the mircosoft teams message */
+    title: z.string(),
+  })
+  .partial();
 
-export type IMicrosoftTeamsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IMicrosoftTeamsPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Post your release notes to Microsoft Teams during `auto release` */
 export default class MicrosoftTeamsPlugin {

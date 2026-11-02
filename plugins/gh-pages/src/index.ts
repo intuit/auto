@@ -6,26 +6,28 @@ import {
   SEMVER,
 } from "@auto-it/core";
 import { execSync } from "child_process";
-import * as t from "io-ts";
+import { z } from "zod";
 import endent from "endent";
 
-const required = t.interface({
+const required = z.strictObject({
   /** The directory to push to gh-pages */
-  dir: t.string,
+  dir: z.string(),
 });
 
-const optional = t.partial({
-  /** A command to build the documentation website */
-  buildCommand: t.string,
-  /** The branch to push to */
-  branch: t.string,
-  /** A label to look for and always publish the docs */
-  label: t.string,
-});
+const optional = z
+  .strictObject({
+    /** A command to build the documentation website */
+    buildCommand: z.string(),
+    /** The branch to push to */
+    branch: z.string(),
+    /** A label to look for and always publish the docs */
+    label: z.string(),
+  })
+  .partial();
 
-const pluginOptions = t.intersection([required, optional]);
+const pluginOptions = required.extend(optional.shape);
 
-export type IGhPagesPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IGhPagesPluginOptions = z.infer<typeof pluginOptions>;
 
 const defaults = {
   branch: "gh-pages",

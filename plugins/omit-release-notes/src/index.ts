@@ -1,20 +1,22 @@
 import type { IPlugin } from "@auto-it/core";
 import { Auto, validatePluginConfiguration } from "@auto-it/core";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pattern = t.union([t.string, t.array(t.string)]);
-const pluginOptions = t.partial({
-  /** Usernames to omit */
-  username: pattern,
-  /** Emails to omit */
-  email: pattern,
-  /** Names to omit */
-  name: pattern,
-  /** Labels to omit */
-  labels: pattern,
-});
+const pattern = z.union([z.string(), z.array(z.string())]);
+const pluginOptions = z
+  .strictObject({
+    /** Usernames to omit */
+    username: pattern,
+    /** Emails to omit */
+    email: pattern,
+    /** Names to omit */
+    name: pattern,
+    /** Labels to omit */
+    labels: pattern,
+  })
+  .partial();
 
-export type IReleaseNotesPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IReleaseNotesPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Ensure a value is an array */
 const arrayify = <T>(arr: T | T[]): T[] => (Array.isArray(arr) ? arr : [arr]);

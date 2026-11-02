@@ -1,5 +1,5 @@
 import type { Mock } from "vitest";
-import { execPromise } from "@auto-it/core";
+import { execPromise, validatePluginConfiguration } from "@auto-it/core";
 import GhPages, { IGhPagesPluginOptions } from "../src";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
@@ -164,5 +164,29 @@ describe("Gh-Pages Plugin", () => {
         '--message="Update docs [skip ci]"',
       ]);
     });
+  });
+});
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    // @auto-it/core is mocked in this file, so use the real validation
+    const core =
+      await vi.importActual<typeof import("@auto-it/core")>("@auto-it/core");
+    vi.mocked(validatePluginConfiguration).mockImplementation(
+      core.validatePluginConfiguration
+    );
+
+    const hooks = makeHooks();
+    const options = { dir: "docs" };
+    const plugin = new GhPages(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
   });
 });
