@@ -19,6 +19,10 @@ permissions:
   # To post comments on PRs
   issues: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Build once. The other jobs install from the pnpm store this job caches and
   # restore the build output from this run's cache instead of building again.
