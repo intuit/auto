@@ -24,7 +24,10 @@
     "**/node_modules",
     "**/dist",
     // A fixture that is deliberately not valid JavaScript
-    "packages/core/src/utils/__tests__/test-plugin-malformed.js"
+    "packages/core/src/utils/__tests__/test-plugin-malformed.js",
+    // Templates for new packages, which contain {{placeholders}}
+    "scripts/template-plugin",
+    "scripts/template-package"
   ],
 
   // The correctness category is the starting point. On top of it, each rule

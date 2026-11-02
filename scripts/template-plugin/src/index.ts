@@ -1,10 +1,13 @@
 import { type Auto, type IPlugin, validatePluginConfiguration } from '@auto-it/core';
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-});
+/** The options a user can set for the plugin. Unknown options are an error. */
+const pluginOptions = z
+  .strictObject({
+  })
+  .partial();
 
-export type I{{pascal}}PluginOptions = t.TypeOf<typeof pluginOptions>;
+export type I{{pascal}}PluginOptions = z.infer<typeof pluginOptions>;
 
 /** {{description}} */
 export default class {{pascal}}Plugin implements IPlugin {

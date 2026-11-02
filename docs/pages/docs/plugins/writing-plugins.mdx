@@ -72,29 +72,37 @@ export default class TestPlugin implements IPlugin {
 
 ### Validation
 
-To get validate of the options passed to plugins, `auto` uses [io-ts](https://github.com/gcanti/io-ts) and exports a utility function to validate the structured produced by `io-ts`.
-It lets you defined your interfaces in JavaScript and easily convert them to TypeScript.
-This means it's super simple to have type-safe code and runtime validation checking!
+`auto` validates the options passed to a plugin with the plugin's **options schema**.
+`validatePluginConfiguration` accepts any [Standard Schema](https://standardschema.dev), so you can write it with [Zod](https://zod.dev), [Valibot](https://valibot.dev), [ArkType](https://arktype.io) or any other library that implements the standard.
+`auto`'s own plugins use Zod.
+Your options are defined once, and you get both the TypeScript type and runtime validation from it.
 
-First install the following:
+First install Zod:
 
 ```bash
-npm i --save io-ts fp-ts
+npm i --save zod
 # or
-yarn add io-ts fp-ts
+yarn add zod
 ```
 
-Then convert your options interface to the equivalent `io-ts` structure.
+Then write your options as a schema and derive the type from it.
 
 ```ts
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  someOption: t.boolean,
-});
+const pluginOptions = z
+  .strictObject({
+    someOption: z.boolean(),
+  })
+  .partial();
 
-export type TestPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type TestPluginOptions = z.infer<typeof pluginOptions>;
 ```
+
+Two rules for options schemas:
+
+- **Reject unknown keys in the schema.** Use `z.strictObject` (or your library's strict equivalent). `auto` reports whatever your schema reports, so with a plain `z.object` a typo in a user's config is silently ignored.
+- **Validate, don't transform.** `auto` only checks the options. Your plugin receives the options exactly as the user wrote them, so `.default()` and `.transform()` have no effect. Apply defaults in your constructor instead.
 
 Then tap into the `validateConfig` hook and use the `validatePluginConfiguration` utility.
 
@@ -115,6 +123,77 @@ export default class MyPlugin implements IPlugin {
 
 And that's it!
 Now `auto` will validate your plugins configuration before running.
+
+If a plugin passes something that isn't a Standard Schema, such as an io-ts codec, `auto` logs a warning and doesn't validate that plugin's options.
+
+### Migrating plugins to v12
+
+Before v12, `validatePluginConfiguration` took an [io-ts](https://github.com/gcanti/io-ts) codec.
+v12 takes a Standard Schema instead, and io-ts doesn't implement the standard.
+To migrate, rewrite your options schema with Zod (or another Standard Schema library), then replace `io-ts` and `fp-ts` in your plugin's dependencies with `zod`.
+Your `validateConfig` tap doesn't change.
+
+Here's the same options schema before and after.
+
+```ts
+// Before: io-ts
+import * as t from "io-ts";
+
+const requiredOptions = t.interface({
+  /** The URL to post to */
+  url: t.string,
+});
+
+const optionalOptions = t.partial({
+  /** Who to mention in the post */
+  atTarget: t.union([t.string, t.boolean]),
+  /** The smallest release to post about */
+  threshold: t.keyof({ patch: null, minor: null, major: null }),
+  /** Files to attach to the post */
+  files: t.array(t.string),
+});
+
+const pluginOptions = t.intersection([requiredOptions, optionalOptions]);
+
+export type MyPluginOptions = t.TypeOf<typeof pluginOptions>;
+```
+
+```ts
+// After: Zod
+import { z } from "zod";
+
+const pluginOptions = z.strictObject({
+  /** The URL to post to */
+  url: z.string(),
+  /** Who to mention in the post */
+  atTarget: z.union([z.string(), z.boolean()]).optional(),
+  /** The smallest release to post about */
+  threshold: z.enum(["patch", "minor", "major"]).optional(),
+  /** Files to attach to the post */
+  files: z.array(z.string()).optional(),
+});
+
+export type MyPluginOptions = z.infer<typeof pluginOptions>;
+```
+
+| io-ts                                 | Zod                                       |
+| ------------------------------------- | ----------------------------------------- |
+| `t.type({...})`, `t.interface({...})` | `z.strictObject({...})`                   |
+| `t.partial({...})`                    | `z.strictObject({...}).partial()`         |
+| `t.intersection([A, B])`              | `A.extend(B.shape)`                       |
+| `t.union([...])`                      | `z.union([...])`                          |
+| `t.literal(x)`                        | `z.literal(x)`                            |
+| `t.keyof({ a: null, b: null })`       | `z.enum(["a", "b"])`                      |
+| `t.array(X)`, `t.tuple([...])`        | `z.array(X)`, `z.tuple([...])`            |
+| `t.record(t.string, X)`               | `z.record(z.string(), X)`                 |
+| `t.string`, `t.boolean`, `t.number`   | `z.string()`, `z.boolean()`, `z.number()` |
+| `t.TypeOf<typeof X>`                  | `z.infer<typeof X>`                       |
+
+A few things behave differently:
+
+- **Unknown keys.** Before v12, `auto` rejected unknown keys for you, even when your codec used `t.type` or `t.partial`. Now your schema has to reject them, so use `z.strictObject`.
+- **Error messages.** Some messages changed. For example, unknown keys are now reported together with other errors, not only when there are none, and some compound types are described more simply (`"tuple"` instead of `"[string, any]"`).
+- **`labelDefinition`.** The `labelDefinition` export from `@auto-it/core` is now a Zod schema. Replace `labelDefinition.decode(value)` with `labelDefinition.safeParse(value)`.
 
 ## Example Plugin - NPM (simple)
 
