@@ -25,29 +25,31 @@ const brewOptions: IBrewPluginOptions = {
 /** Auto configuration */
 export default function rc(): AutoRc {
   return {
+    // Loaded by path so the root needs no workspace links to them. Canary
+    // releases rename the packages, which breaks those links.
     plugins: [
       [
-        "protected-branch",
+        "./plugins/protected-branch",
         {
           releaseTemporaryBranchPrefix: "protected-release-",
           requiredStatusChecks: ["WIP", "build", "test", "lint"],
         },
       ],
       [
-        "upload-assets",
+        "./plugins/upload-assets",
         [
           "./packages/cli/binary/auto-linux.gz",
           "./packages/cli/binary/auto-macos.gz",
           "./packages/cli/binary/auto-win.exe.gz",
         ],
       ],
-      ["npm", npmOptions],
-      "released",
-      "first-time-contributor",
-      "pr-body-labels",
+      ["./plugins/npm", npmOptions],
+      "./plugins/released",
+      "./plugins/first-time-contributor",
+      "./plugins/pr-body-labels",
       "./scripts/auto-update-curl-version.js",
-      ["all-contributors", allContributorsOptions],
-      ["brew", brewOptions],
+      ["./plugins/all-contributors", allContributorsOptions],
+      ["./plugins/brew", brewOptions],
     ],
     labels: [
       {
