@@ -2,6 +2,10 @@
 
 exports[`Brew Plugin > should validate it's configuration 1`] = `
 [
+  ""brew"
+
+Found unknown configuration keys: execuable
+",
   {
     "expectedType": ""string"",
     "path": "brew.executable",

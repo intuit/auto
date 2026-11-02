@@ -43,8 +43,7 @@
     "conventional-changelog-preset-loader": "^6.0.1",
     "conventional-commits-parser": "^7.1.3",
     "endent": "^2.1.0",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/array.prototype.flatmap": "^1.2.6",

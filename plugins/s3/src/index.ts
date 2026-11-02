@@ -1,27 +1,23 @@
 import type { IPlugin } from "@auto-it/core";
 import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import { Aws, Options } from "aws-cli-js";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.intersection([
-  t.interface({
-    /** S3 bucket to post the asset to */
-    bucket: t.string,
-    /** S3 Region to post the asset to */
-    region: t.string,
-    /** Paths to the files to upload to S3 */
-    files: t.array(t.tuple([t.string, t.string])),
-  }),
-  t.partial({
-    /** Whether this plugin should overwrite files on S3 */
-    overwrite: t.boolean,
-  }),
-]);
+const pluginOptions = z.strictObject({
+  /** S3 bucket to post the asset to */
+  bucket: z.string(),
+  /** S3 Region to post the asset to */
+  region: z.string(),
+  /** Paths to the files to upload to S3 */
+  files: z.array(z.tuple([z.string(), z.string()])),
+  /** Whether this plugin should overwrite files on S3 */
+  overwrite: z.boolean().optional(),
+});
 
-export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IUploadAssetsPluginOptions = z.infer<typeof pluginOptions>;
 
-const configOptions = t.union([pluginOptions, t.array(pluginOptions)]);
-export type ConfigOptions = t.TypeOf<typeof configOptions>;
+const configOptions = z.union([pluginOptions, z.array(pluginOptions)]);
+export type ConfigOptions = z.infer<typeof configOptions>;
 
 /** Post your built artifacts to s3 during `auto release` */
 export default class S3Plugin implements IPlugin {
@@ -51,17 +47,7 @@ export default class S3Plugin implements IPlugin {
   apply(auto: Auto) {
     auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
       if (name === this.name || name === `@auto-it/${this.name}`) {
-        if (Array.isArray(options)) {
-          const errors = await Promise.all(
-            options.map((o) =>
-              validatePluginConfiguration(this.name, pluginOptions, o)
-            )
-          );
-
-          return errors.reduce((acc, item) => [...acc, ...item], []);
-        }
-
-        return validatePluginConfiguration(this.name, pluginOptions, options);
+        return validatePluginConfiguration(this.name, configOptions, options);
       }
     });
 

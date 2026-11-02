@@ -562,12 +562,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -631,12 +628,9 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/array.prototype.flatmap':
         specifier: ^1.2.6
@@ -703,15 +697,12 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       fromentries:
         specifier: ^1.2.0
         version: 1.3.2
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1016,12 +1007,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1073,12 +1061,9 @@ importers:
       aws-cli-js:
         specifier: ^2.2.3
         version: 2.2.3
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1117,18 +1102,15 @@ importers:
       '@octokit/rest':
         specifier: ^22.0.1
         version: 22.0.1
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       https-proxy-agent:
         specifier: ^9.1.0
         version: 9.1.0(supports-color@8.1.1)
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1145,12 +1127,6 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
@@ -1160,6 +1136,9 @@ importers:
       twitter-text:
         specifier: ^3.0.0
         version: 3.1.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -5090,9 +5069,6 @@ packages:
     resolution: {integrity: sha512-Ua9xNhH0b8pwE3yRbFfXJvfdWF0UHNCdeyb2sbi9Ul/M+r3PTdrz7Cv4SCfZRMjmzEM9PhraqfZFbGTIg3OMyA==}
     engines: {node: '>= 0.6'}
 
-  fp-ts@2.16.11:
-    resolution: {integrity: sha512-LaI+KaX2NFkfn1ZGHoKCmcfv7yrZsC3b8NtWsTVQeHkq4F27vI5igUuO53sxqDEa2gNQMHFPmpojDw/1zmUK7w==}
-
   fragment-cache@0.2.1:
     resolution: {integrity: sha512-GMBAbW9antB8iZRHLoGw0b3HANt57diZYFO/HL1JGIC1MjKrdmhxvrJbupnVvpys0zsz7yBApXdQyfepKly2kA==}
     engines: {node: '>=0.10.0'}
@@ -5674,11 +5650,6 @@ packages:
   into-stream@6.0.0:
     resolution: {integrity: sha512-XHbaOAvP+uFKUFsOgoNPRjLkwB+I22JFPFe5OjTkQ0nwgj6+pSjb4NmB6VMxaPshLiOf+zcpOCBQuLwC1KHhZA==}
     engines: {node: '>=10'}
-
-  io-ts@2.2.22:
-    resolution: {integrity: sha512-FHCCztTkHoV9mdBsHpocLpdTAfh956ZQcIkWQxxS0U5HT53vtrcuYdQneEJKH6xILaLNzXVl2Cvwtoy8XNN0AA==}
-    peerDependencies:
-      fp-ts: ^2.5.0
 
   ip-address@10.7.5:
     resolution: {integrity: sha512-t2v0rkILYv9WXmSL7TpAaU3HXgaFYOPUcH3QHgwQ++gpJuH3bqyMy4Fvt/DJCTKwzH3Cf+bAp5W/mFL39KPLzA==}
@@ -13901,8 +13872,6 @@ snapshots:
 
   forwarded@0.1.2: {}
 
-  fp-ts@2.16.11: {}
-
   fragment-cache@0.2.1:
     dependencies:
       map-cache: 0.2.2
@@ -14579,10 +14548,6 @@ snapshots:
     dependencies:
       from2: 2.3.0
       p-is-promise: 3.0.0
-
-  io-ts@2.2.22(fp-ts@2.16.11):
-    dependencies:
-      fp-ts: 2.16.11
 
   ip-address@10.7.5: {}
 

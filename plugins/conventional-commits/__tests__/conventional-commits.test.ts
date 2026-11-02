@@ -632,3 +632,35 @@ describe("prCheck", () => {
     expect(addLabelToPr).toHaveBeenCalledWith(1, "minor");
   });
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const plugin = new ConventionalCommitsPlugin({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { notAnOption: true })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should report invalid options", async () => {
+    const hooks = makeHooks();
+    const plugin = new ConventionalCommitsPlugin({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { preset: 1 })
+    ).toStrictEqual([
+      {
+        expectedType: '"string"',
+        path: "conventional-commits.preset",
+        value: 1,
+      },
+    ]);
+  });
+});

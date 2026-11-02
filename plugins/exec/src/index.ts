@@ -8,7 +8,7 @@ import {
   makeLogParseHooks,
   makeChangelogHooks,
 } from "@auto-it/core/dist/utils/make-hooks";
-import * as t from "io-ts";
+import { z } from "zod";
 import fromEntries from "fromentries";
 import endent from "endent";
 import type { ExecSyncOptionsWithStringEncoding } from "child_process";
@@ -23,21 +23,24 @@ function trim(val: string | undefined) {
   }
 }
 
-/** Convert a "makeHooks" function into an io-ts interface */
+/** Convert a "makeHooks" function into a schema of hook commands */
 function makeHooksType<
   HookObject extends object,
   ExcludedHook extends keyof HookObject,
 >(hookCreatorFn: () => HookObject, exclude: ExcludedHook[]) {
-  type HookType = keyof HookObject;
-  const hooks = Object.keys(hookCreatorFn()) as HookType[];
-
-  return t.partial(
-    fromEntries(
-      hooks
-        .map((name) => [name, t.string] as const)
-        .filter(([hook]) => !exclude.includes(hook as any))
-    ) as Record<Exclude<HookType, (typeof exclude)[number]>, t.StringC>
+  type HookType = Extract<Exclude<keyof HookObject, ExcludedHook>, string>;
+  const hooks = Object.keys(hookCreatorFn()).filter(
+    (hook): hook is HookType => !exclude.includes(hook as ExcludedHook)
   );
+
+  return z
+    .strictObject(
+      fromEntries(hooks.map((name) => [name, z.string()])) as Record<
+        HookType,
+        z.ZodString
+      >
+    )
+    .partial();
 }
 
 const onCreateChangelog = makeHooksType(makeChangelogHooks, []);
@@ -53,12 +56,13 @@ const rootOptions = makeHooksType(makeHooks, [
   "validateConfig",
 ]);
 
-const pluginOptions = t.intersection([
-  rootOptions,
-  t.partial({ onCreateRelease, onCreateLogParse, onCreateChangelog }),
-]);
+const pluginOptions = rootOptions.extend({
+  onCreateRelease: onCreateRelease.optional(),
+  onCreateLogParse: onCreateLogParse.optional(),
+  onCreateChangelog: onCreateChangelog.optional(),
+});
 
-export type IExecPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IExecPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Put args in envirnment */
 const createEnv = (args: any[]) => ({

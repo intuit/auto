@@ -9,6 +9,7 @@ import {
 import { execSync } from "child_process";
 
 import Exec from "../src";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 const getMockAuto = () => {
   const hooks = makeHooks();
@@ -294,5 +295,33 @@ describe("Exec Plugin", () => {
         })
       ).toBe(true);
     });
+  });
+});
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const plugin = new Exec({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { notAnOption: true })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should reject unknown nested hooks", async () => {
+    const hooks = makeHooks();
+    const plugin = new Exec({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        onCreateRelease: { notAHook: "echo" },
+      })
+    ).toStrictEqual([expect.stringContaining("onCreateRelease.notAHook")]);
   });
 });

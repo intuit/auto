@@ -41,10 +41,9 @@
     "@atomist/slack-messages": "^1.2.2",
     "@auto-it/core": "workspace:*",
     "@octokit/rest": "^22.0.1",
-    "fp-ts": "^2.16.11",
     "https-proxy-agent": "^9.1.0",
-    "io-ts": "^2.2.22",
-    "node-fetch": "3.3.2"
+    "node-fetch": "3.3.2",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "tsdown": "catalog:"
