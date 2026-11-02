@@ -35,3 +35,4 @@ catalog:
   "@types/node": ^24.19.2
   tsdown: 0.23.4
   typescript: 6.0.3
+  zod: ^4.4.0
