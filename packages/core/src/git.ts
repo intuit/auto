@@ -3,8 +3,9 @@ import path from "path";
 import { retry } from "@octokit/plugin-retry";
 import { throttling } from "@octokit/plugin-throttling";
 import { Octokit, type RestEndpointMethodTypes } from "@octokit/rest";
-import { gitlogPromise as gitlog } from "gitlog";
+import gitlog from "gitlog";
 import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from "node-fetch";
 import tinyColor from "tinycolor2";
 import endent from "endent";
 import on from "await-to-js";
@@ -43,7 +44,7 @@ export interface IGitOptions {
   /** A token to auth to GitHub with */
   token?: string;
   /** An optional proxy agent to route requests through */
-  agent?: HttpsProxyAgent;
+  agent?: HttpsProxyAgent<string>;
 }
 
 /** An error originating from the GitHub */
@@ -97,15 +98,6 @@ const makeCommentIdentifier = (context: string) =>
 const makePrBodyIdentifier = (context: string) =>
   makeIdentifier("PR BODY", context);
 
-interface ThrottleOpts {
-  /** The request object */
-  request: { /** What retry we are on */ retryCount: number };
-  /** API method that was throttled */
-  method: string;
-  /** URL that was throttled */
-  url: string;
-}
-
 /**
  * A class to interact with the local git instance and the git remote.
  * currently it only interfaces with GitHub.
@@ -122,6 +114,8 @@ export default class Git {
   private readonly graphqlBaseUrl: string;
   /** A logger that uses log levels */
   private readonly logger: ILogger;
+  /** Request options for octokit, which uses the global fetch and so ignores `agent` */
+  private readonly request: { fetch?: typeof fetch };
 
   /** Initialize the git interface and auth with GitHub */
   constructor(options: IGitOptions, logger: ILogger = dummyLog()) {
@@ -132,20 +126,24 @@ export default class Git {
       ? this.options.graphqlBaseUrl || join(new URL(this.baseUrl).origin, "api")
       : this.baseUrl;
     this.logger.veryVerbose.info(`Initializing GitHub with: ${this.baseUrl}`);
+    const { agent } = this.options;
+    this.request = agent
+      ? { fetch: (url, init) => fetch(url, { ...init, agent }) }
+      : {};
     const GitHub = Octokit.plugin(enterpriseCompatibility, retry, throttling);
     this.github = new GitHub({
       baseUrl: this.baseUrl,
       auth: this.options.token,
       previews: ["symmetra-preview"],
-      request: { agent: this.options.agent },
+      request: this.request,
       throttle: {
         /** Add a wait once rate limit is hit */
-        onRateLimit: (retryAfter: number, opts: ThrottleOpts) => {
+        onRateLimit: (retryAfter, opts, octokit, retryCount) => {
           this.logger.log.warn(
             `Request quota exhausted for request ${opts.method} ${opts.url}`
           );
 
-          if (opts.request.retryCount < 5) {
+          if (retryCount < 5) {
             this.logger.log.log(
               `Retrying after ${prettyMs(retryAfter * 1000)}!`
             );
@@ -153,7 +151,7 @@ export default class Git {
           }
         },
         /** wait after abuse */
-        onAbuseLimit: (retryAfter: number, opts: ThrottleOpts) => {
+        onSecondaryRateLimit: (retryAfter, opts) => {
           this.logger.log.error(
             `Went over abuse rate limit ${opts.method} ${
               opts.url
@@ -166,7 +164,7 @@ export default class Git {
     this.github.hook.error("request", (error) => {
       if (error) {
         // narrow down the type
-        if ("headers" in error && error.request.headers.authorization) {
+        if ("request" in error && error.request.headers.authorization) {
           delete error.request.headers.authorization;
         }
       }
@@ -409,7 +407,9 @@ export default class Git {
         }, []);
     } catch (error) {
       console.log(error);
-      const tag = (error as string).match(/ambiguous argument '(\S+)\.\.\S+'/);
+      // gitlog rejects with an ExecFileException that carries git's stderr
+      const stderr = String((error as { stderr?: string }).stderr ?? error);
+      const tag = stderr.match(/ambiguous argument '(\S+)\.\.\S+'/);
 
       if (tag) {
         this.logger.log.error(
@@ -424,7 +424,7 @@ export default class Git {
         process.exit(1);
       }
 
-      throw new Error(error as string);
+      throw new Error(stderr);
     }
   }
 
@@ -526,7 +526,7 @@ export default class Git {
   ) {
     const repo = `repo:${this.options.owner}/${this.options.repo}`;
     options.q = `${repo} AND (${options.q})`;
-    options.advanced_search = true;
+    options.advanced_search = "true";
 
     this.logger.verbose.info("Searching repo using:\n", options);
 
@@ -545,7 +545,7 @@ export default class Git {
 
     const data = await this.github.graphql<T>(query, {
       baseUrl: this.graphqlBaseUrl,
-      request: { agent: this.options.agent },
+      request: this.request,
       headers: {
         authorization: `token ${this.options.token}`,
       },

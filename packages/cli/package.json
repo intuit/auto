@@ -37,14 +37,14 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "start": "npm run build -- -w",
+    "start": "tsdown -w",
     "lint": "oxlint src",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2",
     "bundle": "pnpm run inject-version && pnpm run package && pnpm run gzip",
     "inject-version": "node scripts/inject-version.js",
-    "package": "rimraf binary && pkg . --out-path binary",
-    "gzip": "ls binary/auto* | xargs gzip"
+    "package": "tsdown -c tsdown.exe.config.mts",
+    "gzip": "ls build/auto* | xargs gzip"
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
@@ -52,18 +52,18 @@
     "@auto-it/released": "workspace:*",
     "@auto-it/version-file": "workspace:*",
     "await-to-js": "^3.0.0",
-    "chalk": "^4.0.0",
+    "chalk": "^6.0.1",
     "command-line-application": "^0.10.1",
     "endent": "^2.1.0",
-    "module-alias": "^2.2.2",
+    "module-alias": "^2.3.4",
     "signale": "^1.4.0",
-    "terminal-link": "^2.1.1",
-    "tslib": "^2.8.1"
+    "terminal-link": "^5.0.0"
   },
   "devDependencies": {
-    "@types/signale": "^1.2.1",
-    "dotenv": "^8.0.0",
-    "pkg": "^5.8.0",
+    "@tsdown/exe": "^0.23.4",
+    "@types/signale": "^1.4.7",
+    "dotenv": "^18.0.9",
+    "pkg": "^5.8.1",
     "tsdown": "catalog:"
   }
 }

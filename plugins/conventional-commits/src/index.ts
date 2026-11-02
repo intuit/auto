@@ -1,7 +1,4 @@
-import type { Options as CoreOptions } from "conventional-changelog-core";
-import { type Commit, sync as parse } from "conventional-commits-parser";
-import { promisify } from "util";
-import conventionalChangelogPresetLoader from "conventional-changelog-preset-loader";
+import type { Commit } from "conventional-commits-parser";
 import flatMap from "array.prototype.flatmap";
 import * as t from "io-ts";
 
@@ -14,18 +11,17 @@ import {
 } from "@auto-it/core";
 import endent from "endent";
 
-/** Resolve a conventional commit preset */
-function presetResolver(presetPackage: CoreOptions.Config) {
-  if (typeof presetPackage === "function") {
-    return promisify(presetPackage)();
-  }
+type WhatBump = (commits: Commit[]) => { level?: number | null } | undefined;
 
-  // handle object literal or Promise instance
-  if (typeof presetPackage === "object") {
-    return presetPackage;
-  }
-
-  throw new Error("preset package must be a promise, function, or object");
+/** The part of a conventional-changelog preset this plugin uses */
+interface Preset {
+  /** Find the bump (current presets) */
+  whatBump?: WhatBump;
+  /** Options for calculating the recommended bump (older presets) */
+  recommendedBumpOpts?: {
+    /** Find the bump */
+    whatBump?: WhatBump;
+  };
 }
 
 const defaultPreset = {
@@ -123,12 +119,17 @@ export default class ConventionalCommitsPlugin implements IPlugin {
             return;
           }
 
-          const conventionalCommit = parse(message);
-          const preset = this.options.preset
-            ? await conventionalChangelogPresetLoader(this.options.preset)
+          // Both packages are ESM-only without a `require` export, so they can't be
+          // loaded with a static import from this CommonJS build
+          const { CommitParser } = await import("conventional-commits-parser");
+          const conventionalCommit = new CommitParser().parse(message);
+          const config: Preset = this.options.preset
+            ? await (
+                await import("conventional-changelog-preset-loader")
+              ).loadPreset<Preset>(this.options.preset)
             : defaultPreset;
-          const config = await presetResolver(preset);
           const whatBump =
+            config.whatBump ||
             config.recommendedBumpOpts?.whatBump ||
             defaultPreset.recommendedBumpOpts.whatBump;
           const result = whatBump([conventionalCommit]);

@@ -4,7 +4,7 @@ import { dummyLog } from "@auto-it/core/src/utils/logger";
 import { makeHooks } from "@auto-it/core/src/utils/make-hooks";
 import { defaultLabels } from "@auto-it/core/dist/semver";
 import { execSync } from "child_process";
-import createHttpsProxyAgent from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 import MicrosoftTeamsPlugin from "../src";
 
@@ -219,13 +219,13 @@ describe("createPost", () => {
 
   test("should call Microsoft Office Teams api through http proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
-    process.env.http_proxy = "http-proxy";
+    process.env.http_proxy = "http://http-proxy";
 
     await plugin.createPost(
       mockAuto,
       "# My Notes\n- PR [some link](google.com)",
       "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
-      createHttpsProxyAgent("mock-url")
+      new HttpsProxyAgent("http://mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();
@@ -236,13 +236,13 @@ describe("createPost", () => {
 
   test("should call Microsoft Office Teams api through https proxy", async () => {
     const plugin = new MicrosoftTeamsPlugin("https://custom-microsoft-url");
-    process.env.https_proxy = "https-proxy";
+    process.env.https_proxy = "http://https-proxy";
 
     await plugin.createPost(
       mockAuto,
       "# My Notes\n- PR [some link](google.com)",
       "*<https://git.hub/some/project/releases/v1.0.0|v1.0.0>*",
-      createHttpsProxyAgent("mock-url")
+      new HttpsProxyAgent("http://mock-url")
     );
 
     expect(fetchSpy).toHaveBeenCalled();

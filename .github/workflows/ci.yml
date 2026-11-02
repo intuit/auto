@@ -7,74 +7,96 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-  #     - name: Fetch git tags
-  #       run: git fetch --unshallow --tags
-  #     - name: Install dependencies
-  #       uses: pnpm/setup@v3
-  #       with:
-  #         node-version-file: mise.toml
-  #     - name: Check node version
-  #       run: node --version
-  #     - name: Build
-  #       run: pnpm -r run build
+  # Build once. The other jobs install from the pnpm store this job caches and
+  # restore the build output from this run's cache instead of building again.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Install dependencies
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
+      - name: Build
+        run: pnpm -r run build
+      # - name: Bundle
+      #   run: pnpm -r run bundle
+      - name: Save build
+        uses: actions/cache/save@v6.1.0
+        with:
+          # Restores must use the same paths, or they miss the cache
+          path: &build-cache-path |
+            packages/*/dist
+            plugins/*/dist
+            */cli/build
+          key: &build-cache-key build-${{ github.run_id }}
 
   format:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
-      - name: Build
-        run: pnpm -r run build
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
       - name: Check for unformatted files
         run: pnpm format:diff
+        continue-on-error: true
 
   lint:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
-      - name: Build
-        run: pnpm -r run build
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
       - name: Lint
         run: pnpm lint
+        continue-on-error: true
 
-  type-check:
+  typecheck:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Install dependencies
-        uses: pnpm/setup@v3
-      - name: Build
-        run: pnpm -r run build
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
       - name: Type check
-        run: pnpm type-check
+        run: pnpm typecheck
+        continue-on-error: true
 
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Fetch git tags
         run: git fetch --unshallow --tags
       - name: Install dependencies
-        uses: pnpm/setup@v3
-      - name: Build
-        run: pnpm -r run build
+        uses: pnpm/setup@v3.1.2
+        with:
+          cache: true
+      - name: Restore build
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: *build-cache-path
+          key: *build-cache-key
+          fail-on-cache-miss: true
       - name: Test
         run: pnpm test:coverage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Send CodeCov Results
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

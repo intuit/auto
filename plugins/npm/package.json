@@ -33,9 +33,9 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "start": "npm run build -- -w",
+    "start": "tsdown -w",
     "lint": "oxlint src",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "dependencies": {
@@ -43,23 +43,21 @@
     "@auto-it/package-json-utils": "workspace:*",
     "await-to-js": "^3.0.0",
     "endent": "^2.1.0",
-    "env-ci": "^5.0.1",
-    "fp-ts": "^2.5.3",
+    "env-ci": "^11.2.0",
+    "fp-ts": "^2.16.11",
     "get-monorepo-packages": "^1.3.0",
-    "io-ts": "^2.1.2",
-    "registry-url": "^5.1.0",
-    "semver": "^7.0.0",
-    "tslib": "^2.8.1",
-    "typescript-memoize": "^1.0.0-alpha.3",
-    "url-join": "^4.0.0",
-    "user-home": "^2.0.0"
+    "io-ts": "^2.2.22",
+    "registry-url": "^7.2.0",
+    "semver": "^7.8.5",
+    "typescript-memoize": "^1.1.1",
+    "url-join": "^6.0.0",
+    "user-home": "^3.0.0"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.12.0",
-    "@types/env-ci": "^3.1.0",
-    "@types/semver": "^7.1.0",
-    "@types/url-join": "^4.0.0",
-    "@types/user-home": "^2.0.0",
+    "@octokit/rest": "^22.0.1",
+    "@types/env-ci": "^3.1.4",
+    "@types/semver": "^7.8.0",
+    "@types/user-home": "^2.0.2",
     "tsdown": "catalog:"
   }
 }

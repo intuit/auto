@@ -219,3 +219,4 @@ docs/public/search-index.json
 
 # Local agent issue tracker
 .scratch/
+packages/cli/build

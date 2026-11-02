@@ -97,6 +97,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
       auto.checkEnv(this.name, "CLIENT_ID");
       auto.checkEnv(this.name, "CLIENT_SECRET");
       auto.checkEnv(this.name, "REFRESH_TOKEN");
+      auto.checkEnv(this.name, "PUBLISHER_ID");
     });
 
     auto.hooks.beforeShipIt.tap(this.name, () => {
@@ -104,6 +105,7 @@ export default class ChromeWebStorePlugin implements IPlugin {
         process.env.CLIENT_ID &&
         process.env.CLIENT_SECRET &&
         process.env.REFRESH_TOKEN &&
+        process.env.PUBLISHER_ID &&
         fs.existsSync(this.options.manifest) &&
         this.options.id &&
         fs.existsSync(this.options.build)
@@ -198,14 +200,12 @@ export default class ChromeWebStorePlugin implements IPlugin {
     );
 
     auto.hooks.publish.tapPromise(this.name, async () => {
-      // publish extension
-      await execPromise("webstore", [
-        "upload",
+      // publish extension (with no command, the CLI uploads and then publishes)
+      await execPromise("chrome-webstore-upload", [
         "--extension-id",
         this.options.id,
         "--source",
         this.options.build,
-        "--auto-publish",
       ]);
 
       // push to github

@@ -1,7 +1,6 @@
 import type { RestEndpointMethodTypes } from "@octokit/rest";
-import type { Agent } from "http";
 import { githubToSlack, url } from "@atomist/slack-messages";
-import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 import type { IPlugin } from "@auto-it/core";
 import {
@@ -334,7 +333,7 @@ export default class SlackPlugin implements IPlugin {
           releases.length > 1 ? "s" : ""
         }: ${releases.map((r) => r.data.tag_name).join(", ")}`;
         const proxyUrl = process.env.https_proxy || process.env.http_proxy;
-        const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
+        const agent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
 
         await this.createPost(
           auto,
@@ -354,7 +353,7 @@ export default class SlackPlugin implements IPlugin {
     header: string,
     releaseNotes: string,
     releases: ReleaseResponse[],
-    agent: HttpsProxyAgent | undefined
+    agent: HttpsProxyAgent<string> | undefined
   ) {
     if (!auto.git) {
       return;
@@ -432,7 +431,7 @@ export default class SlackPlugin implements IPlugin {
                 "Content-Type": "application/json; charset=utf-8",
                 Authorization: `Bearer ${token}`,
               },
-              agent: agent as Agent | undefined,
+              agent,
             });
           }, Promise.resolve());
         } else {
@@ -451,7 +450,7 @@ export default class SlackPlugin implements IPlugin {
                 "application/x-www-form-urlencoded; charset=utf-8",
               Authorization: `Bearer ${token}`,
             },
-            agent: agent as Agent | undefined,
+            agent,
           });
         }
       }, Promise.resolve());
@@ -466,7 +465,7 @@ export default class SlackPlugin implements IPlugin {
           channel: this.options.channel,
         }),
         headers: { "Content-Type": "application/json" },
-        agent: agent as Agent | undefined,
+        agent,
       });
     }
 

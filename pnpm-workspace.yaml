@@ -4,12 +4,12 @@ packages:
   - plugins/*
 
 patchedDependencies:
-  "@atomictech/rehype-toc@3.1.2": patches/@atomictech__rehype-toc@3.1.2.patch
   next-ignite@0.10.11: patches/next-ignite@0.10.11.patch
 
 # None of these install scripts are needed: @parcel/watcher ships prebuilds,
 # nx's postinstall is a no-op without nx.json, dtrace-provider and fsevents@1
-# are optional native builds, and the rest only print banners.
+# are optional native builds, vsce only loads keytar when no PAT is passed (and
+# falls back to a file store without it), and the rest only print banners.
 allowBuilds:
   "@fortawesome/fontawesome-common-types": false
   "@fortawesome/fontawesome-svg-core": false
@@ -19,9 +19,19 @@ allowBuilds:
   dtrace-provider: false
   ejs: false
   fsevents: false
+  keytar: false
   nx: false
+  simple-git-hooks: true
+
+# jest-when only needs Vitest's global `expect`. Without this, pnpm
+# auto-installs its jest peer, which pulls all of Jest into the repo.
+packageExtensions:
+  jest-when:
+    peerDependenciesMeta:
+      jest:
+        optional: true
 
 catalog:
   "@types/node": ^24.19.2
-  tsdown: 0.23.1
+  tsdown: 0.23.4
   typescript: 6.0.3

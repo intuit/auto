@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 declare module "all-contributors-cli/dist/contributors" {
-  function addContributor(
+  export function addContributor(
     config: any,
     username: string,
     newContributions: string
@@ -9,16 +9,12 @@ declare module "all-contributors-cli/dist/contributors" {
     /** The updated contributors */
     contributors: any;
   }>;
-
-  export = addContributor;
 }
 
 declare module "all-contributors-cli/dist/generate" {
-  function generateReadme(
+  export function generate(
     config: any,
     contributors: any,
     readMe: string
-  ): Promise<string>;
-
-  export = generateReadme;
+  ): string;
 }

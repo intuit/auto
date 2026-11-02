@@ -31,16 +31,15 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "start": "npm run build -- -w",
+    "start": "tsdown -w",
     "lint": "oxlint src",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run --config ../../vitest.config.mts --maxWorkers=2"
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
-    "fp-ts": "^2.5.3",
-    "io-ts": "^2.1.2",
-    "tslib": "^2.8.1"
+    "fp-ts": "^2.16.11",
+    "io-ts": "^2.2.22"
   },
   "devDependencies": {
     "tsdown": "catalog:"

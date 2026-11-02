@@ -1,5 +1,4 @@
-import createHttpsProxyAgent, { HttpsProxyAgent } from "https-proxy-agent";
-import type { Agent } from "http";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
   Auto,
@@ -120,7 +119,7 @@ export default class MicrosoftTeamsPlugin {
         );
         const releaseUrl = urls.length ? urls.join(", ") : newVersion;
         const proxyUrl = process.env.https_proxy || process.env.http_proxy;
-        const agent = proxyUrl ? createHttpsProxyAgent(proxyUrl) : undefined;
+        const agent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
 
         await this.createPost(auto, releaseNotes, releaseUrl, agent);
       }
@@ -132,7 +131,7 @@ export default class MicrosoftTeamsPlugin {
     auto: Auto,
     releaseNotes: string,
     releaseUrl: string,
-    agent: HttpsProxyAgent | undefined
+    agent: HttpsProxyAgent<string> | undefined
   ) {
     if (!auto.git) {
       return;
@@ -165,7 +164,7 @@ export default class MicrosoftTeamsPlugin {
         ],
       }),
       headers: { "Content-Type": "application/json" },
-      agent: agent as Agent | undefined,
+      agent,
     });
 
     auto.logger.verbose.info("Posted release notes to microsoft teams.");

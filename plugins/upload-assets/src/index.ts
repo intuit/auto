@@ -169,7 +169,7 @@ export default class UploadAssetsPlugin implements IPlugin {
       assets.map(async (asset) => {
         const file = await readFile(asset);
         const stats = await stat(asset);
-        const type = await FileType.fromBuffer(file);
+        const type = await FileType.fileTypeFromBuffer(file);
 
         const DEFAULT_BASE_URL = "https://api.github.com";
         const baseUrl = auto.git!.options.baseUrl || DEFAULT_BASE_URL;

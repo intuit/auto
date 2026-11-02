@@ -12,7 +12,7 @@ const { version } = JSON.parse(
   fs.readFileSync(path.join(__dirname, "../lerna.json"), "utf8")
 );
 const inDir = path.join(__dirname, "./template-package");
-const kebab = changeCase.paramCase(name);
+const kebab = changeCase.kebabCase(name);
 const outDir = path.join(__dirname, "../packages", kebab);
 const TSCONFIG = path.join(__dirname, "../tsconfig.dev.json");
 

@@ -87,8 +87,8 @@ vi.mock("@octokit/rest", () => {
 
 // @ts-ignore
 vi.mock("gitlog", () => {
-  const mod = {
-    gitlogPromise: () =>
+  return {
+    default: () =>
       Promise.resolve([
         {
           rawBody: "foo",
@@ -100,7 +100,6 @@ vi.mock("gitlog", () => {
         },
       ]),
   };
-  return { ...mod, default: mod };
 });
 
 describe("Auto", () => {

@@ -1,9 +1,11 @@
 import Auto, { SEMVER } from "@auto-it/core";
-import mockFs from "mock-fs";
+import { mockFs } from "../../../scripts/mock-fs";
 import fs from "fs";
 import VersionFilePlugin from "../src";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import { dummyLog } from "@auto-it/core/dist/utils/logger";
+
+vi.mock("fs");
 
 // Mocks
 const execPromise = vi.fn();

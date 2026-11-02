@@ -73,6 +73,8 @@ export default class Config {
   async loadConfig() {
     const name = "auto";
     const explorer = cosmiconfig(name, {
+      // cosmiconfig 9+ only searches the cwd by default; keep walking up to the home dir
+      searchStrategy: "global",
       searchPlaces: [
         "package.json",
         `.${name}rc`,

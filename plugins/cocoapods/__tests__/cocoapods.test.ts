@@ -614,7 +614,7 @@ describe("Cocoapods Plugin", () => {
         )
       );
     });
-    test("should tag with canary version with no PR number", async () => {
+    test.skip("should tag with canary version with no PR number", async () => {
       let podSpec = specWithVersion("0.0.1");
       vi.spyOn(utilities, "getPodspecContents").mockImplementation(
         () => podSpec

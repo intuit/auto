@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import moduleAlias from "module-alias";
 import path from "path";
 
 try {
@@ -8,6 +7,10 @@ try {
   const json = require(path.join(__dirname, "../../package.json"));
 
   if (json.name.startsWith("@auto-canary")) {
+    // module-alias's ESM entry uses a handler's result as the whole specifier,
+    // but its CJS entry joins it with the rest of the request, which this relies on
+    // eslint-disable-next-line
+    const moduleAlias = require("module-alias");
     moduleAlias.addAliases({
       /** We want to rewrite all the imports for canary (ex: npm plugin requiring core) */
       "@auto-it": (fromPath: string, request: string) =>
