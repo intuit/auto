@@ -17,7 +17,10 @@ const blogFeedAlias = {
   name: "blog-feed-alias",
   hooks: {
     "astro:build:done": async ({ dir }) => {
-      await fs.copyFile(new URL("blog/rss.xml", dir), new URL("blog/feed.xml", dir));
+      await fs.copyFile(
+        new URL("blog/rss.xml", dir),
+        new URL("blog/feed.xml", dir)
+      );
     },
   },
 };
@@ -35,12 +38,15 @@ export default defineConfig({
   // Blog post covers are hosted remotely and sized at build time
   image: { domains: ["images.unsplash.com", "cdn-images-1.medium.com"] },
   markdown: {
-    processor: unified({ remarkPlugins: [remarkEmoji, [remarkSiteLinks, { base }]] }),
+    processor: unified({
+      remarkPlugins: [remarkEmoji, [remarkSiteLinks, { base }]],
+    }),
   },
   integrations: [
     starlight({
       title: "auto",
-      description: "Generate releases based on semantic version labels on pull requests.",
+      description:
+        "Generate releases based on semantic version labels on pull requests.",
       logo: {
         light: "./src/assets/light-logo-small.png",
         dark: "./src/assets/dark-logo-small.png",
@@ -56,18 +62,32 @@ export default defineConfig({
             media: "(prefers-color-scheme: dark)",
           },
         },
-        { tag: "link", attrs: { rel: "manifest", href: `${base}/manifest.json` } },
+        {
+          tag: "link",
+          attrs: { rel: "manifest", href: `${base}/manifest.json` },
+        },
         { tag: "meta", attrs: { name: "theme-color", content: "#7A0041" } },
       ],
-      social: [{ icon: "github", label: "GitHub", href: "https://github.com/intuit/auto" }],
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/intuit/auto",
+        },
+      ],
       customCss: ["./src/styles/theme.css"],
-      components: { MarkdownContent: "./src/components/overrides/MarkdownContent.astro" },
+      components: {
+        MarkdownContent: "./src/components/overrides/MarkdownContent.astro",
+      },
       plugins: [
         starlightBlog({
           postCount: Infinity,
           authors: {
             andrew: { name: "Andrew Lisowski" },
-            adam: { name: "Adam Dierkens", url: "https://github.intuit.com/adierkens" },
+            adam: {
+              name: "Adam Dierkens",
+              url: "https://github.intuit.com/adierkens",
+            },
           },
         }),
         starlightImageZoom(),
@@ -88,7 +108,10 @@ export default defineConfig({
             { label: ".autorc", slug: "docs/configuration/autorc" },
             { label: "Plugins", slug: "docs/configuration/plugins" },
             { label: "Non-npm Usage", slug: "docs/configuration/non-npm" },
-            { label: "Troubleshooting", slug: "docs/configuration/troubleshooting" },
+            {
+              label: "Troubleshooting",
+              slug: "docs/configuration/troubleshooting",
+            },
           ],
         },
         {
@@ -177,10 +200,19 @@ export default defineConfig({
               label: "Hook APIs",
               items: [
                 { label: "Overview", slug: "docs/plugins/hook-api-docs" },
-                { label: "Configuration Hooks", slug: "docs/plugins/configuration-hooks" },
+                {
+                  label: "Configuration Hooks",
+                  slug: "docs/plugins/configuration-hooks",
+                },
                 { label: "Init Hooks", slug: "docs/plugins/init-hooks" },
-                { label: "Log Parser Hooks", slug: "docs/plugins/log-parse-hooks" },
-                { label: "Changelog Hooks", slug: "docs/plugins/changelog-hooks" },
+                {
+                  label: "Log Parser Hooks",
+                  slug: "docs/plugins/log-parse-hooks",
+                },
+                {
+                  label: "Changelog Hooks",
+                  slug: "docs/plugins/changelog-hooks",
+                },
                 {
                   label: "Release Lifecycle Hooks",
                   slug: "docs/plugins/release-lifecycle-hooks",
@@ -194,7 +226,10 @@ export default defineConfig({
           items: [
             { label: "CircleCI", slug: "docs/build-platforms/circleci" },
             { label: "Travis CI", slug: "docs/build-platforms/travis" },
-            { label: "GitHub Actions", slug: "docs/build-platforms/github-actions" },
+            {
+              label: "GitHub Actions",
+              slug: "docs/build-platforms/github-actions",
+            },
             { label: "Jenkins 2", slug: "docs/build-platforms/jenkins" },
           ],
         },

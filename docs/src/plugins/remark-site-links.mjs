@@ -30,12 +30,19 @@ export function remarkSiteLinks({ base }) {
     const from = new URL(pageUrl(file.path, prefix), "https://site.invalid");
 
     const rewrite = (url, { relative }) => {
-      if (!url || url.startsWith("#") || url.startsWith("//") || hasScheme.test(url)) {
+      if (
+        !url ||
+        url.startsWith("#") ||
+        url.startsWith("//") ||
+        hasScheme.test(url)
+      ) {
         return url;
       }
 
       if (url.startsWith("/")) {
-        return url === prefix || url.startsWith(`${prefix}/`) ? url : `${prefix}${url}`;
+        return url === prefix || url.startsWith(`${prefix}/`)
+          ? url
+          : `${prefix}${url}`;
       }
 
       if (!relative) {

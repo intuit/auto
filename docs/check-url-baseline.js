@@ -3,9 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 
-/** Baseline paths that haven't moved to the new site yet. Must end up empty. */
-const pending = [];
-
 const dist = path.join(__dirname, "dist");
 const baseline = fs
   .readFileSync(path.join(__dirname, "url-baseline.txt"), "utf8")
@@ -27,9 +24,9 @@ const servedFile = (urlPath) => {
   return `${urlPath.slice(1)}.html`;
 };
 
-const missing = baseline
-  .filter((urlPath) => !pending.includes(urlPath))
-  .filter((urlPath) => !fs.existsSync(path.join(dist, servedFile(urlPath))));
+const missing = baseline.filter(
+  (urlPath) => !fs.existsSync(path.join(dist, servedFile(urlPath)))
+);
 
 if (missing.length) {
   console.error(
@@ -43,7 +40,4 @@ if (missing.length) {
   process.exit(1);
 }
 
-console.log(
-  `All ${baseline.length - pending.length} baseline paths are served` +
-    (pending.length ? ` (${pending.length} still pending)` : "")
-);
+console.log(`All ${baseline.length} baseline paths are served`);
