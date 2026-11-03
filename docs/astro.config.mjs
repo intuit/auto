@@ -4,6 +4,7 @@ import { defineConfig } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import starlight from "@astrojs/starlight";
 import starlightBlog from "starlight-blog";
+import starlightImageZoom from "starlight-image-zoom";
 import starlightLinksValidator from "starlight-links-validator";
 import remarkEmoji from "remark-emoji";
 
@@ -40,6 +41,27 @@ export default defineConfig({
     starlight({
       title: "auto",
       description: "Generate releases based on semantic version labels on pull requests.",
+      logo: {
+        light: "./src/assets/light-logo-small.png",
+        dark: "./src/assets/dark-logo-small.png",
+        replacesTitle: true,
+      },
+      favicon: "/favicon.png",
+      head: [
+        {
+          tag: "link",
+          attrs: {
+            rel: "icon",
+            href: `${base}/favicon-dark.png`,
+            media: "(prefers-color-scheme: dark)",
+          },
+        },
+        { tag: "link", attrs: { rel: "manifest", href: `${base}/manifest.json` } },
+        { tag: "meta", attrs: { name: "theme-color", content: "#7A0041" } },
+      ],
+      social: [{ icon: "github", label: "GitHub", href: "https://github.com/intuit/auto" }],
+      customCss: ["./src/styles/theme.css"],
+      components: { MarkdownContent: "./src/components/overrides/MarkdownContent.astro" },
       plugins: [
         starlightBlog({
           postCount: Infinity,
@@ -48,6 +70,7 @@ export default defineConfig({
             adam: { name: "Adam Dierkens", url: "https://github.intuit.com/adierkens" },
           },
         }),
+        starlightImageZoom(),
         starlightLinksValidator({ sameSitePolicy: "validate" }),
       ],
       sidebar: [

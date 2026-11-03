@@ -4,10 +4,10 @@ title: Introduction
 
 import GetStarted from "../../../components/GetStarted.astro";
 
-<picture>
-  <source srcset="/auto/dark-logo-large.png" media="(prefers-color-scheme: dark)" />
-  <img src="/auto/light-logo-large.png" alt="Auto Logo" style="max-width: 24rem; width: 100%; margin: 4rem auto; display: block;" />
-</picture>
+<div style="max-width: 24rem; margin: 4rem auto;">
+  <img class="light:sl-hidden" src="/auto/dark-logo-large.png" alt="Auto Logo" data-zoom-off />
+  <img class="dark:sl-hidden" src="/auto/light-logo-large.png" alt="Auto Logo" data-zoom-off />
+</div>
 
 > Automated releases powered by pull request labels
 
