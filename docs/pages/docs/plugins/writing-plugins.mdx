@@ -99,10 +99,11 @@ const pluginOptions = z
 export type TestPluginOptions = z.infer<typeof pluginOptions>;
 ```
 
-Two rules for options schemas:
+Rules for options schemas:
 
 - **Reject unknown keys in the schema.** Use `z.strictObject` (or your library's strict equivalent). `auto` reports whatever your schema reports, so with a plain `z.object` a typo in a user's config is silently ignored.
 - **Validate, don't transform.** `auto` only checks the options. Your plugin receives the options exactly as the user wrote them, so `.default()` and `.transform()` have no effect. Apply defaults in your constructor instead.
+- **Use a discriminated union for alternative option shapes.** With a plain `z.union` of strict objects, Zod can report a key that's only valid in another member as unknown. For example, if one member allows `auth: "app"` and also requires `channels`, a user who sets `auth` but forgets `channels` is told `auth` is unknown. Give each member a key that tells them apart and use `z.discriminatedUnion`. That way Zod checks the member the user meant and reports the missing `channels`. The [Slack plugin](https://github.com/intuit/auto/blob/main/plugins/slack/src/index.ts) does this with `auth`.
 
 Then tap into the `validateConfig` hook and use the `validatePluginConfiguration` utility.
 
