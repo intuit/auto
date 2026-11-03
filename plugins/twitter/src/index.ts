@@ -5,20 +5,18 @@ import { diff, type ReleaseType } from "semver";
 import twitter from "tweet-tweet";
 import tweetValidation from "twitter-text";
 import { promisify } from "util";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  /** The message template to use to post to Twitter */
-  message: t.string,
-  /** A threshold the semver has to pass to be posted to Twitter */
-  threshold: t.keyof({
-    patch: null,
-    minor: null,
-    major: null,
-  }),
-});
+const pluginOptions = z
+  .strictObject({
+    /** The message template to use to post to Twitter */
+    message: z.string(),
+    /** A threshold the semver has to pass to be posted to Twitter */
+    threshold: z.enum(["patch", "minor", "major"]),
+  })
+  .partial();
 
-export type ITwitterPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type ITwitterPluginOptions = z.infer<typeof pluginOptions>;
 
 const defaults: Required<ITwitterPluginOptions> = {
   threshold: SEMVER.minor,

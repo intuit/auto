@@ -488,3 +488,20 @@ describe("Upload Assets Plugin", () => {
     expect(deleteReleaseAsset).toHaveBeenCalledTimes(200);
   });
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const options = { assets: ["./foo"] };
+    const plugin = new UploadAssets(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});

@@ -14,7 +14,7 @@ import path from "path";
 import match from "anymatch";
 import on from "await-to-js";
 import type { IExtendedCommit } from "@auto-it/core/src/log-parse";
-import * as t from "io-ts";
+import { z } from "zod";
 import fromEntries from "fromentries";
 
 import { addContributor } from "all-contributors-cli/dist/contributors";
@@ -82,20 +82,24 @@ function getRcFile(auto: Auto) {
   }
 }
 
-const pattern = t.union([t.string, t.array(t.string)]);
-const pluginOptions = t.partial({
-  /** Usernames to exclude from the contributors */
-  exclude: t.array(t.string),
-  /** Globs to detect change types by */
-  types: t.partial(
-    fromEntries(contributionTypes.map((c) => [c, pattern])) as Record<
-      Contribution,
-      typeof pattern
-    >
-  ),
-});
+const pattern = z.union([z.string(), z.array(z.string())]);
+const pluginOptions = z
+  .strictObject({
+    /** Usernames to exclude from the contributors */
+    exclude: z.array(z.string()),
+    /** Globs to detect change types by */
+    types: z
+      .strictObject(
+        fromEntries(contributionTypes.map((c) => [c, pattern])) as Record<
+          Contribution,
+          typeof pattern
+        >
+      )
+      .partial(),
+  })
+  .partial();
 
-export type IAllContributorsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IAllContributorsPluginOptions = z.infer<typeof pluginOptions>;
 
 interface Contributor {
   /** GitHub username */

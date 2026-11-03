@@ -7,7 +7,7 @@ import endent from "endent";
 import glob from "fast-glob";
 import parseGitHubUrl from "parse-github-url";
 import { inc, type ReleaseType } from "semver";
-import * as t from "io-ts";
+import { z } from "zod";
 import envCi from "env-ci";
 import { readFile, writeFile, mkdir } from "./utils";
 
@@ -17,12 +17,14 @@ const GEM_SPEC_NAME_REGEX = /name\s*=\s*["']([\S ]+)["']/;
 
 const { isCi } = envCi();
 
-const pluginOptions = t.partial({
-  /** A command to release the gem */
-  releaseCommand: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** A command to release the gem */
+    releaseCommand: z.string(),
+  })
+  .partial();
 
-export type IGemPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IGemPluginOptions = z.infer<typeof pluginOptions>;
 
 /** A plugin that automates publishing ruby gems */
 export default class GemPlugin implements IPlugin {

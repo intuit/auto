@@ -10,7 +10,7 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import fetch from "node-fetch";
-import * as t from "io-ts";
+import { z } from "zod";
 
 type ReleaseResponse =
   RestEndpointMethodTypes["repos"]["createRelease"]["response"];
@@ -202,44 +202,47 @@ export function convertToBlocks(
   ) as [Block[], ...Array<Block[] | FileUpload>];
 }
 
-const basePluginOptions = t.partial({
-  /** URL of the slack to post to */
-  url: t.string,
-  /** Who to bother when posting to the channel */
-  atTarget: t.union([t.string, t.boolean]),
-  /** Allow users to opt into having prereleases posted to slack */
-  publishPreRelease: t.boolean,
-  /** Additional Title to add at the start of the slack message */
-  title: t.string,
-  /** Username to post the message as */
-  username: t.string,
-  /** Image url to use as the message's avatar */
-  iconUrl: t.string,
-  /** Emoji code to use as the message's avatar */
-  iconEmoji: t.string,
+const basePluginOptions = z
+  .strictObject({
+    /** URL of the slack to post to */
+    url: z.string(),
+    /** Who to bother when posting to the channel */
+    atTarget: z.union([z.string(), z.boolean()]),
+    /** Allow users to opt into having prereleases posted to slack */
+    publishPreRelease: z.boolean(),
+    /** Additional Title to add at the start of the slack message */
+    title: z.string(),
+    /** Username to post the message as */
+    username: z.string(),
+    /** Image url to use as the message's avatar */
+    iconUrl: z.string(),
+    /** Emoji code to use as the message's avatar */
+    iconEmoji: z.string(),
+  })
+  .partial();
+
+const urlPluginOptions = basePluginOptions.extend({
+  /** Channels to post */
+  channel: z.string().optional(),
 });
 
-const urlPluginOptions = t.intersection([
-  t.partial({
-    /** Channels to post */
-    channel: t.string,
-  }),
-  basePluginOptions,
+const appPluginOptions = basePluginOptions.extend({
+  /** Marks we are gonna use app auth */
+  auth: z.literal("app"),
+  /** Channels to post */
+  channels: z.array(z.string()),
+});
+
+// Validate with "auth" as the discriminator, so app options that are
+// missing something report what's missing instead of "auth" being unknown
+const pluginOptions = z.discriminatedUnion("auth", [
+  urlPluginOptions.extend({ auth: z.undefined().optional() }),
+  appPluginOptions,
 ]);
 
-const appPluginOptions = t.intersection([
-  t.interface({
-    /** Marks we are gonna use app auth */
-    auth: t.literal("app"),
-    /** Channels to post */
-    channels: t.array(t.string),
-  }),
-  basePluginOptions,
-]);
-
-const pluginOptions = t.union([urlPluginOptions, appPluginOptions]);
-
-export type ISlackPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type ISlackPluginOptions =
+  | z.infer<typeof urlPluginOptions>
+  | z.infer<typeof appPluginOptions>;
 
 /** Post your release notes to Slack during `auto release` */
 export default class SlackPlugin implements IPlugin {

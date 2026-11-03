@@ -41,13 +41,12 @@
   "dependencies": {
     "@auto-it/core": "workspace:*",
     "fast-glob": "^3.3.3",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
     "jsdom": "^30.1.3",
     "parse-github-url": "^1.0.4",
     "pom-parser": "^1.1.1",
     "prettier": "^3.9.10",
-    "semver": "^7.8.5"
+    "semver": "^7.8.5",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/jsdom": "^30.0.0",

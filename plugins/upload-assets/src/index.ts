@@ -12,7 +12,7 @@ import glob from "fast-glob";
 import path from "path";
 import { promisify } from "util";
 import link from "terminal-link";
-import * as t from "io-ts";
+import { z } from "zod";
 
 type AssetResponse =
   RestEndpointMethodTypes["repos"]["uploadReleaseAsset"]["response"]["data"];
@@ -23,26 +23,18 @@ const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 const canaryTag = "0.0.0-canary";
 
-const requiredPluginOptions = t.interface({
+const pluginOptions = z.strictObject({
   /** Paths to assets to upload */
-  assets: t.array(t.string),
-});
-
-const optionalPluginOptions = t.partial({
+  assets: z.array(z.string()),
   /** Max number of assets to keep in the canary release */
-  maxCanaryAssets: t.number,
+  maxCanaryAssets: z.number().optional(),
 });
-
-const pluginOptions = t.intersection([
-  requiredPluginOptions,
-  optionalPluginOptions,
-]);
 
 /** Convert shorthand options to noraml shape */
 const normalizeOptions = (options: IUploadAssetsPluginOptions | string[]) =>
   Array.isArray(options) ? { assets: options } : options;
 
-export type IUploadAssetsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IUploadAssetsPluginOptions = z.infer<typeof pluginOptions>;
 
 interface Release {
   /** The response data */

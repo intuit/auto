@@ -4,22 +4,24 @@ import * as fs from "fs";
 import * as path from "path";
 import { inc, type ReleaseType, gte } from "semver";
 import { promisify } from "util";
-import * as t from "io-ts";
+import { z } from "zod";
 
 const copyFile = promisify(fs.copyFile);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const pluginOptions = t.partial({
-  /** The id of the chrome extension */
-  id: t.string,
-  /** The path to the manifest of the chrome extension */
-  manifest: t.string,
-  /** A path to the packaged extension */
-  build: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** The id of the chrome extension */
+    id: z.string(),
+    /** The path to the manifest of the chrome extension */
+    manifest: z.string(),
+    /** A path to the packaged extension */
+    build: z.string(),
+  })
+  .partial();
 
-export type IChromeWebStoreConfig = t.TypeOf<typeof pluginOptions>;
+export type IChromeWebStoreConfig = z.infer<typeof pluginOptions>;
 
 /** Get the chrome plugin manifest. */
 async function getManifest(path: string) {

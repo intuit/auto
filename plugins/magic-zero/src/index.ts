@@ -1,14 +1,16 @@
 import type { IPlugin } from "@auto-it/core";
 import { Auto, SEMVER, validatePluginConfiguration } from "@auto-it/core";
 import { satisfies } from "semver";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  /** The label to graduate a version to the next left 0 digit */
-  label: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** The label to graduate a version to the next left 0 digit */
+    label: z.string(),
+  })
+  .partial();
 
-export type IMagicZeroPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IMagicZeroPluginOptions = z.infer<typeof pluginOptions>;
 
 const defaultOptions: Required<IMagicZeroPluginOptions> = {
   label: "graduate",

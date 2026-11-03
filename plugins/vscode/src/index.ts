@@ -1,6 +1,6 @@
 import type { IPlugin } from "@auto-it/core";
 import { Auto, validatePluginConfiguration, execPromise } from "@auto-it/core";
-import * as t from "io-ts";
+import { z } from "zod";
 import { inc, type ReleaseType } from "semver";
 import * as vsce from "vsce";
 import {
@@ -20,14 +20,16 @@ const getVersion = async () => {
   return "0.0.0";
 };
 
-const pluginOptions = t.partial({
-  /** Prepend all relative links in README.md with this url */
-  baseContentUrl: t.string,
-  /** Prepend all relative image links in README.md with this url */
-  baseImagesUrl: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** Prepend all relative links in README.md with this url */
+    baseContentUrl: z.string(),
+    /** Prepend all relative image links in README.md with this url */
+    baseImagesUrl: z.string(),
+  })
+  .partial();
 
-export type IVscodePluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IVscodePluginOptions = z.infer<typeof pluginOptions>;
 
 /** Publish an vscode extension */
 export default class VscodePlugin implements IPlugin {

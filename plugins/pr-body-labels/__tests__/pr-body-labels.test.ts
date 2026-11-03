@@ -1,6 +1,7 @@
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 
 import PrBodyLabels from "../src";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 describe("Pr-Body-Labels Plugin", () => {
   test("not add labels not present in project", async () => {
@@ -103,5 +104,39 @@ describe("Pr-Body-Labels Plugin", () => {
       pr: { body: "- [x] `patch`", number: 1, labels: [{ name: "patch" }] },
     } as any);
     expect(addLabelToPr).not.toHaveBeenCalled();
+  });
+});
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const plugin = new PrBodyLabels({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { notAnOption: true })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should report invalid options", async () => {
+    const hooks = makeHooks();
+    const plugin = new PrBodyLabels({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        removeStaleLabels: "yes",
+      })
+    ).toStrictEqual([
+      {
+        expectedType: '"boolean"',
+        path: "pr-body-labels.removeStaleLabels",
+        value: "yes",
+      },
+    ]);
   });
 });

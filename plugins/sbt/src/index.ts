@@ -6,15 +6,17 @@ import {
   validatePluginConfiguration,
 } from "@auto-it/core";
 import { inc, type ReleaseType } from "semver";
-import * as t from "io-ts";
+import { z } from "zod";
 import stripAnsi from "strip-ansi";
 
-const pluginOptions = t.partial({
-  setCanaryVersion: t.boolean,
-  publishCommand: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    setCanaryVersion: z.boolean(),
+    publishCommand: z.string(),
+  })
+  .partial();
 
-export type ISbtPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type ISbtPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Calls sbt in the client and returns cleaned up logs */
 export async function sbtClient(input: string): Promise<string> {

@@ -567,3 +567,53 @@ describe("convertToBlocks", () => {
     ).toMatchSnapshot();
   });
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const options = { url: "https://slack.com" };
+    const plugin = new SlackPlugin(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should report what app auth is missing", async () => {
+    const hooks = makeHooks();
+    const plugin = new SlackPlugin({ url: "https://slack.com" });
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { auth: "app" })
+    ).toStrictEqual([
+      {
+        expectedType: '"array"',
+        path: "slack.channels",
+        value: undefined,
+      },
+    ]);
+  });
+
+  test("should reject app-only options without app auth", async () => {
+    const hooks = makeHooks();
+    const plugin = new SlackPlugin({ url: "https://slack.com" });
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        url: "https://slack.com",
+        channels: ["releases"],
+      })
+    ).toStrictEqual([expect.stringContaining("channels")]);
+  });
+});

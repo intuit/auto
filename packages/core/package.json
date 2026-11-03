@@ -54,13 +54,11 @@
     "enquirer": "^2.4.1",
     "env-ci": "^11.2.0",
     "fast-glob": "^3.3.3",
-    "fp-ts": "^2.16.11",
     "fromentries": "^1.2.0",
     "gitlog": "^5.1.0",
     "https-proxy-agent": "^9.1.0",
     "import-cwd": "^3.0.0",
     "import-from": "^4.0.0",
-    "io-ts": "^2.2.22",
     "lodash.chunk": "^4.2.0",
     "log-symbols": "^7.0.1",
     "node-fetch": "3.3.2",
@@ -76,7 +74,8 @@
     "ts-node": "^10.9.2",
     "type-fest": "^5.10.0",
     "typescript-memoize": "^1.1.1",
-    "url-join": "^6.0.0"
+    "url-join": "^6.0.0",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "typescript": ">=2.7"

@@ -2,29 +2,25 @@ import type { IPlugin } from "@auto-it/core";
 import { Auto, validatePluginConfiguration } from "@auto-it/core";
 import { execSync } from "child_process";
 import fs from "fs";
-import * as t from "io-ts";
+import { z } from "zod";
 
-const requiredOptions = t.interface({
+const formulaConfiguration = z.strictObject({
   /** The name of the formula to create */
-  name: t.string,
+  name: z.string(),
   /** The executable to create a formula for */
-  executable: t.string,
-});
-
-const optionalOptions = t.partial({
+  executable: z.string(),
   /** A path to the formula template */
-  formula: t.string,
+  formula: z.string().optional(),
 });
 
-const formulaConfiguration = t.intersection([requiredOptions, optionalOptions]);
-export type FormulaConfiguration = t.TypeOf<typeof formulaConfiguration>;
+export type FormulaConfiguration = z.infer<typeof formulaConfiguration>;
 
-const pluginOptions = t.union([
+const pluginOptions = z.union([
   formulaConfiguration,
-  t.array(formulaConfiguration),
+  z.array(formulaConfiguration),
 ]);
 
-export type IBrewPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IBrewPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Automate the creation of Homebrew formulae. */
 export default class BrewPlugin implements IPlugin {

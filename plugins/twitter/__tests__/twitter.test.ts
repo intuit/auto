@@ -2,6 +2,7 @@ import Auto, { SEMVER } from "@auto-it/core";
 import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import endent from "endent";
 import TwitterPlugin from "../src";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 const tweet = vi.fn();
 // @ts-ignore
@@ -192,5 +193,37 @@ describe("Twitter Plugin", () => {
     });
 
     expect(tweet.mock.calls[0][0]).toMatchSnapshot();
+  });
+});
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const plugin = new TwitterPlugin({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { notAnOption: true })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should list the allowed thresholds", async () => {
+    const hooks = makeHooks();
+    const plugin = new TwitterPlugin({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { threshold: "huge" })
+    ).toStrictEqual([
+      {
+        expectedType: '"patch" or "minor" or "major"',
+        path: "twitter.threshold",
+        value: "huge",
+      },
+    ]);
   });
 });

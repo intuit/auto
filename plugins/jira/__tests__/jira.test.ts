@@ -176,3 +176,20 @@ test("should create note for JIRA commits", async () => {
 
   expect(await changelog.generateReleaseNotes(normalized)).toMatchSnapshot();
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const options = { url: "https://jira.com" };
+    const plugin = new JiraPlugin(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});

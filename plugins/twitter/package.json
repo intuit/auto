@@ -42,11 +42,10 @@
     "@auto-it/core": "workspace:*",
     "@types/twitter-text": "^3.1.10",
     "endent": "^2.1.0",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
     "semver": "^7.8.5",
     "tweet-tweet": "^1.0.4",
-    "twitter-text": "^3.0.0"
+    "twitter-text": "^3.0.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/semver": "^7.8.0",

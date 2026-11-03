@@ -8,7 +8,7 @@ import {
   DEFAULT_PRERELEASE_BRANCHES,
 } from "@auto-it/core";
 import { promisify } from "util";
-import * as t from "io-ts";
+import { z } from "zod";
 import * as fs from "fs";
 import { inc, type ReleaseType } from "semver";
 
@@ -24,22 +24,26 @@ interface ReleaseTypeArgs {
   next: string[];
 }
 
-const pluginOptions = t.partial({
-  /** Path to file (from where auto is executed) where the version is stored */
-  versionFile: t.string,
+const pluginOptions = z
+  .strictObject({
+    /** Path to file (from where auto is executed) where the version is stored */
+    versionFile: z.string(),
 
-  /** Optional script that executes release pipeline stages */
-  publishScript: t.string,
+    /** Optional script that executes release pipeline stages */
+    publishScript: z.string(),
 
-  /** Optional publish script args mapping for each release hook, defaults `publish` to ["release"] and the others to ["snapshot"] */
-  publishScriptReleaseTypeArgs: t.partial({
-    publish: t.array(t.string),
-    canary: t.array(t.string),
-    next: t.array(t.string),
-  }),
-});
+    /** Optional publish script args mapping for each release hook, defaults `publish` to ["release"] and the others to ["snapshot"] */
+    publishScriptReleaseTypeArgs: z
+      .strictObject({
+        publish: z.array(z.string()),
+        canary: z.array(z.string()),
+        next: z.array(z.string()),
+      })
+      .partial(),
+  })
+  .partial();
 
-export type IVersionFilePluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IVersionFilePluginOptions = z.infer<typeof pluginOptions>;
 
 /**
  * Reads version file from location specified in config

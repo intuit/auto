@@ -5,7 +5,9 @@ import { commands } from "../src/parse-args";
 test.each(commands.map((c) => [c.name, c] as const))(
   "%s has correct config options",
   (name, command) => {
-    const configOptions = globalOptions.props[name]?.props || {};
+    const option =
+      globalOptions.shape[name as keyof typeof globalOptions.shape]?.unwrap();
+    const configOptions = option && "shape" in option ? option.shape : {};
 
     expect.assertions(command.options?.filter((o) => o.config).length ?? 0);
 

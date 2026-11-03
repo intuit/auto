@@ -1,15 +1,17 @@
 import type { IPlugin } from "@auto-it/core";
-import { Auto } from "@auto-it/core";
-import * as t from "io-ts";
+import { Auto, validatePluginConfiguration } from "@auto-it/core";
+import { z } from "zod";
 
-const pluginOptions = t.partial({
-  /** Labels the user cannot apply through the PR */
-  disabledLabels: t.array(t.string),
-  /** Remove labels that are no longer checked from the PR. */
-  removeStaleLabels: t.boolean,
-});
+const pluginOptions = z
+  .strictObject({
+    /** Labels the user cannot apply through the PR */
+    disabledLabels: z.array(z.string()),
+    /** Remove labels that are no longer checked from the PR. */
+    removeStaleLabels: z.boolean(),
+  })
+  .partial();
 
-export type IPrBodyLabelsPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IPrBodyLabelsPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Allow outside contributors to indicate what semver label should be applied to the Pull Request */
 export default class PrBodyLabelsPlugin implements IPlugin {
@@ -29,6 +31,12 @@ export default class PrBodyLabelsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, pluginOptions, options);
+      }
+    });
+
     auto.hooks.prCheck.tapPromise(this.name, async ({ pr }) => {
       if (!auto.git || !auto.labels) {
         return;

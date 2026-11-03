@@ -4,7 +4,7 @@ import path from "path";
 import endent from "endent";
 import { Memoize as memoize } from "typescript-memoize";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
-import * as t from "io-ts";
+import { z } from "zod";
 import { execSync } from "child_process";
 import on from "await-to-js";
 
@@ -262,36 +262,38 @@ async function getRegistryArgs() {
     : ["--registry", registry];
 }
 
-const pluginOptions = t.partial({
-  /** Whether to create sub-package changelogs */
-  subPackageChangelogs: t.boolean,
-  /** Whether to create a commit for "next" version. The default behavior will only create the tags */
-  commitNextVersion: t.boolean,
-  /** Whether to set the npm token on CI */
-  setRcToken: t.boolean,
-  /** Whether to force publish all the packages in a monorepo */
-  forcePublish: t.boolean,
-  /** A scope to publish canary versions under */
-  canaryScope: t.string,
-  /** Publish a monorepo with the lerna --exact flag */
-  exact: t.boolean,
-  /**
-   * When publishing packages that require authentication but you are working with an internally
-   * hosted NPM Registry that only uses the legacy Base64 version of username:password. This is
-   * the same as the NPM publish _auth flag.
-   */
-  legacyAuth: t.boolean,
-  /** Whether to add package information to monorepo changelogs */
-  monorepoChangelog: t.boolean,
-  /**
-   * Path used when publishing packages.
-   * When used with npm this is equivalent to npm publish <publishFolder>
-   * When used with lerna this is equivalent to lerna publish --contents <publishFolder>
-   */
-  publishFolder: t.string,
-});
+const pluginOptions = z
+  .strictObject({
+    /** Whether to create sub-package changelogs */
+    subPackageChangelogs: z.boolean(),
+    /** Whether to create a commit for "next" version. The default behavior will only create the tags */
+    commitNextVersion: z.boolean(),
+    /** Whether to set the npm token on CI */
+    setRcToken: z.boolean(),
+    /** Whether to force publish all the packages in a monorepo */
+    forcePublish: z.boolean(),
+    /** A scope to publish canary versions under */
+    canaryScope: z.string(),
+    /** Publish a monorepo with the lerna --exact flag */
+    exact: z.boolean(),
+    /**
+     * When publishing packages that require authentication but you are working with an internally
+     * hosted NPM Registry that only uses the legacy Base64 version of username:password. This is
+     * the same as the NPM publish _auth flag.
+     */
+    legacyAuth: z.boolean(),
+    /** Whether to add package information to monorepo changelogs */
+    monorepoChangelog: z.boolean(),
+    /**
+     * Path used when publishing packages.
+     * When used with npm this is equivalent to npm publish <publishFolder>
+     * When used with lerna this is equivalent to lerna publish --contents <publishFolder>
+     */
+    publishFolder: z.string(),
+  })
+  .partial();
 
-export type INpmConfig = t.TypeOf<typeof pluginOptions>;
+export type INpmConfig = z.infer<typeof pluginOptions>;
 
 /** Render a list of string in markdown */
 const markdownList = (lines: string[]) =>

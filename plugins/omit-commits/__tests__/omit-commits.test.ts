@@ -6,6 +6,7 @@ import {
   makeLogParseHooks,
 } from "@auto-it/core/dist/utils/make-hooks";
 import OmitCommits, { IOmitCommitsPluginOptions } from "../src";
+import { dummyLog } from "@auto-it/core/dist/utils/logger";
 
 const setup = (options: IOmitCommitsPluginOptions) => {
   const plugin = new OmitCommits(options);
@@ -53,5 +54,18 @@ describe("Omit Commits Plugin", () => {
     const hooks = setup({ subject: "WIP" });
     const commit = makeCommitFromMsg("[WIP] foo");
     expect(await hooks.omitCommit.promise(commit)).toBe(true);
+  });
+});
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const plugin = new OmitCommits({});
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, { notAnOption: true })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
   });
 });

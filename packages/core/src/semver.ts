@@ -1,5 +1,5 @@
 import type { ReleaseCalculationOptions } from "./types";
-import * as t from "io-ts";
+import { z } from "zod";
 
 export type VersionLabel =
   | SEMVER.major
@@ -40,38 +40,26 @@ export const releaseLabels: VersionLabel[] = [
 export const isVersionLabel = (label: string): label is VersionLabel =>
   releaseLabels.includes(label as VersionLabel);
 
-const labelDefinitionRequired = t.type({
+const releaseType = z.enum(["none", "skip", ...releaseLabels]);
+type ReleaseType = z.infer<typeof releaseType>;
+
+export const labelDefinition = z.strictObject({
   /** The label text */
-  name: t.string,
-});
-
-const releaseType = t.union([
-  t.literal("none"),
-  t.literal("skip"),
-  ...releaseLabels.map((l) => t.literal(l)),
-]);
-type ReleaseType = t.TypeOf<typeof releaseType>;
-
-const labelDefinitionOptional = t.partial({
+  name: z.string(),
   /** A title to put in the changelog for the label */
-  changelogTitle: t.string,
+  changelogTitle: z.string().optional(),
   /** The color of the label */
-  color: t.string,
+  color: z.string().optional(),
   /** The description of the label */
-  description: t.string,
+  description: z.string().optional(),
   /** What type of release this label signifies */
-  releaseType,
+  releaseType: releaseType.optional(),
   /** Whether to overwrite the base label */
-  overwrite: t.boolean,
+  overwrite: z.boolean().optional(),
   /** Marks this label as the default label for unlabelled PRs */
-  default: t.boolean,
+  default: z.boolean().optional(),
 });
-
-export const labelDefinition = t.intersection([
-  labelDefinitionOptional,
-  labelDefinitionRequired,
-]);
-export type ILabelDefinition = t.TypeOf<typeof labelDefinition>;
+export type ILabelDefinition = z.infer<typeof labelDefinition>;
 
 const patchLabel: ILabelDefinition = {
   name: "patch",

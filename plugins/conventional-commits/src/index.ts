@@ -1,6 +1,6 @@
 import type { Commit } from "conventional-commits-parser";
 import flatMap from "array.prototype.flatmap";
-import * as t from "io-ts";
+import { z } from "zod";
 
 import type { IPlugin } from "@auto-it/core";
 import {
@@ -8,6 +8,7 @@ import {
   SEMVER,
   getReleaseType,
   getHigherSemverTag,
+  validatePluginConfiguration,
 } from "@auto-it/core";
 import endent from "endent";
 
@@ -71,16 +72,18 @@ const defaultPreset = {
   },
 };
 
-const optionalOptions = t.partial({
-  /** A path to the formula template */
-  preset: t.string,
-  /** The default release type to apply when the conventional commit isn't "fix", "feat" or "breaking" */
-  defaultReleaseType: t.string,
-});
+const optionalOptions = z
+  .strictObject({
+    /** A path to the formula template */
+    preset: z.string(),
+    /** The default release type to apply when the conventional commit isn't "fix", "feat" or "breaking" */
+    defaultReleaseType: z.string(),
+  })
+  .partial();
 
 const VERSIONS = [SEMVER.major, SEMVER.minor, SEMVER.patch] as const;
 
-export type ConventionalCommitsOptions = t.TypeOf<typeof optionalOptions>;
+export type ConventionalCommitsOptions = z.infer<typeof optionalOptions>;
 
 /**
  * Parse conventional commit messages and use them to
@@ -110,6 +113,12 @@ export default class ConventionalCommitsPlugin implements IPlugin {
 
   /** Tap into auto plugin points. */
   apply(auto: Auto) {
+    auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
+      if (name === this.name || name === `@auto-it/${this.name}`) {
+        return validatePluginConfiguration(this.name, optionalOptions, options);
+      }
+    });
+
     /** Get the bump using conventional commits */
     const getBump = async (message: string) => {
       if (!this.storedGetBump) {

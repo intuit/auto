@@ -6,7 +6,9 @@ import {
   validatePluginConfiguration,
 } from "../validate-config";
 import { AsyncSeriesBailHook } from "tapable";
-import * as t from "io-ts";
+import { z } from "zod";
+import { z as z3 } from "zod/v3";
+import createLog from "../utils/logger";
 
 describe("formatError", () => {
   test.each([
@@ -198,12 +200,12 @@ describe("validateConfig", () => {
       })
     ).toStrictEqual([
       {
-        expectedType: '"string" or "[string, any]"',
+        expectedType: '"string" or "tuple"',
         path: "plugins.0",
         value: 123,
       },
       {
-        expectedType: '"string" or "[string, any]"',
+        expectedType: '"string" or "tuple"',
         path: "plugins.1",
         value: true,
       },
@@ -327,11 +329,11 @@ describe("validatePlugin", () => {
       "options",
     ]);
 
-    const pluginOptions = t.partial({
-      types: t.partial({
-        docs: t.string,
-      }),
-    });
+    const pluginOptions = z
+      .strictObject({
+        types: z.strictObject({ docs: z.string() }).partial(),
+      })
+      .partial();
 
     hook.tapPromise("test", async (name, options) => {
       if (name === "test-plugin") {
@@ -365,9 +367,11 @@ describe("validatePlugin", () => {
       "options",
     ]);
 
-    const pluginOptions = t.partial({
-      types: t.union([t.string, t.array(t.string)]),
-    });
+    const pluginOptions = z
+      .strictObject({
+        types: z.union([z.string(), z.array(z.string())]),
+      })
+      .partial();
 
     hook.tapPromise("test", async (name, options) => {
       if (name === "test-plugin") {
@@ -405,13 +409,11 @@ describe("validatePlugin", () => {
       "options",
     ]);
 
-    const pluginOptions = t.partial({
-      exclude: t.array(
-        t.partial({
-          name: t.string,
-        })
-      ),
-    });
+    const pluginOptions = z
+      .strictObject({
+        exclude: z.array(z.strictObject({ name: z.string() }).partial()),
+      })
+      .partial();
 
     hook.tapPromise("test", async (name, options) => {
       if (name === "test-plugin") {
@@ -443,28 +445,27 @@ describe("validatePlugin", () => {
       "options",
     ]);
 
-    const basePluginOptions = t.partial({
-      /** URL of the slack to post to */
-      url: t.string,
-      /** Who to bother when posting to the channel */
-      atTarget: t.string,
-      /** Allow users to opt into having prereleases posted to slack */
-      publishPreRelease: t.boolean,
-      /** Additional Title to add at the start of the slack message */
-      title: t.string,
+    const basePluginOptions = z
+      .strictObject({
+        /** URL of the slack to post to */
+        url: z.string(),
+        /** Who to bother when posting to the channel */
+        atTarget: z.string(),
+        /** Allow users to opt into having prereleases posted to slack */
+        publishPreRelease: z.boolean(),
+        /** Additional Title to add at the start of the slack message */
+        title: z.string(),
+      })
+      .partial();
+
+    const appPluginOptions = basePluginOptions.extend({
+      /** Marks we are gonna use app auth */
+      auth: z.literal("app"),
+      /** Channels to post */
+      channels: z.array(z.string()),
     });
 
-    const appPluginOptions = t.intersection([
-      t.interface({
-        /** Marks we are gonna use app auth */
-        auth: t.literal("app"),
-        /** Channels to post */
-        channels: t.array(t.string),
-      }),
-      basePluginOptions,
-    ]);
-
-    const pluginOptions = t.union([basePluginOptions, appPluginOptions]);
+    const pluginOptions = z.union([basePluginOptions, appPluginOptions]);
 
     hook.tapPromise("test", async (name, options) => {
       if (name === "test-plugin") {
@@ -502,10 +503,8 @@ describe("validatePlugin", () => {
       "options",
     ]);
 
-    const config = t.partial({
-      name: t.string,
-    });
-    const pluginOptions = t.union([config, t.array(config)]);
+    const config = z.strictObject({ name: z.string() }).partial();
+    const pluginOptions = z.union([config, z.array(config)]);
 
     hook.tapPromise("test", async (name, options) => {
       if (name === "test-plugin") {
@@ -528,5 +527,107 @@ describe("validatePlugin", () => {
         plugins: [["test-plugin", [{ named: "foo" }]]],
       })
     ).toMatchSnapshot();
+  });
+
+  test("should report the allowed values of an enum", async () => {
+    expect(
+      await validatePluginConfiguration(
+        "test-plugin",
+        z.strictObject({ level: z.enum(["low", "high"]) }),
+        { level: "medium" }
+      )
+    ).toStrictEqual([
+      {
+        expectedType: '"low" or "high"',
+        path: "test-plugin.level",
+        value: "medium",
+      },
+    ]);
+  });
+
+  test("should report every unknown key together", async () => {
+    expect(
+      await validatePluginConfiguration(
+        "test-plugin",
+        z.strictObject({ name: z.string(), nested: z.strictObject({}) }),
+        { name: "foo", extra: 1, nested: { deep: 2 } }
+      )
+    ).toMatchSnapshot();
+  });
+
+  test("should report the closest union member", async () => {
+    expect(
+      await validatePluginConfiguration(
+        "test-plugin",
+        z.union([
+          z.strictObject({ kind: z.literal("a"), size: z.number() }),
+          z.strictObject({ kind: z.literal("b"), name: z.string() }),
+        ]),
+        { kind: "b", name: 1 }
+      )
+    ).toStrictEqual([
+      {
+        expectedType: '"string"',
+        path: "test-plugin.name",
+        value: 1,
+      },
+    ]);
+  });
+
+  test("should validate options with any Standard Schema", async () => {
+    const optionsSchema = {
+      "~standard": {
+        version: 1 as const,
+        vendor: "test",
+        validate: async (value: unknown) =>
+          value === "ok"
+            ? { value }
+            : {
+                issues: [
+                  { message: "Must be ok", path: [{ key: "a" }, 0] },
+                  { message: "Not ok at all" },
+                ],
+              },
+      },
+    };
+
+    expect(
+      await validatePluginConfiguration("test-plugin", optionsSchema, "ok")
+    ).toStrictEqual([]);
+    expect(
+      await validatePluginConfiguration("test-plugin", optionsSchema, "no")
+    ).toMatchSnapshot();
+  });
+
+  test("should validate options with a Zod 3 union", async () => {
+    // Zod 3 also reports its vendor as "zod", but its union issues have
+    // unionErrors instead of errors
+    const optionsSchema = z3.union([
+      z3.strictObject({ size: z3.number() }),
+      z3.strictObject({ name: z3.string() }),
+    ]);
+
+    expect(
+      await validatePluginConfiguration("test-plugin", optionsSchema, {
+        size: "big",
+      })
+    ).toHaveLength(1);
+  });
+
+  test("should warn and skip validation for io-ts options schemas", async () => {
+    const warn = vi.spyOn(createLog().log, "warn").mockImplementation(() => {});
+    // Shaped like an io-ts codec, which has no "~standard" property
+    const optionsSchema = { _tag: "PartialType", decode: () => ({}) };
+
+    expect(
+      await validatePluginConfiguration("test-plugin", optionsSchema as any, {
+        name: 123,
+      })
+    ).toStrictEqual([]);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('The "test-plugin" plugin')
+    );
+
+    warn.mockRestore();
   });
 });

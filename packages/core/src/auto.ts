@@ -2377,6 +2377,7 @@ export { default as InteractiveInit } from "./init";
 export { DEFAULT_PRERELEASE_BRANCHES } from "./config";
 export { getCurrentBranch } from "./utils/get-current-branch";
 export { validatePluginConfiguration } from "./validate-config";
+export type { StandardSchemaV1 } from "./standard-schema";
 export type { ILogger } from "./utils/logger";
 export type { IPlugin } from "./utils/load-plugins";
 export type { ICommitAuthor, IExtendedCommit } from "./log-parse";

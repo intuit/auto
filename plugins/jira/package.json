@@ -40,9 +40,8 @@
   "dependencies": {
     "@auto-it/core": "workspace:*",
     "enquirer": "^2.4.1",
-    "fp-ts": "^2.16.11",
-    "io-ts": "^2.2.22",
-    "url-join": "^6.0.0"
+    "url-join": "^6.0.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "tsdown": "catalog:"

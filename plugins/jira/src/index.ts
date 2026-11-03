@@ -1,6 +1,6 @@
 import join from "url-join";
 import { prompt } from "enquirer";
-import * as t from "io-ts";
+import { z } from "zod";
 
 import type { IPlugin } from "@auto-it/core";
 import {
@@ -10,12 +10,12 @@ import {
 } from "@auto-it/core";
 import type { IExtendedCommit } from "@auto-it/core/dist/log-parse";
 
-const pluginOptions = t.interface({
+const pluginOptions = z.strictObject({
   /** Url to a hosted JIRA instance */
-  url: t.string,
+  url: z.string(),
 });
 
-export type IJiraPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IJiraPluginOptions = z.infer<typeof pluginOptions>;
 
 interface InputResponse<T = "string"> {
   /** he value of the input prompt */

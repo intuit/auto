@@ -198,3 +198,25 @@ describe("Brew Plugin", () => {
     );
   });
 });
+
+describe("invalid options", () => {
+  test("should name the field that's wrong in a list of formulas", async () => {
+    const hooks = makeHooks();
+    const plugin = new Brew({ name: "foo", executable: "./foo" });
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, [
+        { name: "foo", executable: "./foo" },
+        { name: "bar" },
+      ])
+    ).toStrictEqual([
+      {
+        expectedType: '"string"',
+        path: "brew.1.executable",
+        value: undefined,
+      },
+    ]);
+  });
+});

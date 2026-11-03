@@ -173,6 +173,9 @@ catalogs:
     typescript:
       specifier: 6.0.3
       version: 6.0.3
+    zod:
+      specifier: ^4.4.0
+      version: 4.6.7
 
 packageExtensionsChecksum: sha256-ECV6dx6XBOohlcvP/Xzfu3tLBV3pfCQulAkqRNE7IFM=
 
@@ -403,9 +406,6 @@ importers:
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       fromentries:
         specifier: ^1.2.0
         version: 1.3.2
@@ -421,9 +421,6 @@ importers:
       import-from:
         specifier: ^4.0.0
         version: 4.0.0
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       lodash.chunk:
         specifier: ^4.2.0
         version: 4.2.0
@@ -472,6 +469,9 @@ importers:
       url-join:
         specifier: ^6.0.0
         version: 6.0.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/env-ci':
         specifier: ^3.1.4
@@ -543,15 +543,12 @@ importers:
       env-ci:
         specifier: ^11.2.0
         version: 11.2.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       fromentries:
         specifier: ^1.2.0
         version: 1.3.2
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/env-ci':
         specifier: ^3.1.4
@@ -565,12 +562,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -584,15 +578,12 @@ importers:
       chrome-webstore-upload-cli:
         specifier: ^4.0.2
         version: 4.0.2
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -606,15 +597,12 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -640,12 +628,9 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/array.prototype.flatmap':
         specifier: ^1.2.6
@@ -690,15 +675,12 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -715,15 +697,12 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       fromentries:
         specifier: ^1.2.0
         version: 1.3.2
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -771,18 +750,15 @@ importers:
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       parse-github-url:
         specifier: 1.0.4
         version: 1.0.4
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/env-ci':
         specifier: ^3.1.4
@@ -805,15 +781,12 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       push-dir:
         specifier: ^0.4.1
         version: 0.4.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -840,15 +813,12 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -865,15 +835,12 @@ importers:
       enquirer:
         specifier: ^2.4.1
         version: 2.4.1
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       url-join:
         specifier: ^6.0.0
         version: 6.0.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -884,15 +851,12 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -909,12 +873,6 @@ importers:
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       jsdom:
         specifier: ^30.1.3
         version: 30.1.3
@@ -930,6 +888,9 @@ importers:
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/jsdom':
         specifier: ^30.0.0
@@ -946,18 +907,15 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       https-proxy-agent:
         specifier: ^9.1.0
         version: 9.1.0(supports-color@8.1.1)
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -980,15 +938,9 @@ importers:
       env-ci:
         specifier: ^11.2.0
         version: 11.2.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       get-monorepo-packages:
         specifier: ^1.3.0
         version: 1.3.0
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       registry-url:
         specifier: ^7.2.0
         version: 7.2.0
@@ -1004,6 +956,9 @@ importers:
       user-home:
         specifier: ^3.0.0
         version: 3.0.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@octokit/rest':
         specifier: ^22.0.1
@@ -1026,12 +981,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1042,12 +994,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1058,12 +1007,9 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1077,12 +1023,9 @@ importers:
       '@octokit/rest':
         specifier: ^22.0.1
         version: 22.0.1
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1099,12 +1042,9 @@ importers:
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@octokit/rest':
         specifier: ^22.0.1
@@ -1121,12 +1061,9 @@ importers:
       aws-cli-js:
         specifier: ^2.2.3
         version: 2.2.3
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1137,18 +1074,15 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
       strip-ansi:
         specifier: ^7.2.0
         version: 7.2.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1168,18 +1102,15 @@ importers:
       '@octokit/rest':
         specifier: ^22.0.1
         version: 22.0.1
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
       https-proxy-agent:
         specifier: ^9.1.0
         version: 9.1.0(supports-color@8.1.1)
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       tsdown:
         specifier: 'catalog:'
@@ -1196,12 +1127,6 @@ importers:
       endent:
         specifier: ^2.1.0
         version: 2.1.0
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
@@ -1211,6 +1136,9 @@ importers:
       twitter-text:
         specifier: ^3.0.0
         version: 3.1.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1233,15 +1161,12 @@ importers:
       file-type:
         specifier: ^22.3.0
         version: 22.3.0(supports-color@10.2.2)
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       terminal-link:
         specifier: ^5.0.0
         version: 5.0.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@octokit/rest':
         specifier: ^22.0.1
@@ -1258,15 +1183,12 @@ importers:
       '@auto-it/core':
         specifier: workspace:*
         version: link:../../packages/core
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -1283,18 +1205,15 @@ importers:
       '@auto-it/package-json-utils':
         specifier: workspace:*
         version: link:../../packages/package-json-utils
-      fp-ts:
-        specifier: ^2.16.11
-        version: 2.16.11
-      io-ts:
-        specifier: ^2.2.22
-        version: 2.2.22(fp-ts@2.16.11)
       semver:
         specifier: ^7.8.5
         version: 7.8.5
       vsce:
         specifier: ^2.15.0
         version: 2.15.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@types/semver':
         specifier: ^7.8.0
@@ -5150,9 +5069,6 @@ packages:
     resolution: {integrity: sha512-Ua9xNhH0b8pwE3yRbFfXJvfdWF0UHNCdeyb2sbi9Ul/M+r3PTdrz7Cv4SCfZRMjmzEM9PhraqfZFbGTIg3OMyA==}
     engines: {node: '>= 0.6'}
 
-  fp-ts@2.16.11:
-    resolution: {integrity: sha512-LaI+KaX2NFkfn1ZGHoKCmcfv7yrZsC3b8NtWsTVQeHkq4F27vI5igUuO53sxqDEa2gNQMHFPmpojDw/1zmUK7w==}
-
   fragment-cache@0.2.1:
     resolution: {integrity: sha512-GMBAbW9antB8iZRHLoGw0b3HANt57diZYFO/HL1JGIC1MjKrdmhxvrJbupnVvpys0zsz7yBApXdQyfepKly2kA==}
     engines: {node: '>=0.10.0'}
@@ -5734,11 +5650,6 @@ packages:
   into-stream@6.0.0:
     resolution: {integrity: sha512-XHbaOAvP+uFKUFsOgoNPRjLkwB+I22JFPFe5OjTkQ0nwgj6+pSjb4NmB6VMxaPshLiOf+zcpOCBQuLwC1KHhZA==}
     engines: {node: '>=10'}
-
-  io-ts@2.2.22:
-    resolution: {integrity: sha512-FHCCztTkHoV9mdBsHpocLpdTAfh956ZQcIkWQxxS0U5HT53vtrcuYdQneEJKH6xILaLNzXVl2Cvwtoy8XNN0AA==}
-    peerDependencies:
-      fp-ts: ^2.5.0
 
   ip-address@10.7.5:
     resolution: {integrity: sha512-t2v0rkILYv9WXmSL7TpAaU3HXgaFYOPUcH3QHgwQ++gpJuH3bqyMy4Fvt/DJCTKwzH3Cf+bAp5W/mFL39KPLzA==}
@@ -9627,6 +9538,9 @@ packages:
   yuku-parser@0.19.0:
     resolution: {integrity: sha512-XrBh9ZiQK5mJVRxZBAvD6LwRyAYrK3MFtH3+onyuxFL5hFD44EC3QOmIC1FjTj6H2MMwq46/NAI+NZxLZPZgxg==}
     engines: {node: '>=14.18.0'}
+
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zwitch@1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
@@ -13958,8 +13872,6 @@ snapshots:
 
   forwarded@0.1.2: {}
 
-  fp-ts@2.16.11: {}
-
   fragment-cache@0.2.1:
     dependencies:
       map-cache: 0.2.2
@@ -14636,10 +14548,6 @@ snapshots:
     dependencies:
       from2: 2.3.0
       p-is-promise: 3.0.0
-
-  io-ts@2.2.22(fp-ts@2.16.11):
-    dependencies:
-      fp-ts: 2.16.11
 
   ip-address@10.7.5: {}
 
@@ -19218,5 +19126,7 @@ snapshots:
     dependencies:
       '@yuku-toolchain/types': 0.19.0
       yuku-core: 0.19.0
+
+  zod@4.6.7: {}
 
   zwitch@1.0.5: {}

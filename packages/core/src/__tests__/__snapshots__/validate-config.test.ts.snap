@@ -70,6 +70,28 @@ Expected string but got: 123
 ]
 `;
 
+exports[`validatePlugin > should report every unknown key together 1`] = `
+[
+  ""test-plugin"
+
+Found unknown configuration keys: nested.deep, extra
+",
+]
+`;
+
+exports[`validatePlugin > should validate options with any Standard Schema 1`] = `
+[
+  ""test-plugin.a.0"
+
+Must be ok
+",
+  ""test-plugin"
+
+Not ok at all
+",
+]
+`;
+
 exports[`validatePlugin > should validate plugin configuration - array of configurations 1`] = `
 [
   ""test-plugin"
@@ -110,7 +132,7 @@ exports[`validatePlugin > should validate plugin configuration - union 1`] = `
 [
   ""test-plugin"
 
-Found missing configuration keys: when using auth you must also provide channels
+Found unknown configuration keys: auth
 ",
 ]
 `;

@@ -144,3 +144,42 @@ describe("S3 Plugin", () => {
     expect(plugin.aws.command).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("unknown options", () => {
+  test("should reject options the plugin doesn't have", async () => {
+    const hooks = makeHooks();
+    const options = { bucket: "bucket", region: "us-west-2", files: [] };
+    const plugin = new S3(options);
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, {
+        ...options,
+        notAnOption: true,
+      })
+    ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("invalid options", () => {
+  test("should name the field that's wrong in a list of buckets", async () => {
+    const hooks = makeHooks();
+    const plugin = new S3({ bucket: "bucket", region: "us-west-2", files: [] });
+
+    plugin.apply({ hooks, logger: dummyLog() } as any);
+
+    expect(
+      await hooks.validateConfig.promise(plugin.name, [
+        { bucket: "bucket", region: "us-west-2", files: [] },
+        { bucket: "bucket", region: "us-west-2", files: [["./foo", 1]] },
+      ])
+    ).toStrictEqual([
+      {
+        expectedType: '"string"',
+        path: "s3.1.files.0.1",
+        value: 1,
+      },
+    ]);
+  });
+});

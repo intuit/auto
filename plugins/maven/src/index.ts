@@ -2,7 +2,7 @@ import type { IPlugin, IExtendedCommit } from "@auto-it/core";
 import { Auto, execPromise } from "@auto-it/core";
 import parseGitHubUrl from "parse-github-url";
 import { promisify } from "util";
-import * as t from "io-ts";
+import { z } from "zod";
 import { type IDeveloper, parse } from "pom-parser";
 import { inc, type ReleaseType } from "semver";
 import { validatePluginConfiguration } from "@auto-it/core/dist/auto";
@@ -21,41 +21,43 @@ const parsePom = promisify(parse);
 export const getPom = async (filePath = "pom.xml") =>
   parsePom({ filePath: filePath });
 
-const pluginOptions = t.partial({
-  /** The maven binary to release the project with **/
-  mavenCommand: t.string,
+const pluginOptions = z
+  .strictObject({
+    /** The maven binary to release the project with **/
+    mavenCommand: z.string(),
 
-  /** A list of maven command customizations to pass to maven **/
-  mavenOptions: t.array(t.string),
+    /** A list of maven command customizations to pass to maven **/
+    mavenOptions: z.array(z.string()),
 
-  /** A list of maven goals to pass to maven for release **/
-  mavenReleaseGoals: t.array(t.string),
+    /** A list of maven goals to pass to maven for release **/
+    mavenReleaseGoals: z.array(z.string()),
 
-  /** Path to maven settings file **/
-  mavenSettings: t.string,
+    /** Path to maven settings file **/
+    mavenSettings: z.string(),
 
-  /** Print width for prettier formatting **/
-  printWidth: t.number,
+    /** Print width for prettier formatting **/
+    printWidth: z.number(),
 
-  /** Tab width for prettier formatting **/
-  tabWidth: t.number,
+    /** Tab width for prettier formatting **/
+    tabWidth: z.number(),
 
-  /**
-   * The username to use when deploying to the maven repository
-   *
-   * @deprecated since 9.38.0
-   **/
-  mavenUsername: t.string,
+    /**
+     * The username to use when deploying to the maven repository
+     *
+     * @deprecated since 9.38.0
+     **/
+    mavenUsername: z.string(),
 
-  /**
-   * The password to use when deploying to the maven repository
-   *
-   * @deprecated since 9.38.0
-   **/
-  mavenPassword: t.string,
-});
+    /**
+     * The password to use when deploying to the maven repository
+     *
+     * @deprecated since 9.38.0
+     **/
+    mavenPassword: z.string(),
+  })
+  .partial();
 
-export type IMavenPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IMavenPluginOptions = z.infer<typeof pluginOptions>;
 
 export interface IMavenProperties {
   /** version **/

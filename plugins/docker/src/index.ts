@@ -8,23 +8,25 @@ import {
   validatePluginConfiguration,
   getPrNumberFromEnv,
 } from "@auto-it/core";
-import * as t from "io-ts";
+import { z } from "zod";
 import { inc, type ReleaseType } from "semver";
 
-const pluginOptions = t.partial({
-  /** The source image, if a static name and/or tag */
-  image: t.string,
-  /** The target registry to push too */
-  registry: t.string,
-  /** Whether to tag non-prerelease images with latest alias tag */
-  tagLatest: t.boolean,
-  /** Whether to tag prereleases with alias tags too */
-  tagPrereleaseAliases: t.boolean,
-  /** Whether to tag pull requests with alias tags  */
-  tagPullRequestAliases: t.boolean,
-  /** Prerelease alias tag mappings (BRANCH=ALIAS_NAME) */
-  prereleaseAliasMappings: t.record(t.string, t.string),
-});
+const pluginOptions = z
+  .strictObject({
+    /** The source image, if a static name and/or tag */
+    image: z.string(),
+    /** The target registry to push too */
+    registry: z.string(),
+    /** Whether to tag non-prerelease images with latest alias tag */
+    tagLatest: z.boolean(),
+    /** Whether to tag prereleases with alias tags too */
+    tagPrereleaseAliases: z.boolean(),
+    /** Whether to tag pull requests with alias tags  */
+    tagPullRequestAliases: z.boolean(),
+    /** Prerelease alias tag mappings (BRANCH=ALIAS_NAME) */
+    prereleaseAliasMappings: z.record(z.string(), z.string()),
+  })
+  .partial();
 
 /** Convert string/number to boolean value */
 function toBoolean(v?: string | number) {
@@ -39,7 +41,7 @@ enum DOCKER_PLUGIN_ENV_VARS {
   TAG_PULL_REQUEST_ALIASES = "TAG_PULL_REQUEST_ALIASES",
 }
 
-export type IDockerPluginOptions = t.TypeOf<typeof pluginOptions>;
+export type IDockerPluginOptions = z.infer<typeof pluginOptions>;
 
 /** Manages tagging and publishing to docker registries. */
 export default class DockerPlugin implements IPlugin {
