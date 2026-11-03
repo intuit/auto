@@ -7,6 +7,7 @@ import {
 } from "../validate-config";
 import { AsyncSeriesBailHook } from "tapable";
 import { z } from "zod";
+import { z as z3 } from "zod/v3";
 import createLog from "../utils/logger";
 
 describe("formatError", () => {
@@ -596,6 +597,21 @@ describe("validatePlugin", () => {
     expect(
       await validatePluginConfiguration("test-plugin", optionsSchema, "no")
     ).toMatchSnapshot();
+  });
+
+  test("should validate options with a Zod 3 union", async () => {
+    // Zod 3 also reports its vendor as "zod", but its union issues have
+    // unionErrors instead of errors
+    const optionsSchema = z3.union([
+      z3.strictObject({ size: z3.number() }),
+      z3.strictObject({ name: z3.string() }),
+    ]);
+
+    expect(
+      await validatePluginConfiguration("test-plugin", optionsSchema, {
+        size: "big",
+      })
+    ).toHaveLength(1);
   });
 
   test("should warn and skip validation for io-ts options schemas", async () => {

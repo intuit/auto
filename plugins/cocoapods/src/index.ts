@@ -31,25 +31,19 @@ const sourceLineRegex = /\.source.*(?<source>\{\s*:\s*git.*\})/;
  */
 const logMessage = (msg: string): string => `${logPrefix} ${msg}`;
 
-const required = z.strictObject({
+const pluginOptions = z.strictObject({
   /** Relative path to podspec file */
   podspecPath: z.union([z.string(), z.array(z.string())]),
+
+  /** The Cocoapods repo to publish to */
+  specsRepo: z.string().optional(),
+
+  /** Any additional command line flags to pass to `pod repo push` */
+  flags: z.array(z.string()).optional(),
+
+  /** The command to use for `pod` if it needs to be separate like `bundle exec pod` */
+  podCommand: z.string().optional(),
 });
-
-const optional = z
-  .strictObject({
-    /** The Cocoapods repo to publish to */
-    specsRepo: z.string(),
-
-    /** Any additional command line flags to pass to `pod repo push` */
-    flags: z.array(z.string()),
-
-    /** The command to use for `pod` if it needs to be separate like `bundle exec pod` */
-    podCommand: z.string(),
-  })
-  .partial();
-
-const pluginOptions = required.extend(optional.shape);
 export type ICocoapodsPluginOptions = z.infer<typeof pluginOptions>;
 
 /**

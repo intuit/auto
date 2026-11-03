@@ -4,21 +4,15 @@ import { execSync } from "child_process";
 import fs from "fs";
 import { z } from "zod";
 
-const requiredOptions = z.strictObject({
+const formulaConfiguration = z.strictObject({
   /** The name of the formula to create */
   name: z.string(),
   /** The executable to create a formula for */
   executable: z.string(),
+  /** A path to the formula template */
+  formula: z.string().optional(),
 });
 
-const optionalOptions = z
-  .strictObject({
-    /** A path to the formula template */
-    formula: z.string(),
-  })
-  .partial();
-
-const formulaConfiguration = requiredOptions.extend(optionalOptions.shape);
 export type FormulaConfiguration = z.infer<typeof formulaConfiguration>;
 
 const pluginOptions = z.union([

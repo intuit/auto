@@ -176,6 +176,9 @@ const pluginOptions = z.strictObject({
 export type MyPluginOptions = z.infer<typeof pluginOptions>;
 ```
 
+When an intersection only joins required and optional options, write one `z.strictObject` and mark the optional fields with `.optional()`, as above.
+Use `A.extend(B.shape)` when one schema builds on another.
+
 | io-ts                                 | Zod                                       |
 | ------------------------------------- | ----------------------------------------- |
 | `t.type({...})`, `t.interface({...})` | `z.strictObject({...})`                   |

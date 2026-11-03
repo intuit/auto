@@ -9,23 +9,16 @@ import { execSync } from "child_process";
 import { z } from "zod";
 import endent from "endent";
 
-const required = z.strictObject({
+const pluginOptions = z.strictObject({
   /** The directory to push to gh-pages */
   dir: z.string(),
+  /** A command to build the documentation website */
+  buildCommand: z.string().optional(),
+  /** The branch to push to */
+  branch: z.string().optional(),
+  /** A label to look for and always publish the docs */
+  label: z.string().optional(),
 });
-
-const optional = z
-  .strictObject({
-    /** A command to build the documentation website */
-    buildCommand: z.string(),
-    /** The branch to push to */
-    branch: z.string(),
-    /** A label to look for and always publish the docs */
-    label: z.string(),
-  })
-  .partial();
-
-const pluginOptions = required.extend(optional.shape);
 
 export type IGhPagesPluginOptions = z.infer<typeof pluginOptions>;
 

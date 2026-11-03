@@ -23,19 +23,12 @@ const stat = promisify(fs.stat);
 const readFile = promisify(fs.readFile);
 const canaryTag = "0.0.0-canary";
 
-const requiredPluginOptions = z.strictObject({
+const pluginOptions = z.strictObject({
   /** Paths to assets to upload */
   assets: z.array(z.string()),
+  /** Max number of assets to keep in the canary release */
+  maxCanaryAssets: z.number().optional(),
 });
-
-const optionalPluginOptions = z
-  .strictObject({
-    /** Max number of assets to keep in the canary release */
-    maxCanaryAssets: z.number(),
-  })
-  .partial();
-
-const pluginOptions = requiredPluginOptions.extend(optionalPluginOptions.shape);
 
 /** Convert shorthand options to noraml shape */
 const normalizeOptions = (options: IUploadAssetsPluginOptions | string[]) =>

@@ -69,16 +69,11 @@ function getValue(input: unknown, keys: PropertyKey[]) {
   );
 }
 
-/** Whether a union member failed only because the value has the wrong type */
-function isTypeMismatch(issues: core.$ZodIssue[]) {
-  return issues.every(
-    (issue) =>
-      issue.path.length === 0 &&
-      (issue.code === "invalid_type" || issue.code === "invalid_value")
-  );
-}
-
-/** Describe what a type mismatch expected, e.g. "string" */
+/**
+ * Describe what a type mismatch expected, e.g. "string". This is the one
+ * place that decides which issues are type mismatches: any other issue
+ * returns undefined.
+ */
 function describeExpected(issue: core.$ZodIssue) {
   if (issue.code === "invalid_type") {
     return [`"${issue.expected}"`];
@@ -88,7 +83,14 @@ function describeExpected(issue: core.$ZodIssue) {
     return issue.values.map((value) => JSON.stringify(value));
   }
 
-  return [];
+  return undefined;
+}
+
+/** Whether a union member failed only because the value has the wrong type */
+function isTypeMismatch(issues: core.$ZodIssue[]) {
+  return issues.every(
+    (issue) => issue.path.length === 0 && describeExpected(issue) !== undefined
+  );
 }
 
 interface ReportOptions {
@@ -105,6 +107,19 @@ interface Report {
   errors: ConfigError[];
   /** The paths of every unknown key found so far */
   unknownKeys: string[];
+}
+
+/** Turn a type error into an error that shows the expected types and value */
+function typeError(
+  keys: PropertyKey[],
+  expected: string[],
+  options: ReportOptions
+): ConfigOptionError {
+  return {
+    path: joinPath(keys, options.prefix),
+    expectedType: expected.join(" or "),
+    value: getValue(options.input, keys),
+  };
 }
 
 /** Turn an issue that isn't a type error into a string error */
@@ -127,31 +142,30 @@ function reportZodIssues(
 ) {
   issues.forEach((issue) => {
     const keys = [...base, ...issue.path];
+    const expected = describeExpected(issue);
 
-    if (issue.code === "invalid_type" || issue.code === "invalid_value") {
-      report.errors.push({
-        path: joinPath(keys, options.prefix),
-        expectedType: describeExpected(issue).join(" or "),
-        value: getValue(options.input, keys),
-      });
+    if (expected) {
+      report.errors.push(typeError(keys, expected, options));
     } else if (issue.code === "unrecognized_keys") {
       report.unknownKeys.push(
         ...issue.keys.map((key) => joinPath([...keys, key]))
       );
-    } else if (issue.code === "invalid_union" && issue.errors.length) {
+    } else if (
+      issue.code === "invalid_union" &&
+      // Zod 3 schemas report the "zod" vendor too, but their union issues
+      // have unionErrors instead
+      Array.isArray(issue.errors) &&
+      issue.errors.length
+    ) {
       // When every member rejects the value's type, report all the types
       // that would have worked. Otherwise report the member that came
       // closest to matching.
       if (issue.errors.every(isTypeMismatch)) {
-        const expected = [
-          ...new Set(issue.errors.flat().flatMap(describeExpected)),
-        ];
+        const allExpected = issue.errors
+          .flat()
+          .flatMap((memberIssue) => describeExpected(memberIssue) ?? []);
 
-        report.errors.push({
-          path: joinPath(keys, options.prefix),
-          expectedType: expected.join(" or "),
-          value: getValue(options.input, keys),
-        });
+        report.errors.push(typeError(keys, [...new Set(allExpected)], options));
       } else {
         const closest = issue.errors
           .filter((member) => !isTypeMismatch(member))
