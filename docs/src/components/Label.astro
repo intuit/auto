@@ -1,7 +1,7 @@
 ---
 /** A GitHub style label */
 interface Props {
-  color: "blue" | "yellow";
+  color: "primary" | "blue" | "yellow";
   class?: string;
 }
 
@@ -22,6 +22,10 @@ const { color, class: className } = Astro.props;
 
   .ml-4 {
     margin-inline-start: 1rem;
+  }
+
+  .primary {
+    background-color: #7a0041;
   }
 
   .blue {

@@ -5,7 +5,6 @@ const path = require("path");
 
 /** Baseline paths that haven't moved to the new site yet. Must end up empty. */
 const pending = [
-  "/",
   "/blog",
   "/blog/both-worlds",
   "/blog/npm-canary-scope",

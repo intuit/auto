@@ -1,0 +1,397 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+import GetStarted from "./GetStarted.astro";
+import Label from "./Label.astro";
+
+const base = import.meta.env.BASE_URL;
+
+const features = [
+  {
+    title: "Keep Your Workflow",
+    icon: "setting",
+    description:
+      "Other tools require you to change how any contributor commits to your project. With <em>auto</em> leave that baggage behind!",
+  },
+  {
+    title: "Beautiful Changelogs",
+    icon: "document",
+    description:
+      "Link to PRs and Jira stories, include authors, monorepo aware, customizable labels section, additional release notes, and even more!",
+  },
+  {
+    title: "Atomic Functions",
+    icon: "puzzle",
+    description:
+      "Each command does one thing and they do it well. Easily use them to fit any build process.",
+  },
+  {
+    title: "Blazingly Fast Releases",
+    icon: "rocket",
+    description:
+      "Since all you need to worry about are labels, you can work at an incredibly fast pace! This speed to commit also helps with new contributors.",
+  },
+] as const;
+
+const releaseTypes = [
+  {
+    type: "canary",
+    color: "#870048",
+    description: "PR build previews that enable your project's consumers to easily test changes.",
+  },
+  {
+    type: "next",
+    color: "#d97706",
+    description:
+      "Easily create and manage pre-releases for your project as you develop large changes.",
+  },
+  {
+    type: "latest",
+    color: "#b91c1c",
+    description:
+      "Publish a new full release for the project. Creates changelogs, github releases, and more!",
+  },
+];
+---
+
+<div class="home not-content">
+  <section class="intro">
+    <h2>Adding automated releases shouldn't be hard or require changing your workflow</h2>
+    <p>
+      <em>auto</em> makes automating releases for your project as simple adding a <Label
+        color="yellow">label</Label
+      > to a pull request. If you're releasing all the time you can be <strong class="hot"
+        >more confident</strong
+      > in your releases. And your users might thank you too 😉
+    </p>
+  </section>
+
+  <section class="features">
+    <div class="feature-list">
+      {
+        features.map((feature) => (
+          <div class="feature">
+            <div class="feature-icon">
+              <Icon name={feature.icon} size="1.5rem" />
+            </div>
+            <div>
+              <h3>{feature.title}</h3>
+              <p set:html={feature.description} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <img class="changelog" src={`${base}/changelog-example.png`} alt="Changelog example" />
+  </section>
+
+  <section class="release-types">
+    <h2>A release for any situation!</h2>
+    <p>
+      <em>auto</em> can create multiple types of releases. Each release type guarantees that no matter
+      the situation you'll be able to publish and consume a release with your changes.
+    </p>
+    <div class="release-type-list">
+      {
+        releaseTypes.map(({ type, color, description }) => (
+          <div class="release-type" style={`background-color: ${color}`}>
+            <h3>{type}</h3>
+            <p>{description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="workflow">
+    <h2>What does the workflow look like? How easy is it really?</h2>
+    <div class="step">
+      <div class="step-label"><span class="step-number">1</span><h3>Open a Pull Request</h3></div>
+      <img src={`${base}/open-pr.png`} alt="" />
+    </div>
+    <div class="step">
+      <div class="step-label">
+        <span class="step-number">2</span><h3>Add a <Label color="blue">label</Label></h3>
+      </div>
+      <img src={`${base}/add-label.png`} alt="" />
+    </div>
+    <div class="step">
+      <div class="step-label"><span class="step-number">3</span><h3>Hit that merge button</h3></div>
+      <img src={`${base}/merge.png`} alt="" />
+    </div>
+    <div class="step">
+      <div class="step-label">
+        <span class="step-number">4</span>
+        <h3>Wait for your continuous integration to make the release for you!</h3>
+      </div>
+      <img src={`${base}/release-example.png`} alt="" />
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2>Frequently asked questions</h2>
+
+    <h4>Do you really release <strong><em>every</em></strong> pull request?!</h4>
+    <p>
+      <a href="https://github.com/intuit/auto/releases">Yup!</a> But if you don't want to do that it's
+      up to you. The tools <em>auto</em> ships with can be used to <strong class="hot"
+        >fit any workflow</strong
+      >! You can also use <Label color="primary">skip-release</Label> labels or configure <em
+        >auto</em
+      > to only release with a <Label color="blue">release</Label> label.
+    </p>
+
+    <h4>Is there a way to hook into <em>auto</em> and customize my release process?</h4>
+    <p>
+      Many of <em>auto</em>'s features are <a href={`${base}/docs/configuration/plugins`}
+        >built into plugins</a
+      >. You can also use this plugin system to do <strong class="hot">almost anything</strong> during
+      your release!
+    </p>
+
+    <h4>Does <em>auto</em> support any other types of releases?</h4>
+    <p>Yes! <em>auto</em> has commands for any situation!</p>
+    <p>Want a test version? Try a <a href={`${base}/docs/generated/canary`}>canary</a></p>
+    <p>
+      Want a prerelease? Try creating a pre-release branch and using <a
+        href={`${base}/docs/generated/next`}>next</a
+      >
+    </p>
+    <p>
+      Need to patch an old major release? <em>auto</em> can automatically make branches for <a
+        href={`${base}/docs/generated/shipit#managing-old-major-versions`}>old major versions</a
+      >!
+    </p>
+    <p>
+      Or if you don't want to worry about what command you need, just use <a
+        href={`${base}/docs/generated/shipit`}>shipit</a
+      >! This command determines what type of release to make based on the context it's run in.
+    </p>
+  </section>
+
+  <section class="closing">
+    <h2>Stop worrying about your release and hit that merge button!</h2>
+    <GetStarted />
+  </section>
+</div>
+
+<style>
+  /* The hero holds the white logo, so it sits on auto's primary colour */
+  :global([data-has-hero] .hero) {
+    padding: 6rem 1rem;
+    border-radius: 0.75rem;
+    background-color: #870048;
+    text-align: center;
+  }
+
+  :global([data-has-hero] .hero h1) {
+    display: flex;
+    justify-content: center;
+  }
+
+  :global([data-has-hero] .hero h1 img) {
+    width: min(24rem, 60%);
+  }
+
+  :global([data-has-hero] .hero .tagline) {
+    color: #e1bfd1;
+    font-size: var(--sl-text-2xl);
+    font-weight: 300;
+  }
+
+  :global([data-has-hero] .hero .tagline strong) {
+    color: #eab308;
+    font-weight: 600;
+  }
+
+  .home {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+
+  .home em {
+    color: var(--sl-color-accent-high);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .home a {
+    color: var(--sl-color-text-accent);
+    font-weight: 600;
+  }
+
+  .hot {
+    color: #ef4444;
+  }
+
+  h2 {
+    font-size: var(--sl-text-3xl);
+    line-height: var(--sl-line-height-headings);
+  }
+
+  h3 {
+    font-size: var(--sl-text-xl);
+  }
+
+  .intro {
+    max-width: 42rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro h2 {
+    margin-bottom: 1.5rem;
+    font-size: var(--sl-text-2xl);
+  }
+
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .feature-list {
+    display: flex;
+    flex: 1 1 20rem;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .feature-icon {
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    background-color: #d97706;
+    color: #fef3c7;
+  }
+
+  .feature h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .changelog {
+    flex: 1 1 20rem;
+    max-height: 500px;
+    object-fit: contain;
+    padding: 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    box-shadow: var(--sl-shadow-md);
+  }
+
+  .release-types > p {
+    max-width: 56rem;
+    margin: 1.5rem 0 2.5rem;
+    font-size: var(--sl-text-xl);
+  }
+
+  .release-type-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .release-type {
+    flex: 1 1 14rem;
+    padding: 1.5rem 2rem;
+    border-radius: 0.75rem;
+    color: #f3f4f6;
+  }
+
+  .release-type h3 {
+    margin-bottom: 1rem;
+    color: white;
+    font-size: var(--sl-text-2xl);
+  }
+
+  .workflow h2,
+  .faq h2 {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .workflow {
+    max-width: 56rem;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .step-label {
+    display: flex;
+    flex: 1 1 16rem;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .step-number {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: var(--sl-color-gray-2);
+    color: var(--sl-color-black);
+  }
+
+  .step img {
+    flex: 1 1 20rem;
+    max-width: 32rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+  }
+
+  .faq {
+    max-width: 56rem;
+    margin: 0 auto;
+  }
+
+  .faq h4 {
+    margin: 2.5rem 0 0.75rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+    font-size: var(--sl-text-xl);
+    font-weight: 400;
+  }
+
+  .faq p {
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+  }
+
+  .closing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 3rem 1rem 5rem;
+    border-radius: 0.75rem;
+    background-color: #870048;
+    color: white;
+    text-align: center;
+  }
+
+  .closing :global(.get-started) {
+    color: white;
+  }
+
+  .closing h2 {
+    font-size: var(--sl-text-xl);
+    font-weight: 400;
+  }
+</style>
