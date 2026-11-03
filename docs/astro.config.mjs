@@ -1,12 +1,25 @@
+import fs from "node:fs/promises";
+
 import { defineConfig } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import starlight from "@astrojs/starlight";
+import starlightBlog from "starlight-blog";
 import starlightLinksValidator from "starlight-links-validator";
 import remarkEmoji from "remark-emoji";
 
 import { remarkSiteLinks } from "./src/plugins/remark-site-links.mjs";
 
 const base = "/auto";
+
+/** Keep serving the blog's feed at the path the old site used */
+const blogFeedAlias = {
+  name: "blog-feed-alias",
+  hooks: {
+    "astro:build:done": async ({ dir }) => {
+      await fs.copyFile(new URL("blog/rss.xml", dir), new URL("blog/feed.xml", dir));
+    },
+  },
+};
 
 /** A sidebar link to a generated command or plugin page */
 const generated = (label, name) => ({ label, slug: `docs/generated/${name}` });
@@ -18,6 +31,8 @@ export default defineConfig({
   // Pages serves every page both with and without the ".html"
   build: { format: "file" },
   trailingSlash: "never",
+  // Blog post covers are hosted remotely and sized at build time
+  image: { domains: ["images.unsplash.com", "cdn-images-1.medium.com"] },
   markdown: {
     processor: unified({ remarkPlugins: [remarkEmoji, [remarkSiteLinks, { base }]] }),
   },
@@ -25,7 +40,16 @@ export default defineConfig({
     starlight({
       title: "auto",
       description: "Generate releases based on semantic version labels on pull requests.",
-      plugins: [starlightLinksValidator({ sameSitePolicy: "validate" })],
+      plugins: [
+        starlightBlog({
+          postCount: Infinity,
+          authors: {
+            andrew: { name: "Andrew Lisowski" },
+            adam: { name: "Adam Dierkens", url: "https://github.intuit.com/adierkens" },
+          },
+        }),
+        starlightLinksValidator({ sameSitePolicy: "validate" }),
+      ],
       sidebar: [
         {
           label: "Welcome",
@@ -153,5 +177,6 @@ export default defineConfig({
         },
       ],
     }),
+    blogFeedAlias,
   ],
 });

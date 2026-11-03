@@ -12,6 +12,7 @@
     "@astrojs/starlight": "^0.42.8",
     "astro": "^7.4.4",
     "remark-emoji": "^5.0.2",
+    "starlight-blog": "^0.30.2",
     "starlight-links-validator": "^0.27.0"
   }
 }

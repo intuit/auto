@@ -1,13 +1,16 @@
 ---
-image: https://images.unsplash.com/photo-1485795046599-702122cd1267?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1950
 title: Announcing "auto" 8.0.0
-author: Andrew Lisowski
-email: lisowski54@gmail.com
-date: "Thu, 12 Mar 2020 23:00:02 -0700"
+date: 2020-03-12T12:00:00Z
+authors: andrew
+cover:
+  alt: ""
+  image: https://images.unsplash.com/photo-1485795046599-702122cd1267?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1950
 ---
 
 We are excited to announce the release of `auto` 8.0.0.
 This release brings a new command `next`, a new use for `shipit`, more powerful label configuration, and more.
+
+{/* excerpt */}
 
 If you are unfamiliar, `auto` is a CLI tool which helps you version your code and automate any part of your release pipeline.
 `auto`'s main use is for automating your versioning with [semantic versioning](https://semver.org/) and [GitHub](https://github.com/) pull request labels.
@@ -41,8 +44,8 @@ This new command will make a preview release of your code. This entails:
 2. Creating a tag and "Pre Release" on GitHub releases page
 
 The only prerelease branch `auto` comes configured with is `next`.
-You can configure as many branches as you want with the [prereleaseBranches](../pages/autorc#prerelease-branches) `.autorc` option.
-If your package manager plugin supports release tags, such as the [npm](../generated/npm) plugin, `auto` will publish the prerelease branch to a tag of the same name.
+You can configure as many branches as you want with the [prereleaseBranches](../docs/configuration/autorc#prerelease-branches) `.autorc` option.
+If your package manager plugin supports release tags, such as the [npm](../docs/generated/npm) plugin, `auto` will publish the prerelease branch to a tag of the same name.
 Calling `auto next` from a one of these branches will publish a prerelease, otherwise it will publish to your default prerelease branch/tag.
 
 ### Example Usage

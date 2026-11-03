@@ -4,16 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 /** Baseline paths that haven't moved to the new site yet. Must end up empty. */
-const pending = [
-  "/blog",
-  "/blog/both-worlds",
-  "/blog/npm-canary-scope",
-  "/blog/pr-in-progress",
-  "/blog/using-shipit",
-  "/blog/v8",
-  "/blog/why",
-  "/blog/feed.xml",
-];
+const pending = [];
 
 const dist = path.join(__dirname, "dist");
 const baseline = fs
