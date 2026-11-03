@@ -1,15 +1,13 @@
-import { GetStarted } from "../../components/get-started-button";
+---
+title: Introduction
+---
 
-<div className="mx-auto max-w-sm my-24 w-full">
-  <picture>
-    <source
-      srcSet="dark-logo-large.png"
-      media="(prefers-color-scheme: dark)"
-      className="w-full"
-    />
-    <img src="light-logo-large.png" alt="Auto Logo" className="w-full" />
-  </picture>
-</div>
+import GetStarted from "../../../components/GetStarted.astro";
+
+<picture>
+  <source srcset="/auto/dark-logo-large.png" media="(prefers-color-scheme: dark)" />
+  <img src="/auto/light-logo-large.png" alt="Auto Logo" style="max-width: 24rem; width: 100%; margin: 4rem auto; display: block;" />
+</picture>
 
 > Automated releases powered by pull request labels
 
@@ -52,6 +50,6 @@ pre: (optional) Check if new version
 Each tool is a function that can be run in isolation and only does one thing really well.
 For instance, you could just use `auto changelog` to generate the changelog and nothing else or use `auto version` to calculate just the `semver` bump.
 
-<div className="my-20 flex align-center justify-center w-full">
+<div style="display: flex; justify-content: center; margin: 5rem 0;">
   <GetStarted />
 </div>

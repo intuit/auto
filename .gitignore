@@ -5,7 +5,9 @@ package-lock.json
 _ignite
 .vscode/
 binary
-docs/pages/docs/generated
+docs/src/content/docs/docs/generated
+docs/dist
+docs/.astro
 **/tsconfig.tsbuildinfo
 
 docs/.mdx-data

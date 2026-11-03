@@ -1,0 +1,34 @@
+---
+/** A GitHub style label */
+interface Props {
+  color: "blue" | "yellow";
+  class?: string;
+}
+
+const { color, class: className } = Astro.props;
+---
+
+<span class:list={["label", color, className]}><slot /></span>
+
+<style>
+  .label {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: white;
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  .ml-4 {
+    margin-inline-start: 1rem;
+  }
+
+  .blue {
+    background-color: #2563eb;
+  }
+
+  .yellow {
+    background-color: #d97706;
+  }
+</style>

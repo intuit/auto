@@ -1,7 +1,10 @@
-# Keep in sync with "packages" in lerna.json, which the npm plugin reads.
+# Keep packages/* and plugins/* in sync with "packages" in lerna.json, which the
+# npm plugin reads. The docs site is a private workspace package that lerna
+# never versions or publishes, so it isn't listed there.
 packages:
   - packages/*
   - plugins/*
+  - docs
 
 patchedDependencies:
   next-ignite@0.10.11: patches/next-ignite@0.10.11.patch

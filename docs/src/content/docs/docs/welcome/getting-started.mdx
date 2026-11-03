@@ -2,7 +2,7 @@
 title: Getting Started
 ---
 
-import { Label } from "../../../components/label";
+import Label from "../../../../components/Label.astro";
 
 Before we do anything we must first install `auto` as a dev dependency.
 
@@ -49,7 +49,7 @@ Getting started with `auto` is super easy.
 3. Create Labels
 4. Run `auto`
 
-### 1. Initialize Options <Label color="blue" className="ml-4">Optional</Label>
+### 1. Initialize Options <Label color="blue" class="ml-4">Optional</Label>
 
 Initialize the bare minimum options and a few other optional things.
 This will set you up locally but you will still have to configure environment variables in your CI.
@@ -66,7 +66,7 @@ You must configure some environment variables for publishing and releasing to wo
 
 > Make sure you give the GH_TOKEN <Label color="blue">repo</Label> permission or `shipit` will fail!
 
-#### Local `.env` <Label color="yellow" className="ml-4">Recommended</Label>
+#### Local `.env` <Label color="yellow" class="ml-4">Recommended</Label>
 
 You can also store these values in a local file at the root of your project named `.env`.
 You should make sure to add this file to your `.gitignore` so you don't commit any keys!
@@ -116,7 +116,7 @@ There are two ways you can use `auto` to create releases.
 1. `auto shipit` - Let `auto` do everything
 2. Sub Commands - Run each command yourself
 
-#### `auto shipit` <Label color="yellow" className="ml-4">Recommended</Label>
+#### `auto shipit` <Label color="yellow" class="ml-4">Recommended</Label>
 
 To version, changelog, publish and release your code all at the same time you should use the `shipit` command.
 `shipit` runs all commands in the `auto` workflow and puts it into one meta-command.
