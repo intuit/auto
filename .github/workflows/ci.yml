@@ -159,7 +159,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    # Never cancel a deploy halfway, but don't queue more than one either
+    # Never run two deploys at once. A newer push to main still cancels this
+    # run through the workflow's concurrency group, and its deploy follows.
     concurrency:
       group: pages
       cancel-in-progress: false
