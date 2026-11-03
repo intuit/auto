@@ -7,7 +7,7 @@ const endent = require("endent").default;
 const glob = require("fast-glob");
 const docs = require("command-line-docs").default;
 const { defaultLabels } = require("../packages/core/dist/semver");
-const { commands } = require("../packages/cli/dist/parse-args");
+const { commands } = require("../packages/cli/dist");
 
 try {
   fs.mkdirSync(path.join(__dirname, "./pages/docs/generated"));
