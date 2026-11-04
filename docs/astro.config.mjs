@@ -48,8 +48,8 @@ export default defineConfig({
       description:
         "Generate releases based on semantic version labels on pull requests.",
       logo: {
-        light: "./src/assets/light-logo-small.png",
-        dark: "./src/assets/dark-logo-small.png",
+        light: "./src/assets/logo-light.svg",
+        dark: "./src/assets/logo-dark.svg",
         replacesTitle: true,
       },
       favicon: "/favicon.png",
@@ -67,6 +67,27 @@ export default defineConfig({
           attrs: { rel: "manifest", href: `${base}/manifest.json` },
         },
         { tag: "meta", attrs: { name: "theme-color", content: "#7A0041" } },
+        // Site type: DM Sans (body), DM Serif Display (landing headings),
+        // JetBrains Mono (code)
+        {
+          tag: "link",
+          attrs: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        },
+        {
+          tag: "link",
+          attrs: {
+            rel: "preconnect",
+            href: "https://fonts.gstatic.com",
+            crossorigin: true,
+          },
+        },
+        {
+          tag: "link",
+          attrs: {
+            rel: "stylesheet",
+            href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap",
+          },
+        },
       ],
       social: [
         {
@@ -78,6 +99,8 @@ export default defineConfig({
       customCss: ["./src/styles/theme.css"],
       components: {
         MarkdownContent: "./src/components/overrides/MarkdownContent.astro",
+        Hero: "./src/components/overrides/Hero.astro",
+        Header: "./src/components/overrides/Header.astro",
       },
       plugins: [
         starlightBlog({

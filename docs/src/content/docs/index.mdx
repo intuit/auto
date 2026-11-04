@@ -6,9 +6,9 @@ template: splash
 head:
   - tag: title
     content: Auto
-hero:
-  title: <img src="/auto/monochrome-logo-large.png" alt="auto" />
-  tagline: Streamline your release workflow and <strong>publish constantly!</strong>
+# Declared (empty) so Starlight uses its single-panel hero layout; the hero
+# itself is drawn by <Home />, and the Hero override renders nothing
+hero: {}
 ---
 
 import Home from "../../components/Home.astro";

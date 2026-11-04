@@ -1,5 +1,9 @@
 /* auto's primary and gray scales mapped onto Starlight's theme colours */
 :root {
+  --sl-font: "DM Sans", system-ui, sans-serif;
+  --sl-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --sl-nav-height: 4.25rem;
+
   --sl-color-accent-low: #3d0020;
   --sl-color-accent: #ab4d7f;
   --sl-color-accent-high: #e1bfd1;
@@ -12,11 +16,14 @@
   --sl-color-gray-5: #3c383b;
   --sl-color-gray-6: #2e2c2f;
   --sl-color-black: #181517;
+
+  /* Header sits on the page's own ground in dark mode */
+  --sl-color-bg-nav: var(--sl-color-black);
 }
 
 :root[data-theme="light"] {
-  --sl-color-accent-low: #f3e6ed;
-  --sl-color-accent: #870048;
+  --sl-color-accent-low: #f6e6ec;
+  --sl-color-accent: #7a0041;
   --sl-color-accent-high: #51002b;
 
   --sl-color-white: #181517;
@@ -28,4 +35,8 @@
   --sl-color-gray-6: #eaeae7;
   --sl-color-gray-7: #f6f7f5;
   --sl-color-black: #ffffff;
+
+  /* Header: warm off-white ground with a rose hairline */
+  --sl-color-bg-nav: #fbf7f8;
+  --sl-color-hairline-shade: #ead9df;
 }
