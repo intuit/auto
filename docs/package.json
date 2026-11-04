@@ -1,0 +1,19 @@
+{
+  "name": "auto-docs",
+  "private": true,
+  "description": "The auto documentation site, built with Astro Starlight",
+  "scripts": {
+    "docs": "pnpm docs:generate && astro dev",
+    "docs:build": "pnpm docs:generate && astro build && node ./check-url-baseline.js",
+    "docs:generate": "node ./generate-command-docs.js"
+  },
+  "devDependencies": {
+    "@astrojs/markdown-remark": "^7.3.5",
+    "@astrojs/starlight": "^0.42.8",
+    "astro": "^7.4.4",
+    "remark-emoji": "^5.0.2",
+    "starlight-blog": "^0.30.2",
+    "starlight-image-zoom": "^0.16.2",
+    "starlight-links-validator": "^0.27.0"
+  }
+}

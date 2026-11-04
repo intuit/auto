@@ -282,6 +282,13 @@
         // expect(object.method).toHaveBeenCalled() reads a method unbound
         "typescript/unbound-method": "off"
       }
+    },
+    {
+      // The docs site's build scripts are plain CommonJS run by Node
+      "files": ["docs/*.js"],
+      "rules": {
+        "typescript/no-var-requires": "off"
+      }
     }
   ]
 }

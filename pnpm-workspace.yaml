@@ -1,22 +1,17 @@
-# Keep in sync with "packages" in lerna.json, which the npm plugin reads.
+# Keep packages/* and plugins/* in sync with "packages" in lerna.json, which the
+# npm plugin reads. The docs site is a private workspace package that lerna
+# never versions or publishes, so it isn't listed there.
 packages:
   - packages/*
   - plugins/*
+  - docs
 
-patchedDependencies:
-  next-ignite@0.10.11: patches/next-ignite@0.10.11.patch
-
-# None of these install scripts are needed: @parcel/watcher ships prebuilds,
-# nx's postinstall is a no-op without nx.json, dtrace-provider and fsevents@1
-# are optional native builds, vsce only loads keytar when no PAT is passed (and
-# falls back to a file store without it), and the rest only print banners.
+# None of these install scripts are needed: nx's postinstall is a no-op without
+# nx.json, fsevents is an optional native build, vsce only loads keytar when no
+# PAT is passed (and falls back to a file store without it), and the rest only
+# print banners.
 allowBuilds:
-  "@fortawesome/fontawesome-common-types": false
-  "@fortawesome/fontawesome-svg-core": false
-  "@fortawesome/free-solid-svg-icons": false
-  "@parcel/watcher": false
   core-js: false
-  dtrace-provider: false
   ejs: false
   fsevents: false
   keytar: false

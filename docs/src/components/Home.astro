@@ -1,0 +1,1047 @@
+---
+/**
+ * The landing page. Sections are full-bleed bands; the brand bands (maroon,
+ * ink) use fixed colours, the neutral bands follow Starlight's light/dark
+ * theme so the page sits well under either header.
+ */
+import logo from "../assets/logo-dark.svg";
+
+const base = import.meta.env.BASE_URL;
+const docs = `${base}/docs/welcome/getting-started`;
+const github = "https://github.com/intuit/auto";
+
+const features = [
+  {
+    title: "Keep your workflow",
+    description:
+      "Other tools make every contributor change how they commit. With auto, leave that baggage behind.",
+    icon: `<path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>`,
+  },
+  {
+    title: "Beautiful changelogs",
+    description:
+      "Links to PRs and Jira stories, authors, monorepo awareness, custom label sections and release notes.",
+    icon: `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/>`,
+  },
+  {
+    title: "Atomic commands",
+    description: "Each command does one thing well. Compose them to fit any build process.",
+    icon: `<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>`,
+  },
+  {
+    title: "Blazingly fast",
+    description:
+      "All you manage are labels, so you move at an incredible pace. New contributors ramp up faster too.",
+    icon: `<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>`,
+  },
+];
+
+const releaseTypes = [
+  {
+    type: "canary",
+    version: "11.2.0-canary.2491.1",
+    description: "Per-PR build previews so your consumers can test changes before they land.",
+  },
+  {
+    type: "next",
+    version: "12.0.0-next.3",
+    description: "Pre-releases you can manage while developing large changes on a branch.",
+  },
+  {
+    type: "latest",
+    version: "11.2.0",
+    description: "A full release. Changelog, GitHub release, package publish and more.",
+  },
+];
+---
+
+<div class="home not-content">
+  <!-- Hero -->
+  <section class="band hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Ship a release <i>every time</i> you merge.</h1>
+        <p class="lede">
+          auto turns a pull-request label into a versioned, changelogged, published release. Keep
+          your workflow. Stop babysitting releases.
+        </p>
+        <div class="actions">
+          <a class="btn btn-light" href={docs}>Get started</a>
+          <a class="btn btn-ghost" href={github}>View on GitHub</a>
+        </div>
+        <div class="install">
+          <code><span class="prompt">$</span> npx auto init</code>
+          <button type="button" class="copy" aria-label="Copy command" data-copy="npx auto init">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="terminal" aria-hidden="true">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <code class="terminal-title">ci · release</code>
+        </div>
+        <pre><span class="prompt">$</span> auto shipit
+<span class="ok">✔</span> Detected label <span class="hl">minor</span>
+<span class="ok">✔</span> Bumped version <span class="hl">v11.1.6 → v11.2.0</span>
+<span class="ok">✔</span> Generated CHANGELOG.md
+<span class="ok">✔</span> Published to npm
+<span class="ok">✔</span> Created GitHub release
+<span class="ok">✔</span> Commented on #2491
+
+<span class="live">Release v11.2.0 is live.</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why auto -->
+  <section class="band">
+    <div class="wrap stack-lg">
+      <div class="section-head">
+        <span class="eyebrow">Why auto</span>
+        <h2>Automated releases shouldn't be hard or change how your team works.</h2>
+        <p>
+          Releasing is as simple as adding a label to a pull request. Release all the time and
+          you'll trust every release more. Your users will thank you.
+        </p>
+      </div>
+      <div class="feature-grid">
+        {
+          features.map((feature) => (
+            <article class="card">
+              <span class="icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={feature.icon} />
+              </span>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Changelog showcase -->
+  <section class="band band-tight">
+    <div class="wrap showcase">
+      <div class="section-head">
+        <span class="eyebrow">Changelogs</span>
+        <h2>Release notes written for you, from the PRs you already merged.</h2>
+        <p>
+          Every entry links back to its pull request and author. Group by label, add release
+          notes in the PR body, and keep monorepo packages straight.
+        </p>
+        <a class="more" href={`${base}/docs/configuration/autorc#changelog-titles`}>
+          See changelog options
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="changelog card">
+        <div class="changelog-head">
+          <h3>v11.2.0</h3>
+          <span class="muted">Tue Nov 3 2026</span>
+        </div>
+        <div class="changelog-group">
+          <span class="tag tag-brand">Minor — Feature</span>
+          <ul>
+            <li>Add <code>--base-branch</code> flag to shipit <a href={`${github}/pull/2491`}>#2491</a> (<a href="https://github.com/hipstersmoothie">@hipstersmoothie</a>)</li>
+            <li>Allow plugins to extend <code>.autorc</code> validation <a href={`${github}/pull/2487`}>#2487</a> (<a href="https://github.com/adierkens">@adierkens</a>)</li>
+          </ul>
+        </div>
+        <div class="changelog-group">
+          <span class="tag tag-neutral">Patch — Bug fix</span>
+          <ul>
+            <li>Fix canary tag when PR title contains a slash <a href={`${github}/pull/2483`}>#2483</a> (<a href="https://github.com/kharrop">@kharrop</a>)</li>
+          </ul>
+        </div>
+        <div class="changelog-foot">
+          <span class="muted">Authors: 3</span>
+          <div class="avatars"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Release types -->
+  <section class="band band-ink">
+    <div class="wrap stack-lg">
+      <div class="section-head">
+        <span class="eyebrow eyebrow-pink">Release types</span>
+        <h2>A release for any situation.</h2>
+        <p>
+          Whatever the branch or the PR, there's a release type that lets you publish and consume
+          your changes safely.
+        </p>
+      </div>
+      <div class="release-grid">
+        {
+          releaseTypes.map(({ type, version, description }) => (
+            <article class="release">
+              <code class="release-name">{type}</code>
+              <p>{description}</p>
+              <code class="release-version">{version}</code>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="band">
+    <div class="wrap stack-lg">
+      <div class="section-head">
+        <span class="eyebrow">The workflow</span>
+        <h2>How easy is it, really?</h2>
+        <p>Four steps. Three of them you already do.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-no">01</span>
+          <h3>Open a pull request</h3>
+          <div class="card card-sm">
+            <div class="row">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="#2DA44E" aria-hidden="true"><path d="M7.177 3.073 9.573.677A.25.25 0 0 1 10 .854v4.792a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354zM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zm-2.25.75a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25zM11 2.5h-1V4h1a1 1 0 0 1 1 1v5.628a2.251 2.251 0 1 0 1.5 0V5A2.5 2.5 0 0 0 11 2.5zm1 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0zM3.75 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5z"/></svg>
+              <strong>Add base-branch flag</strong>
+            </div>
+            <span class="muted small">#2491 · wants to merge 3 commits into main</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-no">02</span>
+          <h3>Add a label</h3>
+          <div class="card card-sm">
+            <strong class="small">Labels</strong>
+            <div class="row wrap-row">
+              <span class="pill pill-brand">minor</span>
+              <span class="pill">patch</span>
+              <span class="pill">major</span>
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="step-no">03</span>
+          <h3>Hit merge</h3>
+          <div class="card card-sm">
+            <span class="merge">Merge pull request</span>
+            <span class="muted small">All checks have passed</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-no">04</span>
+          <h3>CI releases for you</h3>
+          <div class="card card-sm">
+            <div class="row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7A0041" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              <strong>v11.2.0 published</strong>
+            </div>
+            <span class="muted small">npm · GitHub release · changelog</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="band band-surface" id="faq">
+    <div class="wrap faq">
+      <div class="section-head">
+        <span class="eyebrow">FAQ</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>Do you really release every pull request?<span aria-hidden="true">+</span></summary>
+          <p>
+            <a href={`${github}/releases`}>Yup!</a> But if you don't want to, it's up to you. The
+            tools auto ships with fit any workflow. Use <code>skip-release</code> labels, or
+            configure auto to only release when a <code>release</code> label is present.
+          </p>
+        </details>
+        <details>
+          <summary>Can I hook into auto and customize my release process?<span aria-hidden="true">+</span></summary>
+          <p>
+            Many of auto's features are <a href={`${base}/docs/configuration/plugins`}>built as plugins</a>.
+            The same plugin system lets you do almost anything during a release.
+          </p>
+        </details>
+        <details>
+          <summary>Does auto support other types of releases?<span aria-hidden="true">+</span></summary>
+          <p>
+            Yes. Try <a href={`${base}/docs/generated/canary`}><code>canary</code></a> for test
+            versions, <a href={`${base}/docs/generated/next`}><code>next</code></a> for pre-releases,
+            and <a href={`${base}/docs/generated/shipit#managing-old-major-versions`}>old-major branches</a>
+            for patching past releases. Or just run
+            <a href={`${base}/docs/generated/shipit`}><code>shipit</code></a> and let auto pick based
+            on context.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="band hero cta">
+    <div class="wrap">
+      <h2>Stop worrying about your release and hit that merge button.</h2>
+      <div class="actions">
+        <a class="btn btn-light" href={docs}>Get started</a>
+        <a class="btn btn-ghost" href={github}>Star on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="band band-ink site-foot">
+    <div class="wrap">
+      <img src={logo.src} alt="auto" width="109" height="24" />
+      <nav aria-label="Footer">
+        <a href={docs}>Docs</a>
+        <a href={`${base}/blog`}>Blog</a>
+        <a href={github}>GitHub</a>
+        <a href={`${github}/releases`}>Releases</a>
+      </nav>
+      <span>MIT License · Built at Intuit</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
+    button.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(button.dataset.copy ?? "");
+      button.setAttribute("aria-label", "Copied");
+      setTimeout(() => button.setAttribute("aria-label", "Copy command"), 1500);
+    });
+  }
+</script>
+
+<style>
+  /* The landing page is the only hero page: drop the content panel's top
+     inset so the hero starts right under the header */
+  :global([data-has-hero] .content-panel) {
+    padding-block-start: 0;
+  }
+
+  :global([data-has-hero] .sl-markdown-content) {
+    margin-top: 0;
+  }
+
+  /* …and Starlight's page footer (edit link / pagination), which is empty
+     here and would leave a gap under the site footer */
+  :global([data-has-hero] .sl-container > footer) {
+    display: none;
+  }
+
+  /* Palette */
+  .home {
+    --maroon: #7a0041;
+    --ink: #1c0a12;
+    --pink: #f5b8d0;
+    --pink-soft: #f5dce6;
+    --rose: rgba(245, 184, 208, 0.14);
+    --code: var(--pink);
+    --gold: #f5b40b;
+    --line: var(--sl-color-gray-5);
+    --text-2: var(--sl-color-gray-3);
+    --card: var(--sl-color-black);
+
+    display: flex;
+    flex-direction: column;
+    /* Undo the content panel's bottom inset so the footer band runs to the edge */
+    margin-block: 0 -1.5rem;
+    font-family: var(--sl-font);
+    color: var(--sl-color-white);
+  }
+
+  :root[data-theme="light"] .home {
+    --card: #ffffff;
+    --line: #ead9df;
+    --text-2: #5c4650;
+    --rose: #f6e6ec;
+    --code: var(--ink);
+  }
+
+  /* Type */
+  .home h1,
+  .home h2,
+  .home h3 {
+    margin: 0;
+    font-family: "DM Serif Display", Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .home p {
+    margin: 0;
+  }
+
+  .home a {
+    color: var(--maroon);
+    text-decoration: none;
+  }
+
+  .home a:hover {
+    text-decoration: underline;
+  }
+
+  .home code {
+    font-family: var(--sl-font-mono);
+  }
+
+  /* Bands */
+  .band {
+    margin-inline: calc(50% - 50vw);
+    padding-inline: 1.5rem;
+  }
+
+  .wrap {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding-block: 6rem;
+  }
+
+  .band-tight .wrap {
+    padding-block: 1.5rem 6rem;
+  }
+
+  .band-surface {
+    background: var(--card);
+    border-top: 1px solid var(--line);
+  }
+
+  .band-ink {
+    background: var(--ink);
+    color: #ffffff;
+  }
+
+  .stack-lg {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 760px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .section-head p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .band-ink .section-head p {
+    color: #d9bfcb;
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--maroon);
+  }
+
+  .eyebrow-pink {
+    color: var(--pink);
+  }
+
+  .muted {
+    color: var(--text-2);
+  }
+
+  .small {
+    font-size: 0.75rem;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--maroon);
+    color: #ffffff;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2rem;
+    align-items: center;
+    padding-block: 6rem 5.5rem;
+  }
+
+  .hero-copy {
+    grid-column: span 7;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    min-width: 0;
+  }
+
+  .hero h1 {
+    max-width: 12ch;
+    font-size: clamp(2.75rem, 5.5vw, 4.25rem);
+    line-height: 1.02;
+  }
+
+  .hero h1 i {
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-decoration-thickness: 6px;
+    text-underline-offset: 8px;
+  }
+
+  .lede {
+    max-width: 46ch;
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--pink-soft);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    align-items: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 1.375rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .btn:hover {
+    text-decoration: none;
+    filter: brightness(0.96);
+  }
+
+  /* `.home a` sets the link colour; match its specificity here */
+  .home .btn-light {
+    background: #ffffff;
+    color: var(--maroon);
+  }
+
+  .home .btn-ghost {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+  }
+
+  .install {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    align-self: flex-start;
+    max-width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    background: rgba(28, 10, 18, 0.35);
+  }
+
+  .install code {
+    font-size: 0.9375rem;
+    color: #ffffff;
+  }
+
+  .prompt {
+    color: var(--pink);
+  }
+
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--pink-soft);
+    cursor: pointer;
+  }
+
+  .copy:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .terminal {
+    grid-column: span 5;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    background: var(--ink);
+    box-shadow: 0 30px 60px rgba(28, 10, 18, 0.35);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .terminal-bar > span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6b4a57;
+  }
+
+  .terminal-title {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #b08a99;
+  }
+
+  .terminal pre {
+    margin: 0;
+    padding: 1.25rem;
+    font-size: 0.84375rem;
+    line-height: 1.7;
+    color: #f1e3e9;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: transparent;
+  }
+
+  .ok {
+    color: #7fd8a9;
+  }
+
+  .hl {
+    color: #ffd6e7;
+  }
+
+  .live {
+    color: #7fd8a9;
+  }
+
+  /* Cards */
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+  }
+
+  .card h3 {
+    font-size: 1.25rem;
+  }
+
+  .card p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .card-sm {
+    gap: 0.625rem;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--rose);
+    color: var(--maroon);
+  }
+
+  :root:not([data-theme="light"]) .icon,
+  :root:not([data-theme="light"]) .tag-brand {
+    color: var(--pink);
+  }
+
+  /* Changelog showcase */
+  .showcase {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .showcase .section-head {
+    grid-column: span 5;
+    min-width: 0;
+  }
+
+  .showcase .section-head h2 {
+    font-size: clamp(1.75rem, 3.2vw, 2.375rem);
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 600;
+  }
+
+  .changelog {
+    grid-column: span 7;
+    gap: 1.25rem;
+    padding: 2rem;
+    box-shadow: 0 20px 50px rgba(122, 0, 65, 0.08);
+  }
+
+  .changelog-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .changelog-head h3 {
+    font-size: 1.625rem;
+  }
+
+  .changelog-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .changelog ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .changelog li code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--rose);
+    color: var(--code);
+    font-size: 0.84375rem;
+  }
+
+  .changelog-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .avatars {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .avatars span {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--maroon);
+  }
+
+  .avatars span:nth-child(2) {
+    background: #b8476f;
+  }
+
+  .avatars span:nth-child(3) {
+    background: #dca3b8;
+  }
+
+  .tag {
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tag-brand {
+    background: var(--rose);
+    color: var(--maroon);
+  }
+
+  .tag-neutral {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+  }
+
+  :root[data-theme="light"] .tag-neutral {
+    background: #eef1f4;
+    color: #3b4a58;
+  }
+
+  /* Release types */
+  .release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .release {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .release-name {
+    font-size: 1.625rem;
+    font-weight: 500;
+    color: var(--pink);
+  }
+
+  .release p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #d9bfcb;
+  }
+
+  .release-version {
+    margin-top: auto;
+    font-size: 0.8125rem;
+    color: #b08a99;
+  }
+
+  /* Workflow */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+  }
+
+  .steps h3 {
+    font-size: 1.25rem;
+  }
+
+  .step-no {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: #dca3b8;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .wrap-row {
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .pill {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #eef1f4;
+    color: #3b4a58;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .pill-brand {
+    background: var(--maroon);
+    color: #ffffff;
+  }
+
+  .merge {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 0.875rem;
+    border-radius: 8px;
+    background: #2da44e;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  /* FAQ */
+  .faq {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+
+  .faq .section-head {
+    grid-column: span 4;
+  }
+
+  .faq .section-head h2 {
+    font-size: clamp(1.75rem, 3.2vw, 2.375rem);
+  }
+
+  .faq-list {
+    grid-column: span 8;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .faq details {
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .faq details:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 44px;
+    list-style: none;
+    cursor: pointer;
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 1.25rem;
+  }
+
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq summary span {
+    color: var(--maroon);
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.15s;
+  }
+
+  .faq details[open] summary span {
+    transform: rotate(45deg);
+  }
+
+  .faq details p {
+    max-width: 64ch;
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+
+  .faq code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--rose);
+    color: var(--code);
+    font-size: 0.875rem;
+  }
+
+  /* CTA */
+  .cta .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 5.5rem;
+    text-align: center;
+  }
+
+  .cta h2 {
+    max-width: 18ch;
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    line-height: 1.08;
+  }
+
+  .cta .actions {
+    justify-content: center;
+  }
+
+  /* Footer */
+  .site-foot .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding-block: 2.5rem;
+    font-size: 0.875rem;
+    color: #d9bfcb;
+  }
+
+  .site-foot img {
+    height: 1.5rem;
+    width: auto;
+  }
+
+  .site-foot nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .site-foot a {
+    color: #d9bfcb;
+  }
+
+  /* Phone width: stack the grids */
+  @media (max-width: 50rem) {
+    .hero-copy,
+    .terminal,
+    .showcase .section-head,
+    .changelog,
+    .faq .section-head,
+    .faq-list {
+      grid-column: 1 / -1;
+    }
+
+    .hero-grid {
+      padding-block: 3.5rem 3rem;
+    }
+
+    .wrap {
+      padding-block: 3.5rem;
+    }
+
+    .actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>

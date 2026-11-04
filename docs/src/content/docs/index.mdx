@@ -1,0 +1,16 @@
+---
+title: auto
+description: Automated releases powered by pull request labels.
+template: splash
+# The old home page was titled just "Auto", not "<page> | <site>"
+head:
+  - tag: title
+    content: Auto
+# Declared (empty) so Starlight uses its single-panel hero layout; the hero
+# itself is drawn by <Home />, and the Hero override renders nothing
+hero: {}
+---
+
+import Home from "../../components/Home.astro";
+
+<Home />

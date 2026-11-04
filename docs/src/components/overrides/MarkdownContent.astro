@@ -1,0 +1,9 @@
+---
+// starlight-blog and starlight-image-zoom both override this component and
+// each steps aside when another override exists, so render both here
+import BlogMarkdownContent from "starlight-blog/overrides/MarkdownContent.astro";
+import ImageZoom from "starlight-image-zoom/components/ImageZoom.astro";
+---
+
+<ImageZoom />
+<BlogMarkdownContent><slot /></BlogMarkdownContent>
