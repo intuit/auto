@@ -27,7 +27,7 @@ if (missing.length) {
 const { defaultLabels } = require("../packages/core/dist/semver");
 const { commands } = require("../packages/cli/dist");
 
-const outDir = path.join(__dirname, "./src/content/docs/docs/generated");
+const outDir = path.join(__dirname, "./src/content/docs/generated");
 
 /** Front matter with a title Starlight can render as plain text */
 const frontMatter = (title) => endent`

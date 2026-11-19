@@ -56,11 +56,21 @@ const current = links
 </div>
 
 <style>
+  /* Held to the width of the content beneath: the landing page's 1160px
+     wrap, or the docs' centred sidebar + article block */
   .header {
     display: flex;
     align-items: center;
     gap: var(--sl-nav-gap);
     height: 100%;
+    max-width: 72.5rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 72rem) {
+    :global([data-has-sidebar]) .header {
+      max-width: 65.25rem;
+    }
   }
 
   .title-wrapper {

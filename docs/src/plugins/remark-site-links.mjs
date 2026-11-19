@@ -1,23 +1,20 @@
 import path from "node:path";
 
+import { pageId } from "../page-ids.mjs";
+
 const contentDir = path.resolve(import.meta.dirname, "../content/docs");
 const hasScheme = /^[a-z][a-z\d+.-]*:/i;
-
-/** The URL path a content file is served at, e.g. "/auto/docs/welcome/getting-started" */
-const pageUrl = (file, base) => {
-  const slug = path
-    .relative(contentDir, file)
-    .replace(/\.mdx?$/, "")
-    .replace(/(^|\/)index$/, "");
-
-  return slug ? `${base}/${slug}` : `${base}/`;
-};
 
 /**
  * Rewrite content links the way the old Ignite site served them, so the
  * links validator can check every one:
  * - relative links resolve against the page's own URL
  * - root links ("/hook-overview.png") get the site base in front
+ *
+ * The validator works out a page's URL from its file path, not from the
+ * collection's ids, and only listens to a `slug` in the frontmatter. So each
+ * page also gets its id as its slug, or the validator would look for the docs
+ * section's pages outside "/docs".
  */
 export function remarkSiteLinks({ base }) {
   const prefix = base.replace(/\/$/, "");
@@ -27,7 +24,18 @@ export function remarkSiteLinks({ base }) {
       return;
     }
 
-    const from = new URL(pageUrl(file.path, prefix), "https://site.invalid");
+    const frontmatter = file.data.astro?.frontmatter;
+    const id = pageId(path.relative(contentDir, file.path), frontmatter);
+
+    // The validator would read a slug of "index" as "/index"
+    if (frontmatter && !frontmatter.slug && id !== "index") {
+      frontmatter.slug = id;
+    }
+
+    const from = new URL(
+      id === "index" ? `${prefix}/` : `${prefix}/${id}`,
+      "https://site.invalid"
+    );
 
     const rewrite = (url, { relative }) => {
       if (

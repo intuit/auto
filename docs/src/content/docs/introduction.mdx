@@ -1,8 +1,10 @@
 ---
 title: Introduction
+# Served at /docs, the docs section's own index; index.mdx is the home page
+slug: docs
 ---
 
-import GetStarted from "../../../components/GetStarted.astro";
+import GetStarted from "../../components/GetStarted.astro";
 
 <div style="max-width: 24rem; margin: 4rem auto;">
   <img
@@ -19,7 +21,7 @@ import GetStarted from "../../../components/GetStarted.astro";
   />
 </div>
 
-> Automated releases powered by pull request labels
+Automated releases powered by pull request labels.
 
 Streamline your release workflow and publish constantly!
 `auto` is meant to be run in a continuous integration (CI) environment, but all the commands work locally as well.
@@ -59,7 +61,3 @@ pre: (optional) Check if new version
 `auto` makes no assumptions about your publishing process.
 Each tool is a function that can be run in isolation and only does one thing really well.
 For instance, you could just use `auto changelog` to generate the changelog and nothing else or use `auto version` to calculate just the `semver` bump.
-
-<div style="display: flex; justify-content: center; margin: 5rem 0;">
-  <GetStarted />
-</div>

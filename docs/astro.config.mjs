@@ -8,6 +8,7 @@ import starlightImageZoom from "starlight-image-zoom";
 import starlightLinksValidator from "starlight-links-validator";
 import remarkEmoji from "remark-emoji";
 
+import { remarkNotes } from "./src/plugins/remark-notes.mjs";
 import { remarkSiteLinks } from "./src/plugins/remark-site-links.mjs";
 
 const base = "/auto";
@@ -32,14 +33,15 @@ export default defineConfig({
   site: "https://intuit.github.io",
   base,
   // "docs/welcome/getting-started.html", like the old Next export, so GitHub
-  // Pages serves every page both with and without the ".html"
-  build: { format: "file" },
+  // Pages serves every page both with and without the ".html". Unlike "file",
+  // "preserve" leaves the ".html" off the links Starlight writes.
+  build: { format: "preserve" },
   trailingSlash: "never",
   // Blog post covers are hosted remotely and sized at build time
   image: { domains: ["images.unsplash.com", "cdn-images-1.medium.com"] },
   markdown: {
     processor: unified({
-      remarkPlugins: [remarkEmoji, [remarkSiteLinks, { base }]],
+      remarkPlugins: [remarkEmoji, remarkNotes, [remarkSiteLinks, { base }]],
     }),
   },
   integrations: [
@@ -97,6 +99,9 @@ export default defineConfig({
         },
       ],
       customCss: ["./src/styles/theme.css"],
+      routeMiddleware: "./src/route-data.mjs",
+      // The docs design has no "On this page" column
+      tableOfContents: false,
       components: {
         MarkdownContent: "./src/components/overrides/MarkdownContent.astro",
         Hero: "./src/components/overrides/Hero.astro",

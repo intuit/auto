@@ -40,3 +40,358 @@
   --sl-color-bg-nav: #fbf7f8;
   --sl-color-hairline-shade: #ead9df;
 }
+
+/* Sidebar, as drawn in the "Docs — Getting Started" design.
+   Starlight's own rules sit in a cascade layer, so these win as written. */
+
+/* Sections: 24px apart; an eyebrow label with its items flush beneath */
+.sidebar-content .top-level > li + li {
+  margin-top: 1.5rem;
+}
+
+.sidebar-content .top-level > li > details > summary {
+  padding: 0 0.625rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.sidebar-content .top-level > li > details > ul {
+  margin-top: 2px;
+}
+
+.sidebar-content .top-level > li > details > summary .large {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sl-color-text-accent);
+}
+
+/* Sections aren't drawn as collapsible: no caret on the eyebrow */
+.sidebar-content .top-level > li > details > summary .caret {
+  display: none;
+}
+
+/* Every list: rows 2px apart, no per-item indent or rule */
+.sidebar-content .top-level ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-content .top-level ul li {
+  margin-inline-start: 0;
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+/* Rows: 28px, 13px type */
+.sidebar-content .top-level a,
+.sidebar-content .top-level ul summary {
+  display: flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--sl-color-white);
+}
+
+/* Sub-group label (Setup, Publishing…): medium weight, small caret */
+.sidebar-content .top-level ul summary .large {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: inherit;
+}
+
+.sidebar-content .top-level ul summary .caret {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Sub-group items: one rule down the left of the whole list, quieter text,
+   26px rows */
+.sidebar-content .top-level ul ul {
+  /* Rule lines up with the sub-group label's text; items sit close to it */
+  margin-inline-start: 0.625rem;
+  border-inline-start: 1px solid var(--sl-color-hairline-light);
+  padding-inline-start: 0.125rem;
+}
+
+.sidebar-content .top-level ul ul a {
+  min-height: 1.625rem;
+  padding-block: 0.1875rem;
+  color: var(--sl-color-gray-3);
+}
+
+.sidebar-content .top-level a:hover {
+  color: var(--sl-color-white);
+}
+
+/* Current page: rose chip, maroon text */
+.sidebar-content .top-level a[aria-current="page"],
+.sidebar-content .top-level a[aria-current="page"]:hover,
+.sidebar-content .top-level a[aria-current="page"]:focus {
+  font-weight: 600;
+  color: var(--sl-color-text-accent);
+  background-color: var(--sl-color-accent-low);
+}
+
+/* Type: DM Serif Display for headings site-wide, DM Sans body, matching the
+   landing and docs designs */
+:root {
+  --sl-text-h1: 3rem;
+  --sl-text-h2: 1.875rem;
+  --sl-text-h3: 1.375rem;
+  --sl-text-h4: 1.125rem;
+  --sl-line-height-headings: 1.15;
+}
+
+h1,
+h2,
+h3,
+h4,
+.sl-markdown-content :is(h1, h2, h3, h4) {
+  font-family: "DM Serif Display", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Page title + lede */
+.content-panel h1 {
+  line-height: 1.05;
+}
+
+.sl-markdown-content > p:first-child {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--sl-color-gray-3);
+}
+
+/* Body copy */
+.sl-markdown-content {
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Sections: h2 gets a hairline rule above, like the design */
+.sl-markdown-content h2:not(:where(.not-content *)) {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--sl-color-hairline);
+}
+
+/* Inline code: rose chip */
+.sl-markdown-content code:not(:where(.not-content *, pre *)) {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-white);
+  /* 12px in 14px body copy; em so code in headings scales with them */
+  font-size: 0.857em;
+}
+
+/* Sidebar sits on the page's own ground in both themes, with no rule
+   between it and the content */
+:root {
+  --sl-color-bg-sidebar: var(--sl-color-bg);
+}
+
+.sidebar-pane {
+  border-inline-end: 0;
+}
+
+/* Page title: no rule beneath it, and the content starts 16px below (as in
+   the design) instead of 48px */
+.content-panel:has(+ .content-panel) {
+  padding-block-end: 0.5rem;
+}
+
+.content-panel + .content-panel {
+  border-top: 0;
+  padding-block-start: 0.5rem;
+}
+
+.content-panel + .content-panel .sl-markdown-content {
+  margin-top: 0;
+}
+
+/* Code blocks (colours and sizes are in ec.config.mjs). Terminal frames get
+   the design's title bar: language label on the left, copy button on the
+   right, hairline beneath. */
+:root .expressive-code .frame.is-terminal .header {
+  min-height: 2.75rem;
+  padding: 0.5rem 3.25rem 0.5rem 1rem;
+  justify-content: flex-start;
+}
+
+/* Expressive Code draws its three dots here; show the language instead */
+:root .expressive-code .frame.is-terminal .header::before {
+  content: "bash";
+  position: static;
+  width: auto;
+  height: auto;
+  opacity: 1;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  color: #b08a99;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+:root
+  .expressive-code
+  .frame.is-terminal:has(> pre[data-language="sh"])
+  .header::before {
+  content: "sh";
+}
+
+:root
+  .expressive-code
+  .frame.is-terminal:has(> pre[data-language="zsh"])
+  .header::before {
+  content: "zsh";
+}
+
+:root
+  .expressive-code
+  .frame.is-terminal:has(> pre[data-language="powershell"])
+  .header::before {
+  content: "powershell";
+}
+
+:root .expressive-code .frame.is-terminal .header::after {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Copy button lives in the title bar and is always visible */
+:root .expressive-code .frame.is-terminal .copy {
+  inset-block-start: 0.375rem;
+}
+
+:root .expressive-code .frame.is-terminal .copy button {
+  opacity: 0.75;
+}
+
+:root .expressive-code .frame.is-terminal .copy button:hover,
+:root .expressive-code .frame.is-terminal .copy button:focus-visible {
+  opacity: 1;
+}
+
+/* Notes: blockquotes become callouts (classes come from
+   src/plugins/remark-notes.mjs). Rose "info" by default, amber for warnings,
+   each with its icon in the left gutter. */
+.sl-markdown-content blockquote.note {
+  --note-bg: rgba(245, 184, 208, 0.1);
+  --note-line: rgba(245, 184, 208, 0.25);
+  --note-text: #f5dce6;
+  --note-icon: #f5b8d0;
+
+  position: relative;
+  padding: 1rem 1.125rem 1rem 3.25rem;
+  border: 1px solid var(--note-line);
+  border-radius: 12px;
+  background: var(--note-bg);
+  color: var(--note-text);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.sl-markdown-content blockquote.note-warning {
+  --note-bg: rgba(245, 180, 11, 0.1);
+  --note-line: rgba(245, 180, 11, 0.3);
+  --note-text: #f3dcb0;
+  --note-icon: #f5b40b;
+}
+
+:root[data-theme="light"] .sl-markdown-content blockquote.note {
+  --note-bg: #f6e6ec;
+  --note-line: #e6c3d1;
+  --note-text: #4a1030;
+  --note-icon: #7a0041;
+}
+
+:root[data-theme="light"] .sl-markdown-content blockquote.note-warning {
+  --note-bg: #fff4e8;
+  --note-line: #f3d9bc;
+  --note-text: #5a3a14;
+  --note-icon: #b8742a;
+}
+
+/* Icon: circled "i", or a warning triangle */
+.sl-markdown-content blockquote.note::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 1.125rem;
+  inset-inline-start: 1.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: var(--note-icon);
+  -webkit-mask: var(--note-glyph) center / contain no-repeat;
+  mask: var(--note-glyph) center / contain no-repeat;
+  --note-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+}
+
+.sl-markdown-content blockquote.note-warning::before {
+  --note-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+}
+
+.sl-markdown-content blockquote.note > * + * {
+  margin-top: 0.5rem;
+}
+
+/* Inline code inside a note: plain mono, tinted by the note */
+.sl-markdown-content blockquote.note code:not(:where(pre *)) {
+  background: color-mix(in srgb, var(--note-icon) 14%, transparent);
+  color: inherit;
+}
+
+.sl-markdown-content blockquote.note a {
+  color: inherit;
+}
+
+/* Docs layout, as in the "Docs — centered, no right sidebar" design: no table
+   of contents (switched off in astro.config.mjs); the sidebar and the article
+   form one 1044px block (260 + 64 + 720) centred on the page. The header's
+   contents are held to the same width in overrides/Header.astro.
+   Percentages, not vw, so the block ignores the scrollbar like the header. */
+@media (min-width: 72rem) {
+  :root[data-has-sidebar] {
+    --sl-sidebar-width: 16.25rem;
+    --sl-sidebar-pad-x: 0rem;
+    --sl-content-pad-x: 0rem;
+    --sl-content-margin-inline: 0;
+    --docs-gap: 4rem;
+    --docs-block: calc(
+      var(--sl-sidebar-width) + var(--docs-gap) + var(--sl-content-width)
+    );
+  }
+
+  :root[data-has-sidebar] .sidebar-pane {
+    inset-inline-start: max(1.5rem, calc((100% - var(--docs-block)) / 2));
+  }
+
+  :root[data-has-sidebar] .main-frame {
+    padding-inline-start: calc(
+      max(1.5rem, (100% - var(--docs-block)) / 2) + var(--sl-sidebar-width) +
+        var(--docs-gap)
+    );
+    padding-inline-end: 1.5rem;
+  }
+}
+
+/* Sidebar still scrolls, but without a visible scrollbar (and without the
+   gutter Starlight reserves for one) */
+.sidebar-pane {
+  scrollbar-width: none;
+  scrollbar-gutter: auto;
+}
+
+.sidebar-pane::-webkit-scrollbar {
+  display: none;
+}
