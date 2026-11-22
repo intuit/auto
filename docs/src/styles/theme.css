@@ -1,3 +1,12 @@
+/* auto's brand colours, the same in both themes: the landing page's bands
+   and the label badges draw on these */
+:root {
+  --auto-maroon: #7a0041;
+  --auto-ink: #1c0a12;
+  --auto-pink: #f5b8d0;
+  --auto-gold: #f5b40b;
+}
+
 /* auto's primary and gray scales mapped onto Starlight's theme colours */
 :root {
   --sl-font: "DM Sans", system-ui, sans-serif;
@@ -177,6 +186,12 @@ h4,
   line-height: 1.7;
 }
 
+/* Lists, bulleted and numbered: indented 22px as in the design (the browser
+   default is 40px), so markers sit just inside the text column */
+.sl-markdown-content :is(ul, ol):not(:where(.not-content *)) {
+  padding-inline-start: 1.375rem;
+}
+
 /* Sections: h2 gets a hairline rule above, like the design */
 .sl-markdown-content h2:not(:where(.not-content *)) {
   margin-top: 3rem;
@@ -238,7 +253,7 @@ h4,
   background: none;
   -webkit-mask: none;
   mask: none;
-  color: #b08a99;
+  color: var(--ec-frm-trmTtbFg);
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
   line-height: 1.5;
@@ -265,10 +280,6 @@ h4,
   content: "powershell";
 }
 
-:root .expressive-code .frame.is-terminal .header::after {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
 /* Copy button lives in the title bar and is always visible */
 :root .expressive-code .frame.is-terminal .copy {
   inset-block-start: 0.375rem;
@@ -283,80 +294,128 @@ h4,
   opacity: 1;
 }
 
-/* Notes: blockquotes become callouts (classes come from
-   src/plugins/remark-notes.mjs). Rose "info" by default, amber for warnings,
-   each with its icon in the left gutter. */
-.sl-markdown-content blockquote.note {
-  --note-bg: rgba(245, 184, 208, 0.1);
-  --note-line: rgba(245, 184, 208, 0.25);
-  --note-text: #f5dce6;
-  --note-icon: #f5b8d0;
+/* Callouts, which rehype-callouts makes from "> [!note]", "> [!info]",
+   "> [!tip]" and "> [!warning]" blockquotes. Rose notes, blue info, green
+   tips and amber warnings, each with its icon in the left gutter beside the
+   text. */
+.sl-markdown-content .callout {
+  --callout-bg: rgba(245, 184, 208, 0.1);
+  --callout-line: rgba(245, 184, 208, 0.25);
+  --callout-text: #f5dce6;
+  --callout-icon: #f5b8d0;
 
   position: relative;
   padding: 1rem 1.125rem 1rem 3.25rem;
-  border: 1px solid var(--note-line);
+  border: 1px solid var(--callout-line);
   border-radius: 12px;
-  background: var(--note-bg);
-  color: var(--note-text);
+  background: var(--callout-bg);
+  color: var(--callout-text);
   font-size: 0.875rem;
   line-height: 1.6;
 }
 
-.sl-markdown-content blockquote.note-warning {
-  --note-bg: rgba(245, 180, 11, 0.1);
-  --note-line: rgba(245, 180, 11, 0.3);
-  --note-text: #f3dcb0;
-  --note-icon: #f5b40b;
+.sl-markdown-content .callout[data-callout="info"] {
+  --callout-bg: rgba(138, 180, 248, 0.1);
+  --callout-line: rgba(138, 180, 248, 0.28);
+  --callout-text: #dbe6fb;
+  --callout-icon: #8ab4f8;
 }
 
-:root[data-theme="light"] .sl-markdown-content blockquote.note {
-  --note-bg: #f6e6ec;
-  --note-line: #e6c3d1;
-  --note-text: #4a1030;
-  --note-icon: #7a0041;
+.sl-markdown-content .callout[data-callout="tip"] {
+  --callout-bg: rgba(111, 207, 151, 0.1);
+  --callout-line: rgba(111, 207, 151, 0.28);
+  --callout-text: #d5f0df;
+  --callout-icon: #6fcf97;
 }
 
-:root[data-theme="light"] .sl-markdown-content blockquote.note-warning {
-  --note-bg: #fff4e8;
-  --note-line: #f3d9bc;
-  --note-text: #5a3a14;
-  --note-icon: #b8742a;
+.sl-markdown-content .callout[data-callout="warning"] {
+  --callout-bg: rgba(245, 180, 11, 0.1);
+  --callout-line: rgba(245, 180, 11, 0.3);
+  --callout-text: #f3dcb0;
+  --callout-icon: #f5b40b;
 }
 
-/* Icon: circled "i", or a warning triangle */
-.sl-markdown-content blockquote.note::before {
-  content: "";
+:root[data-theme="light"] .sl-markdown-content .callout {
+  --callout-bg: #f6e6ec;
+  --callout-line: #e6c3d1;
+  --callout-text: #4a1030;
+  --callout-icon: #7a0041;
+}
+
+:root[data-theme="light"] .sl-markdown-content .callout[data-callout="info"] {
+  --callout-bg: #eaf1fd;
+  --callout-line: #c7d8f6;
+  --callout-text: #13294f;
+  --callout-icon: #2563eb;
+}
+
+:root[data-theme="light"] .sl-markdown-content .callout[data-callout="tip"] {
+  --callout-bg: #e8f5ec;
+  --callout-line: #c3e3cd;
+  --callout-text: #123d22;
+  --callout-icon: #1f7a45;
+}
+
+:root[data-theme="light"]
+  .sl-markdown-content
+  .callout[data-callout="warning"] {
+  --callout-bg: #fff4e8;
+  --callout-line: #f3d9bc;
+  --callout-text: #5a3a14;
+  --callout-icon: #b8742a;
+}
+
+/* The icon is an inline SVG drawn in currentColor at 1em */
+.sl-markdown-content .callout-title-icon {
   position: absolute;
   inset-block-start: 1.125rem;
   inset-inline-start: 1.125rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: var(--note-icon);
-  -webkit-mask: var(--note-glyph) center / contain no-repeat;
-  mask: var(--note-glyph) center / contain no-repeat;
-  --note-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+  display: flex;
+  color: var(--callout-icon);
+  font-size: 1.25rem;
 }
 
-.sl-markdown-content blockquote.note-warning::before {
-  --note-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+/* As drawn in the design, a callout is an icon and its text, with no heading
+   line. Its type ("Note", "Warning"…) stays in the markup for screen
+   readers; a callout written with its text on the "[!type]" line has that
+   text as its title, so the title shows there, at body weight. */
+.sl-markdown-content .callout-title-text {
+  margin-top: 0;
+  font-weight: 400;
 }
 
-.sl-markdown-content blockquote.note > * + * {
+.sl-markdown-content
+  .callout:not(:has(> .callout-content:empty))
+  .callout-title-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sl-markdown-content .callout-content {
+  margin-top: 0;
+}
+
+.sl-markdown-content .callout-content > * + * {
   margin-top: 0.5rem;
 }
 
-/* Inline code inside a note: plain mono, tinted by the note */
-.sl-markdown-content blockquote.note code:not(:where(pre *)) {
-  background: color-mix(in srgb, var(--note-icon) 14%, transparent);
+/* Inline code inside a callout: plain mono in the callout's own colour */
+.sl-markdown-content .callout code:not(:where(pre *)) {
+  padding: 0;
+  background: none;
   color: inherit;
 }
 
-.sl-markdown-content blockquote.note a {
+.sl-markdown-content .callout a {
   color: inherit;
 }
 
 /* Docs layout, as in the "Docs — centered, no right sidebar" design: no table
-   of contents (switched off in astro.config.mjs); the sidebar and the article
+   of contents (switched off in astro.config.ts); the sidebar and the article
    form one 1044px block (260 + 64 + 720) centred on the page. The header's
    contents are held to the same width in overrides/Header.astro.
    Percentages, not vw, so the block ignores the scrollbar like the header. */

@@ -1,0 +1,62 @@
+---
+title: "auto canary"
+---
+
+Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
+
+1. In PR: 1.2.3-canary.123.0 + add version to PR body
+2. Locally: 1.2.3-canary.1810cfd
+
+## Options
+
+| Flag              | Type                         | Description                                                                                                          |
+| ----------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--dry-run`, `-d` | Boolean                      | Report what command will do but do not actually do anything                                                          |
+| `--pr`            | Number                       | PR number to use to create the canary version. Detected in CI env                                                    |
+| `--build`         | String                       | Build number to use to create the canary version. Detected in CI env                                                 |
+| `--target`        | pr-body \| comment \| status | How the canary version should be attached to a PR                                                                    |
+| `--message`, `-m` | String                       | Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment |
+| `--force`         | Boolean                      | Force a next release, even if the last commit is marked to skip the release                                          |
+| `--quiet`, `-q`   | Boolean                      | Print **only** the result of the command                                                                             |
+
+## Examples
+
+```bash
+auto canary
+```
+
+```bash
+auto canary --force
+```
+
+```bash
+auto canary --pr 123 --build 5
+```
+
+```bash
+auto canary --message "Install PR version: `yarn add -D my-project@%v`"
+```
+
+```bash
+auto canary --message false
+```
+
+## Configurable Options
+
+You can configure some of the options for the `canary` command in the `.autorc`.
+
+- `target`
+- `message`
+- `force`
+
+**Example `.autorc`:**
+
+```json
+{
+  "canary": {
+    "target": "pr-body",
+    "message": "string",
+    "force": true
+  }
+}
+```

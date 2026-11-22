@@ -1,5 +1,11 @@
 ---
 // Pages opt into Starlight's single-panel layout by declaring `hero` in their
 // frontmatter. The landing page does so but draws its own hero in Home.astro,
-// so render nothing here.
+// so it gets nothing here. Every other hero page (the 404) gets Starlight's
+// own hero: without it the 404 has no heading or message at all.
+import Default from "@astrojs/starlight/components/Hero.astro";
+
+const isLandingPage = Astro.locals.starlightRoute.id === "";
 ---
+
+{!isLandingPage && <Default />}

@@ -1,0 +1,47 @@
+---
+title: "auto latest"
+---
+
+Run the full `auto` release pipeline. Force a release to latest and bypass `shipit` safeguards.
+
+## Options
+
+| Flag                                | Type    | Description                                                                                                                   |
+| ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `--name`                            | String  | Git name to commit with. Defaults to package definition for the platform                                                      |
+| `--email`                           | String  | Git email to commit with. Defaults to package definition for the platform                                                     |
+| `--only-publish-with-release-label` | Boolean | Only bump version if 'release' label is on pull request                                                                       |
+| `--base-branch`                     | String  | Branch to treat as the base branch                                                                                            |
+| `--dry-run`, `-d`                   | Boolean | Report what command will do but do not actually do anything                                                                   |
+| `--no-version-prefix`               | Boolean | Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm) |
+| `--prerelease`                      | Boolean | Publish a prerelease on GitHub.                                                                                               |
+| `--title`                           | String  | Override the title used in the addition to the CHANGELOG.md.                                                                  |
+| `--message`, `-m`                   | String  | Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'                                             |
+| `--quiet`, `-q`                     | Boolean | Print **only** the result of the command                                                                                      |
+| `--no-changelog`                    | Boolean | Skip creating the changelog                                                                                                   |
+
+## Examples
+
+```bash
+auto latest
+```
+
+## Configurable Options
+
+You can configure some of the options for the `latest` command in the `.autorc`.
+
+- `prerelease`
+- `message`
+- `no-changelog`
+
+**Example `.autorc`:**
+
+```json
+{
+  "latest": {
+    "prerelease": true,
+    "message": "string",
+    "noChangelog": true
+  }
+}
+```

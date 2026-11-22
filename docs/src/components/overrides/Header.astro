@@ -149,6 +149,13 @@ const current = links
     display: none;
   }
 
+  /* The select is invisible, so its own focus ring is too: draw the browser's
+     ring on the round control around it instead, for keyboard focus only */
+  .right-group :global(starlight-theme-select label:has(select:focus-visible)) {
+    outline: auto;
+    outline-offset: 1px;
+  }
+
   .right-group :global(starlight-theme-select select) {
     position: absolute;
     inset: 0;

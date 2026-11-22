@@ -1,5 +1,7 @@
 ---
 title: auto Configuration File
+sidebar:
+  label: .autorc
 ---
 
 import DefaultLabelRenderer from "../generated/defaultLabelsRenderer.mdx";
@@ -150,7 +152,8 @@ or
 
 Name to use with git.
 
-> NOTE: Will be deprecated in v10
+> [!note]
+> Will be deprecated in v10
 
 ```json
 {
@@ -162,7 +165,8 @@ Name to use with git.
 
 Email to use with git.
 
-> NOTE: Will be deprecated in v10
+> [!note]
+> Will be deprecated in v10
 
 ```json
 {
@@ -430,7 +434,8 @@ Will use the package `auto-config-joe` (the `auto` key in `package.json` file)
 
 Will use the default export of `auto-config-module` node package
 
-> :warning: If extending from a config package make sure it's a dependency of your project
+> [!warning]
+> If extending from a config package make sure it's a dependency of your project
 
 If you're extending from a local file it can be any file in JSON format or a `package.json` file.
 
@@ -451,7 +456,8 @@ If you're extending from a local file it can be any file in JSON format or a `pa
 An `extends` configuration can include custom plugins in the NPM package.
 This is useful if you have a shared plugin that doesn't necessarily need to be published as it's own package.
 
-> NOTE: This does not work for `auto` configs stored in a url.
+> [!note]
+> This does not work for `auto` configs stored in a url.
 
 To include custom plugins just use a relative path in the extended configuration/
 

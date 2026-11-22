@@ -206,7 +206,7 @@ importers:
         version: 0.0.6
       copy-template-dir:
         specifier: ^1.4.0
-        version: 1.4.0(supports-color@8.1.1)
+        version: 1.4.0(supports-color@10.2.2)
       endent:
         specifier: ^2.1.0
         version: 2.1.0
@@ -224,7 +224,7 @@ importers:
         version: 2.2.1
       lerna:
         specifier: ^10.1.1
-        version: 10.1.1(@types/node@24.19.2)(supports-color@8.1.1)(typescript@6.0.3)
+        version: 10.1.1(@types/node@24.19.2)(supports-color@10.2.2)(typescript@6.0.3)
       lint-staged:
         specifier: ^17.6.0
         version: 17.6.0
@@ -285,6 +285,9 @@ importers:
       astro:
         specifier: ^7.4.4
         version: 7.4.4(@astrojs/markdown-remark@7.3.5(supports-color@10.2.2))(@types/node@24.19.2)(yaml@2.9.1)
+      rehype-callouts:
+        specifier: ^2.2.0
+        version: 2.2.0
       remark-emoji:
         specifier: ^5.0.2
         version: 5.0.2
@@ -351,7 +354,7 @@ importers:
         version: 18.0.9
       pkg:
         specifier: ^5.8.1
-        version: 5.8.1(encoding@0.1.13)(supports-color@8.1.1)
+        version: 5.8.1(encoding@0.1.13)(supports-color@10.2.2)
       tsdown:
         specifier: 'catalog:'
         version: 0.23.4(@tsdown/exe@0.23.4)(typescript@6.0.3)
@@ -411,10 +414,10 @@ importers:
         version: 1.3.2
       gitlog:
         specifier: ^5.1.0
-        version: 5.1.0(supports-color@8.1.1)
+        version: 5.1.0(supports-color@10.2.2)
       https-proxy-agent:
         specifier: ^9.1.0
-        version: 9.1.0(supports-color@8.1.1)
+        version: 9.1.0(supports-color@10.2.2)
       import-cwd:
         specifier: ^3.0.0
         version: 3.0.0
@@ -909,7 +912,7 @@ importers:
         version: link:../../packages/core
       https-proxy-agent:
         specifier: ^9.1.0
-        version: 9.1.0(supports-color@8.1.1)
+        version: 9.1.0(supports-color@10.2.2)
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
@@ -1104,7 +1107,7 @@ importers:
         version: 22.0.1
       https-proxy-agent:
         specifier: ^9.1.0
-        version: 9.1.0(supports-color@8.1.1)
+        version: 9.1.0(supports-color@10.2.2)
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
@@ -6211,6 +6214,10 @@ packages:
     resolution: {integrity: sha512-I5UEBQ+09LWKInA1fPswOMZps0cs2Z+IQXb5Z5EkTJiUmIN52Vm/FD3ji5X82c5jIXL3nWEWOrYK0RkON6Oqyg==}
     engines: {node: '>=18'}
 
+  rehype-callouts@2.2.0:
+    resolution: {integrity: sha512-snwN1LkjLM3SuymqpsoLonoJ8gVy5yJN9WztBiyj8HAAj5Mv3Fez5vFzVwscLQdzMZo27xv2FycGzAGDkT4dNw==}
+    engines: {node: '>=18.0.0'}
+
   rehype-expressive-code@0.44.3:
     resolution: {integrity: sha512-vaVuQPobFXvmtcHXQ5uqXZlzuuPnLyIuZcX/03sX1U/Qfj9fZrPYI9w66OSr/PUx6alzRYmreEwgYBbsVx8HsA==}
 
@@ -6740,10 +6747,6 @@ packages:
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
-
-  supports-color@8.1.1:
-    resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
-    engines: {node: '>=10'}
 
   supports-hyperlinks@4.6.0:
     resolution: {integrity: sha512-FL/q/YePS4tFFTNiBOR+zPk2ZrKheqNtmTJ/9OUZ4e1wKHJofDbGQSmSsxS0XNnabSkqexryCaXGvEKz1vf9UQ==}
@@ -8449,25 +8452,25 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.4
       fastq: 1.11.0
 
-  '@npmcli/agent@5.0.2(supports-color@8.1.1)':
+  '@npmcli/agent@5.0.2(supports-color@10.2.2)':
     dependencies:
       agent-base: 9.0.0
-      http-proxy-agent: 9.1.0(supports-color@8.1.1)
-      https-proxy-agent: 9.1.0(supports-color@8.1.1)
+      http-proxy-agent: 9.1.0(supports-color@10.2.2)
+      https-proxy-agent: 9.1.0(supports-color@10.2.2)
       lru-cache: 11.5.3
-      socks-proxy-agent: 10.1.0(supports-color@8.1.1)
+      socks-proxy-agent: 10.1.0(supports-color@10.2.2)
     transitivePeerDependencies:
       - kerberos
       - supports-color
 
-  '@npmcli/arborist@10.0.3(supports-color@8.1.1)':
+  '@npmcli/arborist@10.0.3(supports-color@10.2.2)':
     dependencies:
       '@gar/promise-retry': 1.0.3
       '@isaacs/string-locale-compare': 1.1.0
       '@npmcli/fs': 6.0.0
       '@npmcli/installed-package-contents': 5.0.0
       '@npmcli/map-workspaces': 6.0.0
-      '@npmcli/metavuln-calculator': 10.0.0(supports-color@8.1.1)
+      '@npmcli/metavuln-calculator': 10.0.0(supports-color@10.2.2)
       '@npmcli/name-from-folder': 5.0.0
       '@npmcli/node-gyp': 6.0.0
       '@npmcli/package-json': 8.0.0
@@ -8486,8 +8489,8 @@ snapshots:
       npm-install-checks: 9.0.0
       npm-package-arg: 14.0.0
       npm-pick-manifest: 12.0.0
-      npm-registry-fetch: 20.0.1(supports-color@8.1.1)
-      pacote: 22.0.0(supports-color@8.1.1)
+      npm-registry-fetch: 20.0.1(supports-color@10.2.2)
+      pacote: 22.0.0(supports-color@10.2.2)
       parse-conflict-json: 6.0.0
       proc-log: 7.0.0
       proggy: 4.0.0
@@ -8529,11 +8532,11 @@ snapshots:
       glob: 13.0.6
       minimatch: 10.2.6
 
-  '@npmcli/metavuln-calculator@10.0.0(supports-color@8.1.1)':
+  '@npmcli/metavuln-calculator@10.0.0(supports-color@10.2.2)':
     dependencies:
       cacache: 21.0.1
       json-parse-even-better-errors: 6.0.0
-      pacote: 22.0.0(supports-color@8.1.1)
+      pacote: 22.0.0(supports-color@10.2.2)
       proc-log: 7.0.0
       semver: 7.8.5
     transitivePeerDependencies:
@@ -8984,22 +8987,22 @@ snapshots:
 
   '@sigstore/protobuf-specs@0.5.2': {}
 
-  '@sigstore/sign@5.0.0(supports-color@8.1.1)':
+  '@sigstore/sign@5.0.0(supports-color@10.2.2)':
     dependencies:
       '@gar/promise-retry': 1.0.3
       '@sigstore/bundle': 5.0.0
       '@sigstore/core': 4.0.1
       '@sigstore/protobuf-specs': 0.5.2
-      make-fetch-happen: 16.0.1(supports-color@8.1.1)
+      make-fetch-happen: 16.0.1(supports-color@10.2.2)
       proc-log: 7.0.0
     transitivePeerDependencies:
       - kerberos
       - supports-color
 
-  '@sigstore/tuf@5.0.0(supports-color@8.1.1)':
+  '@sigstore/tuf@5.0.0(supports-color@10.2.2)':
     dependencies:
       '@sigstore/protobuf-specs': 0.5.2
-      tuf-js: 6.0.1(supports-color@8.1.1)
+      tuf-js: 6.0.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -9246,9 +9249,9 @@ snapshots:
 
   acorn@8.8.0: {}
 
-  agent-base@6.0.2(supports-color@8.1.1):
+  agent-base@6.0.2(supports-color@10.2.2):
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -9551,7 +9554,7 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  braces@2.3.2(supports-color@8.1.1):
+  braces@2.3.2(supports-color@10.2.2):
     dependencies:
       arr-flatten: 1.1.0
       array-unique: 0.3.2
@@ -9559,7 +9562,7 @@ snapshots:
       fill-range: 4.0.0
       isobject: 3.0.1
       repeat-element: 1.1.4
-      snapdragon: 0.8.2(supports-color@8.1.1)
+      snapdragon: 0.8.2(supports-color@10.2.2)
       snapdragon-node: 2.1.1
       split-string: 3.1.0
       to-regex: 3.0.2
@@ -9878,7 +9881,7 @@ snapshots:
 
   copy-descriptor@0.1.1: {}
 
-  copy-template-dir@1.4.0(supports-color@8.1.1):
+  copy-template-dir@1.4.0(supports-color@10.2.2):
     dependencies:
       end-of-stream: 1.4.4
       graceful-fs: 4.2.11
@@ -9887,7 +9890,7 @@ snapshots:
       mkdirp: 0.5.5
       noop2: 2.0.0
       pump: 1.0.3
-      readdirp: 2.2.1(supports-color@8.1.1)
+      readdirp: 2.2.1(supports-color@10.2.2)
       run-parallel: 1.2.0
     transitivePeerDependencies:
       - supports-color
@@ -9987,29 +9990,23 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.2
 
-  debug@2.6.9(supports-color@8.1.1):
+  debug@2.6.9(supports-color@10.2.2):
     dependencies:
       ms: 2.0.0
     optionalDependencies:
-      supports-color: 8.1.1
+      supports-color: 10.2.2
 
-  debug@4.3.4(supports-color@8.1.1):
+  debug@4.3.4(supports-color@10.2.2):
     dependencies:
       ms: 2.1.2
     optionalDependencies:
-      supports-color: 8.1.1
+      supports-color: 10.2.2
 
   debug@4.4.3(supports-color@10.2.2):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 10.2.2
-
-  debug@4.4.3(supports-color@8.1.1):
-    dependencies:
-      ms: 2.1.3
-    optionalDependencies:
-      supports-color: 8.1.1
 
   decimal.js@10.6.0: {}
 
@@ -10402,14 +10399,14 @@ snapshots:
       signal-exit: 4.1.0
       strip-final-newline: 3.0.0
 
-  expand-brackets@2.1.4(supports-color@8.1.1):
+  expand-brackets@2.1.4(supports-color@10.2.2):
     dependencies:
-      debug: 2.6.9(supports-color@8.1.1)
+      debug: 2.6.9(supports-color@10.2.2)
       define-property: 0.2.5
       extend-shallow: 2.0.1
       posix-character-classes: 0.1.1
       regex-not: 1.0.2
-      snapdragon: 0.8.2(supports-color@8.1.1)
+      snapdragon: 0.8.2(supports-color@10.2.2)
       to-regex: 3.0.2
     transitivePeerDependencies:
       - supports-color
@@ -10438,15 +10435,15 @@ snapshots:
 
   extend@3.0.2: {}
 
-  extglob@2.0.4(supports-color@8.1.1):
+  extglob@2.0.4(supports-color@10.2.2):
     dependencies:
       array-unique: 0.3.2
       define-property: 1.0.0
-      expand-brackets: 2.1.4(supports-color@8.1.1)
+      expand-brackets: 2.1.4(supports-color@10.2.2)
       extend-shallow: 2.0.1
       fragment-cache: 0.2.1
       regex-not: 1.0.2
-      snapdragon: 0.8.2(supports-color@8.1.1)
+      snapdragon: 0.8.2(supports-color@10.2.2)
       to-regex: 3.0.2
     transitivePeerDependencies:
       - supports-color
@@ -10693,9 +10690,9 @@ snapshots:
 
   github-slugger@2.0.0: {}
 
-  gitlog@5.1.0(supports-color@8.1.1):
+  gitlog@5.1.0(supports-color@10.2.2):
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -11044,26 +11041,26 @@ snapshots:
 
   http-cache-semantics@4.3.0: {}
 
-  http-proxy-agent@9.1.0(supports-color@8.1.1):
+  http-proxy-agent@9.1.0(supports-color@10.2.2):
     dependencies:
       agent-base: 9.0.0
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3(supports-color@10.2.2)
       proxy-agent-negotiate: 1.1.0
     transitivePeerDependencies:
       - kerberos
       - supports-color
 
-  https-proxy-agent@5.0.0(supports-color@8.1.1):
+  https-proxy-agent@5.0.0(supports-color@10.2.2):
     dependencies:
-      agent-base: 6.0.2(supports-color@8.1.1)
-      debug: 4.3.4(supports-color@8.1.1)
+      agent-base: 6.0.2(supports-color@10.2.2)
+      debug: 4.3.4(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@9.1.0(supports-color@8.1.1):
+  https-proxy-agent@9.1.0(supports-color@10.2.2):
     dependencies:
       agent-base: 9.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4(supports-color@10.2.2)
       proxy-agent-negotiate: 1.1.0
     transitivePeerDependencies:
       - kerberos
@@ -11525,9 +11522,9 @@ snapshots:
 
   klona@2.0.6: {}
 
-  lerna@10.1.1(@types/node@24.19.2)(supports-color@8.1.1)(typescript@6.0.3):
+  lerna@10.1.1(@types/node@24.19.2)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
-      '@npmcli/arborist': 10.0.3(supports-color@8.1.1)
+      '@npmcli/arborist': 10.0.3(supports-color@10.2.2)
       '@npmcli/package-json': 8.0.0
       '@npmcli/run-script': 11.0.0
       '@nx/devkit': 23.3.1(nx@23.3.1)
@@ -11552,18 +11549,18 @@ snapshots:
       init-package-json: 9.0.0
       inquirer: 14.2.2(@types/node@24.19.2)
       js-yaml: 5.4.2
-      libnpmaccess: 11.0.0(supports-color@8.1.1)
-      libnpmpublish: 12.0.1(supports-color@8.1.1)
+      libnpmaccess: 11.0.0(supports-color@10.2.2)
+      libnpmpublish: 12.0.1(supports-color@10.2.2)
       load-json-file: 7.0.1
-      make-fetch-happen: 16.0.1(supports-color@8.1.1)
+      make-fetch-happen: 16.0.1(supports-color@10.2.2)
       minimatch: 10.2.6
       npm-package-arg: 14.0.0
       npm-packlist: 11.3.0
-      npm-registry-fetch: 20.0.1(supports-color@8.1.1)
+      npm-registry-fetch: 20.0.1(supports-color@10.2.2)
       nx: 23.3.1
       p-map: 7.0.8
       p-queue: 9.3.3
-      pacote: 22.0.0(supports-color@8.1.1)
+      pacote: 22.0.0(supports-color@10.2.2)
       semver: 7.8.5
       signal-exit: 4.1.0
       ssri: 14.0.0
@@ -11584,23 +11581,23 @@ snapshots:
 
   leven@3.1.0: {}
 
-  libnpmaccess@11.0.0(supports-color@8.1.1):
+  libnpmaccess@11.0.0(supports-color@10.2.2):
     dependencies:
       npm-package-arg: 14.0.0
-      npm-registry-fetch: 20.0.1(supports-color@8.1.1)
+      npm-registry-fetch: 20.0.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - kerberos
       - supports-color
 
-  libnpmpublish@12.0.1(supports-color@8.1.1):
+  libnpmpublish@12.0.1(supports-color@10.2.2):
     dependencies:
       '@npmcli/package-json': 8.0.0
       ci-info: 4.4.0
       npm-package-arg: 14.0.0
-      npm-registry-fetch: 20.0.1(supports-color@8.1.1)
+      npm-registry-fetch: 20.0.1(supports-color@10.2.2)
       proc-log: 7.0.0
       semver: 7.8.5
-      sigstore: 5.0.0(supports-color@8.1.1)
+      sigstore: 5.0.0(supports-color@10.2.2)
       ssri: 14.0.0
     transitivePeerDependencies:
       - kerberos
@@ -11731,10 +11728,10 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  make-fetch-happen@16.0.1(supports-color@8.1.1):
+  make-fetch-happen@16.0.1(supports-color@10.2.2):
     dependencies:
       '@gar/promise-retry': 1.0.3
-      '@npmcli/agent': 5.0.2(supports-color@8.1.1)
+      '@npmcli/agent': 5.0.2(supports-color@10.2.2)
       '@npmcli/redact': 5.0.0
       cacache: 21.0.1
       http-cache-semantics: 4.1.1
@@ -12274,20 +12271,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  micromatch@3.1.10(supports-color@8.1.1):
+  micromatch@3.1.10(supports-color@10.2.2):
     dependencies:
       arr-diff: 4.0.0
       array-unique: 0.3.2
-      braces: 2.3.2(supports-color@8.1.1)
+      braces: 2.3.2(supports-color@10.2.2)
       define-property: 2.0.2
       extend-shallow: 3.0.2
-      extglob: 2.0.4(supports-color@8.1.1)
+      extglob: 2.0.4(supports-color@10.2.2)
       fragment-cache: 0.2.1
       kind-of: 6.0.3
-      nanomatch: 1.2.13(supports-color@8.1.1)
+      nanomatch: 1.2.13(supports-color@10.2.2)
       object.pick: 1.3.0
       regex-not: 1.0.2
-      snapdragon: 0.8.2(supports-color@8.1.1)
+      snapdragon: 0.8.2(supports-color@10.2.2)
       to-regex: 3.0.2
     transitivePeerDependencies:
       - supports-color
@@ -12391,7 +12388,7 @@ snapshots:
 
   nanoid@3.3.20: {}
 
-  nanomatch@1.2.13(supports-color@8.1.1):
+  nanomatch@1.2.13(supports-color@10.2.2):
     dependencies:
       arr-diff: 4.0.0
       array-unique: 0.3.2
@@ -12402,7 +12399,7 @@ snapshots:
       kind-of: 6.0.3
       object.pick: 1.3.0
       regex-not: 1.0.2
-      snapdragon: 0.8.2(supports-color@8.1.1)
+      snapdragon: 0.8.2(supports-color@10.2.2)
       to-regex: 3.0.2
     transitivePeerDependencies:
       - supports-color
@@ -12507,11 +12504,11 @@ snapshots:
       npm-package-arg: 14.0.0
       semver: 7.8.5
 
-  npm-registry-fetch@20.0.1(supports-color@8.1.1):
+  npm-registry-fetch@20.0.1(supports-color@10.2.2):
     dependencies:
       '@npmcli/redact': 5.0.0
       jsonparse: 1.3.1
-      make-fetch-happen: 16.0.1(supports-color@8.1.1)
+      make-fetch-happen: 16.0.1(supports-color@10.2.2)
       minipass: 7.1.3
       minipass-fetch: 6.0.0
       minizlib: 3.1.0
@@ -12841,7 +12838,7 @@ snapshots:
 
   package-manager-detector@1.9.0: {}
 
-  pacote@22.0.0(supports-color@8.1.1):
+  pacote@22.0.0(supports-color@10.2.2):
     dependencies:
       '@gar/promise-retry': 1.0.3
       '@npmcli/git': 8.0.0
@@ -12855,9 +12852,9 @@ snapshots:
       npm-package-arg: 14.0.0
       npm-packlist: 11.3.0
       npm-pick-manifest: 12.0.0
-      npm-registry-fetch: 20.0.1(supports-color@8.1.1)
+      npm-registry-fetch: 20.0.1(supports-color@10.2.2)
       proc-log: 7.0.0
-      sigstore: 5.0.0(supports-color@8.1.1)
+      sigstore: 5.0.0(supports-color@10.2.2)
       ssri: 14.0.0
       tar: 7.5.22
     transitivePeerDependencies:
@@ -13000,11 +12997,11 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  pkg-fetch@3.4.2(encoding@0.1.13)(supports-color@8.1.1):
+  pkg-fetch@3.4.2(encoding@0.1.13)(supports-color@10.2.2):
     dependencies:
       chalk: 4.1.2
       fs-extra: 9.1.0
-      https-proxy-agent: 5.0.0(supports-color@8.1.1)
+      https-proxy-agent: 5.0.0(supports-color@10.2.2)
       node-fetch: 2.6.7(encoding@0.1.13)
       progress: 2.0.3
       semver: 7.5.4
@@ -13014,7 +13011,7 @@ snapshots:
       - encoding
       - supports-color
 
-  pkg@5.8.1(encoding@0.1.13)(supports-color@8.1.1):
+  pkg@5.8.1(encoding@0.1.13)(supports-color@10.2.2):
     dependencies:
       '@babel/generator': 7.18.2
       '@babel/parser': 7.18.4
@@ -13026,7 +13023,7 @@ snapshots:
       is-core-module: 2.9.0
       minimist: 1.2.7
       multistream: 4.1.0
-      pkg-fetch: 3.4.2(encoding@0.1.13)(supports-color@8.1.1)
+      pkg-fetch: 3.4.2(encoding@0.1.13)(supports-color@10.2.2)
       prebuild-install: 7.1.1
       resolve: 1.22.1
       stream-meter: 1.0.4
@@ -13175,10 +13172,10 @@ snapshots:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
 
-  readdirp@2.2.1(supports-color@8.1.1):
+  readdirp@2.2.1(supports-color@10.2.2):
     dependencies:
       graceful-fs: 4.2.11
-      micromatch: 3.1.10(supports-color@8.1.1)
+      micromatch: 3.1.10(supports-color@10.2.2)
       readable-stream: 2.3.7
     transitivePeerDependencies:
       - supports-color
@@ -13259,6 +13256,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.1
       ini: 5.0.0
+
+  rehype-callouts@2.2.0:
+    dependencies:
+      '@types/hast': 3.0.5
+      hast-util-from-html: 2.0.3
+      hast-util-is-element: 3.0.0
+      hastscript: 9.0.3
+      unist-util-visit: 5.2.0
 
   rehype-expressive-code@0.44.3:
     dependencies:
@@ -13661,13 +13666,13 @@ snapshots:
       figures: 2.0.0
       pkg-conf: 2.1.0
 
-  sigstore@5.0.0(supports-color@8.1.1):
+  sigstore@5.0.0(supports-color@10.2.2):
     dependencies:
       '@sigstore/bundle': 5.0.0
       '@sigstore/core': 4.0.1
       '@sigstore/protobuf-specs': 0.5.2
-      '@sigstore/sign': 5.0.0(supports-color@8.1.1)
-      '@sigstore/tuf': 5.0.0(supports-color@8.1.1)
+      '@sigstore/sign': 5.0.0(supports-color@10.2.2)
+      '@sigstore/tuf': 5.0.0(supports-color@10.2.2)
       '@sigstore/verify': 4.1.2
     transitivePeerDependencies:
       - kerberos
@@ -13718,10 +13723,10 @@ snapshots:
     dependencies:
       kind-of: 3.2.2
 
-  snapdragon@0.8.2(supports-color@8.1.1):
+  snapdragon@0.8.2(supports-color@10.2.2):
     dependencies:
       base: 0.11.2
-      debug: 2.6.9(supports-color@8.1.1)
+      debug: 2.6.9(supports-color@10.2.2)
       define-property: 0.2.5
       extend-shallow: 2.0.1
       map-cache: 0.2.2
@@ -13731,10 +13736,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  socks-proxy-agent@10.1.0(supports-color@8.1.1):
+  socks-proxy-agent@10.1.0(supports-color@10.2.2):
     dependencies:
       agent-base: 9.0.0
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3(supports-color@10.2.2)
       socks: 2.8.10
     transitivePeerDependencies:
       - supports-color
@@ -13961,11 +13966,6 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  supports-color@8.1.1:
-    dependencies:
-      has-flag: 4.0.0
-    optional: true
-
   supports-hyperlinks@4.6.0:
     dependencies:
       has-flag: 5.0.1
@@ -14190,11 +14190,11 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tuf-js@6.0.1(supports-color@8.1.1):
+  tuf-js@6.0.1(supports-color@10.2.2):
     dependencies:
       '@gar/promise-retry': 1.0.3
       '@tufjs/models': 5.0.1
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 

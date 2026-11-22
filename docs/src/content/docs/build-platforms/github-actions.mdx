@@ -9,7 +9,8 @@ The following config declares the `release` action that run on all branches. The
 
 **`.github/workflows/release.yml`**
 
-> :warning: You must use some sort of action that implements `skip ci` functionality (as seen below). Otherwise you will get stuck in a release loop!
+> [!warning]
+> You must use some sort of action that implements `skip ci` functionality (as seen below). Otherwise you will get stuck in a release loop!
 
 ```yaml
 name: Release

@@ -33,7 +33,6 @@
     "contributors:add": "all-contributors",
     "contributors:generate": "all-contributors generate",
     "docs": "pnpm --filter auto-docs docs",
-    "docs:generate": "pnpm --filter auto-docs docs:generate",
     "docs:build": "pnpm --filter auto-docs docs:build",
     "create:plugin": "./scripts/create-plugin.js",
     "create:package": "./scripts/create-package.js",

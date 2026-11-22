@@ -1,0 +1,24 @@
+---
+title: "auto pr-body"
+---
+
+Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.
+
+## Options
+
+| Flag              | Type    | Description                                                      |
+| ----------------- | ------- | ---------------------------------------------------------------- |
+| `--pr`            | Number  | The pull request the command should use. Detects PR number in CI |
+| `--context`       | String  | A string label to differentiate this status from others          |
+| `--message`, `-m` | String  | Message to post to PR body                                       |
+| `--dry-run`, `-d` | Boolean | Report what command will do but do not actually do anything      |
+
+## Examples
+
+```bash
+auto pr-body --delete
+```
+
+```bash
+auto pr-body --pr 123 --comment "The new version is: 1.2.3"
+```

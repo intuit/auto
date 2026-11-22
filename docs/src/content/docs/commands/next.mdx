@@ -1,0 +1,55 @@
+---
+title: "auto next"
+---
+
+Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
+
+1. Creates a prerelease on package management platform
+2. Creates a "Pre Release" on GitHub releases page
+3. If ran from a PR build in a CI, posts the prerelease's full releases notes and expected version of the prerelease
+
+Calling the `next` command from a prerelease branch will publish a prerelease for just that branch, otherwise it will publish to the default prerelease branch.
+
+## Options
+
+| Flag              | Type    | Description                                                          |
+| ----------------- | ------- | -------------------------------------------------------------------- |
+| `--dry-run`, `-d` | Boolean | Report what command will do but do not actually do anything          |
+| `--message`, `-m` | String  | The message used when attaching the prerelease version to a PR       |
+| `--force`         | Boolean | Force a canary release, even if the PR is marked to skip the release |
+| `--quiet`, `-q`   | Boolean | Print **only** the result of the command                             |
+
+## Examples
+
+```bash
+auto next
+```
+
+## Configurable Options
+
+You can configure some of the options for the `next` command in the `.autorc`.
+
+- `message`
+- `force`
+
+**Example `.autorc`:**
+
+```json
+{
+  "next": {
+    "message": "string",
+    "force": true
+  }
+}
+```
+
+### Setting up Protected Branches
+
+You should make your pre-release branches protected on GitHub. This will prevent a bunch of unwanted behavior from happening.
+
+1. Go to you project's setting on [GitHub](https://github.com)
+2. Click `Branches`
+3. Click `Add Rule`
+4. Enter the name of your prerelease branch (ex: `next`)
+5. Configure extra branch protection settings
+6. (Optional) Set the base branch in GitHub to your prerelease branch (this ensure new PRs go to this branch)

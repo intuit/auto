@@ -12,6 +12,7 @@ If you merge a PR while another is publishing:
 - they might try to publish the same version number
 - one will try to push over the other's changes and fail
 
+> [!note]
 > If you ensure that the last build on `baseBrach` has finished you shouldn't run into any problems!
 
 ### Beware Long Publishes
@@ -25,6 +26,7 @@ If your `publish` step runs a lengthy build, then the window for conflicts is ex
 The recommended approach is to build your code before running `auto` so the window for errors stays small.
 This may make sense on some platforms and not others.
 
+> [!note]
 > Example: When using the `npm` plugin don't use the script `prepublishOnly` to build your code
 
 ## With `skip-release`

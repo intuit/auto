@@ -25,14 +25,16 @@ const { color, class: className } = Astro.props;
   }
 
   .primary {
-    background-color: #7a0041;
+    background-color: var(--auto-maroon);
   }
 
   .blue {
     background-color: #2563eb;
   }
 
+  /* White on amber is 3.2:1; dark ink is 6:1 */
   .yellow {
     background-color: #d97706;
+    color: var(--auto-ink);
   }
 </style>

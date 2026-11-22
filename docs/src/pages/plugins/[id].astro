@@ -1,0 +1,23 @@
+---
+// A plugin's page, from its README, in the same layout as the docs pages
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const plugins = await getCollection("plugins");
+
+  return plugins.map((plugin) => ({
+    params: { id: plugin.id },
+    props: { plugin },
+  }));
+}
+
+const { plugin } = Astro.props;
+const plugins = await getCollection("plugins");
+const sidebar = plugins.map(plugin => ({ id: plugin.id }))
+const { Content, headings } = await render(plugin);
+---
+
+<StarlightPage frontmatter={{ title: plugin.data.title }} headings={headings}>
+  <Content />
+</StarlightPage>

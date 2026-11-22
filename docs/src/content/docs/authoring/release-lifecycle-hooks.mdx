@@ -131,6 +131,7 @@ auto.hooks.version.tapPromise("NPM", async ({ bump, dryRun, quiet }) => {
 });
 ```
 
+> [!note]
 > If you're implementing this hook for a publishing plugin you **must** commit (with `[skip ci]` in the message) and tag the version.
 
 ## afterVersion
@@ -325,7 +326,7 @@ auto.hooks.afterRelease.tapPromise(
 
 _Other examples:_
 
-- [release](../generated/release) - Post comment on issues and PRs about release version
+- [release](../commands/release) - Post comment on issues and PRs about release version
 - [s3](../generated/s3) - Upload release assets to s3
 - [slack](../generated/slack) - Post the release notes to slack
 - [twitter](../generated/twitter) - Create a tweet about the new release

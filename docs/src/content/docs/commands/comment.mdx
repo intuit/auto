@@ -1,0 +1,48 @@
+---
+title: "auto comment"
+---
+
+Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.
+
+## Options
+
+| Flag              | Type    | Description                                                      |
+| ----------------- | ------- | ---------------------------------------------------------------- |
+| `--pr`            | Number  | The pull request the command should use. Detects PR number in CI |
+| `--context`       | String  | A string label to differentiate this status from others          |
+| `--edit`, `-e`    | Boolean | Edit old comment                                                 |
+| `--delete`        | Boolean | Delete old comment                                               |
+| `--message`, `-m` | String  | Message to post to comment                                       |
+| `--dry-run`, `-d` | Boolean | Report what command will do but do not actually do anything      |
+
+## Examples
+
+```bash
+auto comment --delete
+```
+
+```bash
+auto comment --pr 123 --message "# Why you're wrong..."
+```
+
+```bash
+auto comment --pr 123 --edit --message "This smells..." --context code-smell
+```
+
+## Configurable Options
+
+You can configure some of the options for the `comment` command in the `.autorc`.
+
+- `edit`
+- `delete`
+
+**Example `.autorc`:**
+
+```json
+{
+  "comment": {
+    "edit": true,
+    "delete": true
+  }
+}
+```

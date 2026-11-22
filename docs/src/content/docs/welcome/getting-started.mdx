@@ -12,7 +12,7 @@ yarn add -D auto
 
 If you are using `auto` in a non-javascript project, you can install `auto` and all it's official plugins via the [releases](https://github.com/intuit/auto/releases) page. Here you will find a build of `auto` for all major OSes. This build has `node` bundled so you don't need it installed!
 
-> :warning: If you use <Label color="blue">yarn@2</Label> none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
+> [!warning] If you use `yarn@2` none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
 
 ## Help
 
@@ -64,6 +64,7 @@ You must configure some environment variables for publishing and releasing to wo
 
 - `GH_TOKEN` - Used for publishing the GitHub release and creating labels ([create one here](https://github.com/settings/tokens)) (needs `repo` permission)
 
+> [!note]
 > Make sure you give the GH_TOKEN <Label color="blue">repo</Label> permission or `shipit` will fail!
 
 #### Local `.env` <Label color="yellow" class="ml-4">Recommended</Label>
@@ -122,7 +123,7 @@ To version, changelog, publish and release your code all at the same time you sh
 `shipit` runs all commands in the `auto` workflow and puts it into one meta-command.
 It's context aware and will make different types of releases based on where you run it.
 
-[Read more here.](../generated/shipit)
+[Read more here.](../commands/shipit)
 
 ```json
 {

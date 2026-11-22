@@ -1,21 +1,40 @@
 import { defineEcConfig } from "@astrojs/starlight/expressive-code";
 
 const ink = "#1c0a12";
-const hairline = "rgba(255, 255, 255, 0.08)";
+const cream = "#fbf7f8";
+const rose = "#ead9df";
+
+/** A value per colour scheme: the dark "ink" block, or the light cream one */
+const pick =
+  (dark, light) =>
+  ({ theme }) =>
+    theme.type === "dark" ? dark : light;
+
+const ground = pick(ink, cream);
+const hairline = pick("rgba(255, 255, 255, 0.08)", rose);
+const quiet = pick("#b08a99", "#5c4650");
 
 /**
- * Code blocks, as drawn in the "Docs — Getting Started" design: one dark
- * "ink" block in both colour schemes, with a quiet title bar. The language
- * label and the copy button's place in that bar are set in
+ * Code blocks, as drawn in the docs designs, with a quiet title bar.
+ * - Dark mode: the dark "ink" block, no border.
+ * - Light mode: the step cards' cream ground with a rose border, and the text
+ *   recoloured to suit ("Docs — centered, no right sidebar").
+ * The language label and the copy button's place in the title bar are set in
  * src/styles/theme.css.
  */
 export default defineEcConfig({
-  themes: ["github-dark"],
-  useStarlightDarkModeSwitch: false,
+  themes: ["github-dark", "github-light"],
   useStarlightUiThemeColors: false,
   customizeTheme(theme) {
-    // Commands in pink, comments in a muted plum; the rest keeps the theme's
-    // colours. Expressive Code still lifts anything below its contrast floor.
+    const dark = theme.type === "dark";
+
+    // Plain code text: warm off-white on ink, ink on cream
+    theme.fg = dark ? "#f1e3e9" : ink;
+    theme.colors["editor.foreground"] = theme.fg;
+
+    // Commands in the brand colour, comments in a muted plum; the rest keeps
+    // the theme's colours. Expressive Code still lifts anything below its
+    // contrast floor.
     theme.settings.push(
       {
         scope: [
@@ -23,21 +42,35 @@ export default defineEcConfig({
           "entity.name.function",
           "support.function",
         ],
-        settings: { foreground: "#f5b8d0" },
+        settings: { foreground: dark ? "#f5b8d0" : "#7a0041" },
       },
       {
         scope: ["comment", "punctuation.definition.comment"],
-        settings: { foreground: "#7c6470" },
+        settings: { foreground: dark ? "#7c6470" : "#7a6570" },
       }
     );
+
+    // On cream, a command's flags and arguments ("--help", "add") read as
+    // plain ink, not the theme's blues, so a shell line is maroon then ink
+    if (!dark) {
+      theme.settings.push({
+        scope: [
+          "constant.other.option",
+          "string.unquoted.argument.shell",
+          "string.unquoted.shell",
+        ],
+        settings: { foreground: ink },
+      });
+    }
+
     return theme;
   },
   styleOverrides: {
     borderRadius: "12px",
-    borderWidth: "0px",
-    borderColor: "transparent",
-    codeBackground: ink,
-    codeForeground: "#f1e3e9",
+    borderWidth: "1px",
+    borderColor: pick("transparent", rose),
+    codeBackground: ground,
+    codeForeground: pick("#f1e3e9", ink),
     codeFontFamily: "var(--sl-font-mono)",
     codeFontSize: "0.75rem",
     codeLineHeight: "1.7",
@@ -45,20 +78,20 @@ export default defineEcConfig({
     codePaddingInline: "1.125rem",
     frames: {
       frameBoxShadowCssValue: "none",
-      terminalBackground: ink,
-      terminalTitlebarBackground: ink,
-      terminalTitlebarForeground: "#b08a99",
+      terminalBackground: ground,
+      terminalTitlebarBackground: ground,
+      terminalTitlebarForeground: quiet,
       terminalTitlebarBorderBottomColor: hairline,
       terminalTitlebarDotsOpacity: "0",
-      editorBackground: ink,
-      editorTabBarBackground: ink,
+      editorBackground: ground,
+      editorTabBarBackground: ground,
       editorTabBarBorderBottomColor: hairline,
-      editorActiveTabBackground: ink,
-      editorActiveTabForeground: "#b08a99",
+      editorActiveTabBackground: ground,
+      editorActiveTabForeground: quiet,
       editorActiveTabBorderColor: "transparent",
       editorActiveTabIndicatorTopColor: "transparent",
       editorActiveTabIndicatorBottomColor: "transparent",
-      inlineButtonForeground: "#d9bfcb",
+      inlineButtonForeground: pick("#d9bfcb", "#5c4650"),
       inlineButtonBorderOpacity: "0",
       inlineButtonBackgroundIdleOpacity: "0",
     },
