@@ -27,13 +27,8 @@ try {
 
 import chalk from "chalk";
 import parseArgs from "../parse-args";
-import { runCli } from "../run";
 
-const [command, args] = parseArgs();
-
-if (command && args) {
-  runCli(command, args).catch((e: Error) => {
-    console.error(chalk.redBright("Error: "), e.message);
-    process.exit(1);
-  });
-}
+parseArgs().catch((e: Error) => {
+  console.error(chalk.redBright("Error: "), e.message);
+  process.exit(1);
+});

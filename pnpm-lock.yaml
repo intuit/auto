@@ -324,12 +324,12 @@ importers:
       await-to-js:
         specifier: ^3.0.0
         version: 3.0.0
+      cac:
+        specifier: ^7.1.1
+        version: 7.1.1
       chalk:
         specifier: ^6.0.1
         version: 6.0.1
-      command-line-application:
-        specifier: ^0.10.1
-        version: 0.10.1
       endent:
         specifier: ^2.1.0
         version: 2.1.0
@@ -3168,10 +3168,6 @@ packages:
     resolution: {integrity: sha512-TkuxA4UCOvxuDK6NZYXCalszEzj+TLszyASooky+i742l9TqsOdYCMJJupxRic61hwquNtppB3hgcuq9SVSH1Q==}
     engines: {node: '>=6'}
 
-  array-back@4.0.1:
-    resolution: {integrity: sha512-Z/JnaVEXv+A9xabHzN43FiiiWEE7gPCRXMrVmRm00tWbjZRul1iHm7ECzlyNq1p4a4ATXz+G9FJ3GqGOkOV3fg==}
-    engines: {node: '>=8'}
-
   array-buffer-byte-length@1.0.2:
     resolution: {integrity: sha512-LHE+8BuR7RYGDKvnrmcuSq3tDcKv9OFEXQt/HpbZhY7V6h0zlUXutnAD82GiFx9rdieCMjkvtcsPqBwgUl1Iiw==}
     engines: {node: '>= 0.4'}
@@ -3350,6 +3346,10 @@ packages:
     resolution: {integrity: sha512-LMDU/U2yA4IPIY8KT0NsNPWEYZvAMkbgyspxJ6btJaYV+WMDOHAZCmB0lsTObiHaRS1V/ztKAl7+TSkTqXyeoA==}
     engines: {node: '>=20.19.0'}
 
+  cac@7.1.1:
+    resolution: {integrity: sha512-8zc+h51HxpodKsA7L4PpBNd+9qlrfuUcyUDE5a793BJfN4NZgwk7v9NmrY3ptZ+Sk0+ToigxSzkb47AsEgyizw==}
+    engines: {node: '>=20.19.0'}
+
   cacache@21.0.1:
     resolution: {integrity: sha512-pTwz/uj3Jyp6WXdJ6fWhR+7LVxVs6RyroQSn7KJwHsSxXuyGSp0pcMVcwSwTpCFq1X2YG8QBe0W+vN+cr0SwzA==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
@@ -3512,9 +3512,6 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  command-line-application@0.10.1:
-    resolution: {integrity: sha512-PWZ4nRkz09MbBRocqEe/Fil3RjTaMNqw0didl1n/i3flDcw/vecVfvsw3r+ZHhGs4BOuW7sk3cEYSdfM3Wv5/Q==}
-
   command-line-application@0.8.1:
     resolution: {integrity: sha512-ZfdsXsjDjVC4XbJZ2DBjDn42Cje7XNeGCN3cMLsuOdAhQJNUJRn11rVK6ZPOpyceeUFg7mOjvHK4N56SScxFqg==}
 
@@ -3528,10 +3525,6 @@ packages:
   command-line-usage@5.0.5:
     resolution: {integrity: sha512-d8NrGylA5oCXSbGoKz05FkehDAzSmIm4K03S5VDh4d5lZAtTWfc3D1RuETtuQCn8129nYfJfDdF7P/lwcz1BlA==}
     engines: {node: '>=4.0.0'}
-
-  command-line-usage@6.1.1:
-    resolution: {integrity: sha512-F59pEuAR9o1SF/bD0dQBDluhpT4jJQNWUHEuVBqpDmCUo6gPjCi+m9fCWnWZVR/oG6cMTUms4h+3NPl74wGXvA==}
-    engines: {node: '>=8.0.0'}
 
   commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
@@ -6182,10 +6175,6 @@ packages:
     resolution: {integrity: sha512-j5WfFJfc9CoXv/WbwVLHq74i/hdTUpy+iNC534LxczMRP67vJeK3V9JOdnL0N1cIRbn9mYhE2yVjvvKXDxvNXQ==}
     engines: {node: '>=0.10.0'}
 
-  reduce-flatten@2.0.0:
-    resolution: {integrity: sha512-EJ4UNY/U1t2P/2k6oqotuX2Cc3T6nxJwsM0N0asT7dhrtH1ltUxDn4NalSYmPE2rCkVpcf/X6R0wDwcFpzhd4w==}
-    engines: {node: '>=6'}
-
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
     engines: {node: '>= 0.4'}
@@ -6765,10 +6754,6 @@ packages:
     resolution: {integrity: sha512-zTvf0mcggrGeTe/2jJ6ECkJHAQPIYEwDoqsiqBjI24mvRmQbInK5jq33fyypaCBxX08hMkfmdOqj6haT33EqWw==}
     engines: {node: '>=4.0.0'}
 
-  table-layout@1.0.2:
-    resolution: {integrity: sha512-qd/R7n5rQTRFi+Zf2sk5XVVd9UQl6ZkduPFC3S7WEGJAmetDTjY3qPN50eSKzwuzEyQKy5TN2TiZdkIjos2L6A==}
-    engines: {node: '>=8.0.0'}
-
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
@@ -6969,9 +6954,6 @@ packages:
       unrun:
         optional: true
 
-  tslib@1.10.0:
-    resolution: {integrity: sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==}
-
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -7031,10 +7013,6 @@ packages:
 
   typical@4.0.0:
     resolution: {integrity: sha512-VAH4IvQ7BDFYglMd7BPRDfLgxZZX4O4TFcRDA6EN5X7erNJJq+McIEp8np9aVtxrCJ6qx4GTYVfOWNjcqwZgRw==}
-    engines: {node: '>=8'}
-
-  typical@5.2.0:
-    resolution: {integrity: sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==}
     engines: {node: '>=8'}
 
   uc.micro@1.0.6:
@@ -7431,10 +7409,6 @@ packages:
   wordwrapjs@3.0.0:
     resolution: {integrity: sha512-mO8XtqyPvykVCsrwj5MlOVWvSnCdT+C+QVbm6blradR7JExAhbkZ7hZ9A+9NUtwzSqrlUo9a67ws0EiILrvRpw==}
     engines: {node: '>=4.0.0'}
-
-  wordwrapjs@4.0.1:
-    resolution: {integrity: sha512-kKlNACbvHrkpIw6oPeYDSmdCTu2hdMHoyXLTcUKala++lx5Y+wjJ/e474Jqv5abnVmwxw08DiTuHmw69lJGksA==}
-    engines: {node: '>=8.0.0'}
 
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
@@ -9324,8 +9298,6 @@ snapshots:
 
   array-back@3.1.0: {}
 
-  array-back@4.0.1: {}
-
   array-buffer-byte-length@1.0.2:
     dependencies:
       call-bound: 1.0.4
@@ -9590,6 +9562,8 @@ snapshots:
 
   cac@7.1.0: {}
 
+  cac@7.1.1: {}
+
   cacache@21.0.1:
     dependencies:
       '@npmcli/fs': 6.0.0
@@ -9768,17 +9742,6 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  command-line-application@0.10.1:
-    dependencies:
-      '@types/command-line-args': 5.0.0
-      '@types/command-line-usage': 5.0.1
-      chalk: 2.4.2
-      command-line-args: 5.1.1
-      command-line-usage: 6.1.1
-      meant: 1.0.3
-      remove-markdown: 0.3.0
-      tslib: 1.10.0
-
   command-line-application@0.8.1:
     dependencies:
       '@types/command-line-args': 5.0.0
@@ -9807,13 +9770,6 @@ snapshots:
       chalk: 2.4.2
       table-layout: 0.4.5
       typical: 2.6.1
-
-  command-line-usage@6.1.1:
-    dependencies:
-      array-back: 4.0.1
-      chalk: 2.4.2
-      table-layout: 1.0.2
-      typical: 5.2.0
 
   commander@11.1.0: {}
 
@@ -13213,8 +13169,6 @@ snapshots:
 
   reduce-flatten@1.0.1: {}
 
-  reduce-flatten@2.0.0: {}
-
   reflect.getprototypeof@1.0.10:
     dependencies:
       call-bind: 1.0.9
@@ -13991,13 +13945,6 @@ snapshots:
       typical: 2.6.1
       wordwrapjs: 3.0.0
 
-  table-layout@1.0.2:
-    dependencies:
-      array-back: 4.0.1
-      deep-extend: 0.6.0
-      typical: 5.2.0
-      wordwrapjs: 4.0.1
-
   tagged-tag@1.0.0: {}
 
   tapable@2.3.3: {}
@@ -14186,8 +14133,6 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tslib@1.10.0: {}
-
   tslib@2.8.1: {}
 
   tuf-js@6.0.1(supports-color@10.2.2):
@@ -14266,8 +14211,6 @@ snapshots:
   typical@2.6.1: {}
 
   typical@4.0.0: {}
-
-  typical@5.2.0: {}
 
   uc.micro@1.0.6: {}
 
@@ -14594,11 +14537,6 @@ snapshots:
     dependencies:
       reduce-flatten: 1.0.1
       typical: 2.6.1
-
-  wordwrapjs@4.0.1:
-    dependencies:
-      reduce-flatten: 2.0.0
-      typical: 5.2.0
 
   wrap-ansi@7.0.0:
     dependencies:

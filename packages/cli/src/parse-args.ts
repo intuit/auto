@@ -1,37 +1,11 @@
 import chalk from "chalk";
-import { app, type Command, type Option } from "command-line-application";
+import { cac, type CAC } from "cac";
 import endent from "endent";
 
-import type {
-  ApiOptions,
-  GlobalOptions,
-  ICanaryOptions,
-  IChangelogOptions,
-  ICommentOptions,
-  ICreateLabelsOptions,
-  ILabelOptions,
-  IPRBodyOptions,
-  IPRCheckOptions,
-  IPRStatusOptions,
-  IReleaseOptions,
-  IShipItOptions,
-  IVersionOptions,
-} from "@auto-it/core";
+import type { ApiOptions } from "@auto-it/core";
 import { getAutoVersion } from "@auto-it/core";
 
-export type Flags =
-  | keyof GlobalOptions
-  | keyof ICreateLabelsOptions
-  | keyof ILabelOptions
-  | keyof IPRCheckOptions
-  | keyof IPRStatusOptions
-  | keyof ICommentOptions
-  | keyof IPRBodyOptions
-  | keyof IReleaseOptions
-  | keyof IVersionOptions
-  | keyof IShipItOptions
-  | keyof IChangelogOptions
-  | keyof ICanaryOptions;
+import { runCli } from "./run";
 
 const p = chalk.hex("#870048");
 const y = chalk.hex("#F1A60E");
@@ -49,201 +23,111 @@ const logo = `
    ${g('\\   \\')}     ${g('/   /')}     |_____/ |______ |      |______ |_____| |______ |______
     ${g('\\   ▔▔▔▔▔   /')}      |    \\_ |______ |_____ |______ |     | ______| |______
      ${g('\\         /')}
-      ${g('▔▔▔▔▔▔▔▔▔ ')}
-`.replace(/\\/g, '\\\\');
+      ${g('▔▔▔▔▔▔▔▔▔ ')}`;
 
-interface AutoOption extends Option {
-  /** This option is configurable via .autorc */
-  config?: boolean;
-}
+const description =
+  "Generate releases based on semantic version labels on pull requests, and other pull request automation tools.";
 
-const version: AutoOption = {
-  name: "version",
-  alias: "V",
-  type: Boolean,
-  description: "Display auto's version",
-  group: "global",
+/** The headings commands are grouped under in the main help */
+const commandGroups: Record<string, string[]> = {
+  "Setup Command": ["init", "info", "create-labels"],
+  "Pull Request Interaction Commands": [
+    "label",
+    "comment",
+    "pr-check",
+    "pr-status",
+    "pr-body",
+  ],
+  "Release Commands": [
+    "version",
+    "changelog",
+    "release",
+    "shipit",
+    "latest",
+    "canary",
+    "next",
+  ],
 };
 
-const prerelease: AutoOption = {
-  name: "prerelease",
-  type: Boolean,
-  group: "main",
-  description: "Publish a prerelease on GitHub.",
-  config: true,
-};
-
-const onlyPublishWithReleaseLabel: AutoOption = {
-  name: "only-publish-with-release-label",
-  type: Boolean,
-  description: "Only bump version if 'release' label is on pull request",
-  group: "main",
-};
-
-const quiet: AutoOption = {
-  name: "quiet",
-  alias: "q",
-  type: Boolean,
-  description: "Print **only** the result of the command",
-  group: "global",
-};
-
-const defaultOptions: AutoOption[] = [
-  {
-    name: "verbose",
-    alias: "v",
-    type: Boolean,
-    description: "Show some more logs. Pass -vv for very verbose logs.",
-    group: "global",
-    multiple: true,
-  },
-  {
-    name: "repo",
-    type: String,
-    description:
-      "The repo to set the status on. Defaults to looking in the package definition for the platform",
-    group: "global",
-  },
-  {
-    name: "owner",
-    type: String,
-    description:
-      "The owner of the GitHub repo. Defaults to reading from the package definition for the platform",
-    group: "global",
-  },
-  {
-    name: "github-api",
-    type: String,
-    description: "GitHub API to use",
-    group: "global",
-  },
-  {
-    name: "plugins",
-    type: String,
-    multiple: true,
-    description: "Plugins to load auto with. (defaults to just npm)",
-    group: "global",
-  },
+/** The arguments to cac's `option()` */
+type OptionArgs = [
+  rawName: string,
+  description: string,
+  config?: { default?: unknown; type?: unknown[] },
 ];
 
-const baseBranch: AutoOption = {
-  name: "base-branch",
-  type: String,
-  description: "Branch to treat as the base branch",
-  group: "global",
-};
+/** An option with a different description */
+const describe = (
+  [rawName, , config]: OptionArgs,
+  text: string
+): OptionArgs => [rawName, text, config];
 
-const pr: AutoOption = {
-  name: "pr",
-  type: Number,
-  description:
-    "The pull request the command should use. Detects PR number in CI",
-  group: "main",
-};
+const prerelease: OptionArgs = [
+  "--prerelease",
+  "Publish a prerelease on GitHub.",
+];
+const onlyPublishWithReleaseLabel: OptionArgs = [
+  "--only-publish-with-release-label",
+  "Only bump version if 'release' label is on pull request",
+];
+const quiet: OptionArgs = [
+  "-q, --quiet",
+  "Print **only** the result of the command",
+];
+const baseBranch: OptionArgs = [
+  "--base-branch <string>",
+  "Branch to treat as the base branch",
+];
+const pr: OptionArgs = [
+  "--pr <number>",
+  "The pull request the command should use. Detects PR number in CI",
+];
+const dryRun: OptionArgs = [
+  "-d, --dry-run",
+  "Report what command will do but do not actually do anything",
+];
+const noGitCommit: OptionArgs = ["--no-git-commit", "Do not commit changes"];
+const url: OptionArgs = ["--url <string>", "URL to associate with this status"];
+const noVersionPrefix: OptionArgs = [
+  "--no-version-prefix",
+  "Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm)",
+];
+const name: OptionArgs = [
+  "--name <string>",
+  "Git name to commit  with. Defaults to package definition for the platform",
+];
+const email: OptionArgs = [
+  "--email <string>",
+  "Git email to commit with. Defaults to package definition for the platform",
+];
+const context: OptionArgs = [
+  "--context <string>",
+  "A string label to differentiate this status from others",
+];
+const message: OptionArgs = ["-m, --message <string>", ""];
+const changelogTitle: OptionArgs = [
+  "--title <string>",
+  "Override the title used in the addition to the CHANGELOG.md.",
+];
+const changelogCommitMessage = describe(
+  message,
+  "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'"
+);
+const noChangelog: OptionArgs = [
+  "--no-changelog",
+  "Skip creating the changelog",
+];
+const force: OptionArgs = ["--force", ""];
+const useVersion: OptionArgs = [
+  "--use-version <string>",
+  "Version number to publish as. Defaults to reading from the package definition for the platform.",
+];
+const changelogFrom: OptionArgs = [
+  "--from <string>",
+  "Tag to start changelog generation on. Defaults to latest tag or if a prerelease the latest tag in the branch. Provide latest to override.",
+];
 
-const dryRun: AutoOption = {
-  name: "dry-run",
-  alias: "d",
-  type: Boolean,
-  description: "Report what command will do but do not actually do anything",
-  group: "main",
-};
-
-const noGitCommit: AutoOption = {
-  name: "no-git-commit",
-  type: Boolean,
-  description: "Do not commit changes",
-  group: "main",
-};
-
-const url: AutoOption = {
-  name: "url",
-  type: String,
-  description: "URL to associate with this status",
-  group: "main",
-};
-
-const noVersionPrefix: AutoOption = {
-  name: "no-version-prefix",
-  type: Boolean,
-  description:
-    "Use the version as the tag without the 'v' prefix. WARNING: some plugins might need extra config to use this option (ex: npm)",
-  group: "main",
-};
-
-const name: AutoOption = {
-  name: "name",
-  type: String,
-  description:
-    "Git name to commit  with. Defaults to package definition for the platform",
-  group: "main",
-};
-
-const email: AutoOption = {
-  name: "email",
-  type: String,
-  description:
-    "Git email to commit with. Defaults to package definition for the platform",
-  group: "main",
-};
-
-const context: AutoOption = {
-  name: "context",
-  type: String,
-  description: "A string label to differentiate this status from others",
-  group: "main",
-};
-
-const message: AutoOption = {
-  name: "message",
-  group: "main",
-  type: String,
-  alias: "m",
-};
-
-const changelogTitle: AutoOption = {
-  name: "title",
-  type: String,
-  group: "main",
-  description: "Override the title used in the addition to the CHANGELOG.md.",
-};
-
-const changelogCommitMessage: AutoOption = {
-  ...message,
-  description:
-    "Message to commit the changelog with. Defaults to 'Update CHANGELOG.md [skip ci]'",
-  config: true,
-};
-
-const noChangelog: AutoOption = {
-  name: "no-changelog",
-  type: Boolean,
-  group: "main",
-  description: "Skip creating the changelog",
-  config: true,
-};
-
-const force: AutoOption = {
-  name: "force",
-  type: Boolean,
-  group: "main",
-  config: true,
-};
-
-const useVersion: AutoOption = {
-  name: "use-version",
-  type: String,
-  group: "main",
-  description:
-    "Version number to publish as. Defaults to reading from the package definition for the platform.",
-};
-
-interface AutoCommand extends Command {
-  /** Options for the command */
-  options?: AutoOption[];
-}
-
-const latestCommandArgs: AutoOption[] = [
+const latestCommandArgs: OptionArgs[] = [
   name,
   email,
   onlyPublishWithReleaseLabel,
@@ -257,422 +141,539 @@ const latestCommandArgs: AutoOption[] = [
   noChangelog,
 ];
 
-export const commands: AutoCommand[] = [
-  {
-    name: "init",
-    group: "Setup Command",
-    description: "Interactive setup for minimum working configuration.",
-    examples: ["{green $} auto init"],
-  },
-  {
-    name: "info",
-    group: "Setup Command",
-    description:
-      "Determine the environment, check if auto is set up correctly, and list plugins.",
-    examples: ["{green $} auto info"],
-    options: [
-      {
-        name: "list-plugins",
-        type: Boolean,
-        description: "List the available plugins",
-        group: "main",
-      },
-    ],
-  },
-  {
-    name: "create-labels",
-    group: "Setup Command",
-    description:
-      "Create your project's labels on github. If labels exist it will update them.",
-    examples: ["{green $} auto create-labels"],
-    options: [dryRun],
-  },
-  {
-    name: "label",
-    group: "Pull Request Interaction Commands",
-    description:
-      "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!",
-    options: [
-      { ...pr, description: `${pr.description} (defaults to last merged PR)` },
-      {
-        name: "exists",
-        type: String,
-        group: "main",
-        description: "Checks for existence of a specific label",
-      },
-    ],
-    examples: ["{green $} auto label --pr 123"],
-  },
-  {
-    name: "comment",
-    group: "Pull Request Interaction Commands",
-    description:
-      "Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.",
-    require: [["message", "delete"]],
-    options: [
-      pr,
-      context,
-      {
-        name: "edit",
-        type: Boolean,
-        alias: "e",
-        group: "main",
-        description: "Edit old comment",
-        config: true,
-      },
-      {
-        name: "delete",
-        type: Boolean,
-        group: "main",
-        description: "Delete old comment",
-        config: true,
-      },
-      { ...message, description: "Message to post to comment" },
-      dryRun,
-    ],
-    examples: [
-      "{green $} auto comment --delete",
-      '{green $} auto comment --pr 123 --message "# Why you\'re wrong..."',
-      '{green $} auto comment --pr 123 --edit --message "This smells..." --context code-smell',
-    ],
-  },
-  {
-    name: "pr-check",
-    group: "Pull Request Interaction Commands",
-    description:
-      "Check that a pull request has a SemVer label and run all pr-check plugins.",
-    require: ["url"],
-    options: [
-      pr,
-      url,
-      dryRun,
-      {
-        ...context,
-        defaultValue: "ci/pr-check",
-      },
-    ],
-    examples: ["{green $} auto pr-check --url http://your-ci.com/build/123"],
-  },
-  {
-    name: "pr-status",
-    group: "Pull Request Interaction Commands",
-    description: "Set the status on a PR commit",
-    require: ["state", "url", "description", "context"],
-    options: [
-      {
-        name: "sha",
-        type: String,
-        group: "main",
-        description:
-          "Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository",
-      },
-      {
-        ...pr,
-        description: "PR to set the status on. Detects PR number in CI",
-      },
-      url,
-      {
-        name: "state",
-        type: String,
-        group: "main",
-        description:
-          "State of the PR. ['pending', 'success', 'error', 'failure']",
-      },
-      {
-        name: "description",
-        type: String,
-        group: "main",
-        description: "A description of the status",
-      },
-      {
-        name: "context",
-        type: String,
-        group: "main",
-        description: "A string label to differentiate this status from others",
-      },
-      dryRun,
-    ],
-    examples: [
-      `{green $} auto pr-status \\\\ \n   --state pending \\\\ \n   --description "Build still running..." \\\\ \n   --context build-check`,
-    ],
-  },
-  {
-    name: "pr-body",
-    group: "Pull Request Interaction Commands",
-    description:
-      "Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.",
-    require: ["message"],
-    options: [
-      pr,
-      context,
-      { ...message, description: "Message to post to PR body" },
-      dryRun,
-    ],
-    examples: [
-      "{green $} auto pr-body --delete",
-      '{green $} auto pr-body --pr 123 --comment "The new version is: 1.2.3"',
-    ],
-  },
-  {
-    name: "version",
-    group: "Release Commands",
-    description: endent`
-      Calculate a semantic version bump for the given changes.
-      Requires all PRs to have labels for the change type.
-      If a PR does not have a label associated with it, it will default to \`patch\` or whatever you configure the default label to.
+/** Format an example for the help output, with an optional description above it */
+const example = (command: string, text?: string) =>
+  `${text ? `  ${text}\n` : ""}  ${chalk.green("$")} ${command}`;
 
-      NOTE: This does not change the version of your project or anything in your repo. It just returns \`patch\`, \`minor\`, or \`major\`.
-    `,
-    options: [
-      onlyPublishWithReleaseLabel,
-      {
-        name: "from",
-        type: String,
-        group: "main",
-        description:
-          "Git revision (tag, commit sha, ...) to calculate version bump from. Defaults to latest github release",
-      },
-    ],
-    examples: [
-      {
-        desc: "Get the new version using the last release to head",
-        example: "{green $} auto version",
-      },
-    ],
-  },
-  {
-    name: "changelog",
-    group: "Release Commands",
-    description:
-      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.",
-    options: [
-      dryRun,
-      noVersionPrefix,
-      name,
-      email,
-      {
-        name: "from",
-        type: String,
-        group: "main",
-        description:
-          "Tag to start changelog generation on. Defaults to latest tag or if a prerelease the latest tag in the branch. Provide latest to override.",
-      },
-      {
-        name: "to",
-        type: String,
-        group: "main",
-        description: "Tag to end changelog generation on. Defaults to HEAD.",
-      },
-      changelogTitle,
-      changelogCommitMessage,
-      baseBranch,
-      quiet,
-      noGitCommit,
-    ],
-    examples: [
-      {
-        desc: "Generate a changelog from the last release to head",
-        example: "{green $} auto changelog",
-      },
-      {
-        desc: "Generate a changelog across specific versions",
-        example: "{green $} auto changelog --from v0.20.1 --to v0.21.0",
-      },
-    ],
-  },
-  {
-    name: "release",
-    group: "Release Commands",
-    description: endent`
-      Create a GitHub release for a tag. Defaults to last tag in branch.
+/** The option names auto's core reads for a `--no-*` flag, e.g. `noGitCommit` */
+export const negatedName = (name: string) =>
+  `no${name.charAt(0).toUpperCase()}${name.slice(1)}`;
 
-      > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
-    `,
-    options: [
-      dryRun,
-      noVersionPrefix,
-      name,
-      email,
+/** Turn the options cac parsed into the ones auto's core reads */
+function toCoreOptions(cli: CAC, options: Record<string, unknown>) {
+  const result: Record<string, unknown> = { ...options };
+  const registered = [
+    ...cli.globalCommand.options,
+    ...(cli.matchedCommand?.options ?? []),
+  ];
+
+  for (const option of registered) {
+    if (option.negated) {
+      // cac sets `true` for a `--no-*` flag that wasn't typed. Passed on, it would
+      // replace the matching .autorc section (`changelog: { message }`).
+      if (result[option.name] === false) {
+        result[negatedName(option.name)] = true;
+      } else {
+        delete result[option.name];
+      }
+
+      continue;
+    }
+
+    // cac turns text that looks like a number into a number
+    if (!option.isBoolean && !option.rawName.includes("<number>")) {
+      for (const key of option.names) {
+        const value = result[key];
+
+        if (Array.isArray(value)) {
+          result[key] = value.map((v) =>
+            typeof v === "number" ? String(v) : v
+          );
+        } else if (typeof value === "number") {
+          result[key] = String(value);
+        }
+      }
+    }
+  }
+
+  return result as ApiOptions;
+}
+
+/** Options a command needs. An array means at least one of them. */
+type RequiredOptions = Array<string | string[]>;
+
+/** Print which required options are missing, if any */
+function hasRequiredOptions(options: ApiOptions, required: RequiredOptions) {
+  const values = options as Record<string, unknown>;
+  const missing = required
+    .filter((names) => [names].flat().every((n) => values[n] === undefined))
+    .map((names) =>
+      Array.isArray(names)
+        ? `(${names.map((n) => `--${n}`).join(" or ")})`
+        : `--${names}`
+    );
+
+  if (missing.length) {
+    console.log(
+      `Missing required arg${missing.length > 1 ? "s" : ""}: ${missing.join(", ")}`
+    );
+    return false;
+  }
+
+  return true;
+}
+
+interface HelpSection {
+  title?: string;
+  body: string;
+}
+
+/** Rewrite cac's help: logo, grouped commands, and own vs global options */
+function formatHelp(cli: CAC) {
+  return (sections: HelpSection[]): HelpSection[] => {
+    const [header = { body: "" }, usage = { body: "" }] = sections;
+    const command = cli.matchedCommand;
+    const globals = cli.globalCommand.options.filter(
+      (option) => command === undefined || option.name !== "version"
+    );
+    const own = command?.options ?? [];
+    const width = Math.max(
+      ...[...own, ...globals].map((o) => o.rawName.length)
+    );
+    const lines = (options: typeof own) =>
+      options
+        .map((option) => {
+          const value = option.config.default;
+          // cac gives every `--no-*` flag a default of `true`, which reads backwards
+          const shown =
+            value === undefined || option.negated ? "" : ` (default: ${value})`;
+
+          return `  ${option.rawName.padEnd(width)}  ${option.description}${shown}`;
+        })
+        .join("\n");
+    const examples = sections.filter((s) => s.title === "Examples");
+
+    if (command) {
+      return [
+        header,
+        usage,
+        { body: command.description },
+        ...(own.length ? [{ title: "Options", body: lines(own) }] : []),
+        { title: "Global Options", body: lines(globals) },
+        ...examples,
+      ];
+    }
+
+    const commandWidth = Math.max(...cli.commands.map((c) => c.name.length));
+    const grouped = Object.entries(commandGroups).map(([title, names]) => ({
+      title,
+      body: cli.commands
+        .filter((c) => names.includes(c.name))
+        .map(
+          (c) =>
+            `  ${c.name.padEnd(commandWidth)}  ${c.description.split("\n")[0]}`
+        )
+        .join("\n"),
+    }));
+    const moreInfo = sections.filter((s) =>
+      s.title?.startsWith("For more info")
+    );
+
+    return [
+      { body: logo },
+      header,
+      { body: description },
+      usage,
+      ...grouped,
+      ...moreInfo,
+      { title: "Global Options", body: lines(globals) },
+    ];
+  };
+}
+
+/** Declare auto's commands and options with cac */
+export function createCli() {
+  const cli = cac("auto");
+
+  /** Convert the options, check the required ones, then run the command */
+  const run =
+    (command: string, required: RequiredOptions = []) =>
+    (options: Record<string, unknown>) => {
+      const args = toCoreOptions(cli, options);
+
+      if (!hasRequiredOptions(args, required)) {
+        process.exit(1);
+        return;
+      }
+
+      return runCli(command, args);
+    };
+
+  cli
+    .usage("<command> [options]")
+    .option(
+      "-v, --verbose",
+      "Show some more logs. Pass -vv for very verbose logs.",
       {
-        name: "from",
-        type: String,
-        group: "main",
-        description:
-          "Tag to start changelog generation on. Defaults to latest tag or if a prerelease the latest tag in the branch. Provide latest to override.",
-      },
-      {
-        name: "to",
-        type: String,
-        group: "main",
-        description:
-          "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD.",
-      },
-      useVersion,
-      baseBranch,
-      prerelease,
-    ],
-    examples: [
-      {
-        desc: "Create a GitHub release",
-        example: "{green $} auto release",
-      },
-      {
-        desc: "Create a GitHub release using provided commit range and version",
-        example:
-          "{green $} auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
-      },
-    ],
-  },
-  {
-    name: "shipit",
-    group: "Release Commands",
-    description: endent`
+        type: [Boolean],
+      }
+    )
+    .option(
+      "--repo <string>",
+      "The repo to set the status on. Defaults to looking in the package definition for the platform"
+    )
+    .option(
+      "--owner <string>",
+      "The owner of the GitHub repo. Defaults to reading from the package definition for the platform"
+    )
+    .option("--github-api <string>", "GitHub API to use")
+    .option(
+      "--plugins <string>",
+      "Plugins to load auto with. Repeat the flag for each plugin. (defaults to just npm)",
+      { type: [String] }
+    )
+    .version(process.env.AUTO_CLI_VERSION || getAutoVersion(), "-V, --version")
+    .help(formatHelp(cli));
+
+  cli
+    .command("init", "Interactive setup for minimum working configuration.")
+    .example(example("auto init"))
+    .action(run("init"));
+
+  cli
+    .command(
+      "info",
+      "Determine the environment, check if auto is set up correctly, and list plugins."
+    )
+    .option("--list-plugins", "List the available plugins")
+    .example(example("auto info"))
+    .action(run("info"));
+
+  cli
+    .command(
+      "create-labels",
+      "Create your project's labels on github. If labels exist it will update them."
+    )
+    .option(...dryRun)
+    .example(example("auto create-labels"))
+    .action(run("create-labels"));
+
+  cli
+    .command(
+      "label",
+      "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!"
+    )
+    .option(...describe(pr, `${pr[1]} (defaults to last merged PR)`))
+    .option("--exists <string>", "Checks for existence of a specific label")
+    .example(example("auto label --pr 123"))
+    .action(run("label"));
+
+  cli
+    .command(
+      "comment",
+      "Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment."
+    )
+    .option(...pr)
+    .option(...context)
+    .option("-e, --edit", "Edit old comment")
+    .option("--delete", "Delete old comment")
+    .option(...describe(message, "Message to post to comment"))
+    .option(...dryRun)
+    .example(example("auto comment --delete"))
+    .example(
+      example('auto comment --pr 123 --message "# Why you\'re wrong..."')
+    )
+    .example(
+      example(
+        'auto comment --pr 123 --edit --message "This smells..." --context code-smell'
+      )
+    )
+    .action(run("comment", [["message", "delete"]]));
+
+  cli
+    .command(
+      "pr-check",
+      "Check that a pull request has a SemVer label and run all pr-check plugins."
+    )
+    .option(...pr)
+    .option(...url)
+    .option(...dryRun)
+    .option(context[0], context[1], { default: "ci/pr-check" })
+    .example(example("auto pr-check --url http://your-ci.com/build/123"))
+    .action(run("pr-check", ["url"]));
+
+  cli
+    .command("pr-status", "Set the status on a PR commit")
+    .option(
+      "--sha <string>",
+      "Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository"
+    )
+    .option(...describe(pr, "PR to set the status on. Detects PR number in CI"))
+    .option(...url)
+    .option(
+      "--state <string>",
+      "State of the PR. ['pending', 'success', 'error', 'failure']"
+    )
+    .option("--description <string>", "A description of the status")
+    .option(...context)
+    .option(...dryRun)
+    .example(
+      example(
+        'auto pr-status \\\n    --state pending \\\n    --description "Build still running..." \\\n    --context build-check'
+      )
+    )
+    .action(run("pr-status", ["state", "url", "description", "context"]));
+
+  cli
+    .command(
+      "pr-body",
+      "Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment."
+    )
+    .option(...pr)
+    .option(...context)
+    .option(...describe(message, "Message to post to PR body"))
+    .option(...dryRun)
+    .example(example("auto pr-body --delete"))
+    .example(
+      example('auto pr-body --pr 123 --comment "The new version is: 1.2.3"')
+    )
+    .action(run("pr-body", ["message"]));
+
+  cli
+    .command(
+      "version",
+      endent`
+        Calculate a semantic version bump for the given changes.
+        Requires all PRs to have labels for the change type.
+        If a PR does not have a label associated with it, it will default to \`patch\` or whatever you configure the default label to.
+
+        NOTE: This does not change the version of your project or anything in your repo. It just returns \`patch\`, \`minor\`, or \`major\`.
+      `
+    )
+    .option(...onlyPublishWithReleaseLabel)
+    .option(
+      "--from <string>",
+      "Git revision (tag, commit sha, ...) to calculate version bump from. Defaults to latest github release"
+    )
+    .example(
+      example(
+        "auto version",
+        "Get the new version using the last release to head"
+      )
+    )
+    .action(run("version"));
+
+  cli
+    .command(
+      "changelog",
+      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes."
+    )
+    .option(...dryRun)
+    .option(...noVersionPrefix)
+    .option(...name)
+    .option(...email)
+    .option(...changelogFrom)
+    .option(
+      "--to <string>",
+      "Tag to end changelog generation on. Defaults to HEAD."
+    )
+    .option(...changelogTitle)
+    .option(...changelogCommitMessage)
+    .option(...baseBranch)
+    .option(...quiet)
+    .option(...noGitCommit)
+    .example(
+      example(
+        "auto changelog",
+        "Generate a changelog from the last release to head"
+      )
+    )
+    .example(
+      example(
+        "auto changelog --from v0.20.1 --to v0.21.0",
+        "Generate a changelog across specific versions"
+      )
+    )
+    .action(run("changelog"));
+
+  cli
+    .command(
+      "release",
+      endent`
+        Create a GitHub release for a tag. Defaults to last tag in branch.
+
+        > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
+      `
+    )
+    .option(...dryRun)
+    .option(...noVersionPrefix)
+    .option(...name)
+    .option(...email)
+    .option(...changelogFrom)
+    .option(
+      "--to <string>",
+      "Git revision (tag, commit sha, ...) to end release notes at. Defaults to HEAD."
+    )
+    .option(...useVersion)
+    .option(...baseBranch)
+    .option(...prerelease)
+    .example(example("auto release", "Create a GitHub release"))
+    .example(
+      example(
+        "auto release --from v0.20.1 --to HEAD --use-version v0.21.0",
+        "Create a GitHub release using provided commit range and version"
+      )
+    )
+    .action(run("release"));
+
+  const shipit = cli.command(
+    "shipit",
+    endent`
       Context aware publishing.
 
       1. call from base branch -> latest version released (LATEST)
       2. call from prerelease branch -> prerelease version released (NEXT)
       3. call from PR in CI -> canary version released (CANARY)
       4. call locally when not on base/prerelease branch -> canary version released (CANARY)
-    `,
-    examples: ["{green $} auto shipit"],
-    options: [
-      ...latestCommandArgs,
-      {
-        ...useVersion,
-        description: `${useVersion.description} Currently only supported for the **npm plugin**.`,
-      },
-      {
-        name: "only-graduate-with-release-label",
-        type: Boolean,
-        defaultValue: false,
-        group: "main",
-        description:
-          'Make auto publish prerelease versions when merging to baseBranch. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use baseBranch.',
-        config: true,
-      },
-    ],
-  },
-  {
-    name: "latest",
-    group: "Release Commands",
-    description: endent`
-      Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
-    `,
-    examples: ["{green $} auto latest"],
-    options: latestCommandArgs,
-  },
-  {
-    name: "canary",
-    group: "Release Commands",
-    description: endent`
-      Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
-
-      1. In PR: 1.2.3-canary.123.0 + add version to PR body
-      2. Locally: 1.2.3-canary.1810cfd
-    `,
-    examples: [
-      "{green $} auto canary",
-      "{green $} auto canary --force",
-      "{green $} auto canary --pr 123 --build 5",
-      '{green $} auto canary --message "Install PR version: `yarn add -D my-project@%v`"',
-      "{green $} auto canary --message false",
-    ],
-    options: [
-      dryRun,
-      {
-        ...pr,
-        description:
-          "PR number to use to create the canary version. Detected in CI env",
-      },
-      {
-        name: "build",
-        type: String,
-        group: "main",
-        description:
-          "Build number to use to create the canary version. Detected in CI env",
-      },
-      {
-        name: "target",
-        type: String,
-        group: "main",
-        defaultValue: "pr-body",
-        description: "How the canary version should be attached to a PR",
-        typeLabel: "pr-body | comment | status",
-        config: true,
-      },
-      {
-        ...message,
-        description:
-          "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment",
-        config: true,
-      },
-      {
-        ...force,
-        description:
-          "Force a next release, even if the last commit is marked to skip the release",
-      },
-      quiet,
-    ],
-  },
-  {
-    name: "next",
-    group: "Release Commands",
-    description: endent`
-      Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
-
-      1. Creates a prerelease on package management platform
-      2. Creates a "Pre Release" on GitHub releases page
-      3. If ran from a PR build in a CI, posts the prerelease's full releases notes and expected version of the prerelease
-
-      Calling the \`next\` command from a prerelease branch will publish a prerelease for just that branch, otherwise it will publish to the default prerelease branch.
-    `,
-    examples: ["{green $} auto next"],
-    options: [
-      dryRun,
-      {
-        ...message,
-        description:
-          "The message used when attaching the prerelease version to a PR",
-        config: true,
-      },
-      {
-        ...force,
-        description:
-          "Force a canary release, even if the PR is marked to skip the release",
-      },
-      quiet,
-    ],
-  },
-];
-
-/** Parse the CLI args and return command + options provided. */
-export default function parseArgs(testArgs?: string[]) {
-  const mainOptions = app(
-    {
-      name: "auto",
-      logo,
-      description:
-        "Generate releases based on semantic version labels on pull requests, and other pull request automation tools.",
-      commands,
-      options: [version, ...defaultOptions],
-    },
-    {
-      argv: testArgs,
-    }
+    `
   );
 
-  if (!mainOptions) {
-    return [];
+  latestCommandArgs.forEach((option) => shipit.option(...option));
+  shipit
+    .option(
+      ...describe(
+        useVersion,
+        `${useVersion[1]} Currently only supported for the **npm plugin**.`
+      )
+    )
+    .option(
+      "--only-graduate-with-release-label",
+      'Make auto publish prerelease versions when merging to baseBranch. Only PRs merged with "release" label will generate a "latest" release. Only use this flag if you do not want to maintain a prerelease branch, and instead only want to use baseBranch.',
+      { default: false }
+    )
+    .example(example("auto shipit"))
+    .action(run("shipit"));
+
+  const latest = cli.command(
+    "latest",
+    endent`
+      Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
+    `
+  );
+
+  latestCommandArgs.forEach((option) => latest.option(...option));
+  latest.example(example("auto latest")).action(run("latest"));
+
+  cli
+    .command(
+      "canary",
+      endent`
+        Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
+
+        1. In PR: 1.2.3-canary.123.0 + add version to PR body
+        2. Locally: 1.2.3-canary.1810cfd
+      `
+    )
+    .option(...dryRun)
+    .option(
+      ...describe(
+        pr,
+        "PR number to use to create the canary version. Detected in CI env"
+      )
+    )
+    .option(
+      "--build <string>",
+      "Build number to use to create the canary version. Detected in CI env"
+    )
+    .option(
+      "--target <pr-body|comment|status>",
+      "How the canary version should be attached to a PR",
+      { default: "pr-body" }
+    )
+    .option(
+      ...describe(
+        message,
+        "Message to comment on PR with. Defaults to 'Published PR with canary version: %v'. Pass false to disable the comment"
+      )
+    )
+    .option(
+      ...describe(
+        force,
+        "Force a next release, even if the last commit is marked to skip the release"
+      )
+    )
+    .option(...quiet)
+    .example(example("auto canary"))
+    .example(example("auto canary --force"))
+    .example(example("auto canary --pr 123 --build 5"))
+    .example(
+      example(
+        'auto canary --message "Install PR version: `yarn add -D my-project@%v`"'
+      )
+    )
+    .example(example("auto canary --message false"))
+    .action(run("canary"));
+
+  cli
+    .command(
+      "next",
+      endent`
+        Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
+
+        1. Creates a prerelease on package management platform
+        2. Creates a "Pre Release" on GitHub releases page
+        3. If ran from a PR build in a CI, posts the prerelease's full releases notes and expected version of the prerelease
+
+        Calling the \`next\` command from a prerelease branch will publish a prerelease for just that branch, otherwise it will publish to the default prerelease branch.
+      `
+    )
+    .option(...dryRun)
+    .option(
+      ...describe(
+        message,
+        "The message used when attaching the prerelease version to a PR"
+      )
+    )
+    .option(
+      ...describe(
+        force,
+        "Force a canary release, even if the PR is marked to skip the release"
+      )
+    )
+    .option(...quiet)
+    .example(example("auto next"))
+    .action(run("next"));
+
+  return cli;
+}
+
+/** Parse the CLI args and run the command they name. */
+export default async function parseArgs(
+  argv: string[] = process.argv.slice(2)
+) {
+  const cli = createCli();
+
+  cli.parse(["node", "auto", ...argv], { run: false });
+
+  // cac already printed help or the version
+  if (
+    cli.options.help ||
+    (cli.options.version && cli.matchedCommandName === undefined)
+  ) {
+    return;
   }
 
-  if (!mainOptions._command) {
-    if (mainOptions.version) {
-      const version = process.env.AUTO_CLI_VERSION || getAutoVersion();
-      console.log(`v${version}`);
+  if (!cli.matchedCommand) {
+    cli.outputHelp();
+
+    if (cli.args[0]) {
+      console.log(`Found unknown command: "${cli.args[0]}"`);
     }
 
-    return [];
+    process.exit(1);
+    return;
   }
 
-  return [mainOptions._command, mainOptions] as [string, ApiOptions];
+  try {
+    await cli.runMatchedCommand();
+  } catch (error) {
+    // Unknown options, missing values and unused args
+    if (error instanceof Error && error.name === "CACError") {
+      console.error(chalk.redBright("Error: "), error.message);
+      process.exit(1);
+      return;
+    }
+
+    throw error;
+  }
 }

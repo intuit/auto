@@ -12,7 +12,7 @@ const config: UserConfig = defineConfig({
       "@auto-it/version-file",
       "endent",
       "chalk",
-      "command-line-application",
+      "cac",
       "module-alias",
       "signale",
       "terminal-link",
