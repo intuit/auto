@@ -15,11 +15,12 @@ import {
   select,
   text,
 } from "@clack/prompts";
-import { prompt } from "enquirer";
+import chalk from "chalk";
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
 import { makeInteractiveInitHooks } from "./utils/make-hooks";
 import SEMVER, { defaultLabels, type ILabelDefinition } from "./semver";
+import { findPaletteColor, labelPalette, leastUsedColor } from "./label-colors";
 import { loadPlugin } from "./utils/load-plugins";
 import type { ILogger } from "./utils/logger";
 import { readFileSync, writeFileSync } from "fs";
@@ -31,11 +32,6 @@ import type {
 } from "./types";
 
 // const writeFile = promisify(fs.writeFile);
-
-interface Confirmation {
-  /** Whether the user confirmed the question */
-  confirmed: boolean;
-}
 
 /** Shown when the user cancels a question */
 const cancelMessage = "Setup cancelled before the configuration was written.";
@@ -81,121 +77,208 @@ export interface InteractiveInitHooks {
   >;
 }
 
-/** Get label configuration from the user. */
-async function getLabel(label?: ILabelDefinition) {
-  interface LabelResponse {
-    /** Response value */
-    value: {
-      /** Snippet values */
-      values: ILabelDefinition;
-    };
+/** The release type picker's value for "No release type" */
+const noReleaseType = "";
+
+/** A choice in the release type picker */
+type ReleaseTypeChoice =
+  | NonNullable<ILabelDefinition["releaseType"]>
+  | typeof noReleaseType;
+
+/** The release types to choose from for a label, in the order shown */
+const releaseTypes: Array<{
+  value: ReleaseTypeChoice;
+  label: string;
+  hint: string;
+}> = [
+  {
+    value: noReleaseType,
+    label: "No release type",
+    hint: "doesn't change the version",
+  },
+  { value: SEMVER.major, label: "major", hint: "bumps the major version" },
+  { value: SEMVER.minor, label: "minor", hint: "bumps the minor version" },
+  { value: SEMVER.patch, label: "patch", hint: "bumps the patch version" },
+  {
+    value: "none",
+    label: "none",
+    hint: "no release if a PR has only labels like this",
+  },
+  { value: "skip", label: "skip", hint: "skips the release when merged" },
+  {
+    value: "release",
+    label: "release",
+    hint: 'releases when merged, if releases need the "release" label',
+  },
+];
+
+/** The color picker's value for "Custom…" */
+const customColor = "custom";
+
+/** A small block in a color, for the pickers */
+const swatch = (color?: string) => (color ? chalk.hex(color)("■") : " ");
+
+/** Ask for a label's color: one from the palette, or a custom hex */
+async function getColor(initial?: string) {
+  const fromPalette = findPaletteColor(initial);
+  const choice = answer(
+    await select({
+      message: "Color",
+      options: [
+        ...labelPalette.map(({ name, hex }) => ({
+          value: hex,
+          label: `${swatch(hex)} ${name}`,
+          hint: hex,
+        })),
+        { value: customColor, label: "Custom…" },
+      ],
+      initialValue: fromPalette?.hex ?? (initial ? customColor : undefined),
+    })
+  );
+
+  if (choice !== customColor) {
+    return choice;
   }
 
-  // @ts-expect-error enquirer types `validate` as taking a string, but snippet prompts pass their state
-  const response = await prompt<LabelResponse>({
-    type: "snippet",
-    name: "value",
-    message: label ? `Edit "${label.name}" label:` : "Add a label:",
-    template: label
-      ? endent`{
-          name: #{name:${label.name}},
-          ${
-            label.changelogTitle
-              ? `changelogTitle: #{changelogTitle:${label.changelogTitle}},`
-              : ""
-          }
-          description: #{description:${label.description}},
-          releaseType: #{releaseType:${label.releaseType}}
-          color: #{color:${label.color}}
-        }`
-      : endent`{
-          name: #{name},
-          changelogTitle: #{changelogTitle},
-          description: #{description},
-          releaseType: #{releaseType},
-          color: #{color}
-        }`,
-    /** Check if returned config is valid */
-    validate: (state: {
-      /** The result of the prompt */
-      values: ILabelDefinition;
-    }) => {
-      if (!state.values.name) {
-        return "name is required for new label";
-      }
+  const hex = answer(
+    await text({
+      message: "Hex color",
+      placeholder: "#1F6FEB",
+      initialValue: fromPalette ? undefined : initial,
+      validate: (value) =>
+        /^#?[0-9a-f]{6}$/i.test(value?.trim() ?? "")
+          ? undefined
+          : "Use a hex color like #1F6FEB",
+    })
+  ).trim();
 
-      const releaseTypes = [
-        SEMVER.major,
-        SEMVER.minor,
-        SEMVER.patch,
-        "none",
-        "skip",
-        "release",
-      ];
-
-      if (
-        state.values.releaseType &&
-        !releaseTypes.includes(state.values.releaseType)
-      ) {
-        return `Release type can only be one of the following: ${releaseTypes.join(
-          ", "
-        )}`;
-      }
-
-      return true;
-    },
-  });
-
-  return response.value.values;
+  return hex.startsWith("#") ? hex : `#${hex}`;
 }
+
+/** The text without surrounding space, or undefined if nothing's left */
+const optional = (value?: string) => value?.trim() || undefined;
+
+/**
+ * Ask for a label's fields. An edit starts on the label's current values, and
+ * a new label starts blank. Both start on the color given.
+ */
+async function getLabel(current: ILabelDefinition | undefined, color?: string) {
+  const answers = await group(
+    {
+      name: () =>
+        text({
+          message: "Name",
+          initialValue: current?.name,
+          validate: (value) =>
+            value?.trim() ? undefined : "A label needs a name",
+        }),
+      changelogTitle: () =>
+        !current || current.changelogTitle
+          ? text({
+              message: current
+                ? "Changelog title"
+                : "Changelog title (optional)",
+              initialValue: current?.changelogTitle,
+            })
+          : undefined,
+      description: () =>
+        text({
+          message: current ? "Description" : "Description (optional)",
+          initialValue: current?.description,
+        }),
+      releaseType: () =>
+        select<ReleaseTypeChoice>({
+          message: "Release type",
+          options: releaseTypes,
+          initialValue: current?.releaseType ?? noReleaseType,
+        }),
+      color: () => getColor(color),
+    },
+    { onCancel: exitOnCancel }
+  );
+
+  const label: ILabelDefinition = { name: answers.name.trim() };
+  const changelogTitle = optional(answers.changelogTitle);
+  const description = optional(answers.description);
+
+  if (changelogTitle) {
+    label.changelogTitle = changelogTitle;
+  }
+
+  if (description) {
+    label.description = description;
+  }
+
+  if (answers.releaseType !== noReleaseType) {
+    label.releaseType = answers.releaseType;
+  }
+
+  label.color = answers.color;
+
+  return label;
+}
+
+/** Whether an edit changed anything about a label */
+const isChanged = (before: ILabelDefinition, after: ILabelDefinition) =>
+  (["name", "changelogTitle", "description", "releaseType"] as const).some(
+    (key) => before[key] !== after[key]
+  ) || before.color?.toLowerCase() !== after.color?.toLowerCase();
 
 /** Get any custom labels from the user */
-async function getAdditionalLabels() {
+async function getAdditionalLabels(inUse: ILabelDefinition[]) {
   const labels: ILabelDefinition[] = [];
 
-  let addLabels = await prompt<Confirmation>({
-    type: "confirm",
-    name: "confirmed",
-    message: "Would you like to add more labels?",
-    initial: "no",
-  });
+  let addLabel = answer(
+    await confirm({
+      message: "Would you like to add your own labels?",
+      initialValue: false,
+    })
+  );
 
-  while (addLabels.confirmed) {
-    labels.push(await getLabel());
+  while (addLabel) {
+    log.step("New label");
+    labels.push(
+      await getLabel(undefined, leastUsedColor([...inUse, ...labels]))
+    );
 
-    addLabels = await prompt<Confirmation>({
-      type: "confirm",
-      name: "confirmed",
-      message: "Would you like to add another label?",
-      initial: "no",
-    });
+    addLabel = answer(
+      await confirm({
+        message: "Would you like to add another label?",
+        initialValue: false,
+      })
+    );
   }
 
   return labels;
 }
 
-/** Get default label overrides */
+/** Ask which default labels to customize, and get the changed ones by name */
 async function getCustomizedDefaultLabels() {
-  const labels: ILabelDefinition[] = [];
-  const addLabels = await prompt<Confirmation>({
-    type: "confirm",
-    name: "confirmed",
-    message: "Would you like to customize the default labels?",
-    initial: "no",
-  });
+  const picked = answer(
+    await multiselect({
+      message: "Which default labels would you like to customize? (optional)",
+      options: defaultLabels.map((label) => ({
+        value: label.name,
+        label: `${swatch(label.color)} ${label.name}`,
+        hint: label.description,
+      })),
+      required: false,
+    })
+  );
+  const edits = new Map<string, ILabelDefinition>();
 
-  if (addLabels.confirmed) {
-    await defaultLabels.reduce(async (last, defaultLabel) => {
-      await last;
-      const newLabel = await getLabel(defaultLabel);
+  for (const defaultLabel of defaultLabels) {
+    if (picked.includes(defaultLabel.name)) {
+      log.step(`Editing the "${defaultLabel.name}" label`);
+      const label = await getLabel(defaultLabel, defaultLabel.color);
 
-      if (JSON.stringify(newLabel) !== JSON.stringify(defaultLabel)) {
-        labels.push({ ...newLabel, overwrite: true });
+      if (isChanged(defaultLabel, label)) {
+        edits.set(defaultLabel.name, label);
       }
-    }, Promise.resolve());
+    }
   }
 
-  return labels;
+  return edits;
 }
 
 /** The publishing plugins to choose from, in the order shown */
@@ -473,9 +556,12 @@ export default class InteractiveInit {
 
     await createEnv(this.hooks.createEnv);
 
+    const edits = await getCustomizedDefaultLabels();
     const newLabels = [
-      ...(await getCustomizedDefaultLabels()),
-      ...(await getAdditionalLabels()),
+      ...[...edits.values()].map((label) => ({ ...label, overwrite: true })),
+      ...(await getAdditionalLabels(
+        defaultLabels.map((label) => edits.get(label.name) ?? label)
+      )),
     ];
 
     if (newLabels.length > 0) {

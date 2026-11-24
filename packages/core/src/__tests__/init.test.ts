@@ -20,9 +20,10 @@ import {
   select,
   text,
 } from "@clack/prompts";
-import { prompt } from "enquirer";
 
 import InteractiveInit from "../init";
+import { labelPalette, leastUsedColor, paletteColorFor } from "../label-colors";
+import { defaultLabels } from "../semver";
 import { loadPlugin } from "../utils/load-plugins";
 import { dummyLog } from "../utils/logger";
 
@@ -45,8 +46,6 @@ vi.mock("@clack/prompts", async (importOriginal) => {
     log: { ...actual.log, success: vi.fn(), step: vi.fn() },
   };
 });
-// The label questions still use enquirer until they move to clack
-vi.mock("enquirer", () => ({ prompt: vi.fn() }));
 // Real plugins can write package.json, so none are loaded
 vi.mock("../utils/load-plugins", () => ({ loadPlugin: vi.fn() }));
 
@@ -74,11 +73,12 @@ function answer(answers: Answers) {
 /** Answers for every question, accepting the defaults */
 const defaults = (overrides: Answers = {}): Answers => ({
   select: ["git-tag"],
-  multiselect: [[]],
+  // other plugins, default labels to customize
+  multiselect: [[], []],
   // owner, repo, name, email
   text: ["intuit", "auto", "Jane Doe", "jane@example.com"],
-  // release label, enterprise, .env
-  confirm: [false, false, false],
+  // release label, enterprise, .env, own labels
+  confirm: [false, false, false, false],
   ...overrides,
 });
 
@@ -89,7 +89,6 @@ let dir: string;
 
 beforeEach(() => {
   vi.resetAllMocks();
-  vi.mocked(prompt).mockResolvedValue({ confirmed: false });
   vi.spyOn(process, "exit").mockImplementation(() => {
     throw new Error("process.exit");
   });
@@ -159,7 +158,7 @@ describe("InteractiveInit", () => {
           }
         : undefined
     );
-    answer(defaults({ multiselect: [["jira"]] }));
+    answer(defaults({ multiselect: [["jira"], []] }));
 
     await new InteractiveInit({ logger: dummyLog() }).run();
 
@@ -179,7 +178,7 @@ describe("InteractiveInit", () => {
           "jane@example.com",
           "https://github.example.com/api/v3",
         ],
-        confirm: [false, true, false],
+        confirm: [false, true, false, false],
       })
     );
 
@@ -189,7 +188,7 @@ describe("InteractiveInit", () => {
   });
 
   test("only publishes with the release label when asked", async () => {
-    answer(defaults({ confirm: [true, false, false] }));
+    answer(defaults({ confirm: [true, false, false, false] }));
 
     await new InteractiveInit({ logger: dummyLog() }).run();
 
@@ -199,7 +198,10 @@ describe("InteractiveInit", () => {
   test("asks for tokens with a masked prompt and writes .env", async () => {
     writeFileSync(".gitignore", "node_modules\n");
     answer(
-      defaults({ confirm: [false, false, true], password: ["ghp_secret"] })
+      defaults({
+        confirm: [false, false, true, false],
+        password: ["ghp_secret"],
+      })
     );
 
     await new InteractiveInit({ logger: dummyLog() }).run();
@@ -216,11 +218,12 @@ describe("InteractiveInit", () => {
 
   test("doesn't ask for env vars already in .env", async () => {
     writeFileSync(".env", "GH_TOKEN=existing\n");
-    answer(defaults({ confirm: [false, false] }));
+    answer(defaults({ confirm: [false, false, false] }));
 
     await new InteractiveInit({ logger: dummyLog() }).run();
 
-    expect(confirm).toHaveBeenCalledTimes(2);
+    // release label, enterprise, own labels
+    expect(confirm).toHaveBeenCalledTimes(3);
     expect(password).not.toHaveBeenCalled();
   });
 
@@ -272,6 +275,26 @@ describe("InteractiveInit", () => {
       await expectCancelled(new InteractiveInit({ logger: dummyLog() }).run());
       expect(existsSync(".env")).toBe(false);
     });
+
+    test("inside a label's fields", async () => {
+      answer(
+        defaults({
+          multiselect: [[], ["major"]],
+          text: [
+            "intuit",
+            "auto",
+            "Jane Doe",
+            "jane@example.com",
+            CANCEL_SYMBOL,
+          ],
+        })
+      );
+
+      await expectCancelled(new InteractiveInit({ logger: dummyLog() }).run());
+      // No more of the label's questions are asked
+      expect(text).toHaveBeenCalledTimes(5);
+      expect(select).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("plugin helpers", () => {
@@ -290,5 +313,204 @@ describe("InteractiveInit", () => {
         new InteractiveInit({ logger: dummyLog() }).getRepoInformation()
       ).resolves.toStrictEqual({ owner: "intuit", repo: "auto" });
     });
+  });
+});
+
+/** The four answers before the label questions: owner, repo, name, email */
+const before = ["intuit", "auto", "Jane Doe", "jane@example.com"];
+
+/** The calls to the color picker, in order */
+const colorPickers = () =>
+  vi
+    .mocked(select)
+    .mock.calls.map(([options]) => options)
+    .filter((options) => options.message === "Color");
+
+describe("labels", () => {
+  test("offers every default label, and picking none keeps them all", async () => {
+    answer(defaults());
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    expect(multiselect).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Which default labels would you like to customize? (optional)",
+        required: false,
+        options: defaultLabels.map((label) =>
+          expect.objectContaining({
+            value: label.name,
+            hint: label.description,
+          })
+        ),
+      })
+    );
+    expect(readRc().labels).toBeUndefined();
+  });
+
+  test("edits a picked default label, starting on its current values", async () => {
+    answer(
+      defaults({
+        multiselect: [[], ["major"]],
+        text: [
+          ...before,
+          "major",
+          "💥 Breaking Change",
+          "Increment the major version when merged",
+        ],
+        select: ["git-tag", "major", "#1F883D"],
+      })
+    );
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    expect(log.step).toHaveBeenCalledWith('Editing the "major" label');
+    expect(text).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "Name", initialValue: "major" })
+    );
+    expect(select).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Release type",
+        initialValue: "major",
+      })
+    );
+    expect(colorPickers()[0]?.initialValue).toBe("#C5000B");
+    expect(readRc().labels).toStrictEqual([
+      {
+        name: "major",
+        changelogTitle: "💥 Breaking Change",
+        description: "Increment the major version when merged",
+        releaseType: "major",
+        color: "#1F883D",
+        overwrite: true,
+      },
+    ]);
+  });
+
+  test("doesn't write a default label that wasn't changed", async () => {
+    answer(
+      defaults({
+        multiselect: [[], ["release"]],
+        // release has no changelog title, so that question is skipped
+        text: [...before, "release", "Create a release when this pr is merged"],
+        select: ["git-tag", "release", "#0e7c7b"],
+      })
+    );
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    expect(text).toHaveBeenCalledTimes(6);
+    expect(readRc().labels).toBeUndefined();
+  });
+
+  test("adds labels of your own, leaving out blank fields", async () => {
+    answer(
+      defaults({
+        // release label, enterprise, .env, own labels, another, another
+        confirm: [false, false, false, true, true, false],
+        text: [...before, "bug", "", "  ", "chore", "🧹 Chores", "Tidy up"],
+        select: ["git-tag", "", "#1F883D", "none", "#1F6FEB"],
+      })
+    );
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    expect(log.step).toHaveBeenCalledWith("New label");
+    expect(select).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "Release type", initialValue: "" })
+    );
+    // Green and Blue are the colors no default label uses
+    expect(colorPickers().map((options) => options.initialValue)).toStrictEqual(
+      ["#1F883D", "#1F6FEB"]
+    );
+    expect(readRc().labels).toStrictEqual([
+      { name: "bug", color: "#1F883D" },
+      {
+        name: "chore",
+        changelogTitle: "🧹 Chores",
+        description: "Tidy up",
+        releaseType: "none",
+        color: "#1F6FEB",
+      },
+    ]);
+  });
+
+  test("requires a name for a new label", async () => {
+    answer(
+      defaults({
+        confirm: [false, false, false, true, false],
+        text: [...before, "bug", "", ""],
+        select: ["git-tag", "", "#1F883D"],
+      })
+    );
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    const name = vi
+      .mocked(text)
+      .mock.calls.find(([options]) => options.message === "Name")![0];
+    const validate = name.validate as (value?: string) => string | undefined;
+
+    expect(validate("")).toBe("A label needs a name");
+    expect(validate("bug")).toBeUndefined();
+  });
+
+  test("takes a custom hex color", async () => {
+    answer(
+      defaults({
+        confirm: [false, false, false, true, false],
+        text: [...before, "bug", "", "", "1f6feb"],
+        select: ["git-tag", "", "custom"],
+      })
+    );
+
+    await new InteractiveInit({ logger: dummyLog() }).run();
+
+    const hex = vi
+      .mocked(text)
+      .mock.calls.find(([options]) => options.message === "Hex color")![0];
+    const validate = hex.validate as (value?: string) => string | undefined;
+
+    expect(validate("#12345")).toBe("Use a hex color like #1F6FEB");
+    expect(validate("#1F6FEB")).toBeUndefined();
+    expect(validate("1f6feb")).toBeUndefined();
+    expect(readRc().labels).toStrictEqual([{ name: "bug", color: "#1f6feb" }]);
+  });
+});
+
+describe("label palette", () => {
+  test("has 12 different colors", () => {
+    expect(new Set(labelPalette.map(({ hex }) => hex.toLowerCase())).size).toBe(
+      12
+    );
+  });
+
+  test("has every default label's color", () => {
+    const hexes = labelPalette.map(({ hex }) => hex.toLowerCase());
+
+    defaultLabels.forEach((label) =>
+      expect(hexes).toContain(label.color?.toLowerCase())
+    );
+  });
+
+  test("picks the same color for a name in any case", () => {
+    expect(paletteColorFor("Foo")).toBe(paletteColorFor("foo"));
+    expect(labelPalette.map(({ hex }) => hex)).toContain(
+      paletteColorFor("foo")
+    );
+  });
+
+  test("starts new labels on the least-used color", () => {
+    expect(leastUsedColor(defaultLabels)).toBe("#1F883D");
+    expect(leastUsedColor([...defaultLabels, { color: "#1f883d" }])).toBe(
+      "#1F6FEB"
+    );
+    // Every color used once: the first one
+    expect(
+      leastUsedColor([
+        ...defaultLabels,
+        { color: "#1F883D" },
+        { color: "#1F6FEB" },
+      ])
+    ).toBe("#C5000B");
   });
 });

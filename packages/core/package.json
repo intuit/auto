@@ -52,7 +52,6 @@
     "deepmerge": "^4.3.1",
     "dotenv": "^18.0.9",
     "endent": "^2.1.0",
-    "enquirer": "^2.4.1",
     "env-ci": "^11.2.0",
     "fast-glob": "^3.3.3",
     "fromentries": "^1.2.0",
