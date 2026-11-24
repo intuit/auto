@@ -332,15 +332,12 @@ export function createCli() {
     .help(formatHelp(cli));
 
   cli
-    .command("init", "Interactive setup for minimum working configuration.")
+    .command("init", "Interactive setup for minimum working configuration")
     .example(example("auto init"))
     .action(run("init"));
 
   cli
-    .command(
-      "info",
-      "Determine the environment, check if auto is set up correctly, and list plugins."
-    )
+    .command("info", "Check auto's setup and environment, and list plugins")
     .option("--list-plugins", "List the available plugins")
     .example(example("auto info"))
     .action(run("info"));
@@ -348,7 +345,7 @@ export function createCli() {
   cli
     .command(
       "create-labels",
-      "Create your project's labels on github. If labels exist it will update them."
+      "Create or update your project's labels on GitHub"
     )
     .option(...dryRun)
     .example(example("auto create-labels"))
@@ -357,7 +354,11 @@ export function createCli() {
   cli
     .command(
       "label",
-      "Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!"
+      endent`
+        Get the labels for a pull request
+
+        Doesn't do much, but the return value lets you write your own scripts based off of the PR labels!
+      `
     )
     .option(...describe(pr, `${pr[1]} (defaults to last merged PR)`))
     .option("--exists <string>", "Checks for existence of a specific label")
@@ -367,7 +368,11 @@ export function createCli() {
   cli
     .command(
       "comment",
-      "Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment."
+      endent`
+        Comment on a pull request with a markdown message
+
+        Each comment has a context, and each context only has one comment.
+      `
     )
     .option(...pr)
     .option(...context)
@@ -389,7 +394,7 @@ export function createCli() {
   cli
     .command(
       "pr-check",
-      "Check that a pull request has a SemVer label and run all pr-check plugins."
+      "Check a PR for a SemVer label and run all pr-check plugins"
     )
     .option(...pr)
     .option(...url)
@@ -423,7 +428,12 @@ export function createCli() {
   cli
     .command(
       "pr-body",
-      "Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment."
+      endent`
+        Update the body of a PR with a message
+
+        Appends to the PR and will not overwrite user content.
+        Each comment has a context, and each context only has one comment.
+      `
     )
     .option(...pr)
     .option(...context)
@@ -439,7 +449,8 @@ export function createCli() {
     .command(
       "version",
       endent`
-        Calculate a semantic version bump for the given changes.
+        Calculate a semantic version bump for the given changes
+
         Requires all PRs to have labels for the change type.
         If a PR does not have a label associated with it, it will default to \`patch\` or whatever you configure the default label to.
 
@@ -462,7 +473,11 @@ export function createCli() {
   cli
     .command(
       "changelog",
-      "Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes."
+      endent`
+        Prepend release notes to \`CHANGELOG.md\` and commit them
+
+        Creates \`CHANGELOG.md\` if it doesn't exist.
+      `
     )
     .option(...dryRun)
     .option(...noVersionPrefix)
@@ -496,7 +511,9 @@ export function createCli() {
     .command(
       "release",
       endent`
-        Create a GitHub release for a tag. Defaults to last tag in branch.
+        Create a GitHub release for a tag
+
+        Defaults to the last tag in the branch.
 
         > NOTE: The tag must already be pushed to GitHub. If it isn't GitHub will create a tag pointing to the "to" option value.
       `
@@ -525,7 +542,7 @@ export function createCli() {
   const shipit = cli.command(
     "shipit",
     endent`
-      Context aware publishing.
+      Context aware publishing
 
       1. call from base branch -> latest version released (LATEST)
       2. call from prerelease branch -> prerelease version released (NEXT)
@@ -553,7 +570,9 @@ export function createCli() {
   const latest = cli.command(
     "latest",
     endent`
-      Run the full \`auto\` release pipeline. Force a release to latest and bypass \`shipit\` safeguards.
+      Force a release to latest, bypassing \`shipit\` safeguards
+
+      Runs the full \`auto\` release pipeline.
     `
   );
 
@@ -564,7 +583,10 @@ export function createCli() {
     .command(
       "canary",
       endent`
-        Make a canary release of the project. Useful on PRs. If ran locally, \`canary\` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
+        Make a canary release of the project
+
+        Useful on PRs. If run locally, \`canary\` will release a canary version for your current git HEAD.
+        This is run automatically from "shipit".
 
         1. In PR: 1.2.3-canary.123.0 + add version to PR body
         2. Locally: 1.2.3-canary.1810cfd
@@ -614,7 +636,9 @@ export function createCli() {
     .command(
       "next",
       endent`
-        Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
+        Make a release for your "prerelease" release line
+
+        This is run automatically by "shipit" in a prerelease branch.
 
         1. Creates a prerelease on package management platform
         2. Creates a "Pre Release" on GitHub releases page

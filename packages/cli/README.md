@@ -144,25 +144,25 @@ Usage:
   $ auto <command> [options]
 
 Setup Command:
-  init           Interactive setup for minimum working configuration.
-  info           Determine the environment, check if auto is set up correctly, and list plugins.
-  create-labels  Create your project's labels on github. If labels exist it will update them.
+  init           Interactive setup for minimum working configuration
+  info           Check auto's setup and environment, and list plugins
+  create-labels  Create or update your project's labels on GitHub
 
 Pull Request Interaction Commands:
-  label          Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!
-  comment        Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.
-  pr-check       Check that a pull request has a SemVer label and run all pr-check plugins.
+  label          Get the labels for a pull request
+  comment        Comment on a pull request with a markdown message
+  pr-check       Check a PR for a SemVer label and run all pr-check plugins
   pr-status      Set the status on a PR commit
-  pr-body        Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.
+  pr-body        Update the body of a PR with a message
 
 Release Commands:
-  version        Calculate a semantic version bump for the given changes.
-  changelog      Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.
-  release        Create a GitHub release for a tag. Defaults to last tag in branch.
-  shipit         Context aware publishing.
-  latest         Run the full `auto` release pipeline. Force a release to latest and bypass `shipit` safeguards.
-  canary         Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
-  next           Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
+  version        Calculate a semantic version bump for the given changes
+  changelog      Prepend release notes to `CHANGELOG.md` and commit them
+  release        Create a GitHub release for a tag
+  shipit         Context aware publishing
+  latest         Force a release to latest, bypassing `shipit` safeguards
+  canary         Make a canary release of the project
+  next           Make a release for your "prerelease" release line
 
 For more info, run any command with the `--help` flag:
   $ auto init --help

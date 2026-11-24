@@ -42,7 +42,7 @@ describe("help and version", () => {
     expect(help).toContain("Release Commands:");
     expect(help).toContain("Global Options:");
     // Only the first line of a multi-line description
-    expect(help).toContain("Context aware publishing.");
+    expect(help).toContain("Context aware publishing\n");
     expect(help).not.toContain("call from base branch");
     expect(run).not.toHaveBeenCalled();
   });
@@ -50,7 +50,7 @@ describe("help and version", () => {
   test("should print help for simple command", async () => {
     await parseArgs(["init", "--help"]);
     expect(printed()).toContain(
-      "Interactive setup for minimum working configuration."
+      "Interactive setup for minimum working configuration"
     );
     expect(run).not.toHaveBeenCalled();
   });
