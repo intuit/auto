@@ -23,7 +23,7 @@ yarn add -D @auto-it/jira
 
 To use the plugin include it in your `.autorc`
 
-```json
+```json title=".autorc"
 {
   "plugins": [
     ["jira", { "url": "https://url-to-your-jira.com" }],

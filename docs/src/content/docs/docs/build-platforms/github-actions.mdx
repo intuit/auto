@@ -7,12 +7,10 @@ The following config declares the `release` action that run on all branches. The
 - a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (only on the main fork and if your package manager plugin implements them)
 
-**`.github/workflows/release.yml`**
-
 > [!warning]
 > You must use some sort of action that implements `skip ci` functionality (as seen below). Otherwise you will get stuck in a release loop!
 
-```yaml
+```yaml title=".github/workflows/release.yml"
 name: Release
 
 on: [push]

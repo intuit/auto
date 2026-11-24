@@ -281,7 +281,7 @@ This error will occur when you do not have a `NPM_TOKEN` set.
 
 Make sure that `npm` is trying to publish to the correct registry. Force `npm`/`lerna` to use the public registry by adding the following to your package.json:
 
-```json
+```json title="package.json"
 {
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

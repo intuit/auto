@@ -116,7 +116,7 @@ If you are using a `prerelease` branch like `next`, Slack will not post a messag
 This is done to avoid spamming your consumers every time you make a preview release.
 However, if you would like to configure it such that Slack _does_ post on prerelease, you can add the `publishPreRelease` to your `.autorc` like so:
 
-```json
+```json title=".autorc"
 {
   "plugins": [
     [

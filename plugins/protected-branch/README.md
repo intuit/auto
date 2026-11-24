@@ -26,7 +26,7 @@ Add the `protected-branch` plugin to the list in `.autorc`.
 
 No config example:
 
-```json
+```json title=".autorc"
 {
   "plugins": [
     "protected-branch"
@@ -37,7 +37,7 @@ No config example:
 
 Fully-configured example:
 
-```json
+```json title=".autorc"
 {
   "plugins": [
     [

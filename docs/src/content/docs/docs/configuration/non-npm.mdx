@@ -40,27 +40,27 @@ To configure `auto` to work with your project you will need to do two things
 
 Using `auto` with any other package manager than [npm](https://npmjs.com) requires that you create an [`.autorc`](./autorc) at the root of your project.
 
-1. `.autorc` - No plugins, `shipit` doesn't work. Enables [advanced setup](https://intuit.github.io/auto/docs/welcome/getting-started#configuration)
+1. No plugins, `shipit` doesn't work. Enables [advanced setup](https://intuit.github.io/auto/docs/welcome/getting-started#configuration)
 
-   ```json
+   ```json title=".autorc"
    {
      "author": "Andrew Lisowski <lisowski54@gmail.com>",
      "plugins": []
    }
    ```
 
-2. `.autorc` - `git-tag` plugin compatible with any platform. Enables [`shipit` usage](https://intuit.github.io/auto/docs/commands/shipit)
+2. `git-tag` plugin compatible with any platform. Enables [`shipit` usage](https://intuit.github.io/auto/docs/commands/shipit)
 
-   ```json
+   ```json title=".autorc"
    {
      "author": "Andrew Lisowski <lisowski54@gmail.com>",
      "plugins": ["git-tag"]
    }
    ```
 
-3. `.autorc` - With package manager plugin. [`shipit`](https://intuit.github.io/auto/docs/commands/shipit) works, some configuration picked up from package manager package definition files. In the following `repo`, `owner`, and `author` are picked up from the `pom.xml`
+3. With package manager plugin. [`shipit`](https://intuit.github.io/auto/docs/commands/shipit) works, some configuration picked up from package manager package definition files. In the following `repo`, `owner`, and `author` are picked up from the `pom.xml`
 
-   ```json
+   ```json title=".autorc"
    {
      "plugins": ["maven"]
    }
@@ -91,9 +91,7 @@ You could:
 - Write your own custom plugins and store them in here
 - Copy a plugin from the internet
 
-**`.autorc`:**
-
-```json
+```json title=".autorc"
 {
   "plugins": ["./plugins/custom-plugin.js"]
 }
@@ -111,9 +109,7 @@ mkdir plugins
 git clone https://github.com/me/custom-plugin plugins/custom-plugin
 ```
 
-**`.autorc`:**
-
-```json
+```json title=".autorc"
 {
   "plugins": ["./plugins/custom-plugin"]
 }
@@ -127,9 +123,7 @@ If distributed via NPM you could install those plugins globally through `npm`:
 npm i -g auto-plugin-my-custom-plugin
 ```
 
-**`.autorc`:**
-
-```json
+```json title=".autorc"
 {
   "plugins": ["my-custom-plugin"]
 }

@@ -422,7 +422,8 @@ const releaseTypes = [
     text-decoration: none;
   }
 
-  .home a:hover {
+  /* Buttons show hover through their fill instead (see .btn) */
+  .home a:not(.btn):hover {
     text-decoration: underline;
   }
 
@@ -576,11 +577,14 @@ const releaseTypes = [
     border-radius: 10px;
     font-weight: 600;
     font-size: 1rem;
+    transition:
+      background-color 120ms ease,
+      border-color 120ms ease;
   }
 
-  .btn:hover {
-    text-decoration: none;
-    filter: brightness(0.96);
+  /* Pressed: the button sinks a pixel */
+  .btn:active {
+    transform: translateY(1px);
   }
 
   /* `.home a` sets the link colour; match its specificity here */
@@ -589,9 +593,26 @@ const releaseTypes = [
     color: var(--maroon);
   }
 
+  .home .btn-light:hover {
+    background: var(--pink-soft);
+  }
+
+  .home .btn-light:active {
+    background: var(--auto-pink);
+  }
+
   .home .btn-ghost {
     border: 1px solid rgba(255, 255, 255, 0.4);
     color: #ffffff;
+  }
+
+  .home .btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .home .btn-ghost:active {
+    background: rgba(255, 255, 255, 0.18);
   }
 
   .install {

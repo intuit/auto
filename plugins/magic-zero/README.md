@@ -64,7 +64,7 @@ The label to graduate a version to the next left 0 digit.
 
 If you want to customize the label color/description you must define the label in your `.autorc`.
 
-```json
+```json title=".autorc"
 {
   "plugins": [
     ["magic-zero", { "label": "super major" }]

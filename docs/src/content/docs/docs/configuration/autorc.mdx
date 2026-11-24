@@ -30,9 +30,7 @@ auto init
 
 You can write your `auto` configuration in a TypeScript file for easier validation
 
-**auto.config.ts:**
-
-```ts
+```ts title="auto.config.ts"
 import { AutoRc } from "auto";
 
 import { INpmConfig } from "@auto-it/npm";
@@ -190,9 +188,9 @@ Do not make tags or releases with a `v` prefix.
 
 For some commands you can supply defaults for some options.
 
-**Example:** Adding the following to you `.autorc` will make `auto` only release pre-releases to GitHub.
+**Example:** Adding the following will make `auto` only release pre-releases to GitHub.
 
-```json
+```json title=".autorc"
 {
   "release": {
     "prerelease": true
@@ -234,9 +232,9 @@ If you configure `prereleaseBranches` it will override the default.
 
 ### Labels
 
-To customize your project's labels use the `labels` section in your `.autorc`.
+To customize your project's labels use the `labels` section.
 
-```json
+```json title=".autorc"
 {
   "labels": [
     { "releaseType": "major", "name": "Version: Major" },
@@ -465,9 +463,7 @@ This is useful if you have a shared plugin that doesn't necessarily need to be p
 
 To include custom plugins just use a relative path in the extended configuration/
 
-**`package.json`:**
-
-```json
+```json title="package.json"
 {
   "auto": {
     "plugins": ["./plugins/some-plugin.js"]

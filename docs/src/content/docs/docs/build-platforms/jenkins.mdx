@@ -7,13 +7,11 @@ The following config declares the `release` action that run on all branches. The
 - a new `latest` version from `baseBranch`
 - a `canary` build from a pull request (only if your package manager plugin supports it)
 
-**`Jenkinsfile`**
-
 > [!warning]
 > You must use some sort of step that implements `skip ci` functionality.
 > Otherwise you will get stuck in a release loop!
 
-```groovy
+```groovy title="Jenkinsfile"
 pipeline {
   environment {
     NPM_TOKEN = credentials('NPM_TOKEN')
@@ -95,7 +93,7 @@ For `auto`'s prerelease to work you need to makes sure that you jenkins instance
 
 2. Add this to the top of your `Jenkinsfile`.
 
-   ```groovy
+   ```groovy title="Jenkinsfile"
    // Exit the branch build if not on "baseBranch" or a prerelease, but still do PR builds
    if (env.BRANCH_NAME != "master" && env.BRANCH_NAME != "next" && !env.BRANCH_NAME.startsWith('PR-')) {
      echo ("Aborting build. Only the master/next branch and PR builds run.")

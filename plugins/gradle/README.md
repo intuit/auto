@@ -44,7 +44,7 @@ yarn add -D @auto-it/gradle
 
 This plugin uses the [gradle release plugin](https://github.com/researchgate/gradle-release) to update the version. Make sure the the latest `gradle-release-plugin` is in your `build.gradle`.
 
-```groovy
+```groovy title="build.gradle"
 plugins {
   id 'net.researchgate.release' version '2.6.0' // gradle release plugin
 }

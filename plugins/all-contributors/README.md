@@ -7,7 +7,7 @@ Out of the box the plugin will only detect the following contribution types:
 
 - 📖 `doc` - Edits to any README `['**/*.mdx', '**/*.md', '**/docs/**/*', '**/documentation/**/*']`
 - 💡 `example` - Edits to `['**/*.stories*', '**/*.story.*']`
-- 🚇 `infra` - Edits to `['**/.circle/**/*', '**/.github/**/*', '**/travis.yml'],`
+- 🚇 `infra` - Edits to `['**/.circleci/**/*', '**/.github/**/*', '**/.travis.yml']`
 - ⚠️ `test` - Edits to `['**/*.test.*']`
 - 💻 `code` - Edits to `['**/src/**/*', '**/lib/**/*', '**/package.json', '**/tsconfig.json']`
 
@@ -42,9 +42,7 @@ npx all-contributors init
 You use any of the [contribution types](https://allcontributors.org/docs/en/emoji-key).
 If you configure an pre-configured contribution type the arrays are not merged, it is overridden.
 
-**`auto.rc`**
-
-```json
+```json title=".autorc"
 {
   "plugins": [
     [
@@ -80,9 +78,7 @@ To ensure you are doing it right `auto` will comment on the PR with the people +
 
 Useful for excluding bots from getting into your contributors.
 
-**`auto.rc`**
-
-```json
+```json title=".autorc"
 {
   "plugins": [
     [

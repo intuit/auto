@@ -60,9 +60,7 @@ If you also want `auto` to run the build for you docs site provide the `buildCom
 You _must_ also make sure that your built website is in your `.gitignore`.
 Otherwise your release will fail because of uncommitted changes.
 
-**.gitignore:**
-
-```sh
+```plaintext title=".gitignore"
 ./path/to/built/docs/website
 ```
 

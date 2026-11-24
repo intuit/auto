@@ -42,9 +42,7 @@ The following is an example of using [gem-release](https://github.com/svenfuchs/
 
 > Make sure to tag and push in this command!
 
-**.autorc:**
-
-```json
+```json title=".autorc"
 {
   "plugins": [
     [
