@@ -1,5 +1,5 @@
 import join from "url-join";
-import { prompt } from "enquirer";
+import { cancel, isCancel, text } from "@clack/prompts";
 import { z } from "zod";
 
 import type { IPlugin } from "@auto-it/core";
@@ -16,11 +16,6 @@ const pluginOptions = z.strictObject({
 });
 
 export type IJiraPluginOptions = z.infer<typeof pluginOptions>;
-
-interface InputResponse<T = "string"> {
-  /** he value of the input prompt */
-  value: T;
-}
 
 interface IJiraCommit extends IExtendedCommit {
   /** The jira info for the commit */
@@ -95,14 +90,17 @@ export default class JiraPlugin implements IPlugin {
   init(initializer: InteractiveInit) {
     initializer.hooks.configurePlugin.tapPromise(this.name, async (name) => {
       if (name === "jira") {
-        const url = await prompt<InputResponse>({
-          type: "input",
-          name: "value",
-          message: "What is the root url of your Jira instance?",
-          required: true,
+        const url = await text({
+          message: "What's the root URL of your Jira instance?",
+          validate: (value) => (value?.trim() ? undefined : "This is required"),
         });
 
-        return ["jira", url.value];
+        if (isCancel(url)) {
+          cancel("Setup cancelled before the configuration was written.");
+          process.exit(1);
+        }
+
+        return ["jira", url];
       }
     });
   }

@@ -1,4 +1,5 @@
-import Auto, { SEMVER } from "@auto-it/core";
+import Auto, { InteractiveInit, SEMVER } from "@auto-it/core";
+import { CANCEL_SYMBOL, cancel, text } from "@clack/prompts";
 import makeCommitFromMsg from "@auto-it/core/dist/__tests__/make-commit-from-msg";
 import Changelog, {
   IGenerateReleaseNotesOptions,
@@ -11,6 +12,12 @@ import {
   makeHooks,
 } from "@auto-it/core/dist/utils/make-hooks";
 import JiraPlugin, { parseJira } from "../src";
+
+vi.mock("@clack/prompts", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@clack/prompts")>()),
+  text: vi.fn(),
+  cancel: vi.fn(),
+}));
 
 const multipleJiraMessages = [
   "PLAYA-5052 PLAYA-6000: Add log",
@@ -191,5 +198,52 @@ describe("unknown options", () => {
         notAnOption: true,
       })
     ).toStrictEqual([expect.stringContaining("notAnOption")]);
+  });
+});
+
+describe("init", () => {
+  const setup = () => {
+    const initializer = new InteractiveInit({ logger: dummyLog() });
+    new JiraPlugin("jira.com").init(initializer);
+
+    return initializer;
+  };
+
+  test("asks for the Jira URL", async () => {
+    vi.mocked(text).mockResolvedValueOnce("https://jira.example.com");
+
+    expect(await setup().hooks.configurePlugin.promise("jira")).toStrictEqual([
+      "jira",
+      "https://jira.example.com",
+    ]);
+    expect(text).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "What's the root URL of your Jira instance?",
+      })
+    );
+  });
+
+  test("leaves other plugins alone", async () => {
+    vi.mocked(text).mockClear();
+
+    expect(await setup().hooks.configurePlugin.promise("npm")).toBeUndefined();
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  test("stops init when cancelled", async () => {
+    vi.mocked(text).mockResolvedValueOnce(CANCEL_SYMBOL);
+    const exit = vi.spyOn(process, "exit").mockImplementation((() => {
+      throw new Error("process.exit");
+    }));
+
+    await expect(setup().hooks.configurePlugin.promise("jira")).rejects.toThrow(
+      "process.exit"
+    );
+    expect(cancel).toHaveBeenCalledWith(
+      "Setup cancelled before the configuration was written."
+    );
+    expect(exit).toHaveBeenCalledWith(1);
+
+    exit.mockRestore();
   });
 });

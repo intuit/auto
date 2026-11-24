@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@auto-it/core": "workspace:*",
-    "enquirer": "^2.4.1",
+    "@clack/prompts": "^1.9.0",
     "url-join": "^6.0.0",
     "zod": "catalog:"
   },

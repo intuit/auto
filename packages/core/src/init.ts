@@ -1,6 +1,20 @@
 /* eslint-disable no-await-in-loop */
 
 import endent from "endent";
+import {
+  cancel,
+  confirm,
+  group,
+  intro,
+  isCancel,
+  log,
+  multiselect,
+  note,
+  outro,
+  password,
+  select,
+  text,
+} from "@clack/prompts";
 import { prompt } from "enquirer";
 import { AsyncSeriesBailHook, AsyncSeriesWaterfallHook } from "tapable";
 
@@ -14,7 +28,6 @@ import type {
   RepoInformation,
   AuthorInformation,
   PluginConfig,
-  GithubInformation,
 } from "./types";
 
 // const writeFile = promisify(fs.writeFile);
@@ -24,10 +37,27 @@ interface Confirmation {
   confirmed: boolean;
 }
 
-interface InputResponse<T = "string"> {
-  /** he value of the input prompt */
-  value: T;
+/** Shown when the user cancels a question */
+const cancelMessage = "Setup cancelled before the configuration was written.";
+
+/** Stop init without writing the configuration */
+function exitOnCancel(): never {
+  cancel(cancelMessage);
+  process.exit(1);
 }
+
+/** The user's answer, or stop init if they cancelled the question */
+function answer<T>(value: T): Exclude<T, symbol> {
+  if (isCancel(value)) {
+    exitOnCancel();
+  }
+
+  return value as Exclude<T, symbol>;
+}
+
+/** Reject an empty answer */
+const required = (value?: string) =>
+  value?.trim() ? undefined : "This is required";
 
 export interface InteractiveInitHooks {
   /** Override where/how the rc file is written */
@@ -168,72 +198,69 @@ async function getCustomizedDefaultLabels() {
   return labels;
 }
 
+/** The publishing plugins to choose from, in the order shown */
+const publishingPlugins = [
+  { value: "brew", label: "Homebrew" },
+  { value: "chrome", label: "Chrome Web Store" },
+  { value: "cocoapod", label: "CocoaPods" },
+  { value: "crates", label: "Rust Crate" },
+  { value: "gem", label: "Ruby Gem" },
+  { value: "git-tag", label: "Git Tag" },
+  { value: "Gradle", label: "Gradle" },
+  { value: "maven", label: "Maven" },
+  { value: "npm", label: "npm" },
+];
+
+/** The other plugins to choose from, in the order shown */
+const otherPlugins = [
+  {
+    value: "all-contributors",
+    label: "All Contributors",
+    hint: "Automatically add contributors as changelogs are produced",
+  },
+  {
+    value: "conventional-commits",
+    label: "Conventional Commits",
+    hint: "Parse conventional commit messages",
+  },
+  {
+    value: "first-time-contributor",
+    label: "First Time Contributor",
+    hint: "Thank first time contributors for their work right in your release notes",
+  },
+  { value: "jira", label: "Jira", hint: "Include Jira story information" },
+  { value: "released", label: "Released", hint: "Mark PRs as released" },
+  {
+    value: "slack",
+    label: "Slack",
+    hint: "Post your release notes to a Slack channel",
+  },
+  {
+    value: "twitter",
+    label: "Twitter",
+    hint: "Post tweets after a release is made",
+  },
+];
+
 /** Get the plugins the user wants to use */
 async function getPlugins() {
-  const releasePlugins = {
-    Homebrew: "brew",
-    "Chrome Web Store": "chrome",
-    Cocoapod: "cocoapod",
-    "Rust Crate": "crates",
-    "Ruby Gem": "gem",
-    "Git Tag": "git-tag",
-    Gradle: "Gradle",
-    Maven: "maven",
-    npm: "npm",
-  };
+  const publishingPlugin = answer(
+    await select({
+      message:
+        "Which publishing plugin should auto use to publish your project?",
+      options: publishingPlugins,
+    })
+  );
 
-  const releasePlugin = await prompt<InputResponse>({
-    type: "select",
-    name: "value",
-    required: true,
-    message:
-      "What package manager plugin would you like to publish your project with?",
-    choices: Object.keys(releasePlugins),
-  });
+  const plugins = answer(
+    await multiselect({
+      message: "Which other plugins would you like to use? (optional)",
+      options: otherPlugins,
+      required: false,
+    })
+  );
 
-  const featurePlugin = await prompt<InputResponse<string[]>>({
-    type: "multiselect",
-    name: "value",
-    required: true,
-    message: "What other plugins would you like to use?",
-    choices: [
-      {
-        name: "all-contributors",
-        message:
-          "All Contributors - Automatically add contributors as changelogs are produced",
-      },
-      {
-        name: "conventional-commits",
-        message: "Conventional Commits - Parse conventional commit messages",
-      },
-      {
-        name: "first-time-contributor",
-        message:
-          "First Time Contributor - Thank first time contributors for their work right in your release notes",
-      },
-      {
-        name: "jira",
-        message: "Jira - Include Jira story information",
-      },
-      {
-        name: "released",
-        message: "Released - Mark PRs as released",
-      },
-      {
-        name: "slack",
-        message: "Slack - Post your release notes to a slack channel",
-      },
-      {
-        name: "twitter",
-        message: "Twitter - Post tweets after a release is made",
-      },
-    ],
-  });
-
-  return [
-    releasePlugins[releasePlugin.value as keyof typeof releasePlugins],
-    ...featurePlugin.value,
-  ];
+  return [publishingPlugin, ...plugins];
 }
 
 /** Get env vars, create .env file, add to .gitignore */
@@ -254,31 +281,26 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
     return;
   }
 
-  const shouldCreateEnv = await prompt<Confirmation>({
-    type: "confirm",
-    name: "confirmed",
-    message:
-      "Would you like to create an .env file? This makes it easy to test and use auto locally.",
-    initial: "yes",
-  });
+  const shouldCreateEnv = answer(
+    await confirm({
+      message:
+        "Would you like to create an .env file? This makes it easy to test and use auto locally.",
+      initialValue: true,
+    })
+  );
 
-  if (!shouldCreateEnv.confirmed) {
+  if (!shouldCreateEnv) {
     return;
   }
 
   // Get user input for each variable
-  await env.reduce(async (last, envVar) => {
-    await last;
+  for (const envVar of env) {
+    const token = answer(
+      await password({ message: envVar.message, validate: required })
+    );
 
-    const token = await prompt<InputResponse>({
-      type: "input",
-      name: "value",
-      message: envVar.message,
-      required: true,
-    });
-
-    currentEnv += `${envVar.variable}=${token.value}\n`;
-  }, Promise.resolve());
+    currentEnv += `${envVar.variable}=${token}\n`;
+  }
 
   writeFileSync(".env", currentEnv);
 
@@ -295,14 +317,6 @@ async function createEnv(hook: InteractiveInitHooks["createEnv"]) {
     writeFileSync(".gitignore", gitIgnore ? `${gitIgnore}\n.env\n` : `.env\n`);
   }
 }
-
-type SnippetResponse<Key extends string, ResponseValue> = Record<
-  Key,
-  {
-    /** The response from the user */
-    values: ResponseValue;
-  }
->;
 
 /**
  * Parse the gitlog for commits that are PRs and attach their labels.
@@ -325,36 +339,43 @@ export default class InteractiveInit {
   }
 
   /** Run a prompt to get the author information */
-  async getAuthorInformation() {
-    const response = await prompt<SnippetResponse<"author", AuthorInformation>>(
+  async getAuthorInformation(): Promise<AuthorInformation> {
+    return group(
       {
-        type: "snippet",
-        name: "author",
-        message: `What git user would you like to make commits with?`,
-        required: true,
-        template: endent`
-        Name:   #{name} 
-        Email:  #{email}`,
-      }
+        name: () =>
+          text({
+            message: "What name should auto commit with?",
+            validate: required,
+          }),
+        email: () =>
+          text({
+            message: "What email should auto commit with?",
+            validate: required,
+          }),
+      },
+      { onCancel: exitOnCancel }
     );
-
-    return response.author.values;
   }
 
   /** Run a prompt to get the repo information */
-  async getRepoInformation() {
-    const response = await prompt<SnippetResponse<"repoInfo", RepoInformation>>(
+  async getRepoInformation(): Promise<RepoInformation> {
+    return group(
       {
-        type: "snippet",
-        name: "repoInfo",
-        message: `What GitHub project you would like to publish?`,
-        required: true,
-        template: endent`#{owner}/#{repo}`,
-      }
+        owner: () =>
+          text({
+            message: "Who owns the GitHub repo? (a user or organization)",
+            placeholder: "intuit",
+            validate: required,
+          }),
+        repo: () =>
+          text({
+            message: "What's the GitHub repo's name?",
+            placeholder: "auto",
+            validate: required,
+          }),
+      },
+      { onCancel: exitOnCancel }
     );
-    console.log(response);
-
-    return response.repoInfo.values;
   }
 
   /** Load the default behavior */
@@ -375,13 +396,15 @@ export default class InteractiveInit {
     this.hooks.writeRcFile.tap("Init Default", (rc) => {
       const filename = ".autorc";
       writeFileSync(filename, JSON.stringify(rc, null, 2));
-      this.logger.log.success(`Wrote configuration to: ${filename}`);
+      log.success(`Wrote configuration to ${filename}`);
     });
   }
 
   /** Run the initialization. */
   async run() {
     let autoRc: Partial<AutoRc> = {};
+
+    intro("auto init");
 
     const plugins: string[] = await getPlugins();
 
@@ -418,37 +441,34 @@ export default class InteractiveInit {
       autoRc = { ...autoRc, ...author };
     }
 
-    const onlyPublishWithReleaseLabel = await prompt<Confirmation>({
-      type: "confirm",
-      name: "confirmed",
-      message: 'Only make releases if "release" label is on pull request?',
-      initial: "no",
-    });
+    const onlyPublishWithReleaseLabel = answer(
+      await confirm({
+        message: 'Only release when a pull request has the "release" label?',
+        initialValue: false,
+      })
+    );
 
-    if (onlyPublishWithReleaseLabel.confirmed) {
+    if (onlyPublishWithReleaseLabel) {
       autoRc = { ...autoRc, onlyPublishWithReleaseLabel: true };
     }
 
-    const isEnterprise = await prompt<Confirmation>({
-      type: "confirm",
-      name: "confirmed",
-      message: "Are you using an enterprise instance of GitHub?",
-      initial: "no",
-    });
+    const isEnterprise = answer(
+      await confirm({
+        message: "Are you using a GitHub Enterprise instance?",
+        initialValue: false,
+      })
+    );
 
-    if (isEnterprise.confirmed) {
-      const response = await prompt<
-        SnippetResponse<"repoInfo", Omit<GithubInformation, "baseBranch">>
-      >({
-        type: "snippet",
-        name: "repoInfo",
-        message: `What are the api URLs for your GitHub enterprise instance?`,
-        required: true,
-        // @ts-ignore
-        template: `GitHub API:  #{githubApi}`,
-      });
+    if (isEnterprise) {
+      const githubApi = answer(
+        await text({
+          message: "What's the API URL of your GitHub Enterprise instance?",
+          placeholder: "https://github.example.com/api/v3",
+          validate: required,
+        })
+      );
 
-      autoRc = { ...autoRc, ...response.repoInfo.values };
+      autoRc = { ...autoRc, githubApi };
     }
 
     await createEnv(this.hooks.createEnv);
@@ -464,12 +484,14 @@ export default class InteractiveInit {
 
     await this.hooks.writeRcFile.promise(autoRc);
 
-    this.logger.log.note(endent`
-      Next steps:
-      
+    note(
+      endent`
         - Run "auto create-labels" to create your labels on GitHub
         - Add your environment variables to your CI builds
-        - Add "auto shipit" at the end of you build/release process\n
-    `);
+        - Add "auto shipit" at the end of your build or release process
+      `,
+      "Next steps"
+    );
+    outro("auto is set up.");
   }
 }

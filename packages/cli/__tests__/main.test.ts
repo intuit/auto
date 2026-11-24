@@ -1,3 +1,4 @@
+import { Auto } from "@auto-it/core";
 import { runCli, execute } from "../src/run";
 
 process.env.GH_TOKEN = "XXXX";
@@ -23,4 +24,14 @@ test("throws exits for caught error", async () => {
   await runCli("foo", {});
 
   expect(process.exit).toHaveBeenCalledWith(1);
+});
+
+test("init doesn't tear down, because it loads no config", async () => {
+  const init = vi.spyOn(Auto.prototype, "init").mockResolvedValue();
+  const teardown = vi.spyOn(Auto.prototype, "teardown");
+
+  await expect(execute("init", {})).resolves.toBeUndefined();
+
+  expect(init).toHaveBeenCalled();
+  expect(teardown).not.toHaveBeenCalled();
 });

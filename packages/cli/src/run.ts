@@ -26,12 +26,13 @@ import link from "terminal-link";
 export async function execute(command: string, args: ApiOptions) {
   const auto = new Auto(args);
 
-  try {
-    if (command === "init") {
-      await auto.init();
-      return;
-    }
+  // init doesn't load a config, so teardown would throw "Auto is not initialized!"
+  if (command === "init") {
+    await auto.init();
+    return;
+  }
 
+  try {
     await auto.loadConfig();
 
     if (args.verbose || command === "info") {
