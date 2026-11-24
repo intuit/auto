@@ -1,3 +1,5 @@
+import { stripVTControlCharacters } from "node:util";
+
 import parseArgs, { createCli, respellOnOffFlags } from "../src/parse-args";
 import { runCli } from "../src/run";
 
@@ -11,8 +13,9 @@ const exit = vi
   .spyOn(process, "exit")
   .mockImplementation((() => undefined) as never);
 
-/** Everything printed with console.info, e.g. help */
-const printed = () => info.mock.calls.flat().join("\n");
+/** Everything printed with console.info, e.g. help, without its colors */
+const printed = () =>
+  stripVTControlCharacters(info.mock.calls.flat().join("\n"));
 
 /** The options the command ran with */
 const optionsFor = async (args: string) => {

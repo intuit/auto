@@ -12,6 +12,17 @@ const y = chalk.hex("#F1A60E");
 const r = chalk.hex("#C5000B");
 const g = chalk.hex("#888888");
 
+/** A section heading in the help output, e.g. `Release Commands:` */
+const heading = chalk.bold.yellow;
+/** A command name in the help output */
+const commandName = chalk.bold.cyan;
+/** An option's flags in the help output, e.g. `-d, --dry-run` */
+const flags = chalk.cyan;
+
+/** Style text, then pad it to a width measured without the styling */
+const padStyled = (text: string, width: number, style: (s: string) => string) =>
+  style(text) + " ".repeat(Math.max(0, width - text.length));
+
 // prettier-ignore
 const logo = `
       ${y('_________')}
@@ -227,7 +238,13 @@ interface HelpSection {
   body: string;
 }
 
-/** Rewrite cac's help: logo, grouped commands, and own vs global options */
+/** Put the styled title in the body, so its colon is styled too (cac adds a plain one) */
+const styleTitles = (sections: HelpSection[]): HelpSection[] =>
+  sections.map(({ title, body }) =>
+    title ? { body: `${heading(`${title}:`)}\n${body}` } : { body }
+  );
+
+/** Rewrite cac's help: logo, grouped commands, own vs global options, and colors */
 function formatHelp(cli: CAC) {
   return (sections: HelpSection[]): HelpSection[] => {
     const [header = { body: "" }, usage = { body: "" }] = sections;
@@ -247,20 +264,20 @@ function formatHelp(cli: CAC) {
           const shown =
             value === undefined || option.negated ? "" : ` (default: ${value})`;
 
-          return `  ${option.rawName.padEnd(width)}  ${option.description}${shown}`;
+          return `  ${padStyled(option.rawName, width, flags)}  ${option.description}${shown}`;
         })
         .join("\n");
     const examples = sections.filter((s) => s.title === "Examples");
 
     if (command) {
-      return [
+      return styleTitles([
         header,
         usage,
         { body: command.description },
         ...(own.length ? [{ title: "Options", body: lines(own) }] : []),
         { title: "Global Options", body: lines(globals) },
         ...examples,
-      ];
+      ]);
     }
 
     const commandWidth = Math.max(...cli.commands.map((c) => c.name.length));
@@ -270,7 +287,7 @@ function formatHelp(cli: CAC) {
         .filter((c) => names.includes(c.name))
         .map(
           (c) =>
-            `  ${c.name.padEnd(commandWidth)}  ${c.description.split("\n")[0]}`
+            `  ${padStyled(c.name, commandWidth, commandName)}  ${c.description.split("\n")[0]}`
         )
         .join("\n"),
     }));
@@ -278,7 +295,7 @@ function formatHelp(cli: CAC) {
       s.title?.startsWith("For more info")
     );
 
-    return [
+    return styleTitles([
       { body: logo },
       header,
       { body: description },
@@ -286,7 +303,7 @@ function formatHelp(cli: CAC) {
       ...grouped,
       ...moreInfo,
       { title: "Global Options", body: lines(globals) },
-    ];
+    ]);
   };
 }
 
