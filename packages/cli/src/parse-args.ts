@@ -637,13 +637,40 @@ export function createCli() {
   return cli;
 }
 
+/**
+ * Respell hyphenated on/off flags in camelCase, e.g. `--dry-run` as `--dryRun`.
+ * cac's parser only knows an on/off flag by its camelCased name, so `--dry-run`
+ * would take the next word as its value.
+ */
+export function respellOnOffFlags(cli: CAC, argv: string[]) {
+  const onOff = new Set(
+    [cli.globalCommand, ...cli.commands]
+      .flatMap((command) => command.options)
+      .filter((option) => option.isBoolean && !option.negated)
+      .flatMap((option) => option.names)
+  );
+
+  return argv.map((arg) => {
+    const [, name, value = ""] = /^--([^=]+)(=.*)?$/.exec(arg) ?? [];
+    // The same camelCasing cac applies to option names
+    const camel = name?.replace(
+      /([a-z])-([a-z])/g,
+      (_, a: string, b: string) => a + b.toUpperCase()
+    );
+
+    return camel && onOff.has(camel) ? `--${camel}${value}` : arg;
+  });
+}
+
 /** Parse the CLI args and run the command they name. */
 export default async function parseArgs(
   argv: string[] = process.argv.slice(2)
 ) {
   const cli = createCli();
 
-  cli.parse(["node", "auto", ...argv], { run: false });
+  cli.parse(["node", "auto", ...respellOnOffFlags(cli, argv)], {
+    run: false,
+  });
 
   // cac already printed help or the version
   if (

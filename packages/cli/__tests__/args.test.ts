@@ -1,4 +1,4 @@
-import parseArgs from "../src/parse-args";
+import parseArgs, { createCli, respellOnOffFlags } from "../src/parse-args";
 import { runCli } from "../src/run";
 
 vi.mock("../src/run", () => ({ runCli: vi.fn() }));
@@ -210,5 +210,62 @@ describe("parsed options", () => {
     expect((await optionsFor("shipit")).onlyGraduateWithReleaseLabel).toBe(
       false
     );
+  });
+});
+
+describe("hyphenated on/off flags", () => {
+  test.each(["--dry-run false", "--dry-run=false", "-d false"])(
+    "shipit %s turns dry run off",
+    async (flag) => {
+      expect((await optionsFor(`shipit ${flag}`)).dryRun).toBe(false);
+    }
+  );
+
+  test("work before the command name", async () => {
+    expect((await optionsFor("--dry-run shipit")).dryRun).toBe(true);
+    expect(run.mock.calls[0][0]).toBe("shipit");
+  });
+
+  test.each(["info --list-plugins extra", "shipit extra"])(
+    "%s fails on the stray word",
+    async (args) => {
+      await parseArgs(args.split(" "));
+      expect(error.mock.calls[0][1]).toBe("Unused args: `extra`");
+      expect(exit).toHaveBeenCalledWith(1);
+      expect(run).not.toHaveBeenCalled();
+    }
+  );
+
+  test("are followed by other flags", async () => {
+    expect(await optionsFor("shipit --dry-run --no-changelog")).toStrictEqual(
+      expect.objectContaining({ dryRun: true, noChangelog: true })
+    );
+    run.mockClear();
+    expect(
+      await optionsFor("shipit --only-publish-with-release-label --name foo")
+    ).toStrictEqual(
+      expect.objectContaining({
+        onlyPublishWithReleaseLabel: true,
+        name: "foo",
+      })
+    );
+  });
+
+  test("a newly declared on/off flag is respelled too", () => {
+    const cli = createCli();
+
+    cli.commands
+      .find((command) => command.name === "shipit")!
+      .option("--new-flag", "Declared after the respelling was written");
+    cli.parse(
+      [
+        "node",
+        "auto",
+        ...respellOnOffFlags(cli, ["shipit", "--new-flag", "false"]),
+      ],
+      { run: false }
+    );
+
+    expect(cli.options.newFlag).toBe(false);
   });
 });
