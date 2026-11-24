@@ -125,69 +125,70 @@ In the `Tag version` field enter the version number you just tagged and click `P
 ```txt
 $ auto --help
 
-auto
+      _________
+     /\       /\                   _______ _     _ _______  _____
+    /  \_____/  \                  |_____| |     |    |    |     |
+   /   /     \   \                 |     | |_____|    |    |_____|
+  /___/ \▔▔\  \___\
+  \   \  \_/  /   /     ______ _______        _______ _______ _______ _______
+   \   \     /   /     |_____/ |______ |      |______ |_____| |______ |______
+    \   ▔▔▔▔▔   /      |    \_ |______ |_____ |______ |     | ______| |______
+     \         /
+      ▔▔▔▔▔▔▔▔▔
 
-  Generate releases based on semantic version labels on pull requests, and
-  other pull request automation tools.
+auto/<version>
 
-Synopsis
+Generate releases based on semantic version labels on pull requests, and other pull request automation tools.
 
-  $ auto <command> <options>
+Usage:
+  $ auto <command> [options]
 
-Setup Command
+Setup Command:
+  init           Interactive setup for minimum working configuration.
+  info           Determine the environment, check if auto is set up correctly, and list plugins.
+  create-labels  Create your project's labels on github. If labels exist it will update them.
 
-  init            Interactive setup for minimum working configuration.
-  info            Determine the environment and check if auto is set up correctly
-  create-labels   Create your project's labels on github. If labels exist it will update them.
+Pull Request Interaction Commands:
+  label          Get the labels for a pull request. Doesn't do much, but the return value lets you write you own scripts based off of the PR labels!
+  comment        Comment on a pull request with a markdown message. Each comment has a context, and each context only has one comment.
+  pr-check       Check that a pull request has a SemVer label and run all pr-check plugins.
+  pr-status      Set the status on a PR commit
+  pr-body        Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each comment has a context, and each context only has one comment.
 
-Pull Request Interaction Commands
+Release Commands:
+  version        Calculate a semantic version bump for the given changes.
+  changelog      Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.
+  release        Create a GitHub release for a tag. Defaults to last tag in branch.
+  shipit         Context aware publishing.
+  latest         Run the full `auto` release pipeline. Force a release to latest and bypass `shipit` safeguards.
+  canary         Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary version for your current git HEAD. This is ran automatically from "shipit".
+  next           Make a release for your "prerelease" release line. This is ran automatically by "shipit" in a prerelease branch.
 
-  label       Get the labels for a pull request. Doesn't do much, but the return value lets you write you own
-              scripts based off of the PR labels!
-  comment     Comment on a pull request with a markdown message. Each comment has a context, and each context only
-              has one comment.
-  pr-check    Check that a pull request has a SemVer label
-  pr-status   Set the status on a PR commit
-  pr-body     Update the body of a PR with a message. Appends to PR and will not overwrite user content. Each
-              comment has a context, and each context only has one comment.
+For more info, run any command with the `--help` flag:
+  $ auto init --help
+  $ auto info --help
+  $ auto create-labels --help
+  $ auto label --help
+  $ auto comment --help
+  $ auto pr-check --help
+  $ auto pr-status --help
+  $ auto pr-body --help
+  $ auto version --help
+  $ auto changelog --help
+  $ auto release --help
+  $ auto shipit --help
+  $ auto latest --help
+  $ auto canary --help
+  $ auto next --help
 
-Release Commands
-
-  version     Get the semantic version bump for the given changes. Requires all PRs to have labels for the change
-              type. If a PR does not have a label associated with it, it will default to `patch`.
-  changelog   Prepend release notes to `CHANGELOG.md`, create one if it doesn't exist, and commit the changes.
-  release     Auto-generate a github release
-  shipit      Context aware publishing.
-
-              1. call from base branch -> latest version released (LATEST)
-              2. call from prerelease branch -> prerelease version released (NEXT)
-              3. call from PR in CI -> canary version released (CANARY)
-              4. call locally when not on base/prerelease branch -> canary version released (CANARY)
-  latest      Run the full `auto` release pipeline. Force a release to latest and bypass `shipit` safeguards.
-  canary      Make a canary release of the project. Useful on PRs. If ran locally, `canary` will release a canary
-              version for your current git HEAD. This is ran automatically from "shipit".
-
-              1. In PR: 1.2.3-canary.123.0 + add version to PR body
-              2. Locally: 1.2.3-canary.1810cfd
-  next        Make a release for your "prerelease" release line. This is ran automatically from "shipit".
-
-              1. Creates a prerelease on package management platform
-              2. Creates a "Pre Release" on GitHub releases page.
-
-              Calling the `next` command from a prerelease branch will publish a prerelease, otherwise it will
-              publish to the default prerelease branch.
-
-Global Options
-
-  -V, --version         Display auto's version
-  -v, --verbose         Show some more logs. Pass -vv for very verbose logs.
-  --repo string         The repo to set the status on. Defaults to looking in the package definition
-                        for the platform
-  --owner string        The owner of the GitHub repo. Defaults to reading from the package definition
-                        for the platform
-  --github-api string   GitHub API to use
-  --plugins string[]    Plugins to load auto with. (defaults to just npm)
-  -h, --help            Display the help output
+Global Options:
+  -v, --verbose          Show some more logs. Pass -vv for very verbose logs.
+  --repo <string>        The repo to set the status on. Defaults to looking in the package definition for the platform
+  --owner <string>       The owner of the GitHub repo. Defaults to reading from the package definition for the platform
+  --github-api <string>  GitHub API to use
+  --plugins <string>     Plugins to load auto with. Repeat the flag for each plugin. (defaults to just npm)
+  -V, --version          Display version number
+  -h, --help             Display this message
 ```
 
 ## Merging Quickly

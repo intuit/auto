@@ -42,6 +42,9 @@ You can configure some of the options for the `shipit` command in the `.autorc`.
 - `no-changelog`
 - `only-graduate-with-release-label`
 
+> [!warning]
+> `onlyGraduateWithReleaseLabel` in `.autorc` has no effect, because the CLI's default for `--only-graduate-with-release-label` (`false`) overrides it. Pass the flag instead: `auto shipit --only-graduate-with-release-label`.
+
 **Example `.autorc`:**
 
 ```json

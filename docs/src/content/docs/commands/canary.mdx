@@ -49,6 +49,9 @@ You can configure some of the options for the `canary` command in the `.autorc`.
 - `message`
 - `force`
 
+> [!warning]
+> `target` in `.autorc` has no effect, because the CLI's default for `--target` (`pr-body`) overrides it. Pass the flag instead, for example `auto canary --target comment`.
+
 **Example `.autorc`:**
 
 ```json
