@@ -15,6 +15,7 @@ import prettyMs from "pretty-ms";
 
 import { Memoize as memoize } from "typescript-memoize";
 
+import { paletteColorFor } from "./label-colors";
 import type { ILabelDefinition } from "./semver";
 import verifyAuth from "./utils/verify-auth";
 import execPromise from "./utils/exec-promise";
@@ -97,6 +98,10 @@ const makeCommentIdentifier = (context: string) =>
 /** Make an identifier for `auto pr-body` */
 const makePrBodyIdentifier = (context: string) =>
   makeIdentifier("PR BODY", context);
+
+/** A label color as GitHub takes it: six hex digits without a `#` */
+const gitHubColor = (color: string) =>
+  tinyColor(color).toString("hex6").replace("#", "");
 
 /**
  * A class to interact with the local git instance and the git remote.
@@ -587,14 +592,11 @@ export default class Git {
       `Creating "${label.releaseType || "general"}" label :\n${label.name}`
     );
 
-    const color = label.color
-      ? tinyColor(label.color).toString("hex6")
-      : tinyColor.random().toString("hex6");
     const result = await this.github.issues.createLabel({
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: color.replace("#", ""),
+      color: gitHubColor(label.color || paletteColorFor(label.name)),
       description: label.description,
     });
 
@@ -612,15 +614,13 @@ export default class Git {
       `Updating "${label.releaseType || "generic"}" label :\n${label.name}`
     );
 
-    const color = label.color
-      ? tinyColor(label.color).toString("hex6")
-      : tinyColor.random().toString("hex6");
+    // With no color, leave it out so GitHub keeps the label's current one
     const result = await this.github.issues.updateLabel({
       current_name: label.name,
       name: label.name,
       owner: this.options.owner,
       repo: this.options.repo,
-      color: color.replace("#", ""),
+      ...(label.color && { color: gitHubColor(label.color) }),
       description: label.description,
     });
 

@@ -1,4 +1,5 @@
 import Git from "../git";
+import { labelPalette } from "../label-colors";
 
 const authenticate = vi.fn();
 const listLabelsOnIssue = vi.fn();
@@ -736,23 +737,43 @@ describe("github", () => {
     });
   });
 
-  test("updateLabel", async () => {
-    const gh = new Git(options);
+  describe("updateLabel", () => {
+    test("should update a label", async () => {
+      const gh = new Git(options);
 
-    await gh.updateLabel({
-      name: "Foo bar",
-      description: "test",
-      releaseType: "release",
+      await gh.updateLabel({
+        name: "Foo bar",
+        description: "test",
+        releaseType: "release",
+      });
+
+      expect(updateLabel).toHaveBeenCalledWith(
+        expect.objectContaining({
+          owner: "Adam Dierkens",
+          repo: "test",
+          current_name: "Foo bar",
+          description: "test",
+        })
+      );
     });
 
-    expect(updateLabel).toHaveBeenCalledWith(
-      expect.objectContaining({
-        owner: "Adam Dierkens",
-        repo: "test",
-        current_name: "Foo bar",
-        description: "test",
-      })
-    );
+    test("keeps the label's current color when it has none", async () => {
+      const gh = new Git(options);
+
+      await gh.updateLabel({ name: "Foo" });
+
+      expect(updateLabel.mock.calls[0]?.[0]).not.toHaveProperty("color");
+    });
+
+    test("sends the label's color as six hex digits", async () => {
+      const gh = new Git(options);
+
+      await gh.updateLabel({ name: "Foo", color: "blue" });
+
+      expect(updateLabel).toHaveBeenCalledWith(
+        expect.objectContaining({ color: "0000ff" })
+      );
+    });
   });
 
   describe("createLabel", () => {
@@ -771,6 +792,33 @@ describe("github", () => {
           repo: "test",
           name: "Foo bar",
         })
+      );
+    });
+
+    test("picks a palette color from the name when the label has none", async () => {
+      const gh = new Git(options);
+
+      await gh.createLabel({ name: "Foo" });
+      await gh.createLabel({ name: "foo" });
+
+      const [first, second] = createLabel.mock.calls.map(
+        (call) => (call[0] as { color: string }).color
+      );
+      const palette = labelPalette.map(({ hex }) =>
+        hex.replace("#", "").toLowerCase()
+      );
+
+      expect(palette).toContain(first);
+      expect(second).toBe(first);
+    });
+
+    test("sends the label's color as six hex digits", async () => {
+      const gh = new Git(options);
+
+      await gh.createLabel({ name: "Foo", color: "blue" });
+
+      expect(createLabel).toHaveBeenCalledWith(
+        expect.objectContaining({ color: "0000ff" })
       );
     });
 
