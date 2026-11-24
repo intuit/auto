@@ -10,7 +10,6 @@ import starlightLinksValidator from "starlight-links-validator";
 import remarkEmoji from "remark-emoji";
 import rehypeCallouts from "rehype-callouts";
 
-import { generatedPages } from "./src/generated-pages.mjs";
 import { remarkSiteLinks } from "./src/plugins/remark-site-links.mjs";
 
 const base = "/auto";
@@ -38,11 +37,11 @@ const command = (name: string) => ({
   slug: `docs/commands/${name}`,
 });
 
-/** A sidebar link to a plugin's page, generated from its README */
-const plugin = (label: string, name: string) => ({
-  label,
-  slug: `docs/generated/${name}`,
-});
+// /** A sidebar link to a plugin's page, generated from its README */
+// const plugin = (label: string, name: string) => ({
+//   label,
+//   slug: `docs/generated/${name}`,
+// });
 
 /** The commands whose pages were generated into docs/generated before */
 const movedCommands = [
@@ -99,8 +98,8 @@ export default defineConfig({
     }),
   },
   integrations: [
-    // The plugin and default labels pages, written into src/content/docs/generated
-    generatedPages(),
+    // The plugin and default labels pages, written into src/content/docs/docs/generated
+    // generatedPages(),
     starlight({
       title: "auto",
       description:
@@ -187,59 +186,60 @@ export default defineConfig({
           label: "Welcome",
           items: [
             { label: "Introduction", slug: "docs" },
-            { autogenerate: { directory: "welcome" } },
+            "docs/welcome/getting-started",
+            "docs/welcome/quick-merge",
           ],
         },
-        {
-          // A new plugin's page is generated from its README, but only shows
-          // here once it's added to one of these lists
-          label: "Plugins",
-          items: [
-            {
-              label: "Package Managers",
-              items: [
-                plugin("Homebrew", "brew"),
-                plugin("Chrome Web Store", "chrome"),
-                plugin("Cocoapod", "cocoapods"),
-                plugin("Crates", "crates"),
-                plugin("Docker", "docker"),
-                plugin("Gem", "gem"),
-                plugin("Git Tag", "git-tag"),
-                plugin("Gradle", "gradle"),
-                plugin("Maven", "maven"),
-                plugin("NPM", "npm"),
-                plugin("sbt", "sbt"),
-                plugin("Version File", "version-file"),
-                plugin("VSCode", "vscode"),
-              ],
-            },
-            {
-              label: "Extra Functionality",
-              items: [
-                plugin("All Contributors", "all-contributors"),
-                plugin("Amazon S3", "s3"),
-                plugin("Conventional Commits", "conventional-commits"),
-                plugin("Exec", "exec"),
-                plugin("First Time Contributor", "first-time-contributor"),
-                plugin("GitHub Pages", "gh-pages"),
-                plugin("Jira", "jira"),
-                plugin("Magic Zero", "magic-zero"),
-                plugin("Microsoft Teams", "microsoft-teams"),
-                plugin("Omit Commits", "omit-commits"),
-                plugin("Omit Release Notes", "omit-release-notes"),
-                plugin("PR Body Labels", "pr-body-labels"),
-                plugin("Protected Branch", "protected-branch"),
-                plugin("Released", "released"),
-                plugin("Slack", "slack"),
-                plugin("Twitter", "twitter"),
-                plugin("Upload Assets", "upload-assets"),
-              ],
-            },
-          ],
-        },
+        // {
+        //   // A new plugin's page is generated from its README, but only shows
+        //   // here once it's added to one of these lists
+        //   label: "Plugins",
+        //   items: [
+        //     {
+        //       label: "Package Managers",
+        //       items: [
+        //         plugin("Homebrew", "brew"),
+        //         plugin("Chrome Web Store", "chrome"),
+        //         plugin("Cocoapod", "cocoapods"),
+        //         plugin("Crates", "crates"),
+        //         plugin("Docker", "docker"),
+        //         plugin("Gem", "gem"),
+        //         plugin("Git Tag", "git-tag"),
+        //         plugin("Gradle", "gradle"),
+        //         plugin("Maven", "maven"),
+        //         plugin("NPM", "npm"),
+        //         plugin("sbt", "sbt"),
+        //         plugin("Version File", "version-file"),
+        //         plugin("VSCode", "vscode"),
+        //       ],
+        //     },
+        //     {
+        //       label: "Extra Functionality",
+        //       items: [
+        //         plugin("All Contributors", "all-contributors"),
+        //         plugin("Amazon S3", "s3"),
+        //         plugin("Conventional Commits", "conventional-commits"),
+        //         plugin("Exec", "exec"),
+        //         plugin("First Time Contributor", "first-time-contributor"),
+        //         plugin("GitHub Pages", "gh-pages"),
+        //         plugin("Jira", "jira"),
+        //         plugin("Magic Zero", "magic-zero"),
+        //         plugin("Microsoft Teams", "microsoft-teams"),
+        //         plugin("Omit Commits", "omit-commits"),
+        //         plugin("Omit Release Notes", "omit-release-notes"),
+        //         plugin("PR Body Labels", "pr-body-labels"),
+        //         plugin("Protected Branch", "protected-branch"),
+        //         plugin("Released", "released"),
+        //         plugin("Slack", "slack"),
+        //         plugin("Twitter", "twitter"),
+        //         plugin("Upload Assets", "upload-assets"),
+        //       ],
+        //     },
+        //   ],
+        // },
         {
           label: "Configuration",
-          items: [{ autogenerate: { directory: "configuration" } }],
+          items: [{ autogenerate: { directory: "docs/configuration" } }],
         },
         {
           label: "CLI Commands",
@@ -296,7 +296,7 @@ export default defineConfig({
         },
         {
           label: "Continuous Integration",
-          items: [{ autogenerate: { directory: "build-platforms" } }],
+          items: [{ autogenerate: { directory: "docs/build-platforms" } }],
         },
       ],
     }),

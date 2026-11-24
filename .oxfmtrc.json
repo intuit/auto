@@ -16,7 +16,7 @@
     "CHANGELOG.md",
     "coverage",
     "docs/.astro",
-    "docs/src/content/docs/generated",
+    "docs/src/content/docs/docs/generated",
     "dist/",
     "test-plugin-malformed.js",
     "lerna.json",

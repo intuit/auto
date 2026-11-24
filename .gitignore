@@ -4,7 +4,7 @@ coverage
 package-lock.json
 .vscode/
 binary
-docs/src/content/docs/generated
+docs/src/content/docs/docs/generated
 docs/.astro
 **/tsconfig.tsbuildinfo
 

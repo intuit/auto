@@ -44,7 +44,7 @@ Supporting it:
 - The site is an Astro Starlight app, a private workspace package in `docs/`. CI builds it on every PR and deploys it to GitHub Pages from `main`, under the base path `/auto`.
 - Every path in `docs/url-baseline.txt` must keep resolving, with and without `.html`. The build fails if one is missing. New pages are allowed.
 - The build checks every internal link and anchor.
-- Plugin pages are generated from each plugin's README, and the default-labels fragment from the core package, into `docs/src/content/docs/generated/`. That folder is gitignored and never edited by hand. The site doesn't change plugin READMEs to suit itself.
+- Plugin pages are generated from each plugin's README, and the default-labels fragment from the core package, into `docs/src/content/docs/docs/generated/`. That folder is gitignored and never edited by hand. The site doesn't change plugin READMEs to suit itself.
 - No analytics or tracking scripts.
 - Reading works without client-side JavaScript. There is no React or other client framework runtime.
 - Search runs locally with Pagefind, not an external service.

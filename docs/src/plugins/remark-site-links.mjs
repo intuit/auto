@@ -1,25 +1,36 @@
 import path from "node:path";
 
-import { pageId } from "../page-ids.mjs";
-
 const contentDir = path.resolve(import.meta.dirname, "../content/docs");
 const pluginsDir = path.resolve(import.meta.dirname, "../../../plugins");
 const hasScheme = /^[a-z][a-z\d+.-]*:/i;
 
 /**
- * The id, and so the URL path, of the page a markdown file is built into: a
- * page in src/content/docs, or a plugin's README, which
- * src/pages/plugins/[id].astro builds at "plugins/<name>"
+ * The URL path of a page in src/content/docs: its `slug`, or else its file
+ * path, the way Starlight serves it
  *
  * @param {string} filePath The markdown file's absolute path
  * @param {Record<string, unknown>} [frontmatter] The file's frontmatter
- * @returns {string | undefined} e.g. "docs/welcome/getting-started" or "plugins/npm", or nothing for other files
+ * @returns {string} e.g. "docs/welcome/getting-started", "docs", or "" for the home page
  */
-const sitePageId = (filePath, frontmatter) => {
-  if (filePath.startsWith(contentDir)) {
-    return pageId(path.relative(contentDir, filePath), frontmatter);
+const contentPagePath = (filePath, frontmatter) => {
+  if (typeof frontmatter?.slug === "string") {
+    return frontmatter.slug;
   }
 
+  return path
+    .relative(contentDir, filePath)
+    .replace(/\.mdx?$/, "")
+    .replace(/(^|\/)index$/, "");
+};
+
+/**
+ * The URL path of a plugin's README page, which src/pages/plugins/[id].astro
+ * builds at "plugins/<name>"
+ *
+ * @param {string} filePath The markdown file's absolute path
+ * @returns {string | undefined} e.g. "plugins/npm", or nothing for other files
+ */
+const readmePagePath = (filePath) => {
   const readme = path
     .relative(pluginsDir, filePath)
     .match(/^(?!\.\.)([^/\\]+)[/\\]README\.md$/);
@@ -33,31 +44,34 @@ const sitePageId = (filePath, frontmatter) => {
  * - relative links resolve against the page's own URL
  * - root links ("/hook-overview.png") get the site base in front
  *
- * The validator works out a page's URL from its file path, not from the
- * collection's ids, and only listens to a `slug` in the frontmatter. So each
- * page also gets its id as its slug, or the validator would look for the docs
- * section's pages outside "/docs", or not know the plugin pages at all.
+ * The validator works out a page's URL from its file path, or a `slug` in its
+ * frontmatter. A README's file path isn't its page's URL, so each README also
+ * gets its page's path as its slug, or the validator wouldn't know the plugin
+ * pages at all.
  */
 export function remarkSiteLinks({ base }) {
   const prefix = base.replace(/\/$/, "");
 
   return (tree, file) => {
-    const frontmatter = file.data.astro?.frontmatter;
-    const id = file.path && sitePageId(file.path, frontmatter);
-
-    if (!id) {
+    if (!file.path) {
       return;
     }
 
-    // The validator would read a slug of "index" as "/index"
-    if (frontmatter && !frontmatter.slug && id !== "index") {
-      frontmatter.slug = id;
+    const frontmatter = file.data.astro?.frontmatter;
+    const readme = readmePagePath(file.path);
+    const page = file.path.startsWith(contentDir)
+      ? contentPagePath(file.path, frontmatter)
+      : readme;
+
+    if (page === undefined) {
+      return;
     }
 
-    const from = new URL(
-      id === "index" ? `${prefix}/` : `${prefix}/${id}`,
-      "https://site.invalid"
-    );
+    if (readme && frontmatter && !frontmatter.slug) {
+      frontmatter.slug = readme;
+    }
+
+    const from = new URL(`${prefix}/${page}`, "https://site.invalid");
 
     const rewrite = (url, { relative }) => {
       if (

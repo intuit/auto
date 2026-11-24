@@ -9,7 +9,7 @@ const endent = require("endent").default;
 const glob = require("fast-glob");
 
 const root = path.resolve(import.meta.dirname, "../..");
-const outDir = path.resolve(import.meta.dirname, "content/docs/generated");
+const outDir = path.resolve(import.meta.dirname, "content/docs/docs/generated");
 const builtSemver = path.join(root, "packages/core/dist/semver.js");
 
 /** A page's "# Heading" as a title Starlight can render as plain text */
@@ -139,7 +139,7 @@ const writeReadmePage = (readme) => {
  * A content loader with an entry per plugin README, for the pages
  * src/pages/plugins/[id].astro builds. Each entry's id is the plugin's
  * folder name, and its title and markdown are the same as its page in
- * src/content/docs/generated. In dev, an entry reloads when its README changes.
+ * src/content/docs/docs/generated. In dev, an entry reloads when its README changes.
  *
  * @returns {import("astro/loaders").Loader} The loader, for content.config.ts
  */
@@ -231,7 +231,7 @@ const loadDefaultLabels = () => {
 };
 
 /**
- * Write every generated page into src/content/docs/generated: one per plugin
+ * Write every generated page into src/content/docs/docs/generated: one per plugin
  * README, and the default labels.
  */
 export function generatePages() {

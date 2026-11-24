@@ -5,13 +5,10 @@ import { docsSchema } from "@astrojs/starlight/schema";
 import { blogSchema } from "starlight-blog/schema";
 
 import { pluginReadmes } from "./generated-pages.mjs";
-import { pageId } from "./page-ids.mjs";
 
 export const collections = {
   docs: defineCollection({
-    loader: docsLoader({
-      generateId: ({ entry, data }) => pageId(entry, data),
-    }),
+    loader: docsLoader(),
     schema: docsSchema({ extend: (context) => blogSchema(context) }),
   }),
   // A page per plugin README, built by src/pages/plugins/[id].astro
