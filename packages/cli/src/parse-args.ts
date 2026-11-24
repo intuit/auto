@@ -149,6 +149,10 @@ const example = (command: string, text?: string) =>
 export const negatedName = (name: string) =>
   `no${name.charAt(0).toUpperCase()}${name.slice(1)}`;
 
+/** Text again, if cac turned it into a number */
+const toText = (value: unknown) =>
+  typeof value === "number" ? String(value) : value;
+
 /** Turn the options cac parsed into the ones auto's core reads */
 function toCoreOptions(cli: CAC, options: Record<string, unknown>) {
   const result: Record<string, unknown> = { ...options };
@@ -170,19 +174,24 @@ function toCoreOptions(cli: CAC, options: Record<string, unknown>) {
       continue;
     }
 
-    // cac turns text that looks like a number into a number
-    if (!option.isBoolean && !option.rawName.includes("<number>")) {
-      for (const key of option.names) {
-        const value = result[key];
+    if (option.isBoolean) {
+      continue;
+    }
 
-        if (Array.isArray(value)) {
-          result[key] = value.map((v) =>
-            typeof v === "number" ? String(v) : v
-          );
-        } else if (typeof value === "number") {
-          result[key] = String(value);
-        }
+    for (const key of option.names.filter((name) => name in result)) {
+      let value = result[key];
+
+      // cac collects a repeated option into a list, but core expects one value
+      if (Array.isArray(value) && !option.config.type) {
+        value = value[value.length - 1];
       }
+
+      // cac turns text that looks like a number into a number
+      if (!option.rawName.includes("<number>")) {
+        value = Array.isArray(value) ? value.map(toText) : toText(value);
+      }
+
+      result[key] = value;
     }
   }
 

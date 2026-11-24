@@ -195,6 +195,24 @@ describe("parsed options", () => {
     expect(options).not.toHaveProperty("noVersionPrefix");
   });
 
+  test("a repeated single-value option uses the last value", async () => {
+    expect((await optionsFor("shipit --message a --message b")).message).toBe(
+      "b"
+    );
+    run.mockClear();
+    expect((await optionsFor("label --pr 1 --pr 2")).pr).toBe(2);
+    run.mockClear();
+    expect((await optionsFor("canary --build 1 --build 2")).build).toBe("2");
+  });
+
+  test("options that weren't typed aren't passed, so .autorc applies", async () => {
+    const options = await optionsFor("shipit");
+
+    expect(options).not.toHaveProperty("message");
+    expect(options).not.toHaveProperty("name");
+    expect(options).not.toHaveProperty("useVersion");
+  });
+
   test("text values that look like numbers stay text", async () => {
     const options = await optionsFor("canary --message 123 --build 5 --pr 123");
 
