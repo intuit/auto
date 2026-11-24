@@ -303,10 +303,7 @@ export function createCli() {
     .usage("<command> [options]")
     .option(
       "-v, --verbose",
-      "Show some more logs. Pass -vv for very verbose logs.",
-      {
-        type: [Boolean],
-      }
+      "Show some more logs. Pass -vv for very verbose logs."
     )
     .option(
       "--repo <string>",

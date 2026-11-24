@@ -153,17 +153,20 @@ describe("parsed options", () => {
     );
   });
 
-  test("verbose is a list, counted per flag", async () => {
-    expect((await optionsFor("shipit -v")).verbose).toStrictEqual([true]);
-    run.mockClear();
-    expect((await optionsFor("shipit -vv")).verbose).toStrictEqual([
-      true,
-      true,
-    ]);
+  test.each([
+    ["-v", true],
+    ["-vv", [true, true]],
+    ["-v -v", [true, true]],
+    ["-v false", false],
+    ["--verbose=false", false],
+  ])("shipit %s gives verbose: %j", async (flags, verbose) => {
+    expect((await optionsFor(`shipit ${flags}`)).verbose).toStrictEqual(
+      verbose
+    );
   });
 
   test("global options work before the command", async () => {
-    expect((await optionsFor("-v shipit")).verbose).toStrictEqual([true]);
+    expect((await optionsFor("-v shipit")).verbose).toBe(true);
   });
 
   test("plugins is a list", async () => {
