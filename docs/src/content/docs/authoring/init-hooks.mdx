@@ -46,17 +46,28 @@ _Examples:_
 
 Run extra configuration for a plugin. Here is where to display prompts to the user.
 
+`auto init` asks its questions with [@clack/prompts](https://github.com/bombshell-dev/clack/tree/main/packages/prompts#readme), so ask yours with it to match. Add it to your plugin's own dependencies, because core doesn't re-export it.
+
+If the user presses Ctrl+C, a clack prompt returns a cancel symbol instead of an answer. Check for it with `isCancel`, then call `cancel()` and exit with code 1, as `auto init` does, so no `.autorc` is written.
+
 ```ts
+import { cancel, isCancel, text } from "@clack/prompts";
+
 class MyPlugin implements IPlugin {
   init(initializer: InteractiveInit) {
     initializer.hooks.configurePlugin.tapPromise("Example", async (name) => {
-      if (name === "my-plugins") {
-        return [
-          name,
-          {
-            // extra config options
-          },
-        ];
+      if (name === "my-plugin") {
+        const url = await text({
+          message: "What's the URL of your server?",
+          validate: (value) => (value?.trim() ? undefined : "This is required"),
+        });
+
+        if (isCancel(url)) {
+          cancel("Setup cancelled before the configuration was written.");
+          process.exit(1);
+        }
+
+        return [name, { url }];
       }
     });
   }
