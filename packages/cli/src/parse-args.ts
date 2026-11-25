@@ -18,6 +18,8 @@ const heading = chalk.bold.yellow;
 const commandName = chalk.bold.cyan;
 /** An option's flags in the help output, e.g. `-d, --dry-run` */
 const flags = chalk.cyan;
+/** An environment variable's name in the help output */
+const variable = chalk.cyan;
 
 /** Style text, then pad it to a width measured without the styling */
 const padStyled = (text: string, width: number, style: (s: string) => string) =>
@@ -60,6 +62,26 @@ const commandGroups: Record<string, string[]> = {
   ],
 };
 
+/** Options auto fills in from the CI service's own variables, through env-ci */
+const detectedInCi = new Set(["pr", "build"]);
+
+/** The environment variables listed at the end of the main help */
+const environmentVariables: Array<[name: string, description: string]> = [
+  ["GH_TOKEN", "GitHub token for every request (needs repo permission)"],
+  [
+    "GITHUB_TOKEN",
+    "Used when GH_TOKEN isn't set, and for pushes in GitHub Actions",
+  ],
+  ["https_proxy", "Proxy for requests to GitHub (or http_proxy)"],
+];
+
+/** Printed below the environment variables */
+const environmentNotes = endent`
+  Plugins read their own tokens, such as NPM_TOKEN.
+  A .env file in the current directory is loaded too, except for the proxy.
+  See https://intuit.github.io/auto/docs/configuration/environment-variables
+`;
+
 /** The arguments to cac's `option()` */
 type OptionArgs = [
   rawName: string,
@@ -91,7 +113,7 @@ const baseBranch: OptionArgs = [
 ];
 const pr: OptionArgs = [
   "--pr <number>",
-  "The pull request the command should use. Detects PR number in CI",
+  "The pull request the command should use",
 ];
 const dryRun: OptionArgs = [
   "-d, --dry-run",
@@ -260,11 +282,13 @@ function formatHelp(cli: CAC) {
       options
         .map((option) => {
           const value = option.config.default;
-          // cac gives every `--no-*` flag a default of `true`, which reads backwards
-          const shown =
-            value === undefined || option.negated ? "" : ` (default: ${value})`;
+          const tags = [
+            detectedInCi.has(option.name) ? "[detected in CI]" : "",
+            // cac gives every `--no-*` flag a default of `true`, which reads backwards
+            value === undefined || option.negated ? "" : `[default: ${value}]`,
+          ].filter(Boolean);
 
-          return `  ${padStyled(option.rawName, width, flags)}  ${option.description}${shown}`;
+          return `  ${padStyled(option.rawName, width, flags)}  ${[option.description, ...tags].join(" ")}`;
         })
         .join("\n");
     const examples = sections.filter((s) => s.title === "Examples");
@@ -294,6 +318,16 @@ function formatHelp(cli: CAC) {
     const moreInfo = sections.filter((s) =>
       s.title?.startsWith("For more info")
     );
+    const variableWidth = Math.max(
+      ...environmentVariables.map(([n]) => n.length)
+    );
+    const environment = [
+      ...environmentVariables.map(
+        ([n, text]) => `  ${padStyled(n, variableWidth, variable)}  ${text}`
+      ),
+      "",
+      ...environmentNotes.split("\n").map((line) => `  ${line}`),
+    ].join("\n");
 
     return styleTitles([
       { body: logo },
@@ -303,6 +337,7 @@ function formatHelp(cli: CAC) {
       ...grouped,
       ...moreInfo,
       { title: "Global Options", body: lines(globals) },
+      { title: "Environment Variables", body: environment },
     ]);
   };
 }
@@ -377,7 +412,7 @@ export function createCli() {
         Doesn't do much, but the return value lets you write your own scripts based off of the PR labels!
       `
     )
-    .option(...describe(pr, `${pr[1]} (defaults to last merged PR)`))
+    .option(...describe(pr, `${pr[1]}, or the last merged PR`))
     .option("--exists <string>", "Checks for existence of a specific label")
     .example(example("auto label --pr 123"))
     .action(run("label"));
@@ -426,7 +461,7 @@ export function createCli() {
       "--sha <string>",
       "Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository"
     )
-    .option(...describe(pr, "PR to set the status on. Detects PR number in CI"))
+    .option(...describe(pr, "PR to set the status on"))
     .option(...url)
     .option(
       "--state <string>",
@@ -610,15 +645,10 @@ export function createCli() {
       `
     )
     .option(...dryRun)
-    .option(
-      ...describe(
-        pr,
-        "PR number to use to create the canary version. Detected in CI env"
-      )
-    )
+    .option(...describe(pr, "PR number to use to create the canary version"))
     .option(
       "--build <string>",
-      "Build number to use to create the canary version. Detected in CI env"
+      "Build number to use to create the canary version"
     )
     .option(
       "--target <pr-body|comment|status>",

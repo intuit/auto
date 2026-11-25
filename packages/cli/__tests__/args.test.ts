@@ -50,6 +50,31 @@ describe("help and version", () => {
     expect(run).not.toHaveBeenCalled();
   });
 
+  test("should list environment variables at the end of the main help", async () => {
+    await parseArgs(["--help"]);
+    const help = printed();
+    const environment = help.indexOf("Environment Variables:");
+
+    expect(environment).toBeGreaterThan(help.indexOf("Global Options:"));
+    expect(help.slice(environment)).toMatch(/^ {2}GH_TOKEN {2,}GitHub token/m);
+    expect(help.slice(environment)).toContain("A .env file");
+  });
+
+  test("should only list environment variables in the main help", async () => {
+    await parseArgs(["canary", "--help"]);
+    expect(printed()).not.toContain("Environment Variables:");
+  });
+
+  test("should tag options detected in CI and options with defaults", async () => {
+    await parseArgs(["canary", "--help"]);
+    const help = printed();
+
+    expect(help).toMatch(/--pr <number> .*\[detected in CI\]$/m);
+    expect(help).toMatch(/--build <string> .*\[detected in CI\]$/m);
+    expect(help).toMatch(/--target <.*\[default: pr-body\]$/m);
+    expect(help).not.toMatch(/--dry-run .*\[detected in CI\]/);
+  });
+
   test("should print help for simple command", async () => {
     await parseArgs(["init", "--help"]);
     expect(printed()).toContain(
@@ -71,7 +96,7 @@ describe("help and version", () => {
     expect(help.indexOf("--dry-run")).toBeGreaterThan(own);
     expect(help.indexOf("--dry-run")).toBeLessThan(global);
     expect(help.indexOf("--verbose")).toBeGreaterThan(global);
-    expect(help).not.toContain("(default: true)");
+    expect(help).not.toContain("[default: true]");
     expect(help).toContain("$ auto shipit");
   });
 });

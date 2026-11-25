@@ -189,6 +189,15 @@ Global Options:
   --plugins <string>     Plugins to load auto with. Repeat the flag for each plugin. (defaults to just npm)
   -V, --version          Display version number
   -h, --help             Display this message
+
+Environment Variables:
+  GH_TOKEN      GitHub token for every request (needs repo permission)
+  GITHUB_TOKEN  Used when GH_TOKEN isn't set, and for pushes in GitHub Actions
+  https_proxy   Proxy for requests to GitHub (or http_proxy)
+
+  Plugins read their own tokens, such as NPM_TOKEN.
+  A .env file in the current directory is loaded too, except for the proxy.
+  See https://intuit.github.io/auto/docs/configuration/environment-variables
 ```
 
 ## Merging Quickly
