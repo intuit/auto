@@ -94,6 +94,8 @@ You must configure some environment variables for publishing and releasing to wo
 - `GH_TOKEN` - Used for publishing the GitHub release and creating labels ([create one here](https://github.com/settings/tokens)) (needs `repo` permission)
 - Your publishing plugin's credentials, such as `NPM_TOKEN` for npm. Each plugin's page covers its setup.
 
+See [Environment Variables](../configuration/environment-variables) for everything `auto` reads from the environment.
+
 > [!note]
 > Make sure you give the GH_TOKEN <Label color="blue">repo</Label> permission or `shipit` will fail!
 
@@ -112,8 +114,7 @@ NPM_TOKEN=PUBLISH_TOKEN
 #### HTTP Proxy
 
 If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment.
-To test locally add it to `.env` file.
-Remember this file is only local, so you will need to set the variable in your CI as well.
+Set it in your shell or your CI, not in `.env`: auto reads the proxy before it loads `.env`.
 
 ```plaintext
 https_proxy=<PROXYHOST>:<PROXYPORT>
