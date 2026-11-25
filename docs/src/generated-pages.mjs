@@ -11,6 +11,7 @@ const glob = require("fast-glob");
 const root = path.resolve(import.meta.dirname, "../..");
 const outDir = path.resolve(import.meta.dirname, "content/docs/docs/generated");
 const builtSemver = path.join(root, "packages/core/dist/semver.js");
+const codeBlockConfig = path.resolve(import.meta.dirname, "../ec.config.mjs");
 
 /** A page's "# Heading" as a title Starlight can render as plain text */
 const plainTitle = (heading) => heading.replace("# ", "").replace(/`/g, "");
@@ -148,11 +149,16 @@ export function pluginReadmes() {
     name: "plugin-readmes",
     load: async (context) => {
       const { config, store } = context;
+      // A rendered page links the code block stylesheet by a hashed name that
+      // changes with ec.config.mjs. It's part of each entry's digest, so a
+      // config change renders the pages again instead of leaving them linked
+      // to a stylesheet that no longer exists.
+      const codeBlocks = fs.readFileSync(codeBlockConfig, "utf8");
 
       /** Store a README's entry, unless it is already stored as it is */
       const load = async (readme) => {
         const { name: id, title, markdown } = readmePage(readme);
-        const digest = context.generateDigest({ title, markdown });
+        const digest = context.generateDigest({ title, markdown, codeBlocks });
 
         if (store.get(id)?.digest === digest) {
           return;

@@ -243,6 +243,15 @@ h4,
   justify-content: flex-start;
 }
 
+/* A file name's title bar matches the terminal's: the same height, with the
+   name centred on it like the language label */
+:root .expressive-code .frame.has-title:not(.is-terminal) .header {
+  min-height: 2.75rem;
+  align-items: center;
+  font-weight: 500;
+  letter-spacing: 0.025ch;
+}
+
 /* Expressive Code draws its three dots here; show the language instead */
 :root .expressive-code .frame.is-terminal .header::before {
   content: "bash";
@@ -280,6 +289,16 @@ h4,
   content: "powershell";
 }
 
+/* A "$" before each command in a terminal frame. The shell-prompt plugin in
+   ec.config.mjs adds the empty span; drawing the "$" here keeps it out of
+   selections and copies. The "/ ''" hides it from screen readers. */
+:root .expressive-code .frame.is-terminal .shell-prompt::before {
+  content: "$ ";
+  content: "$ " / "";
+  color: var(--ec-frm-trmTtbFg);
+  user-select: none;
+}
+
 /* Copy button lives in the title bar and is always visible */
 :root .expressive-code .frame.is-terminal .copy {
   inset-block-start: 0.375rem;
@@ -292,6 +311,73 @@ h4,
 :root .expressive-code .frame.is-terminal .copy button:hover,
 :root .expressive-code .frame.is-terminal .copy button:focus-visible {
   opacity: 1;
+}
+
+/* Package manager tabs: <Tabs syncKey="package-manager"> with one shell code
+   block per <TabItem>. The tabs sit in the code block's title bar in place of
+   the language label; the copy button keeps its place on the right. */
+starlight-tabs[data-sync-key="package-manager"] {
+  display: grid;
+}
+
+starlight-tabs[data-sync-key="package-manager"] .tablist-wrapper,
+starlight-tabs[data-sync-key="package-manager"] [role="tabpanel"] {
+  grid-area: 1 / 1;
+}
+
+starlight-tabs[data-sync-key="package-manager"] .tablist-wrapper {
+  z-index: 1;
+  justify-self: start;
+  align-self: start;
+  padding-inline-start: 0.5rem;
+}
+
+/* Its own stacking context, so the code block's title bar can't paint over
+   the tabs */
+starlight-tabs[data-sync-key="package-manager"] [role="tabpanel"] {
+  margin-top: 0;
+  isolation: isolate;
+}
+
+/* Starlight's restore element only runs a script; as a grid item it would add
+   a row and its margin under the block */
+starlight-tabs[data-sync-key="package-manager"] starlight-tabs-restore {
+  display: none;
+}
+
+starlight-tabs[data-sync-key="package-manager"] [role="tablist"] {
+  height: 2.75rem;
+  border-bottom: 0;
+}
+
+starlight-tabs[data-sync-key="package-manager"] .tab > [role="tab"] {
+  padding: 0 0.5rem;
+  box-shadow: none;
+  color: var(--sl-color-gray-3);
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+starlight-tabs[data-sync-key="package-manager"] .tab > [role="tab"]:hover {
+  color: var(--sl-color-white);
+}
+
+/* The underline sits on the title bar's hairline */
+starlight-tabs[data-sync-key="package-manager"]
+  .tab
+  > [role="tab"][aria-selected="true"] {
+  box-shadow: inset 0 -2px 0 var(--sl-color-text-accent);
+  color: var(--sl-color-white);
+  font-weight: 600;
+}
+
+:root
+  starlight-tabs[data-sync-key="package-manager"]
+  .expressive-code
+  .frame.is-terminal
+  .header::before {
+  content: none;
 }
 
 /* Callouts, which rehype-callouts makes from "> [!note]", "> [!info]",
@@ -416,14 +502,17 @@ h4,
 
 /* Docs layout, as in the "Docs — centered, no right sidebar" design: no table
    of contents (switched off in astro.config.ts); the sidebar and the article
-   form one 1044px block (260 + 64 + 720) centred on the page. The header's
-   contents are held to the same width in overrides/Header.astro.
+   form one 1044px block (260 + 64 + 720) centred on the page, inside the
+   header's 1160px (overrides/Header.astro).
    Percentages, not vw, so the block ignores the scrollbar like the header. */
 @media (min-width: 72rem) {
   :root[data-has-sidebar] {
     --sl-sidebar-width: 16.25rem;
     --sl-sidebar-pad-x: 0rem;
     --sl-content-pad-x: 0rem;
+    /* Starlight spaces the header with the content padding; keep the 1.5rem
+       it has on every other page */
+    --sl-nav-gap: 1.5rem;
     --sl-content-margin-inline: 0;
     --docs-gap: 4rem;
     --docs-block: calc(

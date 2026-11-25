@@ -2,6 +2,8 @@
 title: Writing Plugins
 ---
 
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
 If you've ever written a `webpack` plugin it's a lot like that.
 
 A plugin definition is:
@@ -79,11 +81,36 @@ Your options are defined once, and you get both the TypeScript type and runtime 
 
 First install Zod:
 
+<Tabs syncKey="package-manager">
+  <TabItem label="npm">
+
 ```bash
-npm i --save zod
-# or
+npm install zod
+```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```bash
 yarn add zod
 ```
+
+  </TabItem>
+  <TabItem label="pnpm">
+
+```bash
+pnpm add zod
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```bash
+bun add zod
+```
+
+  </TabItem>
+</Tabs>
 
 Then write your options as a schema and derive the type from it.
 

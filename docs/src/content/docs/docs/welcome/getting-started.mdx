@@ -3,6 +3,7 @@ title: Getting Started
 ---
 
 import Label from "../../../../components/Label.astro";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
 
 By the end of this page, merging a pull request labelled `minor` will release your project from CI: a new version, a changelog entry and a GitHub release.
 
@@ -17,11 +18,36 @@ By the end of this page, merging a pull request labelled `minor` will release yo
 
 **In a JavaScript project**, add `auto` as a dev dependency. It publishes to npm by default.
 
+<Tabs syncKey="package-manager">
+  <TabItem label="npm">
+
 ```bash
 npm install --save-dev auto
-# or: yarn add -D auto
-# or: pnpm add -D auto
 ```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```bash
+yarn add --dev auto
+```
+
+  </TabItem>
+  <TabItem label="pnpm">
+
+```bash
+pnpm add --save-dev auto
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```bash
+bun add --dev auto
+```
+
+  </TabItem>
+</Tabs>
 
 > [!warning] If you use `yarn@2` none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
 

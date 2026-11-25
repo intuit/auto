@@ -1,4 +1,8 @@
-import { defineEcConfig } from "@astrojs/starlight/expressive-code";
+import {
+  defineEcConfig,
+  definePlugin,
+} from "@astrojs/starlight/expressive-code";
+import { h, select } from "@astrojs/starlight/expressive-code/hast";
 
 const ink = "#1c0a12";
 const cream = "#fbf7f8";
@@ -14,6 +18,41 @@ const ground = pick(ink, cream);
 const hairline = pick("rgba(255, 255, 255, 0.08)", rose);
 const quiet = pick("#b08a99", "#5c4650");
 
+/** Languages whose blocks are commands typed at a "$" prompt */
+const shellLanguages = new Set(["bash", "sh", "shell", "zsh"]);
+
+/**
+ * A "$" prompt before each command in a shell block, so the docs don't have
+ * to type one. Comments, blank lines and the lines a "\" continues get none.
+ * The plugin only adds an empty, aria-hidden span to each command line;
+ * src/styles/theme.css draws the "$" in it, in terminal frames only. With no
+ * text, the prompt can't be selected, and the copy button copies the block's
+ * code as written.
+ */
+const shellPrompt = () =>
+  definePlugin({
+    name: "shell-prompt",
+    hooks: {
+      postprocessRenderedLine: ({ codeBlock, line, lineIndex, renderData }) => {
+        if (!shellLanguages.has(codeBlock.language)) return;
+
+        const text = line.text.trim();
+        const continued =
+          lineIndex > 0 &&
+          codeBlock
+            .getLine(lineIndex - 1)
+            ?.text.trimEnd()
+            .endsWith("\\");
+
+        if (!text || text.startsWith("#") || continued) return;
+
+        select(".code", renderData.lineAst)?.children.unshift(
+          h("span", { className: "shell-prompt", ariaHidden: "true" })
+        );
+      },
+    },
+  });
+
 /**
  * Code blocks, as drawn in the docs designs, with a quiet title bar.
  * - Dark mode: the dark "ink" block, no border.
@@ -23,6 +62,7 @@ const quiet = pick("#b08a99", "#5c4650");
  * src/styles/theme.css.
  */
 export default defineEcConfig({
+  plugins: [shellPrompt()],
   themes: ["github-dark", "github-light"],
   useStarlightUiThemeColors: false,
   customizeTheme(theme) {
@@ -76,6 +116,10 @@ export default defineEcConfig({
     codeLineHeight: "1.7",
     codePaddingBlock: "0.875rem",
     codePaddingInline: "1.125rem",
+    // Title bars (file names, the terminal label) in the code's mono, like
+    // the package manager tabs
+    uiFontFamily: "var(--sl-font-mono)",
+    uiFontSize: "0.75rem",
     frames: {
       frameBoxShadowCssValue: "none",
       terminalBackground: ground,
@@ -86,7 +130,9 @@ export default defineEcConfig({
       editorBackground: ground,
       editorTabBarBackground: ground,
       editorTabBarBorderBottomColor: hairline,
-      editorActiveTabBackground: ground,
+      // A file name is a label on the title bar, not a tab drawn over it, so
+      // the hairline runs beneath it
+      editorActiveTabBackground: "transparent",
       editorActiveTabForeground: quiet,
       editorActiveTabBorderColor: "transparent",
       editorActiveTabIndicatorTopColor: "transparent",
