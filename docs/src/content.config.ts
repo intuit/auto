@@ -14,6 +14,6 @@ export const collections = {
   // A page per plugin README, built by src/pages/plugins/[id].astro
   plugins: defineCollection({
     loader: pluginReadmes(),
-    schema: z.object({ title: z.string() }),
+    schema: z.object({ title: z.string(), description: z.string() }),
   }),
 };

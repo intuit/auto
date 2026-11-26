@@ -98,12 +98,37 @@ const writePage = (name, content) => {
 };
 
 /**
+ * The first sentence of a README's opening paragraph, as plain text: links
+ * keep their text, and code and bold lose their markup. It's the plugin's
+ * line on the plugins overview and its page's description.
+ *
+ * @param {string} markdown The README without its heading
+ * @returns {string} e.g. "Publish to NPM."
+ */
+const firstSentence = (markdown) => {
+  const paragraph =
+    markdown
+      .split(/\n\s*\n/)
+      .map((block) => block.trim())
+      .find((block) => /^(?:[\p{L}\d`]|\*\*|\[(?!!))/u.test(block)) ?? "";
+  const text = paragraph
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\](?:\([^)]*\)|\[[^\]]*\])/g, "$1")
+    .replace(/`|\*\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text;
+};
+
+/**
  * A plugin's page, read from its README: the plugin folder's name, the
- * README's "# Heading" as the title, and the rest as the page's markdown.
- * The heading is left out of the markdown since Starlight prints the title.
+ * README's "# Heading" as the title, its first sentence as the description,
+ * and the rest as the page's markdown. The heading is left out of the
+ * markdown since Starlight prints the title.
  *
  * @param {string} readme The README's absolute path
- * @returns {{ name: string, title: string, markdown: string }} e.g. name "npm", title "NPM Plugin"
+ * @returns {{ name: string, title: string, description: string, markdown: string }} e.g. name "npm", title "NPM Plugin"
  */
 const readmePage = (readme) => {
   const content = fs.readFileSync(readme, "utf8");
@@ -116,10 +141,13 @@ const readmePage = (readme) => {
     )
     .split("\n");
 
+  const markdown = readmeDocs.join("\n");
+
   return {
     name,
     title: plainTitle(heading),
-    markdown: toCallouts(readmeDocs.join("\n")),
+    description: firstSentence(markdown),
+    markdown: toCallouts(markdown),
   };
 };
 
@@ -135,6 +163,36 @@ const writeReadmePage = (readme) => {
 
   return writePage(`${name}.md`, `${frontMatter(title)}\n${markdown}`);
 };
+
+/**
+ * A README's install block, the way every plugin README writes it:
+ * "npm i --save-dev @auto-it/x", "# or", then "yarn add -D @auto-it/x".
+ * Written any other way, it stays a code block.
+ */
+const installBlock =
+  /^```(?:bash|sh)\nnpm i(?:nstall)? --save-dev (\S+)\n# or\nyarn add -D \1\n```$/gm;
+
+/** The element that stands in for an install block in a plugin's HTML */
+const installSlot = /<div data-package-install="([^"]+)"><\/div>/;
+
+/**
+ * Swap each install block for an empty element naming the package, which
+ * the plugin's page replaces with the site's package manager tabs. Markdown
+ * can't hold the Tabs component itself.
+ *
+ * @param {string} markdown A README's markdown
+ */
+const withInstallSlots = (markdown) =>
+  markdown.replace(installBlock, '<div data-package-install="$1"></div>');
+
+/**
+ * A plugin's HTML, split around its install blocks: HTML at the even
+ * indexes, and the package each block installs at the odd ones.
+ *
+ * @param {string} html A plugin entry's rendered HTML
+ * @returns {string[]} e.g. ["<p>Publish to NPM.</p>…", "@auto-it/npm", "…"]
+ */
+export const splitAtInstalls = (html) => html.split(installSlot);
 
 /**
  * A content loader with an entry per plugin README, for the pages
@@ -157,8 +215,13 @@ export function pluginReadmes() {
 
       /** Store a README's entry, unless it is already stored as it is */
       const load = async (readme) => {
-        const { name: id, title, markdown } = readmePage(readme);
-        const digest = context.generateDigest({ title, markdown, codeBlocks });
+        const { name: id, title, description, markdown } = readmePage(readme);
+        const digest = context.generateDigest({
+          title,
+          description,
+          markdown,
+          codeBlocks,
+        });
 
         if (store.get(id)?.digest === digest) {
           return;
@@ -168,13 +231,13 @@ export function pluginReadmes() {
           id,
           data: await context.parseData({
             id,
-            data: { title },
+            data: { title, description },
             filePath: readme,
           }),
           body: markdown,
           filePath: path.relative(fileURLToPath(config.root), readme),
           digest,
-          rendered: await context.renderMarkdown(markdown, {
+          rendered: await context.renderMarkdown(withInstallSlots(markdown), {
             fileURL: pathToFileURL(readme),
           }),
         });

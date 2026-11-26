@@ -1,7 +1,12 @@
 ---
 // A plugin's page, from its README, in the same layout as the docs pages
+// but with the plugins sidebar
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
+
+import PackageInstall from "../../components/PackageInstall.astro";
+import { splitAtInstalls } from "../../generated-pages.mjs";
+import { getPluginGroups, pluginsSidebar } from "../../plugin-pages";
 
 export async function getStaticPaths() {
   const plugins = await getCollection("plugins");
@@ -13,11 +18,23 @@ export async function getStaticPaths() {
 }
 
 const { plugin } = Astro.props;
-const plugins = await getCollection("plugins");
-const sidebar = plugins.map(plugin => ({ id: plugin.id }))
-const { Content, headings } = await render(plugin);
+const sidebar = pluginsSidebar(await getPluginGroups());
+// The README's HTML, with the package manager tabs where its install
+// commands were
+const parts = splitAtInstalls(plugin.rendered?.html ?? "");
 ---
 
-<StarlightPage frontmatter={{ title: plugin.data.title }} headings={headings}>
-  <Content />
+<StarlightPage
+  frontmatter={{
+    title: plugin.data.title,
+    description: plugin.data.description,
+  }}
+  headings={plugin.rendered?.metadata?.headings}
+  sidebar={sidebar}
+>
+  {
+    parts.map((part, index) =>
+      index % 2 ? <PackageInstall pkg={part} /> : <Fragment set:html={part} />
+    )
+  }
 </StarlightPage>
