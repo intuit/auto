@@ -1,0 +1,32 @@
+---
+/**
+ * The command that installs a dev dependency, as a tab per package manager.
+ * The tabs share the "package-manager" sync key with every other install
+ * block on the site, and theme.css draws them in the code block's title bar.
+ */
+import { Code, TabItem, Tabs } from "@astrojs/starlight/components";
+
+interface Props {
+  /** The package to install, e.g. "@auto-it/crates" */
+  pkg: string;
+}
+
+const { pkg } = Astro.props;
+
+const commands = [
+  ["npm", `npm install --save-dev ${pkg}`],
+  ["yarn", `yarn add --dev ${pkg}`],
+  ["pnpm", `pnpm add --save-dev ${pkg}`],
+  ["bun", `bun add --dev ${pkg}`],
+];
+---
+
+<Tabs syncKey="package-manager">
+  {
+    commands.map(([label, command]) => (
+      <TabItem label={label}>
+        <Code code={command} lang="bash" />
+      </TabItem>
+    ))
+  }
+</Tabs>

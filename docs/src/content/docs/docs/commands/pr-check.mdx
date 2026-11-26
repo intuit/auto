@@ -1,0 +1,20 @@
+---
+title: "auto pr-check"
+---
+
+Check that a pull request has a SemVer label and run all pr-check plugins.
+
+## Options
+
+| Flag              | Type    | Description                                                      |
+| ----------------- | ------- | ---------------------------------------------------------------- |
+| `--pr`            | Number  | The pull request the command should use. Detects PR number in CI |
+| `--url`           | String  | URL to associate with this status                                |
+| `--dry-run`, `-d` | Boolean | Report what command will do but do not actually do anything      |
+| `--context`       | String  | A string label to differentiate this status from others          |
+
+## Examples
+
+```bash
+auto pr-check --url http://your-ci.com/build/123
+```

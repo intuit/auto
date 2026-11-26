@@ -21,14 +21,6 @@ updates:
       - dependency-name: "@types/jsdom"
         versions:
           - 16.2.9
-      - dependency-name: "@fortawesome/fontawesome-svg-core"
-        versions:
-          - 1.2.34
-          - 1.2.35
-      - dependency-name: next-ignite
-        versions:
-          - 0.10.7
-          - 0.10.8
       - dependency-name: "@octokit/rest"
         versions:
           - 18.3.0

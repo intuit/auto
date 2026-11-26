@@ -6,6 +6,9 @@ workflows:
     '.github/workflows/ci.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
+        - 'actions/configure-pages@v6.0.0'
+        - 'actions/deploy-pages@v5.0.1'
+        - 'actions/upload-pages-artifact@v5.0.0'
         - 'codecov/codecov-action@v7.1.1'
         - 'pnpm/setup@v3.1.2'
 dependencies:
@@ -19,11 +22,33 @@ dependencies:
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
+    'actions/configure-pages@v6.0.0':
+        ref: 'v6.0.0'
+        commit: 'sha1-45bfe0192ca1faeb007ade9deae92b16b8254a0d'
+        owner_id: 44036562
+        repo_id: 513659658
+    'actions/deploy-pages@v5.0.1':
+        ref: 'v5.0.1'
+        commit: 'sha1-368f82528645a54fb793d4d04e342629a3f51346'
+        owner_id: 44036562
+        repo_id: 438112499
     'actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd':
         ref: 'v8.0.0'
         commit: 'sha1-ed597411d8f924073f98dfc5c65a23a2325f34cd'
         owner_id: 44036562
         repo_id: 205262760
+    'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f':
+        ref: 'v7.0.0'
+        commit: 'sha1-bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
+        owner_id: 44036562
+        repo_id: 192625955
+    'actions/upload-pages-artifact@v5.0.0':
+        ref: 'v5.0.0'
+        commit: 'sha1-fc324d3547104276b827a68afc52ff2a11cc49c9'
+        owner_id: 44036562
+        repo_id: 496012378
+        uses:
+            - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
     'codecov/codecov-action@v7.1.1':
         ref: 'v7.1.1'
         commit: 'sha1-303a32d7a59b442fa8d48b6a1cc6825c09c847a5'

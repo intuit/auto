@@ -1,0 +1,6 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  // starlight-blog ships its source as .ts, so tsc checks it, but nothing
+  // loads the types of the virtual modules that source imports
+  "files": ["node_modules/starlight-blog/virtual.d.ts"]
+}

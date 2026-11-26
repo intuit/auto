@@ -1,0 +1,247 @@
+---
+title: Getting Started
+---
+
+import Label from "../../../../components/Label.astro";
+import { TabItem, Tabs } from "@astrojs/starlight/components";
+
+By the end of this page, merging a pull request labelled `minor` will release your project from CI: a new version, a changelog entry and a GitHub release.
+
+## What you'll need
+
+- A GitHub repository you can push to
+- A GitHub [personal access token](https://github.com/settings/tokens) with `repo` permission, used as `GH_TOKEN`
+- A CI service that builds every push, such as [GitHub Actions](../build-platforms/github-actions), [CircleCI](../build-platforms/circleci), [Jenkins](../build-platforms/jenkins) or [Travis CI](../build-platforms/travis)
+- The credentials for wherever you publish, such as `NPM_TOKEN` for npm. Each plugin's page covers its setup.
+
+## Install
+
+**In a JavaScript project**, add `auto` as a dev dependency. It publishes to npm by default.
+
+<Tabs syncKey="package-manager">
+  <TabItem label="npm">
+
+```bash
+npm install --save-dev auto
+```
+
+  </TabItem>
+  <TabItem label="yarn">
+
+```bash
+yarn add --dev auto
+```
+
+  </TabItem>
+  <TabItem label="pnpm">
+
+```bash
+pnpm add --save-dev auto
+```
+
+  </TabItem>
+  <TabItem label="bun">
+
+```bash
+bun add --dev auto
+```
+
+  </TabItem>
+</Tabs>
+
+> [!warning] If you use `yarn@2` none of the default plugins (`npm` and `released`) are included so you must install them if you want to use them.
+
+**In any other project**, such as Gradle, Maven, CocoaPods, Homebrew, Docker, Rust or Ruby, download the standalone `auto` for your operating system from the [releases](https://github.com/intuit/auto/releases) page.
+It has `node` and every official plugin bundled, so you don't need anything else installed.
+[Non-npm Usage](../configuration/non-npm) walks through it, including installing with Homebrew.
+
+### What do you publish?
+
+`auto` publishes through a plugin for your package manager.
+`auto init` (below) sets most of them up for you; the rest you add to your [`.autorc`](../configuration/plugins) yourself.
+
+| You publish                 | Plugin                                    | Set up by `auto init`                   |
+| --------------------------- | ----------------------------------------- | --------------------------------------- |
+| npm packages                | [npm](../generated/npm)                   | Yes (default when installed from npm)   |
+| Maven artifacts             | [maven](../generated/maven)               | Yes                                     |
+| Gradle projects             | [gradle](../generated/gradle)             | Yes                                     |
+| CocoaPods                   | [cocoapods](../generated/cocoapods)       | Yes                                     |
+| Homebrew formulae           | [brew](../generated/brew)                 | Yes                                     |
+| Rust crates                 | [crates](../generated/crates)             | Yes                                     |
+| Ruby gems                   | [gem](../generated/gem)                   | Yes                                     |
+| Chrome Web Store extensions | [chrome](../generated/chrome)             | Yes                                     |
+| Docker images               | [docker](../generated/docker)             | Add to `.autorc`                        |
+| sbt (Scala) projects        | [sbt](../generated/sbt)                   | Add to `.autorc`                        |
+| VS Code extensions          | [vscode](../generated/vscode)             | Add to `.autorc`                        |
+| A version kept in a file    | [version-file](../generated/version-file) | Add to `.autorc`                        |
+| A git tag only              | [git-tag](../generated/git-tag)           | Yes (default for the standalone `auto`) |
+
+### Already published? Mark your latest release
+
+If your project is already published then you need to make sure that your last release is tagged and that it's the `Latest Release` on GitHub.
+
+To tag your last release find that last commit where you bumped the version and run the following commands with your version number.
+
+```bash
+git tag v1.2.3
+git push --tags
+```
+
+Then on GitHub go to your project's releases and click `Draft a new release`.
+In the `Tag version` field enter the version number you just tagged and click `Publish release`.
+
+Now your GitHub project is set up to use `auto` :tada:
+
+## Configuration
+
+1. Initialize options
+2. Configure environment variables
+3. Create labels
+4. Release from CI
+
+### 1. Initialize Options <Label color="yellow" class="ml-4">Recommended</Label>
+
+`auto init` walks you through the minimum setup.
+It asks which plugin publishes your project and which other plugins you want, offers to customize your labels, and writes your `.autorc`.
+It can also save your tokens in a `.env` file and add that file to your `.gitignore`.
+
+```bash
+npx auto init
+```
+
+With the standalone `auto`, run `auto init` from wherever you saved it (for example `~/auto init`).
+npm projects can skip this step and run on the defaults; every other project needs the `.autorc` it writes.
+This sets you up locally, but you will still have to configure environment variables in your CI.
+
+### 2. Configure Environment Variables
+
+You must configure some environment variables for publishing and releasing to work properly.
+
+- `GH_TOKEN` - Used for publishing the GitHub release and creating labels ([create one here](https://github.com/settings/tokens)) (needs `repo` permission)
+- Your publishing plugin's credentials, such as `NPM_TOKEN` for npm. Each plugin's page covers its setup.
+
+See [Environment Variables](../configuration/environment-variables) for everything `auto` reads from the environment.
+
+> [!note]
+> Make sure you give the GH_TOKEN <Label color="blue">repo</Label> permission or `shipit` will fail!
+
+#### Local `.env` <Label color="yellow" class="ml-4">Recommended</Label>
+
+You can also store these values in a local file at the root of your project named `.env`.
+You should make sure to add this file to your `.gitignore` so you don't commit any keys!
+These values override any variable already set in your environment.
+This gives you a per-project configuration that isn't affected by your global setup.
+
+```plaintext title=".env"
+GH_TOKEN=YOUR_TOKEN
+NPM_TOKEN=PUBLISH_TOKEN
+```
+
+#### HTTP Proxy
+
+If you are running auto behind a `http` or `https` proxy, add either the `http_proxy` or `https_proxy` environment variable to your environment.
+Set it in your shell or your CI, not in `.env`: auto reads the proxy before it loads `.env`.
+
+```plaintext
+https_proxy=<PROXYHOST>:<PROXYPORT>
+```
+
+### 3. Create Labels
+
+After that, you need to set up the labels on your GitHub project.
+The types of labels that `auto` uses are:
+
+- Versioning Labels - Used to calculate version numbers and make releases. To change them refer to [this](../configuration/autorc#labels).
+- Changelog Labels - These labels do not affect the version calculation but they will change the section the PR displays in the changelog. These are customizable too, and you can even [add your own sections](../configuration/autorc#changelog-titles).
+
+To create the labels for your project on GitHub, run the following command with your `GH_TOKEN`.
+
+```bash
+GH_TOKEN=YOUR_TOKEN auto create-labels
+# or with .env file
+auto create-labels
+```
+
+### 4. Release from CI
+
+Have your CI run `auto shipit` after your build, on every push, with your tokens set as secrets.
+Each guide has a complete config: [GitHub Actions](../build-platforms/github-actions), [CircleCI](../build-platforms/circleci), [Jenkins](../build-platforms/jenkins) and [Travis CI](../build-platforms/travis).
+
+On your main branch `shipit` makes a full release.
+In a pull request's build it makes a canary version, if your plugin supports canaries.
+
+Then try it: open a pull request, add the `minor` label and merge it.
+CI bumps the version, writes the changelog, publishes and creates the GitHub release.
+
+`auto` is written so that each tool it exposes is useful in isolation.
+You can use as much or as little of `auto` as you want!
+
+There are two ways you can use `auto` to create releases.
+
+1. `auto shipit` - Let `auto` do everything
+2. Sub Commands - Run each command yourself
+
+#### `auto shipit` <Label color="yellow" class="ml-4">Recommended</Label>
+
+To version, changelog, publish and release your code all at the same time you should use the `shipit` command.
+`shipit` runs all commands in the `auto` workflow and puts it into one meta-command.
+It's context aware and will make different types of releases based on where you run it.
+
+[Read more here.](../commands/shipit)
+
+```json title="package.json"
+{
+  "scripts": {
+    "release": "auto shipit"
+  }
+}
+```
+
+#### Do-It-Yourself
+
+All of the functionality of `shipit` is accessible through all of `auto`'s other commands.
+Through these commands you can fit parts of `auto` into your existing release process.
+
+```json title="package.json"
+{
+  "scripts": {
+    "release": "./scripts/release.sh"
+  }
+}
+```
+
+Here is an example release script for a npm package:
+
+```bash title="release.sh"
+export PATH=$(npm bin):$PATH
+
+VERSION=`auto version`
+
+## Support for label 'skip-release'
+if [ ! -z "$VERSION" ]; then
+  ## Update Changelog
+  auto changelog
+
+  ## Publish Package
+  npm version $VERSION -m "Bump version to: %s [skip ci]"
+  npm publish
+
+  ## Create GitHub Release
+  git push --follow-tags --set-upstream origin $branch
+  auto release
+fi
+```
+
+## Help
+
+To get detailed help for any command use the `--help` flag.
+
+```bash
+auto --help
+# or any of auto's command's help
+auto shipit --help
+```
+
+## Enterprise
+
+If you are using enterprise github `auto` lets you configure the github API URL that it uses. You can configure this by using the CLI option `--github-api`, by setting the value in your [.autorc](../configuration/autorc#githubapi), or during `auto init`.

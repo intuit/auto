@@ -1,0 +1,65 @@
+---
+// The plugins overview, where the header's "Plugins" link goes: how to add a
+// plugin, then a card per plugin README in the plugins sidebar's groups
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { CardGrid, Code, LinkCard } from "@astrojs/starlight/components";
+
+import { getPluginGroups, pluginLabel, pluginsSidebar } from "../plugin-pages";
+
+const base = import.meta.env.BASE_URL;
+const groups = await getPluginGroups();
+
+/** LinkCard writes its description as HTML, and a README's sentence is text */
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+const autorc = `{
+  "plugins": ["npm", "released"]
+}`;
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Plugins",
+    description:
+      "Plugins publish your package, shape the version and changelog, and announce releases.",
+  }}
+  sidebar={pluginsSidebar(groups)}
+>
+  <p>
+    <code>auto</code> works out the version, writes the changelog and creates
+    the GitHub release. Plugins do everything else: publish your package, change
+    how the version and changelog come out, comment on pull requests and
+    announce the release.
+  </p>
+
+  <p>Name the ones you want in your <code>.autorc</code>:</p>
+
+  <Code code={autorc} lang="json" title=".autorc" />
+
+  <p>
+    Setting <code>plugins</code> replaces the default plugin, so list your
+    package manager too. Each plugin's page covers installing it and its
+    options. <a href={`${base}/docs/configuration/plugins`}>Using plugins</a> has
+    the details, and <a href={`${base}/docs/authoring/writing-plugins`}>Writing plugins</a> shows
+    how to make your own.
+  </p>
+
+  {
+    groups.map(({ label, lede, plugins }) => (
+      <>
+        <h2 id={label.toLowerCase().replace(/ /g, "-")}>{label}</h2>
+        <p>{lede}</p>
+        <CardGrid>
+          {plugins.map((plugin) => (
+            <LinkCard
+              title={escapeHtml(pluginLabel(plugin))}
+              description={escapeHtml(plugin.data.description)}
+              href={`${base}/plugins/${plugin.id}`}
+            />
+          ))}
+        </CardGrid>
+      </>
+    ))
+  }
+</StarlightPage>

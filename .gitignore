@@ -2,15 +2,11 @@ dist
 coverage
 .DS_store
 package-lock.json
-_ignite
 .vscode/
 binary
-docs/pages/docs/generated
+docs/src/content/docs/docs/generated
+docs/.astro
 **/tsconfig.tsbuildinfo
-
-docs/.mdx-data
-docs/.next
-docs/out
 
 # Created by https://www.gitignore.io/api/node,intellij,sublimetext,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,intellij,sublimetext,visualstudiocode
@@ -215,7 +211,6 @@ GitHub.sublime-settings
 
 ### Files generated from testing ###
 packages/cli/auto
-docs/public/search-index.json
 
 # Local agent issue tracker
 .scratch/

@@ -7,7 +7,7 @@ const { execSync } = require("child_process");
 
 const filename = path.join(
   __dirname,
-  "../docs/pages/docs/configuration/non-npm.mdx"
+  "../docs/src/content/docs/docs/configuration/non-npm.mdx"
 );
 
 module.exports = class TestPlugin {

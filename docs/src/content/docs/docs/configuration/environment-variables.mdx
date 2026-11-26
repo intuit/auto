@@ -1,0 +1,65 @@
+---
+title: Environment Variables
+---
+
+`auto` reads a few things from the environment: your tokens, a proxy, and the details of the CI build it's running in.
+
+That's the whole list.
+Other flags can't be set with an environment variable (there's no `AUTO_DRY_RUN`).
+Many flags have an `.autorc` setting instead, so you don't have to pass them every time: see [Options](./autorc#options) and [Command Defaults](./autorc#command-defaults).
+
+## Tokens
+
+There are no flags for tokens, so they always come from the environment.
+
+| Variable       | Used for                                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `GH_TOKEN`     | Every request to GitHub: releases, labels, comments and statuses. Needs `repo` permission.                                     |
+| `GITHUB_TOKEN` | Used in place of `GH_TOKEN` when that isn't set.                                                                               |
+| Plugin tokens  | Each plugin reads its own credentials, such as `NPM_TOKEN` for [npm](../generated/npm). The plugin's page lists what it needs. |
+
+`auto` pushes commits and tags over SSH when your git remote allows it, and otherwise over HTTPS with `GH_TOKEN`.
+In GitHub Actions, if `GITHUB_TOKEN` is set, `auto` pushes with that one, even when `GH_TOKEN` is set too.
+See [GitHub Actions](../build-platforms/github-actions) for setting up tokens there.
+
+## Detected in CI
+
+In a CI service, `auto` reads the build's details from the service's own variables, using [env-ci](https://github.com/semantic-release/env-ci#supported-ci).
+You don't set anything for this, and a flag you pass always wins over what's detected.
+
+| Value        | Stands in for | Commands                                                         |
+| ------------ | ------------- | ---------------------------------------------------------------- |
+| PR number    | `--pr`        | `label`, `comment`, `pr-check`, `pr-status`, `pr-body`, `canary` |
+| Build number | `--build`     | `canary`                                                         |
+
+`next` has no `--pr` flag, but in a PR build it uses the detected PR number to post the prerelease's notes.
+
+Not every service provides every value, and env-ci's list shows which ones do.
+If your service has no PR number, `canary` searches GitHub for a PR that contains the current commit.
+If it has no build number, `canary` uses the commit instead.
+
+Outside CI nothing is detected, so pass the flags yourself.
+
+## Proxy
+
+If you're behind a proxy, set `https_proxy` or `http_proxy`, and `auto` sends its GitHub requests through it.
+
+```bash
+https_proxy=<PROXYHOST>:<PROXYPORT>
+```
+
+Set it in your shell or your CI, not in `.env`.
+`auto` reads the proxy before it loads `.env`, so a proxy there has no effect.
+
+## `.env` file
+
+For local runs, `auto` loads a `.env` file from the directory you run it in.
+Its values override any variable already set in your environment, which keeps tokens per project.
+Add it to your `.gitignore` so you don't commit your keys!
+
+```plaintext title=".env"
+GH_TOKEN=YOUR_TOKEN
+NPM_TOKEN=PUBLISH_TOKEN
+```
+
+`.env` is only for your machine. In CI, set the same variables in your service's settings.

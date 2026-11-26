@@ -408,6 +408,39 @@ describe("All Contributors Plugin", () => {
     expect(addContributorMock.mock.calls[0][2]).toBe("code,test");
   });
 
+  test.each([".circleci/config.yml", ".travis.yml"])(
+    "should find an infra contribution for %s",
+    async (file) => {
+      const releasedLabel = new AllContributors();
+      const autoHooks = makeHooks();
+      mockRead('{ "contributors": [] }');
+
+      releasedLabel.apply({
+        hooks: autoHooks,
+        logger: dummyLog(),
+      } as Auto.Auto);
+
+      await autoHooks.afterChangelog.promise({
+        bump: Auto.SEMVER.patch,
+        currentVersion: "0.0.0",
+        lastRelease: "0.0.0",
+        releaseNotes: "",
+        commits: [
+          {
+            subject: "Update CI",
+            hash: "123",
+            labels: [],
+            files: [file],
+            authors: [{ username: "Jeff", hash: "123" }],
+          },
+        ],
+      });
+
+      expect(addContributorMock.mock.calls[0][1]).toBe("Jeff");
+      expect(addContributorMock.mock.calls[0][2]).toBe("infra");
+    }
+  );
+
   test("should update sub-packages", async () => {
     const releasedLabel = new AllContributors();
     const autoHooks = makeHooks();

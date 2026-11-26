@@ -1,0 +1,26 @@
+---
+title: "auto pr-status"
+---
+
+Set the status on a PR commit
+
+## Options
+
+| Flag              | Type    | Description                                                                             |
+| ----------------- | ------- | --------------------------------------------------------------------------------------- |
+| `--sha`           | String  | Specify a custom git sha. Defaults to the HEAD for a git repo in the current repository |
+| `--pr`            | Number  | PR to set the status on. Detects PR number in CI                                        |
+| `--url`           | String  | URL to associate with this status                                                       |
+| `--state`         | String  | State of the PR. ['pending', 'success', 'error', 'failure']                             |
+| `--description`   | String  | A description of the status                                                             |
+| `--context`       | String  | A string label to differentiate this status from others                                 |
+| `--dry-run`, `-d` | Boolean | Report what command will do but do not actually do anything                             |
+
+## Examples
+
+```bash
+auto pr-status \
+   --state pending \
+   --description "Build still running..." \
+   --context build-check
+```

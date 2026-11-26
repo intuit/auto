@@ -1,0 +1,30 @@
+---
+/** A button that routes the user to the getting started page */
+const href = `${import.meta.env.BASE_URL}/docs/welcome/getting-started`;
+---
+
+<a class="get-started not-content" href={href}>
+  <span>Get Started</span> 🎉
+</a>
+
+<style>
+  .get-started {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid currentColor;
+    border-radius: 0.25rem;
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-2xl);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .get-started:hover {
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+
+  span {
+    padding-inline-end: 0.5rem;
+  }
+</style>

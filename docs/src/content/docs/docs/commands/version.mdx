@@ -1,0 +1,30 @@
+---
+title: "auto version"
+---
+
+Calculate a semantic version bump for the given changes.
+Requires all PRs to have labels for the change type.
+If a PR does not have a label associated with it, it will default to `patch` or whatever you configure the default label to.
+
+NOTE: This does not change the version of your project or anything in your repo. It just returns `patch`, `minor`, or `major`.
+
+## Options
+
+| Flag                                | Type    | Description                                                                                           |
+| ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `--only-publish-with-release-label` | Boolean | Only bump version if 'release' label is on pull request                                               |
+| `--from`                            | String  | Git revision (tag, commit sha, ...) to calculate version bump from. Defaults to latest github release |
+
+## Examples
+
+Get the new version using the last release to head
+
+```bash
+auto version
+```
+
+Useful in conjunction with `npm version` to auto-version releases.
+
+## Configure Versioning Labels
+
+You can customize the versioning labels in the `.autorc`. To see configuration [go here](../configuration/autorc#labels).

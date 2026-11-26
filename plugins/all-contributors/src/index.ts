@@ -120,7 +120,7 @@ const defaultOptions: IAllContributorsPluginOptions = {
   types: {
     doc: ["**/*.mdx", "**/*.md", "**/docs/**/*", "**/documentation/**/*"],
     example: ["**/*.stories*", "**/*.story.*"],
-    infra: ["**/.circle/**/*", "**/.github/**/*", "**/travis.yml"],
+    infra: ["**/.circleci/**/*", "**/.github/**/*", "**/.travis.yml"],
     test: ["**/*.test.*", "**/test/**", "**/__tests__/**"],
     code: ["**/src/**/*", "**/lib/**/*", "**/package.json", "**/tsconfig.json"],
   },

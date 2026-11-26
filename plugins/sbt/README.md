@@ -24,13 +24,13 @@ yarn add -D @auto-it/sbt
 
 It is strongly recommended to use an sbt plugin to manage the version. There are a few options, but the most reliable and well maintained is [sbt-dynver](https://github.com/dwijnand/sbt-dynver). To enable it in your project add this line to `project/plugins.sbt`:
 
-```scala
+```scala title="project/plugins.sbt"
 addSbtPlugin("com.dwijnand" % "sbt-dynver" % "x.y.z")
 ```
 
 and then, depending on the publishing repository (e.g. if you are publishing to Sonatype Nexus), you might want to add
 
-```scala
+```scala title="build.sbt"
 ThisBuild / dynverSeparator := "-"
 ThisBuild / dynverSonatypeSnapshots := true
 ```

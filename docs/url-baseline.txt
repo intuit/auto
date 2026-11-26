@@ -1,0 +1,121 @@
+# URL baseline for the docs site, relative to the /auto base.
+#
+# Every path here must still be served after the move to Astro Starlight.
+# Page paths (no extension) must resolve both bare and with ".html", the way
+# GitHub Pages serves the old Next export. Paths with an extension are static
+# files that must exist exactly.
+#
+# Produced from commit b0433e9d9 by building the packages, running the generator and
+# running the Ignite build, then listing the routes in Next's pages manifest.
+# The Ignite export itself fails on /blog under Node 26 (a JSON.parse of an
+# unset env var inside next-ignite), so the manifest is the source of routes.
+#
+# Left out on purpose:
+# - /docs/_sidebar: the sidebar source rendered as a page by accident.
+# - /search-index.json: Ignite's search index, replaced by Pagefind.
+#
+# Kept beyond pages:
+# - /blog/feed.xml: the blog's RSS feed.
+# - /sw.js: the old site's PWA service worker; it must be replaced, not dropped.
+# - Files in the public folder that content or READMEs link to by URL.
+/
+/404
+/blog
+/blog/both-worlds
+/blog/npm-canary-scope
+/blog/pr-in-progress
+/blog/using-shipit
+/blog/v8
+/blog/why
+/docs
+/docs/build-platforms/circleci
+/docs/build-platforms/github-actions
+/docs/build-platforms/jenkins
+/docs/build-platforms/travis
+/docs/configuration/autorc
+/docs/configuration/non-npm
+/docs/configuration/plugins
+/docs/configuration/troubleshooting
+/docs/generated/all-contributors
+/docs/generated/brew
+/docs/generated/canary
+/docs/generated/changelog
+/docs/generated/chrome
+/docs/generated/cocoapods
+/docs/generated/comment
+/docs/generated/conventional-commits
+/docs/generated/crates
+/docs/generated/create-labels
+/docs/generated/defaultLabelsRenderer
+/docs/generated/docker
+/docs/generated/exec
+/docs/generated/first-time-contributor
+/docs/generated/gem
+/docs/generated/gh-pages
+/docs/generated/git-tag
+/docs/generated/gradle
+/docs/generated/info
+/docs/generated/init
+/docs/generated/jira
+/docs/generated/label
+/docs/generated/latest
+/docs/generated/magic-zero
+/docs/generated/maven
+/docs/generated/microsoft-teams
+/docs/generated/next
+/docs/generated/npm
+/docs/generated/omit-commits
+/docs/generated/omit-release-notes
+/docs/generated/pr-body
+/docs/generated/pr-body-labels
+/docs/generated/pr-check
+/docs/generated/pr-status
+/docs/generated/protected-branch
+/docs/generated/release
+/docs/generated/released
+/docs/generated/s3
+/docs/generated/sbt
+/docs/generated/shipit
+/docs/generated/slack
+/docs/generated/twitter
+/docs/generated/upload-assets
+/docs/generated/version
+/docs/generated/version-file
+/docs/generated/vscode
+/docs/plugins/changelog-hooks
+/docs/plugins/configuration-hooks
+/docs/plugins/hook-api-docs
+/docs/plugins/init-hooks
+/docs/plugins/log-parse-hooks
+/docs/plugins/release-lifecycle-hooks
+/docs/plugins/writing-plugins
+/docs/plugins/writing-publishing-plugins
+/docs/welcome/getting-started
+/docs/welcome/quick-merge
+/blog/feed.xml
+/sw.js
+/add-label.png
+/changelog-example.png
+/complete-auto.png
+/dark-logo-large.png
+/dark-logo-small.png
+/default-auto.png
+/favicon-dark.png
+/favicon.png
+/hook-overview.png
+/jenkins-next-branches.png
+/light-logo-large.png
+/light-logo-small.png
+/logo-dark.svg
+/logo-large-dark.png
+/logo-large.png
+/logo.svg
+/manifest.json
+/merge.png
+/monochrome-logo-large.png
+/monochrome-logo-small.png
+/next-branch.png
+/open-pr.png
+/pr-to-pr.png
+/readme-logo.png
+/release-example.png

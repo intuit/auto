@@ -23,7 +23,7 @@ yarn add -D @auto-it/released
 
 To use the plugin include it in your `.autorc`
 
-```json
+```json title=".autorc"
 {
   "plugins": ["released"]
 }

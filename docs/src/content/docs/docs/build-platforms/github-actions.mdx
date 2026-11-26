@@ -1,0 +1,101 @@
+---
+title: GitHub Actions
+---
+
+The following config declares the `release` action that run on all branches. The job will either release:
+
+- a new `latest` version from `baseBranch`
+- a `canary` build from a pull request (only on the main fork and if your package manager plugin implements them)
+
+> [!warning]
+> You must use some sort of action that implements `skip ci` functionality (as seen below). Otherwise you will get stuck in a release loop!
+
+```yaml title=".github/workflows/release.yml"
+name: Release
+
+on: [push]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: "0"
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          cache: "npm" # or yarn, pnpm
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm clean-install
+          npm run build
+          npx auto shipit
+```
+
+### NPM: Github Package Registry
+
+If you are publishing to the Github Package Registry you will need to change a few things.
+
+1. Modify the node action to use the Github Package Registry and your user scope.
+
+```yaml
+- name: Setup Node
+  uses: actions/setup-node@v7
+  with:
+    node-version: "lts/*"
+    registry-url: "https://npm.pkg.github.com"
+    scope: "@your-username-scope"
+```
+
+2. Use the `GITHUB_TOKEN` as the `NODE_AUTH_TOKEN` to publish to the Github Package Registry.
+
+```yaml
+- name: Create Release
+  env:
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    npm clean-install
+    npm build
+    npx auto shipit
+```
+
+The `NODE_AUTH_TOKEN` variable is required for the `.npmrc` that `actions/setup-node@v7` sets up.
+If you aren't using `actions/setup-node@v7` replace the variable name `NODE_AUTH_TOKEN` with `NPM_TOKEN` and the `.npmrc` `auto` will handle authentication instead.
+
+## Troubleshooting
+
+If you are having problems make sure you have done the following:
+
+- Any required secrets for plugins are set (e.g. `NPM_TOKEN` with the NPM plugin)
+- Update references of `<your-github-user>`, `<project-owner>`, and `<project-repo>` with the appropriate values
+
+### Running With Branch Protection
+
+GitHub actions require a little more setup to use `auto` with branch protection.
+We can't use the `GITHUB_TOKEN` to commit to the branch because it does not have high enough permissions.
+You will need to create a token with admin access to your repo and modify your build config like the following:
+
+```yaml
+steps:
+  - uses: actions/checkout@v7
+    with:
+      # Ensure that git uses your token with admin access to the repo
+      token: ${{ secrets.ADMIN_TOKEN }}
+      fetch-depth: "0"
+```
+
+## Examples
+
+- [`auto-config-hipstersmoothie`](https://github.com/hipstersmoothie/auto-config-hipstersmoothie/blob/07d128afd96ac6a7b0fe3f04313847c0fc3d84a2/.github/workflows/push.yml)
+- [`create-check`](https://github.com/hipstersmoothie/create-check/blob/master/.github/workflows/push.yml)
+- [`octokit-cli`](https://github.com/hipstersmoothie/octokit-cli/blob/master/.github/workflows/push.yml)
+- [`auto-lerna-gh-actions`](https://github.com/hipstersmoothie/auto-lerna-gh-actions)
