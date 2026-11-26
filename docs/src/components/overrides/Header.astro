@@ -7,6 +7,10 @@ import Search from "@astrojs/starlight/components/Search.astro";
 import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
 import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
 import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
+// starlight-image-zoom only adds this through its own MarkdownContent
+// override, which steps aside for starlight-blog's. Its zoom works from
+// anywhere on the page, so the header renders it.
+import ImageZoom from "starlight-image-zoom/components/ImageZoom.astro";
 
 const base = import.meta.env.BASE_URL;
 // Pages built from a route ("docs.html", "plugins.html") have the ".html"
@@ -52,6 +56,8 @@ const current = links
     <LanguageSelect />
   </div>
 </div>
+
+<ImageZoom />
 
 <style>
   /* The same on every page: held to the landing page's 1160px wrap, so the

@@ -62,22 +62,39 @@ const movedCommands = [
   "next",
 ];
 
+/** The plugin authoring pages that lived under docs/plugins before */
+const movedAuthoringPages = [
+  "writing-plugins",
+  "writing-publishing-plugins",
+  "hook-api-docs",
+  "init-hooks",
+  "configuration-hooks",
+  "log-parse-hooks",
+  "changelog-hooks",
+  "release-lifecycle-hooks",
+];
+
 export default defineConfig({
   site: "https://intuit.github.io",
   base,
   // "docs/welcome/getting-started.html", like the old Next export, so GitHub
   // Pages serves every page both with and without the ".html". Unlike "file",
   // "preserve" leaves the ".html" off the links Starlight writes.
-  build: { format: "preserve" },
-  trailingSlash: "never",
-  // Links to the commands' old pages still land on them. Astro adds the base
+  build: { format: "directory" },
+  // trailingSlash: "never",
+  trailingSlash: "ignore",
+  // Links to moved pages' old paths still land on them. Astro adds the base
   // to where a redirect is from, but not to where it goes.
-  redirects: Object.fromEntries(
-    movedCommands.map((name) => [
+  redirects: Object.fromEntries([
+    ...movedCommands.map((name) => [
       `/docs/generated/${name}`,
       `${base}/docs/commands/${name}`,
-    ])
-  ),
+    ]),
+    ...movedAuthoringPages.map((name) => [
+      `/docs/plugins/${name}`,
+      `${base}/docs/authoring/${name}`,
+    ]),
+  ]),
   // Blog post covers are hosted remotely and sized at build time
   image: { domains: ["images.unsplash.com", "cdn-images-1.medium.com"] },
   // markdown: {
@@ -159,11 +176,10 @@ export default defineConfig({
         // Starlight's heading links and code markup like the docs pages
         processedDirs: ["../plugins"],
       },
-      routeMiddleware: "./src/route-data.mjs",
+      // routeMiddleware: "./src/route-data.mjs",
       // The docs design has no "On this page" column
       tableOfContents: false,
       components: {
-        MarkdownContent: "./src/components/overrides/MarkdownContent.astro",
         Hero: "./src/components/overrides/Hero.astro",
         Header: "./src/components/overrides/Header.astro",
       },
